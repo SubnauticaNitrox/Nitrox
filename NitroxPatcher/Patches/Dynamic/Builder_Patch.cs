@@ -5,6 +5,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
@@ -26,13 +27,13 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
 {
-    // TODO: Secure the system, for example: you can't build on a base on which another player built less than 3 seconds ago
-    // idea for it: when an action is applied on a base from another player, you can't build on it for 2 seconds
     internal static MethodInfo TARGET_METHOD_TRYPLACE = Reflect.Method(() => Builder.TryPlace());
+    internal static MethodInfo TARGET_METHOD_UPDATE = Reflect.Method(() => Builder.Update());
     internal static MethodInfo TARGET_METHOD_DECONSTRUCT = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
     internal static MethodInfo TARGET_METHOD_CONSTRUCT = Reflect.Method((Constructable t) => t.Construct());
     internal static MethodInfo TARGET_METHOD_DECONSTRUCT_ASYNC = AccessTools.EnumeratorMoveNext(Reflect.Method((Constructable t) => t.DeconstructAsync(default, default)));
-    internal static MethodInfo TARGET_METHOD_DECONSTRUCTION_ALLOWED = typeof(BaseDeconstructable).GetMethod(nameof(BaseDeconstructable.DeconstructionAllowed), BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string).MakeByRefType() }, null);
+    internal static MethodInfo TARGET_METHOD_DECONSTRUCTION_ALLOWED_1 = Reflect.Method((Constructable t) => t.DeconstructionAllowed(out Reflect.Ref<string>.Field));
+    internal static MethodInfo TARGET_METHOD_DECONSTRUCTION_ALLOWED_2 = Reflect.Method((BaseDeconstructable t) => t.DeconstructionAllowed(out Reflect.Ref<string>.Field));
     internal static MethodInfo TARGET_METHOD_TOOL_CONSTRUCT = Reflect.Method((BuilderTool t) => t.Construct(default, default, default));
 
     private static BuildPieceIdentifier cachedPieceIdentifier;
@@ -90,6 +91,27 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             }
             return null;
         });
+
+    public static void BuilderUpdatePostfix()
+    {
+        if (!Builder.canPlace || !BuildingTester.Main)
+        {
+            return;
+        }
+        BaseGhost baseGhost = Builder.ghostModel.GetComponent<BaseGhost>();
+        if (baseGhost.targetBase && NitroxEntity.TryGetIdFrom(baseGhost.targetBase.gameObject, out NitroxId parentId) &&
+            BuildingTester.Main.EnsureTracker(parentId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
+        {
+            Builder.canPlace = false;
+            Color safeColor = Color.magenta;
+            IBuilderGhostModel[] components = Builder.ghostModel.GetComponents<IBuilderGhostModel>();
+            for (int i = 0; i < components.Length; i++)
+            {
+                components[i].UpdateGhostModelColor(Builder.canPlace, ref safeColor);
+            }
+            Builder.ghostStructureMaterial.SetColor(ShaderPropertyID._Tint, safeColor);
+        }
+    }
 
     // Construction progress
     public static readonly InstructionsPattern ConstructionInstructionPattern = new()
@@ -313,6 +335,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             
             BuildingTester.Main.EnsureTracker(parentEntity.Id).LocalOperations++;
             int operationId = BuildingTester.Main.GetCurrentOperationIdOrDefault(parentEntity.Id);
+
             UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");
 
@@ -440,6 +463,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         ghostEntity.Id = pieceId;
         ghostEntity.ParentId = baseEntity.Id;
 
+        BuildingTester.Main.EnsureTracker(baseEntity.Id).LocalOperations++;
         int operationId = BuildingTester.Main.GetCurrentOperationIdOrDefault(baseEntity.Id);
 
         PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null ?
@@ -451,26 +475,54 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         BuildingTester.Main.Temp.Reset();
     }
 
-    public static void PostfixDeconstructionAllowed(BaseDeconstructable __instance, ref bool __result, ref string reason)
+    public static void PostfixDeconstructionAllowed1(Constructable __instance, ref bool __result, ref string reason)
     {
-        if (__result && __instance.deconstructedBase.TryGetComponent(out NitroxEntity parentId) &&
-            BuildingTester.Main && BuildingTester.Main.BasesCooldown.ContainsKey(parentId.Id))
+        if (!__result || !BuildingTester.Main || !__instance.TryGetComponentInParent(out NitroxEntity parentEntity))
+        {
+            return;
+        }
+        DeconstructionAllowed(parentEntity.Id, ref __result, ref reason);
+    }
+
+    public static void PostfixDeconstructionAllowed2(BaseDeconstructable __instance, ref bool __result, ref string reason)
+    {
+        if (!__result || !BuildingTester.Main || !__instance.deconstructedBase.TryGetComponent(out NitroxEntity parentEntity))
+        {
+            return;
+        }
+        DeconstructionAllowed(parentEntity.Id, ref __result, ref reason);
+    }
+
+    public static void DeconstructionAllowed(NitroxId baseId, ref bool __result, ref string reason)
+    {
+        // TODO: Localize those strings string (same for PrefixToolConstruct)
+        if (BuildingTester.Main.BasesCooldown.ContainsKey(baseId))
         {
             __result = false;
-            // TODO: Add a cooldown so that the message is not actually spammed (or maybe we don't care)
-            // TODO: Localize this string (same for below)
             reason = "You can't modify a base that was recently updated by another player";
+        }
+        else if (BuildingTester.Main.EnsureTracker(baseId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
+        {
+            __result = false;
+            reason = "[Safe Building] This base is currently desynced so you can't modify it unless you resync buildings (in Nitrox settings)";
         }
     }
 
     public static bool PrefixToolConstruct(Constructable c)
     {
-        if (c.TryGetComponentInParent(out NitroxEntity parentId) &&
-            BuildingTester.Main && BuildingTester.Main.BasesCooldown.ContainsKey(parentId.Id))
+        if (!BuildingTester.Main || !c.tr.parent || !NitroxEntity.TryGetIdFrom(c.tr.parent.gameObject, out NitroxId parentId))
         {
-            ErrorMessage.AddMessage("You can't modify a base that was recently updated by another player");
+            return true;
+        }
+        bool isAllowed = true;
+        string message = "";
+        DeconstructionAllowed(parentId, ref isAllowed, ref message);
+        if (!isAllowed)
+        {
+            ErrorMessage.AddMessage(message);
             return false;
         }
+
         return true;
     }
 
@@ -482,9 +534,11 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
     public override void Patch(Harmony harmony)
     {
         PatchTranspiler(harmony, TARGET_METHOD_TRYPLACE, nameof(TranspilerTryplace));
+        PatchPostfix(harmony, TARGET_METHOD_UPDATE, nameof(BuilderUpdatePostfix));
         PatchTranspiler(harmony, TARGET_METHOD_CONSTRUCT, nameof(TranspilerConstruct));
         PatchTranspiler(harmony, TARGET_METHOD_DECONSTRUCT_ASYNC, nameof(TranspilerDeconstructAsync));
-        PatchPostfix(harmony, TARGET_METHOD_DECONSTRUCTION_ALLOWED, nameof(PostfixDeconstructionAllowed));
+        PatchPostfix(harmony, TARGET_METHOD_DECONSTRUCTION_ALLOWED_1, nameof(PostfixDeconstructionAllowed1));
+        PatchPostfix(harmony, TARGET_METHOD_DECONSTRUCTION_ALLOWED_2, nameof(PostfixDeconstructionAllowed2));
         PatchPrefix(harmony, TARGET_METHOD_TOOL_CONSTRUCT, nameof(PrefixToolConstruct));
         PatchMultiple(harmony, TARGET_METHOD_DECONSTRUCT, prefixMethod: nameof(PrefixBaseDeconstruct), transpilerMethod: nameof(TranspilerBaseDeconstruct));
     }

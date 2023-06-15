@@ -38,7 +38,9 @@ public class NitroxSettingsManager
                 BuildingTester.Main.AskForResync();
             }
         }));
-        // TODO: Add a setting for auto-resync: "ask for resync base every n missed operations"
+        AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
+        AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
+        // TODO: Localize
     }
 
     /// <summary>Adds a setting to the list under a certain heading</summary>

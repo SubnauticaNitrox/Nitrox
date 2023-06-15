@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
 using NitroxServer.GameLogic.Entities;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.GameLogic.Bases;
 
@@ -13,11 +16,13 @@ public class BuildingManager
 {
     private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
+    private readonly ServerConfig config;
 
     public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager)
     {
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
+        config = NitroxServiceLocator.LocateService<ServerConfig>();
     }
 
     public bool AddGhost(PlaceGhost placeGhost)
@@ -138,7 +143,7 @@ public class BuildingManager
         return false;
     }
 
-    public bool UpdateBase(UpdateBase updateBase, out int operationId)
+    public bool UpdateBase(Player player, UpdateBase updateBase, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
@@ -153,13 +158,13 @@ public class BuildingManager
             return false;
         }
         int deltaOperations = buildEntity.OperationId + 1 - updateBase.OperationId;
-        if (deltaOperations > 0)
+        if (deltaOperations != 0 && config.SafeBuilding)
         {
-            Log.Warn($"[RISKY] Registering an {nameof(UpdateBase)} packet which is {deltaOperations} operations ahead");
-        }
-        else if (deltaOperations < 0)
-        {
-            Log.Warn($"[RISKY] Registering an {nameof(UpdateBase)} packet which is {-deltaOperations} operations late");
+            Log.Debug(buildEntity.OperationId);
+            Log.Warn($"Ignoring an {nameof(UpdateBase)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            NotifyPlayerDesync(player);
+            operationId = -1;
+            return false;
         }
 
         worldEntityManager.RemoveGlobalRootEntity(updateBase.FormerGhostId);
@@ -232,7 +237,7 @@ public class BuildingManager
         return true;
     }
 
-    public bool ReplacePieceByGhost(PieceDeconstructed pieceDeconstructed, out Entity removedEntity, out int operationId)
+    public bool ReplacePieceByGhost(Player player, PieceDeconstructed pieceDeconstructed, out Entity removedEntity, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
@@ -244,6 +249,17 @@ public class BuildingManager
         if (entityRegistry.TryGetEntityById(pieceDeconstructed.PieceId, out GhostEntity _))
         {
             Log.Error($"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
+            removedEntity = null;
+            operationId = -1;
+            return false;
+        }
+
+        int deltaOperations = buildEntity.OperationId + 1 - pieceDeconstructed.OperationId;
+        if (deltaOperations != 0 && config.SafeBuilding)
+        {
+            Log.Debug(buildEntity.OperationId);
+            Log.Warn($"Ignoring a {nameof(PieceDeconstructed)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
+            NotifyPlayerDesync(player);
             removedEntity = null;
             operationId = -1;
             return false;
@@ -286,6 +302,12 @@ public class BuildingManager
             entityRegistry.TransferChildren(removedEntity, newPiece, entity => entity is not PlanterEntity);
         }
         return true;
+    }
+
+    private void NotifyPlayerDesync(Player player)
+    {
+        Dictionary<NitroxId, int> operations = GetEntitiesOperations(worldEntityManager.GetGlobalRootEntities(true));
+        player.SendPacket(new BuildingDesyncWarning(operations));
     }
 
     public Dictionary<NitroxId, int> GetEntitiesOperations(List<GlobalRootEntity> entities)

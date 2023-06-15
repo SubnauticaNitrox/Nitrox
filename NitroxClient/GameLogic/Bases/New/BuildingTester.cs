@@ -248,7 +248,6 @@ public class BuildingTester : MonoBehaviour
         }
 
         OperationTracker tracker = EnsureTracker(pieceDeconstructed.BaseId);
-        tracker.RegisterOperation(pieceDeconstructed.OperationId);
 
         BuildPieceIdentifier pieceIdentifier = pieceDeconstructed.BuildPieceIdentifier;
         Transform cellObject = @base.GetCellObject(pieceIdentifier.BaseCell.ToUnity());
@@ -265,7 +264,7 @@ public class BuildingTester : MonoBehaviour
             {
                 continue;
             }
-            Log.Debug($"Found a BaseDeconstructable {baseDeconstructable.name}, will now deconstruct it manually");
+            Log.Debug($"[{pieceDeconstructed.OperationId}] Found a BaseDeconstructable {baseDeconstructable.name}, will now deconstruct it manually");
             using (PacketSuppressor<BaseDeconstructed>.Suppress())
             using (PacketSuppressor<PieceDeconstructed>.Suppress())
             using (PacketSuppressor<WaterParkDeconstructed>.Suppress())
@@ -274,6 +273,7 @@ public class BuildingTester : MonoBehaviour
                 baseDeconstructable.Deconstruct();
                 Temp.Reset();
             }
+            tracker.RegisterOperation(pieceDeconstructed.OperationId);
             BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.Now;
             yield break;
         }
@@ -313,6 +313,7 @@ public class BuildingTester : MonoBehaviour
     {
         foreach (KeyValuePair<NitroxId, int> pair in operations)
         {
+            Log.Debug($"Resetting {pair.Key} to {pair.Value}");
             EnsureTracker(pair.Key).ResetToId(pair.Value);
         }
     }
@@ -532,52 +533,6 @@ public class BuildingTester : MonoBehaviour
             MovedChildrenIds = null;
             ChildrenTransfer = (null, null);
             Transfer = false;
-        }
-    }
-
-    public class OperationTracker
-    {
-        public NitroxId BuildId;
-        public int LastOperationId = -1;
-        /// <summary>
-        /// Accounts for locally-issued build actions
-        /// </summary>
-        public int LocalOperations;
-        /// <summary>
-        /// Calculated number of missed build actions
-        /// </summary>
-        public int MissedOperations;
-        /// <summary>
-        /// Number of detected issues when trying to apply actions remotely
-        /// </summary>
-        public int FailedOperations;
-
-        public OperationTracker(NitroxId buildId)
-        {
-            BuildId = buildId;
-        }
-
-        public void RegisterOperation(int newOperationId)
-        {
-            // If the progress was never registered, we don't need to account for missed operations
-            if (LastOperationId != -1)
-            {
-                MissedOperations += Math.Min(newOperationId - (LastOperationId + LocalOperations) - 1, 0);
-            }
-            LastOperationId = newOperationId;
-        }
-
-        public void ResetToId(int operationId = 0)
-        {
-            LastOperationId = operationId;
-            LocalOperations = 0;
-            MissedOperations = 0;
-            FailedOperations = 0;
-        }
-
-        public void AskForResync()
-        {
-            Resolve<IPacketSender>().Send(new BuildingResyncRequest(BuildId));
         }
     }
 }
