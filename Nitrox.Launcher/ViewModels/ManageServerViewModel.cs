@@ -34,6 +34,28 @@ public class ManageServerViewModel : RoutableViewModelBase
         get => serverGameMode;
         set => this.RaiseAndSetIfChanged(ref serverGameMode, value);
     }
+    
+    private string serverSeed;
+    public string ServerSeed
+    {
+        get => serverSeed;
+        set => this.RaiseAndSetIfChanged(ref serverSeed, value);
+    }
+    
+    private int serverPlayerLimit;
+    public int ServerPlayerLimit
+    {
+        get => serverPlayerLimit;
+        set => this.RaiseAndSetIfChanged(ref serverPlayerLimit, value);
+    }
+    
+    private int serverPort;
+    public int ServerPort
+    {
+        get => serverPort;
+        set => this.RaiseAndSetIfChanged(ref serverPort, value);
+    }
+    
     public ReactiveCommand<Unit, IRoutableViewModel> BackCommand { get; init; }
 
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
@@ -45,7 +67,11 @@ public class ManageServerViewModel : RoutableViewModelBase
     public void LoadFrom(ServerEntry server)
     {
         ServerName = server.Name;
-        ServerPassword = ""; // Need to add password config
+        ServerPassword = ""; // Need to add
         ServerGameMode = server.GameMode;
+        serverSeed = ""; // Need to add
+
+        serverPlayerLimit = server.MaxPlayers;
+        serverPort = 11000; // Need to add
     }
 }
