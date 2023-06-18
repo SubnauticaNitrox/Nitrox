@@ -76,28 +76,29 @@
                     </StackPanel>
                 </Grid>
                 
+                <!-- TODO: Fix Spacing and alignment here. Each row (grid) is supposed to be spaced apart by 31 pixels -->
                 <StackPanel>
                     <TextBlock Text="OPTIONS" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 25.5" />
-                    <StackPanel >
+                    <StackPanel>
                         <StackPanel.Styles>
-                            <Style Selector="DockPanel">
-                                <Setter Property="Margin" Value="0,0,0,31"/>
-                            </Style>
-                            <Style Selector="TextBlock">
-                                <Setter Property="DockPanel.Dock" Value="Left"/>
+                            <Style Selector="StackPanel > TextBlock">
+                                <Setter Property="Margin" Value="0 0 0 11"/>
                                 <Setter Property="FontSize" Value="16"/>
                                 <Setter Property="FontWeight" Value="400"/>
                             </Style>
                         </StackPanel.Styles> 
-                        <DockPanel>
+                        <Grid>
                             <TextBlock Text="Enable auto port forwarding"/>
-                        </DockPanel>
-                        <DockPanel>
+                            <CheckBox Classes="switch" IsChecked="True"  HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid>
                             <TextBlock Text="Allow LAN Discovery"/>
-                        </DockPanel>
-                        <DockPanel>
+                            <CheckBox Classes="switch"  HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid>
                             <TextBlock Text="Enable Commands"/>
-                        </DockPanel>
+                            <CheckBox Classes="switch" IsChecked="True" HorizontalAlignment="Right"/>
+                        </Grid>
                     </StackPanel>
                 </StackPanel>
                 

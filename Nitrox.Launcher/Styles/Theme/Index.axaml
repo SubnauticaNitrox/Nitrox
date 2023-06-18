@@ -166,6 +166,7 @@
     <StyleInclude Source="/Styles/Theme/TextBlockStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/ButtonStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/ComboBoxStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/CheckBoxStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/NavigationStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/RadioButtonGroupStyle.axaml" />
 </Styles>
