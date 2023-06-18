@@ -6,16 +6,17 @@
             <StackPanel Margin="10" Spacing="10">
                 <StackPanel HorizontalAlignment="Center">
                     <Border design:NitroxAttached.Theme="LIGHT" Margin="0 0 0 110">
+                        <!-- (TODO) The ComboBox item highlight shows correctly in the Previewer, but not in-app. The foreground also looks wrong, but it shows correctly in-app  -->
                         <ComboBox PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
                             <ComboBoxItem Content="Item 1"/>
                             <ComboBoxItem Content="Item 2"/>
                             <ComboBoxItem Content="Item 3"/>
                         </ComboBox>
                     </Border>
-                    
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center">
                     <Border design:NitroxAttached.Theme="DARK" Margin="0 0 0 110">
+                        <!-- The ComboBox item highlight DOESN'T show correctly in the Previewer, but it DOES in-app -->
                         <ComboBox PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
                             <ComboBoxItem Content="Item 1"/>
                             <ComboBoxItem Content="Item 2"/>
@@ -40,51 +41,56 @@
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="MinWidth" Value="100"/>
         <Setter Property="MinHeight" Value="30"/>
+        
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
+                <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+        
         <Setter Property="Template">
             <ControlTemplate>
                 <DataValidationErrors>
                     <Grid>
-                        
-                        <Button HorizontalAlignment="Stretch" Padding="0" Background="Transparent" CornerRadius="8" BorderThickness="0">
-                            <Grid ColumnDefinitions="*,32" IsHitTestVisible="True">
-                                <Border x:Name="Background"
-                                        Grid.ColumnSpan="2"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="{TemplateBinding CornerRadius}"
-                                        MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
-                                <TextBlock Grid.Column="0" x:Name="PlaceholderTextBlock"
-                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                           Margin="{TemplateBinding Padding}"
-                                           Text="{TemplateBinding PlaceholderText}"
-                                           IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}" />
-                                <ContentControl Grid.Column="0" x:Name="ContentPresenter"
-                                                Content="{TemplateBinding SelectionBoxItem}"
-                                                ContentTemplate="{TemplateBinding ItemTemplate}"
-                                                Margin="{TemplateBinding Padding}"
-                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                <Border x:Name="DropDownOverlay"
-                                        Grid.Column="1"
-                                        Background="Transparent"
-                                        Margin="0,1,1,1"
-                                        Width="30"
-                                        IsVisible="False"
-                                        HorizontalAlignment="Right" />
-                                <PathIcon x:Name="DropDownGlyph"
-                                          Grid.Column="1"
-                                          UseLayoutRounding="False"
-                                          IsHitTestVisible="False"
-                                          Height="12" Width="12"
-                                          Margin="0,0,10,0"
-                                          HorizontalAlignment="Right"
-                                          VerticalAlignment="Center"
-                                          Foreground="{TemplateBinding Foreground}"
-                                          Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"/>
-                            </Grid>
-                        </Button>
+                        <Grid ColumnDefinitions="*,32" IsHitTestVisible="True">
+                            <Border x:Name="Background"
+                                    Grid.ColumnSpan="2"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
+                            <TextBlock Grid.Column="0" x:Name="PlaceholderTextBlock"
+                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                       Margin="{TemplateBinding Padding}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}" />
+                            <ContentControl Grid.Column="0" x:Name="ContentPresenter" Foreground="Blue"
+                                            Content="{TemplateBinding SelectionBoxItem}"
+                                            ContentTemplate="{TemplateBinding ItemTemplate}"
+                                            Margin="{TemplateBinding Padding}"
+                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            <Border x:Name="DropDownOverlay"
+                                    Grid.Column="1"
+                                    Background="Transparent"
+                                    Margin="0,1,1,1"
+                                    Width="30"
+                                    IsVisible="False"
+                                    HorizontalAlignment="Right" />
+                            <PathIcon x:Name="DropDownGlyph"
+                                      Grid.Column="1"
+                                      UseLayoutRounding="False"
+                                      IsHitTestVisible="False"
+                                      Height="12" Width="12"
+                                      Margin="0,0,10,0"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"/>
+                        </Grid>
                         
                         <Popup Grid.Column="0" Name="PART_Popup"
                                WindowManagerAddShadowHint="False"
@@ -114,46 +120,48 @@
                 </DataValidationErrors>
             </ControlTemplate>
         </Setter>
-
         
-        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Background" Value="#ECECEC" />
-            <Setter Property="PlaceholderForeground" Value="#0f0f0f" />
-            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
-            <Style Selector="^ /template/ TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
-            </Style>
-            <Style Selector="^:pointerover /template/ Border#Background">
-                <Setter Property="Background" Value="#ECECEC" />
-                <Setter Property="Opacity" Value=".6" />
-            </Style>
-        </Style>
         <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
             <Setter Property="Background" Value="#1F1F1F" />
-            <Setter Property="PlaceholderForeground" Value="#f0f0f0" />
-            <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
             <Style Selector="^ /template/ TextBlock">
                 <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
             </Style>
+            <Style Selector="^ /template/ PathIcon">
+                <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
+                <Setter Property="Foreground" Value="#80FFFFFF" />
+            </Style>
             <Style Selector="^:pointerover /template/ Border#Background">
                 <Setter Property="Background" Value="#1F1F1F" />
-                <Setter Property="Opacity" Value=".6" />
+            </Style>
+        </Style>
+        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
+            <Setter Property="Background" Value="#ECECEC" />
+            <Style Selector="^ /template/ TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+            </Style>
+            <Style Selector="^ /template/ PathIcon">
+                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
+                <Setter Property="Foreground" Value="#202225" />
+            </Style>
+            <Style Selector="^:pointerover /template/ Border#Background">
+                <Setter Property="Background" Value="#ECECEC" />
             </Style>
         </Style>
         
-        <Style Selector="^ /template/ Border#Background">
-            <Setter Property="Opacity" Value="1"/>
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
-                </Transitions>
-            </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Opacity" Value=".75" />
         </Style>
         
-        <Style Selector="^:pointerover /template/ Border#Background">
-            
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.98)" />
         </Style>
         
     </Style>
+    
+    
     
 </Styles>
