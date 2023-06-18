@@ -115,12 +115,16 @@
                         </StackPanel.Styles> 
                         
                         <Button Classes="textimage"
+                                design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
+                                design:NitroxAttached.Text="Advanced settings"/>
+                        
+                        <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/window-external-2x.png"
                                 design:NitroxAttached.Text="Open world folder"/>
                         
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/export-2x.png"
-                                design:NitroxAttached.Text="Import backup"/>
+                                design:NitroxAttached.Text="Restore a backup"/>
                         
                         <Button Classes="textimage" 
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/delete-2x.png"
