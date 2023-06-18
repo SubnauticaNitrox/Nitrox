@@ -15,38 +15,41 @@
         </Button>
         <TextBlock Classes="header" Text="{Binding ServerName}" />
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto"> <!-- Scroll bar functionality doesn't work yet -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto"> <!-- TODO: Fix Scroll bar functionality -->
             <StackPanel VerticalAlignment="Stretch">
                 <StackPanel.Styles>
-                    <Style Selector="StackPanel > StackPanel, StackPanel > Grid">
-                        <Setter Property="Margin" Value="0,0,0,42"/>
+                    <Style Selector="ScrollViewer > StackPanel > StackPanel, ScrollViewer > StackPanel > Grid">
+                        <Setter Property="Margin" Value="0 0 0 42"/>
+                    </Style>
+                    <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
+                        <Setter Property="Margin" Value="0 0 0 11"/>
                     </Style>
                 </StackPanel.Styles>
                 
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
-                        <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                        <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}" />
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                        <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"/>
                     </StackPanel>
                 </Grid>
         
                 <StackPanel>
-                    <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                    <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
                     <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" SelectedItem="{Binding ServerGameMode, Mode=TwoWay}" />
                 </StackPanel>
                 
                 <Grid ColumnDefinitions="*,30,*,30,*">
                     <StackPanel>
-                        <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                        <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Server seed" Text="{Binding ServerSeed}" />
                     </StackPanel>
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" Margin="0 0 0 11" />
+                        <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
                         <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <ComboBoxItem Content="Player" IsSelected="True"/>
                             <ComboBoxItem Content="Operator"/>
@@ -54,7 +57,7 @@
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Grid.Column="4">
-                        <TextBlock Text="AUTO SAVE INTERVAL" FontSize="10" Opacity=".5" FontWeight="700" Margin="0 0 0 11" />
+                        <TextBlock Text="AUTO SAVE INTERVAL" FontSize="10" Opacity=".5" FontWeight="700" />
                         <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch">
                             <ComboBoxItem Content="60s"/>
                             <ComboBoxItem Content="120s" IsSelected="True"/>
@@ -66,34 +69,36 @@
                 
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
-                        <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                        <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Enter a player limit" Text="{Binding ServerPlayerLimit, FallbackValue=100}" />
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                        <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, FallbackValue=11000}"/>
                     </StackPanel>
                 </Grid>
                 
-                <!-- TODO: Fix Spacing and alignment here. Each row (grid) is supposed to be spaced apart by 31 pixels -->
                 <StackPanel>
-                    <TextBlock Text="OPTIONS" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 25.5" />
+                    <TextBlock Text="OPTIONS" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 15" />
                     <StackPanel>
                         <StackPanel.Styles>
-                            <Style Selector="StackPanel > TextBlock">
-                                <Setter Property="Margin" Value="0 0 0 11"/>
+                            <Style Selector="StackPanel > Grid">
+                                <Setter Property="Margin" Value="0 0 0 20"/>
+                            </Style>
+                            <Style Selector="Grid > TextBlock">
                                 <Setter Property="FontSize" Value="16"/>
                                 <Setter Property="FontWeight" Value="400"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
                             </Style>
                         </StackPanel.Styles> 
                         <Grid>
                             <TextBlock Text="Enable auto port forwarding"/>
-                            <CheckBox Classes="switch" IsChecked="True"  HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="True" HorizontalAlignment="Right"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Allow LAN Discovery"/>
-                            <CheckBox Classes="switch"  HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" HorizontalAlignment="Right"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Enable Commands"/>
