@@ -81,11 +81,8 @@
                 
                 <StackPanel>
                     <TextBlock Text="OPTIONS" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 15" />
-                    <StackPanel>
+                    <StackPanel Spacing="20">
                         <StackPanel.Styles>
-                            <Style Selector="StackPanel > Grid">
-                                <Setter Property="Margin" Value="0 0 0 20"/>
-                            </Style>
                             <Style Selector="Grid > TextBlock">
                                 <Setter Property="FontSize" Value="16"/>
                                 <Setter Property="FontWeight" Value="400"/>
@@ -104,6 +101,31 @@
                             <TextBlock Text="Enable Commands"/>
                             <CheckBox Classes="switch" IsChecked="True" HorizontalAlignment="Right"/>
                         </Grid>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel>
+                    <TextBlock Text="ADVANCED" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 20" />
+                    <StackPanel Spacing="20">
+                        <StackPanel.Styles>
+                            <Style Selector="Button">
+                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="FontWeight" Value="400"/>
+                            </Style>
+                        </StackPanel.Styles> 
+                        
+                        <Button Classes="textimage"
+                                design:NitroxAttached.Image="/Assets/Images/world-manager/window-external-2x.png"
+                                design:NitroxAttached.Text="Open world folder"/>
+                        
+                        <Button Classes="textimage"
+                                design:NitroxAttached.Image="/Assets/Images/world-manager/export-2x.png"
+                                design:NitroxAttached.Text="Import backup"/>
+                        
+                        <Button Classes="textimage" 
+                                design:NitroxAttached.Image="/Assets/Images/world-manager/delete-2x.png"
+                                design:NitroxAttached.Text="Delete server" Foreground="#ec1c24"/>
+                        
                     </StackPanel>
                 </StackPanel>
                 
