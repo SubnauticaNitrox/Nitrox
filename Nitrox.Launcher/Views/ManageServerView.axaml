@@ -8,14 +8,16 @@
              xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
-    <StackPanel VerticalAlignment="Stretch" Classes="form">
+    <Grid RowDefinitions="Auto,*">
         
-        <Button Background="Transparent" Command="{Binding BackCommand}">
-            <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
-        </Button>
-        <TextBlock Classes="header" Text="{Binding ServerName}" />
-
-        <ScrollViewer VerticalScrollBarVisibility="Auto"> <!-- TODO: Fix Scroll bar functionality -->
+        <StackPanel Classes="form" Margin="0 0 0 26">
+            <Button Background="Transparent" Command="{Binding BackCommand}">
+                <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
+            </Button>
+            <TextBlock Classes="header" Text="{Binding ServerName}" />
+        </StackPanel>
+        
+        <ScrollViewer Grid.Row="1">
             <StackPanel VerticalAlignment="Stretch">
                 <StackPanel.Styles>
                     <Style Selector="ScrollViewer > StackPanel > StackPanel, ScrollViewer > StackPanel > Grid">
@@ -135,5 +137,5 @@
                 
             </StackPanel>
         </ScrollViewer>
-    </StackPanel>
+    </Grid>
 </UserControl>

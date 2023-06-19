@@ -169,4 +169,5 @@
     <StyleInclude Source="/Styles/Theme/CheckBoxStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/NavigationStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/RadioButtonGroupStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/ScrollViewerStyle.axaml" />
 </Styles>
