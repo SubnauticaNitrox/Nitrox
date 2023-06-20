@@ -6,23 +6,61 @@
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:models="clr-namespace:Nitrox.Launcher.Models"
              xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
+             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*,Auto">
         
         <StackPanel Classes="form" Margin="0 0 0 26">
             <Button Background="Transparent" Command="{Binding BackCommand}">
                 <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
             </Button>
+            
+            <StackPanel Width="223" Orientation="Horizontal" HorizontalAlignment="Left" Classes="description" Margin="0 0 0 10">
+                <StackPanel.Styles>
+                    <Style Selector="StackPanel.description > :is(Control)">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="6 0" />
+                    </Style>
+                    <Style Selector="StackPanel.description > :is(Control):nth-child(1)">
+                        <Setter Property="Margin" Value="0 0 6 0" />
+                    </Style>
+                    <Style Selector="StackPanel.description > :is(Control):nth-last-child(1)">
+                        <Setter Property="Margin" Value="6 0 0 0" />
+                    </Style>
+                    <Style Selector="Ellipse">
+                        <Setter Property="Height" Value="6" />
+                        <Setter Property="Width" Value="6" />
+                    </Style>
+                    <Style Selector="TextBlock">
+                        <Setter Property="Opacity" Value="0.5" />
+                    </Style>
+                </StackPanel.Styles>
+                <Panel>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding ServerIsOnline}">
+                        <Ellipse Margin="0 0 6 0" Fill="#38C149" />
+                        <TextBlock IsVisible="{Binding ServerIsOnline}" Text="Online" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !ServerIsOnline}">
+                        <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
+                        <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
+                    </StackPanel>
+                </Panel>
+                <TextBlock Text="{Binding ServerGameMode, Converter={converters:ToStringConverter}}" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ServerPlayerCount}" />
+                    <TextBlock Text="/" />
+                    <TextBlock Text="{Binding ServerPlayerLimit}" />
+                    <TextBlock Margin="6 0 0 0" Text="playing" />
+                </StackPanel>
+            </StackPanel>
+            
             <TextBlock Classes="header" Text="{Binding ServerName}" />
         </StackPanel>
         
         <ScrollViewer Grid.Row="1">
-            <StackPanel VerticalAlignment="Stretch">
+            <StackPanel VerticalAlignment="Stretch" Spacing="42">
                 <StackPanel.Styles>
-                    <Style Selector="ScrollViewer > StackPanel > StackPanel, ScrollViewer > StackPanel > Grid">
-                        <Setter Property="Margin" Value="0 0 0 42"/>
-                    </Style>
                     <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
                         <Setter Property="Margin" Value="0 0 0 11"/>
                     </Style>
@@ -52,19 +90,22 @@
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
-                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                            <ComboBoxItem Content="Player" IsSelected="True"/>
-                            <ComboBoxItem Content="Operator"/>
-                            <ComboBoxItem Content="Admin"/>
+                        <!-- TODO: Might need to use converters here -->
+                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding ServerDefaultPerms}">
+                            <ComboBoxItem Content="Player" Tag="PLAYER"/>
+                            <ComboBoxItem Content="Operator" Tag="OPERATOR"/>
+                            <ComboBoxItem Content="Admin" Tag="ADMIN"/>
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="AUTO SAVE INTERVAL" FontSize="10" Opacity=".5" FontWeight="700" />
-                        <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch">
-                            <ComboBoxItem Content="60s"/>
-                            <ComboBoxItem Content="120s" IsSelected="True"/>
-                            <ComboBoxItem Content="180s"/>
-                            <ComboBoxItem Content="240s"/>
+                        <!-- TODO: Handle values other than the preset ones by binding data directly to the ComboBox's TextBox -->
+                        <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding ServerAutoSaveInterval}">
+                            <ComboBoxItem Content="60s" Tag="60"/>
+                            <ComboBoxItem Content="120s" Tag="120"/>
+                            <ComboBoxItem Content="240s" Tag="240"/>
+                            <ComboBoxItem Content="300s" Tag="300"/>
+                            <ComboBoxItem Content="600s" Tag="600"/>
                         </ComboBox>
                     </StackPanel>
                 </Grid>
@@ -93,15 +134,15 @@
                         </StackPanel.Styles> 
                         <Grid>
                             <TextBlock Text="Enable auto port forwarding"/>
-                            <CheckBox Classes="switch" IsChecked="True" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding AutoPortForward}" HorizontalAlignment="Right"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Allow LAN Discovery"/>
-                            <CheckBox Classes="switch" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding AllowLanDiscovery}" HorizontalAlignment="Right"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Enable Commands"/>
-                            <CheckBox Classes="switch" IsChecked="True" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding EnableCommands}" HorizontalAlignment="Right"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
@@ -134,6 +175,22 @@
                         
                     </StackPanel>
                 </StackPanel>
+                
+                <Border Background="#151516" CornerRadius="12" Height="96">
+                    <Grid ColumnDefinitions="*,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="26 0">
+                            <RadioButton IsChecked="True" >Docked console</RadioButton>
+                            <RadioButton >External console</RadioButton>
+                        </StackPanel>
+                        
+                        <Button Grid.Column="1" Classes="nitrox abort big" IsVisible="{Binding ServerIsOnline}"
+                                VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="25 17"
+                                design:NitroxAttached.Text="STOP SERVER" Command="{Binding Server.StopCommand}" /> <!-- Sort of works -->
+                        <Button Grid.Column="1" Classes="nitrox primary big" IsVisible="{Binding !ServerIsOnline}"
+                                VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="25 17"
+                                design:NitroxAttached.Text="START SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" Command="{Binding Server.StartCommand}" /> <!-- Sort of works -->
+                    </Grid>
+                </Border>
                 
             </StackPanel>
         </ScrollViewer>
