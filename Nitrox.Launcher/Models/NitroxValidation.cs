@@ -17,8 +17,9 @@ public static class NitroxValidation
 
     public static void BindValidation(this ManageServerViewModel viewModel)
     {
-        viewModel.ValidationRule(vm => vm.ServerName, IsNotNullAndWhiteSpace, $"{nameof(viewModel.ServerName)} shouldn't be empty.");
-        viewModel.ValidationRule(vm => vm.ServerName, IsValidFileName, $"{nameof(viewModel.ServerName)} shouldn't contain invalid characters.");
+        // TODO: Fix these (they stopped working)
+        viewModel.ValidationRule(vm => vm.Server.Name, IsNotNullAndWhiteSpace, $"{nameof(viewModel.Server.Name)} shouldn't be empty.");
+        viewModel.ValidationRule(vm => vm.Server.Name, IsValidFileName, $"{nameof(viewModel.Server.Name)} shouldn't contain invalid characters.");
     }
 
     private static bool IsValidFileName(string s) => s == null || s.All(c => !invalidPathCharacters.Contains(c));

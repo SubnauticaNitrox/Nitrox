@@ -9,16 +9,20 @@ namespace Nitrox.Launcher.Models;
 /// </summary>
 public class ServerEntry : ReactiveObject
 {
+    // Default values
     private bool isOnline;
     private string name;
     private string password;
     private string seed;
-    private PlayerPermissions playerPermissions;
-    private int autoSaveInterval;
-    private int port;
-    private bool autoPortForward;
-    private bool allowLanDiscovery;
-    private bool allowCommands;
+    private GameMode gamemode = GameMode.SURVIVAL;
+    private PlayerPermissions playerPermissions = PlayerPermissions.PLAYER;
+    private int autoSaveInterval = 120;
+    private int players;
+    private int maxPlayers = 100;
+    private int port = 11000;
+    private bool autoPortForward = true;
+    private bool allowLanDiscovery = true;
+    private bool allowCommands = true;
     
     public bool IsOnline
     {
@@ -40,40 +44,51 @@ public class ServerEntry : ReactiveObject
         get => seed;
         set => this.RaiseAndSetIfChanged(ref seed, value);
     }
-    public GameMode GameMode { get; init; }
+    public GameMode GameMode
+    {
+        get => gamemode;
+        set => this.RaiseAndSetIfChanged(ref gamemode, value);
+    }
     public PlayerPermissions DefaultPlayerPerm
     {
-        get => playerPermissions = PlayerPermissions.PLAYER;
+        get => playerPermissions;
         set => this.RaiseAndSetIfChanged(ref playerPermissions, value);
     }
     public int AutoSaveInterval
     {
-        get => autoSaveInterval = 120;
+        get => autoSaveInterval;
         set => this.RaiseAndSetIfChanged(ref autoSaveInterval, value);
     }
-    public int Players { get; init; }
-    public int MaxPlayers { get; init; } = 100;
+    public int Players
+    {
+        get => players;
+        set => this.RaiseAndSetIfChanged(ref players, value);
+    }
+    public int MaxPlayers
+    {
+        get => maxPlayers;
+        set => this.RaiseAndSetIfChanged(ref maxPlayers, value);
+    }
     public int Port
     {
-        get => port = 11000;
+        get => port;
         set => this.RaiseAndSetIfChanged(ref port, value);
     }
     public bool AutoPortForward
     {
-        get => autoPortForward = true;
+        get => autoPortForward;
         set => this.RaiseAndSetIfChanged(ref autoPortForward, value);
     }
     public bool AllowLanDiscovery
     {
-        get => allowLanDiscovery = true;
+        get => allowLanDiscovery;
         set => this.RaiseAndSetIfChanged(ref allowLanDiscovery, value);
     }
     public bool AllowCommands
     {
-        get => allowCommands = true;
+        get => allowCommands;
         set => this.RaiseAndSetIfChanged(ref allowCommands, value);
     }
-    public string SavePath { get; init; }
     public ICommand StartCommand { get; init; }
     public ICommand StopCommand { get; init; }
     public ICommand ManageCommand { get; init; }
