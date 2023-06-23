@@ -23,30 +23,42 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
-            SetPlayerPermissions(packet.Permissions);
-            waitScreenItem.SetProgress(0.16f);
+            LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+
+            SetPlayerPermissions(localPlayer, packet.Permissions);
+            waitScreenItem.SetProgress(0.14f);
+            yield return null;
+
+            SetPlayerIntroCinematicMode(localPlayer, packet.IntroCinematicMode);
+            waitScreenItem.SetProgress(0.28f);
             yield return null;
 
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
-            waitScreenItem.SetProgress(0.33f);
+            waitScreenItem.SetProgress(0.42f);
             yield return null;
 
             yield return AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            waitScreenItem.SetProgress(0.50f);
+            waitScreenItem.SetProgress(0.56f);
             yield return null;
 
             SetPlayerStats(packet.PlayerStatsData);
-            waitScreenItem.SetProgress(0.66f);
+            waitScreenItem.SetProgress(0.7f);
             yield return null;
 
             SetPlayerGameMode(packet.GameMode);
-            waitScreenItem.SetProgress(0.83f);
+            waitScreenItem.SetProgress(0.84f);
             yield return null;
         }
 
-        private void SetPlayerPermissions(Perms permissions)
+        private void SetPlayerPermissions(LocalPlayer localPlayer, Perms permissions)
         {
-            NitroxServiceLocator.LocateService<LocalPlayer>().Permissions = permissions;
+            localPlayer.Permissions = permissions;
+        }
+
+        private void SetPlayerIntroCinematicMode(LocalPlayer localPlayer, IntroCinematicMode introCinematicMode)
+        {
+            localPlayer.IntroCinematicMode = introCinematicMode;
+            Log.Info($"Received initial sync player IntroCinematicMode: {introCinematicMode}");
         }
 
         private void SetPlayerGameObjectId(NitroxId id)

@@ -31,6 +31,7 @@ namespace NitroxModel.Packets
         public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
+        public IntroCinematicMode IntroCinematicMode { get; }
         public SubnauticaPlayerPreferences Preferences { get; }
         public TimeData TimeData { get; }
 
@@ -52,6 +53,7 @@ namespace NitroxModel.Packets
             IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms perms,
+            IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData)
         {
@@ -73,6 +75,7 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
             Permissions = perms;
+            IntroCinematicMode = introCinematicMode;
             Preferences = preferences;
             TimeData = timeData;
         }
@@ -97,6 +100,7 @@ namespace NitroxModel.Packets
             List<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms permissions,
+            IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData)
         {
@@ -118,6 +122,7 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships;
             GameMode = gameMode;
             Permissions = permissions;
+            IntroCinematicMode = introCinematicMode;
             Preferences = preferences;
             TimeData = timeData;
         }

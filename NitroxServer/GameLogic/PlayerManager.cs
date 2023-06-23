@@ -115,7 +115,7 @@ namespace NitroxServer.GameLogic
             bool hasSeenPlayerBefore = player != null;
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
-            SetIntroCinematicMode.IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? SetIntroCinematicMode.IntroCinematicMode.COMPLETED : SetIntroCinematicMode.IntroCinematicMode.LOADING;
+            IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
 
             // TODO: At some point, store the muted state of a player
             PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, introCinematicMode, playerSettings, false);
@@ -324,7 +324,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        private IEnumerable<Player> ConnectedPlayers()
+        public IEnumerable<Player> ConnectedPlayers()
         {
             return assetsByConnection.Values
                 .Where(assetPackage => assetPackage.Player != null)

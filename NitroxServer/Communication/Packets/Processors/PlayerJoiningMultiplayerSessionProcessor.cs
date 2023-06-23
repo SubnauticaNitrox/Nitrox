@@ -85,6 +85,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 simulations,
                 world.GameMode,
                 player.Permissions,
+                wasBrandNewPlayer ? IntroCinematicMode.LOADING : IntroCinematicMode.COMPLETED,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
                 storyManager.GetTimeData()
             );

@@ -1,3 +1,4 @@
+#if DEBUG
 using System.Reflection;
 using HarmonyLib;
 using NitroxModel.Helper;
@@ -10,7 +11,7 @@ public class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IPersistent
 
     public static void Postfix(ref bool __result)
     {
-        //__result = true;
+        __result = false;
     }
 
     public override void Patch(Harmony harmony)
@@ -18,3 +19,4 @@ public class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IPersistent
         PatchPostfix(harmony, TARGET_METHOD);
     }
 }
+#endif

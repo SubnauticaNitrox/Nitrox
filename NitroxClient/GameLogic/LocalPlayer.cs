@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -37,6 +37,7 @@ namespace NitroxClient.GameLogic
         public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
         public Perms Permissions;
+        public IntroCinematicMode IntroCinematicMode;
 
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
         {
@@ -47,6 +48,7 @@ namespace NitroxClient.GameLogic
             playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
             bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
             Permissions = Perms.PLAYER;
+            IntroCinematicMode = IntroCinematicMode.NONE;
         }
 
         public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
