@@ -97,7 +97,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         }
 
         int serverPort = int.Parse(serverPortText);
-        MainMenuMultiplayerPanel.Main.CreateServerButton(serverNameText, serverHostText, serverPort);
+        MainMenuServerListPanel.Main.CreateServerButton(serverNameText, serverHostText, serverPort);
         ServerList.Instance.Add(new ServerList.Entry(serverNameText, serverHostText, serverPort));
         ServerList.Instance.Save();
         OnBack();
@@ -163,11 +163,11 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         }
         else
         {
-            selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuMultiplayerPanel.SelectedSprite;
+            selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuServerListPanel.SelectedSprite;
         }
 
         selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.black);
-        RuntimeManager.PlayOneShot(MainMenuMultiplayerPanel.HoverSound.path);
+        RuntimeManager.PlayOneShot(MainMenuServerListPanel.HoverSound.path);
     }
 
     public void DeselectItem()
@@ -184,7 +184,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         }
         else
         {
-            selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuMultiplayerPanel.NormalSprite;
+            selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuServerListPanel.NormalSprite;
         }
 
         selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.white);

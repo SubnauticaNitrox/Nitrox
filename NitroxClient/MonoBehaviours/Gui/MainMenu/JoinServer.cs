@@ -87,7 +87,7 @@ public class JoinServer : MonoBehaviour
     private void Update()
     {
         if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS ||
-            gameObject.GetComponent<MainMenuNotification>())
+            gameObject.GetComponent<JoinServerNotification>())
         {
             return;
         }
@@ -258,16 +258,16 @@ public class JoinServer : MonoBehaviour
 
     private void NotifyUser(string notificationMessage, Action continuationAction = null)
     {
-        if (gameObject.GetComponent<MainMenuNotification>())
+        if (gameObject.GetComponent<JoinServerNotification>())
         {
             return;
         }
 
-        MainMenuNotification notificationDialog = gameObject.AddComponent<MainMenuNotification>();
+        JoinServerNotification notificationDialog = gameObject.AddComponent<JoinServerNotification>();
         notificationDialog.ShowNotification(notificationMessage, () =>
         {
             continuationAction?.Invoke();
-            Destroy(gameObject.GetComponent<MainMenuNotification>(), 0.0001f);
+            Destroy(gameObject.GetComponent<JoinServerNotification>(), 0.0001f);
         });
     }
 

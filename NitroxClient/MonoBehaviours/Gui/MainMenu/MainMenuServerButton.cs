@@ -55,10 +55,10 @@ public class MainMenuServerButton : MonoBehaviour
         ServerList.Instance.RemoveAt(transform.GetSiblingIndex() - 1);
         ServerList.Instance.Save();
 
-        int scrollIndex = MainMenuMultiplayerPanel.Main.GetSelectedIndex();
-        if (GameInput.IsPrimaryDeviceGamepad() && !MainMenuMultiplayerPanel.Main.SelectItemInYDirection(scrollIndex, 1))
+        int scrollIndex = MainMenuServerListPanel.Main.GetSelectedIndex();
+        if (GameInput.IsPrimaryDeviceGamepad() && !MainMenuServerListPanel.Main.SelectItemInYDirection(scrollIndex, 1))
         {
-            MainMenuMultiplayerPanel.Main.SelectItemInYDirection(scrollIndex, -1);
+            MainMenuServerListPanel.Main.SelectItemInYDirection(scrollIndex, -1);
         }
 
         Destroy(gameObject);
@@ -66,22 +66,22 @@ public class MainMenuServerButton : MonoBehaviour
 
     public async void OnJoinButtonClicked()
     {
-        if (MainMenuMultiplayerPanel.Main.IsJoining)
+        if (MainMenuServerListPanel.Main.IsJoining)
         {
             // Do not attempt to join multiple servers.
             return;
         }
 
-        MainMenuMultiplayerPanel.Main.IsJoining = true;
+        MainMenuServerListPanel.Main.IsJoining = true;
 
-        await OpenJoinServerMenuAsync(joinIp, joinPort).ContinueWith(_ => { MainMenuMultiplayerPanel.Main.IsJoining = false; });
+        await OpenJoinServerMenuAsync(joinIp, joinPort).ContinueWith(_ => { MainMenuServerListPanel.Main.IsJoining = false; });
     }
 
     public static async System.Threading.Tasks.Task OpenJoinServerMenuAsync(string serverIp, int serverPort)
     {
-        if (!MainMenuMultiplayerPanel.Main)
+        if (!MainMenuServerListPanel.Main)
         {
-            Log.Error("MainMenuMultiplayerPanel is not instantiated although OpenJoinServerMenuAsync is called.");
+            Log.Error("MainMenuServerListPanel is not instantiated although OpenJoinServerMenuAsync is called.");
             return;
         }
 
@@ -92,7 +92,7 @@ public class MainMenuServerButton : MonoBehaviour
             return;
         }
 
-        await MainMenuMultiplayerPanel.Main.JoinServer.ShowAsync(endpoint.Address.ToString(), endpoint.Port);
+        await MainMenuServerListPanel.Main.JoinServer.ShowAsync(endpoint.Address.ToString(), endpoint.Port);
     }
 
     private static IPEndPoint ResolveIPEndPoint(string serverIp, int serverPort)

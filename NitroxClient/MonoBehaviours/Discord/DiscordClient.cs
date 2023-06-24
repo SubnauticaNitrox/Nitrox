@@ -99,7 +99,7 @@ public class DiscordClient : MonoBehaviour
     {
         Log.Info("[Discord] Joining Server");
 
-        if (SceneManager.GetActiveScene().name != "StartScreen" || !MainMenuMultiplayerPanel.Main)
+        if (SceneManager.GetActiveScene().name != "StartScreen" || !MainMenuServerListPanel.Main)
         {
             Log.InGame(Language.main.Get("Nitrox_DiscordMultiplayerMenu"));
             Log.Warn("[Discord] Can't join a server outside of the main-menu.");

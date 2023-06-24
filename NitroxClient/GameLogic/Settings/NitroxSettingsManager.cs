@@ -21,9 +21,9 @@ public class NitroxSettingsManager
 
     /// <summary>
     /// Allows to create new settings
-    /// 
+    ///
     /// Available types : TOGGLE, SLIDER, LIST, BUTTON
-    /// 
+    ///
     /// <example>
     /// <para>Examples :</para>
     /// <code>
@@ -38,7 +38,7 @@ public class NitroxSettingsManager
         AddSetting("Nitrox_StreamerSettings", new Setting("Nitrox_HideIp", NitroxPrefs.HideIp, hide =>
         {
             NitroxPrefs.HideIp.Value = hide;
-            MainMenuMultiplayerPanel.Main.RefreshServerEntries();
+            MainMenuServerListPanel.Main.RefreshServerEntries();
         }));
 
         AddSetting("Nitrox_ResyncSettings", new Setting("Nitrox_ResyncBuildings", () =>
@@ -48,6 +48,7 @@ public class NitroxSettingsManager
                 BuildingHandler.Main.AskForResync();
             }
         }));
+                MainMenuServerListPanel.Main.RefreshServerEntries();
 
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));

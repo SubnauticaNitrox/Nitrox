@@ -10,9 +10,9 @@ using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
 
-public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver
+public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver
 {
-    public static MainMenuMultiplayerPanel Main;
+    public static MainMenuServerListPanel Main;
     public static Sprite NormalSprite;
     public static Sprite SelectedSprite;
     public static FMODAsset HoverSound;
