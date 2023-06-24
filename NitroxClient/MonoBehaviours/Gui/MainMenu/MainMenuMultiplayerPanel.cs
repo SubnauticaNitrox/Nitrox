@@ -13,21 +13,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
 public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver
 {
     public static MainMenuMultiplayerPanel Main;
+    public static Sprite NormalSprite;
+    public static Sprite SelectedSprite;
+    public static FMODAsset HoverSound;
 
     private GameObject multiplayerButtonRef;
-
-    private Sprite normalSprite;
-    private Sprite selectedSprite;
-    private FMODAsset hoverSound;
-
     private Transform serverAreaContent;
     private GameObject selectedServerItem;
 
     public JoinServer JoinServer { get; private set; }
-    public bool IsJoining{ get; set; }
+    public bool IsJoining { get; set; }
 
-
-    public void Setup(GameObject loadedMultiplayer, GameObject savedGamesRef)
+    public void Setup(GameObject savedGamesRef)
     {
         Main = this;
 
@@ -36,13 +33,14 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
         JoinServer = new GameObject("NitroxJoinServer").AddComponent<JoinServer>();
         JoinServer.Setup(savedGamesRef);
 
-        MainMenuLoadMenu loadMenu = loadedMultiplayer.GetComponentInChildren<MainMenuLoadMenu>();
-        normalSprite = loadMenu.normalSprite;
-        selectedSprite = loadMenu.selectedSprite;
-        hoverSound = loadMenu.hoverSound;
+        MainMenuLoadMenu loadMenu = savedGamesRef.GetComponentInChildren<MainMenuLoadMenu>();
+        NormalSprite = loadMenu.normalSprite;
+        SelectedSprite = loadMenu.selectedSprite;
+        HoverSound = loadMenu.hoverSound;
 
-        serverAreaContent = loadedMultiplayer.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
         multiplayerButtonRef = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
+        serverAreaContent = transform.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
+        serverAreaContent.gameObject.name = "ServerAreaContent";
 
         MainMenuLoadButton loadButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>();
         MainMenuServerButton.Setup(loadButtonRef);
@@ -72,7 +70,7 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
 
     public void OnBack()
     {
-        MainMenuAddServerWindow.HideAddServerWindow();
+        DeselectAllItems();
         MainMenuRightSide.main.OpenGroup("Home");
     }
 
@@ -93,9 +91,10 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
 
         if (selectedServerItem.gameObject.name == "NewServer")
         {
-            selectedServerItem.GetComponentInChildren<Button>().onClick.Invoke();
+            DeselectAllItems();
+            MainMenuRightSide.main.OpenGroup("MultiplayerCreateServer");
         }
-        else if(selectedServerItem.TryGetComponent(out MainMenuServerButton serverButton))
+        else if (selectedServerItem.TryGetComponent(out MainMenuServerButton serverButton))
         {
             serverButton.OnJoinButtonClicked();
         }
@@ -123,9 +122,9 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
 
         UIUtils.ScrollToShowItemInCenter(selectedServerItem.transform);
 
-        selectedServerItem.transform.GetChild(0).GetComponent<Image>().sprite = selectedSprite;
+        selectedServerItem.transform.GetChild(0).GetComponent<Image>().sprite = SelectedSprite;
         selectedServerItem.GetComponentInChildren<TextMeshProUGUI>().color = Color.black;
-        RuntimeManager.PlayOneShot(this.hoverSound.path);
+        RuntimeManager.PlayOneShot(HoverSound.path);
     }
 
     public void DeselectItem()
@@ -135,11 +134,19 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
             return;
         }
 
-        selectedServerItem.transform.GetChild(0).GetComponent<Image>().sprite = normalSprite;
+        selectedServerItem.transform.GetChild(0).GetComponent<Image>().sprite = NormalSprite;
         selectedServerItem.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
         selectedServerItem = null;
     }
 
+    public void DeselectAllItems()
+    {
+        foreach (Transform child in serverAreaContent)
+        {
+            child.GetChild(0).GetComponent<Image>().sprite = NormalSprite;
+            child.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+        }
+    }
 
     public bool SelectFirstItem()
     {
@@ -160,7 +167,6 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
         return false;
     }
 
-
     public bool SelectItemInDirection(int dirX, int dirY)
     {
         if (selectedServerItem)
@@ -176,13 +182,14 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
     public bool SelectItemInYDirection(int selectedIndex, int dirY)
     {
         int dir = dirY > 0 ? 1 : -1;
-        for (int newIndex =  selectedIndex + dir; newIndex >= 0 && newIndex < serverAreaContent.childCount; newIndex += dir)
+        for (int newIndex = selectedIndex + dir; newIndex >= 0 && newIndex < serverAreaContent.childCount; newIndex += dir)
         {
             if (SelectItemByIndex(newIndex))
             {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -195,15 +202,6 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
         }
 
         return false;
-    }
-
-
-
-
-
-    private void OnGUI()
-    {
-        MainMenuAddServerWindow.OnExternalGUI();
     }
 
     private void LoadSavedServers()
@@ -250,7 +248,13 @@ public class MainMenuMultiplayerPanel : MonoBehaviour, uGUI_INavigableIconGrid, 
 
         Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
         multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-        multiplayerButtonButton.onClick.AddListener(MainMenuAddServerWindow.ShowAddServerWindow);
+        multiplayerButtonButton.onClick.AddListener(OpenAddServerGroup);
+    }
+
+    public void OpenAddServerGroup()
+    {
+        DeselectAllItems();
+        MainMenuRightSide.main.OpenGroup("MultiplayerCreateServer");
     }
 
     public void RefreshServerEntries()

@@ -48,18 +48,28 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             showLoadedMultiplayerButton.onClick.AddListener(ShowMultiplayerMenu);
 
             GameObject savedGamesRef = rightSide.gameObject.RequireGameObject("SavedGames");
-            GameObject loadedMultiplayer = Instantiate(savedGamesRef, rightSide.transform);
-            loadedMultiplayer.name = "Multiplayer";
-            Transform header = loadedMultiplayer.RequireTransform("Header");
-            header.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Multiplayer");
-            header.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
-            Destroy(loadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
-            Destroy(loadedMultiplayer.GetComponent<MainMenuLoadPanel>());
-            Destroy(loadedMultiplayer.GetComponentInChildren<MainMenuLoadMenu>());
 
-            loadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>().Setup(loadedMultiplayer, savedGamesRef);
+            GameObject CloneMainMenuLoadPanel(string panelName, string translationKey)
+            {
+                GameObject menuPanel = Instantiate(savedGamesRef, rightSide.transform);
+                menuPanel.name = panelName;
+                Transform header = menuPanel.RequireTransform("Header");
+                header.GetComponent<TextMeshProUGUI>().text = Language.main.Get(translationKey);
+                header.GetComponent<TranslationLiveUpdate>().translationKey = translationKey;
+                Destroy(menuPanel.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
+                Destroy(menuPanel.GetComponent<MainMenuLoadPanel>());
+                Destroy(menuPanel.GetComponentInChildren<MainMenuLoadMenu>());
 
-            rightSide.groups.Add(loadedMultiplayer.GetComponent<MainMenuGroup>());
+                rightSide.groups.Add(menuPanel.GetComponent<MainMenuGroup>());
+                return menuPanel;
+            }
+
+            GameObject serverList = CloneMainMenuLoadPanel("MultiplayerServerList", "Nitrox_Multiplayer");
+            serverList.AddComponent<MainMenuMultiplayerPanel>().Setup(savedGamesRef);
+
+            GameObject serverCreate = CloneMainMenuLoadPanel("MultiplayerCreateServer", "Nitrox_AddServer");
+            serverCreate.AddComponent<MainMenuCreateServerPanel>().Setup(savedGamesRef);
+
 
 #if RELEASE
             // Remove singleplayer button because SP is broken when Nitrox is injected. TODO: Allow SP to work and co-exist with Nitrox MP in the future
@@ -69,7 +79,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void ShowMultiplayerMenu()
         {
-            rightSide.OpenGroup("Multiplayer");
+            rightSide.OpenGroup("MultiplayerServerList");
         }
     }
 }
