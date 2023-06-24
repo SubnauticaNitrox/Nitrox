@@ -91,7 +91,6 @@ public class ServerEntry : ReactiveObject
     }
     public ICommand StartCommand { get; init; }
     public ICommand StopCommand { get; init; }
-    public ICommand ManageCommand { get; init; }
 
     public ServerEntry()
     {

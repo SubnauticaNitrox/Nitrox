@@ -11,7 +11,7 @@
         <StackPanel VerticalAlignment="Stretch">
             <TextBlock Classes="header" Text="Servers" />
             <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
-            <TextBlock>Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.</TextBlock>
+            <TextBlock>Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the <TextBlock Foreground="#007BFF"Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.</TextBlock>
             <ItemsControl ItemsSource="{Binding Servers}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -50,7 +50,7 @@
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
                                     <Button Classes="nitrox abort" IsVisible="{Binding IsOnline}" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
                                     <Button Classes="nitrox" IsVisible="{Binding !IsOnline}" design:NitroxAttached.Text="Start" Command="{Binding StartCommand}" />
-                                    <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage" Command="{Binding ManageCommand}" CommandParameter="{Binding}" />
+                                    <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage" Command="{Binding DataContext.ManageServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
                                 </StackPanel>
                             </DockPanel>
                         </Border>

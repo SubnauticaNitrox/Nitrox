@@ -37,25 +37,25 @@
                     </Style>
                 </StackPanel.Styles>
                 <Panel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding Server.IsOnline}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding ServerIsOnline}">
                         <Ellipse Margin="0 0 6 0" Fill="#38C149" />
-                        <TextBlock IsVisible="{Binding Server.IsOnline}" Text="Online" />
+                        <TextBlock IsVisible="{Binding ServerIsOnline}" Text="Online" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !Server.IsOnline}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !ServerIsOnline}">
                         <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
-                        <TextBlock IsVisible="{Binding !Server.IsOnline}" Text="Offline" />
+                        <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
                     </StackPanel>
                 </Panel>
-                <TextBlock Text="{Binding Server.GameMode, Converter={converters:ToStringConverter}}" />
+                <TextBlock Text="{Binding ServerGameMode, Converter={converters:ToStringConverter}}" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Server.Players}" />
+                    <TextBlock Text="{Binding ServerPlayers}" />
                     <TextBlock Text="/" />
-                    <TextBlock Text="{Binding Server.MaxPlayers}" />
+                    <TextBlock Text="{Binding ServerMaxPlayers}" />
                     <TextBlock Margin="6 0 0 0" Text="playing" />
                 </StackPanel>
             </StackPanel>
             
-            <TextBlock Classes="header" Text="{Binding Server.Name}" />
+            <TextBlock Classes="header" Text="{Binding ServerName}" />
         </StackPanel>
         
         <ScrollViewer Grid.Row="1">
@@ -69,38 +69,40 @@
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Server.Name}" />
+                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}" />
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Server password" Text="{Binding Server.Password}" PasswordChar="●"/>
+                        <TextBox Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"/>
                     </StackPanel>
                 </Grid>
         
                 <StackPanel>
                     <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" SelectedItem="{Binding Server.GameMode, Mode=TwoWay}" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" SelectedItem="{Binding ServerGameMode, Mode=TwoWay}" />
                 </StackPanel>
                 
                 <Grid ColumnDefinitions="*,30,*,30,*">
                     <StackPanel>
                         <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Server seed" Text="{Binding Server.Seed}" />
+                        <TextBox Watermark="Server seed" Text="{Binding ServerSeed}" MaxLength="10" />
                     </StackPanel>
+                    
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
                         <!-- TODO: Might need to use converters here -->
-                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding Server.DefaultPlayerPerm}">
+                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding ServerDefaultPlayerPerm}">
                             <ComboBoxItem Content="Player" Tag="PLAYER"/>
                             <ComboBoxItem Content="Operator" Tag="OPERATOR"/>
                             <ComboBoxItem Content="Admin" Tag="ADMIN"/>
                         </ComboBox>
                     </StackPanel>
+                    
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="AUTO SAVE INTERVAL" FontSize="10" Opacity=".5" FontWeight="700" />
                         <!-- TODO: Handle values other than the preset ones by binding data directly to the ComboBox's TextBox -->
-                        <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding Server.AutoSaveInterval}">
+                        <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding ServerAutoSaveInterval}">
                             <ComboBoxItem Content="60s" Tag="60"/>
                             <ComboBoxItem Content="120s" Tag="120"/>
                             <ComboBoxItem Content="240s" Tag="240"/>
@@ -113,12 +115,12 @@
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Enter a player limit" Text="{Binding Server.MaxPlayers, FallbackValue=100}" />
+                        <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, FallbackValue=100}" />
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Enter a port number" Text="{Binding Server.Port, FallbackValue=11000}"/>
+                        <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, FallbackValue=11000}"/>
                     </StackPanel>
                 </Grid>
                 
@@ -134,15 +136,15 @@
                         </StackPanel.Styles> 
                         <Grid>
                             <TextBlock Text="Enable auto port forwarding"/>
-                            <CheckBox Classes="switch" IsChecked="{Binding Server.AutoPortForward}" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding ServerAutoPortForward}" HorizontalAlignment="Right"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Allow LAN Discovery"/>
-                            <CheckBox Classes="switch" IsChecked="{Binding Server.AllowLanDiscovery}" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowLanDiscovery}" HorizontalAlignment="Right"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Enable Commands"/>
-                            <CheckBox Classes="switch" IsChecked="{Binding Server.AllowCommands}" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowCommands}" HorizontalAlignment="Right"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
@@ -183,12 +185,12 @@
                             <RadioButton >External console</RadioButton>
                         </StackPanel>
                         
-                        <Button Grid.Column="1" Classes="nitrox abort big" IsVisible="{Binding Server.IsOnline}"
+                        <Button Grid.Column="1" Classes="nitrox abort big" IsVisible="{Binding ServerIsOnline}"
                                 VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="25 17"
-                                design:NitroxAttached.Text="STOP SERVER" Command="{Binding Server.StopCommand}" /> <!-- Sort of works -->
-                        <Button Grid.Column="1" Classes="nitrox primary big" IsVisible="{Binding !Server.IsOnline}"
+                                design:NitroxAttached.Text="STOP SERVER" Command="{Binding Server.StopCommand}" />
+                        <Button Grid.Column="1" Classes="nitrox primary big" IsVisible="{Binding !ServerIsOnline}"
                                 VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="25 17"
-                                design:NitroxAttached.Text="START SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" Command="{Binding Server.StartCommand}" /> <!-- Sort of works -->
+                                design:NitroxAttached.Text="START SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" Command="{Binding Server.StartCommand}" />
                     </Grid>
                 </Border>
                 
