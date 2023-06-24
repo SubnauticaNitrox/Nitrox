@@ -55,6 +55,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             header.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
             Destroy(loadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
             Destroy(loadedMultiplayer.GetComponent<MainMenuLoadPanel>());
+            Destroy(loadedMultiplayer.GetComponentInChildren<MainMenuLoadMenu>());
 
             loadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>().Setup(loadedMultiplayer, savedGamesRef);
 

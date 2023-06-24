@@ -109,7 +109,13 @@ public class DiscordClient : MonoBehaviour
         string[] splitSecret = secret.Split(':');
         string ip = string.Join(":", splitSecret.Take(splitSecret.Length - 1));
         string port = splitSecret.Last();
-        MainMenuMultiplayerPanel.OpenJoinServerMenuAsync(ip, port).ContinueWithHandleError();
+
+        if(int.TryParse(port, out int portInt))
+        {
+            Log.Error($"[Discord] Port from received secret can't be parsed as int: {port}");
+            return;
+        }
+        MainMenuServerButton.OpenJoinServerMenuAsync(ip, portInt).ContinueWithHandleError(true);
     }
 
     private void ActivityJoinRequest(ref User user)
