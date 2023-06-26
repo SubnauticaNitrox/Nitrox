@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -33,7 +34,8 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             yield break;
         }
         bool isWaterPark = entity.IsWaterPark;
-        
+
+        List<Entity> batch = new();
         foreach (Entity childEntity in entity.ChildEntities)
         {
             switch(childEntity)
@@ -41,25 +43,28 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
                 case InventoryItemEntity:
                 case InstalledModuleEntity:
                     Log.Debug($"Spawning child entity: {childEntity}");
-                    yield return entities.SpawnAsync(childEntity);
+                    batch.Add(childEntity);
                     break;
 
                 case PlanterEntity:
                     foreach (InventoryItemEntity childItemEntity in childEntity.ChildEntities.OfType<InventoryItemEntity>())
                     {
                         Log.Debug($"Spawning planter child item entity: {childItemEntity}");
-                        yield return entities.SpawnAsync(childItemEntity);
+                        batch.Add(childItemEntity);
                     }
                     break;
 
                 case WorldEntity:
                     if (isWaterPark)
                     {
-                        yield return entities.SpawnAsync(childEntity);
+                        batch.Add(childEntity);
                     }
                     break;
             }
         }
+
+        yield return entities.SpawnBatchAsync(batch, true);
+
         if (isWaterPark)
         {
             foreach (Planter planter in result.Get().Value.GetComponentsInChildren<Planter>(true))

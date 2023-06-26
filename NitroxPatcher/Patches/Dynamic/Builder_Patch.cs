@@ -99,7 +99,18 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         BaseGhost baseGhost = Builder.ghostModel.GetComponent<BaseGhost>();
-        if (baseGhost.targetBase && NitroxEntity.TryGetIdFrom(baseGhost.targetBase.gameObject, out NitroxId parentId) &&
+        GameObject parentBase;
+        if (baseGhost && baseGhost.targetBase)
+        {
+            parentBase = baseGhost.targetBase.gameObject;
+        }
+        // In case it's a simple Constructable
+        else
+        {
+            parentBase = Builder.placementTarget;
+        }
+
+        if (parentBase && NitroxEntity.TryGetIdFrom(parentBase, out NitroxId parentId) &&
             BuildingTester.Main.EnsureTracker(parentId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
         {
             Builder.canPlace = false;
@@ -335,6 +346,8 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             
             BuildingTester.Main.EnsureTracker(parentEntity.Id).LocalOperations++;
             int operationId = BuildingTester.Main.GetCurrentOperationIdOrDefault(parentEntity.Id);
+
+            // TODO: In case of rebuilt interior piece which contained an inventory, send the inventory in the newly created entity
 
             UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");

@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
@@ -12,7 +16,7 @@ namespace NitroxClient.GameLogic.Spawning.Bases;
 public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
 {
     private readonly Entities entities;
-    
+
     public ModuleEntitySpawner(Entities entities)
     {
         this.entities = entities;
@@ -30,11 +34,26 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         Transform parent = BuildingTester.GetParentOrGlobalRoot(entity.ParentId);
 
         yield return NitroxBuild.RestoreModule(parent, entity, result);
-        foreach (InventoryItemEntity childItemEntity in entity.ChildEntities.OfType<InventoryItemEntity>())
+
+        if (!result.Get().HasValue)
         {
-            Log.Debug($"Spawning inventory item {childItemEntity.Id}");
-            yield return entities.SpawnAsync(childItemEntity);
+            Log.Error($"Module couldn't be spawned {entity}");
+            yield break;
         }
+        GameObject moduleObject = result.Get().Value;
+        Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(moduleObject);
+        if (!opContainer.HasValue)
+        {
+            yield break;
+        }
+
+        DateTimeOffset beginTime = DateTimeOffset.Now;
+        List<Entity> rootEntitiesToSpawn = entity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>();
+
+        yield return entities.SpawnBatchAsync(rootEntitiesToSpawn, true);
+
+        DateTimeOffset endTime = DateTimeOffset.Now;
+        Log.Debug($"Module complete spawning took {(endTime - beginTime).TotalMilliseconds}ms");
     }
 
     public override bool SpawnsOwnChildren(ModuleEntity entity) => true;

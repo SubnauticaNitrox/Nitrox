@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
@@ -16,31 +15,72 @@ namespace NitroxClient.GameLogic.Spawning;
 public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
 {
     public override IEnumerator SpawnAsync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
-    {
-        Optional<GameObject> owner = NitroxEntity.GetObjectFrom(entity.ParentId);
-
-        if (!owner.HasValue)
+    {        
+        if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
         {
-            Log.Error($"Unable to find inventory container with id {entity.Id} for {entity}");
+            Log.Info(errorLog);
             result.Set(Optional.Empty);
             yield break;
+        }
+
+        TaskResult<GameObject> gameObjectResult = new();
+        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, gameObjectResult);
+        GameObject gameObject = gameObjectResult.Get();
+
+        SetupObject(entity, gameObject, parentObject, container);
+
+        result.Set(Optional.Of(gameObject));
+    }
+
+    public override bool SpawnSync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, entity.TechType.ToUnity(), entity.ClassId))
+        {
+            return false;
+        }
+        if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
+        {
+            Log.Info(errorLog);
+            return false;
+        }
+
+        GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
+
+        SetupObject(entity, gameObject, parentObject, container);
+
+        result.Set(gameObject);
+        return true;
+    }
+
+    private bool CanSpawn(InventoryItemEntity entity, out GameObject parentObject, out ItemsContainer container, out string errorLog)
+    {
+        Optional<GameObject> owner = NitroxEntity.GetObjectFrom(entity.ParentId);
+        if (!owner.HasValue)
+        {
+            parentObject = null;
+            container = null;
+            errorLog = $"Unable to find inventory container with id {entity.Id} for {entity}";
+            return false;
         }
 
         Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
 
         if (!opContainer.HasValue)
         {
-            Log.Error($"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
-            result.Set(Optional.Empty);
-            yield break;
+            parentObject = null;
+            container = null;
+            errorLog = $"Could not find container field on GameObject {parentObject.GetFullHierarchyPath()}";
+            return false;
         }
 
-        ItemsContainer container = opContainer.Value;
+        parentObject = owner.Value;
+        container = opContainer.Value;
+        errorLog = null;
+        return true;
+    }
 
-        TaskResult<GameObject> gameObjectResult = new();
-        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, gameObjectResult);
-        GameObject gameObject = gameObjectResult.Get();
-
+    private void SetupObject(InventoryItemEntity entity, GameObject gameObject, GameObject parentObject, ItemsContainer container)
+    {
         NitroxEntity.SetNewId(gameObject, entity.Id);
 
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
@@ -50,10 +90,8 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
         using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         {
             container.UnsafeAdd(new InventoryItem(pickupable));
-            Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {owner.Value.GetFullHierarchyPath()}");
+            Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {parentObject.GetFullHierarchyPath()}");
         }
-
-        result.Set(Optional.Of(gameObject));
     }
 
     public override bool SpawnsOwnChildren(InventoryItemEntity entity)
