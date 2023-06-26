@@ -36,6 +36,12 @@ namespace NitroxClient.GameLogic.Spawning
 
             IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
 
+            if (entitySpawner is IWorldEntitySyncSpawner syncSpawner &&
+                syncSpawner.SpawnSync(entity, parent, cellRoot, result))
+            {
+                return null;
+            }
+
             return entitySpawner.SpawnAsync(entity, parent, cellRoot, result);
         }
         public override bool SpawnsOwnChildren(WorldEntity entity)

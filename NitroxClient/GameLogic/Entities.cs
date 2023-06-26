@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
@@ -19,6 +20,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic
 {
@@ -135,6 +137,111 @@ namespace NitroxClient.GameLogic
             }
         }
 
+        // TODO: Localize
+        /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
+        public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false)
+        {
+            float timeOffset = 0.0069f;// = 1s/144 FPS
+            float timeLimit = Time.unscaledTime + timeOffset;
+            DateTimeOffset beginTime = DateTimeOffset.Now;
+            foreach (Entity entity in batch)
+            {
+                IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
+                TaskResult<Optional<GameObject>> entityResult = new();
+                TaskResult<Exception> exception = new();
+                if (!entitySpawner.SpawnSyncSafe(entity, entityResult, exception) && exception.Get() == null)
+                {
+                    IEnumerator coroutine = entitySpawner.SpawnAsync(entity, entityResult);
+                    if (coroutine != null)
+                    {
+                        yield return CoroutineUtils.YieldSafe(coroutine, exception);
+                        timeLimit = Time.unscaledTime + timeOffset;                        
+                    }
+                }
+                if (exception.Get() != null)
+                {
+                    Log.Error($"Failed to spawn entity {entity.Id} during a batch spawning:\n{exception.Get()}");
+                    continue;
+                }
+
+                MarkAsSpawned(entity);
+
+                List<Entity> childrenToSpawn = GetChildrenRecursively(entity, forceRespawn);
+                List<NitroxId> childrenIds = childrenToSpawn.Select(entity => entity.Id).ToList();
+                if (!entitySpawner.SpawnsOwnChildren(entity) &&
+                    pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
+                {
+                    childrenToSpawn.AddRange(pendingEntities.Where(pendingEntity => !childrenIds.Contains(pendingEntity.Id)));
+                    pendingParentEntitiesByParentId.Remove(entity.Id);
+                }
+
+                foreach (Entity childEntity in childrenToSpawn)
+                {
+                    TaskResult<Optional<GameObject>> childResult = new();
+                    IEntitySpawner childSpawner = entitySpawnersByType[childEntity.GetType()];
+                    if (!childSpawner.SpawnSyncSafe(childEntity, childResult, exception) && exception.Get() == null)
+                    {
+                        IEnumerator coroutine = childSpawner.SpawnAsync(childEntity, childResult);
+                        if (coroutine != null)
+                        {
+                            yield return CoroutineUtils.YieldSafe(coroutine, exception);
+                            timeLimit = Time.unscaledTime + timeOffset;
+                        }
+                    }
+                    if (exception.Get() != null)
+                    {
+                        Log.Error($"Failed to spawn entity {entity.Id} during a batch spawning:\n{exception.Get()}");
+                        continue;
+                    }
+                    MarkAsSpawned(childEntity);
+                    Optional<GameObject> childGameObject = childResult.Get();
+
+                    if (childGameObject.HasValue)
+                    {
+                        // Apply entity metadata after children have been spawned.  This will allow metadata processors to
+                        // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
+                        EntityMetadataProcessor.ApplyMetadata(childGameObject.Value, childEntity.Metadata);
+                    }
+
+                    if (Time.unscaledTime > timeLimit)
+                    {
+                        timeLimit = Time.unscaledTime + timeOffset;
+                        yield return null;
+                    }
+                }
+
+                // Apply entity metadata after children have been spawned.  This will allow metadata processors to
+                // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
+                EntityMetadataProcessor.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
+
+                if (Time.unscaledTime > timeLimit)
+                {
+                    timeLimit = Time.unscaledTime + timeOffset;
+                    yield return null;
+                }
+            }
+            DateTimeOffset endTime = DateTimeOffset.Now;
+            Log.Debug($"Optimized spawning took {(endTime - beginTime).TotalMilliseconds}ms");
+        }
+
+        public List<Entity> GetChildrenRecursively(Entity entity, bool forceRespawn = false)
+        {
+            if (entitySpawnersByType[entity.GetType()].SpawnsOwnChildren(entity))
+            {
+                return new();
+            }
+            List<Entity> children = new(entity.ChildEntities);
+            foreach (Entity child in entity.ChildEntities)
+            {
+                children.AddRange(GetChildrenRecursively(child, forceRespawn));
+            }
+            if (forceRespawn)
+            {
+                return children;
+            }
+            return children.Where(child => !WasAlreadySpawned(child)).ToList();
+        }
+
         private IEnumerator SpawnChildren(Entity entity)
         {
             foreach (Entity childEntity in entity.ChildEntities)
@@ -144,7 +251,7 @@ namespace NitroxClient.GameLogic
                     yield return SpawnAsync(childEntity);
                 }
             }
-
+            
             if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
             {
                 foreach (WorldEntity child in pendingEntities)

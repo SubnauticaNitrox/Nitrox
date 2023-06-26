@@ -1,6 +1,8 @@
 using System.Collections;
 using NitroxClient.Communication;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -13,31 +15,66 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
 {
     public override IEnumerator SpawnAsync(InstalledBatteryEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
-
-        if (!parent.HasValue)
+        if (!CanSpawn(entity, out EnergyMixin energyMixin, out string errorLog))
         {
-            Log.Info($"Unable to find parent to install battery {entity}");
+            Log.Info(errorLog);
             result.Set(Optional.Empty);
             yield break;
         }
 
-        EnergyMixin energyMixin = parent.Value.GetComponent<EnergyMixin>();
+        TaskResult<GameObject> prefabResult = new();
+        yield return DefaultWorldEntitySpawner.RequestPrefab(entity.TechType.ToUnity(), prefabResult);
+        GameObject gameObject = UnityEngine.Object.Instantiate(prefabResult.Get());
+
+        SetupObject(entity, gameObject, energyMixin);
+
+        result.Set(gameObject);
+    }
+
+    public override bool SpawnSync(InstalledBatteryEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, entity.TechType.ToUnity()))
+        {
+            return false;
+        }
+        if (!CanSpawn(entity, out EnergyMixin energyMixin, out string errorLog))
+        {
+            Log.Info(errorLog);
+            return true;
+        }
+
+        GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
+
+        SetupObject(entity, gameObject, energyMixin);
+
+        result.Set(gameObject);
+        return true;
+    }
+
+    private bool CanSpawn(Entity entity, out EnergyMixin energyMixin, out string errorLog)
+    {
+        if (!NitroxEntity.TryGetObjectFrom(entity.ParentId, out GameObject parentObject))
+        {
+            energyMixin = null;
+            errorLog = $"Unable to find parent to install battery {entity}";
+            return false;
+        }
+
+        energyMixin = parentObject.GetComponent<EnergyMixin>();
 
         if (!energyMixin)
         {
-            Log.Info($"Unable to find EnergyMixin on parent to install battery {entity}");
-            result.Set(Optional.Empty);
-            yield break;
+            errorLog = $"Unable to find EnergyMixin on parent to install battery {entity}";
+            return false;
         }
+        errorLog = null;
+        return true;
+    }
 
+    private void SetupObject(Entity entity, GameObject gameObject, EnergyMixin energyMixin)
+    {
         energyMixin.Initialize();
         energyMixin.RestoreBattery();
-
-        CoroutineTask<GameObject> techPrefabCoroutine = CraftData.GetPrefabForTechTypeAsync(entity.TechType.ToUnity(), false);
-        yield return techPrefabCoroutine;
-        GameObject prefab = techPrefabCoroutine.GetResult();
-        GameObject gameObject = UnityEngine.Object.Instantiate(prefab);
 
         NitroxEntity.SetNewId(gameObject, entity.Id);
 
@@ -46,10 +83,8 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
         {
             energyMixin.batterySlot.AddItem(new InventoryItem(gameObject.GetComponent<Pickupable>()));
         }
-
-        result.Set(gameObject);
     }
- 
+
     public override bool SpawnsOwnChildren(InstalledBatteryEntity entity)
     {
         return false;
