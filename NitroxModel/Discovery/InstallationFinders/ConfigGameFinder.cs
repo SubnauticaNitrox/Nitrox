@@ -6,7 +6,7 @@ using NitroxModel.Helper;
 namespace NitroxModel.Discovery.InstallationFinders;
 
 /// <summary>
-///     Tries to read a local config value that contains the installation directory of Subnautica.
+///     Tries to read a local config value that contains the installation directory.
 /// </summary>
 public class ConfigGameFinder : IGameFinder
 {
@@ -17,17 +17,17 @@ public class ConfigGameFinder : IGameFinder
 
         if (string.IsNullOrEmpty(path))
         {
-            errors.Add("Configured game path was found empty. Please enter the path to the Subnautica installation.");
+            errors.Add("Configured game path was found empty. Please enter the path to the game installation.");
             return null;
         }
 
         if (!Directory.Exists(Path.Combine(path, gameInfo.DataFolder, "Managed")))
         {
-            errors.Add($"Game installation directory config '{path}' is invalid. Please enter the path to the Subnautica installation.");
+            errors.Add($"Game installation directory config '{path}' is invalid. Please enter the path to the game installation.");
             return null;
         }
 
-        if (!GameInstallationFinder.IsSubnauticaDirectory(path, gameInfo))
+        if (!GameInstallationFinder.HasGameExecutable(path, gameInfo))
         {
             errors.Add($"Found valid installation directory at '{path}'. But game exe is missing.");
             return null;

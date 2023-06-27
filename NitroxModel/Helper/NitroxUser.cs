@@ -82,10 +82,16 @@ namespace NitroxModel.Helper
                 }
 
                 List<string> errors = new();
-                GameInstallation installation = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica, GameLibraries.ALL, errors).First();
-                string path = installation.Path;
 
-                if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
+                GameInstallation installation = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica, GameLibraries.ALL, errors).FirstOrDefault();
+                if (installation == default)
+                {
+                    Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                    return string.Empty;
+                }
+
+                string path = installation.Path;
+                if (Directory.Exists(path))
                 {
                     return gamePath = path;
                 }

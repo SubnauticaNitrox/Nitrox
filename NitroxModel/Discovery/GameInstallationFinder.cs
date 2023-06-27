@@ -8,8 +8,7 @@ using NitroxModel.Discovery.Models;
 namespace NitroxModel.Discovery;
 
 /// <summary>
-///     Main game installation finder that will use all available methods of detection to find the Subnautica installation
-///     directory.
+///     Main game installation finder that will use all available methods of detection to find the game installation directory.
 /// </summary>
 public class GameInstallationFinder
 {
@@ -19,7 +18,7 @@ public class GameInstallationFinder
     /// <summary>
     ///     The order of these finders is VERY important. Only change if you know what you're doing.
     /// </summary>
-    private Dictionary<GameLibraries, IGameFinder> finders = new()
+    private readonly Dictionary<GameLibraries, IGameFinder> finders = new()
     {
         { GameLibraries.CURRENT_DIRECTORY, new GameInCurrentDirectoryFinder() },
         { GameLibraries.CONFIG, new ConfigGameFinder() },
@@ -34,7 +33,7 @@ public class GameInstallationFinder
     { 
         errors ??= new List<string>();
 
-        if (gameInfo == null || gameLibraries == GameLibraries.UNKNOWN)
+        if (gameInfo == null || !Enum.IsDefined(typeof(GameLibraries), gameLibraries))
         {
             yield break;
         }
@@ -64,7 +63,7 @@ public class GameInstallationFinder
             .ToArray();
     }
 
-    public static bool IsSubnauticaDirectory(string path, GameInfo gameInfo)
+    public static bool HasGameExecutable(string path, GameInfo gameInfo)
     {
         return File.Exists(Path.Combine(path, gameInfo.ExeName));
     }

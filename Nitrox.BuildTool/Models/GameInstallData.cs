@@ -4,20 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxModel.Discovery;
 
 /// <summary>
 ///     Game definition data gathered from Steam's files.
 /// </summary>
+[Serializable]
 public class GameInstallData
 {
+    public const string XML_GAME_DIR = "GameDir";
+    public const string XML_GAME_MANAGED_DIR = "GameManagedDir";
+
     private string managedDllsDir;
     public string InstallDir { get; private set; }
 
     public string ManagedDllsDir => managedDllsDir ??= Directory.EnumerateDirectories(InstallDir, "Managed", SearchOption.AllDirectories).FirstOrDefault();
 
-    private GameInstallData()
+    protected GameInstallData()
     {
         // Required for serialization
     }
@@ -28,7 +33,7 @@ public class GameInstallData
         InstallDir = installDir;
     }
 
-    public static bool TryFrom(string path, out GameInstallData result)
+    public static bool TryRead(string path, out GameInstallData result)
     {
         try
         {
@@ -41,10 +46,11 @@ public class GameInstallData
             {
                 switch (elem.Name)
                 {
-                    case "GameDir":
+                    case XML_GAME_DIR:
                         game.InstallDir = elem.LastChild.Value;
                         break;
-                    case "GameManagedDir":
+
+                    case XML_GAME_MANAGED_DIR:
                         if (!Directory.Exists(elem.LastChild.Value))
                         {
                             throw new DirectoryNotFoundException();
@@ -57,8 +63,9 @@ public class GameInstallData
             result = game;
             return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Error(ex, "An error occured while reading game install data XML");
             result = null;
             return false;
         }
@@ -84,8 +91,8 @@ public class GameInstallData
         writer.WriteStartElement("Project");
         writer.WriteAttributeString("xmlns", "http://schemas.microsoft.com/developer/msbuild/2003");
         writer.WriteStartElement("PropertyGroup");
-        writer.WriteElementString("GameDir", PostfixBackslash(InstallDir));
-        writer.WriteElementString("GameManagedDir", PostfixBackslash(ManagedDllsDir));
+        writer.WriteElementString(XML_GAME_DIR, PostfixBackslash(InstallDir));
+        writer.WriteElementString(XML_GAME_MANAGED_DIR, PostfixBackslash(ManagedDllsDir));
         writer.WriteEndElement();
         writer.WriteEndElement();
     }

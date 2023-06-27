@@ -63,7 +63,7 @@ namespace NitroxLauncher.Pages
             }
 
             // TODO: Rework to allow flexibility for BZ
-            if (!GameInstallationFinder.IsSubnauticaDirectory(selectedDirectory, GameInfo.Subnautica))
+            if (!GameInstallationFinder.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
             {
                 LauncherNotifier.Error("Invalid subnautica directory");
                 return;

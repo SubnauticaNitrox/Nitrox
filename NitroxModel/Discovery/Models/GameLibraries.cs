@@ -5,42 +5,40 @@ namespace NitroxModel.Discovery.Models;
 [Flags]
 public enum GameLibraries
 {
-    UNKNOWN = 0,
-
     /// <summary>
     /// Steam registry finder
     /// </summary>
-    STEAM = 1,
+    STEAM = 1 << 0,
 
     /// <summary>
     /// Epic games finder
     /// </summary>
-    EPIC = 2,
+    EPIC = 1 << 1,
 
     /// <summary>
     /// Microsoft store finder
     /// </summary>
-    MICROSOFT = 3,
+    MICROSOFT = 1 << 2,
 
     /// <summary>
     /// Discord game store finder
     /// </summary>
-    DISCORD = 4,
+    DISCORD = 1 << 3,
 
     /// <summary>
     /// Local config value finder
     /// </summary>
-    CONFIG = 10,
+    CONFIG = 1 << 4,
 
     /// <summary>
     /// Environment variable value finder
     /// </summary>
-    ENVIRONMENT = 11,
+    ENVIRONMENT = 1 << 5,
 
     /// <summary>
     /// Current directory finder
     /// </summary>
-    CURRENT_DIRECTORY = 12,
+    CURRENT_DIRECTORY = 1 << 6,
 
     PLATFORMS = STEAM | EPIC | MICROSOFT | DISCORD,
 

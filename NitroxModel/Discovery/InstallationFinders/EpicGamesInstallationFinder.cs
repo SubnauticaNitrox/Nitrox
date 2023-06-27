@@ -30,7 +30,7 @@ public class EpicGamesInstallationFinder : IGameFinder
             {
                 string matchedPath = match.Groups[1].Value;
 
-                if (!GameInstallationFinder.IsSubnauticaDirectory(matchedPath, gameInfo))
+                if (!GameInstallationFinder.HasGameExecutable(matchedPath, gameInfo))
                 {
                     errors.Add($"Found valid installation directory at '{matchedPath}'. But game exe is missing.");
                     continue;

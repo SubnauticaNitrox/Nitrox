@@ -10,7 +10,7 @@ public class GameInCurrentDirectoryFinder : IGameFinder
     {
         string currentDirectory = Directory.GetCurrentDirectory();
 
-        if (GameInstallationFinder.IsSubnauticaDirectory(currentDirectory, gameInfo))
+        if (GameInstallationFinder.HasGameExecutable(currentDirectory, gameInfo))
         {
             return new()
             {

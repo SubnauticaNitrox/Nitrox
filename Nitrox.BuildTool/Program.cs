@@ -108,7 +108,7 @@ namespace Nitrox.BuildTool
             }
 
             string cacheFile = Path.Combine(GeneratedOutputDir, "game.props");
-            if (GameInstallData.TryFrom(cacheFile, out GameInstallData game))
+            if (GameInstallData.TryRead(cacheFile, out GameInstallData game))
             {
                 // Retry if the saved path is invalid
                 if (!Directory.Exists(game.InstallDir))

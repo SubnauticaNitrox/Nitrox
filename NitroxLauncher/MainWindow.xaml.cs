@@ -117,7 +117,7 @@ namespace NitroxLauncher
                  .ContinueWith(task =>
                  {
                      // TODO: Rework to allow flexibility for BZ
-                     if (GameInstallationFinder.IsSubnauticaDirectory(task.Result, GameInfo.Subnautica))
+                     if (GameInstallationFinder.HasGameExecutable(task.Result, GameInfo.Subnautica))
                      {
                          LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
                      }

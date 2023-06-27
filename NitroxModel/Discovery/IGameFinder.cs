@@ -9,6 +9,6 @@ public interface IGameFinder
     ///     Searches for Subnautica installation directory.
     /// </summary>
     /// <param name="errors">Error messages that can be set if it failed to find the game.</param>
-    /// <returns>Nullable game installation of Subnautica</returns>
+    /// <returns>Nullable game installation</returns>
     GameInstallation? FindGame(GameInfo gameInfo, IList<string> errors);
 }

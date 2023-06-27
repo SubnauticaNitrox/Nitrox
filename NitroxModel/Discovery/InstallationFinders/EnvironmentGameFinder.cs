@@ -6,12 +6,13 @@ using System.IO;
 namespace NitroxModel.Discovery.InstallationFinders;
 
 /// <summary>
-///     Trying to find the path in environment variables by the key SUBNAUTICA_INSTALLATION_PATH that contains the installation directory of Subnautica.
+///     Trying to find the path in environment variables by the key SUBNAUTICA_INSTALLATION_PATH that contains the installation directory.
 /// </summary>
 public class EnvironmentGameFinder : IGameFinder
 {
     public GameInstallation? FindGame(GameInfo gameInfo, IList<string> errors)
     {
+        // Allow multiple environment variable by game
         string path = Environment.GetEnvironmentVariable("SUBNAUTICA_INSTALLATION_PATH");
         if (string.IsNullOrEmpty(path))
         {
@@ -25,7 +26,7 @@ public class EnvironmentGameFinder : IGameFinder
             return null;
         }
 
-        if (!GameInstallationFinder.IsSubnauticaDirectory(path, gameInfo))
+        if (!GameInstallationFinder.HasGameExecutable(path, gameInfo))
         {
             errors.Add($"Found valid installation directory at '{path}'. But game exe is missing.");
             return null;

@@ -33,7 +33,7 @@ public class SteamGameRegistryFinder : IGameFinder
         string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), gameInfo.SteamAppId, gameInfo.Name);
         if (string.IsNullOrWhiteSpace(path))
         {
-            errors?.Add($"It appears you don't have {gameInfo.Name} installed anywhere. The game files are needed to run the server.");
+            errors?.Add($"It appears you don't have {gameInfo.Name} installed anywhere.");
             return null;
         }
 
