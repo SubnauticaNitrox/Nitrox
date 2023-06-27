@@ -88,6 +88,11 @@
             </Style>
         </Style>
         
+        <!-- Disabled State -->
+        <Style Selector="^:disabled /template/ Border#PART_Border">
+            <Setter Property="Background" Value="{TemplateBinding Background}" />
+        </Style>
+        
         <Style Selector="^:checked">
             
             <!-- Checked Normal State -->

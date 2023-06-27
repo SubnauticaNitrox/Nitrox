@@ -6,11 +6,20 @@
         <Setter Property="Padding" Value="14" />
         <Setter Property="Background" Value="#ECECEC" />
         <Setter Property="BorderThickness" Value="0" />
+        
+        <Style Selector="^ /template/ Border">
+            <Setter Property="Background" Value="{TemplateBinding Background}" />
+            <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius}" />
+            <Setter Property="BorderThickness" Value="{TemplateBinding BorderThickness}" />
+        </Style>
+        
+        <Style Selector="^:disabled">
+            <Style Selector="^ /template/ Border">
+                <Setter Property="Background" Value="{TemplateBinding Background}" />
+            </Style>
+            <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
+        </Style>
     </Style>
 
-    <Style Selector="TextBox /template/ Border">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-        <Setter Property="CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-        <Setter Property="BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-    </Style>
+    
 </Styles>

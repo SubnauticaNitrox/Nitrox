@@ -141,6 +141,10 @@
                 <Setter Property="TextDecorations" Value="Underline" />
             </Style>
         </Style>
+        
+        <Style Selector="^:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
     </Style>
     
 </Styles>

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Reactive;
+using System.Reactive.Linq;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
@@ -126,14 +127,34 @@ public class ManageServerViewModel : RoutableViewModelBase
     private string worldFolderDirectory;
     
     public ReactiveCommand<Unit, Unit> BackCommand { get; init; }
+    public ReactiveCommand<Unit, Unit> SaveCommand { get; init; }
 
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
     {
         this.BindValidation();
+        
         BackCommand = ReactiveCommand.Create(() =>
         {
-            Save();
+            Save(); // TEMP - Will be replaced by Save button/command (below)
             Router.NavigateBack.Execute();
+        });
+        
+        SaveCommand = ReactiveCommand.Create(() =>
+        {
+            Server.WhenAnyValue(x => x.IsOnline).Where(x => !x);
+            
+            Server.Name = ServerName;
+            Server.Password = ServerPassword;
+            Server.GameMode = ServerGameMode;
+            Server.Seed = ServerSeed;
+            Server.DefaultPlayerPerm = ServerDefaultPlayerPerm;
+            Server.AutoSaveInterval = ServerAutoSaveInterval;
+            Server.MaxPlayers = ServerMaxPlayers;
+            Server.Players = ServerPlayers;
+            Server.Port = ServerPort;
+            Server.AutoPortForward = ServerAutoPortForward;
+            Server.AllowLanDiscovery = ServerAllowLanDiscovery;
+            Server.AllowCommands = ServerAllowCommands;
         });
     }
     public void LoadFrom(ServerEntry serverEntry)
@@ -157,7 +178,7 @@ public class ManageServerViewModel : RoutableViewModelBase
         ServerAllowCommands = Server.AllowCommands;
     }
 
-    private void Save()
+    private void Save() // TEMP - Will be replaced
     {
         // TODO: Check for invalid value inputs and throw an error if one is found
         

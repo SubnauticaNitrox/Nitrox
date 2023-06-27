@@ -69,30 +69,37 @@
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}" />
+                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}"
+                                 IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"/>
+                        <TextBox Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"
+                                 IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                 </Grid>
         
                 <StackPanel>
                     <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" SelectedItem="{Binding ServerGameMode, Mode=TwoWay}" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}"
+                                               SelectedItem="{Binding ServerGameMode, Mode=TwoWay}"
+                                               IsEnabled="{Binding !ServerIsOnline}"/>
                 </StackPanel>
                 
                 <Grid ColumnDefinitions="*,30,*,30,*">
                     <StackPanel>
                         <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Server seed" Text="{Binding ServerSeed}" MaxLength="10" />
+                        <TextBox Watermark="Server seed" Text="{Binding ServerSeed}"
+                                 MaxLength="10" IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
                         <!-- TODO: Might need to use converters here -->
-                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding ServerDefaultPlayerPerm}">
+                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
+                                  SelectedValueBinding="{Binding ServerDefaultPlayerPerm}"
+                                  IsEnabled="{Binding !ServerIsOnline}">
                             <ComboBoxItem Content="Player" Tag="PLAYER"/>
                             <ComboBoxItem Content="Operator" Tag="OPERATOR"/>
                             <ComboBoxItem Content="Admin" Tag="ADMIN"/>
@@ -102,7 +109,9 @@
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="AUTO SAVE INTERVAL" FontSize="10" Opacity=".5" FontWeight="700" />
                         <!-- TODO: Handle values other than the preset ones by binding data directly to the ComboBox's TextBox -->
-                        <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch" SelectedValueBinding="{Binding ServerAutoSaveInterval}">
+                        <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
+                                  SelectedValueBinding="{Binding ServerAutoSaveInterval}"
+                                  IsEnabled="{Binding !ServerIsOnline}">
                             <ComboBoxItem Content="60s" Tag="60"/>
                             <ComboBoxItem Content="120s" Tag="120"/>
                             <ComboBoxItem Content="240s" Tag="240"/>
@@ -115,12 +124,14 @@
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, FallbackValue=100}" />
+                        <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, FallbackValue=100}"
+                                 IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, FallbackValue=11000}"/>
+                        <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, FallbackValue=11000}"
+                                 IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                 </Grid>
                 
@@ -136,15 +147,18 @@
                         </StackPanel.Styles> 
                         <Grid>
                             <TextBlock Text="Enable auto port forwarding"/>
-                            <CheckBox Classes="switch" IsChecked="{Binding ServerAutoPortForward}" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding ServerAutoPortForward}" HorizontalAlignment="Right"
+                                      IsEnabled="{Binding !ServerIsOnline}"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Allow LAN Discovery"/>
-                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowLanDiscovery}" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowLanDiscovery}" HorizontalAlignment="Right"
+                                      IsEnabled="{Binding !ServerIsOnline}"/>
                         </Grid>
                         <Grid>
                             <TextBlock Text="Enable Commands"/>
-                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowCommands}" HorizontalAlignment="Right"/>
+                            <CheckBox Classes="switch" IsChecked="{Binding ServerAllowCommands}" HorizontalAlignment="Right"
+                                      IsEnabled="{Binding !ServerIsOnline}"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
@@ -169,18 +183,21 @@
                         
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/export-2x.png"
-                                design:NitroxAttached.Text="Restore a backup"/>
+                                design:NitroxAttached.Text="Restore a backup"
+                                IsEnabled="{Binding !ServerIsOnline}"/>
                         
                         <Button Classes="textimage" 
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/delete-2x.png"
-                                design:NitroxAttached.Text="Delete server" Foreground="#ec1c24"/>
+                                design:NitroxAttached.Text="Delete server" Foreground="#ec1c24"
+                                IsEnabled="{Binding !ServerIsOnline}"/>
                         
                     </StackPanel>
                 </StackPanel>
                 
                 <Border Background="#151516" CornerRadius="12" Height="96">
                     <Grid ColumnDefinitions="*,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="26 0">
+                        <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="26 0"
+                                     IsEnabled="{Binding !ServerIsOnline}">
                             <RadioButton IsChecked="True" >Docked console</RadioButton>
                             <RadioButton >External console</RadioButton>
                         </StackPanel>
