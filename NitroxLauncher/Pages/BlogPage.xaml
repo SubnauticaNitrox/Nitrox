@@ -38,7 +38,7 @@
 
         <Grid Grid.Row="2" Grid.ColumnSpan="2">
 
-            <ItemsControl x:Name="Blogs">
+            <ItemsControl ItemsSource="{Binding NitroxBlogs, Mode=OneWay}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -53,7 +53,7 @@
                                 <StackPanel>
                                     <Border CornerRadius="12" Height="200" Margin="0" VerticalAlignment="Top">
                                         <Border.Background>
-                                            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource VinesImage}}" />
+                                            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, IsAsync=True, TargetNullValue={StaticResource VinesImage}}" />
                                         </Border.Background>
                                     </Border>
 

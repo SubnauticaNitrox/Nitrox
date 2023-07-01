@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.Win32;
@@ -81,8 +80,8 @@ namespace NitroxModel.Platforms.OS.Windows
                 DirectoryInfo dir = new(directory);
                 DirectorySecurity flags = dir.GetAccessControl();
                 flags.AddAccessRule(new(identity, FileSystemRights.FullControl, InheritanceFlags.None, PropagationFlags.InheritOnly, AccessControlType.Allow));
-                flags.AddAccessRule(new (identity, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
-                flags.AddAccessRule(new (identity, FileSystemRights.FullControl, InheritanceFlags.ObjectInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
+                flags.AddAccessRule(new(identity, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
+                flags.AddAccessRule(new(identity, FileSystemRights.FullControl, InheritanceFlags.ObjectInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
                 dir.SetAccessControl(flags);
                 return true;
             }
@@ -93,5 +92,52 @@ namespace NitroxModel.Platforms.OS.Windows
         }
 
         public override bool IsTrustedFile(string file) => Win32Native.IsTrusted(file);
+
+        private static bool DeleteFileOrFolder(string path)
+        {
+            try
+            {
+                // https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileopstructa
+                Win32Native.SHFILEOPSTRUCT fileop = new()
+                {
+                    wFunc = Win32Native.FO_DELETE,
+                    pFrom = $"{path}\0",
+                    fFlags = Win32Native.FOF_ALLOWUNDO | Win32Native.FOF_NOCONFIRMATION
+                };
+
+                var rc = Win32Native.SHFileOperation(ref fileop);
+                return rc == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override bool MoveDirectoryToRecycleBin(DirectoryInfo directoryInfo)
+        {
+            if (directoryInfo is null) return false;
+
+            directoryInfo.Refresh();
+            if (!directoryInfo.Exists)
+            {
+                return false;
+            }
+
+            return DeleteFileOrFolder(directoryInfo.FullName);
+        }
+
+        public override bool MoveFileToRecycleBin(FileInfo fileInfo)
+        {
+            if (fileInfo is null) return false;
+
+            fileInfo.Refresh();
+            if (!fileInfo.Exists)
+            {
+                return false;
+            }
+
+            return DeleteFileOrFolder(fileInfo.FullName);
+        }
     }
 }

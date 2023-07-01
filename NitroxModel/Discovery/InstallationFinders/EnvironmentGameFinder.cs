@@ -6,14 +6,17 @@ using System.IO;
 namespace NitroxModel.Discovery.InstallationFinders;
 
 /// <summary>
-///     Trying to find the path in environment variables by the key SUBNAUTICA_INSTALLATION_PATH that contains the installation directory.
+///     Trying to find the path in environment variables by the key {GAMEINFO FULLNAME}_INSTALLATION_PATH that contains the installation directory.
+/// <para>
+///     SUBNAUTICA_INSTALLATION_PATH,
+///     SUBNAUTICAZERO_INSTALLATION_PATH
+/// </para>
 /// </summary>
 public class EnvironmentGameFinder : IGameFinder
 {
     public GameInstallation? FindGame(GameInfo gameInfo, IList<string> errors)
     {
-        // Allow multiple environment variable by game
-        string path = Environment.GetEnvironmentVariable("SUBNAUTICA_INSTALLATION_PATH");
+        string path = Environment.GetEnvironmentVariable($"{gameInfo.FullName.ToUpper()}_INSTALLATION_PATH");
         if (string.IsNullOrEmpty(path))
         {
             errors.Add(@"Configured game path with environment variable SUBNAUTICA_INSTALLATION_PATH was found empty.");

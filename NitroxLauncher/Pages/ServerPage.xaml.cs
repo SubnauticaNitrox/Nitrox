@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,10 +10,10 @@ using System.Windows.Media.Animation;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
-using Microsoft.VisualBasic.FileIO;
 
 namespace NitroxLauncher.Pages
 {
@@ -288,7 +288,8 @@ namespace NitroxLauncher.Pages
             
             try
             {
-                FileSystem.DeleteDirectory(SelectedWorldDirectory, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                FileSystem.Instance.MoveDirectoryToRecycleBin(SelectedWorldDirectory);
+
                 Log.Info($"Moving world \"{Path.GetFileName(SelectedWorldDirectory)}\" to the recyling bin.");
                 LauncherNotifier.Success($"Successfully moved save \"{Path.GetFileName(SelectedWorldDirectory)}\" to the recycling bin");
             }
@@ -728,7 +729,7 @@ namespace NitroxLauncher.Pages
             {
                 try
                 {
-                    FileSystem.DeleteDirectory(SelectedWorldDirectory, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    FileSystem.Instance.MoveDirectoryToRecycleBin(SelectedWorldDirectory);
                 }
                 catch (Exception ex)
                 {
@@ -744,7 +745,7 @@ namespace NitroxLauncher.Pages
                 Directory.CreateDirectory(SelectedWorldDirectory);
 
                 // Copy over targeted server.cfg file and ensure its serializer is set to JSON to prevent future errors
-                FileSystem.CopyFile(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"));
+                File.Copy(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"), true);
                 ServerConfig importedServerConfig = ServerConfig.Load(Path.Combine(SelectedWorldDirectory));
                 if (importedServerConfig.SerializerMode != ServerSerializerMode.JSON)
                 {
@@ -765,7 +766,7 @@ namespace NitroxLauncher.Pages
                         continue;
                     }
 
-                    FileSystem.CopyFile(targetFileDir, destFileDir);
+                    File.Copy(targetFileDir, destFileDir, true);
                     File.SetLastWriteTime(destFileDir, DateTime.Now);
                 }
 

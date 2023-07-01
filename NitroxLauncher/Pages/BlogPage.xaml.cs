@@ -1,39 +1,40 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using NitroxLauncher.Models;
 
-namespace NitroxLauncher.Pages
+namespace NitroxLauncher.Pages;
+
+public partial class BlogPage : PageBase
 {
-    public partial class BlogPage : PageBase
+    public static readonly Uri BLOGS_LINK = new("https://nitroxblog.rux.gg/");
+
+    [ObservableProperty]
+    private bool isLoading = true;
+
+    [ObservableProperty]
+    private ObservableCollection<NitroxBlog> nitroxBlogs = new();
+
+    public BlogPage()
     {
-        public static readonly Uri BLOGS_LINK = new("https://nitroxblog.rux.gg/");
+        InitializeComponent();
 
-        private readonly ObservableCollection<NitroxBlog> nitroxBlogs = new();
-
-        public BlogPage()
+        Dispatcher.InvokeAsync(async() =>
         {
-            InitializeComponent();
+            CancellationTokenSource cancellationTokenSource = new(8000);
 
-            Blogs.ItemsSource = nitroxBlogs;
-
-            Dispatcher?.BeginInvoke(new Action(async () =>
+            try
             {
-                try
-                {
-                    IList<NitroxBlog> blogs = await Downloader.GetBlogs();
-
-                    foreach (NitroxBlog blog in blogs)
-                    {
-                        nitroxBlogs.Add(blog);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Error while trying to display nitrox blogs");
-                }
+                IList<NitroxBlog> blogs = await Downloader.GetBlogsAsync(cancellationTokenSource.Token);
+                NitroxBlogs = new(blogs);
+                IsLoading = false;
             }
-            ));
-        }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while trying to display nitrox blogs");
+            }
+        });
     }
 }

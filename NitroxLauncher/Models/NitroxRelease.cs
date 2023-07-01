@@ -1,34 +1,33 @@
-﻿using System;
+using System;
 
-namespace NitroxLauncher.Models
+namespace NitroxLauncher.Models;
+
+[Serializable]
+public class NitroxRelease
 {
-    [Serializable]
-    internal class NitroxRelease
+    public string Url { get; }
+
+    public string Version { get; }
+
+    public string FileSize { get; }
+
+    public string Md5 { get; }
+
+    protected NitroxRelease()
     {
-        public string Url { get; }
+        // Constructor for serialization. Has to be "protected" for json serialization.
+    }
 
-        public string Version { get; }
+    public NitroxRelease(string url, string version, string filesize, string md5)
+    {
+        Url = url;
+        Version = version;
+        FileSize = filesize;
+        Md5 = md5;
+    }
 
-        public string FileSize { get; }
-
-        public string Md5 { get; }
-
-        protected NitroxRelease()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public NitroxRelease(string url, string version, string filesize, string md5)
-        {
-            Url = url;
-            Version = version;
-            FileSize = filesize;
-            Md5 = md5;
-        }
-
-        public override string ToString()
-        {
-            return $"[{nameof(NitroxRelease)} - Url: {Url}, Version: {Version}, FileSize: {FileSize}, Md5: {Md5}]";
-        }
+    public override string ToString()
+    {
+        return $"[{nameof(NitroxRelease)} - Url: {Url}, Version: {Version}, FileSize: {FileSize}, Md5: {Md5}]";
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -492,4 +492,24 @@ internal static class Win32Native
 
         public void Dispose() => Dispose(true);
     }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 1)]
+    public struct SHFILEOPSTRUCT
+    {
+        public IntPtr hwnd;
+        [MarshalAs(UnmanagedType.U4)] public int wFunc;
+        public string pFrom;
+        public string pTo;
+        public short fFlags;
+        [MarshalAs(UnmanagedType.Bool)] public bool fAnyOperationsAborted;
+        public IntPtr hNameMappings;
+        public string lpszProgressTitle;
+    }
+
+    public const int FO_DELETE = 3;
+    public const int FOF_ALLOWUNDO = 0x40;
+    public const int FOF_NOCONFIRMATION = 0x10; // Don't prompt the user
+
+    [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+    public static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
 }

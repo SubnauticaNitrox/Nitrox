@@ -12,6 +12,7 @@
         WindowStyle="None" WindowStartupLocation="CenterScreen"
         Closing="OnClosing"
         Background="Black"
+        ResizeMode="CanResize"
         Loaded="Window_Loaded">
 
     <Window.Resources>
@@ -36,29 +37,32 @@
 
     <WindowChrome.WindowChrome>
         <WindowChrome
-            ResizeBorderThickness="0"
-            CaptionHeight="72"
+            ResizeBorderThickness="5"
             CornerRadius="0"
-            GlassFrameThickness="3" />
+            CaptionHeight="60"
+            NonClientFrameEdges="None"
+            UseAeroCaptionButtons="False"
+            GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
 
-    <Grid Margin="0">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="22"/>
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="Transparent" Panel.ZIndex="100" HorizontalAlignment="Right" >
+        <!-- Windows button -->
+        <Grid Grid.Row="0" Background="Transparent" Panel.ZIndex="9999" HorizontalAlignment="Right">
             <Grid>
-                <Grid Panel.ZIndex="100">
+                <Grid Panel.ZIndex="9999">
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Width="46" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
+                        <Button Width="46" Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch" ToolTip="Minimize">
                             <Image Height="10" Width="10" Source="{StaticResource MinimizeImage}" Stretch="Fill" />
                         </Button>
-                        <Button Width="46" x:Name="RestoreButton" Click="Restore_Click"  Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
+                        <Button Width="46" Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch" ToolTip="Maximize">
                             <Image Height="10" Width="10" Source="{StaticResource RestoreImage}" Stretch="Fill" />
                         </Button>
-                        <Button Width="46" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Style="{DynamicResource CloseButton}" VerticalAlignment="Stretch">
+                        <Button Width="46" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Style="{DynamicResource CloseButton}" VerticalAlignment="Stretch" ToolTip="Close">
                             <Image Height="10" Width="10" Source="{StaticResource ExitImage}" Stretch="Fill" />
                         </Button>
                     </StackPanel>
@@ -130,8 +134,8 @@
                 </StackPanel>
             </Grid>
             
-            <ScrollViewer Background="Black" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
-                <Frame Grid.Column="1" Background="Black" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
+            <ScrollViewer Panel.ZIndex="-1" Background="Transparent" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
+                <Frame Grid.Column="1" Background="Transparent" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" />
             </ScrollViewer>
         </Grid>
     </Grid>

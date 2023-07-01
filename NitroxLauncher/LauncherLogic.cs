@@ -65,7 +65,7 @@ namespace NitroxLauncher
         {
             await Task.Factory.StartNew(async () =>
             {
-                Version latestVersion = await Downloader.GetNitroxLatestVersion();
+                Version latestVersion = await Downloader.GetNitroxLatestVersionAsync();
                 Version currentVersion = new(Version);
 
                 if (latestVersion > currentVersion)

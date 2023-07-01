@@ -15,12 +15,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="dnlib" Version="3.4.0" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+      <PackageReference Include="dnlib" Version="3.6.0" />
       <PackageReference Include="LitJson" Version="0.17.0" />
       <PackageReference Include="ToastNotifications" Version="2.5.1" />
       <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
       <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-      <PackageReference Include="WindowsFirewallHelper" Version="2.1.4.81" />
+      <PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,7 +37,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.VisualBasic" />
       <Reference Include="PresentationFramework.Aero2" />
     </ItemGroup>
     

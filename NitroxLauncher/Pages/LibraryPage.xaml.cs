@@ -1,4 +1,4 @@
-﻿using NitroxLauncher.Models;
+using NitroxLauncher.Models;
 
 namespace NitroxLauncher.Pages
 {

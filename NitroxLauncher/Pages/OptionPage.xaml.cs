@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel;
@@ -10,104 +14,115 @@ using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxServer.Serialization.World;
 
-namespace NitroxLauncher.Pages
+namespace NitroxLauncher.Pages;
+
+public partial class OptionPage : PageBase
 {
-    public partial class OptionPage : PageBase
+    public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
+    public string PathToSubnautica => NitroxUser.GamePath;
+    public string SubnauticaLaunchArguments => LauncherLogic.Config.SubnauticaLaunchArguments;
+
+    [ObservableProperty]
+    public ObservableCollection<GameInstallation> gameInstallations = new();
+
+    [ObservableProperty]
+    private GameInstallation selectedGameInstallation = default;
+
+    public OptionPage()
     {
-        public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        public string PathToSubnautica => NitroxUser.GamePath;
-        public string SubnauticaLaunchArguments => LauncherLogic.Config.SubnauticaLaunchArguments;
+        InitializeComponent();
+        SaveFileLocationTextblock.Text = WorldManager.SavesFolderDir;
 
-        public OptionPage()
+        ArgumentsTextbox.Text = SubnauticaLaunchArguments;
+        if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
         {
-            InitializeComponent();
-            SaveFileLocationTextblock.Text = WorldManager.SavesFolderDir;
-
-            ArgumentsTextbox.Text = SubnauticaLaunchArguments;
-            if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
-            {
-                ResetButton.Visibility = Visibility.Visible;
-            }
-
-            Loaded += (s, e) =>
-            {
-                LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
-                OnLogicPropertyChanged(null, null);
-            };
-
-            Unloaded += (s, e) =>
-            {
-                LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
-            };
+            ResetButton.Visibility = Visibility.Visible;
         }
 
-        private async void OnChangePath_Click(object sender, RoutedEventArgs e)
+        _ = Dispatcher.InvokeAsync(() =>
         {
-            string selectedDirectory;
+            IEnumerable<GameInstallation> data = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica, GameLibraries.PLATFORMS, null);
+            GameInstallations = new(data);
+        });
 
-            // Don't use FolderBrowserDialog because its UI sucks. See: https://stackoverflow.com/a/31082
-            using (CommonOpenFileDialog dialog = new()
-            {
-                Multiselect = false,
-                InitialDirectory = PathToSubnautica,
-                EnsurePathExists = true,
-                IsFolderPicker = true,
-                Title = "Select Subnautica installation directory"
-            })
-            {
-                if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
-                {
-                    return;
-                }
-                selectedDirectory = Path.GetFullPath(dialog.FileName);
-            }
-
-            // TODO: Rework to allow flexibility for BZ
-            if (!GameInstallationFinder.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
-            {
-                LauncherNotifier.Error("Invalid subnautica directory");
-                return;
-            }
-
-            if (selectedDirectory != PathToSubnautica)
-            {
-                await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
-                LauncherNotifier.Success("Applied changes");
-            }
-        }
-
-        private void OnChangeArguments_Click(object sender, RoutedEventArgs e)
+        Loaded += (s, e) =>
         {
-            if (ArgumentsTextbox.Text == SubnauticaLaunchArguments)
+            LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
+            OnLogicPropertyChanged(null, null);
+        };
+
+        Unloaded += (s, e) =>
+        {
+            LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
+        };
+    }
+
+    private async void OnChangePath_Click(object sender, RoutedEventArgs e)
+    {
+        string selectedDirectory;
+
+        // Don't use FolderBrowserDialog because its UI sucks. See: https://stackoverflow.com/a/31082
+        using (CommonOpenFileDialog dialog = new()
+        {
+            Multiselect = false,
+            InitialDirectory = PathToSubnautica,
+            EnsurePathExists = true,
+            IsFolderPicker = true,
+            Title = "Select Subnautica installation directory"
+        })
+        {
+            if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
             {
                 return;
             }
+            selectedDirectory = Path.GetFullPath(dialog.FileName);
+        }
 
-            ResetButton.Visibility = SubnauticaLaunchArguments == LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS ? Visibility.Visible : Visibility.Hidden;
-            ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = ArgumentsTextbox.Text.Trim();
+        // TODO: Rework to allow flexibility for BZ
+        if (!GameInstallationFinder.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
+        {
+            LauncherNotifier.Error("Invalid subnautica directory");
+            return;
+        }
+
+        if (selectedDirectory != PathToSubnautica)
+        {
+            await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
             LauncherNotifier.Success("Applied changes");
         }
+    }
 
-        private void OnResetArguments_Click(object sender, RoutedEventArgs e)
+    private void OnChangeArguments_Click(object sender, RoutedEventArgs e)
+    {
+        if (ArgumentsTextbox.Text == SubnauticaLaunchArguments)
         {
-            if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
-            {
-                ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS;
-                ResetButton.Visibility = Visibility.Hidden;
-                LauncherNotifier.Success("Applied changes");
-                return;
-            }
+            return;
         }
 
-        private void OnLogicPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            OnPropertyChanged(nameof(PathToSubnautica));
-            OnPropertyChanged(nameof(GamePlatform));
-        }
+        ResetButton.Visibility = SubnauticaLaunchArguments == LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS ? Visibility.Visible : Visibility.Hidden;
+        ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = ArgumentsTextbox.Text.Trim();
+        LauncherNotifier.Success("Applied changes");
+    }
 
-        private void OnViewFolder_Click(object sender, RoutedEventArgs e)
+    private void OnResetArguments_Click(object sender, RoutedEventArgs e)
+    {
+        if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
         {
-            Process.Start(WorldManager.SavesFolderDir)?.Dispose();
+            ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS;
+            ResetButton.Visibility = Visibility.Hidden;
+            LauncherNotifier.Success("Applied changes");
+            return;
         }
+    }
+
+    private void OnLogicPropertyChanged(object sender, PropertyChangedEventArgs args)
+    {
+        OnPropertyChanged(nameof(PathToSubnautica));
+        OnPropertyChanged(nameof(GamePlatform));
+    }
+
+    private void OnViewFolder_Click(object sender, RoutedEventArgs e)
+    {
+        Process.Start(WorldManager.SavesFolderDir)?.Dispose();
     }
 }

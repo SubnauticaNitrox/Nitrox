@@ -4,21 +4,21 @@ namespace NitroxModel.Discovery.Models;
 
 public enum Platform
 {
-    [Description("Standalone")]
-    NONE,
-
-    [Description("Pirated")]
-    PIRATED,
-
-    [Description("Epic Games Store")]
-    EPIC,
+    [Description("Unknown")]
+    NONE = 0,
 
     [Description("Steam")]
-    STEAM,
+    STEAM = 1 << 0,
+
+    [Description("Epic Games Store")]
+    EPIC = 1 << 1,
 
     [Description("Microsoft")]
-    MICROSOFT,
+    MICROSOFT = 1 << 2,
 
     [Description("Discord")]
-    DISCORD
+    DISCORD = 1 << 3,
+
+    [Description("Pirated")]
+    PIRATED = 255
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -259,6 +259,12 @@ namespace NitroxModel.Platforms.OS.Shared
                 return false;
             }
         }
+
+        public bool MoveDirectoryToRecycleBin(string path) => MoveDirectoryToRecycleBin(new DirectoryInfo(path));
+        public virtual bool MoveDirectoryToRecycleBin(DirectoryInfo directoryInfo) => throw new NotSupportedException();
+
+        public bool MoveFileToRecycleBin(string path) => MoveFileToRecycleBin(new FileInfo(path));
+        public virtual bool MoveFileToRecycleBin(FileInfo directoryInfo) => throw new NotSupportedException();
 
         public abstract bool SetFullAccessToCurrentUser(string directory);
         public abstract bool IsTrustedFile(string file);

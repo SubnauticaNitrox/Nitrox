@@ -2,13 +2,13 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
                 xmlns:local="clr-namespace:NitroxLauncher.Models"
                 x:Class="NitroxLauncher.Pages.ServerPage"
                 mc:Ignorable="d"
                 d:DesignHeight="650" d:DesignWidth="750"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
-                Title="Server Page" xmlns:pages="clr-namespace:NitroxLauncher.Pages"
-                xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+                Title="Server Page">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/Assets/Images/serverIllustration.png"/>

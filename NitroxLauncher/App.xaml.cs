@@ -25,16 +25,16 @@ namespace NitroxLauncher
                     DefaultValue = FindResource(typeof(Page))
                 });
 
+            DispatcherUnhandledException += (object sender, DispatcherUnhandledExceptionEventArgs e) =>
+            {
+                // If something went wrong. Close the server if embedded.
+                LauncherLogic.Instance.Dispose();
+
+                Log.Error(e.Exception.GetBaseException().ToString()); // Gets the exception that was unhandled, not the "dispatched unhandled" exception.
+                MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+            };
+
             base.OnStartup(e);
-        }
-
-        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            // If something went wrong. Close the server if embedded.
-            LauncherLogic.Instance.Dispose();
-
-            Log.Error(e.Exception.GetBaseException().ToString()); // Gets the exception that was unhandled, not the "dispatched unhandled" exception.
-            MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private string GetExceptionError(Exception e)

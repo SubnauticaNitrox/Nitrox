@@ -25,7 +25,7 @@ public class GameInstallationFinder
         { GameLibraries.STEAM, new SteamGameRegistryFinder() },
         { GameLibraries.EPIC, new EpicGamesInstallationFinder() },
         { GameLibraries.DISCORD, new DiscordGameFinder() },
-        { GameLibraries.MICROSOFT, null },
+        { GameLibraries.MICROSOFT, new NullGameFinder() },
         { GameLibraries.ENVIRONMENT, new EnvironmentGameFinder() },
     };
 

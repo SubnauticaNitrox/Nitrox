@@ -70,7 +70,7 @@
         </Grid>
 
         <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="10">
-            <ItemsControl x:Name="Changelogs">
+            <ItemsControl ItemsSource="{Binding NitroxChangelogs, Mode=OneWay}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
