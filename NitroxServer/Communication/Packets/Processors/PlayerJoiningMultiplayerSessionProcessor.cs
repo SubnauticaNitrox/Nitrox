@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Numerics;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -51,8 +50,9 @@ namespace NitroxServer.Communication.Packets.Processors
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             // Make players on localhost admin by default.
-            if (IPAddress.IsLoopback(connection.Endpoint.Address))
+            if (connection.Endpoint.Address.IsLocalhost())
             {
+                Log.Info($"Granted admin to '{player.Name}' because they're playing on the host machine");
                 player.Permissions = Perms.ADMIN;
             }
 
