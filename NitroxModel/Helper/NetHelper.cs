@@ -161,5 +161,31 @@ namespace NitroxModel.Helper
             }
             return false;
         }
+
+        /// <summary>
+        ///     Returns true if the IP address points to the executing machine.
+        /// </summary>
+        public static bool IsLocalhost(this IPAddress address)
+        {
+            if (address == null)
+            {
+                return false;
+            }
+            if (IPAddress.IsLoopback(address))
+            {
+                return true;
+            }
+            foreach (NetworkInterface ni in GetInternetInterfaces())
+            {
+                foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                {
+                    if (address.Equals(ip.Address))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
