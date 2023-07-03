@@ -27,18 +27,18 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
-            <RowDefinition Height="252"/>
+            <RowDefinition Height="250"/>
             <RowDefinition Height="100*"/>
             <RowDefinition Height="113*"/>
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
 
-        <Grid>
+        <Grid Grid.Row="0">
             <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold"><Run Text="Community"/></TextBlock>
         </Grid>
 
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
-            <Image Source="{StaticResource CommunityHeader}"></Image>
+            <Image Height="200" Stretch="UniformToFill" Source="{StaticResource CommunityHeader}" />
         </Grid>
 
         <Grid Grid.Column="0" Margin="0,0,8,8" Grid.Row="2" Grid.ColumnSpan="1">

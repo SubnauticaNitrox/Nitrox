@@ -15,18 +15,15 @@ public class GameInstallationFinder
     private static readonly Lazy<GameInstallationFinder> instance = new(() => new GameInstallationFinder());
     public static GameInstallationFinder Instance => instance.Value;
 
-    /// <summary>
-    ///     The order of these finders is VERY important. Only change if you know what you're doing.
-    /// </summary>
     private readonly Dictionary<GameLibraries, IGameFinder> finders = new()
     {
-        { GameLibraries.CURRENT_DIRECTORY, new GameInCurrentDirectoryFinder() },
-        { GameLibraries.CONFIG, new ConfigGameFinder() },
         { GameLibraries.STEAM, new SteamGameRegistryFinder() },
         { GameLibraries.EPIC, new EpicGamesInstallationFinder() },
         { GameLibraries.DISCORD, new DiscordGameFinder() },
-        { GameLibraries.MICROSOFT, new NullGameFinder() },
+        { GameLibraries.MICROSOFT, new DefaultFinder() },
         { GameLibraries.ENVIRONMENT, new EnvironmentGameFinder() },
+        { GameLibraries.CURRENT_DIRECTORY, new GameInCurrentDirectoryFinder() },
+        { GameLibraries.CONFIG, new ConfigGameFinder() }
     };
 
     public IEnumerable<GameInstallation> FindGame(GameInfo gameInfo, GameLibraries gameLibraries, IList<string> errors)

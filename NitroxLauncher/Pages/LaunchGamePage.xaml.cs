@@ -1,63 +1,63 @@
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using NitroxLauncher.Models;
 using NitroxModel;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 
-namespace NitroxLauncher.Pages
+namespace NitroxLauncher.Pages;
+
+public partial class LaunchGamePage : PageBase
 {
-    public partial class LaunchGamePage : PageBase
+    public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
+    public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
+    public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
+
+    public LaunchGamePage()
     {
-        public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
-        public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
+        InitializeComponent();
 
-        public LaunchGamePage()
+        Loaded += (s, e) =>
         {
-            InitializeComponent();
+            LauncherLogic.Config.PropertyChanged += LogicPropertyChanged;
+            LogicPropertyChanged(null, null);
+        };
 
-            Loaded += (s, e) =>
-            {
-                LauncherLogic.Config.PropertyChanged += LogicPropertyChanged;
-                LogicPropertyChanged(null, null);
-            };
-
-            Unloaded += (s, e) =>
-            {
-                LauncherLogic.Config.PropertyChanged -= LogicPropertyChanged;
-            };
-        }
-
-        private async void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
+        Unloaded += (s, e) =>
         {
-            try
-            {
-                await LauncherLogic.Instance.StartSingleplayerAsync();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error while starting in singleplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+            LauncherLogic.Config.PropertyChanged -= LogicPropertyChanged;
+        };
+    }
 
-        private async void MultiplayerButton_Click(object sender, RoutedEventArgs e)
+    private async void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            try
-            {
-                await LauncherLogic.Instance.StartMultiplayerAsync();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error while starting in multiplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            await LauncherLogic.Instance.StartSingleplayerAsync();
         }
+        catch (Exception ex)
+        {
+            MessageBox.Show(App.GetExceptionError(ex), "Error while starting in singleplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 
-        private void LogicPropertyChanged(object sender, PropertyChangedEventArgs args)
+    private async void MultiplayerButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            OnPropertyChanged(nameof(GamePlatform));
-            OnPropertyChanged(nameof(PlatformToolTip));
+            await LauncherLogic.Instance.StartMultiplayerAsync();
         }
+        catch (Exception ex)
+        {
+            MessageBox.Show(App.GetExceptionError(ex), "Error while starting in multiplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void LogicPropertyChanged(object sender, PropertyChangedEventArgs args)
+    {
+        OnPropertyChanged(nameof(GamePlatform));
+        OnPropertyChanged(nameof(PlatformToolTip));
     }
 }

@@ -1,7 +1,5 @@
-﻿global using NitroxModel.Logger;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace NitroxLauncher
@@ -13,31 +11,28 @@ namespace NitroxLauncher
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            // Set default style for all windows to the style with the target type 'Window' (in App.xaml).
-            FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
-                new FrameworkPropertyMetadata
-                {
-                    DefaultValue = FindResource(typeof(Window))
-                });
-            FrameworkElement.StyleProperty.OverrideMetadata(typeof(Page),
-                new FrameworkPropertyMetadata
-                {
-                    DefaultValue = FindResource(typeof(Page))
-                });
+            AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
+            {
+                Exception error = (Exception)e.ExceptionObject;
+                Log.Error(error.GetBaseException().ToString());
+
+                MessageBox.Show(GetExceptionError(error), "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            };
 
             DispatcherUnhandledException += (object sender, DispatcherUnhandledExceptionEventArgs e) =>
             {
+                Log.Error(e.Exception.GetBaseException().ToString()); // Gets the exception that was unhandled, not the "dispatched unhandled" exception.
+
                 // If something went wrong. Close the server if embedded.
                 LauncherLogic.Instance.Dispose();
 
-                Log.Error(e.Exception.GetBaseException().ToString()); // Gets the exception that was unhandled, not the "dispatched unhandled" exception.
-                MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                MessageBox.Show(GetExceptionError(e.Exception), "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             };
 
             base.OnStartup(e);
         }
 
-        private string GetExceptionError(Exception e)
+        public static string GetExceptionError(Exception e)
         {
 #if RELEASE
             return e.GetBaseException().Message;

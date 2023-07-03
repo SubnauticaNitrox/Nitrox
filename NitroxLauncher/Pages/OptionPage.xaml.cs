@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -28,6 +29,11 @@ public partial class OptionPage : PageBase
     [ObservableProperty]
     private GameInstallation selectedGameInstallation = default;
 
+    partial void OnSelectedGameInstallationChanged(GameInstallation value)
+    {
+        _ = LauncherLogic.Instance.SetTargetedSubnauticaPath(value.Path);
+    }
+
     public OptionPage()
     {
         InitializeComponent();
@@ -43,6 +49,21 @@ public partial class OptionPage : PageBase
         {
             IEnumerable<GameInstallation> data = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica, GameLibraries.PLATFORMS, null);
             GameInstallations = new(data);
+
+            GameInstallation currentInstallation = GameInstallations.Where(x => x.Path == NitroxUser.PreferredGamePath).FirstOrDefault();
+            if (currentInstallation == default)
+            {
+                currentInstallation = new()
+                {
+                    Origin = GameLibraries.CONFIG,
+                    GameInfo = GameInfo.Subnautica,
+                    Path = NitroxUser.PreferredGamePath
+                };
+                
+                GameInstallations.Add(currentInstallation);
+            }
+
+            selectedGameInstallation = currentInstallation;
         });
 
         Loaded += (s, e) =>
@@ -57,7 +78,7 @@ public partial class OptionPage : PageBase
         };
     }
 
-    private async void OnChangePath_Click(object sender, RoutedEventArgs e)
+    private void OnChangePath_Click(object sender, RoutedEventArgs e)
     {
         string selectedDirectory;
 
@@ -78,7 +99,6 @@ public partial class OptionPage : PageBase
             selectedDirectory = Path.GetFullPath(dialog.FileName);
         }
 
-        // TODO: Rework to allow flexibility for BZ
         if (!GameInstallationFinder.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
         {
             LauncherNotifier.Error("Invalid subnautica directory");
@@ -87,7 +107,15 @@ public partial class OptionPage : PageBase
 
         if (selectedDirectory != PathToSubnautica)
         {
-            await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
+            GameInstallation gameInstallation = new()
+            {
+                Origin = GameLibraries.CONFIG,
+                GameInfo = GameInfo.Subnautica,
+                Path = selectedDirectory
+            };
+
+            GameInstallations.Add(gameInstallation);
+            SelectedGameInstallation = gameInstallation;
             LauncherNotifier.Success("Applied changes");
         }
     }

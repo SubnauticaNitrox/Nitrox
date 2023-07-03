@@ -36,32 +36,49 @@
             </TextBlock>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.ColumnSpan="2">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0 20 0 0">
 
             <ItemsControl ItemsSource="{Binding NitroxBlogs, Mode=OneWay}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel ItemWidth="350" ItemHeight="300" Width="Auto"/>
+                        <WrapPanel ItemWidth="330" ItemHeight="300" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:NitroxBlog}">
-                        <Grid Margin="0,15,15,0">
+                        <Grid Margin="0,0,15,0">
                             <Grid VerticalAlignment="Top">
                                 <StackPanel>
                                     <Border CornerRadius="12" Height="200" Margin="0" VerticalAlignment="Top">
+
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="{x:Null}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="Border.IsMouseOver" Value="True">
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect Color="White" ShadowDepth="0" Opacity="0.7" RenderingBias="Performance" BlurRadius="20" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        
                                         <Border.Background>
-                                            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, IsAsync=True, TargetNullValue={StaticResource VinesImage}}" />
+                                            <ImageBrush ImageSource="{Binding Image, IsAsync=True, TargetNullValue={StaticResource VinesImage}}" />
                                         </Border.Background>
                                     </Border>
 
-                                    <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold" TextWrapping="Wrap">
+                                    <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,10,0,4" FontWeight="Bold" TextWrapping="Wrap">
                                         <Run Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"/>
                                     </TextBlock>
 
-                                    <TextBlock FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold" TextWrapping="Wrap">
+                                    <TextBlock FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" TextWrapping="Wrap">
                                         <Hyperlink NavigateUri="{Binding Url, Mode=OneTime, TargetNullValue={x:Static pages:BlogPage.BLOGS_LINK}}" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
                                             <Run Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"/>
                                         </Hyperlink>

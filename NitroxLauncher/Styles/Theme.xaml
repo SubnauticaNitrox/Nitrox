@@ -1,4 +1,69 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:ap="clr-namespace:NitroxLauncher.Models.Properties"
+                    xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Styles/Controls/Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Styles/Controls/Checkbox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Styles/Controls/HyperLink.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Styles/Controls/Image.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Styles/Controls/RadioButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Styles/Controls/ScrollBar.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Styles/Controls/TextBlock.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Fonts -->
+    <FontFamily x:Key="OpenSans">pack://application:,,,/Assets/Fonts/#OpenSans</FontFamily>
+    <FontFamily x:Key="RobotoMono">pack://application:,,,/Assets/Fonts/#Roboto Mono</FontFamily>
+    <FontFamily x:Key="Inter">pack://application:,,,/Assets/Fonts/#Inter</FontFamily>
+    <FontFamily x:Key="DefaultFont">pack://application:,,,/Assets/Fonts/#Inter</FontFamily>
+
+    <!-- Colors -->
+
+    <SolidColorBrush x:Key="Nitrox.Brushes.Red" Color="#FFE60914" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Yellow" Color="#FFF5A300" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.DarkBlue" Color="#FF007BFF" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.LightBlue" Color="#FF3D9BFF" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Green" Color="#FF11AD45" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Black" Color="#FF000000" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.White" Color="#FFFFFFFF" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray" Color="#FF151516" options:Freeze="True" />
+
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray1" Color="#FF333333" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray2" Color="#FF7F7F7F" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray3" Color="#FF9D9D9D" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray4" Color="#FFA59F93" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray5" Color="#FFB9B9B9" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray6" Color="#FFCCCCCC" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray7" Color="#FFD8D8D9" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray8" Color="#FFE0E0E0" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray9" Color="#5EC9C9C9" options:Freeze="True" />
+    <SolidColorBrush x:Key="Nitrox.Brushes.Gray10" Color="#FFF7F7F7" options:Freeze="True" />
+
+    <!-- Styles -->
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+    </Style>
+
+    <Style TargetType="{x:Type Page}">
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <Style x:Key="MainNavigationGrid" TargetType="{x:Type Grid}">
+        <Style.Resources>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Margin" Value="0 10" />
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="OpacityMask" Value="#7FFFFFFF" />
+                <Style.Triggers>
+                    <Trigger Property="ap:ButtonProperties.Selected" Value="True">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="OpacityMask" Value="White" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Style.Resources>
+    </Style>
 </ResourceDictionary>

@@ -15,9 +15,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
       <PackageReference Include="dnlib" Version="3.6.0" />
-      <PackageReference Include="LitJson" Version="0.17.0" />
+      <PackageReference Include="LitJson" Version="0.18.0" />
+      <PackageReference Include="MathConverter" Version="2.2.0" />
       <PackageReference Include="ToastNotifications" Version="2.5.1" />
       <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
       <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
@@ -38,6 +39,10 @@
 
     <ItemGroup>
       <Reference Include="PresentationFramework.Aero2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="JetBrains.Annotations" Version="2023.2.0" />
     </ItemGroup>
     
     <!-- Move assets from Subnautica assets to launcher.

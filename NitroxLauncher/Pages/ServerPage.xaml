@@ -221,13 +221,13 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <RadioButton Style="{StaticResource LeftServerSettingRB}" x:Name="RBIsExternal" GroupName="ServerType" ToolTip="Set the server console to launch in a separate CMD window" Click="RBServer_Clicked">
+                    <RadioButton Grid.Column="0" x:Name="RBIsExternal" GroupName="ServerType" ToolTip="Set the server console to launch in a separate CMD window" Click="RBServer_Clicked">
                         <Image Source="{StaticResource ExternalServerRB}" Width="24" Height="24"/>
                     </RadioButton>
 
                     <Border Grid.Column="1" Background="Black"/>
 
-                    <RadioButton Grid.Column="2" Style="{StaticResource RightServerSettingRB}" x:Name="RBIsDocked" GroupName="ServerType" ToolTip="Set the server console to display within the launcher" Click="RBServer_Clicked">
+                    <RadioButton Grid.Column="2" x:Name="RBIsDocked" GroupName="ServerType" ToolTip="Set the server console to display within the launcher" Click="RBServer_Clicked">
                         <Image Source="{StaticResource DockedServerRB}" Width="24" Height="24"/>
                     </RadioButton>
 

@@ -16,7 +16,7 @@
     </local:PageBase.Resources>
 
     <Grid>
-        <Grid Margin="32,20">
+        <Grid Margin="32,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="106" />
                 <RowDefinition Height="2*" />
@@ -42,7 +42,7 @@
                               ItemsSource="{Binding GameInstallations, Mode=OneWay}"
                               SelectedItem="{Binding SelectedGameInstallation, Mode=TwoWay}"
                               AlternationCount="2"
-                              IsSynchronizedWithCurrentItem="False"
+                              IsSynchronizedWithCurrentItem="True"
                               SelectionMode="Single"
                               Background="Transparent">
 
@@ -72,22 +72,31 @@
 
                     <ListView.ItemTemplate>
                         <DataTemplate DataType="{x:Type discovery:GameInstallation}">
-                            <StackPanel Orientation="Horizontal" MinHeight="62" >
-                                <RadioButton Width="16" Height="16" Margin="10 0 10 0" VerticalAlignment="Center" GroupName="GameInstall" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}" />
-                                <Image Source="{Binding OriginPlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue={StaticResource SubnauticaIcon}}"
+                            <Grid MinHeight="62">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                
+                                <RadioButton Grid.Column="0" Margin="10 0 10 0" VerticalAlignment="Center" GroupName="GameInstall" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}" />
+                                
+                                <Image Grid.Column="1"
+                                       Source="{Binding OriginPlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue={StaticResource SubnauticaIcon}}"
                                        ToolTip="Welcome aboard, Captain!"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Center"
-                                       Stretch="Uniform"
                                        MaxHeight="36"
                                        MaxWidth="36"
                                        Margin="0 0 20 0">
                                 </Image>
-                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                
+                                <StackPanel Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center">
                                     <TextBlock Foreground="White" FontWeight="Bold" FontSize="16" Text="{Binding GameInfo.Name}" />
                                     <TextBlock Foreground="White" FontWeight="Regular" FontSize="14" Text="{Binding Path}" />
                                 </StackPanel>
-                            </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
@@ -139,7 +148,7 @@
                             </Grid>
                         </Border>
 
-                        <Rectangle Grid.Column="1" Width="24" Height="24" Margin="10,0,0,0">
+                        <Rectangle Grid.Column="1" Width="24" Height="24" Margin="10,0,0,0" ToolTipService.InitialShowDelay="100">
                             <Rectangle.Fill>
                                 <VisualBrush Visual="{StaticResource InformationIcon}" AutoLayoutContent="True" />
                             </Rectangle.Fill>
