@@ -3,28 +3,53 @@
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
-            <StackPanel Margin="10" Spacing="10">
-                <Border Background="White" Padding="10" HorizontalAlignment="Center">
-                    <Border design:NitroxAttached.Theme="LIGHT" Margin="0 0 0 110">
-                        <!-- (TODO) The ComboBox item highlight shows correctly in the Previewer, but not in-app. The foreground also looks wrong, but it shows correctly in-app  -->
-                        <ComboBox PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
-                            <ComboBoxItem Content="Item 1"/>
-                            <ComboBoxItem Content="Item 2"/>
-                            <ComboBoxItem Content="Item 3"/>
-                        </ComboBox>
+            <StackPanel Margin="10" Spacing="20" Orientation="Horizontal">
+                <StackPanel Spacing="10">
+                    <Border Background="White" Padding="10" HorizontalAlignment="Center">
+                        <Border design:NitroxAttached.Theme="LIGHT" Margin="0 0 0 110">
+                            <!-- (TODO) The ComboBox item highlight shows correctly in the Previewer, but not in-app. The foreground also looks wrong, but it shows correctly in-app  -->
+                            <ComboBox PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
+                                <ComboBoxItem Content="Item 1"/>
+                                <ComboBoxItem Content="Item 2"/>
+                                <ComboBoxItem Content="Item 3"/>
+                            </ComboBox>
+                        </Border>
                     </Border>
-                </Border>
-                <Border Background="Black" Padding="10" HorizontalAlignment="Center">
-                    <Border design:NitroxAttached.Theme="DARK" Margin="0 0 0 110">
-                        <!-- The ComboBox item highlight DOESN'T show correctly in the Previewer, but it DOES in-app -->
-                        <ComboBox PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
-                            <ComboBoxItem Content="Item 1"/>
-                            <ComboBoxItem Content="Item 2"/>
-                            <ComboBoxItem Content="Item 3"/>
-                        </ComboBox>
+                    <Border Background="Black" Padding="10" HorizontalAlignment="Center">
+                        <Border design:NitroxAttached.Theme="DARK" Margin="0 0 0 110">
+                            <!-- The ComboBox item highlight DOESN'T show correctly in the Previewer, but it DOES in-app -->
+                            <ComboBox PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
+                                <ComboBoxItem Content="Item 1"/>
+                                <ComboBoxItem Content="Item 2"/>
+                                <ComboBoxItem Content="Item 3"/>
+                            </ComboBox>
+                        </Border>
                     </Border>
-                </Border>
+                </StackPanel>
+                
+                <StackPanel Spacing="10">
+                    <Border Background="White" Padding="10" HorizontalAlignment="Center">
+                        <Border design:NitroxAttached.Theme="LIGHT" Margin="0 0 0 110">
+                            <ComboBox Classes="text" PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
+                                <ComboBoxItem Content="Item 1"/>
+                                <ComboBoxItem Content="Item 2"/>
+                                <ComboBoxItem Content="Item 3"/>
+                            </ComboBox>
+                        </Border>
+                    </Border>
+                    <Border Background="Black" Padding="10" HorizontalAlignment="Center">
+                        <Border design:NitroxAttached.Theme="DARK" Margin="0 0 0 110">
+                            <ComboBox Classes="text" PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
+                                <ComboBoxItem Content="Item 1"/>
+                                <ComboBoxItem Content="Item 2"/>
+                                <ComboBoxItem Content="Item 3"/>
+                            </ComboBox>
+                        </Border>
+                    </Border>
+                </StackPanel>
             </StackPanel>
+            
+            
         </Panel>
     </Design.PreviewWith>
     
@@ -67,7 +92,7 @@
                                        Margin="{TemplateBinding Padding}"
                                        Text="{TemplateBinding PlaceholderText}"
                                        IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}" />
-                            <ContentControl Grid.Column="0" x:Name="ContentPresenter" Foreground="Blue"
+                            <ContentControl Grid.Column="0" x:Name="ContentPresenter"
                                             Content="{TemplateBinding SelectionBoxItem}"
                                             ContentTemplate="{TemplateBinding ItemTemplate}"
                                             Margin="{TemplateBinding Padding}"
@@ -166,6 +191,12 @@
         
     </Style>
     
-    
+    <!--Style Selector="ComboBox.text">
+        <Style Selector="ComboBox /template/ ContentControl">
+            <Setter Property="Content">
+                <ItemTe
+            </Setter>
+        </Style>
+    </Style-->
     
 </Styles>
