@@ -6,8 +6,6 @@ using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New;
 
-// TODO: Verify if LocalScale is necessary
-
 [DataContract]
 public class SavedBase
 {
@@ -15,10 +13,10 @@ public class SavedBase
     public NitroxInt3 BaseShape;
 
     [DataMember(Order = 2)]
-    public int[] Faces;
+    public byte[] Faces;
 
     [DataMember(Order = 3)]
-    public int[] Cells;
+    public byte[] Cells;
 
     [DataMember(Order = 4)]
     public byte[] Links;
@@ -30,10 +28,13 @@ public class SavedBase
     public byte[] Masks;
 
     [DataMember(Order = 7)]
-    public int[] IsGlass;
+    public byte[] IsGlass;
 
     [DataMember(Order = 8)]
     public NitroxInt3 Anchor;
+
+    [DataMember(Order = 9)]
+    public int PrecompressionSize;
 }
 
 [DataContract]

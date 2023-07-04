@@ -13,10 +13,7 @@ public class InteriorPieceEntity : GlobalRootEntity
     [DataMember(Order = 1)]
     public NitroxBaseFace BaseFace;
 
-    [DataMember(Order = 2)]
-    public float Constructed;
-
-    [IgnoreDataMember()]
+    [IgnoreDataMember]
     public bool IsWaterPark => waterparkClassIds.Contains(ClassId);
 
     [IgnoreConstructor]
@@ -30,21 +27,19 @@ public class InteriorPieceEntity : GlobalRootEntity
         return new();
     }
 
-    public InteriorPieceEntity(NitroxId id, NitroxId parentId, NitroxBaseFace baseFace, float constructed)
+    public InteriorPieceEntity(NitroxId id, NitroxId parentId, NitroxBaseFace baseFace)
     {
         Id = id;
         ParentId = parentId;
         BaseFace = baseFace;
-        Constructed = constructed;
 
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InteriorPieceEntity(NitroxBaseFace baseFace, float constructed, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InteriorPieceEntity(NitroxBaseFace baseFace, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
         BaseFace = baseFace;
-        Constructed = constructed;
 
         Id = id;
         TechType = techType;
@@ -59,7 +54,7 @@ public class InteriorPieceEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[InteriorPieceEntity Id: {Id}, ParentId: {ParentId}, BaseFace: {BaseFace}, Constructed: {Constructed}]";
+        return $"[InteriorPieceEntity Id: {Id}, ParentId: {ParentId}, BaseFace: {BaseFace}]";
     }
 
     /// <summary>

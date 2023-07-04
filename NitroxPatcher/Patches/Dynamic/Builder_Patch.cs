@@ -347,8 +347,6 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             BuildingTester.Main.EnsureTracker(parentEntity.Id).LocalOperations++;
             int operationId = BuildingTester.Main.GetCurrentOperationIdOrDefault(parentEntity.Id);
 
-            // TODO: In case of rebuilt interior piece which contained an inventory, send the inventory in the newly created entity
-
             UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");
 

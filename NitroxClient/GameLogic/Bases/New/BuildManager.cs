@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
@@ -325,6 +326,12 @@ public static class NitroxBuild
         result?.Set(baseObject);
     }
     
+    public static void SetupPower(PowerSource powerSource)
+    {
+        // TODO: Have synced/restored power
+        powerSource.SetPower(powerSource.maxPower);
+    }
+
     /// <summary>
     /// Destroys manually ghosts, modules, interior pieces and vehicles of a base
     /// </summary>
@@ -667,6 +674,8 @@ public static class NitroxBase
 {
     public static SavedBase From(Base targetBase)
     {
+        Func<byte[], byte[]> c = SerializationHelper.CompressBytes;
+
         SavedBase savedBase = new();
         if (targetBase.baseShape != null)
         {
@@ -674,15 +683,16 @@ public static class NitroxBase
         }
         if (targetBase.faces != null)
         {
-            savedBase.Faces = Array.ConvertAll(targetBase.faces, faceType => (int)faceType);
+            savedBase.Faces = c(Array.ConvertAll(targetBase.faces, faceType => (byte)faceType));
         }
         if (targetBase.cells != null)
         {
-            savedBase.Cells = Array.ConvertAll(targetBase.cells, cellType => (int)cellType);
+            savedBase.Cells = c(Array.ConvertAll(targetBase.cells, cellType => (byte)cellType));
         }
         if (targetBase.links != null)
         {
-            savedBase.Links = targetBase.links;
+            savedBase.Links = c(targetBase.links);
+            savedBase.PrecompressionSize = targetBase.links.Length;
         }
         if (targetBase.cellOffset != null)
         {
@@ -690,11 +700,11 @@ public static class NitroxBase
         }
         if (targetBase.masks != null)
         {
-            savedBase.Masks = targetBase.masks;
+            savedBase.Masks = c(targetBase.masks);
         }
         if (targetBase.isGlass != null)
         {
-            savedBase.IsGlass = Array.ConvertAll(targetBase.isGlass, isGlass => isGlass ? 1 : 0);
+            savedBase.IsGlass = c(Array.ConvertAll(targetBase.isGlass, isGlass => isGlass ? (byte)1 : (byte)0));
         }
         if (targetBase.anchor != null)
         {
@@ -705,6 +715,10 @@ public static class NitroxBase
 
     public static void ApplyTo(this SavedBase savedBase, Base @base)
     {
+
+        Func<byte[], int, byte[]> d = SerializationHelper.DecompressBytes;
+        int size = savedBase.PrecompressionSize;
+
         if (savedBase.BaseShape != null)
         {
             @base.baseShape = new(); // Reset it so that the following instruction is understood as a change
@@ -712,15 +726,15 @@ public static class NitroxBase
         }
         if (savedBase.Faces != null)
         {
-            @base.faces = Array.ConvertAll(savedBase.Faces, faceType => (Base.FaceType)faceType);
+            @base.faces = Array.ConvertAll(d(savedBase.Faces, size * 6), faceType => (Base.FaceType)faceType);
         }
         if (savedBase.Cells != null)
         {
-            @base.cells = Array.ConvertAll(savedBase.Cells, cellType => (Base.CellType)cellType);
+            @base.cells = Array.ConvertAll(d(savedBase.Cells, size), cellType => (Base.CellType)cellType);
         }
         if (savedBase.Links != null)
         {
-            @base.links = savedBase.Links;
+            @base.links = d(savedBase.Links, size);
         }
         if (savedBase.CellOffset != null)
         {
@@ -728,11 +742,11 @@ public static class NitroxBase
         }
         if (savedBase.Masks != null)
         {
-            @base.masks = savedBase.Masks;
+            @base.masks = d(savedBase.Masks, size);
         }
         if (savedBase.IsGlass != null)
         {
-            @base.isGlass = Array.ConvertAll(savedBase.IsGlass, num => num == 1);
+            @base.isGlass = Array.ConvertAll(d(savedBase.IsGlass, size), num => num == 1);
         }
         if (savedBase.Anchor != null)
         {
@@ -788,8 +802,6 @@ public static class NitroxInteriorPiece
         if (gameObject && gameObject.TryGetComponent(out PrefabIdentifier identifier))
         {
             interiorPiece.ClassId = identifier.ClassId;
-            // TODO: Fix techtype not being found out
-            interiorPiece.TechType = CraftData.entClassTechTable.GetOrDefault(identifier.ClassId, TechType.None).ToDto();
         }
         else
         {
@@ -810,32 +822,26 @@ public static class NitroxInteriorPiece
             interiorPiece.ParentId = parentEntity.Id;
         }
 
-        // TODO: Verify if this is necessary or not
-        // EDIT: This is most likely not, apart from the PlanterEntity which is important
         switch (module)
         {
-            case LargeRoomWaterPark largeRoomWaterPark:
+            case LargeRoomWaterPark:
                 PlanterEntity leftPlanter = new(interiorPiece.Id.Increment(), interiorPiece.Id);
                 PlanterEntity rightPlanter = new(leftPlanter.Id.Increment(), interiorPiece.Id);
                 interiorPiece.ChildEntities.Add(leftPlanter);
                 interiorPiece.ChildEntities.Add(rightPlanter);
-                // TODO: Eventually add the children items as entities
-                interiorPiece.Constructed = largeRoomWaterPark.constructed;
                 break;
-            case WaterPark waterPark:
-                interiorPiece.Constructed = waterPark.constructed;
-                break;
-            case FiltrationMachine filtrationMachine:
-                interiorPiece.Constructed = filtrationMachine.constructed;
-                break;
-            case BaseUpgradeConsole baseUpgradeConsole:
-                interiorPiece.Constructed = baseUpgradeConsole.constructed;
-                break;
+            // When you deconstruct (not entirely) then construct back those pieces, they keep their inventories
             case BaseNuclearReactor baseNuclearReactor:
-                interiorPiece.Constructed = baseNuclearReactor.constructed;
+                interiorPiece.ChildEntities.AddRange(Items.GetEquipmentModuleEntities(baseNuclearReactor.equipment, entity.Id));
                 break;
             case BaseBioReactor baseBioReactor:
-                interiorPiece.Constructed = baseBioReactor.constructed;
+                foreach (ItemsContainer.ItemGroup itemGroup in baseBioReactor.container._items.Values)
+                {
+                    foreach (InventoryItem item in itemGroup.items)
+                    {
+                        interiorPiece.ChildEntities.Add(Items.ConvertToInventoryItemEntity(item.item.gameObject));
+                    }
+                }
                 break;
         }
 

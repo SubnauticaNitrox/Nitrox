@@ -72,6 +72,11 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
                 yield return planter.DeserializeAsync();
             }
         }
+
+        if (result.Get().Value.TryGetComponent(out PowerSource powerSource))
+        {
+            NitroxBuild.SetupPower(powerSource);
+        }
     }
 
     public override bool SpawnsOwnChildren(InteriorPieceEntity entity) => true;

@@ -54,6 +54,11 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
 
         DateTimeOffset endTime = DateTimeOffset.Now;
         Log.Debug($"Module complete spawning took {(endTime - beginTime).TotalMilliseconds}ms");
+
+        if (moduleObject.TryGetComponent(out PowerSource powerSource))
+        {
+            NitroxBuild.SetupPower(powerSource);
+        }
     }
 
     public override bool SpawnsOwnChildren(ModuleEntity entity) => true;
