@@ -28,6 +28,7 @@ public static class CoroutineHelper
             catch (T exception)
             {
                 exceptionCallback?.Invoke(exception);
+                yield break;
             }
             yield return enumerator.Current;
         }

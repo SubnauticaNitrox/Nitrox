@@ -96,7 +96,7 @@ public class Items
             // 2. You can't drop items in bases but you can place small objects like figures and posters which are put right under the base object
             // NB: They are recognizable by their PlaceTool from which the Place() function executes the current code
             SubRoot currentSub = Player.main.GetCurrentSub();
-            if (currentSub && NitroxEntity.TryGetIdFrom(currentSub.gameObject, out NitroxId parentId))
+            if (currentSub && currentSub.TryGetNitroxId(out NitroxId parentId))
             {
                 droppedItem.ParentId = parentId;
             }
@@ -146,7 +146,7 @@ public class Items
         }
     }
 
-    private InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject)
+    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject)
     {
         NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(gameObject); // id may not exist, create if missing
         string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
@@ -178,11 +178,31 @@ public class Items
     private bool TryGetCurrentWaterParkId(out NitroxId waterParkId)
     {
         if (Player.main && Player.main.currentWaterPark &&
-            NitroxEntity.TryGetIdFrom(Player.main.currentWaterPark.gameObject, out waterParkId))
+            Player.main.currentWaterPark.TryGetNitroxId(out waterParkId))
         {
             return true;
         }
         waterParkId = null;
         return false;
+    }
+
+    public static List<InstalledModuleEntity> GetEquipmentModuleEntities(Equipment equipment, NitroxId equipmentId)
+    {
+        List<InstalledModuleEntity> entities = new();
+        foreach (KeyValuePair<string, InventoryItem> itemEntry in equipment.equipment)
+        {
+            InventoryItem item = itemEntry.Value;
+            if (item != null)
+            {
+                Pickupable pickupable = item.item;
+                string classId = pickupable.RequireComponent<PrefabIdentifier>().ClassId;
+                NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(pickupable.gameObject);
+                Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(pickupable.gameObject);
+                List<Entity> children = GetPrefabChildren(pickupable.gameObject, itemId).ToList();
+
+                entities.Add(new(itemEntry.Key, classId, itemId, pickupable.GetTechType().ToDto(), metadata.OrNull(), equipmentId, children));
+            }
+        }
+        return entities;
     }
 }
