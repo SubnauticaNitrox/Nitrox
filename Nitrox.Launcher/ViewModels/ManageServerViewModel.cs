@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
-using Avalonia.Controls.Notifications;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
@@ -211,19 +210,13 @@ public class ManageServerViewModel : RoutableViewModelBase
     {
         this.BindValidation();
         
-        IObservable<bool> canExecuteManageServerCommands = this.WhenAnyValue(x => x.IsAnySettingChanged);
+        IObservable<bool> canExecuteSaveUndoCommands = this.WhenAnyValue(x => x.IsAnySettingChanged);
+        IObservable<bool> canExecuteManageServerCommands = this.WhenAnyValue(x => x.IsAnySettingChanged, (value) => !value);
         
         BackCommand = ReactiveCommand.Create(() =>
         {
-            if (CheckIfAnySettingChanged())
-            {
-                Console.WriteLine("Save your changes before continuing"); // TODO: Launcher Notification
-            }
-            else
-            {
-                Router.NavigateBack.Execute();
-            }
-        });
+            Router.NavigateBack.Execute();
+        }, canExecuteManageServerCommands);
         
         SaveCommand = ReactiveCommand.Create(() =>
         {
@@ -245,7 +238,7 @@ public class ManageServerViewModel : RoutableViewModelBase
             Server.AllowCommands = ServerAllowCommands;
             
             CheckIfAnySettingChanged();
-        }, canExecuteManageServerCommands);
+        }, canExecuteSaveUndoCommands);
         
         UndoCommand = ReactiveCommand.Create(() =>
         {
@@ -261,19 +254,12 @@ public class ManageServerViewModel : RoutableViewModelBase
             ServerAutoPortForward = Server.AutoPortForward;
             ServerAllowLanDiscovery = Server.AllowLanDiscovery;
             ServerAllowCommands = Server.AllowCommands;
-        }, canExecuteManageServerCommands);
+        }, canExecuteSaveUndoCommands);
         
         StartServerCommand = ReactiveCommand.Create(() =>
         {
-            if (CheckIfAnySettingChanged())
-            {
-                Console.WriteLine("Save your changes before starting the server"); // TODO: Launcher Notification
-            }
-            else
-            {
-                Server.StartCommand.Execute(null);
-            }
-        });
+            Server.StartCommand.Execute(null);
+        }, canExecuteManageServerCommands);
     }
     public void LoadFrom(ServerEntry serverEntry)
     {
