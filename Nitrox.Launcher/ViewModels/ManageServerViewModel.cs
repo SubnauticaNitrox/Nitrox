@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using Nitrox.Launcher.Models;
@@ -12,6 +13,8 @@ namespace Nitrox.Launcher.ViewModels;
 
 public class ManageServerViewModel : RoutableViewModelBase
 {
+    public Array PlayerPerms = Enum.GetValues(typeof(PlayerPermissions));
+    
     private ServerEntry server;
     /// <summary>
     ///     When set, navigates to the <see cref="ManageServerView" />.
@@ -181,8 +184,16 @@ public class ManageServerViewModel : RoutableViewModelBase
         get => isAnySettingChanged;
         set => this.RaiseAndSetIfChanged(ref isAnySettingChanged, value);
     }
+    
+    private bool isChangedSettingsValid;
 
-    private bool CheckIfAnySettingChanged()
+    public bool IsChangedSettingsValid
+    {
+        get => isChangedSettingsValid;
+        set => this.RaiseAndSetIfChanged(ref isChangedSettingsValid, value);
+    }
+
+    private void CheckIfAnySettingChanged()
     {
         if (ServerName != Server.Name || ServerPassword != Server.Password ||
             ServerGameMode != Server.GameMode || ServerSeed != Server.Seed ||
@@ -192,13 +203,17 @@ public class ManageServerViewModel : RoutableViewModelBase
             ServerAllowLanDiscovery != Server.AllowLanDiscovery || ServerAllowCommands != Server.AllowCommands)
         {
             IsAnySettingChanged = true;
+
+            if (string.IsNullOrEmpty(ServerName) || ServerName.Any(c => Path.GetInvalidFileNameChars().Contains(c)))
+                IsChangedSettingsValid = false;
+            else
+                IsChangedSettingsValid = true;
         }
         else
         {
             IsAnySettingChanged = false;
+            IsChangedSettingsValid = true;
         }
-
-        return IsAnySettingChanged;
     }
     
     public ReactiveCommand<Unit, Unit> BackCommand { get; init; }
@@ -210,7 +225,10 @@ public class ManageServerViewModel : RoutableViewModelBase
     {
         this.BindValidation();
         
-        IObservable<bool> canExecuteSaveUndoCommands = this.WhenAnyValue(x => x.IsAnySettingChanged);
+        IObservable<bool> canExecuteSaveCommand = this.WhenAnyValue(x => x.IsAnySettingChanged, x => x.IsChangedSettingsValid,
+                                                                    (settingsAreChanged, noInvalidChanges)
+                                                                        => settingsAreChanged && noInvalidChanges);
+        IObservable<bool> canExecuteUndoCommand = this.WhenAnyValue(x => x.IsAnySettingChanged);
         IObservable<bool> canExecuteManageServerCommands = this.WhenAnyValue(x => x.IsAnySettingChanged, (value) => !value);
         
         BackCommand = ReactiveCommand.Create(() =>
@@ -220,8 +238,6 @@ public class ManageServerViewModel : RoutableViewModelBase
         
         SaveCommand = ReactiveCommand.Create(() =>
         {
-            // TODO: Check for invalid value inputs and throw an error if one is found
-            
             Server.WhenAnyValue(x => x.IsOnline).Where(x => !x);
             
             Server.Name = ServerName;
@@ -238,7 +254,7 @@ public class ManageServerViewModel : RoutableViewModelBase
             Server.AllowCommands = ServerAllowCommands;
             
             CheckIfAnySettingChanged();
-        }, canExecuteSaveUndoCommands);
+        }, canExecuteSaveCommand);
         
         UndoCommand = ReactiveCommand.Create(() =>
         {
@@ -254,7 +270,7 @@ public class ManageServerViewModel : RoutableViewModelBase
             ServerAutoPortForward = Server.AutoPortForward;
             ServerAllowLanDiscovery = Server.AllowLanDiscovery;
             ServerAllowCommands = Server.AllowCommands;
-        }, canExecuteSaveUndoCommands);
+        }, canExecuteUndoCommand);
         
         StartServerCommand = ReactiveCommand.Create(() =>
         {

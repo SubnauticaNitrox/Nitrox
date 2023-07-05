@@ -37,9 +37,18 @@
         <Setter Property="Background" Value="#ECECEC" />
         <Setter Property="Padding" Value="24 20" />
     </Style>
-
-    <!-- TODO: a good-looking focus overlay, compatible with all controls -->
+    
     <Style Selector=":is(Control)">
+        <Style Selector="^ /template/ ContentPresenter">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <!-- TODO: a good-looking focus overlay, compatible with all controls -->
         <Setter Property="FocusAdorner">
             <Setter.Value>
                 <FocusAdornerTemplate>
@@ -47,6 +56,7 @@
                 </FocusAdornerTemplate>
             </Setter.Value>
         </Setter>
+        
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value=".85" />
         </Style>

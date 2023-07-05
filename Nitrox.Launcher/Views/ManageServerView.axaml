@@ -56,12 +56,12 @@
             </StackPanel>
             
             <Grid ColumnDefinitions="*,100,100">
-                <TextBlock Classes="header" Text="{Binding ServerName}" Margin="0 0 5 0" />
+                <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" Margin="0 0 5 0" />
                 
                 <Button Grid.Column="1" Classes="nitrox big abort"
                         Height="40" Margin="0 0 5 0" Padding="5" HorizontalAlignment="Stretch"
                         design:NitroxAttached.Text="UNDO" Command="{Binding UndoCommand}" />
-                <Button Grid.Column="2" Classes="nitrox big"
+                <Button Grid.Column="2" Classes="nitrox big primary"
                         Height="40" Margin="5 0 0 0" Padding="5" HorizontalAlignment="Stretch"
                         design:NitroxAttached.Text="SAVE" Command="{Binding SaveCommand}" />
             </Grid>
@@ -107,12 +107,13 @@
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
                         <!-- TODO: Might need to use converters here -->
-                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
-                                  SelectedValueBinding="{Binding ServerDefaultPlayerPerm}"
+                        <ComboBox x:Name="PlayerPermsComboBox" PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
+                                  ItemsSource="{x:Type models:PlayerPermissions}"
+                                  SelectedValue="{Binding ServerDefaultPlayerPerm}"
                                   IsEnabled="{Binding !ServerIsOnline}">
-                            <ComboBoxItem Content="Player" Tag="PLAYER"/>
+                            <!--ComboBoxItem Content="Player" Tag="PLAYER"/>
                             <ComboBoxItem Content="Operator" Tag="OPERATOR"/>
-                            <ComboBoxItem Content="Admin" Tag="ADMIN"/>
+                            <ComboBoxItem Content="Admin" Tag="ADMIN"/-->
                         </ComboBox>
                     </StackPanel>
                     
@@ -120,7 +121,7 @@
                         <TextBlock Text="AUTO SAVE INTERVAL" FontSize="10" Opacity=".5" FontWeight="700" />
                         <!-- TODO: Handle values other than the preset ones by binding data directly to the ComboBox's TextBox -->
                         <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
-                                  SelectedValueBinding="{Binding ServerAutoSaveInterval}"
+                                  SelectedValue="{Binding ServerAutoSaveInterval}"
                                   IsEnabled="{Binding !ServerIsOnline}">
                             <ComboBoxItem Content="60s" Tag="60"/>
                             <ComboBoxItem Content="120s" Tag="120"/>
