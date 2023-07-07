@@ -80,7 +80,8 @@ namespace NitroxClient.Communication.MultiplayerSession
             // If a reservation has already been sent (in which case the client is enqueued in the join queue)
             if (CurrentState.CurrentStage == MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION)
             {
-                Log.InGame(Language.main.Get("Nitrox_Waiting"));
+                Log.Info("Waiting in join queue…");
+                Log.OnlyInGame(Language.main.Get("Nitrox_Waiting"));
                 return;
             }
 
@@ -93,7 +94,8 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             if (reservation.ReservationState == MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE)
             {
-                Log.InGame(Language.main.Get("Nitrox_Waiting"));
+                Log.Info("Waiting in join queue…");
+                Log.OnlyInGame(Language.main.Get("Nitrox_Waiting"));
                 return;
             }
 
