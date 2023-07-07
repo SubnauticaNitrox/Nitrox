@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 remotePlayerManager.RemovePlayer(disconnect.PlayerId);
                 Log.Info($"{remotePlayer.Value.PlayerName} disconnected");
-                Log.OnlyInGame(Language.main.Get("Nitrox_PlayerDisconnected").Replace("{PLAYER}", remotePlayer.Value.PlayerName));
+                Log.InGame(Language.main.Get("Nitrox_PlayerDisconnected").Replace("{PLAYER}", remotePlayer.Value.PlayerName));
             }
         }
     }

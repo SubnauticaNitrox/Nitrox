@@ -18,7 +18,7 @@ public class PlayerDeathProcessor : ClientPacketProcessor<PlayerDeathEvent>
     {
         RemotePlayer player = Validate.IsPresent(playerManager.Find(playerDeath.PlayerId));
         Log.Debug($"{player.PlayerName} died");
-        Log.OnlyInGame(Language.main.Get("Nitrox_PlayerDied").Replace("{PLAYER}", player.PlayerName));
+        Log.InGame(Language.main.Get("Nitrox_PlayerDied").Replace("{PLAYER}", player.PlayerName));
         player.PlayerDeathEvent.Trigger(player);
 
         // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)

@@ -138,7 +138,7 @@ public class JoinServer : MonoBehaviour
         catch (ClientConnectionFailedException ex)
         {
             Log.ErrorSensitive("Unable to contact the remote server at: {{ip}}:{{port}}", serverIp, serverPort);
-            Log.OnlyInGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
+            Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
 
             if (serverIp.Equals("127.0.0.1"))
             {
@@ -150,7 +150,7 @@ public class JoinServer : MonoBehaviour
                 else
                 {
                     Log.Error(ex);
-                    Log.OnlyInGame(Language.main.Get("Nitrox_FirewallInterfering"));
+                    Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
                 }
             }
 
@@ -193,27 +193,27 @@ public class JoinServer : MonoBehaviour
         {
             case MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY:
                 Log.Info("Requesting session policy info");
-                Log.OnlyInGame(Language.main.Get("Nitrox_RequestingSessionPolicy"));
+                Log.InGame(Language.main.Get("Nitrox_RequestingSessionPolicy"));
                 break;
 
             case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
                 if (multiplayerSession.SessionPolicy.RequiresServerPassword)
                 {
                     Log.Info("Waiting for server password input");
-                    Log.OnlyInGame(Language.main.Get("Nitrox_WaitingPassword"));
+                    Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
                     showingPasswordWindow = true;
                     shouldFocus = true;
                 }
 
                 Log.Info("Waiting for user input");
-                Log.OnlyInGame(Language.main.Get("Nitrox_WaitingUserInput"));
+                Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
                 MainMenuRightSide.main.OpenGroup("Join Server");
                 FocusPlayerNameTextBox();
                 break;
 
             case MultiplayerSessionConnectionStage.SESSION_RESERVED:
                 Log.Info("Launching game");
-                Log.OnlyInGame(Language.main.Get("Nitrox_LaunchGame"));
+                Log.InGame(Language.main.Get("Nitrox_LaunchGame"));
                 multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                 preferencesManager.Save();
 
@@ -228,7 +228,7 @@ public class JoinServer : MonoBehaviour
 
             case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
                 Log.Info("Reservation rejected");
-                Log.OnlyInGame(Language.main.Get("Nitrox_RejectedSessionPolicy"));
+                Log.InGame(Language.main.Get("Nitrox_RejectedSessionPolicy"));
 
                 MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 

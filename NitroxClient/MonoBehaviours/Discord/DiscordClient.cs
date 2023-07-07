@@ -75,7 +75,7 @@ public class DiscordClient : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name != "StartScreen" || !MainMenuMultiplayerPanel.Main)
         {
-            Log.OnlyInGame(Language.main.Get("Nitrox_DiscordMultiplayerMenu"));
+            Log.InGame(Language.main.Get("Nitrox_DiscordMultiplayerMenu"));
             Log.Warn("[Discord] Can't join a server outside of the main-menu.");
             return;
         }
@@ -154,7 +154,7 @@ public class DiscordClient : MonoBehaviour
             }
             else
             {
-                Log.OnlyInGame($"[Discord] {Language.main.Get("Nitrox_Failure")}");
+                Log.InGame($"[Discord] {Language.main.Get("Nitrox_Failure")}");
                 Log.Error($"[Discord] {result}: Failed to send join response");
             }
         });

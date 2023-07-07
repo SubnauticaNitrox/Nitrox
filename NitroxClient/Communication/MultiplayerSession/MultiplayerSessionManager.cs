@@ -64,14 +64,14 @@ namespace NitroxClient.Communication.MultiplayerSession
             {
                 case -1:
                     Log.Error($"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
-                    Log.OnlyInGame(Language.main.Get("Nitrox_OutOfDateClient")
+                    Log.InGame(Language.main.Get("Nitrox_OutOfDateClient")
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
                     return;
                 case 1:
                     Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
-                    Log.OnlyInGame(Language.main.Get("Nitrox_OutOfDateServer")
+                    Log.InGame(Language.main.Get("Nitrox_OutOfDateServer")
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
@@ -87,7 +87,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (CurrentState.CurrentStage == MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION)
             {
                 Log.Info("Waiting in join queue…");
-                Log.OnlyInGame(Language.main.Get("Nitrox_Waiting"));
+                Log.InGame(Language.main.Get("Nitrox_Waiting"));
                 return;
             }
 
@@ -101,7 +101,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (reservation.ReservationState == MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE)
             {
                 Log.Info("Waiting in join queue…");
-                Log.OnlyInGame(Language.main.Get("Nitrox_Waiting"));
+                Log.InGame(Language.main.Get("Nitrox_Waiting"));
                 return;
             }
 

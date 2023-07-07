@@ -159,12 +159,6 @@ namespace NitroxModel.Logger
 
         public static void InGame(string message)
         {
-            logger.Information(message);
-            inGameLogger.Information(message);
-        }
-
-        public static void OnlyInGame(string message)
-        {
             inGameLogger.Information(message);
         }
 
