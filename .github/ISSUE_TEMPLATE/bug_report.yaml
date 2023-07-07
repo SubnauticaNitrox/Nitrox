@@ -24,7 +24,7 @@ body:
     id: os_type
     attributes:
       label: Which OS are you playing on?
-      description: Please select your Operation System from the dropdown.
+      description: Please select your Operating System from the dropdown.
       options:
         - Windows
         - Linux (currently not supported, don't file any reports if your are using this)
@@ -55,7 +55,7 @@ body:
     id: steps_to_reproduce
     attributes:
       label: Describe the steps you took to encounter the bug.
-      description: How did it happened? Please provide steps to reproduce the bug if possible. Did the bug disappear with slightly altered steps?
+      description: How did it happen? Please provide steps to reproduce the bug if possible. Did the bug disappear with slightly altered steps?
       placeholder: Tell us what you did! 
     validations:
       required: false
