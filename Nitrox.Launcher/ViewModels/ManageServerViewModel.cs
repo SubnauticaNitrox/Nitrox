@@ -13,8 +13,9 @@ namespace Nitrox.Launcher.ViewModels;
 
 public class ManageServerViewModel : RoutableViewModelBase
 {
-    public Array PlayerPerms = Enum.GetValues(typeof(PlayerPermissions));
+    public static Array PlayerPerms => Enum.GetValues(typeof(PlayerPermissions));
     
+
     private ServerEntry server;
     /// <summary>
     ///     When set, navigates to the <see cref="ManageServerView" />.
@@ -22,7 +23,7 @@ public class ManageServerViewModel : RoutableViewModelBase
     public ServerEntry Server
     {
         get => server;
-        set
+        private set
         {
             if (server != null)
             {
@@ -43,7 +44,8 @@ public class ManageServerViewModel : RoutableViewModelBase
         get => Server.IsOnline;
         set => this.RaiseAndSetIfChanged(ref serverIsOnline, value);
     }
-
+    
+    
     private string serverName;
     public string ServerName
     {
@@ -176,6 +178,7 @@ public class ManageServerViewModel : RoutableViewModelBase
         }
     }
     
+    
     private string worldFolderDirectory;
 
     private bool isAnySettingChanged;
@@ -192,7 +195,8 @@ public class ManageServerViewModel : RoutableViewModelBase
         get => isChangedSettingsValid;
         set => this.RaiseAndSetIfChanged(ref isChangedSettingsValid, value);
     }
-
+    
+    
     private void CheckIfAnySettingChanged()
     {
         if (ServerName != Server.Name || ServerPassword != Server.Password ||

@@ -23,6 +23,7 @@ public class ServerEntry : ReactiveObject
     private bool autoPortForward = true;
     private bool allowLanDiscovery = true;
     private bool allowCommands = true;
+    private bool isNewServer = true;
     
     public bool IsOnline
     {
@@ -89,6 +90,13 @@ public class ServerEntry : ReactiveObject
         get => allowCommands;
         set => this.RaiseAndSetIfChanged(ref allowCommands, value);
     }
+
+    public bool IsNewServer
+    {
+        get => isNewServer;
+        private set => this.RaiseAndSetIfChanged(ref isNewServer, value);
+    }
+    
     public ICommand StartCommand { get; init; }
     public ICommand StopCommand { get; init; }
 
@@ -101,6 +109,8 @@ public class ServerEntry : ReactiveObject
     private Task StartServer()
     {
         IsOnline = true;
+        if (IsNewServer)
+            IsNewServer = false;
         return Task.CompletedTask;
     }
 

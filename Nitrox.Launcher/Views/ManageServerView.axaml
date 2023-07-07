@@ -101,19 +101,17 @@
                     <StackPanel>
                         <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Server seed" Text="{Binding ServerSeed}"
-                                 MaxLength="10" IsEnabled="{Binding !ServerIsOnline}"/>
+                                 MaxLength="10" IsEnabled="{Binding !ServerIsOnline}"
+                                 IsReadOnly="{Binding !Server.IsNewServer}"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
                         <!-- TODO: Might need to use converters here -->
-                        <ComboBox x:Name="PlayerPermsComboBox" PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
-                                  ItemsSource="{x:Type models:PlayerPermissions}"
+                        <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
+                                  ItemsSource="{Binding PlayerPerms, StringFormat='{}{0} THIS DOESN\'T WORK'}"
                                   SelectedValue="{Binding ServerDefaultPlayerPerm}"
-                                  IsEnabled="{Binding !ServerIsOnline}">
-                            <!--ComboBoxItem Content="Player" Tag="PLAYER"/>
-                            <ComboBoxItem Content="Operator" Tag="OPERATOR"/>
-                            <ComboBoxItem Content="Admin" Tag="ADMIN"/-->
+                                  IsEnabled="{Binding !ServerIsOnline}"> <!-- StringFormat={}{0.ToLower()} -->
                         </ComboBox>
                     </StackPanel>
                     
