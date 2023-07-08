@@ -137,7 +137,7 @@ public class JoinServer : MonoBehaviour
         }
         catch (ClientConnectionFailedException ex)
         {
-            Log.ErrorSensitive("Unable to contact the remote server at: {{ip}}:{{port}}", serverIp, serverPort);
+            Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
             Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
 
             if (serverIp.Equals("127.0.0.1"))

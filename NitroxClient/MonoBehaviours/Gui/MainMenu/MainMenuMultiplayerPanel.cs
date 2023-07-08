@@ -121,7 +121,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
-                Log.ErrorSensitive("Unable to contact the remote server at: {{ip}}:{{port}}", serverIp, serverPort);
+                Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
                 Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
                 return;
             }
