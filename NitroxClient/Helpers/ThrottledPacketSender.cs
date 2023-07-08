@@ -52,6 +52,11 @@ namespace NitroxClient.Helpers
             return true;
         }
 
+        public bool RemovePendingPackets(object dedupeKey)
+        {
+            return throttledPackets.Remove(dedupeKey);
+        }
+
         private class ThrottledPacket
         {
             public DateTime SendTime { get; private set; }

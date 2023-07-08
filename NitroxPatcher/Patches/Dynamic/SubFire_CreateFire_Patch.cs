@@ -1,10 +1,15 @@
-﻿using System;
+using System;
 using System.Reflection;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -34,14 +39,19 @@ namespace NitroxPatcher.Patches.Dynamic
             // We can easily find where it is because it'll be the only Transform in SubFire.availableNodes with a childCount > 0
             if (__state)
             {
-                Fires fires = NitroxServiceLocator.LocateService<Fires>();
                 foreach (Transform transform in __instance.availableNodes)
                 {
                     if (transform.childCount > 0)
                     {
                         int nodeIndex = Array.IndexOf(__instance.roomFires[startInRoom.roomLinks.room].spawnNodes, transform);
                         Fire fire = transform.GetComponentInChildren<Fire>();
-                        fires.OnCreate(fire, startInRoom, nodeIndex);
+
+                        NitroxId subRootId = NitroxEntity.GetId(fire.fireSubRoot.gameObject);
+                        NitroxId fireId = NitroxEntity.GetId(fire.gameObject);
+
+                        CyclopsFireEntity cyclopsFireEntity = new((int)startInRoom.roomLinks.room, nodeIndex, fireId, TechType.None.ToDto(), null, subRootId, new());
+                        Resolve<IPacketSender>().Send(new EntitySpawnedByClient(cyclopsFireEntity));
+
                         return;
                     }
                 }

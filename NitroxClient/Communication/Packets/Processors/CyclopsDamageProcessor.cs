@@ -1,13 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using NitroxClient.Communication.Abstract;
+using System.Collections.Generic;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -18,15 +12,6 @@ namespace NitroxClient.Communication.Packets.Processors
     /// </summary>
     public class CyclopsDamageProcessor : ClientPacketProcessor<CyclopsDamage>
     {
-        private readonly IPacketSender packetSender;
-        private readonly Fires fires;
-
-        public CyclopsDamageProcessor(IPacketSender packetSender, Fires fires)
-        {
-            this.packetSender = packetSender;
-            this.fires = fires;
-        }
-
         public override void Process(CyclopsDamage packet)
         {
             SubRoot subRoot = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<SubRoot>();
@@ -34,11 +19,6 @@ namespace NitroxClient.Communication.Packets.Processors
             using (PacketSuppressor<CyclopsDamagePointRepaired>.Suppress())
             {
                 SetActiveDamagePoints(subRoot, packet.DamagePointIndexes);
-            }
-
-            using (PacketSuppressor<FireDoused>.Suppress())
-            {
-                SetActiveRoomFires(subRoot, packet.RoomFires);
             }
 
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
@@ -132,59 +112,6 @@ namespace NitroxClient.Communication.Packets.Processors
             damageManager.unusedDamagePoints = unusedDamagePoints;
             // Visual update only to show the water leaking through the window and various hull points based on missing health.
             damageManager.ToggleLeakPointsBasedOnDamage();
-        }
-
-        /// <summary>
-        /// Add/remove fires until it matches the <paramref name="roomFires"/> array. Can trigger <see cref="FireDoused"/> packets
-        /// </summary>
-        private void SetActiveRoomFires(SubRoot subRoot, CyclopsFireData[] roomFires)
-        {
-            SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
-            NitroxId subRootId = NitroxEntity.GetId(subRoot.gameObject);
-            CyclopsFireData fireNode = null;
-
-            if (roomFires != null && roomFires.Length > 0)
-            {
-                // Removing and adding fires will happen in the same loop
-                foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
-                {
-                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
-                    {
-                        fireNode = roomFires.SingleOrDefault(x => x.Room == keyValuePair.Key && x.NodeIndex == nodeIndex);
-
-                        // If there's a matching node index, add a fire if there isn't one already. Otherwise remove a fire if there is one
-                        if (fireNode == null)
-                        {
-                            if (keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
-                            {
-                                keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
-                            }
-                        }
-                        else
-                        {
-                            if (keyValuePair.Value.spawnNodes[nodeIndex].childCount < 1)
-                            {
-                                fires.Create(new CyclopsFireData(fireNode.FireId, subRootId, fireNode.Room, fireNode.NodeIndex));
-                            }
-                        }
-                    }
-                }
-            }
-            // Clear out the fires, there should be none active
-            else
-            {
-                foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
-                {
-                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
-                    {
-                        if (keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
-                        {
-                            keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
