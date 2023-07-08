@@ -82,17 +82,12 @@ namespace NitroxModel.Logger
                                                                                                                             shared: true))))
                      .CreateLogger();
 
-            inGameLogger = new LoggerConfiguration()
-                           .WriteTo.Logger(cnf =>
-                           {
-                               if (gameLogger == null)
-                               {
-                                   return;
-                               }
-
-                               cnf.Enrich.FromLogContext().WriteTo.Message(gameLogger.Log);
-                           })
-                           .CreateLogger();
+            if (gameLogger != null)
+            {
+                inGameLogger = new LoggerConfiguration()
+                               .WriteTo.Logger(cnf => cnf.Enrich.FromLogContext().WriteTo.Message(gameLogger.Log))
+                               .CreateLogger();
+            }
         }
 
         [Conditional("DEBUG")]
