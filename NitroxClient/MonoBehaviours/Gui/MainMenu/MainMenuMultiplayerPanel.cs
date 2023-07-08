@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
@@ -87,7 +87,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     return;
                 }
                 isJoining = true;
-                
+
                 txt.GetComponent<TextMeshProUGUI>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
                 await OpenJoinServerMenuAsync(joinIp, joinPort)
                     .ContinueWith(t =>
@@ -121,7 +121,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
-                Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")}: {serverIp}:{serverPort}");
+                Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
+                Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
                 return;
             }
 

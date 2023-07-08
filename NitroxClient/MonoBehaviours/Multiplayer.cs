@@ -50,6 +50,7 @@ namespace NitroxClient.MonoBehaviours
             Main = this;
             DontDestroyOnLoad(gameObject);
 
+            Log.Info("Multiplayer client loaded…");
             Log.InGame(Language.main.Get("Nitrox_MultiplayerLoaded"));
         }
 

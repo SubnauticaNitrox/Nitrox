@@ -18,6 +18,7 @@ namespace NitroxModel.Logger
     public static class Log
     {
         private static ILogger logger = Serilog.Core.Logger.None;
+        private static ILogger inGameLogger = Serilog.Core.Logger.None;
         private static readonly HashSet<int> logOnceCache = new();
         private static bool isSetup;
 
@@ -30,13 +31,14 @@ namespace NitroxModel.Logger
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
 
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
         {
             if (isSetup)
             {
                 Log.Warn($"{nameof(Log)} setup should only be executed once.");
                 return;
             }
+
             isSetup = true;
             NetDebug.Logger = new LiteNetLibLogger();
 
@@ -78,17 +80,14 @@ namespace NitroxModel.Logger
                                                                                                                             retainedFileCountLimit: 10,
                                                                                                                             fileSizeLimitBytes: 200000000, // 200MB
                                                                                                                             shared: true))))
-                     .WriteTo.Logger(cnf =>
-                     {
-                         if (inGameLogger == null)
-                         {
-                             return;
-                         }
-                         cnf
-                             .Enrich.FromLogContext()
-                             .WriteTo.Conditional(evt => evt.Properties.ContainsKey("game"), configuration => configuration.Message(inGameLogger.Log));
-                     })
                      .CreateLogger();
+
+            if (gameLogger != null)
+            {
+                inGameLogger = new LoggerConfiguration()
+                               .WriteTo.Logger(cnf => cnf.Enrich.FromLogContext().WriteTo.Message(gameLogger.Log))
+                               .CreateLogger();
+            }
         }
 
         [Conditional("DEBUG")]
@@ -148,22 +147,14 @@ namespace NitroxModel.Logger
             {
                 return;
             }
-            
+
             Warn(message);
             logOnceCache.Add(hash);
         }
 
-        public static void InGame(object message)
-        {
-            InGame(message?.ToString());
-        }
-
         public static void InGame(string message)
         {
-            using (LogContext.PushProperty("game", true))
-            {
-                logger.Information(message);
-            }
+            inGameLogger.Information(message);
         }
 
         public static void Write(LogLevel level, string message)
@@ -212,15 +203,6 @@ namespace NitroxModel.Logger
             }
         }
 
-        public static void InGameSensitive(string message, params object[] args)
-        {
-            using (LogContext.Push(SensitiveEnricher.Instance))
-            using (LogContext.PushProperty("game", true))
-            {
-                logger.Information(message, args);
-            }
-        }
-
         public static void ErrorUnity(string message)
         {
             using (LogContext.PushProperty("IsUnity", "-UNITY"))
@@ -243,6 +225,7 @@ namespace NitroxModel.Logger
             {
                 Info($"Setting player name to {value}");
             }
+
             LogContext.PushProperty(nameof(PlayerName), @$"[{value}]");
         }
 
@@ -265,10 +248,12 @@ namespace NitroxModel.Logger
             {
                 return "server";
             }
+
             if (Contains(loggerName, "launch"))
             {
                 return "launcher";
             }
+
             return "game";
         }
 
@@ -306,6 +291,7 @@ namespace NitroxModel.Logger
                     {
                         continue;
                     }
+
                     yield return (prop.Key, new string('*', prop.Value.ToString().Length));
                 }
             }

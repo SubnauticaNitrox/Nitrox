@@ -18,18 +18,19 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
 
     public static void Postfix(string language, Dictionary<string, string> ___strings)
     {
-        if (TryLoadLanguageFile(languageToIsoCode[language].Item1, ___strings))
+        if (!TryLoadLanguageFile("en", ___strings)) //Loading english as fallback for missing files or keys
         {
+            Log.Error($"The English language file could not be loaded");
             return;
         }
 
-        if (TryLoadLanguageFile(languageToIsoCode[language].Item2, ___strings))
+        if (!TryLoadLanguageFile(languageToIsoCode[language].Item1, ___strings))
         {
-            return;
+            if (!TryLoadLanguageFile(languageToIsoCode[language].Item2, ___strings))
+            {
+                Log.Warn($"No language file was found for {language}. Using English as fallback");
+            }
         }
-
-        Log.Warn($"No language file was found for {language}. Using English as fallback");
-        TryLoadLanguageFile("en", ___strings);
 
         Language.main.ParseMetaData();
     }
