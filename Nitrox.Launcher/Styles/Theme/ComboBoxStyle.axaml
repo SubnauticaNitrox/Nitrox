@@ -26,30 +26,7 @@
                         </Border>
                     </Border>
                 </StackPanel>
-                
-                <StackPanel Spacing="10">
-                    <Border Background="White" Padding="10" HorizontalAlignment="Center">
-                        <Border design:NitroxAttached.Theme="LIGHT" Margin="0 0 0 110">
-                            <ComboBox Classes="text" PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
-                                <ComboBoxItem Content="Item 1"/>
-                                <ComboBoxItem Content="Item 2"/>
-                                <ComboBoxItem Content="Item 3"/>
-                            </ComboBox>
-                        </Border>
-                    </Border>
-                    <Border Background="Black" Padding="10" HorizontalAlignment="Center">
-                        <Border design:NitroxAttached.Theme="DARK" Margin="0 0 0 110">
-                            <ComboBox Classes="text" PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
-                                <ComboBoxItem Content="Item 1"/>
-                                <ComboBoxItem Content="Item 2"/>
-                                <ComboBoxItem Content="Item 3"/>
-                            </ComboBox>
-                        </Border>
-                    </Border>
-                </StackPanel>
             </StackPanel>
-            
-            
         </Panel>
     </Design.PreviewWith>
     
@@ -190,13 +167,5 @@
         </Style>
         
     </Style>
-    
-    <!--Style Selector="ComboBox.text">
-        <Style Selector="ComboBox /template/ ContentControl">
-            <Setter Property="Content">
-                <ItemTe
-            </Setter>
-        </Style>
-    </Style-->
     
 </Styles>

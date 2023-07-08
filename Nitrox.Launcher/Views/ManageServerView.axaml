@@ -107,26 +107,23 @@
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
-                        <!-- TODO: Might need to use converters here -->
                         <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
-                                  ItemsSource="{Binding PlayerPerms, StringFormat='{}{0} THIS DOESN\'T WORK'}"
+                                  ItemsSource="{Binding PlayerPerms}"
                                   SelectedValue="{Binding ServerDefaultPlayerPerm}"
-                                  IsEnabled="{Binding !ServerIsOnline}"> <!-- StringFormat={}{0.ToLower()} -->
+                                  IsEnabled="{Binding !ServerIsOnline}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={converters:ToStringConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="4">
-                        <TextBlock Text="AUTO SAVE INTERVAL" FontSize="10" Opacity=".5" FontWeight="700" />
-                        <!-- TODO: Handle values other than the preset ones by binding data directly to the ComboBox's TextBox -->
-                        <ComboBox PlaceholderText="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
-                                  SelectedValue="{Binding ServerAutoSaveInterval}"
-                                  IsEnabled="{Binding !ServerIsOnline}">
-                            <ComboBoxItem Content="60s" Tag="60"/>
-                            <ComboBoxItem Content="120s" Tag="120"/>
-                            <ComboBoxItem Content="240s" Tag="240"/>
-                            <ComboBoxItem Content="300s" Tag="300"/>
-                            <ComboBoxItem Content="600s" Tag="600"/>
-                        </ComboBox>
+                        <TextBlock Text="AUTO SAVE INTERVAL (s)" FontSize="10" Opacity=".5" FontWeight="700" />
+                        <TextBox Watermark="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
+                                 Text="{Binding ServerAutoSaveInterval}"
+                                 IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                 </Grid>
                 
