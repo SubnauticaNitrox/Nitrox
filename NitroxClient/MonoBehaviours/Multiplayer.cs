@@ -165,7 +165,7 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
-            gameObject.AddComponent<ThrottledBuilder>();
+
             // TODO: Move to this object
             Player.mainObject.AddComponent<BuildingTester>();
         }

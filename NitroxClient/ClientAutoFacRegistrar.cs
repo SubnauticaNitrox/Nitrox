@@ -12,8 +12,6 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.Debuggers.Drawer;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.HUD;
@@ -28,9 +26,7 @@ using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Map;
 using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient
@@ -100,10 +96,6 @@ namespace NitroxClient
                             .As<ILocalNitroxPlayer>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<SubnauticaRotationMetadataFactory>()
-                            .As<RotationMetadataFactory>()
-                            .InstancePerLifetimeScope();
-
             containerBuilder.RegisterType<SubnauticaMap>()
                             .As<IMap>()
                             .InstancePerLifetimeScope();
@@ -140,7 +132,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Building>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MedkitFabricator>().InstancePerLifetimeScope();
@@ -152,11 +143,8 @@ namespace NitroxClient
             containerBuilder.RegisterType<Rockets>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Interior>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<GeometryRespawnManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxConsole>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<BasePieceSpawnPrioritizer>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();

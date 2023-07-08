@@ -19,7 +19,6 @@ namespace NitroxClient.GameLogic.InitialSync
             // inventory items to them.  Eventually, all of the below processors will become entities on their own 
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor));
             DependentProcessors.Add(typeof(RemotePlayerInitialSyncProcessor));
-            DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)

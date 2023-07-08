@@ -67,7 +67,6 @@ namespace NitroxServer.Serialization.World
                 }
 
                 Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
-                Serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
                 Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
                 Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
                 Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
@@ -116,7 +115,6 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData = new()
                 {
-                    BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}")),
                     PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}")),
                     WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}")),
                     GlobalRootData = Serializer.Deserialize<GlobalRootData>(Path.Combine(saveDir, $"GlobalRootData{FileEnding}")),
@@ -162,7 +160,6 @@ namespace NitroxServer.Serialization.World
         {
             PersistedWorldData pWorldData = new()
             {
-                BaseData = BaseData.From(new List<BasePiece>(), new List<BasePiece>()),
                 EntityData = EntityData.From(new List<Entity>()),
                 PlayerData = PlayerData.From(new List<Player>()),
                 WorldData = new WorldData()
@@ -208,8 +205,6 @@ namespace NitroxServer.Serialization.World
             {
                 SimulationOwnershipData = new SimulationOwnershipData(),
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
-
-                BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
 
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
 
