@@ -75,7 +75,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 wasBrandNewPlayer,
                 assignedEscapePodId,
                 equippedItems,
-                world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 player.UsedItems,
                 player.QuickSlotsBindingIds,
                 world.GameData.PDAState.GetInitialPDAData(),

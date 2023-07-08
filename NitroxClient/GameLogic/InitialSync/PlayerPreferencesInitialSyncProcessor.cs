@@ -23,8 +23,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             typeof(GlobalRootInitialSyncProcessor),
             typeof(StoryGoalInitialSyncProcessor),
             typeof(PdaInitialSyncProcessor),
-            typeof(RemotePlayerInitialSyncProcessor),
-            typeof(BuildingInitialSyncProcessor),
+            typeof(RemotePlayerInitialSyncProcessor)
         });
     }
 

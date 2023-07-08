@@ -16,7 +16,6 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
             this.simulationOwnership = simulationOwnership;
 
-            DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
             DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor));
         }
 

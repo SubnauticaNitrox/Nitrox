@@ -7,17 +7,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxServer_Subnautica;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Serialization.World;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
 namespace NitroxServer.Serialization;
 
@@ -125,75 +122,6 @@ public class WorldPersistenceTest
         Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
         Assert.AreEqual(storyTiming.AuroraCountdownTime, storyTimingAfter.AuroraCountdownTime);
         Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
-    public void BaseDataTest(PersistedWorldData worldDataAfter, string serializerName)
-    {
-        AssertHelper.IsListEqual(worldData.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), worldDataAfter.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), BasePieceTest);
-        AssertHelper.IsListEqual(worldData.BaseData.CompletedBasePieceHistory.OrderBy(x => x.Id), worldDataAfter.BaseData.CompletedBasePieceHistory.OrderBy(x => x.Id), BasePieceTest);
-    }
-
-    private static void BasePieceTest(BasePiece basePiece, BasePiece basePieceAfter)
-    {
-        Assert.AreEqual(basePiece.Id, basePieceAfter.Id);
-        Assert.AreEqual(basePiece.ItemPosition, basePieceAfter.ItemPosition);
-        Assert.AreEqual(basePiece.Rotation, basePieceAfter.Rotation);
-        Assert.AreEqual(basePiece.TechType, basePieceAfter.TechType);
-        Assert.AreEqual(basePiece.ParentId.HasValue, basePieceAfter.ParentId.HasValue);
-        Assert.AreEqual(basePiece.ParentId.Value, basePieceAfter.ParentId.Value);
-        Assert.AreEqual(basePiece.CameraPosition, basePieceAfter.CameraPosition);
-        Assert.AreEqual(basePiece.CameraRotation, basePieceAfter.CameraRotation);
-        Assert.AreEqual(basePiece.ConstructionAmount, basePieceAfter.ConstructionAmount);
-        Assert.AreEqual(basePiece.ConstructionCompleted, basePieceAfter.ConstructionCompleted);
-        Assert.AreEqual(basePiece.IsFurniture, basePieceAfter.IsFurniture);
-        Assert.AreEqual(basePiece.BaseId, basePieceAfter.BaseId);
-        Assert.AreEqual(basePiece.BuildIndex, basePieceAfter.BuildIndex);
-
-        switch (basePiece.RotationMetadata.Value)
-        {
-            case AnchoredFaceBuilderMetadata anchoredMetadata when basePieceAfter.RotationMetadata.Value is AnchoredFaceBuilderMetadata anchoredMetadataAfter:
-                Assert.AreEqual(anchoredMetadata.Cell, anchoredMetadataAfter.Cell);
-                Assert.AreEqual(anchoredMetadata.Direction, anchoredMetadataAfter.Direction);
-                Assert.AreEqual(anchoredMetadata.FaceType, anchoredMetadataAfter.FaceType);
-                Assert.AreEqual(anchoredMetadata.Anchor, anchoredMetadataAfter.Anchor);
-                break;
-            case BaseModuleBuilderMetadata baseModuleMetadata when basePieceAfter.RotationMetadata.Value is BaseModuleBuilderMetadata baseModuleMetadataAfter:
-                Assert.AreEqual(baseModuleMetadata.Cell, baseModuleMetadataAfter.Cell);
-                Assert.AreEqual(baseModuleMetadata.Direction, baseModuleMetadataAfter.Direction);
-                break;
-            case CorridorBuilderMetadata corridorMetadata when basePieceAfter.RotationMetadata.Value is CorridorBuilderMetadata corridorMetadataAfter:
-                Assert.AreEqual(corridorMetadata.Rotation, corridorMetadataAfter.Rotation);
-                Assert.AreEqual(corridorMetadata.Position, corridorMetadataAfter.Position);
-                Assert.AreEqual(corridorMetadata.HasTargetBase, corridorMetadataAfter.HasTargetBase);
-                Assert.AreEqual(corridorMetadata.Cell, corridorMetadataAfter.Cell);
-                break;
-            case MapRoomBuilderMetadata mapRoomMetadata when basePieceAfter.RotationMetadata.Value is MapRoomBuilderMetadata mapRoomMetadataAfter:
-                Assert.AreEqual(mapRoomMetadata.CellType, mapRoomMetadataAfter.CellType);
-                Assert.AreEqual(mapRoomMetadata.Rotation, mapRoomMetadataAfter.Rotation);
-                break;
-            case null when basePieceAfter.RotationMetadata.Value is null:
-                break;
-            default:
-                Assert.Fail($"{nameof(BasePiece)}.{nameof(BasePiece.RotationMetadata)} is not equal");
-                break;
-        }
-
-        switch (basePiece.Metadata.Value)
-        {
-            case SignMetadata signMetadata when basePieceAfter.Metadata.Value is SignMetadata signMetadataAfter:
-                Assert.AreEqual(signMetadata.Text, signMetadataAfter.Text);
-                Assert.AreEqual(signMetadata.ColorIndex, signMetadataAfter.ColorIndex);
-                Assert.AreEqual(signMetadata.ScaleIndex, signMetadataAfter.ScaleIndex);
-                Assert.IsTrue(signMetadata.Elements.SequenceEqual(signMetadataAfter.Elements));
-                Assert.AreEqual(signMetadata.Background, signMetadataAfter.Background);
-                break;
-            case null when basePieceAfter.Metadata.Value is null:
-                break;
-            default:
-                Assert.Fail($"{nameof(BasePiece)}.{nameof(BasePiece.Metadata)} is not equal");
-                break;
-        }
     }
 
     [DataTestMethod, DynamicWorldDataAfter]
