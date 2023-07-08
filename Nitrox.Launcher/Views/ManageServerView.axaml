@@ -122,8 +122,9 @@
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="AUTO SAVE INTERVAL (s)" FontSize="10" Opacity=".5" FontWeight="700" />
                         <TextBox Watermark="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
-                                 Text="{Binding ServerAutoSaveInterval}"
-                                 IsEnabled="{Binding !ServerIsOnline}"/>
+                                 Text="{Binding ServerAutoSaveInterval, Converter={converters:IntToStringConverter}}"
+                                 IsEnabled="{Binding !ServerIsOnline}"
+                                 KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
                     </StackPanel>
                 </Grid>
                 
@@ -131,13 +132,15 @@
                     <StackPanel>
                         <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, FallbackValue=100}"
-                                 IsEnabled="{Binding !ServerIsOnline}"/>
+                                 IsEnabled="{Binding !ServerIsOnline}"
+                                 KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, FallbackValue=11000}"
-                                 IsEnabled="{Binding !ServerIsOnline}"/>
+                                 IsEnabled="{Binding !ServerIsOnline}"
+                                 KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
                     </StackPanel>
                 </Grid>
                 

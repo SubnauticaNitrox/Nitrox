@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using DynamicData.Binding;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using ReactiveUI;
+using ReactiveUI.Validation.Extensions;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -34,7 +35,6 @@ public class ManageServerViewModel : RoutableViewModelBase
             {
                 server.PropertyChanged += Server_PropertyChanged;
             }
-            CheckIfAnySettingChanged();
         }
     }
     
@@ -50,174 +50,108 @@ public class ManageServerViewModel : RoutableViewModelBase
     public string ServerName
     {
         get => serverName;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverName, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverName, value);
     }
 
     private string serverPassword;
     public string ServerPassword
     {
         get => serverPassword;
-        set
-        { 
-            this.RaiseAndSetIfChanged(ref serverPassword, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverPassword, value);
     }
 
     private GameMode serverGameMode;
     public GameMode ServerGameMode
     {
         get => serverGameMode;
-        set
-        {
-            this.RaiseAndSetIfChanged( ref serverGameMode, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged( ref serverGameMode, value);
     }
 
     private string serverSeed;
     public string ServerSeed
     {
         get => serverSeed;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverSeed, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverSeed, value);
     }
 
     private PlayerPermissions serverDefaultPlayerPerm;
     public PlayerPermissions ServerDefaultPlayerPerm
     {
         get => serverDefaultPlayerPerm;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverDefaultPlayerPerm, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverDefaultPlayerPerm, value);
     }
 
     private int serverAutoSaveInterval;
     public int ServerAutoSaveInterval
     {
         get => serverAutoSaveInterval;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverAutoSaveInterval, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverAutoSaveInterval, value);
     }
 
     private int serverMaxPlayers;
     public int ServerMaxPlayers
     {
         get => serverMaxPlayers;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverMaxPlayers, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverMaxPlayers, value);
     }
 
     private int serverPlayers;
     public int ServerPlayers
     {
         get => serverPlayers;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverPlayers, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverPlayers, value);
     }
 
     private int serverPort;
     public int ServerPort
     {
         get => serverPort;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverPort, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverPort, value);
     }
 
     private bool serverAutoPortForward;
     public bool ServerAutoPortForward
     {
         get => serverAutoPortForward;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverAutoPortForward, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverAutoPortForward, value);
     }
 
     private bool serverAllowLanDiscovery;
     public bool ServerAllowLanDiscovery
     {
         get => serverAllowLanDiscovery;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverAllowLanDiscovery, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverAllowLanDiscovery, value);
     }
     
     private bool serverAllowCommands;
     public bool ServerAllowCommands
     {
         get => serverAllowCommands;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref serverAllowCommands, value);
-            CheckIfAnySettingChanged();
-        }
+        set => this.RaiseAndSetIfChanged(ref serverAllowCommands, value);
     }
     
     
     private string worldFolderDirectory;
-
-    private bool isAnySettingChanged;
-    public bool IsAnySettingChanged
-    {
-        get => isAnySettingChanged;
-        set => this.RaiseAndSetIfChanged(ref isAnySettingChanged, value);
-    }
-    
-    private bool isChangedSettingsValid;
-
-    public bool IsChangedSettingsValid
-    {
-        get => isChangedSettingsValid;
-        set => this.RaiseAndSetIfChanged(ref isChangedSettingsValid, value);
-    }
     
     
-    private void CheckIfAnySettingChanged()
+    private bool HasChanges()
     {
-        if (ServerName != Server.Name || ServerPassword != Server.Password ||
-            ServerGameMode != Server.GameMode || ServerSeed != Server.Seed ||
-            ServerDefaultPlayerPerm != Server.DefaultPlayerPerm || ServerAutoSaveInterval != Server.AutoSaveInterval ||
-            ServerMaxPlayers != Server.MaxPlayers || ServerPlayers != Server.Players ||
-            ServerPort != Server.Port || ServerAutoPortForward != Server.AutoPortForward ||
-            ServerAllowLanDiscovery != Server.AllowLanDiscovery || ServerAllowCommands != Server.AllowCommands)
+        if (Server == null)
         {
-            IsAnySettingChanged = true;
-
-            if (string.IsNullOrEmpty(ServerName) || ServerName.Any(c => Path.GetInvalidFileNameChars().Contains(c)))
-                IsChangedSettingsValid = false;
-            else
-                IsChangedSettingsValid = true;
+            return false;
         }
-        else
-        {
-            IsAnySettingChanged = false;
-            IsChangedSettingsValid = true;
-        }
+        return ServerName != Server.Name ||
+               ServerPassword != Server.Password ||
+               ServerGameMode != Server.GameMode ||
+               ServerSeed != Server.Seed ||
+               ServerDefaultPlayerPerm != Server.DefaultPlayerPerm ||
+               ServerAutoSaveInterval != Server.AutoSaveInterval ||
+               ServerMaxPlayers != Server.MaxPlayers ||
+               ServerPlayers != Server.Players ||
+               ServerPort != Server.Port ||
+               ServerAutoPortForward != Server.AutoPortForward ||
+               ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
+               ServerAllowCommands != Server.AllowCommands;
     }
     
     public ReactiveCommand<Unit, Unit> BackCommand { get; init; }
@@ -228,12 +162,10 @@ public class ManageServerViewModel : RoutableViewModelBase
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
     {
         this.BindValidation();
-        
-        IObservable<bool> canExecuteSaveCommand = this.WhenAnyValue(x => x.IsAnySettingChanged, x => x.IsChangedSettingsValid,
-                                                                    (settingsAreChanged, noInvalidChanges)
-                                                                        => settingsAreChanged && noInvalidChanges);
-        IObservable<bool> canExecuteUndoCommand = this.WhenAnyValue(x => x.IsAnySettingChanged);
-        IObservable<bool> canExecuteManageServerCommands = this.WhenAnyValue(x => x.IsAnySettingChanged, (value) => !value);
+
+        IObservable<bool> canExecuteSaveCommand = this.WhenAnyPropertyChanged().CombineLatest(Observable.Return(this), this.IsValid()).Select(pair => pair.Second.HasChanges() && pair.Third);
+        IObservable<bool> canExecuteUndoCommand = this.WhenAnyPropertyChanged().Select(x => x.HasChanges());
+        IObservable<bool> canExecuteManageServerCommands = this.WhenAnyPropertyChanged().Select(x => !x.HasChanges());
         
         BackCommand = ReactiveCommand.Create(() =>
         {
@@ -242,12 +174,10 @@ public class ManageServerViewModel : RoutableViewModelBase
         
         SaveCommand = ReactiveCommand.Create(() =>
         {
-            Server.WhenAnyValue(x => x.IsOnline).Where(x => !x);
-            
             Server.Name = ServerName;
             Server.Password = ServerPassword;
             Server.GameMode = ServerGameMode;
-            Server.Seed = ServerSeed;
+            Server.Seed = ServerSeed;//.ToUpper();
             Server.DefaultPlayerPerm = ServerDefaultPlayerPerm;
             Server.AutoSaveInterval = ServerAutoSaveInterval;
             Server.MaxPlayers = ServerMaxPlayers;
@@ -256,8 +186,7 @@ public class ManageServerViewModel : RoutableViewModelBase
             Server.AutoPortForward = ServerAutoPortForward;
             Server.AllowLanDiscovery = ServerAllowLanDiscovery;
             Server.AllowCommands = ServerAllowCommands;
-            
-            CheckIfAnySettingChanged();
+            this.RaisePropertyChanged(nameof(Server));
         }, canExecuteSaveCommand);
         
         UndoCommand = ReactiveCommand.Create(() =>
@@ -300,8 +229,6 @@ public class ManageServerViewModel : RoutableViewModelBase
         ServerAutoPortForward = Server.AutoPortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
-        
-        CheckIfAnySettingChanged();
     }
     
     private void Server_PropertyChanged(object sender, PropertyChangedEventArgs e)

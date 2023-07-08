@@ -20,10 +20,12 @@ public static class NitroxValidation
     {
         viewModel.ValidationRule(vm => vm.ServerName, IsNotNullAndWhiteSpace, $"{nameof(viewModel.ServerName)} shouldn't be empty.");
         viewModel.ValidationRule(vm => vm.ServerName, IsValidFileName, $"{nameof(viewModel.ServerName)} shouldn't contain invalid characters.");
-        viewModel.ValidationRule(vm => vm.ServerName, ContainsNoWhiteSpace, $"{nameof(viewModel.ServerSeed)} shouldn't contain any spaces.");
+        viewModel.ValidationRule(vm => vm.ServerSeed, ContainsNoWhiteSpace, $"{nameof(viewModel.ServerSeed)} shouldn't contain any spaces.");
+        viewModel.ValidationRule(vm => vm.ServerSeed, IsProperSeed, $"{nameof(viewModel.ServerSeed)} should contain 10 alphabetical characters.");
     }
 
     private static bool IsValidFileName(string s) => s == null || s.All(c => !invalidPathCharacters.Contains(c));
     private static bool IsNotNullAndWhiteSpace(string s) => !string.IsNullOrWhiteSpace(s);
-    private static bool ContainsNoWhiteSpace(string s) => !Regex.IsMatch(s, @"\s");
+    private static bool ContainsNoWhiteSpace(string s) => s == null || !Regex.IsMatch(s, @"\s");
+    private static bool IsProperSeed(string s) => s == null || string.IsNullOrEmpty(s) || s.Length == 10 && Regex.IsMatch(s, @"^[a-zA-Z]+$");
 }
