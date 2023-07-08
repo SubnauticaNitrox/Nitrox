@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Nitrox.Launcher.ViewModels;
 using ReactiveUI.Validation.Extensions;
 
@@ -19,8 +20,10 @@ public static class NitroxValidation
     {
         viewModel.ValidationRule(vm => vm.ServerName, IsNotNullAndWhiteSpace, $"{nameof(viewModel.ServerName)} shouldn't be empty.");
         viewModel.ValidationRule(vm => vm.ServerName, IsValidFileName, $"{nameof(viewModel.ServerName)} shouldn't contain invalid characters.");
+        viewModel.ValidationRule(vm => vm.ServerName, ContainsNoWhiteSpace, $"{nameof(viewModel.ServerSeed)} shouldn't contain any spaces.");
     }
 
     private static bool IsValidFileName(string s) => s == null || s.All(c => !invalidPathCharacters.Contains(c));
     private static bool IsNotNullAndWhiteSpace(string s) => !string.IsNullOrWhiteSpace(s);
+    private static bool ContainsNoWhiteSpace(string s) => !Regex.IsMatch(s, @"\s");
 }
