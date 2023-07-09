@@ -56,7 +56,9 @@
             </StackPanel>
             
             <Grid ColumnDefinitions="*,100,100">
-                <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" Margin="0 0 5 0" />
+                <ScrollViewer Margin="0 0 10 0" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
+                    <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
+                </ScrollViewer>
                 
                 <Button Grid.Column="1" Classes="nitrox big abort"
                         Height="40" Margin="0 0 5 0" Padding="5" HorizontalAlignment="Stretch"
@@ -68,7 +70,7 @@
             
         </StackPanel>
         
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <StackPanel VerticalAlignment="Stretch" Spacing="42">
                 <StackPanel.Styles>
                     <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
@@ -85,11 +87,11 @@
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"
+                        <TextBox Classes="revealPasswordButton" Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"
                                  IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                 </Grid>
-        
+            
                 <StackPanel>
                     <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
                     <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}"

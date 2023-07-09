@@ -19,7 +19,7 @@
             <TextBlock Text="Create a server" Classes="modalHeader" />
             <StackPanel>
                 <TextBlock Text="SERVER NAME" />
-                <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Name}" />
+                <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Name}" MaxWidth="366"/>
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="GAMEMODE" />
