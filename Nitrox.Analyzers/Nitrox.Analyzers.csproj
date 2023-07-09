@@ -15,8 +15,4 @@
      -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" PrivateAssets="all" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Generators" />
-  </ItemGroup>
 </Project>
