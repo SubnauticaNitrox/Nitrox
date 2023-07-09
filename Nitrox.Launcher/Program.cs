@@ -15,14 +15,22 @@ class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
-            .UsePlatformDetect()
-            .LogToTrace()
-            .UseReactiveUI()
-            .With(new X11PlatformOptions
+    {
+        AppBuilder builder = AppBuilder.Configure<App>()
+                                                .UsePlatformDetect()
+                                                .LogToTrace()
+                                                .UseReactiveUI();
+
+        // The Wayland renderer on Linux using GPU rendering is not (yet) supported by Avalonia.
+        // Waiting on PR: https://github.com/AvaloniaUI/Avalonia/pull/11546 to enable rendering on GPU.
+        if (Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is not null)
+        {
+            builder = builder.With(new X11PlatformOptions
             {
-                // The Wayland renderer on Linux using GPU rendering is not supported by Avalonia.
-                // Waiting on PR: https://github.com/AvaloniaUI/Avalonia/pull/8352 to enable rendering on GPU.
-                UseGpu = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is null
+                RenderingMode = new[] { X11RenderingMode.Software }
             });
+        }
+
+        return builder;
+    }
 }
