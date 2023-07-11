@@ -205,7 +205,7 @@
                         <Button Classes="textimage" 
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/delete-2x.png"
                                 design:NitroxAttached.Text="Delete server" Foreground="#ec1c24"
-                                Command="{Binding DeleteServerCommand}"/> <!-- IsEnabled="{Binding !ServerIsOnline}" -->
+                                Command="{Binding DeleteServerCommand}"/>
                         
                     </StackPanel>
                 </StackPanel>
