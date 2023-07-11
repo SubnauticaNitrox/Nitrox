@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData.Binding;
+using Microsoft.VisualBasic.FileIO;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
@@ -158,6 +160,11 @@ public class ManageServerViewModel : RoutableViewModelBase
     public ReactiveCommand<Unit, Unit> SaveCommand { get; init; }
     public ReactiveCommand<Unit, Unit> UndoCommand { get; init; }
     public ReactiveCommand<Unit, Unit> StartServerCommand { get; init; }
+    
+    public ReactiveCommand<Unit, Unit> AdvancedSettingsCommand { get; init; }
+    public ReactiveCommand<Unit, Unit> OpenWorldFolderCommand { get; init; }
+    public ReactiveCommand<Unit, Unit> RestoreBackupCommand { get; init; }
+    public ReactiveCommand<Unit, Unit> DeleteServerCommand { get; init; }
 
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
     {
@@ -166,6 +173,8 @@ public class ManageServerViewModel : RoutableViewModelBase
         IObservable<bool> canExecuteSaveCommand = this.WhenAnyPropertyChanged().CombineLatest(Observable.Return(this), this.IsValid()).Select(pair => pair.Second.HasChanges() && pair.Third);
         IObservable<bool> canExecuteUndoCommand = this.WhenAnyPropertyChanged().Select(x => x.HasChanges());
         IObservable<bool> canExecuteManageServerCommands = this.WhenAnyPropertyChanged().Select(x => !x.HasChanges());
+        
+        IObservable<bool> canExecuteAdvancedSettingsButtonCommands = this.WhenAnyPropertyChanged().Select(x => !x.ServerIsOnline);
         
         BackCommand = ReactiveCommand.Create(() =>
         {
@@ -209,6 +218,36 @@ public class ManageServerViewModel : RoutableViewModelBase
         {
             Server.StartCommand.Execute(null);
         }, canExecuteManageServerCommands);
+        
+        
+        AdvancedSettingsCommand = ReactiveCommand.Create(() =>
+        {
+            // TODO: Open Advanced Settings Popup (which is automatically populated with the rest of the server.cfg settings)
+        });
+        
+        OpenWorldFolderCommand = ReactiveCommand.Create(() =>
+        {
+            Process.Start(worldFolderDirectory)?.Dispose(); // TODO: Fix file access permission issues
+        });
+        
+        RestoreBackupCommand = ReactiveCommand.Create(() =>
+        {
+            // TODO: Open Restore Backup Popup
+        }, canExecuteAdvancedSettingsButtonCommands);
+        
+        DeleteServerCommand = ReactiveCommand.Create(() =>
+        {
+            // TODO: Handle this for other platforms (probably only works on Windows)
+            try
+            {
+                FileSystem.DeleteDirectory(worldFolderDirectory, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                //Log.Info($"Moving world \"{Path.GetFileName(worldFolderDirectory)}\" to the recycling bin.");
+            }
+            catch (Exception ex)
+            {
+                //Log.Error($"Could not move save \"{Path.GetFileName(worldFolderDirectory)}\" to the recycling bin : {ex.GetType()} {ex.Message}");
+            }
+        }, canExecuteAdvancedSettingsButtonCommands);
     }
     public void LoadFrom(ServerEntry serverEntry)
     {

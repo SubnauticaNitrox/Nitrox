@@ -189,21 +189,23 @@
                         
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
-                                design:NitroxAttached.Text="Advanced settings"/>
+                                design:NitroxAttached.Text="Advanced settings"
+                                Command="{Binding AdvancedSettingsCommand}"/>
                         
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/window-external-2x.png"
-                                design:NitroxAttached.Text="Open world folder"/>
+                                design:NitroxAttached.Text="Open world folder"
+                                Command="{Binding OpenWorldFolderCommand}"/>
                         
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/export-2x.png"
                                 design:NitroxAttached.Text="Restore a backup"
-                                IsEnabled="{Binding !ServerIsOnline}"/>
+                                Command="{Binding RestoreBackupCommand}"/>
                         
                         <Button Classes="textimage" 
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/delete-2x.png"
                                 design:NitroxAttached.Text="Delete server" Foreground="#ec1c24"
-                                IsEnabled="{Binding !ServerIsOnline}"/>
+                                Command="{Binding DeleteServerCommand}"/> <!-- IsEnabled="{Binding !ServerIsOnline}" -->
                         
                     </StackPanel>
                 </StackPanel>
