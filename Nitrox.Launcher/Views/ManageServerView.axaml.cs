@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
@@ -14,6 +15,26 @@ public partial class ManageServerView : RoutableViewBase<ManageServerViewModel>
     
     private void InputElement_OnKeyDown(object sender, KeyEventArgs e)
     {
+        switch (e.Key)
+        {
+            case Key.Up:
+            case Key.Down:
+                if (sender is TextBox textBox)
+                {
+                    string previousText = textBox.Text;
+                    if (int.TryParse(textBox.Text, out int val))
+                    {
+                        val += e.Key == Key.Up ? 1 : -1;
+                    }
+                    textBox.Text = Math.Clamp(val, 0, int.MaxValue).ToString();
+                    if (textBox.Text.Length > textBox.MaxLength)
+                    {
+                        textBox.Text = previousText;
+                    }
+                }
+                break;
+        }
+
         e.Handled = e.Key is < Key.D0 or > Key.D9;
     }
 

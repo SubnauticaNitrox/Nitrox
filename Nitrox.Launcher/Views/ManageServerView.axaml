@@ -104,7 +104,13 @@
                         <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Server seed" Text="{Binding ServerSeed}"
                                  MaxLength="10" IsEnabled="{Binding !ServerIsOnline}"
-                                 IsReadOnly="{Binding !Server.IsNewServer}"/>
+                                 IsReadOnly="{Binding !Server.IsNewServer}">
+                            <TextBox.Styles>
+                                <Style Selector="TextBox[IsReadOnly=True]">
+                                    <Setter Property="ToolTip.Tip" Value="Seed cannot be changed for servers that have been run." />
+                                </Style>
+                            </TextBox.Styles>
+                        </TextBox>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
@@ -133,16 +139,16 @@
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, FallbackValue=100}"
+                        <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, Converter={converters:IntToStringConverter}}"
                                  IsEnabled="{Binding !ServerIsOnline}"
                                  KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, FallbackValue=11000}"
+                        <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, Converter={converters:IntToStringConverter}}"
                                  IsEnabled="{Binding !ServerIsOnline}"
-                                 KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
+                                 KeyDown="InputElement_OnKeyDown" MaxLength="5"/>
                     </StackPanel>
                 </Grid>
                 

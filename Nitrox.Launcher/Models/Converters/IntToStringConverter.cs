@@ -20,7 +20,7 @@ public class IntToStringConverter : Converter<IntToStringConverter>, IValueConve
     {
         if (value == null)
         {
-            return "";
+            return 0;
         }
         string str = value as string ?? value.ToString();
 
@@ -29,6 +29,6 @@ public class IntToStringConverter : Converter<IntToStringConverter>, IValueConve
         {
             return result;
         }
-        return "";
+        return 0;
     }
 }
