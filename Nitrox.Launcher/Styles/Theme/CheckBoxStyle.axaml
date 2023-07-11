@@ -14,18 +14,18 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
                     <Border Background="White" design:NitroxAttached.Theme="LIGHT" Padding="5">
-                        <CheckBox Classes="switch"/>
+                        <CheckBox Classes="switch" />
                     </Border>
                     <Border Background="Black" design:NitroxAttached.Theme="DARK" Padding="5">
-                        <CheckBox Classes="switch" IsChecked="True" Foreground="White"/>
+                        <CheckBox Classes="switch" IsChecked="True" Foreground="White" />
                     </Border>
                 </StackPanel>
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
-    
+
     <Style Selector="CheckBox.switch">
-        
+
         <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
             <Setter Property="Background" Value="#333333" />
             <Setter Property="Foreground" Value="White" />
@@ -34,11 +34,11 @@
             <Setter Property="Background" Value="#d9d9d9" />
             <Setter Property="Foreground" Value="#3b3b3b" />
         </Style>
-        
+
         <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Height" Value="30" />
         <Setter Property="Width" Value="54" />
-        
+
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid x:Name="RootGrid">
@@ -53,85 +53,83 @@
                                             <Transitions>
                                                 <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
                                                 <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                                                <ThicknessTransition Property="Margin" Duration="0:0:0.1" />
                                             </Transitions>
                                         </Setter>
                                     </Style>
                                 </Border.Styles>
                             </Border>
-                        </Viewbox>    
+                        </Viewbox>
                     </Border>
                 </Grid>
             </ControlTemplate>
         </Setter>
-        
+
         <!-- Unchecked PointerOver State -->
         <Style Selector="^:pointerover">
-            <Setter Property="Cursor" Value="Hand"/>
-        
+            <Setter Property="Cursor" Value="Hand" />
+
             <Style Selector="^ /template/ Border#PART_Border">
                 <Setter Property="Background" Value="{TemplateBinding Background}" />
             </Style>
-            
+
             <Style Selector="^ /template/ Border#SlidingIcon">
                 <Setter Property="Opacity" Value=".75" />
             </Style>
         </Style>
-    
+
         <!-- Unchecked Pressed State -->
         <Style Selector="^:pressed">
             <Style Selector="^ /template/ Border#PART_Border">
                 <Setter Property="Background" Value="{TemplateBinding Background}" />
             </Style>
-            
+
             <Style Selector="^ /template/ Border#SlidingIcon">
                 <Setter Property="RenderTransform" Value="scale(0.95)" />
             </Style>
         </Style>
-        
+
         <!-- Disabled State -->
         <Style Selector="^:disabled /template/ Border#PART_Border">
             <Setter Property="Background" Value="{TemplateBinding Background}" />
         </Style>
-        
+
         <Style Selector="^:checked">
-            
+
             <!-- Checked Normal State -->
             <Setter Property="Background" Value="{TemplateBinding Background}" />
-            
+
             <Style Selector="^ /template/ Border#SlidingIcon">
                 <Setter Property="Background" Value="#007BFF" />
+                <Setter Property="Margin" Value="22 0 0 0" />
             </Style>
-            
-            <Style Selector="^ /template/ Viewbox#SlidingIconViewbox">
-                <Setter Property="HorizontalAlignment" Value="Right" />
-            </Style>
-            
+
             <!-- Checked PointerOver State -->
             <Style Selector="^:pointerover">
-                <Setter Property="Cursor" Value="Hand"/>
-                
+                <Setter Property="Cursor" Value="Hand" />
+
                 <Style Selector="^ /template/ Border#PART_Border">
                     <Setter Property="Background" Value="{TemplateBinding Background}" />
                 </Style>
-                
+
                 <Style Selector="^ /template/ Border#SlidingIcon">
                     <Setter Property="Opacity" Value=".75" />
                 </Style>
             </Style>
-        
+
             <!-- Checked Pressed State -->
             <Style Selector="^:pressed">
                 <Style Selector="^ /template/ Border#PART_Border">
                     <Setter Property="Background" Value="{TemplateBinding Background}" />
                 </Style>
-                
+
                 <Style Selector="^ /template/ Border#SlidingIcon">
                     <Setter Property="RenderTransform" Value="scale(0.95)" />
                 </Style>
             </Style>
-            
+
         </Style>
-        
+
     </Style>
-    
+
 </Styles>
