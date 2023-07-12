@@ -27,4 +27,8 @@
         <PackageReference Include="ReactiveUI.Validation" Version="3.1.7" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+    </ItemGroup>
+
 </Project>

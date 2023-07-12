@@ -8,6 +8,8 @@ public class WorldManager
     public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
     static WorldManager()
     {
+        if (Directory.Exists(SavesFolderDir)) return;
+        
         try
         {
             Directory.CreateDirectory(SavesFolderDir);

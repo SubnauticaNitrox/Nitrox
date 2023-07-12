@@ -8,6 +8,7 @@ using DynamicData.Binding;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
+using NitroxServer.Serialization.World;
 using ReactiveUI;
 using ReactiveUI.Validation.Extensions;
 
@@ -72,7 +73,7 @@ public class ManageServerViewModel : RoutableViewModelBase
     public string ServerSeed
     {
         get => serverSeed;
-        set => this.RaiseAndSetIfChanged(ref serverSeed, value);
+        set => this.RaiseAndSetIfChanged(ref serverSeed, value?.ToUpper());
     }
 
     private PlayerPermissions serverDefaultPlayerPerm;
@@ -185,7 +186,7 @@ public class ManageServerViewModel : RoutableViewModelBase
             Server.Name = ServerName;
             Server.Password = ServerPassword;
             Server.GameMode = ServerGameMode;
-            Server.Seed = ServerSeed;//.ToUpper();
+            Server.Seed = ServerSeed;
             Server.DefaultPlayerPerm = ServerDefaultPlayerPerm;
             Server.AutoSaveInterval = ServerAutoSaveInterval;
             Server.MaxPlayers = ServerMaxPlayers;
@@ -195,6 +196,8 @@ public class ManageServerViewModel : RoutableViewModelBase
             Server.AllowLanDiscovery = ServerAllowLanDiscovery;
             Server.AllowCommands = ServerAllowCommands;
             this.RaisePropertyChanged(nameof(Server));
+            
+            worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
         }, canExecuteSaveCommand);
 
         UndoCommand = ReactiveCommand.Create(() =>
@@ -242,7 +245,7 @@ public class ManageServerViewModel : RoutableViewModelBase
     public void LoadFrom(ServerEntry serverEntry)
     {
         Server = serverEntry;
-        worldFolderDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", Server.Name);
+        worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
 
         ServerIsOnline = Server.IsOnline;
 
