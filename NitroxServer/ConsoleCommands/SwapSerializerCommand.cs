@@ -25,7 +25,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerSerializerMode serializerMode = args.Get<ServerSerializerMode>(0);
 
-            using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
+            using (serverConfig.Update(Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)))
             {
                 if (serializerMode != serverConfig.SerializerMode)
                 {

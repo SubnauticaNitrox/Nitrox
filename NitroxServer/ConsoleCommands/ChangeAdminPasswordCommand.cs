@@ -20,7 +20,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string saveDir = Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName);
+            string saveDir = Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName);
             using (serverConfig.Update(saveDir))
             {
                 string newPassword = args.Get(0);

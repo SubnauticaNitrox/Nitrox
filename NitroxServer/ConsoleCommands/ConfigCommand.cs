@@ -30,7 +30,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             // Save config file if it doesn't exist yet.
-            string saveDir = Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName);
+            string saveDir = Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName);
             string configFile = Path.Combine(saveDir, serverConfig.FileName);
             if (!File.Exists(configFile))
             {

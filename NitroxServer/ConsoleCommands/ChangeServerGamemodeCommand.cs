@@ -27,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
+            using (serverConfig.Update(Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)))
             {
                 if (serverConfig.GameMode != sgm)
                 {
