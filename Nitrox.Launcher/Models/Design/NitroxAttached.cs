@@ -15,6 +15,7 @@ public class NitroxAttached : AvaloniaObject
 {
     public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Text");
     public static readonly AttachedProperty<string> SubtextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Subtext");
+    public static readonly AttachedProperty<string> ImageProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Image");
     public static readonly AttachedProperty<object> FocusProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, object>("Focus");
     public static readonly AttachedProperty<bool> SelectedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, bool>("Selected");
     public static readonly AttachedProperty<ThemeOption> ThemeProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, ThemeOption>("Theme", inherits: true, defaultValue: ThemeOption.DARK);
@@ -45,6 +46,17 @@ public class NitroxAttached : AvaloniaObject
 
     public static string GetSubtext(AvaloniaObject element) => element.GetValue(SubtextProperty);
 
+    public static void SetImage(AvaloniaObject element, string value)
+    {
+        if (element is not Button)
+        {
+            throw new NotSupportedException($@"Attached property ""{nameof(ImageProperty)}"" is only supported on buttons.");
+        }
+        element.SetValue(ImageProperty, value);
+    }
+
+    public static string GetImage(AvaloniaObject element) => element.GetValue(ImageProperty);
+    
     public static object GetFocus(AvaloniaObject obj) => obj.GetValue(FocusProperty);
 
     /// <summary>

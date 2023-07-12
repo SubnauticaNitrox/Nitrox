@@ -9,6 +9,7 @@ namespace Nitrox.Launcher.ViewModels;
 public class ServersViewModel : RoutableViewModelBase
 {
     public ICommand CreateServerCommand { get; }
+    public ICommand ManageServerCommand { get; }
     public AvaloniaList<ServerEntry> Servers { get; } = new();
 
     public ServersViewModel(IScreen hostScreen) : base(hostScreen)
@@ -23,6 +24,12 @@ public class ServersViewModel : RoutableViewModelBase
 
             AddServer(result.Name, result.SelectedGameMode);
         });
+        ManageServerCommand = ReactiveCommand.Create((ServerEntry server) =>
+        {
+            ManageServerViewModel viewModel = Locator.GetSharedViewModel<ManageServerViewModel>();
+            viewModel.LoadFrom(server);
+            MainViewModel.Router.Navigate.Execute(viewModel);
+        });
 
         // TODO: Load servers from file
     }
@@ -32,13 +39,7 @@ public class ServersViewModel : RoutableViewModelBase
         Servers.Add(new ServerEntry
         {
             Name = name,
-            GameMode = gameMode,
-            ManageCommand = ReactiveCommand.Create((ServerEntry server) =>
-            {
-                ManageServerViewModel viewModel = Locator.GetSharedViewModel<ManageServerViewModel>();
-                viewModel.LoadFrom(server);
-                MainViewModel.Router.Navigate.Execute(viewModel);
-            })
+            GameMode = gameMode
         });
     }
 }

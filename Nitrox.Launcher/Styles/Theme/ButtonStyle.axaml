@@ -1,7 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
-    <Design.PreviewWith>
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Design.PreviewWith> <!-- Previewer broken - see Ref 1 further down in this file  -->
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
                 <StackPanel design:NitroxAttached.Theme="LIGHT" HorizontalAlignment="Center">
@@ -13,6 +14,20 @@
                     <Button Classes="nitrox" design:NitroxAttached.Text="Normal button" HorizontalAlignment="Stretch" />
                     <Button Classes="nitrox primary" design:NitroxAttached.Text="Primary button" HorizontalAlignment="Stretch" />
                     <Button Classes="nitrox primary big" design:NitroxAttached.Text="Primary Button Big" design:NitroxAttached.Subtext="Some sub text" />
+                </StackPanel>
+                <StackPanel>
+                    <Border design:NitroxAttached.Theme="LIGHT" HorizontalAlignment="Stretch" Background="White" Padding="10">
+                        <Button Classes="textimage"
+                                design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
+                                design:NitroxAttached.Text="Text Image button"
+                                HorizontalAlignment="Center"/>
+                    </Border>
+                    <Border design:NitroxAttached.Theme="DARK" HorizontalAlignment="Stretch" Background="Black" Padding="10">
+                        <Button Classes="textimage"
+                                design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
+                                design:NitroxAttached.Text="Text Image button"
+                                HorizontalAlignment="Center"/>
+                    </Border>
                 </StackPanel>
             </StackPanel>
         </Panel>
@@ -74,6 +89,13 @@
     <Style Selector="Button.abort">
         <Setter Property="Background" Value="{DynamicResource BrandAbortBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
+        
+        <Style Selector="^:disabled /template/ ContentPresenter">
+            <!-- TODO: Nice disabled style (loading indicator?) -->
+            <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Opacity" Value="0.15" />
+        </Style>
     </Style>
 
     <Style Selector="Button.big">
@@ -86,4 +108,50 @@
             <Setter Property="FontWeight" Value="600" />
         </Style>
     </Style>
+    
+    <Style Selector="Button.textimage">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Template>
+                    <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                        <Viewbox>
+                            <!-- Ref 1 - The converter here somehow breaks the previewer, but is needed to show the image for the control -->
+                            <Image Source="{Binding (design:NitroxAttached.Image), Converter={converters:BitmapAssetValueConverter}, RelativeSource={RelativeSource AncestorType=Button}}"
+                                   HorizontalAlignment="Center" Width="18" Height="18"/>
+                        </Viewbox>
+                        <TextBlock Grid.Column="1" x:Name="ButtonText"
+                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                   Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8 0 0 0"/>
+                    </Grid>
+                </Template>
+            </Setter.Value>
+        </Setter>
+
+        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
+            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+        </Style>
+        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
+            <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
+        </Style>
+        
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ ContentPresenter">
+                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+                <Setter Property="Cursor" Value="Hand"/>
+            </Style>
+            
+            <Style Selector="^ TextBlock">
+                <Setter Property="TextDecorations" Value="Underline" />
+            </Style>
+        </Style>
+        
+        <Style Selector="^:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+    </Style>
+    
 </Styles>

@@ -69,6 +69,13 @@
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover /template/ ContentPresenter">
         <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}" />
     </Style>
+    <Style Selector="ItemsControl.radioGroup:disabled">
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        <Style Selector="^ Button#ItemContainer /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+    </Style>
 
     <!-- Events -->
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
