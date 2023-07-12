@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
@@ -31,7 +32,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             Log.Error("Trying to respawn an already spawned module without a proper resync process.");
             yield break;
         }
-        Transform parent = BuildingTester.GetParentOrGlobalRoot(entity.ParentId);
+        Transform parent = BuildingHandler.GetParentOrGlobalRoot(entity.ParentId);
 
         yield return NitroxBuild.RestoreModule(parent, entity, result);
 

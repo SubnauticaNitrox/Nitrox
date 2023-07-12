@@ -122,7 +122,8 @@ namespace NitroxServer.Communication.Packets.Processors
             }
             else
             {
-                Log.Error($"Unable to find player entity for {player.Name}");
+                Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
+                SetupPlayerEntity(player);
             }
         }
     }

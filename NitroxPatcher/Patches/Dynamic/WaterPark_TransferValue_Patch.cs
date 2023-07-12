@@ -1,10 +1,11 @@
 using System.Reflection;
 using HarmonyLib;
-using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using static NitroxClient.GameLogic.Bases.New.BuildingTester;
+using static NitroxClient.GameLogic.Bases.BuildingHandler;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -14,7 +15,8 @@ namespace NitroxPatcher.Patches.Dynamic;
 public class WaterPark_TransferValue_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.TransferValue(default, default));
-    private static TemporaryBuildData Temp => BuildingTester.Main.Temp;
+
+    private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 
     public static void Prefix(WaterPark srcWaterPark, WaterPark dstWaterPark)
     {

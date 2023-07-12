@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
+using NitroxModel.DataStructures.GameLogic.Bases.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Unity;
 
-namespace NitroxModel.DataStructures.GameLogic.Buildings.New;
+namespace NitroxModel.DataStructures.GameLogic.Bases;
 
 [DataContract]
 public class SavedBase
@@ -73,10 +73,10 @@ public class SavedGlobalRoot
 {
     [DataMember(Order = 1)]
     public List<BuildEntity> Builds = new();
-    
+
     [DataMember(Order = 2)]
     public List<ModuleEntity> Modules = new();
-    
+
     [DataMember(Order = 3)]
     public List<GhostEntity> Ghosts = new();
 }
