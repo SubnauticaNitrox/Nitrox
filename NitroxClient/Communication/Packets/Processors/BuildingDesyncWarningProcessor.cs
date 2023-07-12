@@ -1,6 +1,5 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.GameLogic.Settings;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
@@ -12,13 +11,13 @@ public class BuildingDesyncWarningProcessor : ClientPacketProcessor<BuildingDesy
 {
     public override void Process(BuildingDesyncWarning packet)
     {        
-        if (!BuildingTester.Main)
+        if (!BuildingHandler.Main)
         {
             return;
         }
         foreach (KeyValuePair<NitroxId, int> operation in packet.Operations)
         {
-            OperationTracker tracker = BuildingTester.Main.EnsureTracker(operation.Key);
+            OperationTracker tracker = BuildingHandler.Main.EnsureTracker(operation.Key);
             tracker.LastOperationId = operation.Value;
             tracker.FailedOperations++;
         }

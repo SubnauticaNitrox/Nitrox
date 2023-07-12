@@ -13,8 +13,9 @@ namespace NitroxPatcher.Patches.Dynamic;
 public class ConstructableBase_SetState_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ConstructableBase t) => t.SetState(default, default));
+
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-    internal static readonly object INJECTION_OPERAND = Reflect.Method(() => GameObject.Destroy(default));
+    internal static readonly object INJECTION_OPERAND = Reflect.Method(() => Object.Destroy(default));
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {

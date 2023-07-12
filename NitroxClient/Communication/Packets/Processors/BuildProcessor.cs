@@ -1,70 +1,29 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Bases;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
-// TODO: Regroup every processor in only one
-public class PlaceGhostProcessor : ClientPacketProcessor<PlaceGhost>
+public abstract class BuildProcessor<T> : ClientPacketProcessor<T> where T : Packet
 {
-    public override void Process(PlaceGhost packet)
+    public override void Process(T packet)
     {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
+        BuildingHandler.Main.BuildQueue.Enqueue(packet);
     }
 }
 
-public class PlaceModuleProcessor : ClientPacketProcessor<PlaceModule>
-{
-    public override void Process(PlaceModule packet)
-    {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
-    }
-}
+public class PlaceGhostProcessor : BuildProcessor<PlaceGhost> { }
 
-public class ModifyConstructedAmountProcessor : ClientPacketProcessor<ModifyConstructedAmount>
-{
-    public override void Process(ModifyConstructedAmount packet)
-    {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
-    }
-}
+public class PlaceModuleProcessor : BuildProcessor<PlaceModule> { }
 
-public class PlaceBaseProcessor : ClientPacketProcessor<PlaceBase>
-{
-    public override void Process(PlaceBase packet)
-    {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
-    }
-}
+public class ModifyConstructedAmountProcessor : BuildProcessor<ModifyConstructedAmount> { }
 
-public class UpdateBaseProcessor : ClientPacketProcessor<UpdateBase>
-{
-    public override void Process(UpdateBase packet)
-    {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
-    }
-}
+public class PlaceBaseProcessor : BuildProcessor<PlaceBase> { }
 
-public class BaseDeconstructedProcessor : ClientPacketProcessor<BaseDeconstructed>
-{
-    public override void Process(BaseDeconstructed packet)
-    {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
-    }
-}
+public class UpdateBaseProcessor : BuildProcessor<UpdateBase> { }
 
-public class PieceDeconstructedProcessor : ClientPacketProcessor<PieceDeconstructed>
-{
-    public override void Process(PieceDeconstructed packet)
-    {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
-    }
-}
+public class BaseDeconstructedProcessor : BuildProcessor<BaseDeconstructed> { }
 
-public class WaterParkDeconstructedProcessor : ClientPacketProcessor<WaterParkDeconstructed>
-{
-    public override void Process(WaterParkDeconstructed packet)
-    {
-        BuildingTester.Main.BuildQueue.Enqueue(packet);
-    }
-}
+public class PieceDeconstructedProcessor : BuildProcessor<PieceDeconstructed> { }
+
+public class WaterParkDeconstructedProcessor : BuildProcessor<WaterParkDeconstructed> { }

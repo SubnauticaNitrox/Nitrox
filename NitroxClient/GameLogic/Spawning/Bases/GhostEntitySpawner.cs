@@ -1,5 +1,6 @@
 using System.Collections;
-using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
@@ -23,7 +24,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             GameObject.Destroy(gameObject);
             yield return null;
         }
-        Transform parent = BuildingTester.GetParentOrGlobalRoot(entity.ParentId);
+        Transform parent = BuildingHandler.GetParentOrGlobalRoot(entity.ParentId);
         yield return NitroxBuild.RestoreGhost(parent, entity, result);
     }
 

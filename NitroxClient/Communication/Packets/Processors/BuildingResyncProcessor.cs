@@ -1,6 +1,7 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -28,19 +29,19 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
 
     public override void Process(BuildingResync packet)
     {        
-        if (!BuildingTester.Main)
+        if (!BuildingHandler.Main)
         {
             return;
         }
         ErrorMessage.AddMessage($"Received a resync packet for bases with {packet.Entities.Count} entities");
-        BuildingTester.Main.StartCoroutine(ResyncEntities(packet.Entities));
+        BuildingHandler.Main.StartCoroutine(ResyncEntities(packet.Entities));
     }
 
     public IEnumerator ResyncEntities(Dictionary<Entity, int> entities)
     {
         DateTimeOffset resyncStart = DateTimeOffset.Now;
 
-        BuildingTester.Main.StartResync(entities);
+        BuildingHandler.Main.StartResync(entities);
         yield return CoroutineHelper.SafelyYieldEnumerator(UpdateEntities<Base, BuildEntity>(
             entities.Keys.OfType<BuildEntity>().ToList(), OverwriteBase, (entity, reference) =>
             {
@@ -53,7 +54,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
                 return NitroxVector3.Distance(entity.LocalPosition, reference) < 0.001f;
             }
         ), exception => Log.Error($"Encountered an exception while resyncing ModuleEntities:\n{exception}"));
-        BuildingTester.Main.Resyncing = false;
+        BuildingHandler.Main.Resyncing = false;
 
         DateTimeOffset resyncEnd = DateTimeOffset.Now;
         ErrorMessage.AddMessage($"Finished resyncing {entities.Count} entities, took {(resyncEnd - resyncStart).TotalSeconds}s");

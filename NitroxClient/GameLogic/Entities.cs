@@ -177,6 +177,7 @@ namespace NitroxClient.GameLogic
 
                 foreach (Entity childEntity in childrenToSpawn)
                 {
+                    exception.Set(null);
                     TaskResult<Optional<GameObject>> childResult = new();
                     IEntitySpawner childSpawner = entitySpawnersByType[childEntity.GetType()];
                     if (!childSpawner.SpawnSyncSafe(childEntity, childResult, exception) && exception.Get() == null)
@@ -190,7 +191,7 @@ namespace NitroxClient.GameLogic
                     }
                     if (exception.Get() != null)
                     {
-                        Log.Error($"Failed to spawn entity {entity.Id} during a batch spawning:\n{exception.Get()}");
+                        Log.Error($"Failed to spawn entity {childEntity.Id} during a batch spawning:\n{exception.Get()}");
                         continue;
                     }
                     MarkAsSpawned(childEntity);

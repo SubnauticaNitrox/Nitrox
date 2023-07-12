@@ -6,12 +6,13 @@ using System.Linq;
 using Newtonsoft.Json;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -19,11 +20,11 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases.New;
+namespace NitroxClient.GameLogic.Bases;
 
-public class BuildingTester : MonoBehaviour
+public class BuildingHandler : MonoBehaviour
 {
-    public static BuildingTester Main;
+    public static BuildingHandler Main;
 
     public Queue<Packet> BuildQueue;
     private bool working;
@@ -69,7 +70,7 @@ public class BuildingTester : MonoBehaviour
         CleanCooldowns();
         if (BuildQueue.Count > 0 && !working && !Resyncing)
         {
-            working = true;            
+            working = true;
             StartCoroutine(SafelyTreatNextBuildCommand());
         }
     }
@@ -84,7 +85,7 @@ public class BuildingTester : MonoBehaviour
         working = false;
     }
 
-    private IEnumerator TreatBuildCommand(object buildCommand)
+    private IEnumerator TreatBuildCommand(Packet buildCommand)
     {
         switch (buildCommand)
         {
@@ -153,7 +154,7 @@ public class BuildingTester : MonoBehaviour
             {
                 constructable.constructedAmount = 0f;
                 yield return constructable.ProgressDeconstruction();
-                GameObject.Destroy(constructable.gameObject);
+                Destroy(constructable.gameObject);
                 BasesCooldown.Remove(modifyConstructedAmount.GhostId);
                 yield break;
             }
@@ -204,7 +205,7 @@ public class BuildingTester : MonoBehaviour
             constructableBase.SetState(true, true);
             BasesCooldown[updateBase.BaseId] = DateTimeOffset.Now;
             // In the case the built piece was an interior piece, we'll want to transfer the id to it.
-            if (BuildManager.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase, out GameObject moduleObject))
+            if (BuildUtils.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase, out GameObject moduleObject))
             {
                 yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, updateBase.FormerGhostId);
             }
@@ -260,7 +261,7 @@ public class BuildingTester : MonoBehaviour
         // TODO: Fix this
         foreach (BaseDeconstructable baseDeconstructable in deconstructableChildren)
         {
-            if (!BuildManager.TryGetIdentifier(baseDeconstructable, out BuildPieceIdentifier identifier) || !identifier.Equals(pieceIdentifier))
+            if (!BuildUtils.TryGetIdentifier(baseDeconstructable, out BuildPieceIdentifier identifier) || !identifier.Equals(pieceIdentifier))
             {
                 continue;
             }
@@ -295,7 +296,7 @@ public class BuildingTester : MonoBehaviour
             return;
         }
         LatestResyncRequestTimeOffset = DateTimeOffset.Now;
-        
+
         Resolve<IPacketSender>().Send(new BuildingResyncRequest());
         ErrorMessage.AddMessage("Issued a resync request for bases");
         // TODO: Localize
@@ -428,7 +429,7 @@ public class BuildingTester : MonoBehaviour
         Transform globalRoot = LargeWorldStreamer.main.globalRoot.transform;
         for (int i = globalRoot.childCount - 1; i >= 0; i--)
         {
-            UnityEngine.Object.Destroy(globalRoot.GetChild(i).gameObject);
+            Destroy(globalRoot.GetChild(i).gameObject);
         }
     }
 
@@ -503,7 +504,7 @@ public class BuildingTester : MonoBehaviour
     {
         if (TargetBase)
         {
-            UnityEngine.Object.Destroy(TargetBase.gameObject);
+            Destroy(TargetBase.gameObject);
         }
     }
 
@@ -514,7 +515,7 @@ public class BuildingTester : MonoBehaviour
         public List<NitroxId> MovedChildrenIds;
         public (NitroxId, NitroxId) ChildrenTransfer;
         public bool Transfer;
-        
+
         public void Fill(PieceDeconstructed pieceDeconstructed)
         {
             Id = pieceDeconstructed.PieceId;

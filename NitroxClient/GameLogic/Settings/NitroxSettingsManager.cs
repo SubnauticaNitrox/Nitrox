@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine.Events;
 
@@ -33,9 +33,9 @@ public class NitroxSettingsManager
         // TODO: Localize
         AddSetting("Nitrox_ResyncSettings", new Setting("Resync all bases", () =>
         {
-            if (BuildingTester.Main)
+            if (BuildingHandler.Main)
             {
-                BuildingTester.Main.AskForResync();
+                BuildingHandler.Main.AskForResync();
             }
         }));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));

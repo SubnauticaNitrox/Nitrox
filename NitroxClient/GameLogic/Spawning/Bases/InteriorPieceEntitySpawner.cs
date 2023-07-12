@@ -1,4 +1,4 @@
-using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
