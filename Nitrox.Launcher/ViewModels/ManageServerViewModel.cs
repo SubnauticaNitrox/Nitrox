@@ -5,7 +5,6 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData.Binding;
-using Microsoft.VisualBasic.FileIO;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
@@ -17,7 +16,7 @@ namespace Nitrox.Launcher.ViewModels;
 public class ManageServerViewModel : RoutableViewModelBase
 {
     public static Array PlayerPerms => Enum.GetValues(typeof(PlayerPermissions));
-    
+
 
     private ServerEntry server;
     /// <summary>
@@ -39,15 +38,15 @@ public class ManageServerViewModel : RoutableViewModelBase
             }
         }
     }
-    
+
     private bool serverIsOnline;
     public bool ServerIsOnline
     {
         get => Server.IsOnline;
         set => this.RaiseAndSetIfChanged(ref serverIsOnline, value);
     }
-    
-    
+
+
     private string serverName;
     public string ServerName
     {
@@ -124,18 +123,18 @@ public class ManageServerViewModel : RoutableViewModelBase
         get => serverAllowLanDiscovery;
         set => this.RaiseAndSetIfChanged(ref serverAllowLanDiscovery, value);
     }
-    
+
     private bool serverAllowCommands;
     public bool ServerAllowCommands
     {
         get => serverAllowCommands;
         set => this.RaiseAndSetIfChanged(ref serverAllowCommands, value);
     }
-    
-    
+
+
     private string worldFolderDirectory;
-    
-    
+
+
     private bool HasChanges()
     {
         if (Server == null)
@@ -155,12 +154,12 @@ public class ManageServerViewModel : RoutableViewModelBase
                ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
                ServerAllowCommands != Server.AllowCommands;
     }
-    
+
     public ReactiveCommand<Unit, Unit> BackCommand { get; init; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; init; }
     public ReactiveCommand<Unit, Unit> UndoCommand { get; init; }
     public ReactiveCommand<Unit, Unit> StartServerCommand { get; init; }
-    
+
     public ReactiveCommand<Unit, Unit> AdvancedSettingsCommand { get; init; }
     public ReactiveCommand<Unit, Unit> OpenWorldFolderCommand { get; init; }
     public ReactiveCommand<Unit, Unit> RestoreBackupCommand { get; init; }
@@ -173,14 +172,14 @@ public class ManageServerViewModel : RoutableViewModelBase
         IObservable<bool> canExecuteSaveCommand = this.WhenAnyPropertyChanged().CombineLatest(Observable.Return(this), this.IsValid()).Select(pair => pair.Second.HasChanges() && pair.Third);
         IObservable<bool> canExecuteUndoCommand = this.WhenAnyPropertyChanged().Select(x => x.HasChanges());
         IObservable<bool> canExecuteManageServerCommands = this.WhenAnyPropertyChanged().Select(x => !x.HasChanges());
-        
+
         IObservable<bool> canExecuteAdvancedSettingsButtonCommands = this.WhenAnyPropertyChanged().Select(x => !x.ServerIsOnline);
-        
+
         BackCommand = ReactiveCommand.Create(() =>
         {
             Router.NavigateBack.Execute();
         }, canExecuteManageServerCommands);
-        
+
         SaveCommand = ReactiveCommand.Create(() =>
         {
             Server.Name = ServerName;
@@ -197,7 +196,7 @@ public class ManageServerViewModel : RoutableViewModelBase
             Server.AllowCommands = ServerAllowCommands;
             this.RaisePropertyChanged(nameof(Server));
         }, canExecuteSaveCommand);
-        
+
         UndoCommand = ReactiveCommand.Create(() =>
         {
             ServerName = Server.Name;
@@ -213,49 +212,40 @@ public class ManageServerViewModel : RoutableViewModelBase
             ServerAllowLanDiscovery = Server.AllowLanDiscovery;
             ServerAllowCommands = Server.AllowCommands;
         }, canExecuteUndoCommand);
-        
+
         StartServerCommand = ReactiveCommand.Create(() =>
         {
             Server.StartCommand.Execute(null);
         }, canExecuteManageServerCommands);
-        
-        
+
+
         AdvancedSettingsCommand = ReactiveCommand.Create(() =>
         {
             // TODO: Open Advanced Settings Popup (which is automatically populated with the rest of the server.cfg settings)
         });
-        
+
         OpenWorldFolderCommand = ReactiveCommand.Create(() =>
         {
             Process.Start(worldFolderDirectory)?.Dispose(); // TODO: Fix file access permission issues
         });
-        
+
         RestoreBackupCommand = ReactiveCommand.Create(() =>
         {
             // TODO: Open Restore Backup Popup
         }, canExecuteAdvancedSettingsButtonCommands);
-        
+
         DeleteServerCommand = ReactiveCommand.Create(() =>
         {
-            // TODO: Handle this for other platforms (probably only works on Windows)
-            try
-            {
-                FileSystem.DeleteDirectory(worldFolderDirectory, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-                //Log.Info($"Moving world \"{Path.GetFileName(worldFolderDirectory)}\" to the recycling bin.");
-            }
-            catch (Exception ex)
-            {
-                //Log.Error($"Could not move save \"{Path.GetFileName(worldFolderDirectory)}\" to the recycling bin : {ex.GetType()} {ex.Message}");
-            }
+            // TODO: Delete this specific server's files
         }, canExecuteAdvancedSettingsButtonCommands);
     }
     public void LoadFrom(ServerEntry serverEntry)
     {
         Server = serverEntry;
         worldFolderDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", Server.Name);
-        
+
         ServerIsOnline = Server.IsOnline;
-        
+
         ServerName = Server.Name;
         ServerPassword = Server.Password;
         ServerGameMode = Server.GameMode;
@@ -269,7 +259,7 @@ public class ManageServerViewModel : RoutableViewModelBase
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
     }
-    
+
     private void Server_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ServerEntry.IsOnline))

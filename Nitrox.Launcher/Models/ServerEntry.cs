@@ -9,7 +9,6 @@ namespace Nitrox.Launcher.Models;
 /// </summary>
 public class ServerEntry : ReactiveObject
 {
-    // Default values
     private bool isOnline;
     private string name;
     private string password;
@@ -24,7 +23,7 @@ public class ServerEntry : ReactiveObject
     private bool allowLanDiscovery = true;
     private bool allowCommands = true;
     private bool isNewServer = true;
-    
+
     public bool IsOnline
     {
         get => isOnline;
@@ -91,12 +90,15 @@ public class ServerEntry : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref allowCommands, value);
     }
 
+    /// <summary>
+    /// TODO: This should be inferred from the server having a save file or not.
+    /// </summary>
     public bool IsNewServer
     {
         get => isNewServer;
         private set => this.RaiseAndSetIfChanged(ref isNewServer, value);
     }
-    
+
     public ICommand StartCommand { get; init; }
     public ICommand StopCommand { get; init; }
 
