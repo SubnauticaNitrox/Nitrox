@@ -1,6 +1,5 @@
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel_Subnautica.DataStructures;
@@ -63,10 +62,5 @@ public static class NitroxInteriorPiece
         interiorPiece.BaseFace = module.moduleFace.ToDto();
 
         return interiorPiece;
-    }
-
-    public static string ToString(this SavedInteriorPiece savedInteriorPiece)
-    {
-        return $"SavedInteriorPiece [ClassId: {savedInteriorPiece.ClassId}, Face: [{savedInteriorPiece.BaseFace.Cell};{savedInteriorPiece.BaseFace.Direction}], Constructed: {savedInteriorPiece.Constructed}]";
     }
 }

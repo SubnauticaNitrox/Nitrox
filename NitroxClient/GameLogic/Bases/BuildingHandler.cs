@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.EntityUtils;
@@ -15,7 +13,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -28,13 +25,7 @@ public class BuildingHandler : MonoBehaviour
 
     public Queue<Packet> BuildQueue;
     private bool working;
-    public string TargetBaseName;
-    public Base TargetBase;
-    public int Cycle = 0;
-    public int Slot = 0;
-    private JsonSerializer serializer;
-    public string SavePath = Path.Combine(NitroxUser.LauncherPath, "SavedBases");
-
+    
     public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
     public DateTimeOffset LatestResyncRequestTimeOffset;
 
@@ -58,11 +49,6 @@ public class BuildingHandler : MonoBehaviour
         BasesCooldown = new();
         Temp = new();
         Operations = new();
-
-        serializer = new();
-        serializer.NullValueHandling = NullValueHandling.Ignore;
-        serializer.TypeNameHandling = TypeNameHandling.Auto;
-        CycleTargetBase();
     }
 
     public void Update()
@@ -319,21 +305,7 @@ public class BuildingHandler : MonoBehaviour
         }
     }
 
-    private void RefreshBase(Base @base)
-    {
-        @base.StorePreviousFaces();
-        @base.FixCorridorLinks();
-        @base.RecalculateFlowData();
-        @base.RebuildGeometry();
-        if (!@base.isGhost)
-        {
-            for (int i = 0; i < @base.ghosts.Count; i++)
-            {
-                @base.ghosts[i].RecalculateTargetOffset();
-            }
-        }
-    }
-
+    
     public static Transform GetParentOrGlobalRoot(NitroxId id)
     {
         if (id != null && NitroxEntity.TryGetObjectFrom(id, out GameObject parentObject))
@@ -377,135 +349,12 @@ public class BuildingHandler : MonoBehaviour
         return -1;
     }
 
-    // TODO: Transform legacy singleplayer loading/saving into a map converting monobehaviour
-
-    public void CycleTargetBase()
-    {
-        Base[] bases = LargeWorldStreamer.main.globalRoot.GetComponentsInChildren<Base>(true);
-        if (Cycle >= bases.Length - 1)
-        {
-            Cycle = 0;
-        }
-        else
-        {
-            Cycle++;
-        }
-
-        if (Cycle < bases.Length)
-        {
-            TargetBase = bases[Cycle];
-            TargetBaseName = TargetBase.name;
-        }
-        else
-        {
-            TargetBase = null;
-            TargetBaseName = string.Empty;
-        }
-    }
-
-    public void SaveGlobalRoot()
-    {
-        SavedGlobalRoot savedGlobalRoot = NitroxGlobalRoot.From(LargeWorldStreamer.main.globalRoot.transform);
-        using (StreamWriter writer = File.CreateText(string.Format("{0}\\big-save{1}.json", SavePath, Slot)))
-        {
-            serializer.Serialize(writer, savedGlobalRoot);
-        }
-    }
-
-    public void LoadGlobalRoot()
-    {
-        DateTimeOffset beginTime = DateTimeOffset.Now;
-        using (StreamReader reader = File.OpenText(string.Format("{0}\\big-save{1}.json", SavePath, Slot)))
-        {
-            SavedGlobalRoot savedGlobalRoot = (SavedGlobalRoot)serializer.Deserialize(reader, typeof(SavedGlobalRoot));
-            DateTimeOffset endTime = DateTimeOffset.Now;
-            Log.Debug(string.Format("Took {0}ms to deserialize the SavedGlobalRoot\n{1}", (endTime - beginTime).TotalMilliseconds, savedGlobalRoot));
-            StartCoroutine(LoadGlobalRootAsync(savedGlobalRoot));
-        }
-    }
-
-    public void ResetGlobalRoot()
-    {
-        Transform globalRoot = LargeWorldStreamer.main.globalRoot.transform;
-        for (int i = globalRoot.childCount - 1; i >= 0; i--)
-        {
-            Destroy(globalRoot.GetChild(i).gameObject);
-        }
-    }
-
-    public IEnumerator LoadGlobalRootAsync(SavedGlobalRoot savedGlobalRoot)
-    {
-        DateTimeOffset beginTime = DateTimeOffset.Now;
-        foreach (BuildEntity build in savedGlobalRoot.Builds)
-        {
-            yield return LoadBaseAsync(build);
-        }
-        yield return NitroxBuild.RestoreModules(savedGlobalRoot.Modules);
-        yield return NitroxBuild.RestoreGhosts(LargeWorldStreamer.main.globalRoot.transform, savedGlobalRoot.Ghosts);
-        DateTimeOffset endTime = DateTimeOffset.Now;
-        Log.Debug($"Took {(endTime - beginTime).TotalMilliseconds}ms to fully load the SavedGlobalRoot");
-    }
-
-    public void LogCurrentBase()
-    {
-        Log.Debug(NitroxBase.From(TargetBase));
-        if (TargetBase.TryGetComponentInParent(out ConstructableBase constructableBase))
-        {
-            foreach (Renderer renderer in constructableBase.ghostRenderers)
-            {
-                Log.Debug($"{renderer.name} (under {renderer.transform.parent.name}) bounds: {renderer.bounds}");
-            }
-        }
-    }
-
-    public void LogAndSaveCurrentBase()
-    {
-        if (!TargetBase)
-        {
-            Log.Debug("Base is null or not alive");
-        }
-        else
-        {
-            BuildEntity buildEntity = NitroxBuild.From(TargetBase);
-            Log.Debug($"Saved base: {TargetBase.name}\n{buildEntity}");
-            SaveBase(buildEntity);
-        }
-    }
-
-    private void SaveBase(BuildEntity buildEntity)
-    {
-        using (StreamWriter writer = File.CreateText(string.Format("{0}\\save{1}.json", SavePath, Slot)))
-        {
-            serializer.Serialize(writer, buildEntity);
-        }
-    }
-
-    public void LoadBase()
-    {
-        DateTimeOffset beginTime = DateTimeOffset.Now;
-        using (StreamReader reader = File.OpenText(string.Format("{0}\\save{1}.json", SavePath, Slot)))
-        {
-            BuildEntity savedBuild = (BuildEntity)serializer.Deserialize(reader, typeof(BuildEntity));
-            DateTimeOffset endTime = DateTimeOffset.Now;
-            Log.Debug(string.Format("Took {0}ms to deserialize the SavedBuild\n:{1}", (endTime - beginTime).TotalMilliseconds, savedBuild));
-            StartCoroutine(LoadBaseAsync(savedBuild));
-        }
-    }
-
     public IEnumerator LoadBaseAsync(BuildEntity buildEntity, TaskResult<Optional<GameObject>> result = null)
     {
         DateTimeOffset beginTime = DateTimeOffset.Now;
         yield return NitroxBuild.CreateBuild(buildEntity, result);
         DateTimeOffset endTime = DateTimeOffset.Now;
         Log.Debug(string.Format("Took {0}ms to create the Base", (endTime - beginTime).TotalMilliseconds));
-    }
-
-    public void DeleteTargetBase()
-    {
-        if (TargetBase)
-        {
-            Destroy(TargetBase.gameObject);
-        }
     }
 
     public class TemporaryBuildData
