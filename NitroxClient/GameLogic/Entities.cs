@@ -138,11 +138,17 @@ namespace NitroxClient.GameLogic
         }
 
         // TODO: Localize
+        /// <remarks>
+        /// Yield returning takes too much time and it quickly gets out of hand with long function call hierarchies so
+        /// we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS)
+        /// </remarks>
         /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
         public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false)
         {
+            int timeSkips = 0;
+
             float timeOffset = 0.0069f;// = 1s/144 FPS
-            float timeLimit = Time.unscaledTime + timeOffset;
+            float timeLimit = Time.realtimeSinceStartup + timeOffset;
             DateTimeOffset beginTime = DateTimeOffset.Now;
             foreach (Entity entity in batch)
             {
@@ -155,12 +161,21 @@ namespace NitroxClient.GameLogic
                     if (coroutine != null)
                     {
                         yield return CoroutineUtils.YieldSafe(coroutine, exception);
-                        timeLimit = Time.unscaledTime + timeOffset;                        
+                        timeLimit = Time.realtimeSinceStartup + timeOffset;                        
+                    }
+                    else
+                    {
+                        Log.Error($"Spawn coroutine for {entity.Id} is null");
+                        continue;
                     }
                 }
                 if (exception.Get() != null)
                 {
                     Log.Error($"Failed to spawn entity {entity.Id} during a batch spawning:\n{exception.Get()}");
+                    continue;
+                }
+                else if (!entityResult.Get().Value)
+                {
                     continue;
                 }
 
@@ -186,7 +201,12 @@ namespace NitroxClient.GameLogic
                         if (coroutine != null)
                         {
                             yield return CoroutineUtils.YieldSafe(coroutine, exception);
-                            timeLimit = Time.unscaledTime + timeOffset;
+                            timeLimit = Time.realtimeSinceStartup + timeOffset;
+                        }
+                        else
+                        {
+                            Log.Error($"Spawn coroutine for {entity.Id} is null");
+                            continue;
                         }
                     }
                     if (exception.Get() != null)
@@ -194,6 +214,11 @@ namespace NitroxClient.GameLogic
                         Log.Error($"Failed to spawn entity {childEntity.Id} during a batch spawning:\n{exception.Get()}");
                         continue;
                     }
+                    else if (!childResult.Get().Value)
+                    {
+                        continue;
+                    }
+
                     MarkAsSpawned(childEntity);
                     Optional<GameObject> childGameObject = childResult.Get();
 
@@ -204,10 +229,11 @@ namespace NitroxClient.GameLogic
                         EntityMetadataProcessor.ApplyMetadata(childGameObject.Value, childEntity.Metadata);
                     }
 
-                    if (Time.unscaledTime > timeLimit)
+                    if (Time.realtimeSinceStartup > timeLimit)
                     {
-                        timeLimit = Time.unscaledTime + timeOffset;
                         yield return null;
+                        timeLimit = Time.realtimeSinceStartup + timeOffset;
+                        timeSkips++;
                     }
                 }
 
@@ -215,14 +241,15 @@ namespace NitroxClient.GameLogic
                 // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
                 EntityMetadataProcessor.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
 
-                if (Time.unscaledTime > timeLimit)
+                if (Time.realtimeSinceStartup > timeLimit)
                 {
-                    timeLimit = Time.unscaledTime + timeOffset;
                     yield return null;
+                    timeLimit = Time.realtimeSinceStartup + timeOffset;
+                    timeSkips++;
                 }
             }
             DateTimeOffset endTime = DateTimeOffset.Now;
-            Log.Debug($"Optimized spawning took {(endTime - beginTime).TotalMilliseconds}ms");
+            Log.Debug($"Optimized spawning took {(endTime - beginTime).TotalMilliseconds}ms with {timeSkips} time skips");
         }
 
         public List<Entity> GetChildrenRecursively(Entity entity, bool forceRespawn = false)

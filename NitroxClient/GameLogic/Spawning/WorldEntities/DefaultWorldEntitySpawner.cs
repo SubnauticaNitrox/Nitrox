@@ -94,17 +94,31 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             result.Set(techPrefabCoroutine.GetResult());
         }
 
+        public static IEnumerator RequestPrefab(string classId, TaskResult<GameObject> result)
+        {
+            if (prefabCacheByClassId.TryGetValue(classId, out GameObject prefab))
+            {
+                result.Set(prefab);
+                yield break;
+            }
+            IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(classId);
+            yield return prefabCoroutine;
+            if (prefabCoroutine.TryGetPrefab(out prefab))
+            {
+                prefabCacheByClassId[classId] = prefab;
+            }
+            result.Set(prefab);
+        }
+
         public static IEnumerator CreateGameObject(TechType techType, string classId, TaskResult<GameObject> result)
         {
             IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(classId);
             yield return prefabCoroutine;
-            prefabCoroutine.TryGetPrefab(out GameObject prefab);
-            if (prefab)
+            if (prefabCoroutine.TryGetPrefab(out GameObject prefab))
             {
                 prefabCacheByClassId[classId] = prefab;
             }
-
-            if (!prefab)
+            else
             {
                 CoroutineTask<GameObject> techPrefabCoroutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
                 yield return techPrefabCoroutine;
@@ -113,6 +127,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
                 {
                     result.Set(Utils.CreateGenericLoot(techType));
                     prefabNotFound.Add((classId, techType));
+                    yield break;
                 }
                 else
                 {

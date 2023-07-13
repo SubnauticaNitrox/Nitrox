@@ -15,6 +15,7 @@ using UnityEngine;
 using UWE;
 using NitroxClient.GameLogic.Bases.MetadataUtils;
 using NitroxModel.DataStructures.GameLogic.Bases;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
 
 namespace NitroxClient.GameLogic.Bases.EntityUtils;
 
@@ -202,13 +203,18 @@ public static class NitroxBuild
 
     public static IEnumerator RestoreInteriorPiece(InteriorPieceEntity interiorPiece, Base @base, TaskResult<Optional<GameObject>> result = null)
     {
-        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(interiorPiece.ClassId);
-        yield return request;
-        if (!request.TryGetPrefab(out GameObject prefab))
+        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: interiorPiece.ClassId))
         {
-            Log.Debug($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
-            yield break;
+            TaskResult<GameObject> prefabResult = new();
+            yield return DefaultWorldEntitySpawner.RequestPrefab(interiorPiece.ClassId, prefabResult);
+            if (!prefabResult.Get())
+            {
+                Log.Debug($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
+                yield break;
+            }
+            prefab = prefabResult.Get();
         }
+
         Base.Face face = interiorPiece.BaseFace.ToUnity();
         face.cell += @base.GetAnchor();
         GameObject moduleObject = @base.SpawnModule(prefab, face);
@@ -232,13 +238,19 @@ public static class NitroxBuild
     public static IEnumerator RestoreModule(Transform parent, ModuleEntity moduleEntity, TaskResult<Optional<GameObject>> result = null)
     {
         Log.Debug($"Restoring module {moduleEntity.ClassId}");
-        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(moduleEntity.ClassId);
-        yield return request;
-        if (!request.TryGetPrefab(out GameObject prefab))
+        
+        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: moduleEntity.ClassId))
         {
-            Log.Debug($"Couldn't find a prefab for module of ClassId {moduleEntity.ClassId}");
-            yield break;
+            TaskResult<GameObject> prefabResult = new();
+            yield return DefaultWorldEntitySpawner.RequestPrefab(moduleEntity.ClassId, prefabResult);
+            if (!prefabResult.Get())
+            {
+                Log.Debug($"Couldn't find a prefab for module of ClassId {moduleEntity.ClassId}");
+                yield break;
+            }
+            prefab = prefabResult.Get();
         }
+        
         GameObject moduleObject = UnityEngine.Object.Instantiate(prefab);
         Transform moduleTransform = moduleObject.transform;
         moduleTransform.parent = parent;
@@ -286,13 +298,19 @@ public static class NitroxBuild
     public static IEnumerator RestoreGhost(Transform parent, GhostEntity ghostEntity, TaskResult<Optional<GameObject>> result = null)
     {
         Log.Debug($"Restoring ghost {ghostEntity}");
-        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(ghostEntity.ClassId);
-        yield return request;
-        if (!request.TryGetPrefab(out GameObject prefab))
+
+        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: ghostEntity.ClassId))
         {
-            Log.Debug($"Couldn't find a prefab for module of ClassId {ghostEntity.ClassId}");
-            yield break;
+            TaskResult<GameObject> prefabResult = new();
+            yield return DefaultWorldEntitySpawner.RequestPrefab(ghostEntity.ClassId, prefabResult);
+            if (!prefabResult.Get())
+            {
+                Log.Debug($"Couldn't find a prefab for ghost of ClassId {ghostEntity.ClassId}");
+                yield break;
+            }
+            prefab = prefabResult.Get();
         }
+
         bool isInBase = parent.TryGetComponent(out Base @base);
 
         GameObject ghostObject = UnityEngine.Object.Instantiate(prefab);
