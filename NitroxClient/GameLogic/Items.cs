@@ -15,6 +15,7 @@ using NitroxModel.DataStructures.GameLogic;
 using System.Linq;
 using NitroxClient.Unity.Helper;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.Helpers;
 
 namespace NitroxClient.GameLogic;
 

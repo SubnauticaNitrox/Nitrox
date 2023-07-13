@@ -1,6 +1,6 @@
 using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.Helpers;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using System.Reflection;
@@ -13,7 +13,7 @@ internal class BuilderTool_Construct_Patch : NitroxPatch, IDynamicPatch
 
     public static bool Prefix(Constructable c)
     {
-        if (!BuildingHandler.Main || !c.tr.parent || !NitroxEntity.TryGetIdFrom(c.tr.parent.gameObject, out NitroxId parentId))
+        if (!BuildingHandler.Main || !c.tr.parent || !c.tr.parent.TryGetNitroxId(out NitroxId parentId))
         {
             return true;
         }

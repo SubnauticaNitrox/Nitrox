@@ -2,6 +2,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.EntityUtils;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -20,14 +21,14 @@ public class WaterPark_TransferValue_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(WaterPark srcWaterPark, WaterPark dstWaterPark)
     {
-        if (!NitroxEntity.TryGetIdFrom(srcWaterPark.gameObject, out NitroxId sourceId))
+        if (!srcWaterPark.TryGetNitroxId(out NitroxId sourceId))
         {
             return;
         }
 
         // Happens when you regroup a bottom waterpark and an upper waterpark by a middle waterpark
         // The waterpark pieces are merged into the bottom one
-        if (NitroxEntity.TryGetIdFrom(dstWaterPark.gameObject, out NitroxId destinationId))
+        if (dstWaterPark.TryGetNitroxId(out NitroxId destinationId))
         {
             Log.Debug($"Changed id when transferring value, from {sourceId} to {destinationId}");
             Temp.ChildrenTransfer = (sourceId, destinationId);

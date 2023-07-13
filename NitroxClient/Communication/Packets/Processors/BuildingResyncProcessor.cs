@@ -2,6 +2,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.EntityUtils;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -68,7 +69,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         {
             if (childTransform.TryGetComponent(out C component))
             {
-                if (NitroxEntity.TryGetIdFrom(component.gameObject, out NitroxId id))
+                if (component.TryGetNitroxId(out NitroxId id))
                 {
                     E correspondingEntity = entitiesToUpdate.Find(entity => entity.Id.Equals(id));
                     if (correspondingEntity != null)
