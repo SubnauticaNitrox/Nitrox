@@ -31,7 +31,7 @@ public class NitroxSettingsManager
             MainMenuMultiplayerPanel.Main.RefreshServerEntries();
         }));
         // TODO: Localize
-        AddSetting("Nitrox_ResyncSettings", new Setting("Resync all bases", () =>
+        AddSetting("Nitrox_ResyncSettings", new Setting("Nitrox_ResyncBuildings", () =>
         {
             if (BuildingHandler.Main)
             {

@@ -1,6 +1,5 @@
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -42,10 +41,5 @@ public static class NitroxModule
         ModuleEntity module = ModuleEntity.MakeEmpty();
         module.FillObject(constructable);
         return module;
-    }
-
-    public static string ToString(this SavedModule savedModule)
-    {
-        return $"SavedModule [ClassId: {savedModule.ClassId}, NitroxId: {savedModule.NitroxId}, Position: {savedModule.Position}, Rotation: {savedModule.Rotation}, LocalScale: {savedModule.LocalScale}, ConstructedAmount: {savedModule.ConstructedAmount}, IsInside: {savedModule.IsInside}]";
     }
 }

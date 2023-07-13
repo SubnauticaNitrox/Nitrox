@@ -10,11 +10,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
-using UWE;
 using NitroxClient.GameLogic.Bases.MetadataUtils;
-using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 
 namespace NitroxClient.GameLogic.Bases.EntityUtils;
@@ -421,13 +418,5 @@ public static class NitroxBuild
         {
             yield return RestoreMapRoom(@base, mapRoomEntity);
         }
-    }
-
-    public static string ToString(this SavedBuild savedBuild)
-    {
-        StringBuilder builder = new();
-        builder.AppendLine($"Build located at {savedBuild.Position}/{savedBuild.Rotation}/{savedBuild.LocalScale}");
-        builder.AppendLine(savedBuild.Base.ToString());
-        return builder.ToString();
     }
 }

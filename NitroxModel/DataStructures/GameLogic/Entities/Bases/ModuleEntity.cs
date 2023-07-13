@@ -71,6 +71,6 @@ public class ModuleEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[ModuleEntity Id: {Id}]";
+        return $"[ModuleEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, LocalPosition: {LocalPosition}, LocalRotation: {LocalRotation}, LocalScale: {LocalScale}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}]";
     }
 }
