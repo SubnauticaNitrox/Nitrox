@@ -13,6 +13,7 @@ using System.Linq;
 using UnityEngine;
 using NitroxClient.GameLogic.Bases.MetadataUtils;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
+using NitroxClient.Helpers;
 
 namespace NitroxClient.GameLogic.Bases.EntityUtils;
 
@@ -162,14 +163,14 @@ public static class NitroxBuild
 
     private static List<MapRoomEntity> SaveMapRooms(Base targetBase)
     {
-        if (!NitroxEntity.TryGetIdFrom(targetBase.gameObject, out NitroxId parentId))
+        if (!targetBase.TryGetNitroxId(out NitroxId parentId))
         {
             return new();
         }
         List<MapRoomEntity> mapRooms = new();
         foreach (MapRoomFunctionality mapRoomFunctionality in targetBase.GetComponentsInChildren<MapRoomFunctionality>(true))
         {
-            if (!NitroxEntity.TryGetIdFrom(mapRoomFunctionality.gameObject, out NitroxId mapRoomId))
+            if (!mapRoomFunctionality.TryGetNitroxId(out NitroxId mapRoomId))
             {
                 continue;
             }

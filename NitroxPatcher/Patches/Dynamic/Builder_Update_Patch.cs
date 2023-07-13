@@ -3,9 +3,9 @@ using NitroxModel.Helper;
 using System.Reflection;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Settings;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using UnityEngine;
+using NitroxClient.Helpers;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -31,7 +31,7 @@ internal class Builder_Update_Patch : NitroxPatch, IDynamicPatch
             parentBase = Builder.placementTarget;
         }
 
-        if (parentBase && NitroxEntity.TryGetIdFrom(parentBase, out NitroxId parentId) &&
+        if (parentBase && parentBase.TryGetNitroxId(out NitroxId parentId) &&
             BuildingHandler.Main.EnsureTracker(parentId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
         {
             Builder.canPlace = false;
