@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -13,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /**
  * When a player is finished crafting an item, we need to let the server know we spawned the items.  We also
- * let other players know to close out the crafter and consider it empty. 
+ * let other players know to close out the crafter and consider it empty.
  */
 public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatch
 {
@@ -46,9 +45,11 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
 
     public static void Callback(GameObject crafter, GameObject item)
     {
-        // Tell the other players to consider this crafter to no longer contain a tech type.
-        NitroxId crafterId = NitroxEntity.GetId(crafter.gameObject);
-        Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));
+        if (crafter.TryGetIdOrWarn(out NitroxId crafterId))
+        {
+            // Tell the other players to consider this crafter to no longer contain a tech type.
+            Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));
+        }
 
         // The Pickup() item codepath will inform the server that the item was added to the inventory.
     }
@@ -58,4 +59,3 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
         PatchTranspiler(harmony, TARGET_METHOD);
     }
 }
-

@@ -3,7 +3,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -27,19 +26,17 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            // Request a simulation lock on the incubator so that we can authoritatively spawn the resulting creatures 
-            if (__instance.powered && !__instance.hatched && Inventory.main.container.Contains(TechType.HatchingEnzymes))
+            // The server only knows about the the main incubator platform which is the direct parent
+            GameObject platform = __instance.transform.parent.gameObject;
+
+            // Request a simulation lock on the incubator so that we can authoritatively spawn the resulting creatures
+            if (__instance.powered && !__instance.hatched && Inventory.main.container.Contains(TechType.HatchingEnzymes) &&
+                platform.TryGetIdOrWarn(out NitroxId id))
             {
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-
-                // the server only knows about the the main incubator platform which is the direct parent
-                GameObject platform = __instance.gameObject.transform.parent.gameObject;
-                NitroxId id = NitroxEntity.GetId(platform);
-
                 HandInteraction<Incubator> context = new(__instance, hand);
                 LockRequest<HandInteraction<Incubator>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
-                simulationOwnership.RequestSimulationLock(lockRequest);
+                Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
             }
 
             return false;

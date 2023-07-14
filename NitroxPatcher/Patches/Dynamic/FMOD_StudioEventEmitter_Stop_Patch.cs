@@ -2,6 +2,7 @@
 using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 
@@ -22,12 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (fmodSystem.IsWhitelisted(__instance.asset.path))
             {
-                __instance.TryGetComponent(out NitroxEntity nitroxEntity);
-                if (!nitroxEntity)
-                {
-                    nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
-                }
-                if (nitroxEntity)
+                if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
                 {
                     fmodSystem.PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, false, allowFadeout);
                 }

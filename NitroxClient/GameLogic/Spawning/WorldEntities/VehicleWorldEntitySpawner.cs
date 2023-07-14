@@ -88,7 +88,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
         yield return Yielders.WaitForEndOfFrame;
 
-        Vehicles.RemoveNitroxEntityTagging(gameObject);
+        Vehicles.RemoveNitroxEntitiesTagging(gameObject);
 
         NitroxEntity.SetNewId(gameObject, vehicleEntity.Id);
 

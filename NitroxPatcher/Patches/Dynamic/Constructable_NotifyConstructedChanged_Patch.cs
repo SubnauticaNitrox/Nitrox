@@ -2,7 +2,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -24,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId id;
 
-                // Check to see if they are trying to deconstruct a base piece.  If so, we will need to use the 
+                // Check to see if they are trying to deconstruct a base piece.  If so, we will need to use the
                 // id in LATEST_DECONSTRUCTED_BASE_PIECE_GUID because base pieces get destroyed and recreated with
                 // a ghost (furniture just uses the same game object).
                 if (opId.HasValue)
@@ -36,7 +35,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 else
                 {
                     // furniture, just use the same object to get the id
-                    id = NitroxEntity.GetId(__instance.gameObject);
+                    if (!__instance.TryGetIdOrWarn(out id))
+                    {
+                        return;
+                    }
                     Log.Debug($"Deconstructing furniture with id: {id}");
                 }
 

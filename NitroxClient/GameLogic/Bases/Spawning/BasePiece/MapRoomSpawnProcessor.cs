@@ -8,7 +8,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
     /*
      * When a map room is created, two objects are added to the base: a BaseMapRoom piece that is
      * entirely geometry and a MapRoomFunctionality game object in the base root.  This class sets
-     * deterministic ids on non-geometry pieces, such as the map module upgrade storage area, so 
+     * deterministic ids on non-geometry pieces, such as the map module upgrade storage area, so
      * they can stay in sync during player interactions.
      */
     public class MapRoomSpawnProcessor : BasePieceSpawnProcessor
@@ -20,7 +20,11 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
-            NitroxId mapRoomGeometryPieceId = NitroxEntity.GetId(finishedPiece);
+            if (!finishedPiece.TryGetIdOrWarn(out NitroxId mapRoomGeometryPieceId))
+            {
+                return;
+            }
+
             GameObject mapRoomFunctionality = FindMapRoomFunctionality(latestBase, finishedPiece);
 
             NitroxId mapRoomFunctionalityId = mapRoomGeometryPieceId.Increment();

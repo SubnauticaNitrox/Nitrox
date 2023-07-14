@@ -1,6 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -15,9 +15,9 @@ public class PDAScanner_ScanTarget_Initialize_Patch : NitroxPatch, IDynamicPatch
     public static void Postfix(PDAScanner.ScanTarget __instance)
     {
         // We only want to set the uid if the target is supposed to have an uid (hasUID)
-        if (__instance.hasUID && NitroxEntity.TryGetEntityFrom(__instance.gameObject, out NitroxEntity entity))
+        if (__instance.hasUID && __instance.gameObject.TryGetNitroxId(out NitroxId entityId))
         {
-            __instance.uid = entity.Id.ToString();
+            __instance.uid = entityId.ToString();
         }
     }
 

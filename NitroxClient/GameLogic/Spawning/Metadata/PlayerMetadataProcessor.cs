@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -13,10 +12,20 @@ namespace NitroxClient.GameLogic.Spawning.Metadata;
 
 public class PlayerMetadataProcessor : GenericEntityMetadataProcessor<PlayerMetadata>
 {
+    private NitroxId localPlayerId = null;
     public override void ProcessMetadata(GameObject gameObject, PlayerMetadata metadata)
     {
-        NitroxId id = NitroxEntity.GetId(gameObject);
-        NitroxId localPlayerId = NitroxEntity.GetId(Player.main.gameObject);
+        if (!gameObject.TryGetIdOrWarn(out NitroxId id))
+        {
+            return;
+        }
+
+        // The local player id should be static, therefor we can cache the id for performance
+        if (localPlayerId == null && !Player.main.TryGetIdOrWarn(out localPlayerId))
+        {
+            return;
+        }
+
 
         if (id == localPlayerId)
         {
@@ -35,8 +44,7 @@ public class PlayerMetadataProcessor : GenericEntityMetadataProcessor<PlayerMeta
 
         foreach(EquippedItem equippedItem in metadata.EquippedItems)
         {
-            InventoryItem inventoryItem = currentItems.Where(item => equippedItem.Id == NitroxEntity.GetId(item.item.gameObject))
-                                                      .FirstOrDefault();
+            InventoryItem inventoryItem = currentItems.FirstOrDefault(item => item.item.TryGetNitroxId(out NitroxId id) && equippedItem.Id == id);
 
             // It is OK if we don't find the item, this could be a rebroadcast and we've already equipped the item.
             if (inventoryItem != null)

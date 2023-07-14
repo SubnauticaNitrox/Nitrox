@@ -47,7 +47,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void BeforeDestroy(GameObject gameObject)
         {
-            if (NitroxEntity.TryGetEntityFrom(gameObject, out NitroxEntity nitroxEntity))
+            if (gameObject.TryGetNitroxEntity(out NitroxEntity nitroxEntity))
             {
                 Resolve<IPacketSender>().Send(new EntityDestroyed(nitroxEntity.Id));
             }

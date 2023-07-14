@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -26,8 +25,11 @@ public class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch, IDyna
             return false;
         }
 
-        NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-        Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
+        if (__instance.TryGetIdOrWarn(out NitroxId id))
+        {
+            Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
+        }
+
         return true;
     }
 

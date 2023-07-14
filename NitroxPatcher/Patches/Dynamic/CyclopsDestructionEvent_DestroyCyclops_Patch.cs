@@ -2,7 +2,7 @@
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -14,9 +14,9 @@ public class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynami
     public static void Prefix(CyclopsDestructionEvent __instance)
     {
         __instance.subLiveMixin.Kill();
-        if (NitroxEntity.TryGetEntityFrom(__instance.gameObject, out NitroxEntity nitroxEntity))
+        if (__instance.TryGetNitroxId(out NitroxId nitroxId))
         {
-            Resolve<SimulationOwnership>().StopSimulatingEntity(nitroxEntity.Id);
+            Resolve<SimulationOwnership>().StopSimulatingEntity(nitroxId);
         }
 
         // Before the cyclops destruction, we move out the remote players so that they aren't stuck in its hierarchy

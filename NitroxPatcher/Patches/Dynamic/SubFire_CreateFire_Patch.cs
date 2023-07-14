@@ -2,8 +2,7 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -20,7 +19,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {
-            __state = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.subRoot.gameObject));
+            __state = __instance.subRoot.TryGetIdOrWarn(out NitroxId id) &&
+                      Resolve<SimulationOwnership>().HasAnyLockType(id);
 
             // Block any new fires if this player is not the owner
             return __state;
@@ -29,19 +29,18 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(SubFire __instance, SubFire.RoomFire startInRoom, bool __state)
         {
             // Spent way too much time trying to get around a bug in dnspy that doesn't allow me to propery edit this method, so I'm going with the hacky solution.
-            // Every time a Fire is created, the whole list of SubFire.availableNodes is cleared, then populated with any transforms that have 0 childCount. 
+            // Every time a Fire is created, the whole list of SubFire.availableNodes is cleared, then populated with any transforms that have 0 childCount.
             // Next, it chooses a random index, then spawns a fire in that node.
             // We can easily find where it is because it'll be the only Transform in SubFire.availableNodes with a childCount > 0
             if (__state)
             {
-                Fires fires = NitroxServiceLocator.LocateService<Fires>();
                 foreach (Transform transform in __instance.availableNodes)
                 {
                     if (transform.childCount > 0)
                     {
                         int nodeIndex = Array.IndexOf(__instance.roomFires[startInRoom.roomLinks.room].spawnNodes, transform);
                         Fire fire = transform.GetComponentInChildren<Fire>();
-                        fires.OnCreate(fire, startInRoom, nodeIndex);
+                        Resolve<Fires>().OnCreate(fire, startInRoom, nodeIndex);
                         return;
                     }
                 }

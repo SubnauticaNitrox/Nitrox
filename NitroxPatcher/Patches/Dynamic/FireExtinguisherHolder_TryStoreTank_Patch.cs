@@ -4,7 +4,6 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -32,7 +31,7 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
             {
                 /*
                  * Injects:  Callback(this, pickupable);
-                 * 
+                 *
                  * This needs to be done before the pickupable object is destroyed because it has necessary metadata such as the tank fuel level.
                  */
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
@@ -44,11 +43,15 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
 
     public static void Callback(FireExtinguisherHolder holder, Pickupable pickupable)
     {
-        NitroxId holderId = NitroxEntity.GetId(holder.gameObject);
-        Resolve<Entities>().EntityMetadataChanged(holder, holderId);
+        if (holder.TryGetIdOrWarn(out NitroxId holderId))
+        {
+            Resolve<Entities>().EntityMetadataChanged(holder, holderId);
+        }
 
-        NitroxId pickupableId = NitroxEntity.GetId(pickupable.gameObject);
-        Resolve<IPacketSender>().Send(new EntityDestroyed(pickupableId));
+        if (pickupable.TryGetIdOrWarn(out NitroxId pickupableId))
+        {
+            Resolve<IPacketSender>().Send(new EntityDestroyed(pickupableId));
+        }
     }
 
     public override void Patch(Harmony harmony)
@@ -56,4 +59,3 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
         PatchTranspiler(harmony, TARGET_METHOD);
     }
 }
-

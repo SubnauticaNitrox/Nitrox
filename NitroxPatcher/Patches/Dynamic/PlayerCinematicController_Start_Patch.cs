@@ -13,13 +13,10 @@ public class PlayerCinematicController_Start_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(PlayerCinematicController __instance)
     {
-        if (!__instance.TryGetComponent(out NitroxEntity entity))
+        if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
         {
-            if (!__instance.TryGetComponentInParent(out entity))
-            {
-                Log.Warn($"[PlayerCinematicController_Start_Patch] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
-                return;
-            }
+            Log.Warn($"[PlayerCinematicController_Start_Patch] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
+            return;
         }
 
         if (!entity.gameObject.TryGetComponent(out MultiplayerCinematicReference reference))

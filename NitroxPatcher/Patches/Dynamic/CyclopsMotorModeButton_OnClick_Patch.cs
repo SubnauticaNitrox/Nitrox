@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -32,10 +31,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsMotorModeButton __instance, bool __state)
         {
-            if (__state)
+            if (__state && __instance.subRoot.TryGetIdOrWarn(out NitroxId id))
             {
-                SubRoot cyclops = __instance.subRoot;
-                NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
                 Resolve<Cyclops>().BroadcastMetadataChange(id);
             }
         }

@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -22,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 /* if (this.crafterLogic.Craft(currentStageTech, craftTime)) {
 			     *      GameObject toBuild = this.rocket.StartRocketConstruction();
-                 *  ->  RocketConstructor_StartRocketConstruction_Patch.Callback(this.rocket); 
+                 *  ->  RocketConstructor_StartRocketConstruction_Patch.Callback(this.rocket);
 			     *      ItemGoalTracker.OnConstruct(currentStageTech);
 			     *      this.SendBuildBots(toBuild);
 		         * }
@@ -38,9 +37,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         private static void Callback(Rocket rocket)
         {
-            NitroxId rocketId = NitroxEntity.GetId(rocket.gameObject);
-
-            Resolve<Entities>().EntityMetadataChanged(rocket, rocketId);
+            if (rocket.TryGetIdOrWarn(out NitroxId rocketId))
+            {
+                Resolve<Entities>().EntityMetadataChanged(rocket, rocketId);
+            }
         }
 
         public override void Patch(Harmony harmony)
