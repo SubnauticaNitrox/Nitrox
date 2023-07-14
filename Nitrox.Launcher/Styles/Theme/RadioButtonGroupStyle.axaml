@@ -1,18 +1,18 @@
 <Styles xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:models="clr-namespace:Nitrox.Launcher.Models"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls">
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
+             xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
                 <Border Padding="10" Background="#000000" design:NitroxAttached.Theme="DARK">
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}" />
                 </Border>
                 <Border Padding="10" Background="#FFFFFF" design:NitroxAttached.Theme="LIGHT">
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}" />
                 </Border>
             </StackPanel>
         </Panel>

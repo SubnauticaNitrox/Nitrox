@@ -2,6 +2,7 @@
 using Avalonia.Input;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Server;
 using ReactiveUI;
 using ReactiveUI.Validation.Extensions;
 
@@ -11,7 +12,7 @@ public class CreateServerViewModel : ModalViewModelBase
 {
 
     private string name = "";
-    private GameMode selectedGameMode = GameMode.SURVIVAL;
+    private ServerGameMode selectedGameMode = ServerGameMode.SURVIVAL;
     public ReactiveCommand<Unit, CreateServerViewModel> CreateServerCommand { get; }
     public ReactiveCommand<Unit, CreateServerViewModel> BackCommand { get; }
 
@@ -24,7 +25,7 @@ public class CreateServerViewModel : ModalViewModelBase
     public KeyGesture BackHotkey { get; } = new(Key.Escape);
     public KeyGesture CreateHotkey { get; } = new(Key.Return);
 
-    public GameMode SelectedGameMode
+    public ServerGameMode SelectedGameMode
     {
         get => selectedGameMode;
         set => this.RaiseAndSetIfChanged(ref selectedGameMode, value);

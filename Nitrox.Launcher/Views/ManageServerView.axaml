@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:models="clr-namespace:Nitrox.Launcher.Models"
              xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
     <Grid RowDefinitions="Auto,*,Auto">
@@ -94,7 +94,7 @@
             
                 <StackPanel>
                     <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}"
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}"
                                                SelectedItem="{Binding ServerGameMode, Mode=TwoWay}"
                                                IsEnabled="{Binding !ServerIsOnline}"/>
                 </StackPanel>

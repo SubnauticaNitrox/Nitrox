@@ -8,6 +8,8 @@ using DynamicData.Binding;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Server;
 using NitroxServer.Serialization.World;
 using ReactiveUI;
 using ReactiveUI.Validation.Extensions;
@@ -16,7 +18,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public class ManageServerViewModel : RoutableViewModelBase
 {
-    public static Array PlayerPerms => Enum.GetValues(typeof(PlayerPermissions));
+    public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
 
 
     private ServerEntry server;
@@ -62,8 +64,8 @@ public class ManageServerViewModel : RoutableViewModelBase
         set => this.RaiseAndSetIfChanged(ref serverPassword, value);
     }
 
-    private GameMode serverGameMode;
-    public GameMode ServerGameMode
+    private ServerGameMode serverGameMode;
+    public ServerGameMode ServerGameMode
     {
         get => serverGameMode;
         set => this.RaiseAndSetIfChanged( ref serverGameMode, value);
@@ -76,8 +78,8 @@ public class ManageServerViewModel : RoutableViewModelBase
         set => this.RaiseAndSetIfChanged(ref serverSeed, value?.ToUpper());
     }
 
-    private PlayerPermissions serverDefaultPlayerPerm;
-    public PlayerPermissions ServerDefaultPlayerPerm
+    private Perms serverDefaultPlayerPerm;
+    public Perms ServerDefaultPlayerPerm
     {
         get => serverDefaultPlayerPerm;
         set => this.RaiseAndSetIfChanged(ref serverDefaultPlayerPerm, value);
@@ -239,7 +241,9 @@ public class ManageServerViewModel : RoutableViewModelBase
 
         DeleteServerCommand = ReactiveCommand.Create(() =>
         {
-            // TODO: Delete this specific server's files
+            // TODO: Delete this specific server's files after showing a confirmation popup
+            WorldManager.DeleteSave(worldFolderDirectory);
+            Router.NavigateBack.Execute();
         }, canExecuteAdvancedSettingsButtonCommands);
     }
     public void LoadFrom(ServerEntry serverEntry)

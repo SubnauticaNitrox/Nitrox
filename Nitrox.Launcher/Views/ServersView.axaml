@@ -7,15 +7,15 @@
              x:Class="Nitrox.Launcher.Views.ServersView"
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
 
-    <Panel>
-        <StackPanel VerticalAlignment="Stretch">
-            <TextBlock Classes="header" Text="Servers" />
-            <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
-            <TextBlock>Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.</TextBlock>
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <TextBlock Classes="header" Text="Servers" />
+        <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
+        <TextBlock Grid.Row="1">Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.</TextBlock>
+        <ScrollViewer Grid.Row="2" Margin="0 40 0 13">
             <ItemsControl ItemsSource="{Binding Servers}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel />
+                        <StackPanel Spacing="26"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -57,10 +57,10 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </StackPanel>
-        <Border CornerRadius="12" Background="#151516" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+        </ScrollViewer>
+        <Border Grid.Row="3" CornerRadius="12" Background="#151516" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Button Classes="nitrox primary big" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Height="48" design:NitroxAttached.Text="CREATE NEW SERVER"
                     Command="{Binding CreateServerCommand}" />
         </Border>
-    </Panel>
+    </Grid>
 </UserControl>

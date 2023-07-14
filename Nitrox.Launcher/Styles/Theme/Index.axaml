@@ -150,7 +150,6 @@
     <Style Selector="Border.serverEntry">
         <Setter Property="Background" Value="#151516" />
         <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="Margin" Value="0 13" />
         <Setter Property="Padding" Value="22 20" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Height" Value="96" />

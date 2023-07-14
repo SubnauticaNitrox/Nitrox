@@ -20,6 +20,7 @@ public static class NitroxValidation
     {
         viewModel.ValidationRule(vm => vm.ServerName, IsNotNullAndWhiteSpace, $"{nameof(viewModel.ServerName)} shouldn't be empty.");
         viewModel.ValidationRule(vm => vm.ServerName, IsValidFileName, $"{nameof(viewModel.ServerName)} shouldn't contain invalid characters.");
+        // TODO: Validate that the name isn't a duplicate of another save
         viewModel.ValidationRule(vm => vm.ServerSeed, ContainsNoWhiteSpace, $"{nameof(viewModel.ServerSeed)} shouldn't contain any spaces.");
         viewModel.ValidationRule(vm => vm.ServerSeed, IsProperSeed, $"{nameof(viewModel.ServerSeed)} should contain 10 alphabetical characters.");
         viewModel.ValidationRule(vm => vm.ServerAutoSaveInterval, IsValidSaveInterval, $"{nameof(viewModel.ServerAutoSaveInterval)} should be between 10s and 24 hours (86400s).");

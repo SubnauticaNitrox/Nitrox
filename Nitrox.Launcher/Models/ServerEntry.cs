@@ -1,5 +1,11 @@
+using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using DynamicData.Binding;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Server;
+using NitroxServer.Serialization;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.Models;
@@ -9,19 +15,21 @@ namespace Nitrox.Launcher.Models;
 /// </summary>
 public class ServerEntry : ReactiveObject
 {
+    private static readonly ServerConfig serverDefaults = new();
+    
     private bool isOnline;
     private string name;
     private string password;
     private string seed;
-    private GameMode gamemode = GameMode.SURVIVAL;
-    private PlayerPermissions playerPermissions = PlayerPermissions.PLAYER;
-    private int autoSaveInterval = 120;
+    private ServerGameMode gamemode = serverDefaults.GameMode;
+    private Perms playerPermissions = serverDefaults.DefaultPlayerPerm;
+    private int autoSaveInterval = serverDefaults.SaveInterval/1000;
     private int players;
-    private int maxPlayers = 100;
-    private int port = 11000;
-    private bool autoPortForward = true;
-    private bool allowLanDiscovery = true;
-    private bool allowCommands = true;
+    private int maxPlayers = serverDefaults.MaxConnections;
+    private int port = serverDefaults.ServerPort;
+    private bool autoPortForward = serverDefaults.AutoPortForward;
+    private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
+    private bool allowCommands = !serverDefaults.DisableConsole;
     private bool isNewServer = true;
 
     public bool IsOnline
@@ -44,12 +52,12 @@ public class ServerEntry : ReactiveObject
         get => seed;
         set => this.RaiseAndSetIfChanged(ref seed, value);
     }
-    public GameMode GameMode
+    public ServerGameMode GameMode
     {
         get => gamemode;
         set => this.RaiseAndSetIfChanged(ref gamemode, value);
     }
-    public PlayerPermissions DefaultPlayerPerm
+    public Perms DefaultPlayerPerm
     {
         get => playerPermissions;
         set => this.RaiseAndSetIfChanged(ref playerPermissions, value);
@@ -96,7 +104,7 @@ public class ServerEntry : ReactiveObject
     public bool IsNewServer
     {
         get => isNewServer;
-        private set => this.RaiseAndSetIfChanged(ref isNewServer, value);
+        set => this.RaiseAndSetIfChanged(ref isNewServer, value);
     }
 
     public ICommand StartCommand { get; init; }
@@ -104,7 +112,9 @@ public class ServerEntry : ReactiveObject
 
     public ServerEntry()
     {
-        StartCommand = ReactiveCommand.CreateFromTask(StartServer);
+        //IObservable<bool> canExecuteStartServerCommand = this.WhenAnyPropertyChanged().Select(x => !x.HasChanges());
+        
+        StartCommand = ReactiveCommand.CreateFromTask(StartServer/*, canExecuteStartServerCommand*/);
         StopCommand = ReactiveCommand.CreateFromTask(StopServer);
     }
 
