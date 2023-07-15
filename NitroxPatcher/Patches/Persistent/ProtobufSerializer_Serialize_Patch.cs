@@ -1,22 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class ProtobufSerializer_Serialize_Patch : NitroxPatch, IPersistentPatch
+    public partial class ProtobufSerializer_Serialize_Patch : NitroxPatch, IPersistentPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ProtobufSerializer t) => t.Serialize(default(Stream), default(object), default(Type)));
 
         /// <summary>
         ///     This patch is in a hot path so it needs this optimization.
         /// </summary>
-        private static readonly NitroxProtobufSerializer serializer = NitroxServiceLocator.LocateServicePreLifetime<NitroxProtobufSerializer>();
+        private static readonly NitroxProtobufSerializer serializer = Resolve<NitroxProtobufSerializer>(true);
 
         public static bool Prefix(Stream stream, object source, Type type)
         {
@@ -27,11 +25,6 @@ namespace NitroxPatcher.Patches.Persistent
             }
 
             return true;
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

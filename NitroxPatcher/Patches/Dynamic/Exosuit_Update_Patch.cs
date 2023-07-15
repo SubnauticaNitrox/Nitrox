@@ -5,53 +5,46 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class Exosuit_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    public class Exosuit_Update_Patch : NitroxPatch, IDynamicPatch
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Exosuit t) => t.Update());
+
+    public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
+    public static readonly object INJECTION_OPERAND = Reflect.Method((Exosuit t) => t.UpdateSounds());
+
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Exosuit t) => t.Update());
+        Validate.NotNull(INJECTION_OPERAND);
 
-        public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-        public static readonly object INJECTION_OPERAND = Reflect.Method((Exosuit t) => t.UpdateSounds());
+        List<CodeInstruction> instructionList = instructions.ToList();
 
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+        for (int i = 0; i < instructionList.Count; i++)
         {
-            Validate.NotNull(INJECTION_OPERAND);
+            CodeInstruction instruction = instructionList[i];
+            yield return instruction;
 
-            List<CodeInstruction> instructionList = instructions.ToList();
-
-            for (int i = 0; i < instructionList.Count; i++)
+            /*
+             *  When syninc exo suit we always want to skip an entire if branch in the update:
+             *
+             *  if(!flag)
+             *
+             *  to do this, we transform it into something that always evaluates false:
+             *
+             *  if(!true)
+             *
+             */
+            if (instruction.opcode == INJECTION_OPCODE && instruction.operand == INJECTION_OPERAND)
             {
-                CodeInstruction instruction = instructionList[i];
-                yield return instruction;
+                i++; //increment to ldloc.2 (loading flag2 on evaluation stack)
+                CodeInstruction ldFlag2 = instructionList[i];
 
-                /*
-                 *  When syninc exo suit we always want to skip an entire if branch in the update: 
-                 * 
-                 *  if(!flag)
-                 *  
-                 *  to do this, we transform it into something that always evaluates false:
-                 *  
-                 *  if(!true)
-                 * 
-                 */
-                if (instruction.opcode == INJECTION_OPCODE && instruction.operand == INJECTION_OPERAND)
-                {
-                    i++; //increment to ldloc.2 (loading flag2 on evaluation stack)
-                    CodeInstruction ldFlag2 = instructionList[i];
+                // Transform to if(!true)
+                ldFlag2.opcode = OpCodes.Ldc_I4_1;
 
-                    // Transform to if(!true)
-                    ldFlag2.opcode = OpCodes.Ldc_I4_1;
-
-                    yield return ldFlag2;
-                }
+                yield return ldFlag2;
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }
-

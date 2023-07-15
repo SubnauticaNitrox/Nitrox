@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class ConstructableBase_SetState_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class ConstructableBase_SetState_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ConstructableBase t) => t.SetState(default, default));
         internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
@@ -51,11 +51,6 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 Resolve<IPacketSender>().Send(new EntityDestroyed(nitroxEntity.Id));
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }

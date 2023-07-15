@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
@@ -11,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
      * build that this object can be deconstructed.)  When this oject is destroyed (we call deconstruct) we want to store its id
      * so that it can be later transfered to the ghost object that replaces it.
      */
-    public class BaseDeconstructable_Deconstructor_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class BaseDeconstructable_Deconstructor_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
 
@@ -21,11 +20,6 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

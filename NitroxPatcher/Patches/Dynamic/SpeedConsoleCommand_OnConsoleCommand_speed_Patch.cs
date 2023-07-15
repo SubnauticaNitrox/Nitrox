@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class SpeedConsoleCommand_OnConsoleCommand_speed_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class SpeedConsoleCommand_OnConsoleCommand_speed_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpeedConsoleCommand t) => t.OnConsoleCommand_speed(default));
 
@@ -13,10 +12,5 @@ public class SpeedConsoleCommand_OnConsoleCommand_speed_Patch : NitroxPatch, IDy
     {
         ErrorMessage.AddMessage(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

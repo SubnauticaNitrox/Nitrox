@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -9,10 +8,9 @@ using Story;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((StoryGoalScheduler t) => t.Schedule(default));
-    private static readonly IPacketSender packetSender = Resolve<IPacketSender>();
 
     // __state is true if the entry was already scheduled before, in which case we cancel the scheduling
     public static bool Prefix(StoryGoal goal, out bool __state)
@@ -40,11 +38,6 @@ public class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDynamicPatch
         }
 
         float timeExecute = StoryGoalScheduler.main.schedule.GetLast().timeExecute;
-        packetSender.Send(new Schedule(timeExecute, goal.key, (int)goal.goalType));
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, true, true);
+        Resolve<IPacketSender>().Send(new Schedule(timeExecute, goal.key, (int)goal.goalType));
     }
 }

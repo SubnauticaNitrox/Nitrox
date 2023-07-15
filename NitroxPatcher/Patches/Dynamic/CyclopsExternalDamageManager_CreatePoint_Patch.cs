@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class CyclopsExternalDamageManager_CreatePoint_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class CyclopsExternalDamageManager_CreatePoint_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsExternalDamageManager t) => t.CreatePoint());
 
@@ -24,10 +23,5 @@ public class CyclopsExternalDamageManager_CreatePoint_Patch : NitroxPatch, IDyna
         {
             Resolve<Cyclops>().OnCreateDamagePoint(__instance.subRoot);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
     }
 }

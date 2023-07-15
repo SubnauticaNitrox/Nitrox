@@ -1,33 +1,25 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class SeaMoth_OnUpgradeModuleUse_Patch : NitroxPatch, IDynamicPatch
 {
-    public class SeaMoth_OnUpgradeModuleUse_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeaMoth t) => t.OnUpgradeModuleUse(default(TechType), default(int)));
+
+    public static bool Prefix(SeaMoth __instance, TechType techType, int slotID)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeaMoth t) => t.OnUpgradeModuleUse(default(TechType), default(int)));
-
-        public static bool Prefix(SeaMoth __instance, TechType techType, int slotID)
+        switch (techType)
         {
-            switch (techType)
-            {
-                case TechType.SeamothElectricalDefense:
-                    Resolve<SeamothModulesEvent>().BroadcastElectricalDefense(techType, slotID, __instance);
-                    break;
-                case TechType.SeamothTorpedoModule:
-                    Resolve<SeamothModulesEvent>().BroadcastTorpedoLaunch(techType, slotID, __instance);
-                    break;
-            }
-
-            return true;
+            case TechType.SeamothElectricalDefense:
+                Resolve<SeamothModulesEvent>().BroadcastElectricalDefense(techType, slotID, __instance);
+                break;
+            case TechType.SeamothTorpedoModule:
+                Resolve<SeamothModulesEvent>().BroadcastTorpedoLaunch(techType, slotID, __instance);
+                break;
         }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
-        }
+        return true;
     }
 }
-

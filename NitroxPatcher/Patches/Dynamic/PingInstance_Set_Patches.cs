@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
@@ -10,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Notice the server of a Ping color change
 /// </summary>
-public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
+public sealed class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD_COLOR = Reflect.Method((PingInstance t) => t.SetColor(default));
     private static readonly MethodInfo TARGET_METHOD_VISIBLE = Reflect.Method((PingInstance t) => t.SetVisible(default));
@@ -22,7 +23,7 @@ public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
         {
             return;
         }
-        
+
         if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool _))
         {
             Resolve<IPacketSender>().Send(new SignalPingPreferenceChanged(pingKey, __instance.visible, index));
@@ -45,7 +46,7 @@ public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
 
     public override void Patch(Harmony harmony)
     {
-        PatchPrefix(harmony, TARGET_METHOD_COLOR, nameof(PrefixColor));
-        PatchPrefix(harmony, TARGET_METHOD_VISIBLE, nameof(PrefixVisible));
+        PatchPrefix(harmony, TARGET_METHOD_COLOR, ((Action<PingInstance, int>)PrefixColor).Method);
+        PatchPrefix(harmony, TARGET_METHOD_VISIBLE, ((Action<PingInstance, bool>)PrefixVisible).Method);
     }
 }

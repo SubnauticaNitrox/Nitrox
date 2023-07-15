@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
 using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class BaseDeconstructable_MakeFaceDeconstructable_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class BaseDeconstructable_MakeFaceDeconstructable_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => BaseDeconstructable.MakeFaceDeconstructable(default(Transform), default(Int3.Bounds), default(Base.Face), default(Base.FaceType), default(TechType)));
 
@@ -22,11 +21,6 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             Resolve<GeometryRespawnManager>().BaseFaceRespawned(geometry.gameObject, face.cell, face.direction);
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

@@ -7,14 +7,13 @@ using NitroxModel.Helper;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// When items are spawned in Subnautica will automatically add batteries to them async.  This is challenging to deal with because it is 
+/// When items are spawned in Subnautica will automatically add batteries to them async.  This is challenging to deal with because it is
 /// difficult to discriminate between these async/default additions and a user purposfully placing batteries into an object. Instead, we
 /// disable the default behavior and allow Nitrox to always spawn the batteries.  This guarentees we can capture the ids correctly.
 /// </summary>
-public class EnergyMixin_SpawnDefaultAsync_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class EnergyMixin_SpawnDefaultAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((EnergyMixin t) => t.SpawnDefaultAsync(default(float), default(TaskResult<bool>)));
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
+    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((EnergyMixin t) => t.SpawnDefaultAsync(default(float), default(TaskResult<bool>))));
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
@@ -31,10 +30,4 @@ public class EnergyMixin_SpawnDefaultAsync_Patch : NitroxPatch, IDynamicPatch
         yield return new CodeInstruction(OpCodes.Ldc_I4_0);
         yield return new CodeInstruction(OpCodes.Ret);
     }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
-    }
 }
-

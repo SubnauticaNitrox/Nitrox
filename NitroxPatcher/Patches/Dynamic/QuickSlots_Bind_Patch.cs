@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -7,7 +6,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.Bind(default(int), default(InventoryItem)));
 
@@ -30,10 +29,5 @@ public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
         }
 
         Resolve<LocalPlayer>().BroadcastQuickSlotsBindingChanged(slotItemIds);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

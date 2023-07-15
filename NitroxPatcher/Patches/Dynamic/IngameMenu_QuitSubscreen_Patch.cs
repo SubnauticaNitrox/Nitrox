@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.QuitSubscreen());
 
@@ -12,10 +11,5 @@ public class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
     {
         IngameMenu.main.QuitGame(false);
         return false;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

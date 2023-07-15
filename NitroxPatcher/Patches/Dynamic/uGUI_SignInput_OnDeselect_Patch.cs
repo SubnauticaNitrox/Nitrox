@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
@@ -9,7 +8,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class uGUI_SignInput_OnDeselect_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class uGUI_SignInput_OnDeselect_Patch : NitroxPatch, IDynamicPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_SignInput t) => t.OnDeselect());
 
@@ -40,11 +39,6 @@ namespace NitroxPatcher.Patches.Dynamic
                     Log.Warn($"[{nameof(uGUI_SignInput_OnDeselect_Patch)}] no case planned for tech type {tag.type}");
                     break;
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

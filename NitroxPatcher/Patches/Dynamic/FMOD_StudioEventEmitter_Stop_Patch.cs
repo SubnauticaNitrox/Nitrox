@@ -1,40 +1,28 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, IDynamicPatch
 {
-    public class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_StudioEventEmitter t) => t.Stop(default(bool)));
+
+    public static bool Prefix()
     {
-        private static FMODSystem fmodSystem;
+        return !FMODSuppressor.SuppressFMODEvents;
+    }
 
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_StudioEventEmitter t) => t.Stop(default(bool)));
-
-        public static bool Prefix()
+    public static void Postfix(FMOD_StudioEventEmitter __instance, bool allowFadeout)
+    {
+        if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path))
         {
-            return !FMODSuppressor.SuppressFMODEvents;
-        }
-
-        public static void Postfix(FMOD_StudioEventEmitter __instance, bool allowFadeout)
-        {
-            if (fmodSystem.IsWhitelisted(__instance.asset.path))
+            if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
             {
-                if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
-                {
-                    fmodSystem.PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, false, allowFadeout);
-                }
+                Resolve<FMODSystem>().PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, false, allowFadeout);
             }
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
-        }
-
     }
 }

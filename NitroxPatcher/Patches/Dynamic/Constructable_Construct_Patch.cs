@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
@@ -7,7 +6,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.Construct());
 
@@ -21,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return true;
             }
-            
+
             // If we are constructing a base piece then we'll want to store all of the BaseGhost information
             // as it will not be available when the construction hits 100%
             if (__instance is ConstructableBase constructableBase)
@@ -58,11 +57,6 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 NitroxServiceLocator.LocateService<Building>().ConstructionComplete(__instance.gameObject, Optional.OfNullable(lastTargetBase), lastTargetBaseOffset, lastFace);
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

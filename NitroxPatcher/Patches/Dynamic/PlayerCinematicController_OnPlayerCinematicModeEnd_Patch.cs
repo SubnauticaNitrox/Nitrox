@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
@@ -9,11 +8,9 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class PlayerCinematicController_OnPlayerCinematicModeEnd_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PlayerCinematicController_OnPlayerCinematicModeEnd_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.OnPlayerCinematicModeEnd());
-
-    private static ushort playerId;
 
     public static void Prefix(PlayerCinematicController __instance)
     {
@@ -29,12 +26,6 @@ public class PlayerCinematicController_OnPlayerCinematicModeEnd_Patch : NitroxPa
         }
 
         int identifier = MultiplayerCinematicReference.GetCinematicControllerIdentifier(__instance.gameObject, entity.gameObject);
-        Resolve<PlayerCinematics>().EndCinematicMode(playerId, entity.Id, identifier, __instance.playerViewAnimationName);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        playerId = Resolve<IMultiplayerSession>().Reservation.PlayerId;
-        PatchPrefix(harmony, targetMethod);
+        Resolve<PlayerCinematics>().EndCinematicMode(Resolve<IMultiplayerSession>().Reservation.PlayerId, entity.Id, identifier, __instance.playerViewAnimationName);
     }
 }

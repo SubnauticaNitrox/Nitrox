@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -11,7 +10,7 @@ using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class Constructable_NotifyConstructedChanged_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class Constructable_NotifyConstructedChanged_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.NotifyConstructedChanged(default(bool)));
 
@@ -44,10 +43,6 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxServiceLocator.LocateService<Building>().DeconstructionBegin(id);
             }
-        }
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

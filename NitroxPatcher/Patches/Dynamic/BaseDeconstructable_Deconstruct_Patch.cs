@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
 
@@ -29,7 +30,7 @@ namespace NitroxPatcher.Patches.Dynamic
                      * BaseDeconstructable_Deconstruct_Patch.Callback(gameObject);
                      */
                     yield return original.Ldloc<ConstructableBase>(0);
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(GameObject))));
+                    yield return new CodeInstruction(OpCodes.Call, ((Action<GameObject>)Callback).Method);
                 }
             }
         }
@@ -38,11 +39,5 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST, gameObject);
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
-        }
     }
 }
-

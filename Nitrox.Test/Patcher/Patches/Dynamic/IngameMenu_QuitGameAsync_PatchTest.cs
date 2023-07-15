@@ -24,7 +24,7 @@ public class IngameMenu_QuitGameAsync_PatchTest
     [TestMethod]
     public void InjectionSanity()
     {
-        IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(IngameMenu_QuitGameAsync_Patch.targetMethod);
+        IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(IngameMenu_QuitGameAsync_Patch.TARGET_METHOD);
         IEnumerable<CodeInstruction> result = IngameMenu_QuitGameAsync_Patch.Transpiler(beforeInstructions);
 
         Assert.IsTrue(beforeInstructions.Count() == result.Count()); // The ifs in the target method are all false in the testing environment

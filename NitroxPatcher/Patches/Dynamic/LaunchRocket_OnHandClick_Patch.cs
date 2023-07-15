@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -8,22 +9,22 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((LaunchRocket t) => t.OnHandClick(default));
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     internal static readonly object INJECTION_OPERAND = Reflect.Method(() => LaunchRocket.SetLaunchStarted());
-    
+
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         Validate.NotNull(INJECTION_OPERAND);
         /* We replace
-         * 
+         *
          * LaunchRocket.SetLaunchStarted();
-         * 
+         *
          * by
-         * 
+         *
          * LaunchRocket_OnHandClick_Patch.RequestRocketLaunch()
          * return; (by just removing the following instructions)
          */
@@ -35,7 +36,7 @@ public class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
                 CodeInstruction loadInstruction = new(OpCodes.Ldarg_0);
                 loadInstruction.labels = instruction.labels;
                 yield return loadInstruction;
-                yield return new(OpCodes.Call, Reflect.Method(() => RequestRocketLaunch(default)));
+                yield return new(OpCodes.Call, ((Action<LaunchRocket>)RequestRocketLaunch).Method);
                 yield return new(OpCodes.Ret);
                 break;
             }
@@ -47,10 +48,5 @@ public class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
         Rocket rocket = launchRocket.RequireComponentInParent<Rocket>();
         Resolve<Rockets>().RequestRocketLaunch(rocket);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

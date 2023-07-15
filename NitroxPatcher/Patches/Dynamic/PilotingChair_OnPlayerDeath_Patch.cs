@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class PilotingChair_OnPlayerDeath_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PilotingChair_OnPlayerDeath_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.OnPlayerDeath(default(Player)));
 
@@ -20,10 +19,5 @@ public class PilotingChair_OnPlayerDeath_Patch : NitroxPatch, IDynamicPatch
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

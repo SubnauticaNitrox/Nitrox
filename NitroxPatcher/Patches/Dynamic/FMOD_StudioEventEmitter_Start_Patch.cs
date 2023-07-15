@@ -1,41 +1,30 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class FMOD_StudioEventEmitter_Start_Patch : NitroxPatch, IDynamicPatch
 {
-    public class FMOD_StudioEventEmitter_Start_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_StudioEventEmitter t) => t.Start());
+
+    public static void Postfix(FMOD_StudioEventEmitter __instance)
     {
-        private static FMODSystem fmodSystem;
-
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_StudioEventEmitter t) => t.Start());
-
-        public static void Postfix(FMOD_StudioEventEmitter __instance)
+        if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out bool _, out float radius))
         {
-            if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool _, out float radius))
+            if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
             {
-                if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
-                {
-                    Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
-                    return;
-                }
-
-                if (!entity.gameObject.TryGetComponent(out FMODEmitterController fmodController))
-                {
-                    fmodController = entity.gameObject.AddComponent<FMODEmitterController>();
-                }
-                fmodController.AddEmitter(__instance.asset.path, __instance, radius);
+                Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
+                return;
             }
-        }
 
-        public override void Patch(Harmony harmony)
-        {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchPostfix(harmony, TARGET_METHOD);
+            if (!entity.gameObject.TryGetComponent(out FMODEmitterController fmodController))
+            {
+                fmodController = entity.gameObject.AddComponent<FMODEmitterController>();
+            }
+            fmodController.AddEmitter(__instance.asset.path, __instance, radius);
         }
     }
 }

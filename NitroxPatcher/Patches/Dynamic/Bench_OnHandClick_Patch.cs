@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
@@ -9,7 +8,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bench t) => t.OnHandClick(default(GUIHand)));
     private static bool skipPrefix;
@@ -56,10 +55,5 @@ public class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
             bench.gameObject.AddComponent<DenyOwnershipHand>();
             bench.isValidHandTarget = false;
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

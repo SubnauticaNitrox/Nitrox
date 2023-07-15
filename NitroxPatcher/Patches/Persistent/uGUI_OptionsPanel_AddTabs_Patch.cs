@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.Settings;
 using NitroxModel.Helper;
 using UnityEngine.Events;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class uGUI_OptionsPanel_AddTabs_Patch : NitroxPatch, IPersistentPatch
+    public partial class uGUI_OptionsPanel_AddTabs_Patch : NitroxPatch, IPersistentPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_OptionsPanel t) => t.AddTabs());
         private static NitroxSettingsManager nitroxSettingsManager;
@@ -36,11 +35,5 @@ namespace NitroxPatcher.Patches.Persistent
                 }
             }
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
-        }
     }
 }
-

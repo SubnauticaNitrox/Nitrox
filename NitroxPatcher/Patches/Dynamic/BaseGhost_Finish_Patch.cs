@@ -8,7 +8,7 @@ using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class BaseGhost_Finish_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class BaseGhost_Finish_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseGhost t) => t.Finish());
 
@@ -34,11 +34,5 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
             }
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
-        }
     }
 }
-
