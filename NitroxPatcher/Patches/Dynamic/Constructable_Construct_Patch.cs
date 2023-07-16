@@ -167,6 +167,7 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
             }
             // create a new base
             NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, entity.Id);
+            BuildingHandler.Main.EnsureTracker(entity.Id).ResetToId();
 
             Resolve<IPacketSender>().Send(new PlaceBase(entity.Id, NitroxBuild.From(targetBase)));
         }

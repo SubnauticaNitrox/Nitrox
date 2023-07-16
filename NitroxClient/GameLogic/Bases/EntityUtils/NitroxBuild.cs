@@ -313,7 +313,7 @@ public static class NitroxBuild
 
         GameObject ghostObject = UnityEngine.Object.Instantiate(prefab);
         Transform ghostTransform = ghostObject.transform;
-        ghostEntity.MoveTransform(ghostTransform);
+        ghostTransform.SetToModuleLocation(ghostEntity);
 
         ConstructableBase constructableBase = ghostObject.GetComponent<ConstructableBase>();
         GameObject ghostModel = constructableBase.model;
@@ -367,7 +367,7 @@ public static class NitroxBuild
         if (isInBase)
         {
             ghostTransform.parent = parent;
-            ghostEntity.MoveTransform(ghostTransform);
+            ghostTransform.SetToModuleLocation(ghostEntity);
         }
 
         constructableBase.SetState(false, false);

@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Linq;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
@@ -108,11 +106,6 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             DockVehicle(gameObject, parent.Value);
         }
 
-        if (isCyclops)
-        {
-            yield return SpawnCyclopsChildren(vehicleEntity);
-        }
-
         result.Set(gameObject);
     }
 
@@ -197,14 +190,6 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         }
 
         dockingBay.DockVehicle(vehicle);        
-    }
-
-    private IEnumerator SpawnCyclopsChildren(VehicleWorldEntity vehicleEntity)
-    {
-        foreach (ModuleEntity moduleEntity in vehicleEntity.ChildEntities.OfType<ModuleEntity>())
-        {
-            yield return entities.SpawnAsync(moduleEntity);
-        }
     }
 
     public bool SpawnsOwnChildren()
