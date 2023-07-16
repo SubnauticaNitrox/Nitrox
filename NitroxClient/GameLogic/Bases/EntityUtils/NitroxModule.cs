@@ -29,7 +29,7 @@ public static class NitroxModule
         moduleEntity.IsInside = constructable.isInside;
     }
 
-    public static void MoveTransform(this ModuleEntity moduleEntity, Transform transform)
+    public static void SetToModuleLocation(this Transform transform, ModuleEntity moduleEntity)
     {
         transform.localPosition = moduleEntity.LocalPosition.ToUnity();
         transform.localRotation = moduleEntity.LocalRotation.ToUnity();

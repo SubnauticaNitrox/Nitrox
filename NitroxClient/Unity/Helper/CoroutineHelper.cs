@@ -7,7 +7,7 @@ public static class CoroutineHelper
 {
     public static IEnumerator SafelyYieldEnumerator(IEnumerator enumerator, Action<Exception> exceptionCallback)
     {
-        yield return SafelyYieldEnumerator<Exception>(enumerator, exceptionCallback);
+        return SafelyYieldEnumerator<Exception>(enumerator, exceptionCallback);
     }
 
     public static IEnumerator SafelyYieldEnumerator<T>(IEnumerator enumerator, Action<T> exceptionCallback = null) where T : Exception

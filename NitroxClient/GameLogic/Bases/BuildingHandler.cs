@@ -244,7 +244,6 @@ public class BuildingHandler : MonoBehaviour
             yield break;
         }
         BaseDeconstructable[] deconstructableChildren = cellObject.GetComponentsInChildren<BaseDeconstructable>(true);
-        // TODO: Fix this
         foreach (BaseDeconstructable baseDeconstructable in deconstructableChildren)
         {
             if (!BuildUtils.TryGetIdentifier(baseDeconstructable, out BuildPieceIdentifier identifier) || !identifier.Equals(pieceIdentifier))
@@ -347,14 +346,6 @@ public class BuildingHandler : MonoBehaviour
             return tracker.LastOperationId + tracker.LocalOperations;
         }
         return -1;
-    }
-
-    public IEnumerator LoadBaseAsync(BuildEntity buildEntity, TaskResult<Optional<GameObject>> result = null)
-    {
-        DateTimeOffset beginTime = DateTimeOffset.Now;
-        yield return NitroxBuild.CreateBuild(buildEntity, result);
-        DateTimeOffset endTime = DateTimeOffset.Now;
-        Log.Debug(string.Format("Took {0}ms to create the Base", (endTime - beginTime).TotalMilliseconds));
     }
 
     public class TemporaryBuildData

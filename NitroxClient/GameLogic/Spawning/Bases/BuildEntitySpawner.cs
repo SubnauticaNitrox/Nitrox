@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using System.Linq;
-using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -28,7 +28,11 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             yield break;
         }
 
-        yield return BuildingHandler.Main.LoadBaseAsync(entity, result);
+        DateTimeOffset beginTime = DateTimeOffset.Now;
+        yield return NitroxBuild.CreateBuild(entity, result);
+        DateTimeOffset endTime = DateTimeOffset.Now;
+        Log.Debug(string.Format("Took {0}ms to create the Base", (endTime - beginTime).TotalMilliseconds));
+
         yield return entities.SpawnAsync(entity.ChildEntities.OfType<PlayerWorldEntity>());
         if (result.value.HasValue && result.value.Value.TryGetComponent(out Base @base))
         {
