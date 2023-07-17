@@ -13,7 +13,6 @@ using System.Linq;
 using UnityEngine;
 using NitroxClient.GameLogic.Bases.MetadataUtils;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
-using NitroxClient.Helpers;
 
 namespace NitroxClient.GameLogic.Bases.EntityUtils;
 
@@ -22,9 +21,9 @@ public static class NitroxBuild
     public static BuildEntity From(Base targetBase)
     {
         BuildEntity buildEntity = BuildEntity.MakeEmpty();
-        if (NitroxEntity.TryGetEntityFrom(targetBase.gameObject, out NitroxEntity entity))
+        if (targetBase.TryGetNitroxId(out NitroxId baseId))
         {
-            buildEntity.Id = entity.Id;
+            buildEntity.Id = baseId;
         }
 
         buildEntity.LocalPosition = targetBase.transform.localPosition.ToDto();
@@ -32,7 +31,7 @@ public static class NitroxBuild
         buildEntity.LocalScale = targetBase.transform.localScale.ToDto();
 
         buildEntity.SavedBase = NitroxBase.From(targetBase);
-        buildEntity.ChildEntities.AddRange(GetChildEntities(targetBase, entity.Id));
+        buildEntity.ChildEntities.AddRange(GetChildEntities(targetBase, baseId));
 
         return buildEntity;
     }

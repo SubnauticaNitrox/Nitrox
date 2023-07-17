@@ -39,10 +39,7 @@ public class MoonpoolManager : MonoBehaviour
             Destroy(this);
             return;
         }
-        if (NitroxEntity.TryGetEntityFrom(@base.gameObject, out NitroxEntity baseEntity))
-        {
-            baseId = baseEntity.Id;
-        }
+        @base.TryGetNitroxId(out baseId);
         moonpoolsByCell = new();
         shiftedMoonpools = new();
         @base.onPostRebuildGeometry += OnPostRebuildGeometry;

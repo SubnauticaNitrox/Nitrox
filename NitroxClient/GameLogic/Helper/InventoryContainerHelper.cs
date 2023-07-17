@@ -1,7 +1,5 @@
 using System.Text.RegularExpressions;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.Helpers;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -44,7 +42,6 @@ namespace NitroxClient.GameLogic.Helper
 
         public static bool TryGetOwnerId(Transform ownerTransform, out NitroxId ownerId)
         {
-
             Transform parent = ownerTransform.parent;
             if (!parent)
             {
@@ -58,7 +55,7 @@ namespace NitroxClient.GameLogic.Helper
                 return parent.TryGetIdOrWarn(out ownerId);
             }
             else if (parent.TryGetComponentInParent(out LargeRoomWaterPark largeRoomWaterPark) &&
-                largeRoomWaterPark.TryGetNitroxId(out ownerId))
+                parent.TryGetNitroxId(out ownerId))
             {
                 return true;
             }

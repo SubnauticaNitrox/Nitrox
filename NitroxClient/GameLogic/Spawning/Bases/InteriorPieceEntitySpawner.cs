@@ -63,15 +63,16 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             }
         }
 
-        yield return entities.SpawnBatchAsync(batch, true);
-
         if (isWaterPark)
         {
+            // Must happen before child plant spawning
             foreach (Planter planter in result.Get().Value.GetComponentsInChildren<Planter>(true))
             {
                 yield return planter.DeserializeAsync();
             }
         }
+
+        yield return entities.SpawnBatchAsync(batch, true);
 
         if (result.Get().Value.TryGetComponent(out PowerSource powerSource))
         {

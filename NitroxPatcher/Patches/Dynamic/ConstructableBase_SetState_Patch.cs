@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -48,9 +48,9 @@ public class ConstructableBase_SetState_Patch : NitroxPatch, IDynamicPatch
 
     public static void BeforeDestroy(GameObject gameObject)
     {
-        if (NitroxEntity.TryGetNitroxEntity(gameObject, out NitroxEntity nitroxEntity))
+        if (gameObject.TryGetNitroxId(out NitroxId nitroxId))
         {
-            Resolve<IPacketSender>().Send(new EntityDestroyed(nitroxEntity.Id));
+            Resolve<IPacketSender>().Send(new EntityDestroyed(nitroxId));
         }
     }
 

@@ -1,5 +1,5 @@
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -12,14 +12,14 @@ public static class NitroxModule
     {
         moduleEntity.ClassId = constructable.GetComponent<PrefabIdentifier>().ClassId;
 
-        if (NitroxEntity.TryGetEntityFrom(constructable.gameObject, out NitroxEntity entity))
+        if (constructable.TryGetNitroxId(out NitroxId entityId))
         {
-            moduleEntity.Id = entity.Id;
+            moduleEntity.Id = entityId;
         }
         if (constructable.TryGetComponentInParent(out Base parentBase) &&
-            NitroxEntity.TryGetEntityFrom(parentBase.gameObject, out NitroxEntity parentEntity))
+            parentBase.TryGetNitroxId(out NitroxId parentId))
         {
-            moduleEntity.ParentId = parentEntity.Id;
+            moduleEntity.ParentId = parentId;
         }
         moduleEntity.LocalPosition = constructable.transform.localPosition.ToDto();
         moduleEntity.LocalRotation = constructable.transform.localRotation.ToDto();
