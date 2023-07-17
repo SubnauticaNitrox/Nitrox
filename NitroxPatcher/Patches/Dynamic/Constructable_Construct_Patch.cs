@@ -58,7 +58,7 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
     public static void ConstructionAmountModified(Constructable constructable)
     {
         // We only manage the amount change, not the deconstruction/construction action
-        if (!NitroxEntity.TryGetEntityFrom(constructable.gameObject, out NitroxEntity entity))
+        if (!constructable.TryGetNitroxId(out NitroxId entityId))
         {
             // TODO: Maybe delete the ghost
             Log.Error($"Couldn't find a NitroxEntity on {constructable.name}");
@@ -76,20 +76,20 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
         {
             if (constructable is ConstructableBase constructableBase)
             {
-                CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entity));
+                CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entityId));
                 return;
             }
-            CoroutineHost.StartCoroutine(EntityPostSpawner.ApplyPostSpawner(constructable.gameObject, entity.Id));
+            CoroutineHost.StartCoroutine(EntityPostSpawner.ApplyPostSpawner(constructable.gameObject, entityId));
         }
         // update as a normal module
 
         // TODO: A latest packet is always sent even after the base is fully built, we don't want that
         // When #2021 is merged, just use ThrottledPacketSender.RemovePendingPackets
-        Resolve<ThrottledPacketSender>().SendThrottled(new ModifyConstructedAmount(entity.Id, amount),
+        Resolve<ThrottledPacketSender>().SendThrottled(new ModifyConstructedAmount(entityId, amount),
             (packet) => { return packet.GhostId; }, 0.1f);
     }
 
-    public static IEnumerator BroadcastObjectBuilt(ConstructableBase constructableBase, NitroxEntity entity)
+    public static IEnumerator BroadcastObjectBuilt(ConstructableBase constructableBase, NitroxId entityId)
     {
         BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
         constructableBase.SetState(true, true);
@@ -106,7 +106,7 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
         }
 
         // If a module was spawned we need to transfer the ghost id to it for further recognition
-        BuildUtils.TryTransferIdFromGhostToModule(baseGhost, entity.Id, constructableBase, out GameObject moduleObject);
+        BuildUtils.TryTransferIdFromGhostToModule(baseGhost, entityId, constructableBase, out GameObject moduleObject);
 
         // Have a delay for baseGhost to be actually destroyed
         yield return null;
@@ -114,7 +114,7 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
         if (parentBase)
         {
             // update existing base
-            if (!NitroxEntity.TryGetEntityFrom(parentBase.gameObject, out NitroxEntity parentEntity))
+            if (!parentBase.TryGetNitroxId(out NitroxId parentId))
             {
                 // TODO: Probably add a resync here
                 Log.Error("Parent base doesn't have a NitroxEntity, which is not normal");
@@ -135,11 +135,11 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
                 }
                 else if (moduleObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
                 {
-                    builtPiece = NitroxBuild.GetMapRoomEntityFrom(mapRoomFunctionality, parentBase, entity.Id, parentEntity.Id);
+                    builtPiece = NitroxBuild.GetMapRoomEntityFrom(mapRoomFunctionality, parentBase, entityId, parentId);
                 }
             }
 
-            List<Entity> childEntities = NitroxBuild.GetChildEntities(parentBase, parentEntity.Id);
+            List<Entity> childEntities = NitroxBuild.GetChildEntities(parentBase, parentId);
 
             // We get InteriorPieceEntity children from the base and make up a dictionary with their updated data (their BaseFace)
             Dictionary<NitroxId, NitroxBaseFace> updatedChildren = childEntities.OfType<InteriorPieceEntity>()
@@ -148,10 +148,10 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
             Dictionary<NitroxId, NitroxInt3> updatedMapRooms = childEntities.OfType<MapRoomEntity>()
                 .ToDictionary(entity => entity.Id, entity => entity.Cell);
 
-            BuildingHandler.Main.EnsureTracker(parentEntity.Id).LocalOperations++;
-            int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(parentEntity.Id);
+            BuildingHandler.Main.EnsureTracker(parentId).LocalOperations++;
+            int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(parentId);
 
-            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
+            UpdateBase updateBase = new(parentId, entityId, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
@@ -162,19 +162,19 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
             // Must happen before NitroxEntity.SetNewId because else, if a moonpool was marked with the same id, this id be will unlinked from the base object
             if (baseGhost.targetBase.TryGetComponent(out MoonpoolManager moonpoolManager))
             {
-                moonpoolManager.LateAssignNitroxEntity(entity.Id);
+                moonpoolManager.LateAssignNitroxEntity(entityId);
                 moonpoolManager.OnPostRebuildGeometry(baseGhost.targetBase);
             }
             // create a new base
-            NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, entity.Id);
-            BuildingHandler.Main.EnsureTracker(entity.Id).ResetToId();
+            NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, entityId);
+            BuildingHandler.Main.EnsureTracker(entityId).ResetToId();
 
-            Resolve<IPacketSender>().Send(new PlaceBase(entity.Id, NitroxBuild.From(targetBase)));
+            Resolve<IPacketSender>().Send(new PlaceBase(entityId, NitroxBuild.From(targetBase)));
         }
 
         if (moduleObject)
         {
-            yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, entity.Id);
+            yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, entityId);
         }
     }
 

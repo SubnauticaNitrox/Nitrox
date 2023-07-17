@@ -77,9 +77,9 @@ internal class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 
         NitroxId parentId = null;
         if (ghostObject.TryGetComponentInParent(out SubRoot subRoot) && (subRoot.isBase || subRoot.isCyclops) &&
-            NitroxEntity.TryGetEntityFrom(subRoot.gameObject, out NitroxEntity entity))
+            subRoot.TryGetNitroxId(out NitroxId entityId))
         {
-            parentId = entity.Id;
+            parentId = entityId;
         }
 
         // Assign a NitroxId to the ghost now

@@ -16,6 +16,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [ProtoInclude(147, typeof(InteriorPieceEntity))]
 [ProtoInclude(148, typeof(MoonpoolEntity))]
 [ProtoInclude(149, typeof(WaterParkCreatureEntity))]
+[ProtoInclude(150, typeof(PlanterEntity))]
 public class GlobalRootEntity : WorldEntity
 {
     public static GlobalRootEntity From(WorldEntity worldEntity)

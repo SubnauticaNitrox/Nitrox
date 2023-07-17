@@ -1,5 +1,5 @@
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel_Subnautica.DataStructures;
@@ -22,18 +22,19 @@ public static class NitroxInteriorPiece
             Log.Warn($"Couldn't find an identifier for the interior piece {module.GetType()}");
         }
 
-        if (NitroxEntity.TryGetEntityFrom(gameObject, out NitroxEntity entity))
+        if (gameObject.TryGetNitroxId(out NitroxId entityId))
         {
-            interiorPiece.Id = entity.Id;
+            interiorPiece.Id = entityId;
         }
         else
         {
             Log.Warn($"Couldn't find a NitroxEntity for the interior piece {module.GetType()}");
         }
+
         if (gameObject.TryGetComponentInParent(out Base parentBase) &&
-            NitroxEntity.TryGetEntityFrom(parentBase.gameObject, out NitroxEntity parentEntity))
+            parentBase.TryGetNitroxId(out NitroxId parentId))
         {
-            interiorPiece.ParentId = parentEntity.Id;
+            interiorPiece.ParentId = parentId;
         }
 
         switch (module)
@@ -46,7 +47,7 @@ public static class NitroxInteriorPiece
                 break;
             // When you deconstruct (not entirely) then construct back those pieces, they keep their inventories
             case BaseNuclearReactor baseNuclearReactor:
-                interiorPiece.ChildEntities.AddRange(Items.GetEquipmentModuleEntities(baseNuclearReactor.equipment, entity.Id));
+                interiorPiece.ChildEntities.AddRange(Items.GetEquipmentModuleEntities(baseNuclearReactor.equipment, entityId));
                 break;
             case BaseBioReactor baseBioReactor:
                 foreach (ItemsContainer.ItemGroup itemGroup in baseBioReactor.container._items.Values)
