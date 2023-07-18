@@ -1,6 +1,9 @@
 using System;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Nitrox.Launcher.Models.Messages;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Server;
@@ -50,12 +53,21 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private Version version = NitroxEnvironment.Version;
 
+    public ServerEntry()
+    {
+        PropertyChanged += OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
+    }
+
     [RelayCommand(CanExecute = nameof(CanStart))]
     public void Start()
     {
+        IsNewServer = false;
         IsOnline = true;
-        if (IsNewServer)
-            IsNewServer = false;
     }
 
     private bool CanStart() => Version >= SaveDataUpgrade.MinimumSaveVersion && Version <= NitroxEnvironment.Version;

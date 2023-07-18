@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
+using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
@@ -17,6 +19,14 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     public ServersViewModel(IScreen hostScreen) : base(hostScreen)
     {
+        WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
+        {
+            if (message.PropertyName == nameof(ServerEntry.IsOnline))
+            {
+                ManageServerCommand.NotifyCanExecuteChanged();
+            }
+        });
+
         // Load servers from the saves folder
         foreach (WorldManager.Listing listing in WorldManager.GetSaves())
         {
@@ -65,7 +75,6 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     private bool CanManageServer(ServerEntry server)
     {
-        // TODO: IsOnline changes should rerun this CanManageServer command (to update view).
         return !server.IsOnline;
     }
 

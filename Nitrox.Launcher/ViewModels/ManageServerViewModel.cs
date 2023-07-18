@@ -40,52 +40,59 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [ObservableProperty]
-    private bool serverIsOnline;
-
-    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private string serverName;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private string serverPassword;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private ServerGameMode serverGameMode;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private string serverSeed;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private Perms serverDefaultPlayerPerm;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private int serverAutoSaveInterval;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private int serverMaxPlayers;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private int serverPlayers;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private int serverPort;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private bool serverAutoPortForward;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private bool serverAllowLanDiscovery;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
     private bool serverAllowCommands;
+
+    private bool ServerIsOnline => Server.IsOnline;
 
     private string worldFolderDirectory;
 
     private bool HasChanges()
     {
-        if (Server == null)
-        {
-            return false;
-        }
         return ServerName != Server.Name ||
                ServerPassword != Server.Password ||
                ServerGameMode != Server.GameMode ||
@@ -102,11 +109,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
     {
-        // TODO: Use CanExecute to enable/disable buttons instead of these observables.
-        // IObservable<bool> canExecuteSaveCommand = this.WhenAnyPropertyChanged().CombineLatest(Observable.Return(this), this.IsValid()).Select(pair => pair.Second.HasChanges() && pair.Third);
-        // IObservable<bool> canExecuteUndoCommand = this.WhenAnyPropertyChanged().Select(x => x.HasChanges());
-        // IObservable<bool> canExecuteManageServerCommands = this.WhenAnyPropertyChanged().Select(x => !x.HasChanges());
-        // IObservable<bool> canExecuteAdvancedSettingsButtonCommands = this.WhenAnyPropertyChanged().Select(x => !x.ServerIsOnline);
     }
 
     [RelayCommand]
@@ -115,7 +117,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Router.NavigateBack.Execute();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanSave))]
     private void Save()
     {
         Server.Name = ServerName;
@@ -130,12 +132,20 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
-        this.RaisePropertyChanged(nameof(Server));
 
         worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
+
+        UndoCommand.NotifyCanExecuteChanged();
+        SaveCommand.NotifyCanExecuteChanged();
     }
 
-    [RelayCommand]
+    private bool CanSave()
+    {
+        // TODO: Add IsValid check from MVVM toolkit's validation API
+        return !ServerIsOnline && HasChanges();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo()
     {
         ServerName = Server.Name;
@@ -152,10 +162,27 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerAllowCommands = Server.AllowCommands;
     }
 
+    private bool CanUndo()
+    {
+        return !ServerIsOnline && HasChanges();
+    }
+
     [RelayCommand]
-    private void StartServer()
+    public void StartServer()
     {
         Server.Start();
+
+        UndoCommand.NotifyCanExecuteChanged();
+        SaveCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand]
+    public void StopServer()
+    {
+        Server.Stop();
+
+        UndoCommand.NotifyCanExecuteChanged();
+        SaveCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -189,8 +216,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server = serverEntry;
         worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
 
-        ServerIsOnline = Server.IsOnline;
-
         ServerName = Server.Name;
         ServerPassword = Server.Password;
         ServerGameMode = Server.GameMode;
@@ -209,7 +234,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         if (e.PropertyName == nameof(ServerEntry.IsOnline))
         {
-            this.RaisePropertyChanged(nameof(ServerIsOnline));
+            OnPropertyChanged(nameof(ServerIsOnline));
         }
     }
 }

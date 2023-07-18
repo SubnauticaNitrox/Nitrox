@@ -3,12 +3,10 @@ using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
 using ReactiveUI;
-using ReactiveUI.Validation.Abstractions;
-using ReactiveUI.Validation.Contexts;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel, IValidatableViewModel
+public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
 {
     /// <summary>
     ///     Gets the unique URL for the view.
@@ -42,6 +40,4 @@ public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel,
     ///     Pass-through event from MVVM toolkit to ReactiveUI.
     /// </summary>
     public void RaisePropertyChanged(PropertyChangedEventArgs args) => OnPropertyChanged(args);
-
-    public ValidationContext ValidationContext { get; }
 }

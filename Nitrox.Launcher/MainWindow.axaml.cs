@@ -61,7 +61,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         }
         handledExceptions.Add(ex);
 
-        // await ViewModel!.ErrorDialog.Handle(new(ex));
+        await ViewModel?.ShowDialogAsync<ErrorViewModel>(vm => vm.Exception = ex)!;
     }
 
     private void TitleBar_OnPointerPressed(object sender, PointerPressedEventArgs e) => BeginMoveDrag(e);

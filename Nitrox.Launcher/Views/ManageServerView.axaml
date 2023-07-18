@@ -10,12 +10,12 @@
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
     <Grid RowDefinitions="Auto,*,Auto">
-        
+
         <StackPanel Classes="form" Margin="0 0 0 26">
             <Button Background="Transparent" Command="{Binding BackCommand}">
                 <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
             </Button>
-            
+
             <StackPanel Width="223" Orientation="Horizontal" HorizontalAlignment="Left" Classes="description" Margin="0 0 0 10">
                 <StackPanel.Styles>
                     <Style Selector="StackPanel.description > :is(Control)">
@@ -54,12 +54,12 @@
                     <TextBlock Margin="6 0 0 0" Text="playing" />
                 </StackPanel>
             </StackPanel>
-            
+
             <Grid ColumnDefinitions="*,100,100">
                 <ScrollViewer Margin="0 0 10 0" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
                     <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
                 </ScrollViewer>
-                
+
                 <Button Grid.Column="1" Classes="nitrox big abort"
                         Height="40" Margin="0 0 5 0" Padding="5" HorizontalAlignment="Stretch"
                         design:NitroxAttached.Text="UNDO" Command="{Binding UndoCommand}" />
@@ -67,9 +67,9 @@
                         Height="40" Margin="5 0 0 0" Padding="5" HorizontalAlignment="Stretch"
                         design:NitroxAttached.Text="SAVE" Command="{Binding SaveCommand}" />
             </Grid>
-            
+
         </StackPanel>
-        
+
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <StackPanel VerticalAlignment="Stretch" Spacing="42">
                 <StackPanel.Styles>
@@ -77,28 +77,28 @@
                         <Setter Property="Margin" Value="0 0 0 11"/>
                     </Style>
                 </StackPanel.Styles>
-                
+
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}"
                                  IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
-                    
+
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Classes="revealPasswordButton" Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"
                                  IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                 </Grid>
-            
+
                 <StackPanel>
                     <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
                     <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}"
                                                SelectedItem="{Binding ServerGameMode, Mode=TwoWay}"
                                                IsEnabled="{Binding !ServerIsOnline}"/>
                 </StackPanel>
-                
+
                 <Grid ColumnDefinitions="*,30,*,30,*">
                     <StackPanel>
                         <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
@@ -112,7 +112,7 @@
                             </TextBox.Styles>
                         </TextBox>
                     </StackPanel>
-                    
+
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="DEFAULT PERMISSIONS" FontSize="10" Opacity=".5" FontWeight="700" />
                         <ComboBox PlaceholderText="Default Perm" FontSize="13" HorizontalAlignment="Stretch"
@@ -126,7 +126,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
-                    
+
                     <StackPanel Grid.Column="4">
                         <TextBlock Text="AUTO SAVE INTERVAL (s)" FontSize="10" Opacity=".5" FontWeight="700" />
                         <TextBox Watermark="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
@@ -135,7 +135,7 @@
                                  KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
                     </StackPanel>
                 </Grid>
-                
+
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
@@ -143,7 +143,7 @@
                                  IsEnabled="{Binding !ServerIsOnline}"
                                  KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
                     </StackPanel>
-                    
+
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
                         <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, Converter={converters:IntToStringConverter}}"
@@ -151,7 +151,7 @@
                                  KeyDown="InputElement_OnKeyDown" MaxLength="5"/>
                     </StackPanel>
                 </Grid>
-                
+
                 <StackPanel>
                     <TextBlock Text="OPTIONS" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 15" />
                     <StackPanel Spacing="20" IsEnabled="{Binding !ServerIsOnline}">
@@ -161,7 +161,7 @@
                                 <Setter Property="FontWeight" Value="400"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                             </Style>
-                        </StackPanel.Styles> 
+                        </StackPanel.Styles>
                         <Grid>
                             <TextBlock Text="Enable auto port forwarding"/>
                             <CheckBox Classes="switch" IsChecked="{Binding ServerAutoPortForward}" HorizontalAlignment="Right" />
@@ -176,7 +176,7 @@
                         </Grid>
                     </StackPanel>
                 </StackPanel>
-                
+
                 <StackPanel>
                     <TextBlock Text="ADVANCED" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 20" />
                     <StackPanel Spacing="20">
@@ -185,31 +185,31 @@
                                 <Setter Property="FontSize" Value="16"/>
                                 <Setter Property="FontWeight" Value="400"/>
                             </Style>
-                        </StackPanel.Styles> 
-                        
+                        </StackPanel.Styles>
+
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
                                 design:NitroxAttached.Text="Advanced settings"
-                                Command="{Binding AdvancedSettingsCommand}"/>
-                        
+                                Command="{Binding OpenAdvancedSettingsCommand}"/>
+
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/window-external-2x.png"
                                 design:NitroxAttached.Text="Open world folder"
                                 Command="{Binding OpenWorldFolderCommand}"/>
-                        
+
                         <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/export-2x.png"
                                 design:NitroxAttached.Text="Restore a backup"
                                 Command="{Binding RestoreBackupCommand}"/>
-                        
-                        <Button Classes="textimage" 
+
+                        <Button Classes="textimage"
                                 design:NitroxAttached.Image="/Assets/Images/world-manager/delete-2x.png"
                                 design:NitroxAttached.Text="Delete server" Foreground="#ec1c24"
                                 Command="{Binding DeleteServerCommand}"/>
-                        
+
                     </StackPanel>
                 </StackPanel>
-                
+
                 <Border Background="#151516" CornerRadius="12" Height="96" Padding="25 17">
                     <Grid ColumnDefinitions="Auto,*,*,3*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -217,16 +217,16 @@
                             <RadioButton IsChecked="True" >Docked console</RadioButton>
                             <RadioButton >External console</RadioButton>
                         </StackPanel>
-                        
+
                         <Button Grid.Column="3" Classes="nitrox abort big" IsVisible="{Binding ServerIsOnline}"
                                 VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                design:NitroxAttached.Text="STOP SERVER" Command="{Binding Server.StopCommand}" />
+                                design:NitroxAttached.Text="STOP SERVER" Command="{Binding StopServerCommand}" />
                         <Button Grid.Column="3" Classes="nitrox primary big" IsVisible="{Binding !ServerIsOnline}"
                                 VerticalAlignment="Center" HorizontalAlignment="Stretch"
                                 design:NitroxAttached.Text="START SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" Command="{Binding StartServerCommand}" />
                     </Grid>
                 </Border>
-                
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

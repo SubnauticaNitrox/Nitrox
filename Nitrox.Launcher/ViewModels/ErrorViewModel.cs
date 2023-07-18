@@ -11,7 +11,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class ErrorViewModel : ModalViewModelBase
 {
-    public Exception Exception { get; init; }
+    public Exception Exception { get; set; }
     public string ErrorTitle => GetTitleFromException(Exception);
     public string ErrorText => Exception.ToString();
     public KeyGesture OkHotkey { get; } = new(Key.Return);

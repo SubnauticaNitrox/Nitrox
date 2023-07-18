@@ -3,7 +3,6 @@ using Avalonia.Markup.Xaml;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Avalonia;
 using Nitrox.Launcher.ViewModels;
-using ReactiveUI;
 using Splat;
 
 namespace Nitrox.Launcher;

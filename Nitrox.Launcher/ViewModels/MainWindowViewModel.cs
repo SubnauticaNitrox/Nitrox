@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using HanumanInstitute.MvvmDialogs;
@@ -102,9 +103,10 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
         };
     }
 
-    public async Task<T> ShowDialogAsync<T>() where T : ModalViewModelBase
+    public async Task<T> ShowDialogAsync<T>(Action<T> setup = null) where T : ModalViewModelBase
     {
         T viewModel = dialogService.CreateViewModel<T>();
+        setup?.Invoke(viewModel);
         bool? result = await dialogService.ShowDialogAsync<T>(this, viewModel);
         if (result == true)
         {
