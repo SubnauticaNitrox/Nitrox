@@ -1,22 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase, IScreen
+public partial class MainWindowViewModel : ViewModelBase, IScreen
 {
-    public Interaction<CreateServerViewModel, CreateServerViewModel> CreateServerDialog { get; } = new();
-    public Interaction<ErrorViewModel, ErrorViewModel> ErrorDialog { get; } = new();
+    private readonly IDialogService dialogService;
     public RoutingState Router { get; } = new();
     public List<INavigationItem> NavigationHeaderItems { get; }
     public List<INavigationItem> NavigationFooterItems { get; }
     public List<TitleBarItem> TitleBarItems { get; }
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(IDialogService dialogService)
     {
+        this.dialogService = dialogService;
         TitleBarItem maximizeControl = new()
         {
             Icon = "/Assets/Images/material-design-icons/max-w-10.png"
@@ -56,32 +58,32 @@ public class MainWindowViewModel : ViewModelBase, IScreen
             {
                 ToolTipText = "Play the game",
                 Icon = "/Assets/Images/material-design-icons/play.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
             },
             new NavigationItem("Servers")
             {
                 ToolTipText = "Configure and start the server",
                 Icon = "/Assets/Images/material-design-icons/server.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<ServersViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<ServersViewModel>()))
             },
             new NavigationItem("Library")
             {
                 ToolTipText = "Configure your setup",
                 Icon = "/Assets/Images/material-design-icons/library.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
             },
             new NavigationHeader("EXPLORE"),
             new NavigationItem("Community")
             {
                 ToolTipText = "Join the Nitrox community",
                 Icon = "/Assets/Images/material-design-icons/community.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
             },
             new NavigationItem("Blog")
             {
-               ToolTipText = "Read the latest from the Dev Blog",
-               Icon = "/Assets/Images/material-design-icons/blog.png",
-               ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<PlayViewModel>()))
+                ToolTipText = "Read the latest from the Dev Blog",
+                Icon = "/Assets/Images/material-design-icons/blog.png",
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
             }
         };
 
@@ -90,13 +92,24 @@ public class MainWindowViewModel : ViewModelBase, IScreen
             new NavigationItem("Updates")
             {
                 Icon = "/Assets/Images/material-design-icons/download.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
             },
             new NavigationItem("Options")
             {
                 Icon = "/Assets/Images/material-design-icons/options.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
             }
         };
+    }
+
+    public async Task<T> ShowDialogAsync<T>() where T : ModalViewModelBase
+    {
+        T viewModel = dialogService.CreateViewModel<T>();
+        bool? result = await dialogService.ShowDialogAsync<T>(this, viewModel);
+        if (result == true)
+        {
+            return viewModel;
+        }
+        return null;
     }
 }

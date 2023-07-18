@@ -1,41 +1,31 @@
-﻿using System.Reactive;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
-using Nitrox.Launcher.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Server;
-using ReactiveUI;
-using ReactiveUI.Validation.Extensions;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public class CreateServerViewModel : ModalViewModelBase
+public partial class CreateServerViewModel : ModalViewModelBase
 {
-
-    private string name = "";
+    [ObservableProperty]
+    private string name;
+    [ObservableProperty]
     private ServerGameMode selectedGameMode = ServerGameMode.SURVIVAL;
-    public ReactiveCommand<Unit, CreateServerViewModel> CreateServerCommand { get; }
-    public ReactiveCommand<Unit, CreateServerViewModel> BackCommand { get; }
-
-    public string Name
-    {
-        get => name;
-        set => this.RaiseAndSetIfChanged(ref name, value);
-    }
-
     public KeyGesture BackHotkey { get; } = new(Key.Escape);
     public KeyGesture CreateHotkey { get; } = new(Key.Return);
 
-    public ServerGameMode SelectedGameMode
+    [RelayCommand(CanExecute = nameof(CanCreate))]
+    private void Create(Window window)
     {
-        get => selectedGameMode;
-        set => this.RaiseAndSetIfChanged(ref selectedGameMode, value);
+        DialogResult = true;
+        Close(window);
     }
 
-    public CreateServerViewModel()
+    private bool CanCreate()
     {
-        BackCommand = ReactiveCommand.Create(() => (CreateServerViewModel)null!);
-        CreateServerCommand = ReactiveCommand.Create(() => this, this.IsValid());
-
-        this.BindValidation();
+        // TODO: Validate that the name isn't a duplicate of another save
+        return true;
     }
 }

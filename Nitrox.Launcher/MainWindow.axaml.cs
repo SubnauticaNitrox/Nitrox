@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
-using Nitrox.Launcher.Views;
 using Nitrox.Launcher.Views.Abstract;
 using ReactiveUI;
 
@@ -37,9 +35,6 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         RxApp.DefaultExceptionHandler = Observer.Create<Exception>(UnhandledExceptionHandler);
 
-        RegisterModal<ErrorModal, ErrorViewModel>(() => ViewModel!.ErrorDialog);
-        RegisterModal<CreateServerModal, CreateServerViewModel>(() => ViewModel!.CreateServerDialog);
-
         this.WhenActivated(d =>
         {
             // Set clicked nav item as selected (and deselect the others).
@@ -66,7 +61,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         }
         handledExceptions.Add(ex);
 
-        await ViewModel!.ErrorDialog.Handle(new(ex));
+        // await ViewModel!.ErrorDialog.Handle(new(ex));
     }
 
     private void TitleBar_OnPointerPressed(object sender, PointerPressedEventArgs e) => BeginMoveDrag(e);

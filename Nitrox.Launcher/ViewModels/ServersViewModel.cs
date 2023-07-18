@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Reactive.Linq;
-using System.Windows.Input;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Collections;
-using DynamicData.Binding;
+using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Server;
@@ -13,39 +11,18 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public class ServersViewModel : RoutableViewModelBase
+public partial class ServersViewModel : RoutableViewModelBase
 {
-    public ICommand CreateServerCommand { get; }
-    public ICommand ManageServerCommand { get; }
     public AvaloniaList<ServerEntry> Servers { get; } = new();
 
     public ServersViewModel(IScreen hostScreen) : base(hostScreen)
     {
-        //IObservable<bool> canExecuteManageServerCommand = this.WhenAnyPropertyChanged().Select(x => !x.IsValidVersion);
-        
-        CreateServerCommand = ReactiveCommand.CreateFromTask(async () =>
-        {
-            CreateServerViewModel result = await ShowDialogAsync(MainViewModel.CreateServerDialog);
-            if (result == null)
-            {
-                return;
-            }
-
-            AddServer(result.Name, result.SelectedGameMode);
-        });
-        ManageServerCommand = ReactiveCommand.Create((ServerEntry server) =>
-        {
-            ManageServerViewModel viewModel = Locator.GetSharedViewModel<ManageServerViewModel>();
-            viewModel.LoadFrom(server);
-            MainViewModel.Router.Navigate.Execute(viewModel);
-        });//, canExecuteManageServerCommand);
-        
         // Load servers from the saves folder
         foreach (WorldManager.Listing listing in WorldManager.GetSaves())
         {
             //NOTE: This line below is a backup in case the CanExecute commands for the Start/Manage Server buttons don't end up working out
             //if (listing.Version < SaveDataUpgrade.MinimumSaveVersion || listing.Version > NitroxEnvironment.Version) continue;
-            
+
             ServerConfig server = ServerConfig.Load(Path.Combine(WorldManager.SavesFolderDir, listing.Name));
             Servers.Add(new ServerEntry
             {
@@ -53,7 +30,7 @@ public class ServersViewModel : RoutableViewModelBase
                 Password = server.ServerPassword,
                 Seed = server.Seed,
                 GameMode = server.GameMode,
-                DefaultPlayerPerm = server.DefaultPlayerPerm,
+                PlayerPermissions = server.DefaultPlayerPerm,
                 AutoSaveInterval = server.SaveInterval/1000,
                 MaxPlayers = server.MaxConnections,
                 Port = server.ServerPort,
@@ -64,6 +41,32 @@ public class ServersViewModel : RoutableViewModelBase
                 Version = listing.Version
             });
         }
+    }
+
+    [RelayCommand]
+    public async Task CreateServer()
+    {
+        CreateServerViewModel result = await MainViewModel.ShowDialogAsync<CreateServerViewModel>();
+        if (result == null)
+        {
+            return;
+        }
+
+        AddServer(result.Name, result.SelectedGameMode);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanManageServer))]
+    public void ManageServer(ServerEntry server)
+    {
+        ManageServerViewModel viewModel = AppViewLocator.GetSharedViewModel<ManageServerViewModel>();
+        viewModel.LoadFrom(server);
+        MainViewModel.Router.Navigate.Execute(viewModel);
+    }
+
+    private bool CanManageServer(ServerEntry server)
+    {
+        // TODO: IsOnline changes should rerun this CanManageServer command (to update view).
+        return !server.IsOnline;
     }
 
     private void AddServer(string name, ServerGameMode gameMode)
