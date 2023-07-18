@@ -24,7 +24,7 @@
                             <DockPanel VerticalAlignment="Center">
                                 <Border CornerRadius="12" ClipToBounds="True">
                                     <Grid>
-                                        <Image DockPanel.Dock="Left" IsVisible="{Binding IsOnline}" Source="/Assets/Images/SubnauticaIcon.png" />
+                                        <Image DockPanel.Dock="Left" IsVisible="{Binding IsOnline}" Source="/Assets/Images/subnauticaIcon.png" />
                                         <Image DockPanel.Dock="Left" IsVisible="{Binding !IsOnline}" Source="/Assets/Images/SubnauticaIconGray.png" />
                                     </Grid>
                                 </Border>
