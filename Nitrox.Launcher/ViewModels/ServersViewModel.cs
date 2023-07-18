@@ -6,10 +6,8 @@ using Avalonia.Collections;
 using DynamicData.Binding;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Helper;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
-using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 using ReactiveUI;
 
@@ -23,7 +21,7 @@ public class ServersViewModel : RoutableViewModelBase
 
     public ServersViewModel(IScreen hostScreen) : base(hostScreen)
     {
-        //IObservable<bool> canExecuteManageServerCommand = this.WhenAnyPropertyChanged().Select(x => !x.HasChanges());
+        //IObservable<bool> canExecuteManageServerCommand = this.WhenAnyPropertyChanged().Select(x => !x.IsValidVersion);
         
         CreateServerCommand = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -40,7 +38,7 @@ public class ServersViewModel : RoutableViewModelBase
             ManageServerViewModel viewModel = Locator.GetSharedViewModel<ManageServerViewModel>();
             viewModel.LoadFrom(server);
             MainViewModel.Router.Navigate.Execute(viewModel);
-        }/*, canExecuteManageServerCommand*/);
+        });//, canExecuteManageServerCommand);
         
         // Load servers from the saves folder
         foreach (WorldManager.Listing listing in WorldManager.GetSaves())
@@ -62,7 +60,8 @@ public class ServersViewModel : RoutableViewModelBase
                 AutoPortForward = server.AutoPortForward,
                 AllowLanDiscovery = server.LANDiscoveryEnabled,
                 AllowCommands = !server.DisableConsole,
-                IsNewServer = false
+                IsNewServer = false,
+                Version = listing.Version
             });
         }
     }

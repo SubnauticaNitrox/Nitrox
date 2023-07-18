@@ -1,11 +1,12 @@
 using System;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using DynamicData.Binding;
+using Nitrox.Launcher.ViewModels;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.Upgrade;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.Models;
@@ -31,6 +32,7 @@ public class ServerEntry : ReactiveObject
     private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
     private bool allowCommands = !serverDefaults.DisableConsole;
     private bool isNewServer = true;
+    private Version version = NitroxEnvironment.Version;
 
     public bool IsOnline
     {
@@ -107,14 +109,20 @@ public class ServerEntry : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref isNewServer, value);
     }
 
+    public Version Version
+    {
+        get => version;
+        init => this.RaiseAndSetIfChanged(ref version, value);
+    }
+
     public ICommand StartCommand { get; init; }
     public ICommand StopCommand { get; init; }
 
     public ServerEntry()
     {
-        //IObservable<bool> canExecuteStartServerCommand = this.WhenAnyPropertyChanged().Select(x => !x.HasChanges());
+        IObservable<bool> canExecuteStartServerCommand = this.WhenAnyValue(x => x.Version, (serverVersion) => serverVersion >= SaveDataUpgrade.MinimumSaveVersion && serverVersion <= NitroxEnvironment.Version );
         
-        StartCommand = ReactiveCommand.CreateFromTask(StartServer/*, canExecuteStartServerCommand*/);
+        StartCommand = ReactiveCommand.CreateFromTask(StartServer, canExecuteStartServerCommand);
         StopCommand = ReactiveCommand.CreateFromTask(StopServer);
     }
 
