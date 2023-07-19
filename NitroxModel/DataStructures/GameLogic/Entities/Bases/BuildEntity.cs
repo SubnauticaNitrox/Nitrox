@@ -21,7 +21,7 @@ public class BuildEntity : GlobalRootEntity
     public NitroxVector3 LocalScale;
 
     [DataMember(Order = 4)]
-    public SavedBase SavedBase;
+    public BaseData BaseData;
 
     [IgnoredMember]
     public int OperationId;
@@ -37,21 +37,21 @@ public class BuildEntity : GlobalRootEntity
         return new();
     }
 
-    public BuildEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, SavedBase savedBase)
+    public BuildEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, BaseData baseData)
     {
         Id = id;
         LocalPosition = localPosition;
         LocalRotation = localRotation;
         LocalScale = localScale;
-        SavedBase = savedBase;
+        BaseData = baseData;
 
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public BuildEntity(SavedBase savedBase, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public BuildEntity(BaseData baseData, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        SavedBase = savedBase;
+        BaseData = baseData;
         LocalPosition = localPosition;
         LocalRotation = localRotation;
         LocalScale = localScale;

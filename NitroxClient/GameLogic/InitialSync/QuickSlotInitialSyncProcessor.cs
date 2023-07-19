@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;

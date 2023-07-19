@@ -6,7 +6,6 @@ using NitroxPatcher.PatternMatching;
 using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures;
@@ -14,6 +13,7 @@ using NitroxModel.Packets;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
+using NitroxClient.GameLogic.Spawning.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -79,7 +79,7 @@ internal class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatc
             return;
         }
 
-        GhostEntity ghostEntity = NitroxGhost.From(constructableBase);
+        GhostEntity ghostEntity = GhostEntitySpawner.From(constructableBase);
         ghostEntity.Id = baseId;
         if (destroyed)
         {
@@ -175,8 +175,8 @@ internal class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatc
         int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(baseId);
 
         PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null ?
-            new PieceDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), operationId) :
-            new WaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
+            new PieceDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), operationId) :
+            new WaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);

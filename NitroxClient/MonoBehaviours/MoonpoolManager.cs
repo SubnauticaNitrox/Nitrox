@@ -167,4 +167,13 @@ public class MoonpoolManager : MonoBehaviour
             Log.Debug($"AbsoluteCell: {absoluteCell}, BaseCell: {baseCell}, id: {moonpoolEntity.Id}");
         }
     }
+
+    public static IEnumerator RestoreMoonpools(IEnumerable<MoonpoolEntity> moonpoolEntities, Base @base)
+    {
+        MoonpoolManager moonpoolManager = @base.gameObject.EnsureComponent<MoonpoolManager>();
+        moonpoolManager.LoadMoonpools(moonpoolEntities);
+        moonpoolManager.OnPostRebuildGeometry(@base);
+        yield return moonpoolManager.SpawnVehicles();
+        Log.Debug($"Restored moonpools: {moonpoolManager.GetSavedMoonpools().Count}");
+    }
 }

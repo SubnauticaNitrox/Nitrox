@@ -1,8 +1,9 @@
 using System.Collections;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -23,7 +24,9 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
-            yield return BuildingHandler.Main.IsAvailable();
+            yield return new WaitUntil(LargeWorldStreamer.main.IsWorldSettled);
+            yield return Base.InitializeAsync();
+
             BuildingHandler.Main.InitializeOperations(packet.BuildOperationIds);
 
             Log.Info($"Received initial sync packet with {packet.GlobalRootEntities.Count} global root entities");

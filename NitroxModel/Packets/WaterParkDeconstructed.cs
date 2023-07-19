@@ -11,7 +11,7 @@ public sealed class WaterParkDeconstructed : PieceDeconstructed
     public List<NitroxId> MovedChildrenIds;
     public bool Transfer;
 
-    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, InteriorPieceEntity newWaterPark, List<NitroxId> movedChildrenIds, bool transfer, int operationId) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase, operationId)
+    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, BaseData baseData, InteriorPieceEntity newWaterPark, List<NitroxId> movedChildrenIds, bool transfer, int operationId) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, baseData, operationId)
     {
         NewWaterPark = newWaterPark;
         MovedChildrenIds = movedChildrenIds ?? new();

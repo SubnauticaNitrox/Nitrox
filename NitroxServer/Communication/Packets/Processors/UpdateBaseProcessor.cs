@@ -12,7 +12,7 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
     {
         if (buildingManager.UpdateBase(player, packet, out int operationId))
         {
-            packet.SavedBase = null;
+            packet.BaseData = null;
             packet.BuiltPieceEntity = null;
             packet.UpdatedChildren = null;
             packet.UpdatedMoonpools = null;

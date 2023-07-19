@@ -15,7 +15,7 @@ public class GhostEntity : ModuleEntity
     public NitroxBaseFace BaseFace;
 
     [DataMember(Order = 2)]
-    public SavedBase SavedBase;
+    public BaseData BaseData;
 
     [IgnoreConstructor]
     protected GhostEntity()
@@ -28,7 +28,7 @@ public class GhostEntity : ModuleEntity
         return new();
     }
 
-    public GhostEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxId parentId = null)
+    public GhostEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, BaseData baseData, NitroxId parentId = null)
     {
         Id = id;
         LocalPosition = localPosition;
@@ -37,14 +37,14 @@ public class GhostEntity : ModuleEntity
         ConstructedAmount = constructedAmount;
         IsInside = isInside;
         BaseFace = baseFace;
-        SavedBase = savedBase;
+        BaseData = baseData;
         ParentId = parentId;
 
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public GhostEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public GhostEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, BaseData baseData, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
         LocalPosition = localPosition;
         LocalRotation = localRotation;
@@ -52,7 +52,7 @@ public class GhostEntity : ModuleEntity
         ConstructedAmount = constructedAmount;
         IsInside = isInside;
         BaseFace = baseFace;
-        SavedBase = savedBase;
+        BaseData = baseData;
 
         Id = id;
         TechType = techType;
@@ -67,6 +67,6 @@ public class GhostEntity : ModuleEntity
 
     public override string ToString()
     {
-        return $"[GhostEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, LocalPosition: {LocalPosition}, LocalRotation: {LocalRotation}, LocalScale: {LocalScale}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}, BaseFace: [{BaseFace}], SavedBase: {SavedBase}";
+        return $"[GhostEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, LocalPosition: {LocalPosition}, LocalRotation: {LocalRotation}, LocalScale: {LocalScale}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}, BaseFace: [{BaseFace}], BaseData: {BaseData}";
     }
 }

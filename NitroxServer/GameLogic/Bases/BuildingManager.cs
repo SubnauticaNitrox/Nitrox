@@ -168,7 +168,7 @@ public class BuildingManager
         }
 
         worldEntityManager.RemoveGlobalRootEntity(updateBase.FormerGhostId);
-        buildEntity.SavedBase = updateBase.SavedBase;
+        buildEntity.BaseData = updateBase.BaseData;
 
         // TODO: Maybe also update the metadata
 
@@ -270,7 +270,7 @@ public class BuildingManager
         
         worldEntityManager.AddGlobalRootEntity(ghostEntity);
         buildEntity.ChildEntities.Add(ghostEntity);
-        buildEntity.SavedBase = pieceDeconstructed.SavedBase;
+        buildEntity.BaseData = pieceDeconstructed.BaseData;
         buildEntity.OperationId++;
         operationId = buildEntity.OperationId;
         return true;

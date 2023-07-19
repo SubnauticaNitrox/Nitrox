@@ -15,7 +15,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.HUD;
-using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
