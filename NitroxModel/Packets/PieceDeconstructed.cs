@@ -10,15 +10,15 @@ public class PieceDeconstructed : OrderedBuildPacket
     public NitroxId PieceId;
     public BuildPieceIdentifier BuildPieceIdentifier;
     public GhostEntity ReplacerGhost;
-    public SavedBase SavedBase;
+    public BaseData BaseData;
 
-    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, int operationId) : base(operationId)
+    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, BaseData baseData, int operationId) : base(operationId)
     {
         BaseId = baseId;
         PieceId = pieceId;
         BuildPieceIdentifier = buildPieceIdentifier;
         ReplacerGhost = replacerGhost;
-        SavedBase = savedBase;
+        BaseData = baseData;
     }
 
     public override string ToString()

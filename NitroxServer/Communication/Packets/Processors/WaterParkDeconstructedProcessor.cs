@@ -14,7 +14,7 @@ public class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDecons
         if (buildingManager.ReplacePieceByGhost(player, packet, out Entity removedEntity, out int operationId) &&
             buildingManager.CreateWaterParkPiece(packet, removedEntity))
         {
-            packet.SavedBase = null;
+            packet.BaseData = null;
             ProcessWithOperationId(packet, player, operationId);
         }
     }

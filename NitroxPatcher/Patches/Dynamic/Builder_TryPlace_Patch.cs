@@ -1,6 +1,5 @@
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures;
@@ -12,6 +11,7 @@ using System.Reflection;
 using UnityEngine;
 using NitroxClient.Unity.Helper;
 using static System.Reflection.Emit.OpCodes;
+using NitroxClient.GameLogic.Spawning.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -87,14 +87,14 @@ internal class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
         NitroxEntity.SetNewId(ghostObject, ghostId);
         if (constructable is ConstructableBase constructableBase)
         {
-            GhostEntity ghost = NitroxGhost.From(constructableBase);
+            GhostEntity ghost = GhostEntitySpawner.From(constructableBase);
             ghost.Id = ghostId;
             ghost.ParentId = parentId;
             Log.Debug($"Sending ghost: {ghost}");
             Resolve<IPacketSender>().Send(new PlaceGhost(ghost));
             return;
         }
-        ModuleEntity module = NitroxModule.From(constructable);
+        ModuleEntity module = ModuleEntitySpawner.From(constructable);
         module.Id = ghostId;
         module.ParentId = parentId;
         Log.Debug($"Sending module: {module}");

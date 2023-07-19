@@ -1,9 +1,14 @@
+using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases;
@@ -229,5 +234,85 @@ public static class BuildUtils
     {
         // Code found from Base.GetMapRoomFunctionalityForCell
         return baseGhost.targetBase.NormalizeCell(baseGhost.targetBase.WorldToGrid(baseGhost.ghostBase.occupiedBounds.center));
+    }
+
+    public static MapRoomEntity GetMapRoomEntityFrom(MapRoomFunctionality mapRoomFunctionality, Base @base, NitroxId id, NitroxId parentId)
+    {
+        Int3 mapRoomCell = @base.NormalizeCell(@base.WorldToGrid(mapRoomFunctionality.transform.position));
+        return new(id, parentId, mapRoomCell.ToDto());
+    }
+
+    public static List<GlobalRootEntity> GetGlobalRootChildren(Transform globalRoot)
+    {
+        List<GlobalRootEntity> entities = new();
+        foreach (Transform child in globalRoot)
+        {
+            if (child.TryGetComponent(out Base @base))
+            {
+                entities.Add(BuildEntitySpawner.From(@base));
+            }
+            else if (child.TryGetComponent(out Constructable constructable))
+            {
+                if (constructable is ConstructableBase constructableBase)
+                {
+                    entities.Add(GhostEntitySpawner.From(constructableBase));
+                    continue;
+                }
+                entities.Add(ModuleEntitySpawner.From(constructable));
+            }
+        }
+        return entities;
+    }
+
+    public static List<Entity> GetChildEntities(Base targetBase, NitroxId baseId)
+    {
+        List<Entity> childEntities = new();
+
+        foreach (Transform transform in targetBase.transform)
+        {
+            if (transform.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
+            {
+                if (!mapRoomFunctionality.TryGetNitroxId(out NitroxId mapRoomId))
+                {
+                    continue;
+                }
+                Log.Debug($"MapRoom found {mapRoomId} in {mapRoomFunctionality.gameObject} under {mapRoomFunctionality.transform.parent}");
+                childEntities.Add(GetMapRoomEntityFrom(mapRoomFunctionality, targetBase, mapRoomId, baseId));
+            }
+            else if (transform.TryGetComponent(out IBaseModule baseModule))
+            {
+                // IBaseModules without a NitroxEntity are related to BaseDeconstructable and are saved with their ghost
+                if (!(baseModule as MonoBehaviour).GetComponent<NitroxEntity>())
+                {
+                    continue;
+                }
+                MonoBehaviour moduleMB = baseModule as MonoBehaviour;
+                Log.Debug($"Base module found: {baseModule.GetType().FullName}  in {moduleMB.gameObject} under {moduleMB.transform.parent}");
+                childEntities.Add(InteriorPieceEntitySpawner.From(baseModule));
+            }
+            else if (transform.TryGetComponent(out Constructable constructable))
+            {
+                if (constructable is ConstructableBase constructableBase)
+                {
+                    Log.Debug($"BaseConstructable found: {constructableBase.name}");
+                    childEntities.Add(GhostEntitySpawner.From(constructableBase));
+                    continue;
+                }
+                Log.Debug($"Constructable found: {constructable.name}");
+                childEntities.Add(ModuleEntitySpawner.From(constructable));
+            }
+        }
+
+        if (targetBase.TryGetComponent(out MoonpoolManager nitroxMoonpool))
+        {
+            childEntities.AddRange(nitroxMoonpool.GetSavedMoonpools());
+        }
+
+        // Making sure that childEntities are correctly parented
+        foreach (Entity childEntity in childEntities)
+        {
+            childEntity.ParentId = baseId;
+        }
+        return childEntities;
     }
 }

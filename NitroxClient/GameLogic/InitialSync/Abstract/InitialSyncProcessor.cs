@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NitroxModel.Packets;
 
-namespace NitroxClient.GameLogic.InitialSync.Base;
+namespace NitroxClient.GameLogic.InitialSync.Abstract;
 
 public abstract class InitialSyncProcessor
 {

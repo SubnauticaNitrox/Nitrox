@@ -1,9 +1,14 @@
-using NitroxClient.GameLogic.Bases.EntityUtils;
+using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.DataStructures;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +32,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             Log.Error($"Couldn't find a Base component on the parent object of InteriorPieceEntity {entity.Id}");
             yield break;
         }
-        yield return NitroxBuild.RestoreInteriorPiece(entity, @base, result);
+        yield return RestoreInteriorPiece(entity, @base, result);
         if (!result.Get().HasValue)
         {
             Log.Error($"Restoring interior piece failed: {entity}");
@@ -76,9 +81,106 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
 
         if (result.Get().Value.TryGetComponent(out PowerSource powerSource))
         {
-            NitroxBuild.SetupPower(powerSource);
+            // TODO: Have synced/restored power
+            powerSource.SetPower(powerSource.maxPower);
         }
     }
 
     public override bool SpawnsOwnChildren(InteriorPieceEntity entity) => true;
+
+    public static IEnumerator RestoreInteriorPiece(InteriorPieceEntity interiorPiece, Base @base, TaskResult<Optional<GameObject>> result = null)
+    {
+        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: interiorPiece.ClassId))
+        {
+            TaskResult<GameObject> prefabResult = new();
+            yield return DefaultWorldEntitySpawner.RequestPrefab(interiorPiece.ClassId, prefabResult);
+            if (!prefabResult.Get())
+            {
+                Log.Debug($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
+                yield break;
+            }
+            prefab = prefabResult.Get();
+        }
+
+        Base.Face face = interiorPiece.BaseFace.ToUnity();
+        face.cell += @base.GetAnchor();
+        GameObject moduleObject = @base.SpawnModule(prefab, face);
+        if (moduleObject)
+        {
+            NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
+            yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
+            EntityMetadataProcessor.ApplyMetadata(moduleObject, interiorPiece.Metadata);
+            result.Set(moduleObject);
+        }
+    }
+
+    public static InteriorPieceEntity From(IBaseModule module)
+    {
+        InteriorPieceEntity interiorPiece = InteriorPieceEntity.MakeEmpty();
+        GameObject gameObject = (module as Component).gameObject;
+        if (gameObject && gameObject.TryGetComponent(out PrefabIdentifier identifier))
+        {
+            interiorPiece.ClassId = identifier.ClassId;
+        }
+        else
+        {
+            Log.Warn($"Couldn't find an identifier for the interior piece {module.GetType()}");
+        }
+
+        if (gameObject.TryGetNitroxId(out NitroxId entityId))
+        {
+            interiorPiece.Id = entityId;
+        }
+        else
+        {
+            Log.Warn($"Couldn't find a NitroxEntity for the interior piece {module.GetType()}");
+        }
+
+        if (gameObject.TryGetComponentInParent(out Base parentBase) &&
+            parentBase.TryGetNitroxId(out NitroxId parentId))
+        {
+            interiorPiece.ParentId = parentId;
+        }
+
+        switch (module)
+        {
+            case LargeRoomWaterPark:
+                PlanterEntity leftPlanter = new(interiorPiece.Id.Increment(), interiorPiece.Id);
+                PlanterEntity rightPlanter = new(leftPlanter.Id.Increment(), interiorPiece.Id);
+                interiorPiece.ChildEntities.Add(leftPlanter);
+                interiorPiece.ChildEntities.Add(rightPlanter);
+                break;
+            // When you deconstruct (not entirely) then construct back those pieces, they keep their inventories
+            case BaseNuclearReactor baseNuclearReactor:
+                interiorPiece.ChildEntities.AddRange(Items.GetEquipmentModuleEntities(baseNuclearReactor.equipment, entityId));
+                break;
+            case BaseBioReactor baseBioReactor:
+                foreach (ItemsContainer.ItemGroup itemGroup in baseBioReactor.container._items.Values)
+                {
+                    foreach (InventoryItem item in itemGroup.items)
+                    {
+                        interiorPiece.ChildEntities.Add(Items.ConvertToInventoryItemEntity(item.item.gameObject));
+                    }
+                }
+                break;
+        }
+
+        interiorPiece.BaseFace = module.moduleFace.ToDto();
+
+        return interiorPiece;
+    }
+
+    public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity)
+    {
+        Log.Debug($"Restoring MapRoom {mapRoomEntity}");
+        MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
+        if (!mapRoomFunctionality)
+        {
+            Log.Error($"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
+            yield break;
+        }
+        NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);
+    }
+
+    
 }

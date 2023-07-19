@@ -1,6 +1,5 @@
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Bases.EntityUtils;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.Helpers;
@@ -20,6 +19,7 @@ using UWE;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
+using NitroxClient.GameLogic.Spawning.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -127,7 +127,7 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
             {
                 if (moduleObject.TryGetComponent(out IBaseModule builtModule))
                 {
-                    builtPiece = NitroxInteriorPiece.From(builtModule);
+                    builtPiece = InteriorPieceEntitySpawner.From(builtModule);
                 }
                 else if (moduleObject.GetComponent<VehicleDockingBay>())
                 {
@@ -135,11 +135,11 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
                 }
                 else if (moduleObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
                 {
-                    builtPiece = NitroxBuild.GetMapRoomEntityFrom(mapRoomFunctionality, parentBase, entityId, parentId);
+                    builtPiece = BuildUtils.GetMapRoomEntityFrom(mapRoomFunctionality, parentBase, entityId, parentId);
                 }
             }
 
-            List<Entity> childEntities = NitroxBuild.GetChildEntities(parentBase, parentId);
+            List<Entity> childEntities = BuildUtils.GetChildEntities(parentBase, parentId);
 
             // We get InteriorPieceEntity children from the base and make up a dictionary with their updated data (their BaseFace)
             Dictionary<NitroxId, NitroxBaseFace> updatedChildren = childEntities.OfType<InteriorPieceEntity>()
@@ -151,7 +151,7 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
             BuildingHandler.Main.EnsureTracker(parentId).LocalOperations++;
             int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(parentId);
 
-            UpdateBase updateBase = new(parentId, entityId, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
+            UpdateBase updateBase = new(parentId, entityId, BuildEntitySpawner.GetBaseData(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
@@ -169,7 +169,7 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
             NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, entityId);
             BuildingHandler.Main.EnsureTracker(entityId).ResetToId();
 
-            Resolve<IPacketSender>().Send(new PlaceBase(entityId, NitroxBuild.From(targetBase)));
+            Resolve<IPacketSender>().Send(new PlaceBase(entityId, BuildEntitySpawner.From(targetBase)));
         }
 
         if (moduleObject)

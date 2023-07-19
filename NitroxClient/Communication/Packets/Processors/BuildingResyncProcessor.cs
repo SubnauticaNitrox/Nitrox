@@ -1,8 +1,8 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Bases.EntityUtils;
-using NitroxClient.Helpers;
+using NitroxClient.GameLogic.Spawning.Bases;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -108,16 +108,45 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
     public IEnumerator OverwriteBase(Base @base, BuildEntity buildEntity)
     {
         Log.Debug($"[Base RESYNC] Overwriting base with id {buildEntity.Id}");
-        NitroxBuild.ClearBaseChildren(@base);
-        yield return NitroxBuild.ApplyBaseData(buildEntity, @base);
-        yield return NitroxBuild.RestoreMoonpools(buildEntity.ChildEntities.OfType<MoonpoolEntity>(), @base);
-        yield return NitroxBuild.RestoreMapRooms(buildEntity.ChildEntities.OfType<MapRoomEntity>(), @base);
+        ClearBaseChildren(@base);
+        yield return BuildEntitySpawner.SetupBase(buildEntity, @base);
+        yield return MoonpoolManager.RestoreMoonpools(buildEntity.ChildEntities.OfType<MoonpoolEntity>(), @base);
+        foreach (MapRoomEntity mapRoomEntity in buildEntity.ChildEntities.OfType<MapRoomEntity>())
+        {
+            yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+        }
     }
 
     public IEnumerator OverwriteModule(Constructable constructable, ModuleEntity moduleEntity)
     {
         Log.Debug($"[Module RESYNC] Overwriting module with id {moduleEntity.Id}");
-        NitroxBuild.ApplyModuleData(moduleEntity, constructable.gameObject);
+        ModuleEntitySpawner.ApplyModuleData(moduleEntity, constructable.gameObject);
         yield break;
+    }
+
+    /// <summary>
+    /// Destroys manually ghosts, modules, interior pieces and vehicles of a base
+    /// </summary>
+    /// <remarks>
+    /// This is the destructive way of clearing the base, if the base isn't modified consequently, IBaseModuleGeometry under the base cells may start spamming errors.
+    /// </remarks>
+    public static void ClearBaseChildren(Base @base)
+    {
+        for (int i = @base.transform.childCount - 1; i >= 0; i--)
+        {
+            Transform child = @base.transform.GetChild(i);
+            if (child.GetComponent<IBaseModule>() != null || child.GetComponent<Constructable>())
+            {
+                UnityEngine.Object.Destroy(child.gameObject);
+            }
+        }
+        foreach (VehicleDockingBay vehicleDockingBay in @base.GetComponentsInChildren<VehicleDockingBay>(true))
+        {
+            if (vehicleDockingBay.dockedVehicle)
+            {
+                UnityEngine.Object.Destroy(vehicleDockingBay.dockedVehicle.gameObject);
+                vehicleDockingBay.SetVehicleUndocked();
+            }
+        }
     }
 }

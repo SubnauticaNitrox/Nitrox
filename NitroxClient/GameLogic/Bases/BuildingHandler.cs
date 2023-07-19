@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Bases.EntityUtils;
+using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -12,7 +12,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -119,7 +118,7 @@ public class BuildingHandler : MonoBehaviour
         GhostEntity ghostEntity = placeGhost.GhostEntity;
 
         Transform parent = GetParentOrGlobalRoot(ghostEntity.ParentId);
-        yield return NitroxBuild.RestoreGhost(parent, ghostEntity);
+        yield return GhostEntitySpawner.RestoreGhost(parent, ghostEntity);
         BasesCooldown[ghostEntity.ParentId ?? ghostEntity.Id] = DateTimeOffset.Now;
     }
 
@@ -127,7 +126,7 @@ public class BuildingHandler : MonoBehaviour
     {
         ModuleEntity moduleEntity = placeModule.ModuleEntity;
         Transform parent = GetParentOrGlobalRoot(moduleEntity.ParentId);
-        yield return NitroxBuild.RestoreModule(parent, moduleEntity);
+        yield return ModuleEntitySpawner.RestoreModule(parent, moduleEntity);
         BasesCooldown[moduleEntity.ParentId ?? moduleEntity.Id] = DateTimeOffset.Now;
     }
 
@@ -315,12 +314,6 @@ public class BuildingHandler : MonoBehaviour
         {
             return LargeWorldStreamer.main.globalRoot.transform;
         }
-    }
-
-    public IEnumerator IsAvailable()
-    {
-        yield return new WaitUntil(LargeWorldStreamer.main.IsWorldSettled);
-        yield return Base.InitializeAsync();
     }
 
     private void CleanCooldowns()

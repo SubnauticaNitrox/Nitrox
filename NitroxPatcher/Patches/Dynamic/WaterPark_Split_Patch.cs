@@ -1,7 +1,7 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Bases.EntityUtils;
+using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -57,7 +57,7 @@ public class WaterPark_Split_Patch : NitroxPatch, IDynamicPatch
             // If it was already set, it means that the local player is remotely destructing the WaterPark
             if (Temp.NewWaterPark == null)
             {
-                Temp.NewWaterPark = NitroxInteriorPiece.From(newWaterPark);
+                Temp.NewWaterPark = InteriorPieceEntitySpawner.From(newWaterPark);
                 Temp.MovedChildrenIds = new();
                 foreach (NitroxEntity childEntity in newWaterPark.itemsRoot.GetComponentsInChildren<NitroxEntity>(true))
                 {
