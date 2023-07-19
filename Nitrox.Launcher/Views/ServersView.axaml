@@ -4,6 +4,7 @@
              xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
              x:Class="Nitrox.Launcher.Views.ServersView"
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
 
@@ -24,8 +25,14 @@
                             <DockPanel VerticalAlignment="Center">
                                 <Border CornerRadius="12" ClipToBounds="True">
                                     <Grid>
-                                        <Image DockPanel.Dock="Left" IsVisible="{Binding IsOnline}" Source="/Assets/Images/SubnauticaIcon.png" />
-                                        <Image DockPanel.Dock="Left" IsVisible="{Binding !IsOnline}" Source="/Assets/Images/SubnauticaIconGray.png" />
+                                        <Image DockPanel.Dock="Left" Source="/Assets/Images/SubnauticaIcon.png" />
+                                        <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
+                                            <controls:GrayscaleControl.Transitions>
+                                                <Transitions>
+                                                    <DoubleTransition Property="Opacity" Duration="0:0:0.30" />
+                                                </Transitions>
+                                            </controls:GrayscaleControl.Transitions>
+                                        </controls:GrayscaleControl>
                                     </Grid>
                                 </Border>
                                 <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
