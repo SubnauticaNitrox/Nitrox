@@ -2,7 +2,6 @@ extern alias JB;
 using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
@@ -77,28 +76,18 @@ public class GrayscaleControl : Decorator
             }
 
             using SKImage backgroundSnapshot = skia.SkSurface.Snapshot();
-            using SKShader backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp,
-                                                                 SKShaderTileMode.Clamp, currentInvertedTransform);
-
-            using SKSurface blurred = SKSurface.Create(skia.GrContext, false, new SKImageInfo(
-                                                           (int)Math.Ceiling(bounds.Width),
-                                                           (int)Math.Ceiling(bounds.Height), SKImageInfo.PlatformColorType, SKAlphaType.Premul));
-            using (SKImageFilter filter = SKImageFilter.CreateColorFilter(CreateGrayscaleColorFilter()))
-            using (SKPaint blurPaint = new()
-                   {
-                       Shader = backdropShader,
-                       ImageFilter = filter,
-                       Color = new SKColor(0, 0, 0, opacity)
-                   })
+            using SKShader backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, currentInvertedTransform);
+            using SKImageFilter grayscaleFilter = SKImageFilter.CreateColorFilter(CreateGrayscaleColorFilter());
+            using SKPaint paint = new()
             {
-                skia.SkCanvas.DrawRect(0, 0, (float)bounds.Width, (float)bounds.Height, blurPaint);
-            }
+                Shader = backdropShader,
+                ImageFilter = grayscaleFilter,
+                Color = new SKColor(0, 0, 0, opacity)
+            };
+            skia.SkCanvas.DrawRect(0, 0, (float)bounds.Width, (float)bounds.Height, paint);
         }
 
-        public bool Equals(ICustomDrawOperation other)
-        {
-            return other is GrayscaleBehindRenderOperation op && op.bounds == bounds;
-        }
+        public bool Equals(ICustomDrawOperation other) => other is GrayscaleBehindRenderOperation op && op.bounds == bounds;
 
         private static SKColorFilter CreateGrayscaleColorFilter() => SKColorFilter.CreateColorMatrix(grayscaleColorFilterMatrix);
     }
