@@ -6,8 +6,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Helper;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 using ReactiveUI;
 
@@ -75,7 +77,7 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     private bool CanManageServer(ServerEntry server)
     {
-        return !server.IsOnline;
+        return server.Version >= SaveDataUpgrade.MinimumSaveVersion && server.Version <= NitroxEnvironment.Version;
     }
 
     private void AddServer(string name, ServerGameMode gameMode)
