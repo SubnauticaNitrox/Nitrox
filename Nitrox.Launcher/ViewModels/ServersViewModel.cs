@@ -75,10 +75,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         MainViewModel.Router.Navigate.Execute(viewModel);
     }
 
-    private bool CanManageServer(ServerEntry server)
-    {
-        return server.Version >= SaveDataUpgrade.MinimumSaveVersion && server.Version <= NitroxEnvironment.Version;
-    }
+    private static bool CanManageServer(ServerEntry server) => server.Version >= SaveDataUpgrade.MinimumSaveVersion && server.Version <= NitroxEnvironment.Version;
 
     private void AddServer(string name, ServerGameMode gameMode)
     {

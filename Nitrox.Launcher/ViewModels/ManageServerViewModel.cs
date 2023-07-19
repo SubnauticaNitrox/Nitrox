@@ -40,83 +40,100 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private string serverName;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private string serverPassword;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private ServerGameMode serverGameMode;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private string serverSeed;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private Perms serverDefaultPlayerPerm;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private int serverAutoSaveInterval;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private int serverMaxPlayers;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private int serverPlayers;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private int serverPort;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private bool serverAutoPortForward;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private bool serverAllowLanDiscovery;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private bool serverAllowCommands;
 
     private bool ServerIsOnline => Server.IsOnline;
 
     private string worldFolderDirectory;
 
-    private bool HasChanges()
-    {
-        return ServerName != Server.Name ||
-               ServerPassword != Server.Password ||
-               ServerGameMode != Server.GameMode ||
-               ServerSeed != Server.Seed ||
-               ServerDefaultPlayerPerm != Server.PlayerPermissions ||
-               ServerAutoSaveInterval != Server.AutoSaveInterval ||
-               ServerMaxPlayers != Server.MaxPlayers ||
-               ServerPlayers != Server.Players ||
-               ServerPort != Server.Port ||
-               ServerAutoPortForward != Server.AutoPortForward ||
-               ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
-               ServerAllowCommands != Server.AllowCommands;
-    }
+    private bool HasChanges() => ServerName != Server.Name ||
+                                 ServerPassword != Server.Password ||
+                                 ServerGameMode != Server.GameMode ||
+                                 ServerSeed != Server.Seed ||
+                                 ServerDefaultPlayerPerm != Server.PlayerPermissions ||
+                                 ServerAutoSaveInterval != Server.AutoSaveInterval ||
+                                 ServerMaxPlayers != Server.MaxPlayers ||
+                                 ServerPlayers != Server.Players ||
+                                 ServerPort != Server.Port ||
+                                 ServerAutoPortForward != Server.AutoPortForward ||
+                                 ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
+                                 ServerAllowCommands != Server.AllowCommands;
 
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
     {
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     private void Back()
     {
         Router.NavigateBack.Execute();
     }
 
+    [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
+    public void StartServer()
+    {
+        Server.Start();
+        
+        RestoreBackupCommand.NotifyCanExecuteChanged();
+        DeleteServerCommand.NotifyCanExecuteChanged();
+    }
+
+    private bool CanGoBackAndStartServer() =>!HasChanges();
+
+    [RelayCommand]
+    public void StopServer()
+    {
+        Server.Stop();
+        
+        RestoreBackupCommand.NotifyCanExecuteChanged();
+        DeleteServerCommand.NotifyCanExecuteChanged();
+    }
+    
     [RelayCommand(CanExecute = nameof(CanSave))]
     private void Save()
     {
@@ -134,16 +151,14 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AllowCommands = ServerAllowCommands;
 
         worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
-
+        
+        BackCommand.NotifyCanExecuteChanged();
+        StartServerCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanSave()
-    {
-        // TODO: Add IsValid check from MVVM toolkit's validation API
-        return !ServerIsOnline && HasChanges();
-    }
+    private bool CanSave() => !ServerIsOnline && HasChanges(); // TODO: Add IsValid check from MVVM toolkit's validation API
 
     [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo()
@@ -162,28 +177,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerAllowCommands = Server.AllowCommands;
     }
 
-    private bool CanUndo()
-    {
-        return !ServerIsOnline && HasChanges();
-    }
-
-    [RelayCommand]
-    public void StartServer()
-    {
-        Server.Start();
-
-        UndoCommand.NotifyCanExecuteChanged();
-        SaveCommand.NotifyCanExecuteChanged();
-    }
-
-    [RelayCommand]
-    public void StopServer()
-    {
-        Server.Stop();
-
-        UndoCommand.NotifyCanExecuteChanged();
-        SaveCommand.NotifyCanExecuteChanged();
-    }
+    private bool CanUndo() => !ServerIsOnline && HasChanges();
 
     [RelayCommand]
     private void OpenAdvancedSettings()
@@ -197,19 +191,21 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Process.Start(worldFolderDirectory)?.Dispose(); // TODO: Fix file access permission issues
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
     private void RestoreBackup()
     {
         // TODO: Open Restore Backup Popup
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
     private void DeleteServer()
     {
         // TODO: Delete this specific server's files after showing a confirmation popup
         WorldManager.DeleteSave(worldFolderDirectory);
         Router.NavigateBack.Execute();
     }
+    
+    private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;
 
     public void LoadFrom(ServerEntry serverEntry)
     {
