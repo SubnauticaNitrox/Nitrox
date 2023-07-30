@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -9,7 +8,7 @@ using Story;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => StoryGoal.Execute(default, default));
 
@@ -54,10 +53,5 @@ public class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         Resolve<IPacketSender>().Send(new StoryGoalExecuted(key, goalType.ToDto(), entry.timestamp));
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
     }
 }

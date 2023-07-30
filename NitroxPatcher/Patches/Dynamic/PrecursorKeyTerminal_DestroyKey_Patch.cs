@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -10,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// When we place a key into the precursor terminal it becomes consumed.  Inform the server the entity was destroyed.
 /// </summary>
-public class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrecursorKeyTerminal t) => t.DestroyKey());
 
@@ -20,10 +19,5 @@ public class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch, IDynamicPatch
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

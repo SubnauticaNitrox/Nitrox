@@ -1,24 +1,19 @@
-using System.Reflection;
-using HarmonyLib;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic;
-
-public class Equipment_AddItem_Patch : NitroxPatch, IDynamicPatch
+namespace NitroxPatcher.Patches.Dynamic
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Equipment t) => t.AddItem(default, default, default));
-
-    public static void Postfix(Equipment __instance, bool __result, string slot, InventoryItem newItem)
+    public sealed partial class Equipment_AddItem_Patch : NitroxPatch, IDynamicPatch
     {
-        if (__result)
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Equipment t) => t.AddItem(default(string), default(InventoryItem), default(bool)));
+
+        public static void Postfix(Equipment __instance, bool __result, string slot, InventoryItem newItem)
         {
-            Resolve<EquipmentSlots>().BroadcastEquip(newItem.item, __instance.owner, slot);
+            if (__result)
+            {
+                Resolve<EquipmentSlots>().BroadcastEquip(newItem.item, __instance.owner, slot);
+            }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

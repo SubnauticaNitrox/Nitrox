@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -10,10 +11,9 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Entity cells will go sleep when the player gets out of range.  This needs to be reported to the server so they can lose simulation locks.
 /// </summary>
-public class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((EntityCell t) => t.SleepAsync(default(ProtobufSerializer)));
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
+    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((EntityCell t) => t.SleepAsync(default(ProtobufSerializer))));
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
     public static readonly object INJECTION_OPERAND = Reflect.Field((EntityCell entityCell) => entityCell.state);
@@ -36,7 +36,7 @@ public class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
                  * Injects:  Callback(this);
                  */
                 yield return TranspilerHelper.Ldloc<EntityCell>(original);
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(EntityCell))));                
+                yield return new CodeInstruction(OpCodes.Call, ((Action<EntityCell>)Callback).Method);
             }
         }
     }
@@ -45,10 +45,4 @@ public class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
     {
         Resolve<Terrain>().CellUnloaded(entityCell.BatchId, entityCell.CellId, entityCell.Level);
     }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
-    }
 }
-

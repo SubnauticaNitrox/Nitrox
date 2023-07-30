@@ -1,42 +1,34 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class ExosuitTorpedoArm_Shoot_Patch : NitroxPatch, IDynamicPatch
 {
-    class ExosuitTorpedoArm_Shoot_Patch : NitroxPatch, IDynamicPatch
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitTorpedoArm t) => t.Shoot(default(TorpedoType), default(Transform), default(bool)));
+
+    public static void Prefix(ExosuitTorpedoArm __instance, bool __result, TorpedoType torpedoType, Transform siloTransform)
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitTorpedoArm t) => t.Shoot(default(TorpedoType), default(Transform), default(bool)));
-
-        public static void Prefix(ExosuitTorpedoArm __instance, bool __result, TorpedoType torpedoType, Transform siloTransform)
+        if (torpedoType != null)
         {
-            if (torpedoType != null)
+            ExosuitArmAction action = ExosuitArmAction.START_USE_TOOL;
+            if (siloTransform == __instance.siloSecond)
             {
-                ExosuitArmAction action = ExosuitArmAction.START_USE_TOOL;
-                if (siloTransform == __instance.siloSecond)
-                {
-                    action = ExosuitArmAction.ALT_HIT;
-                }
-                if (siloTransform != __instance.siloFirst && siloTransform != __instance.siloSecond)
-                {
-                    Log.Error($"Exosuit torpedo arm siloTransform is not first or second silo {__instance.GetId()}");
-                }
-                NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
-                    __instance,
-                    action,
-                    Player.main.camRoot.GetAimingTransform().forward,
-                    Player.main.camRoot.GetAimingTransform().rotation
-                    );
+                action = ExosuitArmAction.ALT_HIT;
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
+            if (siloTransform != __instance.siloFirst && siloTransform != __instance.siloSecond)
+            {
+                Log.Error($"Exosuit torpedo arm siloTransform is not first or second silo {__instance.GetId()}");
+            }
+            Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
+                 __instance,
+                 action,
+                 Player.main.camRoot.GetAimingTransform().forward,
+                 Player.main.camRoot.GetAimingTransform().rotation
+            );
         }
     }
 }

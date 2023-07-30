@@ -1,12 +1,11 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GhostCrafter t) => t.OnCraftingEnd());
 
@@ -24,10 +23,5 @@ public class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
         }
 
         return false;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

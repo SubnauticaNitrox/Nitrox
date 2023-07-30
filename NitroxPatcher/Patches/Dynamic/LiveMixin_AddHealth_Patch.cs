@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures;
@@ -9,7 +8,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.AddHealth(default(float)));
 
@@ -46,10 +45,5 @@ public class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPatch
                 Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
             }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
     }
 }

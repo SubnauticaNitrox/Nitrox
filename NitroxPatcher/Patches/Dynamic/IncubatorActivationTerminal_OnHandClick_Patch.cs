@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -10,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 // The IncubatorActivationTerminal class is attached to the ion cube pillar near the incubator.  This is what the player clicks
 // power up the main incubator terminal window.
-public class IncubatorActivationTerminal_OnHandClick_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class IncubatorActivationTerminal_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IncubatorActivationTerminal t) => t.OnHandClick(default(GUIHand)));
 
@@ -25,10 +24,5 @@ public class IncubatorActivationTerminal_OnHandClick_Patch : NitroxPatch, IDynam
             IncubatorMetadata metadata = new(true, false);
             Resolve<Entities>().BroadcastMetadataUpdate(id, metadata);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

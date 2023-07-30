@@ -1,24 +1,20 @@
-using System.Reflection;
-using HarmonyLib;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic;
-
-public class ItemsContainer_NotifyAddItem_Patch : NitroxPatch, IDynamicPatch
+namespace NitroxPatcher.Patches.Dynamic
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.NotifyAddItem(default));
-
-    public static void Postfix(ItemsContainer __instance, InventoryItem item)
+    public sealed partial class ItemsContainer_NotifyAddItem_Patch : NitroxPatch, IDynamicPatch
     {
-        if (item != null)
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.NotifyAddItem(default(InventoryItem)));
+
+        public static void Postfix(ItemsContainer __instance, InventoryItem item)
         {
-            Resolve<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
+            if (item != null)
+            {
+                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
+            }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

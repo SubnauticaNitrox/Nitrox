@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// from their inventory and delete it.  We want to let the server know that the item
 /// was successfully deleted.
 /// </summary>
-public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.DestroyItem(default(TechType)));
 
@@ -43,10 +43,5 @@ public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

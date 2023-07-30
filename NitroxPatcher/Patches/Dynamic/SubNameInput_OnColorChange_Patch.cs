@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxClient.GameLogic;
@@ -7,7 +6,7 @@ using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubNameInput t) => t.OnColorChange(default(ColorChangeEventData)));
 
@@ -40,10 +39,5 @@ public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
         }
 
         Resolve<Entities>().EntityMetadataChangedThrottled(__instance, subNameId);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -8,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EnergyMixin t) => t.ModifyCharge(default(float)));
 
@@ -22,10 +21,5 @@ public class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
         {
             Resolve<Entities>().EntityMetadataChanged(battery, id);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

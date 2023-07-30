@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static readonly MethodInfo targetMethod = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
 
     internal static readonly object triggerOperand = Reflect.Property(() => SaveLoadManager.main).GetMethod;
     internal static readonly object injectionOperand = Reflect.Method(() => Application.Quit());
@@ -26,10 +26,5 @@ public class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
 
             yield return instruction;
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, targetMethod);
     }
 }

@@ -1,39 +1,28 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class FMOD_CustomLoopingEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
 {
-    public class FMOD_CustomLoopingEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomLoopingEmitter t) => t.OnPlay());
+
+    public static bool Prefix()
     {
-        private static FMODSystem fmodSystem;
+        return !FMODSuppressor.SuppressFMODEvents;
+    }
 
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomLoopingEmitter t) => t.OnPlay());
-
-        public static bool Prefix()
+    public static void Postfix(FMOD_CustomLoopingEmitter __instance)
+    {
+        if (__instance.assetStart && Resolve<FMODSystem>().IsWhitelisted(__instance.assetStart.path))
         {
-            return !FMODSuppressor.SuppressFMODEvents;
-        }
-
-        public static void Postfix(FMOD_CustomLoopingEmitter __instance)
-        {
-            if (__instance.assetStart && fmodSystem.IsWhitelisted(__instance.assetStart.path))
+            if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
             {
-                if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
-                {
-                    fmodSystem.PlayCustomLoopingEmitter(nitroxEntity.Id, __instance.assetStart.path);
-                }
+                Resolve<FMODSystem>().PlayCustomLoopingEmitter(nitroxEntity.Id, __instance.assetStart.path);
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

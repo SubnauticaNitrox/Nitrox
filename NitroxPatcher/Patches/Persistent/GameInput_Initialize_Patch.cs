@@ -8,7 +8,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class GameInput_Initialize_Patch : NitroxPatch, IPersistentPatch
+    public partial class GameInput_Initialize_Patch : NitroxPatch, IPersistentPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GameInput t) => t.Initialize());
 
@@ -38,11 +38,6 @@ namespace NitroxPatcher.Patches.Persistent
 
                 yield return instruction;
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }
