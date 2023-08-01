@@ -12,6 +12,8 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class CreateServerViewModel : ModalViewModelBase
 {
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
+    [NotifyDataErrorInfo]
     [Required]
     [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidFileName))]
     private string name;
@@ -20,6 +22,12 @@ public partial class CreateServerViewModel : ModalViewModelBase
     public KeyGesture BackHotkey { get; } = new(Key.Escape);
     public KeyGesture CreateHotkey { get; } = new(Key.Return);
 
+    public CreateServerViewModel()
+    {
+        // At least one property has an "invalid" default value, so we need to trigger it manually so that the Create button is disabled.
+        ValidateAllProperties();
+    }
+
     [RelayCommand(CanExecute = nameof(CanCreate))]
     private void Create(Window window)
     {
@@ -27,9 +35,6 @@ public partial class CreateServerViewModel : ModalViewModelBase
         Close(window);
     }
 
-    private bool CanCreate()
-    {
-        // TODO: Validate that the name isn't a duplicate of another save
-        return true;
-    }
+    // TODO: Validate that the name isn't a duplicate of another save
+    private bool CanCreate() => !HasErrors;
 }

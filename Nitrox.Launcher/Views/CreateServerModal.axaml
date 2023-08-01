@@ -27,7 +27,7 @@
         </StackPanel>
         <ContentControl Classes="footer">
             <Panel>
-                <Button Classes="nitrox" Content="Back" HorizontalAlignment="Left" HotKey="{Binding BackHotkey}" Command="{Binding Close}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                <Button Classes="nitrox" Content="Back" HorizontalAlignment="Left" HotKey="{Binding BackHotkey}" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                 <Button Classes="nitrox primary" Content="Create" HorizontalAlignment="Right" HotKey="{Binding CreateHotkey}" Command="{Binding CreateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
             </Panel>
         </ContentControl>
