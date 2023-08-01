@@ -1,7 +1,9 @@
-﻿using Avalonia.Controls;
+﻿using System.ComponentModel.DataAnnotations;
+using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Server;
 
@@ -10,6 +12,8 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class CreateServerViewModel : ModalViewModelBase
 {
     [ObservableProperty]
+    [Required]
+    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidFileName))]
     private string name;
     [ObservableProperty]
     private ServerGameMode selectedGameMode = ServerGameMode.SURVIVAL;

@@ -29,7 +29,7 @@
                                         <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
                                             <controls:GrayscaleControl.Transitions>
                                                 <Transitions>
-                                                    <DoubleTransition Property="Opacity" Duration="0:0:0.30" />
+                                                    <DoubleTransition Property="Opacity" Duration="0:0:0.10" />
                                                 </Transitions>
                                             </controls:GrayscaleControl.Transitions>
                                         </controls:GrayscaleControl>

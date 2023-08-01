@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -41,6 +42,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [Required]
+    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidFileName))]
     private string serverName;
 
     [ObservableProperty]
@@ -53,6 +56,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.ContainsNoWhiteSpace))]
+    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsProperSeed))]
     private string serverSeed;
 
     [ObservableProperty]
@@ -61,10 +66,12 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidSaveInterval))]
     private int serverAutoSaveInterval;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidPlayerLimit))]
     private int serverMaxPlayers;
 
     [ObservableProperty]
@@ -73,6 +80,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [Range(0,65535)]
     private int serverPort;
 
     [ObservableProperty]

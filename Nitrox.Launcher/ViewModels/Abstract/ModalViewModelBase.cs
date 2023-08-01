@@ -10,7 +10,7 @@ namespace Nitrox.Launcher.ViewModels.Abstract;
 /// <summary>
 ///     Base class for (popup) dialog ViewModels.
 /// </summary>
-public abstract partial class ModalViewModelBase : ObservableObject, IModalDialogViewModel, IReactiveObject
+public abstract partial class ModalViewModelBase : ObservableValidator, IModalDialogViewModel, IReactiveObject
 {
     [ObservableProperty] private bool? dialogResult;
 
