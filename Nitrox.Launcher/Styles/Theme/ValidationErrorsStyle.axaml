@@ -1,14 +1,16 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
     <!-- Code from: https://docs.avaloniaui.net/docs/data-binding/data-validation (except for colors) -->
     <Style Selector="DataValidationErrors">
         <Setter Property="Template">
             <ControlTemplate>
                 <DockPanel LastChildFill="True">
+                    <!-- TODO: Figure out why entries are duplicated in the DataValidationErrors.Errors, without breaking MVVM Toolkit validation code. -->
                     <ContentControl DockPanel.Dock="Right"
                                     ContentTemplate="{TemplateBinding ErrorTemplate}"
                                     DataContext="{TemplateBinding Owner}"
-                                    Content="{Binding (DataValidationErrors.Errors)}"
+                                    Content="{Binding (DataValidationErrors.Errors), Converter={converters:DeduplicateConverter}}"
                                     IsVisible="{Binding (DataValidationErrors.HasErrors)}" />
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Background="{TemplateBinding Background}"
