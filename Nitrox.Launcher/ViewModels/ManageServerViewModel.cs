@@ -42,6 +42,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyDataErrorInfo]
     [Required]
     [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidFileName))]
     private string serverName;
@@ -56,6 +57,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyDataErrorInfo]
     [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.ContainsNoWhiteSpace))]
     [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsProperSeed))]
     private string serverSeed;
@@ -66,12 +68,14 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyDataErrorInfo]
     [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidSaveInterval))]
     private int serverAutoSaveInterval;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidPlayerLimit))]
+    [NotifyDataErrorInfo]
     private int serverMaxPlayers;
 
     [ObservableProperty]
@@ -80,7 +84,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [Range(0,65535)]
+    [NotifyDataErrorInfo]
+    [Range(ushort.MinValue, ushort.MaxValue)]
     private int serverPort;
 
     [ObservableProperty]
@@ -126,7 +131,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     public void StartServer()
     {
         Server.Start();
-        
+
         RestoreBackupCommand.NotifyCanExecuteChanged();
         DeleteServerCommand.NotifyCanExecuteChanged();
     }
@@ -137,11 +142,11 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     public void StopServer()
     {
         Server.Stop();
-        
+
         RestoreBackupCommand.NotifyCanExecuteChanged();
         DeleteServerCommand.NotifyCanExecuteChanged();
     }
-    
+
     [RelayCommand(CanExecute = nameof(CanSave))]
     private void Save()
     {
@@ -159,14 +164,14 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AllowCommands = ServerAllowCommands;
 
         worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
-        
+
         BackCommand.NotifyCanExecuteChanged();
         StartServerCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanSave() => !ServerIsOnline && HasChanges(); // TODO: Add IsValid check from MVVM toolkit's validation API
+    private bool CanSave() => !HasErrors && !ServerIsOnline && HasChanges();
 
     [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo()
@@ -196,7 +201,12 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand]
     private void OpenWorldFolder()
     {
-        Process.Start(worldFolderDirectory)?.Dispose(); // TODO: Fix file access permission issues
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = worldFolderDirectory,
+            Verb = "open",
+            UseShellExecute = true
+        })?.Dispose();
     }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
@@ -212,7 +222,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         WorldManager.DeleteSave(worldFolderDirectory);
         Router.NavigateBack.Execute();
     }
-    
+
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;
 
     public void LoadFrom(ServerEntry serverEntry)
