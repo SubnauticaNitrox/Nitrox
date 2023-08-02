@@ -86,6 +86,20 @@ public static class WorldManager
         return savesList;
     }
     
+    public static void CreateEmptySave(string saveFileDirectory)
+    {
+        Directory.CreateDirectory(saveFileDirectory);
+        
+        ServerConfig serverConfig = ServerConfig.Load(saveFileDirectory);
+        
+        string fileEnding = "json";
+        if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+        {
+            fileEnding = "nitrox";
+        }
+        File.Create(Path.Combine(saveFileDirectory, $"Version.{fileEnding}")).Close();
+    }
+    
     public static bool ValidateSave(string saveFileDirectory)
     {
         return Directory.Exists(saveFileDirectory) ||  !File.Exists(Path.Combine(saveFileDirectory, "server.cfg")) || File.Exists(Path.Combine(saveFileDirectory, "Version.json"));

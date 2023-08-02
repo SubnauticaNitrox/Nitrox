@@ -75,7 +75,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [Range(1, 100)]
+    [Range(1, 1000)]
     [NotifyDataErrorInfo]
     private int serverMaxPlayers;
 

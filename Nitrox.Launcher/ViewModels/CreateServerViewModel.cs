@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -6,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Server;
+using NitroxServer.Serialization.World;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -34,6 +36,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     private void Create(Window window)
     {
         DialogResult = true;
+        WorldManager.CreateEmptySave(Path.Combine(WorldManager.SavesFolderDir, Name));
         Close(window);
     }
 
