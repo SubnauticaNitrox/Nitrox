@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -19,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// are either unused (found out that they have no actual calls in SN's code, just as <see cref="PDAScanner.RemoveAllEntriesWhichUnlocks"/>)
 /// or simply called automatically by other events (just as <see cref="PDAScanner.CompleteAllEntriesWhichUnlocks"/>).
 /// </remarks>
-public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAScanner.Scan());
 
@@ -36,7 +37,7 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
             {
                 yield return original.Ldloc<PDAScanner.Result>();
                 yield return new(OpCodes.Ldloc_S, original.GetLocalVariableIndex<bool>(4));
-                yield return new(OpCodes.Call, Reflect.Method(() => Callback(default, default)));
+                yield return new(OpCodes.Call, ((Action<PDAScanner.Result, bool>)Callback).Method);
             }
         }
     }
@@ -87,10 +88,5 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
                 Resolve<IPacketSender>().Send(packet);
             }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

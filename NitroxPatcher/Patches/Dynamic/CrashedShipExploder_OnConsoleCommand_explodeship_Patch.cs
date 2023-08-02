@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
@@ -8,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /// We just want to disable all these commands on client-side and redirect them as ConsoleCommand
 /// TODO: Remove this file when we'll have the command system
-public class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
+public sealed class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD_COUNTDOWNSHIP = Reflect.Method((CrashedShipExploder t) => t.OnConsoleCommand_countdownship());
     private static readonly MethodInfo TARGET_METHOD_EXPLODEFORCE = Reflect.Method((CrashedShipExploder t) => t.OnConsoleCommand_explodeforce());
@@ -41,9 +42,9 @@ public class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicP
 
     public override void Patch(Harmony harmony)
     {
-        PatchPrefix(harmony, TARGET_METHOD_COUNTDOWNSHIP, nameof(PrefixCountdownShip));
-        PatchPrefix(harmony, TARGET_METHOD_EXPLODEFORCE, nameof(PrefixExplodeForce));
-        PatchPrefix(harmony, TARGET_METHOD_EXPLODESHIP, nameof(PrefixExplodeShip));
-        PatchPrefix(harmony, TARGET_METHOD_RESTORESHIP, nameof(PrefixRestoreShip));
+        PatchPrefix(harmony, TARGET_METHOD_COUNTDOWNSHIP, ((Func<bool>)PrefixCountdownShip).Method);
+        PatchPrefix(harmony, TARGET_METHOD_EXPLODEFORCE, ((Func<bool>)PrefixExplodeForce).Method);
+        PatchPrefix(harmony, TARGET_METHOD_EXPLODESHIP, ((Func<bool>)PrefixExplodeShip).Method);
+        PatchPrefix(harmony, TARGET_METHOD_RESTORESHIP, ((Func<bool>)PrefixRestoreShip).Method);
     }
 }

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class BaseAddModuleGhost_UpdatePlacement_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class BaseAddModuleGhost_UpdatePlacement_Patch : NitroxPatch, IDynamicPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseAddModuleGhost t) => t.UpdatePlacement(default(Transform), default(float), out Reflect.Ref<bool>.Field, out Reflect.Ref<bool>.Field, default(ConstructableBase)));
 
@@ -59,11 +59,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 // We want to inject just after Player main = Player.main... if this is that instruction then we'll inject after the next opcode (stfld)
                 shouldInject = instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND);
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
         }
 
         private static CodeInstruction GetJumpInstruction(List<CodeInstruction> instructions, int startingIndex)

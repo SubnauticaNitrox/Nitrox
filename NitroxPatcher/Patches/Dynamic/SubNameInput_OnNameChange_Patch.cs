@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -7,7 +6,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubNameInput t) => t.OnNameChange(default(string)));
 
@@ -38,10 +37,5 @@ public class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
 
             Resolve<Entities>().EntityMetadataChanged(__instance, subNameInputId);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

@@ -1,26 +1,19 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class ExosuitClawArm_TryUse_Patch : NitroxPatch, IDynamicPatch
 {
-    class ExosuitClawArm_TryUse_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitClawArm t) => t.TryUse(out Reflect.Ref<float>.Field));
+
+    public static void Postfix(bool __result, ExosuitClawArm __instance, float ___cooldownTime)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitClawArm t) => t.TryUse(out Reflect.Ref<float>.Field));
-
-        public static void Postfix(bool __result, ExosuitClawArm __instance, float ___cooldownTime)
+        if (__result)
         {
-            if (__result)
-            {
-                NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastClawUse(__instance, ___cooldownTime);
-            }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
+            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastClawUse(__instance, ___cooldownTime);
         }
     }
 }

@@ -1,11 +1,10 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class MainMenuRightSide_OpenGroup_Patch : NitroxPatch, IPersistentPatch
+    public partial class MainMenuRightSide_OpenGroup_Patch : NitroxPatch, IPersistentPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((MainMenuRightSide t) => t.OpenGroup(default(string)));
 
@@ -18,11 +17,5 @@ namespace NitroxPatcher.Patches.Persistent
                 MainMenuMultiplayerPanel.Main.JoinServer.StopMultiplayerClient();
             }
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
-        }
     }
 }
-

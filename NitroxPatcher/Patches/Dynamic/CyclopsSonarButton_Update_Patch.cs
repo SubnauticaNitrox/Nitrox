@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Prevents sonar from turning off automatically for the player that isn't currently piloting the Cyclops.
 /// </summary>
-public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.Update());
 
@@ -62,10 +62,5 @@ public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
             return !multiplayerCyclops.enabled;
         }
         return true;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

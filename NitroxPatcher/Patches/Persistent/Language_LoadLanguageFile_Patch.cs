@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Persistent;
 
 public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
 {
-    private static readonly MethodInfo targetMethod = Reflect.Method((Language t) => t.LoadLanguageFile(default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Language t) => t.LoadLanguageFile(default));
 
     private static readonly Dictionary<string, Tuple<string, string>> languageToIsoCode = new(); // First Tuple item is region specific (en-US), second isn't (en)
 
@@ -86,6 +86,6 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
             languageToIsoCode.Add("Spanish (Latin America)", new Tuple<string, string>("es-419", "es"));
         }
 
-        PatchPostfix(harmony, targetMethod);
+        PatchPostfix(harmony, TARGET_METHOD, ((Action<string, Dictionary<string, string>>)Postfix).Method);
     }
 }

@@ -38,13 +38,6 @@ public abstract class NitroxPatch : INitroxPatch
         }
     }
 
-    public HarmonyMethod GetHarmonyMethod(string methodName)
-    {
-        MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-        Validate.NotNull(method, $"Patcher: Patch method \"{methodName}\" cannot be found");
-        return new HarmonyMethod(method);
-    }
-
     /// <summary>
     ///     Resolves a type using <see cref="NitroxServiceLocator.LocateService{T}" />. If the result is not null it will cache and return the same type on future calls.
     /// </summary>
@@ -55,55 +48,40 @@ public abstract class NitroxPatch : INitroxPatch
         return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePreLifetime : NitroxServiceLocator.Cache<T>.Value;
     }
 
-    protected void PatchFinalizer(Harmony harmony, MethodBase targetMethod, string finalizerMethod = "Finalizer")
+    protected void PatchFinalizer(Harmony harmony, MethodBase targetMethod, MethodInfo finalizerMethod)
     {
         PatchMultiple(harmony, targetMethod, null, null, null, finalizerMethod);
     }
 
-    protected void PatchTranspiler(Harmony harmony, MethodBase targetMethod, string transpilerMethod = "Transpiler")
+    protected void PatchTranspiler(Harmony harmony, MethodBase targetMethod, MethodInfo transpilerMethod)
     {
         PatchMultiple(harmony, targetMethod, null, null, transpilerMethod);
     }
 
-    protected void PatchPrefix(Harmony harmony, MethodBase targetMethod, string prefixMethod = "Prefix")
+    protected void PatchPrefix(Harmony harmony, MethodBase targetMethod, MethodInfo prefixMethod)
     {
         PatchMultiple(harmony, targetMethod, prefixMethod);
     }
 
-    protected void PatchPostfix(Harmony harmony, MethodBase targetMethod, string postfixMethod = "Postfix")
+    protected void PatchPostfix(Harmony harmony, MethodBase targetMethod, MethodInfo postfixMethod)
     {
         PatchMultiple(harmony, targetMethod, null, postfixMethod);
-    }
-
-    protected void PatchMultiple(Harmony harmony, MethodBase targetMethod, bool prefix = false, bool postfix = false, bool transpiler = false, bool finalizer = false, bool iLManipulator = false)
-    {
-        string prefixMethod = prefix ? "Prefix" : null;
-        string postfixMethod = postfix ? "Postfix" : null;
-        string transpilerMethod = transpiler ? "Transpiler" : null;
-        string finalizerMethod = finalizer ? "Finalizer" : null;
-        string iLManipulatorMethod = iLManipulator ? "ILManipulator" : null;
-
-        PatchMultiple(harmony, targetMethod, prefixMethod, postfixMethod, transpilerMethod, finalizerMethod, iLManipulatorMethod);
     }
 
     protected void PatchMultiple(
         Harmony harmony,
         MethodBase targetMethod,
-        string prefixMethod = null,
-        string postfixMethod = null,
-        string transpilerMethod = null,
-        string finalizerMethod = null,
-        string iLManipulatorMethod = null)
+        MethodInfo prefix = null,
+        MethodInfo postfix = null,
+        MethodInfo transpiler = null,
+        MethodInfo finalizer = null,
+        MethodInfo manipulator = null)
     {
+        static HarmonyMethod AsHarmonyMethod(MethodInfo methodInfo) => methodInfo != null ? new HarmonyMethod(methodInfo) : null;
+
         Validate.NotNull(targetMethod, "Target method cannot be null");
 
-        HarmonyMethod harmonyPrefixMethod = prefixMethod != null ? GetHarmonyMethod(prefixMethod) : null;
-        HarmonyMethod harmonyPostfixMethod = postfixMethod != null ? GetHarmonyMethod(postfixMethod) : null;
-        HarmonyMethod harmonyTranspilerMethod = transpilerMethod != null ? GetHarmonyMethod(transpilerMethod) : null;
-        HarmonyMethod harmonyFinalizerMethod = finalizerMethod != null ? GetHarmonyMethod(finalizerMethod) : null;
-        HarmonyMethod harmonyILManipulatorMethod = iLManipulatorMethod != null ? GetHarmonyMethod(iLManipulatorMethod) : null;
-
-        harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod, harmonyFinalizerMethod, harmonyILManipulatorMethod);
+        harmony.Patch(targetMethod, AsHarmonyMethod(prefix), AsHarmonyMethod(postfix), AsHarmonyMethod(transpiler), AsHarmonyMethod(finalizer), AsHarmonyMethod(manipulator));
         activePatches.Add(targetMethod); // Store our patched methods
     }
 }

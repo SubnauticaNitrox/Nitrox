@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxModel.DataStructures;
@@ -7,7 +6,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsDestructionEvent t) => t.DestroyCyclops());
 
@@ -24,10 +23,5 @@ public class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynami
         {
             remotePlayerIdentifier.RemotePlayer.ResetStates();
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

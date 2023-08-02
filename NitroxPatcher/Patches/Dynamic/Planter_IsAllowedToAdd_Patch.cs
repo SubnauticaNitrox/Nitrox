@@ -1,12 +1,11 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class Planter_IsAllowedToAdd_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Planter_IsAllowedToAdd_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Planter p) => p.IsAllowedToAdd(default(Pickupable), default(bool)));
 
@@ -18,10 +17,5 @@ public class Planter_IsAllowedToAdd_Patch : NitroxPatch, IDynamicPatch
             Plantable plantable = pickupable.GetComponent<Plantable>();
             Resolve<Entities>().EntityMetadataChanged(plantable, id);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

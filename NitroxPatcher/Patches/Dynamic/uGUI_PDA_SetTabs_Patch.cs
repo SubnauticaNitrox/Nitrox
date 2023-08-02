@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -8,7 +9,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.SetTabs(default));
 
@@ -31,7 +32,7 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
                  */
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
                 yield return new CodeInstruction(OpCodes.Ldloc_1);
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => SetupNitroxIcons(default, default)));
+                yield return new CodeInstruction(OpCodes.Call, ((Action<uGUI_PDA, Atlas.Sprite[]>)SetupNitroxIcons).Method);
             }
         }
     }
@@ -69,10 +70,5 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
         {
             toolbar.icons[index].SetForegroundSprite(sprite);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

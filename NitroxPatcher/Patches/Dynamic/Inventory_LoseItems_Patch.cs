@@ -6,7 +6,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class Inventory_LoseItems_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Inventory_LoseItems_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((Inventory t) => t.LoseItems());
 
@@ -60,10 +60,5 @@ public class Inventory_LoseItems_Patch : NitroxPatch, IDynamicPatch
             return true;
         }
         return false;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

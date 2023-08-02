@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class DayNightCycle_OnConsoleCommand_daynightspeed_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class DayNightCycle_OnConsoleCommand_daynightspeed_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((DayNightCycle t) => t.OnConsoleCommand_daynightspeed(default));
 
@@ -13,10 +12,5 @@ public class DayNightCycle_OnConsoleCommand_daynightspeed_Patch : NitroxPatch, I
     {
         ErrorMessage.AddMessage(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

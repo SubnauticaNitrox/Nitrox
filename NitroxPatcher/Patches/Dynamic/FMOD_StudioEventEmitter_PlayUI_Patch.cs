@@ -1,44 +1,32 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, IDynamicPatch
 {
-    public class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_StudioEventEmitter t) => t.PlayUI());
+
+    public static bool Prefix()
     {
-        private static FMODSystem fmodSystem;
+        return !FMODSuppressor.SuppressFMODEvents;
+    }
 
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_StudioEventEmitter t) => t.PlayUI());
-
-        public static bool Prefix()
+    public static void Postfix(FMOD_StudioEventEmitter __instance, float ____lastTimePlayed)
+    {
+        if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path))
         {
-            return !FMODSuppressor.SuppressFMODEvents;
-        }
-
-        public static void Postfix(FMOD_StudioEventEmitter __instance, float ____lastTimePlayed)
-        {
-            if (fmodSystem.IsWhitelisted(__instance.asset.path))
+            if (____lastTimePlayed == 0.0 || Time.time > ____lastTimePlayed + __instance.minInterval)
             {
-                if (____lastTimePlayed == 0.0 || Time.time > ____lastTimePlayed + __instance.minInterval)
+                if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
                 {
-                    if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
-                    {
-                        fmodSystem.PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, true, false);
-                    }
+                    Resolve<FMODSystem>().PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, true, false);
                 }
             }
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
-        }
-
     }
 }

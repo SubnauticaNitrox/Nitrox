@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -8,10 +9,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class ConstructorInput_OnCraftingBegin_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class ConstructorInput_OnCraftingBegin_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((ConstructorInput t) => t.OnCraftingBeginAsync(default(TechType), default(float)));
-        public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
+        public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((ConstructorInput t) => t.OnCraftingBeginAsync(default(TechType), default(float))));
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = Reflect.Method(() => CrafterLogic.NotifyCraftEnd(default(GameObject), default(TechType)));
@@ -35,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     yield return new CodeInstruction(OpCodes.Ldfld, TARGET_METHOD.DeclaringType.GetField("techType", BindingFlags.Instance | BindingFlags.Public));
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldfld, TARGET_METHOD.DeclaringType.GetField("duration", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default, default, default, default)));
+                    yield return new CodeInstruction(OpCodes.Call, ((Action<ConstructorInput, GameObject, TechType, float>)Callback).Method);
                 }
             }
         }
@@ -44,11 +44,5 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Resolve<MobileVehicleBay>().BeginCrafting(constructor, constructedObject, techType, duration);
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
-        }
     }
 }
-

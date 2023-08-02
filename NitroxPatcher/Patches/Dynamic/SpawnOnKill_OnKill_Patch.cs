@@ -1,8 +1,8 @@
+using System;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
@@ -16,13 +16,13 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Synchronizes entities that Spawn something when they are killed, e.g. Coral Disks.
 /// </summary>
-public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnOnKill t) => t.OnKill());
 
     private static readonly InstructionsPattern spawnInstanceOnKillPattern = new()
     {
-        Reflect.Method(() => Object.Instantiate(default(GameObject), default(Vector3), default(Quaternion))),
+        Reflect.Method(() => UnityEngine.Object.Instantiate(default(GameObject), default(Vector3), default(Quaternion))),
         { Stloc_0, "DropOnKillInstance" },
         Ldarg_0,
     };
@@ -33,7 +33,7 @@ public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
         {
             new(Ldarg_0),
             new(Ldloc_0),
-            new(Call, Reflect.Method(() => Callback(default, default)))
+            new(Call, ((Action<SpawnOnKill, GameObject>)Callback).Method)
         });
     }
 
@@ -49,10 +49,5 @@ public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
         }
         NitroxEntity.SetNewId(spawningItem, new());
         Resolve<Items>().Dropped(spawningItem);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

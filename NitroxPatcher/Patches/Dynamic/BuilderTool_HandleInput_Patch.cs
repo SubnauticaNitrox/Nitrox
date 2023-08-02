@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class BuilderTool_HandleInput_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class BuilderTool_HandleInput_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((BuilderTool t) => t.HandleInput());
 
@@ -38,10 +38,5 @@ public class BuilderTool_HandleInput_Patch : NitroxPatch, IDynamicPatch
                                                 original.Ldloc<Constructable>(),
                                                 new CodeInstruction(OpCodes.Call, CALLBACK_METHOD))
                                             .InstructionEnumeration();
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

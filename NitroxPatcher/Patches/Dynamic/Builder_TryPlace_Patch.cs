@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
 
@@ -59,11 +59,6 @@ namespace NitroxPatcher.Patches.Dynamic
                     yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Building t) => t.PlaceFurniture(default(GameObject), default(TechType), default(Vector3), default(Quaternion))));
                 }
             }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }

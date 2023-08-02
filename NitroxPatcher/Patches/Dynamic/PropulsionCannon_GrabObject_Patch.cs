@@ -1,69 +1,59 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDynamicPatch
 {
-    public class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PropulsionCannon t) => t.GrabObject(default(GameObject)));
+
+    private static bool skipPrefixPatch;
+
+    public static bool Prefix(PropulsionCannon __instance, GameObject target)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PropulsionCannon t) => t.GrabObject(default(GameObject)));
-
-        private static bool skipPrefixPatch;
-
-        public static bool Prefix(PropulsionCannon __instance, GameObject target)
+        if (skipPrefixPatch)
         {
-            if (skipPrefixPatch)
-            {
-                return true;
-            }
-
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-
-            if (!target.TryGetIdOrWarn(out NitroxId id))
-            {
-                return true;
-            }
-
-            if (simulationOwnership.HasExclusiveLock(id))
-            {
-                Log.Debug($"Already have an exclusive lock on the grabbed propulsion cannon object: {id}");
-                return true;
-            }
-
-            PropulsionGrab context = new(__instance, target);
-            LockRequest<PropulsionGrab> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
-
-            simulationOwnership.RequestSimulationLock(lockRequest);
-
-            return false;
+            return true;
         }
 
-        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, PropulsionGrab context)
+        if (!target.TryGetIdOrWarn(out NitroxId id))
         {
-            if (lockAquired)
-            {
-                EntityPositionBroadcaster.WatchEntity(id);
-
-                skipPrefixPatch = true;
-                context.Cannon.GrabObject(context.GrabbedObject);
-                skipPrefixPatch = false;
-            }
-            else
-            {
-                context.GrabbedObject.AddComponent<DenyOwnershipHand>();
-            }
+            return true;
         }
 
-        public override void Patch(Harmony harmony)
+        if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            Log.Debug($"Already have an exclusive lock on the grabbed propulsion cannon object: {id}");
+            return true;
+        }
+
+        PropulsionGrab context = new(__instance, target);
+        LockRequest<PropulsionGrab> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+
+        Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
+
+        return false;
+    }
+
+    private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, PropulsionGrab context)
+    {
+        if (lockAquired)
+        {
+            EntityPositionBroadcaster.WatchEntity(id);
+
+            skipPrefixPatch = true;
+            context.Cannon.GrabObject(context.GrabbedObject);
+            skipPrefixPatch = false;
+        }
+        else
+        {
+            context.GrabbedObject.AddComponent<DenyOwnershipHand>();
         }
     }
 }

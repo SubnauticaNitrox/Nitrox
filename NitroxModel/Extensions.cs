@@ -52,4 +52,10 @@ public static class Extensions
         double num = Math.Round(byteSize / Math.Pow(1024, place), 1);
         return num + suf[place];
     }
+
+    public static string GetFirstNonAggregateMessage(this Exception exception) => exception switch
+    {
+        AggregateException ex => ex.InnerExceptions.FirstOrDefault(e => e is not AggregateException)?.Message ?? ex.Message,
+        _ => exception.Message
+    };
 }
