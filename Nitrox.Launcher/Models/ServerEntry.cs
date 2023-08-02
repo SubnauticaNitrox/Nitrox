@@ -6,8 +6,8 @@ using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Messages;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.Upgrade;
 
 namespace Nitrox.Launcher.Models;
@@ -17,7 +17,7 @@ namespace Nitrox.Launcher.Models;
 /// </summary>
 public partial class ServerEntry : ObservableObject
 {
-    private static readonly ServerConfig serverDefaults = new();
+    private static readonly SubnauticaServerConfig serverDefaults = new();
 
     [ObservableProperty]
     private bool isOnline;
@@ -46,7 +46,7 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private bool allowCommands = !serverDefaults.DisableConsole;
     /// <summary>
-    /// TODO: This should be inferred from the server having a save file or not.
+    /// TODO: This should be inferred from the save having a "WorldData" save file or not, since that is where the seed is stored after it is used/generated.
     /// </summary>
     [ObservableProperty]
     private bool isNewServer = true;

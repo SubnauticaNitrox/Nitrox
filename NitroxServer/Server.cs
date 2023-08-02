@@ -9,8 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Serialization;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Timer = System.Timers.Timer;
 
@@ -20,7 +20,7 @@ namespace NitroxServer
     {
         private readonly Communication.NitroxServer server;
         private readonly WorldPersistence worldPersistence;
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
         private readonly WorldEntityManager worldEntityManager;
@@ -35,7 +35,7 @@ namespace NitroxServer
 
         public int Port => serverConfig?.ServerPort ?? -1;
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
+        public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
@@ -79,7 +79,7 @@ namespace NitroxServer
             return builder.ToString();
         }
 
-        public static ServerConfig ServerStartHandler()
+        public static SubnauticaServerConfig ServerStartHandler()
         {
             string saveDir = null;
             foreach (string arg in Environment.GetCommandLineArgs())
@@ -115,13 +115,13 @@ namespace NitroxServer
                     // Create new save file
                     saveDir = Path.Combine(OldWorldManager.SavesFolderDir, "My World");
                     Directory.CreateDirectory(saveDir);
-                    ServerConfig serverConfig = ServerConfig.Load(saveDir);
+                    SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(saveDir);
                     Log.Debug($"No save file was found, creating a new one...");
                 }
 
             }
 
-            return ServerConfig.Load(saveDir);
+            return SubnauticaServerConfig.Load(saveDir);
         }
 
         public void Save()

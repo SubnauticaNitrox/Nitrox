@@ -1,12 +1,11 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Serialization;
 using NitroxModel.Server;
 
-namespace NitroxServer.Serialization
+namespace NitroxModel.Serialization
 {
     [PropertyDescription("Server settings can be changed here")]
-    public class ServerConfig : NitroxConfig<ServerConfig>
+    public class SubnauticaServerConfig : NitroxConfig<SubnauticaServerConfig>
     {
         private int maxConnectionsSetting = 100;
 

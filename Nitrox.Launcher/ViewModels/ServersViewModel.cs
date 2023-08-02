@@ -7,8 +7,8 @@ using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 using ReactiveUI;
@@ -35,7 +35,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             //NOTE: This line below is a backup in case the CanExecute commands for the Start/Manage Server buttons don't end up working out
             //if (listing.Version < SaveDataUpgrade.MinimumSaveVersion || listing.Version > NitroxEnvironment.Version) continue;
 
-            ServerConfig server = ServerConfig.Load(Path.Combine(WorldManager.SavesFolderDir, listing.Name));
+            SubnauticaServerConfig server = SubnauticaServerConfig.Load(Path.Combine(WorldManager.SavesFolderDir, listing.Name));
             Servers.Add(new ServerEntry
             {
                 Name = server.SaveName,

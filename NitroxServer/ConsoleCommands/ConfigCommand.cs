@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
@@ -14,9 +14,9 @@ namespace NitroxServer.ConsoleCommands
     internal class ConfigCommand : Command
     {
         private readonly SemaphoreSlim configOpenLock = new(1);
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
 
-        public ConfigCommand(ServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
+        public ConfigCommand(SubnauticaServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
         {
             this.serverConfig = serverConfig;
         }

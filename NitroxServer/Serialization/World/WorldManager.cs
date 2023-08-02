@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NitroxModel.Helper;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World;
@@ -38,7 +39,7 @@ public static class WorldManager
                 }
                 
                 Version version;
-                ServerConfig serverConfig = ServerConfig.Load(folder);
+                SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(folder);
                 
                 string fileEnding = "json";
                 if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
@@ -90,7 +91,7 @@ public static class WorldManager
     {
         Directory.CreateDirectory(saveFileDirectory);
         
-        ServerConfig serverConfig = ServerConfig.Load(saveFileDirectory);
+        SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(saveFileDirectory);
         
         string fileEnding = "json";
         if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)

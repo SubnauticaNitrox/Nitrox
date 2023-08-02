@@ -11,15 +11,15 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Microsoft.VisualBasic.FileIO;
+using NitroxModel.Serialization;
 
 namespace NitroxLauncher.Pages
 {
     public partial class ServerPage : PageBase
     {
-        public ServerConfig Config;
+        public SubnauticaServerConfig Config;
 
         public bool IsNewWorld { get; private set; }
         private bool IsInSettings { get; set; }
@@ -66,7 +66,7 @@ namespace NitroxLauncher.Pages
                 SelectedWorldDirectory = dest;
             }
 
-            Config = ServerConfig.Load(SelectedWorldDirectory);
+            Config = SubnauticaServerConfig.Load(SelectedWorldDirectory);
             using (Config.Update(SelectedWorldDirectory))
             {
                 Config.SaveName = TBWorldName.Text;
@@ -102,7 +102,7 @@ namespace NitroxLauncher.Pages
 
         public void UpdateVisualWorldSettings()
         {
-            Config = ServerConfig.Load(SelectedWorldDirectory);
+            Config = SubnauticaServerConfig.Load(SelectedWorldDirectory);
 
             // Set the world settings values to the server.cfg values
             TBWorldName.Text = Path.GetFileName(SelectedWorldDirectory);
@@ -745,7 +745,7 @@ namespace NitroxLauncher.Pages
 
                 // Copy over targeted server.cfg file and ensure its serializer is set to JSON to prevent future errors
                 FileSystem.CopyFile(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"));
-                ServerConfig importedServerConfig = ServerConfig.Load(Path.Combine(SelectedWorldDirectory));
+                SubnauticaServerConfig importedServerConfig = SubnauticaServerConfig.Load(Path.Combine(SelectedWorldDirectory));
                 if (importedServerConfig.SerializerMode != ServerSerializerMode.JSON)
                 {
                     using (importedServerConfig.Update(SelectedWorldDirectory))
