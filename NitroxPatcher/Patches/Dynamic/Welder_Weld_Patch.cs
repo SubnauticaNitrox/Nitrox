@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -36,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 if (instruction.opcode.Equals(SWAP_INSTRUCTION_OPCODE) && instruction.operand.Equals(SWAP_INSTRUCTION_OPERAND))
                 {
                     /*
-                     * Swap 
+                     * Swap
                      * this.activeWeldTarget.AddHealth(this.healthPerWeld)
                      * with
                      * AddHealthOverride(Welder welder, float addHealth)
@@ -65,15 +64,12 @@ namespace NitroxPatcher.Patches.Dynamic
                 float newHealth = Math.Min(live.health + addHealth, live.maxHealth);
                 result = newHealth - num;
 
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-                NitroxId id = NitroxEntity.GetId(live.gameObject);
-
                 // For now, we only control the LiveMixin for vehicles (not even repair nodes at a cyclops)
                 // If we change that, this if should be removed!
                 Vehicle vehicle = live.GetComponent<Vehicle>();
-                if (vehicle)
+                if (vehicle && live.TryGetIdOrWarn(out NitroxId id))
                 {
-                    if (simulationOwnership.HasAnyLockType(id))
+                    if (Resolve<SimulationOwnership>().HasAnyLockType(id))
                     {
                         result = live.AddHealth(addHealth);
                     }

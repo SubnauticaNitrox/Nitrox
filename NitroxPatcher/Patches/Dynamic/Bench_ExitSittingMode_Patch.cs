@@ -25,13 +25,15 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return;
             }
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
-            // Request to be downgraded to a transient lock so we can still simulate the positioning.
-            Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            if (__instance.TryGetIdOrWarn(out NitroxId id))
+            {
+                // Request to be downgraded to a transient lock so we can still simulate the positioning.
+                Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
 
-            Resolve<LocalPlayer>().AnimationChange(AnimChangeType.BENCH, AnimChangeState.OFF);
-            __instance.StartCoroutine(ResetAnimationDelayed(__instance.standUpCinematicController.interpolationTimeOut));
+                Resolve<LocalPlayer>().AnimationChange(AnimChangeType.BENCH, AnimChangeState.OFF);
+                __instance.StartCoroutine(ResetAnimationDelayed(__instance.standUpCinematicController.interpolationTimeOut));
+            }
         }
 
         private static IEnumerator ResetAnimationDelayed(float delay)

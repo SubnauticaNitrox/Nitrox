@@ -24,7 +24,7 @@ namespace NitroxClient.GameLogic
 
         public void RequestRocketLaunch(Rocket rocket)
         {
-            if (NitroxEntity.TryGetEntityFrom(rocket.gameObject, out NitroxEntity entity))
+            if (rocket.TryGetNitroxEntity(out NitroxEntity entity))
             {
                 packetSender.Send(new RocketLaunch(entity.Id));
             }

@@ -20,7 +20,7 @@ public class BreakableResource_BreakIntoResources_Patch : NitroxPatch, IDynamicP
 
     public static void Prefix(BreakableResource __instance)
     {
-        if (!NitroxEntity.TryGetEntityFrom(__instance.gameObject, out NitroxEntity destroyedEntity))
+        if (!__instance.TryGetNitroxEntity(out NitroxEntity destroyedEntity))
         {
             Log.Warn($"[{nameof(BreakableResource_BreakIntoResources_Patch)}] Could not find {nameof(NitroxEntity)} for breakable entity {__instance.gameObject.GetFullHierarchyPath()}.");
             return;

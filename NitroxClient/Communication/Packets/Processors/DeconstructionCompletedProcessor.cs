@@ -4,6 +4,7 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -27,7 +28,7 @@ public class DeconstructionCompletedProcessor : ClientPacketProcessor<Deconstruc
             {
                 TaskResult<bool> result = new ();
                 TaskResult<string> reason = new ();
-                constructable.DeconstructAsync(result, reason);
+                CoroutineHost.StartCoroutine(constructable.DeconstructAsync(result, reason));
             }
         }
         else

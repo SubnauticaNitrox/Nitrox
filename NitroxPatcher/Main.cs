@@ -1,5 +1,6 @@
 ﻿extern alias JB;
 global using NitroxModel.Logger;
+global using static NitroxClient.Helpers.NitroxEntityExtensions;
 using System;
 using System.IO;
 using System.Reflection;
@@ -80,7 +81,7 @@ public static class Main
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void Init()
     {
-        Log.Setup(inGameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
+        Log.Setup(gameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
         // Capture unity errors to be logged by our logging framework.
         Application.logMessageReceived += (condition, stackTrace, type) =>
         {

@@ -1,7 +1,7 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -16,7 +16,11 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Creature __instance, ref CreatureAction __result)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            if (!__instance.TryGetNitroxId(out NitroxId id))
+            {
+                Log.WarnOnce($"[Creature_ChooseBestAction_Patch] Couldn't find an id on {__instance.GetFullHierarchyPath()}");
+                return true;
+            }
 
             if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {
@@ -31,7 +35,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Creature __instance, ref CreatureAction __result)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            if (!__instance.TryGetIdOrWarn(out NitroxId id))
+            {
+                return;
+            }
 
             if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {
@@ -44,7 +51,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:false); // Postfix disabled for the moment as it has no functionality
         }
     }
 }

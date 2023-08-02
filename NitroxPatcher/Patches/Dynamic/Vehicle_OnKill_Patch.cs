@@ -2,7 +2,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -14,8 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(Vehicle __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
+            if (__instance.TryGetIdOrWarn(out NitroxId id) && Resolve<SimulationOwnership>().HasExclusiveLock(id))
             {
                 Resolve<SimulationOwnership>().StopSimulatingEntity(id);
                 Resolve<Vehicles>().BroadcastDestroyedVehicle(id);

@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -43,8 +42,10 @@ public class FireExtinguisherHolder_TakeTankAsync_Patch : NitroxPatch, IDynamicP
         // We force this state earlier because it'll be read by the metadata extractor
         holder.hasTank = false;
 
-        NitroxId id = NitroxEntity.GetId(holder.gameObject);
-        Resolve<Entities>().EntityMetadataChanged(holder, id);
+        if (holder.TryGetIdOrWarn(out NitroxId id))
+        {
+            Resolve<Entities>().EntityMetadataChanged(holder, id);
+        }
     }
 
     public override void Patch(Harmony harmony)
@@ -52,4 +53,3 @@ public class FireExtinguisherHolder_TakeTankAsync_Patch : NitroxPatch, IDynamicP
         PatchTranspiler(harmony, TARGET_METHOD);
     }
 }
-

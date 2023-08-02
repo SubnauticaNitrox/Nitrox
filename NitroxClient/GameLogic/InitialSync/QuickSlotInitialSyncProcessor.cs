@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -20,14 +21,14 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
         int nonEmptySlots = 0;
 
         Dictionary<NitroxId, InventoryItem> inventoryItemsById = GetItemsById();
- 
+
         for (int i = 0; i < packet.QuickSlotsBindingIds.Length; i++)
         {
             waitScreenItem.SetProgress(i, packet.QuickSlotsBindingIds.Length);
 
-            NitroxId id = packet.QuickSlotsBindingIds[i];
+            Optional<NitroxId> opId = packet.QuickSlotsBindingIds[i];
 
-            if (id != null && inventoryItemsById.TryGetValue(id, out InventoryItem inventoryItem) )
+            if (opId.HasValue && inventoryItemsById.TryGetValue(opId.Value, out InventoryItem inventoryItem) )
             {
                 Inventory.main.quickSlots.binding[i] = inventoryItem;
                 Inventory.main.quickSlots.NotifyBind(i, state: true);
@@ -51,10 +52,9 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
 
         foreach (InventoryItem inventoryItem in Inventory.main.container)
         {
-            if (inventoryItem.item)
+            if (inventoryItem.item.TryGetIdOrWarn(out NitroxId itemId))
             {
-                NitroxId id = NitroxEntity.GetId(inventoryItem.item.gameObject);
-                itemsById.Add(id, inventoryItem);
+                itemsById.Add(itemId, inventoryItem);
             }
         }
 

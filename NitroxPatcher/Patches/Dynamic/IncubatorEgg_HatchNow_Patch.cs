@@ -39,14 +39,14 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxEntity serverKnownParent = egg.GetComponentInParent<NitroxEntity>();
             Validate.NotNull(serverKnownParent, "Could not find a server known parent for incubator egg");
 
-            // Only spawn the babies if we are simulating the main incubator platform. 
+            // Only spawn the babies if we are simulating the main incubator platform.
             if (simulationOwnership.HasAnyLockType(serverKnownParent.Id))
             {
                 GameObject baby = UnityEngine.Object.Instantiate<GameObject>(egg.seaEmperorBabyPrefab);
                 baby.transform.position = egg.attachPoint.transform.position;
                 baby.transform.localRotation = Quaternion.identity;
 
-                NitroxId babyId = NitroxEntity.GetId(baby);
+                NitroxId babyId = NitroxEntity.GenerateNewId(baby);
 
                 WorldEntity entity = new WorldEntity(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", false, babyId, null, false, null);
                 NitroxServiceLocator.LocateService<Entities>().BroadcastEntitySpawnedByClient(entity);

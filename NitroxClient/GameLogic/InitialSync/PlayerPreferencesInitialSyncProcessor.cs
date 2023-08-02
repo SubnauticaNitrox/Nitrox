@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -15,12 +14,8 @@ namespace NitroxClient.GameLogic.InitialSync;
 
 public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
 {
-    private readonly IPacketSender packetSender;
-
-    public PlayerPreferencesInitialSyncProcessor(IPacketSender packetSender)
+    public PlayerPreferencesInitialSyncProcessor()
     {
-        this.packetSender = packetSender;
-
         // list of processors which may cause the spawn of Signal pings
         DependentProcessors.AddRange(new[]
         {
@@ -149,6 +144,6 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     private static IEnumerator DelayPingKeyDetection(Action delayedAction)
     {
         yield return Yielders.WaitForHalfSecond;
-        delayedAction();
+        delayedAction?.Invoke();
     }
 }

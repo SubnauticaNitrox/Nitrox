@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -19,9 +18,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsLightingPanel __instance, bool __state)
         {
-            if (__state != __instance.lightingOn)
+            if (__state != __instance.lightingOn && __instance.TryGetIdOrWarn(out NitroxId id))
             {
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }
         }

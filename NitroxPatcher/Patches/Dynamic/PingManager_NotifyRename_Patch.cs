@@ -2,32 +2,33 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
 {
-    public class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PingManager.NotifyRename(default(PingInstance)));
+
+    public static void Postfix(PingInstance instance)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PingManager.NotifyRename(default(PingInstance)));
-
-        public static void Postfix(PingInstance instance)
+        // Only beacons are synced here (not mission, vehicle or other signals) because spawning is handled differently for non-droppable entities
+        if (!instance || !instance.GetComponent<Beacon>())
         {
-            // Only beacons are synced here (not mission, vehicle or other signals) because spawning is handled differently for non-droppable entities
-            if (!instance || !instance.GetComponent<Beacon>())
-            {
-                return;
-            }
-
-            PingRenamed packet = new(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+            return;
         }
 
-        public override void Patch(Harmony harmony)
+        if (instance.TryGetIdOrWarn(out NitroxId id))
         {
-            PatchPostfix(harmony, TARGET_METHOD);
+            PingRenamed packet = new(id, instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
+            Resolve<IPacketSender>().Send(packet);
         }
+    }
+
+    public override void Patch(Harmony harmony)
+    {
+        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

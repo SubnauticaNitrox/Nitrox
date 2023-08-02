@@ -56,7 +56,7 @@ public class Base_SetFaceType_Patch : NitroxPatch, IDynamicPatch
             GameObject faceObject = FindFaceObject(__instance, face, oldFaceType);
             if (faceObject)
             {
-                if (NitroxEntity.TryGetEntityFrom(faceObject, out NitroxEntity entity))
+                if (faceObject.TryGetNitroxEntity(out NitroxEntity entity))
                 {
                     // To make sure we don't accidentally delete some part, we'll add another check
                     Base_CopyFrom_Patch.DeletedFaces[__instance].Add(entity.Id);

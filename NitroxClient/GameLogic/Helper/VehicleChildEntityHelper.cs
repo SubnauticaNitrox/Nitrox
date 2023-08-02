@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper;
 
-public class VehicleChildEntityHelper
+public static class VehicleChildEntityHelper
 {
     private static readonly HashSet<Type> interactiveChildTypes = new HashSet<Type> // we must sync ids of these types when creating vehicles (mainly cyclops)
     {
@@ -33,18 +33,17 @@ public class VehicleChildEntityHelper
     public static void PopulateChildren(NitroxId vehicleId, string vehiclePath, List<Entity> toPopulate, GameObject current)
     {
         string currentPath = current.GetFullHierarchyPath();
-        string relativePathName = currentPath.Replace(vehiclePath, "")
-                                             .TrimStart('/');
+        string relativePathName = currentPath.Replace(vehiclePath, string.Empty).TrimStart('/');
 
-        if (relativePathName.Length > 0) 
+        if (relativePathName.Length > 0)
         {
             // generate PathBasedChildEntities for gameObjects under the main vehicle.
             foreach (MonoBehaviour mono in current.GetComponents<MonoBehaviour>())
             {
+                // We don't to accidentally tag this game object unless we know it has an applicable mono
                 if (interactiveChildTypes.Contains(mono.GetType()))
                 {
-                    // We don't to accidentally tag this game object unless we know it has an applicable mono
-                    NitroxId id = NitroxEntity.GetId(mono.gameObject);
+                    NitroxId id = NitroxEntity.GetIdOrGenerateNew(mono.gameObject);
 
                     PathBasedChildEntity pathBasedChildEntity = new(relativePathName, id, null, null, vehicleId, new());
                     toPopulate.Add(pathBasedChildEntity);
@@ -68,4 +67,3 @@ public class VehicleChildEntityHelper
         }
     }
 }
-

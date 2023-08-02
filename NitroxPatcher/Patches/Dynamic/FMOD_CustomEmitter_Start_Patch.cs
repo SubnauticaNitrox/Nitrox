@@ -3,6 +3,7 @@ using FMOD.Studio;
 using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 
@@ -28,14 +29,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            if (!__instance.TryGetComponent(out NitroxEntity entity))
+            if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
             {
-                entity = __instance.GetComponentInParent<NitroxEntity>();
-                if (!entity)
-                {
-                    Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
-                    return;
-                }
+                Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
+                return;
             }
 
             if (!entity.gameObject.TryGetComponent(out FMODEmitterController fmodController))

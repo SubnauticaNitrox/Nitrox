@@ -1,35 +1,33 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class CyclopsExternalDamageManager_CreatePoint_Patch : NitroxPatch, IDynamicPatch
 {
-    class CyclopsExternalDamageManager_CreatePoint_Patch : NitroxPatch, IDynamicPatch
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsExternalDamageManager t) => t.CreatePoint());
+
+    public static bool Prefix(CyclopsExternalDamageManager __instance, out bool __state)
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsExternalDamageManager t) => t.CreatePoint());
+        // Block from creating points if they aren't the owner of the sub
+        __state = __instance.subRoot.TryGetNitroxId(out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id);
 
-        public static bool Prefix(CyclopsExternalDamageManager __instance, out bool __state)
+        return __state;
+    }
+
+    public static void Postfix(CyclopsExternalDamageManager __instance, bool __state)
+    {
+        if (__state)
         {
-            // Block from creating points if they aren't the owner of the sub
-            __state = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.subRoot.gameObject));
-
-            return __state;
+            Resolve<Cyclops>().OnCreateDamagePoint(__instance.subRoot);
         }
+    }
 
-        public static void Postfix(CyclopsExternalDamageManager __instance, bool __state)
-        {
-            if (__state)
-            {
-                NitroxServiceLocator.LocateService<Cyclops>().OnCreateDamagePoint(__instance.subRoot);
-            }
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
-        }
+    public override void Patch(Harmony harmony)
+    {
+        PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
     }
 }

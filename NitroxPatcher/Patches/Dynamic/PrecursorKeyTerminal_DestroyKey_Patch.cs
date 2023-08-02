@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -17,9 +16,8 @@ public class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(PrecursorKeyTerminal __instance)
     {
-        if (__instance.keyObject)
+        if (__instance.keyObject.TryGetIdOrWarn(out NitroxId id))
         {
-            NitroxId id = NitroxEntity.GetId(__instance.keyObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

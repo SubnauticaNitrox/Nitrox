@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -18,9 +17,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsFireSuppressionSystemButton __instance)
         {
-            SubRoot cyclops = __instance.subRoot;
-            NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
+            if (__instance.subRoot.TryGetIdOrWarn(out NitroxId id))
+            {
+                NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
+            }
         }
 
         public override void Patch(Harmony harmony)

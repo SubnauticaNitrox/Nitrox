@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -40,9 +39,8 @@ public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 
     private static void Callback(Pickupable pickupable)
     {
-        if (pickupable)
+        if (pickupable.TryGetIdOrWarn(out NitroxId id))
         {
-            NitroxId id = NitroxEntity.GetId(pickupable.gameObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

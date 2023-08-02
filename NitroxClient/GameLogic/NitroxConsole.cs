@@ -4,7 +4,6 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
@@ -55,7 +54,7 @@ namespace NitroxClient.GameLogic
         {
             TechType techType = CraftData.GetTechType(gameObject);
 
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
 
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(null, DayNightCycle.main.timePassedAsFloat, gameObject.transform.ToLocalDto(), "", false, id, techType.ToDto(), null);
             VehicleChildEntityHelper.PopulateChildren(id, gameObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, gameObject);
@@ -70,12 +69,10 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private void SpawnItem(GameObject gameObject)
         {
-            Optional<Pickupable> opitem = Optional.OfNullable(gameObject.GetComponent<Pickupable>());
-
-            if (opitem.HasValue)
+            if (gameObject.TryGetComponent(out Pickupable pickupable))
             {
-                Log.Debug($"Spawning item {opitem.Value.GetTechName()} at {gameObject.transform.position}");
-                item.Dropped(gameObject, opitem.Value.GetTechType());
+                Log.Debug($"Spawning item {pickupable.GetTechName()} at {gameObject.transform.position}");
+                item.Dropped(gameObject, pickupable.GetTechType());
             }
         }
     }

@@ -1,8 +1,8 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -13,7 +13,7 @@ public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(QuickSlots __instance)
     {
-        NitroxId[] slotItemIds = new NitroxId[__instance.binding.Length];
+        Optional<NitroxId>[] slotItemIds = new Optional<NitroxId>[__instance.binding.Length];
 
         for (int i = 0; i < __instance.binding.Length; i++)
         {
@@ -21,7 +21,11 @@ public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
 
             if (inventoryItem != null && inventoryItem.item)
             {
-                slotItemIds[i] = NitroxEntity.GetId(inventoryItem.item.gameObject);
+                slotItemIds[i] = inventoryItem.item.GetId();
+            }
+            else
+            {
+                slotItemIds[i] = Optional.Empty;
             }
         }
 

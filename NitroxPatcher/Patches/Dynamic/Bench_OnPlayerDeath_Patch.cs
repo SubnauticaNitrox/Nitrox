@@ -16,10 +16,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Bench __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            if (__instance.TryGetIdOrWarn(out NitroxId id))
+            {
+                // Request to be downgraded to a transient lock so we can still simulate the positioning.
+                simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            }
 
-            // Request to be downgraded to a transient lock so we can still simulate the positioning.
-            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
             localPlayer.AnimationChange(AnimChangeType.BENCH, AnimChangeState.UNSET);
         }
 

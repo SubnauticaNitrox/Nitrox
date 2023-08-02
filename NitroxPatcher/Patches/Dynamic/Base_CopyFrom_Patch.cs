@@ -20,17 +20,15 @@ public class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(Base __instance, Base sourceBase)
     {
-        NitroxEntity entity = sourceBase.GetComponent<NitroxEntity>();
-
         // The game will clone the base when doing things like rebuilding gemometry or placing a new
         // piece.  The copy is normally between a base ghost and a base - and vise versa.  When building
         // a face piece, such as a window, this will clone a ghost base to stage the change which is later
         // integrated into the real base.  For now, prevent guid copies to these staging ghost bases; however,
         // there is still a pending edge case when a base converts to a BaseGhost for deconstruction.
-        if (entity != null && __instance.gameObject.name != "BaseGhost")
+        if (__instance.gameObject.name != "BaseGhost" && sourceBase.TryGetNitroxId(out NitroxId sourceId))
         {
-            Log.Debug($"Transferring base id : {entity.Id} from {sourceBase.name} to {__instance.name}");
-            NitroxEntity.SetNewId(__instance.gameObject, entity.Id);
+            Log.Debug($"Transferring base id : {sourceId} from {sourceBase.name} to {__instance.name}");
+            NitroxEntity.SetNewId(__instance.gameObject, sourceId);
         }
 
         if (TrackDeletedFaces)
