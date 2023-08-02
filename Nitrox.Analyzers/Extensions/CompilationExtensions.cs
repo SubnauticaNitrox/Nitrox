@@ -13,6 +13,6 @@ internal static class CompilationExtensions
     /// <param name="assemblyNameWithoutDll">Assembly name, case sensitive.</param>
     /// <param name="fullTypeName">Type name include the namespace, case sensitive.</param>
     /// <returns></returns>
-    public static INamedTypeSymbol HasType(this Compilation compilation, string assemblyNameWithoutDll, string fullTypeName) =>
+    public static INamedTypeSymbol GetType(this Compilation compilation, string assemblyNameWithoutDll, string fullTypeName) =>
         compilation.GetTypesByMetadataName(fullTypeName).FirstOrDefault(a => a.ContainingAssembly.Name.Equals(assemblyNameWithoutDll, StringComparison.Ordinal));
 }

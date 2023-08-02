@@ -26,7 +26,7 @@ internal sealed class HarmonyRegisterPatchGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Setup compilation pipeline for assemblies that use NitroxPatch.
-        var compilationPipeline = context.CompilationProvider.Select((c, _) => c.HasType("NitroxPatcher", "NitroxPatcher.Patches.NitroxPatch") != null);
+        var compilationPipeline = context.CompilationProvider.Select((c, _) => c.GetType("NitroxPatcher", "NitroxPatcher.Patches.NitroxPatch") != null);
         // Look for partial types inheriting our NitroxPatch type, selecting all the harmony methods and target method infos.
         var harmonyMethodsWithTargetMethods = context.SyntaxProvider
                                                      .CreateSyntaxProvider(
