@@ -19,6 +19,7 @@ namespace NitroxModel.Logger
     public static class Log
     {
         private static ILogger logger = Serilog.Core.Logger.None;
+        private static ILogger inGameLogger = Serilog.Core.Logger.None;
         private static readonly HashSet<int> logOnceCache = new();
         private static bool isSetup;
 
@@ -31,13 +32,14 @@ namespace NitroxModel.Logger
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
 
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true)
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true)
         {
             if (isSetup)
             {
                 Warn($"{nameof(Log)} setup should only be executed once.");
                 return;
             }
+
             isSetup = true;
             NetDebug.Logger = new LiteNetLibLogger();
 
@@ -53,38 +55,36 @@ namespace NitroxModel.Logger
             {
                 loggerConfig = loggerConfig.WriteTo.AppendFileSink();
             }
-            if (inGameLogger != null)
-            {
-                loggerConfig = loggerConfig.WriteTo.AppendGameSink(inGameLogger);
-            }
             logger = loggerConfig.CreateLogger();
-        }
 
-        private static LoggerConfiguration AppendGameSink(this LoggerSinkConfiguration sinkConfig, InGameLogger inGameLogger) => sinkConfig.Logger(cnf =>
-        {
-            cnf
-                .Enrich.FromLogContext()
-                .WriteTo.Conditional(evt => evt.Properties.ContainsKey("game"), configuration => configuration.Message(inGameLogger.Log));
-        });
-
-        private static LoggerConfiguration AppendFileSink(this LoggerSinkConfiguration sinkConfig)
-        {
-            return sinkConfig.Logger(cnf =>
+            if (gameLogger != null)
             {
-                cnf.Enrich.FromLogContext()
-                   .WriteTo
-#if DEBUG
-                   .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
-#else
-                                            .Async((a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
-#endif
-                                                                                                   outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
-                                                                                                   rollingInterval: RollingInterval.Day,
-                                                                                                   retainedFileCountLimit: 10,
-                                                                                                   fileSizeLimitBytes: 200000000, // 200MB
-                                                                                                   shared: true)));
-            });
+                inGameLogger = new LoggerConfiguration()
+                               .WriteTo.Logger(cnf => cnf.Enrich.FromLogContext().WriteTo.Message(gameLogger.Log))
+                               .CreateLogger();
+            }
         }
+
+        private static LoggerConfiguration AppendFileSink(this LoggerSinkConfiguration sinkConfig) => sinkConfig.Logger(cnf =>
+        {
+            static void AppendFileWriteFormat(string filePath, LoggerSinkConfiguration config)
+            {
+                config.File(filePath,
+                            outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
+                            rollingInterval: RollingInterval.Day,
+                            retainedFileCountLimit: 10,
+                            fileSizeLimitBytes: 200000000, // 200MB
+                            shared: true);
+            }
+
+            cnf.Enrich.FromLogContext()
+               .WriteTo
+#if DEBUG
+               .Map(nameof(PlayerName), "", (playerName, sinkCnf) => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"), sinkCnf));
+#else
+               .Async(a => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"), a));
+#endif
+        });
 
         private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate) => sinkConfig.Logger(cnf =>
         {
@@ -93,7 +93,7 @@ namespace NitroxModel.Logger
                 false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
                 _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
             };
- 
+
             if (makeAsync)
             {
                 cnf.WriteTo.Async(a => a.ColoredConsole(outputTemplate: consoleTemplate));
@@ -166,17 +166,9 @@ namespace NitroxModel.Logger
             logOnceCache.Add(hash);
         }
 
-        public static void InGame(object message)
-        {
-            InGame(message?.ToString());
-        }
-
         public static void InGame(string message)
         {
-            using (LogContext.PushProperty("game", true))
-            {
-                logger.Information(message);
-            }
+            inGameLogger.Information(message);
         }
 
         public static void Write(LogLevel level, string message)
@@ -225,15 +217,6 @@ namespace NitroxModel.Logger
             }
         }
 
-        public static void InGameSensitive(string message, params object[] args)
-        {
-            using (LogContext.Push(SensitiveEnricher.Instance))
-            using (LogContext.PushProperty("game", true))
-            {
-                logger.Information(message, args);
-            }
-        }
-
         public static void ErrorUnity(string message)
         {
             using (LogContext.PushProperty("IsUnity", "-UNITY"))
@@ -256,6 +239,7 @@ namespace NitroxModel.Logger
             {
                 Info($"Setting player name to {value}");
             }
+
             LogContext.PushProperty(nameof(PlayerName), @$"[{value}]");
         }
 
@@ -278,10 +262,12 @@ namespace NitroxModel.Logger
             {
                 return "server";
             }
+
             if (Contains(loggerName, "launch"))
             {
                 return "launcher";
             }
+
             return "game";
         }
 
@@ -319,6 +305,7 @@ namespace NitroxModel.Logger
                     {
                         continue;
                     }
+
                     yield return (prop.Key, new string('*', prop.Value.ToString().Length));
                 }
             }

@@ -1,4 +1,5 @@
 global using NitroxModel.Logger;
+global using NitroxClient.Helpers;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
@@ -23,7 +24,6 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxClient.Helpers;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;

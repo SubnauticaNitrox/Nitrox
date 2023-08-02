@@ -57,8 +57,9 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         if (subRoot && !subRoot.isBase)
         {
             // Rotate relative player position relative to the subroot (else there are problems with respawning)
-            Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
-            currentPosition = currentPosition - subRoot.transform.position;
+            Transform subRootTransform = subRoot.transform;
+            Quaternion undoVehicleAngle = subRootTransform.rotation.GetInverse();
+            currentPosition = currentPosition - subRootTransform.position;
             currentPosition = undoVehicleAngle * currentPosition;
             bodyRotation = undoVehicleAngle * bodyRotation;
             aimingRotation = undoVehicleAngle * aimingRotation;
@@ -87,16 +88,22 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         bool appliedThrottle = false;
         Vector3 leftArmPosition = new(0, 0, 0);
         Vector3 rightArmPosition = new(0, 0, 0);
-        float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
+        float steeringWheelYaw, steeringWheelPitch;
 
         if (vehicle)
         {
-            id = NitroxEntity.GetId(vehicle.gameObject);
-            position = vehicle.gameObject.transform.position;
-            rotation = vehicle.gameObject.transform.rotation;
+            //TODO: We should cache this (and other MBs) somehow because the method is called very frequently
+            if (!vehicle.TryGetIdOrWarn(out id))
+            {
+                return Optional.Empty;
+            }
+
+            Transform vehicleTransform = vehicle.transform;
+            position = vehicleTransform.position;
+            rotation = vehicleTransform.rotation;
             techType = CraftData.GetTechType(vehicle.gameObject);
 
-            Rigidbody rigidbody = vehicle.gameObject.GetComponent<Rigidbody>();
+            Rigidbody rigidbody = vehicle.GetComponent<Rigidbody>();
 
             velocity = rigidbody.velocity;
             angularVelocity = rigidbody.angularVelocity;
@@ -107,11 +114,11 @@ public class PlayerMovementBroadcaster : MonoBehaviour
 
             // Vehicles (or the SeaMoth at least) do not have special throttle animations. Instead, these animations are always playing because the player can't even see them (unlike the cyclops which has cameras).
             // So, we need to hack in and try to figure out when thrust needs to be applied.
-            if (vehicle && AvatarInputHandler.main.IsEnabled())
+            if (AvatarInputHandler.main.IsEnabled())
             {
                 if (techType == TechType.Seamoth)
                 {
-                    bool flag = vehicle.transform.position.y < Ocean.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
+                    bool flag = position.y < Ocean.GetOceanLevel() && position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
                     appliedThrottle = flag && GameInput.GetMoveDirection().sqrMagnitude > .1f;
                 }
                 else if (techType == TechType.Exosuit)
@@ -128,17 +135,23 @@ public class PlayerMovementBroadcaster : MonoBehaviour
                         eulerAngles.x = MainCamera.camera.transform.eulerAngles.x;
                         Quaternion quaternion = Quaternion.Euler(eulerAngles.x, eulerAngles.y, eulerAngles.z);
 
-                        leftArmPosition = leftAim.transform.position = MainCamera.camera.transform.position + quaternion * Vector3.forward * 100f;
-                        rightArmPosition = rightAim.transform.position = MainCamera.camera.transform.position + quaternion * Vector3.forward * 100f;
+                        Vector3 mainCameraPosition = MainCamera.camera.transform.position;
+                        leftArmPosition = leftAim.transform.position = mainCameraPosition + quaternion * Vector3.forward * 100f;
+                        rightArmPosition = rightAim.transform.position = mainCameraPosition + quaternion * Vector3.forward * 100f;
                     }
                 }
             }
         }
         else if (sub && Player.main.isPiloting)
         {
-            id = NitroxEntity.GetId(sub.gameObject);
-            position = sub.gameObject.transform.position;
-            rotation = sub.gameObject.transform.rotation;
+            if (!sub.TryGetIdOrWarn(out id))
+            {
+                return Optional.Empty;
+            }
+
+            Transform subTransform = sub.transform;
+            position = subTransform.position;
+            rotation = subTransform.rotation;
             Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
             velocity = rigidbody.velocity;
             angularVelocity = rigidbody.angularVelocity;
@@ -171,4 +184,3 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         );
     }
 }
-

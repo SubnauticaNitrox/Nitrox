@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,7 +19,7 @@ public class PersistedPlayerData
     public List<NitroxTechType> UsedItems { get; set; } = new List<NitroxTechType>();
 
     [DataMember(Order = 3)]
-    public NitroxId[] QuickSlotsBindingIds { get; set; } = new NitroxId[0];
+    public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; } = Array.Empty<Optional<NitroxId>>();
 
     [DataMember(Order = 4)]
     public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();

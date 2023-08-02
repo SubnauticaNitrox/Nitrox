@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -13,8 +12,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsShieldButton __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
-            Resolve<Cyclops>().BroadcastMetadataChange(id);
+            if (__instance.subRoot.TryGetIdOrWarn(out NitroxId id))
+            {
+                Resolve<Cyclops>().BroadcastMetadataChange(id);
+            }
         }
 
         public override void Patch(Harmony harmony)

@@ -8,7 +8,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
     /*
      * When a Alien Containment Unit is created, multiple objects are spawned: the main world object (WaterParkPiece) and
      * the contained WaterPark as a separate game object (WaterParkPiece, also known as a 'module').  The WaterPark in turn
-     * contains a Planter.  When the object spawns, we use this class to set a deterministic id seeded by the parent id. 
+     * contains a Planter.  When the object spawns, we use this class to set a deterministic id seeded by the parent id.
      * This keeps inventory actions in sync and allows for persistent storage of each container's contents.
      */
     public class BaseRoomWaterParkProcessor : BasePieceSpawnProcessor
@@ -22,7 +22,10 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
-            NitroxId pieceId = NitroxEntity.GetId(finishedPiece);
+            if (!finishedPiece.TryGetIdOrWarn(out NitroxId pieceId))
+            {
+                return;
+            }
 
             WaterParkGeometry waterParkPiece = finishedPiece.GetComponent<WaterParkGeometry>();
             if (!waterParkPiece)

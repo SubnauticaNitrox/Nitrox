@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -17,9 +16,13 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(uGUI_SignInput __instance)
         {
             GameObject gameObject = __instance.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
-            NitroxId id = NitroxEntity.GetId(gameObject);
+
+            if (!gameObject.TryGetIdOrWarn(out NitroxId id))
+            {
+                return;
+            }
+
             TechTag tag = gameObject.GetComponent<TechTag>();
-            
             switch (tag.type)
             {
                 case TechType.SmallStorage:

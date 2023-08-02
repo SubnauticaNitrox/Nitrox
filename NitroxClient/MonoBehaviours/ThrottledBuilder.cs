@@ -16,6 +16,7 @@ using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.MonoBehaviours
@@ -66,13 +67,14 @@ namespace NitroxClient.MonoBehaviours
             {
                 BuildEvent currentEvent = buildEvents.Dequeue();
 
-                try
+                TaskResult<Exception> exceptionResult = new();
+                yield return CoroutineUtils.YieldSafe(ActionBuildEvent(currentEvent), exceptionResult);
+
+                Exception exception = exceptionResult.Get();
+                if (exception != null)
                 {
-                    ActionBuildEvent(currentEvent);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error($"Error processing buildEvent in ThrottledBuilder{ex}");
+                    Log.Error(exception, "Error processing buildEvent in ThrottledBuilder");
+                    yield break;
                 }
 
                 if (currentEvent.RequiresFreshFrame() || buildEvents.NextEventRequiresFreshFrame())

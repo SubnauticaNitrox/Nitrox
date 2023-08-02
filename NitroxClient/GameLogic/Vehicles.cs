@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -13,216 +11,225 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic
+namespace NitroxClient.GameLogic;
+
+public class Vehicles
 {
-    public class Vehicles
+    private readonly IPacketSender packetSender;
+    private readonly IMultiplayerSession multiplayerSession;
+
+    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
     {
-        private readonly IPacketSender packetSender;
-        private readonly PlayerManager playerManager;
-        private readonly IMultiplayerSession multiplayerSession;
-        private readonly SimulationOwnership simulationOwnership;
+        this.packetSender = packetSender;
+        this.multiplayerSession = multiplayerSession;
+    }
 
-        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnership)
+    public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
+    {
+        Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(vehicleModel.Id);
+        Vehicle vehicle = null;
+        SubRoot subRoot = null;
+
+        if (opGameObject.HasValue)
         {
-            this.packetSender = packetSender;
-            this.playerManager = playerManager;
-            this.multiplayerSession = multiplayerSession;
-            this.simulationOwnership = simulationOwnership;
-        }
+            Rocket rocket = opGameObject.Value.GetComponent<Rocket>();
+            vehicle = opGameObject.Value.GetComponent<Vehicle>();
+            subRoot = opGameObject.Value.GetComponent<SubRoot>();
 
-        public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
-        {
-            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(vehicleModel.Id);
-            Vehicle vehicle = null;
-            SubRoot subRoot = null;
+            MultiplayerVehicleControl mvc = null;
 
-            if (opGameObject.HasValue)
+            if (subRoot)
             {
-                Rocket rocket = opGameObject.Value.GetComponent<Rocket>();
-                vehicle = opGameObject.Value.GetComponent<Vehicle>();
-                subRoot = opGameObject.Value.GetComponent<SubRoot>();
-
-                MultiplayerVehicleControl mvc = null;
-
-                if (subRoot)
+                mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
+            }
+            else if (vehicle)
+            {
+                if (vehicle.docked)
                 {
-                    mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
+                    Log.Debug($"For vehicle {vehicleModel.Id} position update while docked, will not execute");
+                    return;
                 }
-                else if (vehicle)
+
+                switch (vehicle)
                 {
-                    if (vehicle.docked)
+                    case SeaMoth seamoth:
                     {
-                        Log.Debug($"For vehicle {vehicleModel.Id} position update while docked, will not execute");
-                        return;
+                        mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
+                        break;
                     }
-
-                    switch (vehicle)
+                    case Exosuit exosuit:
                     {
-                        case SeaMoth seamoth:
-                            {
-                                mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
-                                break;
-                            }
-                        case Exosuit exosuit:
-                            {
-                                mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
+                        mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
 
-                                if (vehicleModel is ExosuitMovementData exoSuitMovement)
-                                {
-                                    mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
-                                }
-                                else
-                                {
-                                    Log.Error($"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
-                                }
-                                break;
-                            }
+                        if (vehicleModel is ExosuitMovementData exoSuitMovement)
+                        {
+                            mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
+                        }
+                        else
+                        {
+                            Log.Error($"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
+                        }
+
+                        break;
                     }
-
-                }
-                else if (rocket)
-                {
-                    rocket.transform.position = vehicleModel.Position.ToUnity();
-                    rocket.transform.rotation = vehicleModel.Rotation.ToUnity();
-                }
-
-                if (mvc)
-                {
-                    mvc.SetPositionVelocityRotation(
-                        vehicleModel.Position.ToUnity(),
-                        vehicleModel.Velocity.ToUnity(),
-                        vehicleModel.Rotation.ToUnity(),
-                        vehicleModel.AngularVelocity.ToUnity()
-                    );
-                    mvc.SetThrottle(vehicleModel.AppliedThrottle);
-                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
                 }
             }
-
-            if (player.HasValue)
+            else if (rocket)
             {
-                RemotePlayer playerInstance = player.Value;
-                playerInstance.SetVehicle(vehicle);
-                playerInstance.SetSubRoot(subRoot);
-                playerInstance.SetPilotingChair(subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>());
-                playerInstance.AnimationController.UpdatePlayerAnimations = false;
+                rocket.transform.position = vehicleModel.Position.ToUnity();
+                rocket.transform.rotation = vehicleModel.Rotation.ToUnity();
+            }
+
+            if (mvc)
+            {
+                mvc.SetPositionVelocityRotation(
+                    vehicleModel.Position.ToUnity(),
+                    vehicleModel.Velocity.ToUnity(),
+                    vehicleModel.Rotation.ToUnity(),
+                    vehicleModel.AngularVelocity.ToUnity()
+                );
+                mvc.SetThrottle(vehicleModel.AppliedThrottle);
+                mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
             }
         }
 
-        public void BroadcastDestroyedVehicle(NitroxId id)
+        if (player.HasValue)
         {
-            using (PacketSuppressor<VehicleOnPilotModeChanged>.Suppress())
-            {
-                EntityDestroyed vehicleDestroyed = new(id);
-                packetSender.Send(vehicleDestroyed);
-            }
+            RemotePlayer playerInstance = player.Value;
+            playerInstance.SetVehicle(vehicle);
+            playerInstance.SetSubRoot(subRoot);
+            playerInstance.SetPilotingChair(subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>());
+            playerInstance.AnimationController.UpdatePlayerAnimations = false;
+        }
+    }
+
+    public void BroadcastDestroyedVehicle(NitroxId id)
+    {
+        using (PacketSuppressor<VehicleOnPilotModeChanged>.Suppress())
+        {
+            EntityDestroyed vehicleDestroyed = new(id);
+            packetSender.Send(vehicleDestroyed);
+        }
+    }
+
+    public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
+    {
+        if (!dockingBay.gameObject.TryGetIdOrWarn(out NitroxId dockId))
+        {
+            return;
+        }
+        if (!vehicle.gameObject.TryGetIdOrWarn(out NitroxId vehicleId))
+        {
+            return;
         }
 
-        public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
+        VehicleDocking packet = new VehicleDocking(vehicleId, dockId, multiplayerSession.Reservation.PlayerId);
+        packetSender.Send(packet);
+
+        PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
+        PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
+        vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor, vehicleMovementSuppressor));
+    }
+
+    public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
+    {
+        if (!dockingBay.TryGetIdOrWarn(out NitroxId dockId))
         {
-            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
-
-
-            NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
-            ushort playerId = multiplayerSession.Reservation.PlayerId;
-
-            VehicleDocking packet = new VehicleDocking(vehicleId, dockId, playerId);
-            packetSender.Send(packet);
-
-            PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
-            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor, vehicleMovementSuppressor));
+            return;
+        }
+        if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
+        {
+            return;
         }
 
-        public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
+        PacketSuppressor<PlayerMovement> movementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
+        PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
+        if (!undockingStart)
         {
-            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
-
-            NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
-            ushort playerId = multiplayerSession.Reservation.PlayerId;
-
-            PacketSuppressor<PlayerMovement> movementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
-            if (!undockingStart)
-            {
-                movementSuppressor.Dispose();
-                vehicleMovementSuppressor.Dispose();
-            }
-
-            VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, playerId, undockingStart);
-            packetSender.Send(packet);
-        }
-
-        /*
-         A poorly timed movement packet will cause major problems when docking because the remote
-         player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
-         the vehicle exit code before the animation completes so we need to suppress any side affects.
-         Two thing we want to protect against:
-
-             1) If a movement packet is received when docking, the player might exit the vehicle early
-                and it will show them sitting outside the vehicle during the docking animation.
-
-             2) If a movement packet is received when undocking, the player game object will be stuck in
-                place until after the player exits the vehicle.  This causes the player body to strech to
-                the current cyclops position.
-        */
-        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<PlayerMovement> playerMovementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
-        {
-            yield return Yielders.WaitFor3Seconds;
-            playerMovementSuppressor.Dispose();
+            movementSuppressor.Dispose();
             vehicleMovementSuppressor.Dispose();
         }
 
-        public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, TechType techType, GameObject gameObject, float cooldown)
+        VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, multiplayerSession.Reservation.PlayerId, undockingStart);
+        packetSender.Send(packet);
+    }
+
+    /*
+     A poorly timed movement packet will cause major problems when docking because the remote
+     player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
+     the vehicle exit code before the animation completes so we need to suppress any side affects.
+     Two thing we want to protect against:
+
+         1) If a movement packet is received when docking, the player might exit the vehicle early
+            and it will show them sitting outside the vehicle during the docking animation.
+
+         2) If a movement packet is received when undocking, the player game object will be stuck in
+            place until after the player exits the vehicle.  This causes the player body to strech to
+            the current cyclops position.
+    */
+    public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<PlayerMovement> playerMovementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
+    {
+        yield return Yielders.WaitFor3Seconds;
+        playerMovementSuppressor.Dispose();
+        vehicleMovementSuppressor.Dispose();
+    }
+
+    public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, TechType techType, GameObject gameObject, float cooldown)
+    {
+        yield return new WaitForSeconds(cooldown);
+
+        VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(techType.ToDto(), id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
+        ushort playerId = ushort.MaxValue;
+
+        packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
+    }
+
+    public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
+    {
+        if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
         {
-            yield return new WaitForSeconds(cooldown);
-
-            VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(techType.ToDto(), id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
-            ushort playerId = ushort.MaxValue;
-
-            packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
+            return;
         }
 
-        public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
-        {
-            ushort playerId = multiplayerSession.Reservation.PlayerId;
+        VehicleOnPilotModeChanged packet = new(vehicleId, multiplayerSession.Reservation.PlayerId, isPiloting);
+        packetSender.Send(packet);
+    }
 
-            VehicleOnPilotModeChanged packet = new(NitroxEntity.GetId(vehicle.gameObject), playerId, isPiloting);
-            packetSender.Send(packet);
+    public void SetOnPilotMode(NitroxId vehicleId, ushort playerId, bool isPiloting)
+    {
+        Optional<GameObject> opVehicle = NitroxEntity.GetObjectFrom(vehicleId);
+        if (!opVehicle.HasValue)
+        {
+            return;
         }
 
-        public void SetOnPilotMode(NitroxId vehicleId, ushort playerId, bool isPiloting)
+        GameObject gameObject = opVehicle.Value;
+        Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+        if (!vehicle)
         {
-            Optional<GameObject> opVehicle = NitroxEntity.GetObjectFrom(vehicleId);
-            if (!opVehicle.HasValue)
-            {
-                return;
-            }
-
-            GameObject gameObject = opVehicle.Value;
-            Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-            if (!vehicle)
-            {
-                return;
-            }
-
-            vehicle.pilotId = isPiloting ? playerId.ToString() : string.Empty;
+            return;
         }
 
-        /// <summary>
-        /// Subnautica pre-emptively loads a prefab of each vehicle (such as a cyclops) during the initial game load.  This allows the game to instantaniously
-        /// use this prefab for the first constructor event.  Subsequent constructor events will use this prefab as a template.  However, this is problematic
-        /// because the template + children are now tagged with NitroxEntity because players are interacting with it. We need to remove any NitroxEntity from
-        /// the new gameObject that used the template.
-        /// </summary>
-        public static void RemoveNitroxEntityTagging(GameObject constructedObject)
-        {
-            NitroxEntity[] nitroxEntities = constructedObject.GetComponentsInChildren<NitroxEntity>(true);
+        vehicle.pilotId = isPiloting ? playerId.ToString() : string.Empty;
+    }
 
-            foreach (NitroxEntity nitroxEntity in nitroxEntities)
-            {
-                UnityEngine.Object.DestroyImmediate(nitroxEntity);
-            }
+    /// <summary>
+    /// Removes ALL <see cref="NitroxEntity"/> on the <see cref="GameObject"/> and its children.
+    /// </summary>
+    /// <remarks>
+    /// Subnautica pre-emptively loads a prefab of each vehicle (such as a cyclops) during the initial game load.  This allows the game to instantaniously
+    /// use this prefab for the first constructor event.  Subsequent constructor events will use this prefab as a template.  However, this is problematic
+    /// because the template + children are now tagged with NitroxEntity because players are interacting with it. We need to remove any NitroxEntity from
+    /// the new gameObject that used the template.
+    /// </remarks>
+    public static void RemoveNitroxEntitiesTagging(GameObject constructedObject)
+    {
+        NitroxEntity[] nitroxEntities = constructedObject.GetComponentsInChildren<NitroxEntity>(true);
+
+        foreach (NitroxEntity nitroxEntity in nitroxEntities)
+        {
+            nitroxEntity.Remove();
+            UnityEngine.Object.DestroyImmediate(nitroxEntity);
         }
     }
 }

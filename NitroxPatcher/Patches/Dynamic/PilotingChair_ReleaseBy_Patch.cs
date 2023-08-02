@@ -1,32 +1,29 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class PilotingChair_ReleaseBy_Patch : NitroxPatch, IDynamicPatch
 {
-    public class PilotingChair_ReleaseBy_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.ReleaseBy(default(Player)));
+
+    public static void Postfix(PilotingChair __instance)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.ReleaseBy(default(Player)));
+        SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
+        Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
 
-        public static void Postfix(PilotingChair __instance)
+        if (subRoot.TryGetIdOrWarn(out NitroxId id))
         {
-            SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
-            Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
-            NitroxId id = NitroxEntity.GetId(subRoot.gameObject);
-
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
-            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
+    }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
-        }
+    public override void Patch(Harmony harmony)
+    {
+        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

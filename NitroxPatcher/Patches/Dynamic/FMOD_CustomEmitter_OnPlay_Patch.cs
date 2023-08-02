@@ -3,6 +3,7 @@ using FMOD.Studio;
 using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 
@@ -26,12 +27,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 if (is3D)
                 {
-                    __instance.TryGetComponent(out NitroxEntity nitroxEntity);
-                    if (!nitroxEntity)
-                    {
-                        nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
-                    }
-                    if (nitroxEntity)
+                    if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
                     {
                         Resolve<FMODSystem>().PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
                     }

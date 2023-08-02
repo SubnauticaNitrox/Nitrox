@@ -2,7 +2,6 @@
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -19,15 +18,12 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Vehicle vehicle = __instance.dockingBay.GetDockedVehicle();
 
-            if (skipPrefix || vehicle == null)
+            if (skipPrefix || !vehicle.TryGetIdOrWarn(out NitroxId id))
             {
                 return true;
             }
 
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
-
-            if (simulationOwnership.HasExclusiveLock(id))
+            if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
             {
                 Log.Debug($"Already have an exclusive lock on this vehicle: {id}");
                 return true;
@@ -36,7 +32,7 @@ namespace NitroxPatcher.Patches.Dynamic
             HandInteraction<DockedVehicleHandTarget> context = new(__instance, hand);
             LockRequest<HandInteraction<DockedVehicleHandTarget>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
-            simulationOwnership.RequestSimulationLock(lockRequest);
+            Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
 
             return false;
         }

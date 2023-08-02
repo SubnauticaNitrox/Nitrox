@@ -1,7 +1,7 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -32,7 +32,7 @@ public class CyclopsSonarButton_SonarPing_Patch : NitroxPatch, IDynamicPatch
 
     private static bool LocalPlayerHasLock(SubRoot subRoot)
     {
-        return NitroxEntity.TryGetEntityFrom(subRoot.gameObject, out NitroxEntity entity) && Resolve<SimulationOwnership>().HasExclusiveLock(entity.Id);
+        return subRoot.TryGetNitroxId(out NitroxId entityId) && Resolve<SimulationOwnership>().HasExclusiveLock(entityId);
     }
 
     public override void Patch(Harmony harmony)

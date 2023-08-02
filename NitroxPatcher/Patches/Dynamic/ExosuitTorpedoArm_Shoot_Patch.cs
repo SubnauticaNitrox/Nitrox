@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
@@ -24,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
                 if (siloTransform != __instance.siloFirst && siloTransform != __instance.siloSecond)
                 {
-                    Log.Error($"Exosuit torpedo arm siloTransform is not first or second silo {NitroxEntity.GetId(__instance.gameObject)}");
+                    Log.Error($"Exosuit torpedo arm siloTransform is not first or second silo {__instance.GetId()}");
                 }
                 NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
                     __instance,

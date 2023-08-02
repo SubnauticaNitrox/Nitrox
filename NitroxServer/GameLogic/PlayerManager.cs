@@ -81,7 +81,7 @@ namespace NitroxServer.GameLogic
                     // Don't enqueue the request if there is already another enqueued request by the same user
                     return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
                 }
-                
+
                 JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
                                       connection,
                                       new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
@@ -115,7 +115,7 @@ namespace NitroxServer.GameLogic
             bool hasSeenPlayerBefore = player != null;
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
-            
+
             // TODO: At some point, store the muted state of a player
             PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false);
             string reservationKey = Guid.NewGuid().ToString();
@@ -131,7 +131,7 @@ namespace NitroxServer.GameLogic
 
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
-        
+
         private void InitialSyncTimerElapsed(object state)
         {
             if (state is InitialSyncTimerData timerData && !timerData.Disposing)
@@ -197,7 +197,7 @@ namespace NitroxServer.GameLogic
                     serverConfig.DefaultPlayerPerm,
                     serverConfig.DefaultPlayerStats,
                     new List<NitroxTechType>(),
-                    new NitroxId[0],
+                    Array.Empty<Optional<NitroxId>>(),
                     new List<EquippedItemData>(),
                     new List<EquippedItemData>(),
                     new Dictionary<string, float>(),

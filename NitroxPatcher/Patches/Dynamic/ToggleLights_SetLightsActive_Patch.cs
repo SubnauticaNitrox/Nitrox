@@ -4,7 +4,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -59,7 +58,10 @@ public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
                 DebugUtils.PrintHierarchy(__instance.gameObject);
             }
 
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            if (!gameObject.TryGetIdOrWarn(out NitroxId id))
+            {
+                return;
+            }
 
             if (type == typeof(SeaMoth))
             {

@@ -141,8 +141,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
-            NitroxId subRootId = NitroxEntity.GetId(subRoot.gameObject);
-            CyclopsFireData fireNode = null;
+
+            if (!subRoot.TryGetIdOrWarn(out NitroxId subRootId))
+            {
+                return;
+            }
 
             if (roomFires != null && roomFires.Length > 0)
             {
@@ -151,7 +154,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
                     {
-                        fireNode = roomFires.SingleOrDefault(x => x.Room == keyValuePair.Key && x.NodeIndex == nodeIndex);
+                        CyclopsFireData fireNode = roomFires.SingleOrDefault(x => x.Room == keyValuePair.Key && x.NodeIndex == nodeIndex);
 
                         // If there's a matching node index, add a fire if there isn't one already. Otherwise remove a fire if there is one
                         if (fireNode == null)
@@ -176,11 +179,11 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
                 {
-                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
+                    foreach (Transform spawnNode in keyValuePair.Value.spawnNodes)
                     {
-                        if (keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
+                        if (spawnNode.childCount > 0)
                         {
-                            keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
+                            spawnNode.GetComponentInChildren<Fire>().Douse(10000);
                         }
                     }
                 }

@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
         public RemotePlayer(PlayerContext playerContext, PlayerModelManager modelManager)
         {
             PlayerContext = playerContext;
-            playerModelManager = modelManager;       
+            playerModelManager = modelManager;
         }
 
         public void InitializeGameObject(GameObject playerBody)
@@ -210,7 +210,7 @@ namespace NitroxClient.GameLogic
 
                     Detach();
                     ArmsController.SetWorldIKTarget(null, null);
-                    
+
                     Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
                 }
 
@@ -243,7 +243,7 @@ namespace NitroxClient.GameLogic
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }
-        
+
         /// <summary>
         /// Drops the remote player, swimming where he is
         /// </summary>
@@ -256,7 +256,8 @@ namespace NitroxClient.GameLogic
 
         public void Destroy()
         {
-            Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName)); 
+            Log.Info($"{PlayerName} left the game");
+            Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName));
             NitroxEntity.RemoveFrom(Body);
             Object.DestroyImmediate(Body);
         }
@@ -292,7 +293,7 @@ namespace NitroxClient.GameLogic
         {
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equippedItems));
         }
-        
+
         /// <summary>
         /// Makes the RemotePlayer recognizable as an obstacle for buildings.
         /// </summary>
@@ -300,13 +301,13 @@ namespace NitroxClient.GameLogic
         {
             RemotePlayerIdentifier identifier = Body.AddComponent<RemotePlayerIdentifier>();
             identifier.RemotePlayer = this;
-            
+
             if (Player.mainCollider is CapsuleCollider refCollider)
             {
                 // This layer lets us have a collider as a trigger without preventing its detection as an obstacle
                 Body.layer = LayerID.Useable;
                 Collider = Body.AddComponent<CapsuleCollider>();
-                
+
                 Collider.center = Vector3.zero;
                 Collider.radius = refCollider.radius;
                 Collider.direction = refCollider.direction;
