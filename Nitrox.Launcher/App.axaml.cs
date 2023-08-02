@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Avalonia;
@@ -28,6 +29,15 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        // Disable Avalonia plugins replaced by MVVM Toolkit.
+        for (int i = BindingPlugins.DataValidators.Count - 1; i >= 0; i--)
+        {
+            if (BindingPlugins.DataValidators[i] is DataAnnotationsValidationPlugin)
+            {
+                BindingPlugins.DataValidators.RemoveAt(i);
+            }
+        }
+
         DialogService.Show(null, MainWindow);
 
         base.OnFrameworkInitializationCompleted();
