@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nitrox.Launcher.Models;
+using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Server;
 
@@ -11,11 +11,13 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class CreateServerViewModel : ModalViewModelBase
 {
+    // TODO: Validate that the server name isn't a duplicate of another save
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
     [NotifyDataErrorInfo]
     [Required]
-    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidFileName))]
+    [FileName]
+    [NitroxUniqueSaveName]
     private string name;
     [ObservableProperty]
     private ServerGameMode selectedGameMode = ServerGameMode.SURVIVAL;

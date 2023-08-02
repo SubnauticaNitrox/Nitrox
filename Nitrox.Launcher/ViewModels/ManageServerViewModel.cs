@@ -6,6 +6,7 @@ using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models;
+using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using NitroxModel.DataStructures.GameLogic;
@@ -44,7 +45,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
     [Required]
-    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidFileName))]
+    [FileName]
+    [NitroxUniqueSaveName]
     private string serverName;
 
     [ObservableProperty]
@@ -58,8 +60,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
-    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.ContainsNoWhiteSpace))]
-    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsProperSeed))]
+    [NitroxWorldSeed]
     private string serverSeed;
 
     [ObservableProperty]
@@ -69,12 +70,12 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     [NotifyDataErrorInfo]
-    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidSaveInterval))]
+    [Range(10, 86400, ErrorMessage = "Value must be between 10s and 24 hours (86400s).")]
     private int serverAutoSaveInterval;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [CustomValidation(typeof(NitroxValidation), nameof(NitroxValidation.IsValidPlayerLimit))]
+    [Range(1, 100)]
     [NotifyDataErrorInfo]
     private int serverMaxPlayers;
 
