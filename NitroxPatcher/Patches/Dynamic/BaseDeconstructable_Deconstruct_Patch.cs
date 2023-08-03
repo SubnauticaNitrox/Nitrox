@@ -17,9 +17,9 @@ using static NitroxClient.GameLogic.Bases.BuildingHandler;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
     private static BuildPieceIdentifier cachedPieceIdentifier;
@@ -181,10 +181,5 @@ internal class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatc
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
         BuildingHandler.Main.Temp.Reset();
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix: true, transpiler: true);
     }
 }

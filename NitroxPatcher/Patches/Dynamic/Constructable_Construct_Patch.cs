@@ -1,13 +1,14 @@
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
@@ -15,17 +16,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UWE;
 using UnityEngine;
-using static System.Reflection.Emit.OpCodes;
+using UWE;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
-using NitroxClient.GameLogic.Spawning.Bases;
+using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.Construct());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.Construct());
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 
@@ -176,10 +176,5 @@ internal class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
         {
             yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, entityId);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

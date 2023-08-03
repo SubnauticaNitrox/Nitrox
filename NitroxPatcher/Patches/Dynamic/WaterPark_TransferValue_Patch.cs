@@ -1,11 +1,10 @@
-using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using System.Reflection;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -13,9 +12,9 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Transfers the NitroxEntity to the new main module when two WaterParks are merged.
 /// </summary>
-public class WaterPark_TransferValue_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class WaterPark_TransferValue_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.TransferValue(default, default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.TransferValue(default, default));
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 
@@ -52,10 +51,5 @@ public class WaterPark_TransferValue_Patch : NitroxPatch, IDynamicPatch
         // We simply take the existing water park entity to avoid unnecessary actions
         // its BaseFace will be updated with updatedChildren field in UpdateBase packet
         NitroxEntity.SetNewId(dstWaterPark.gameObject, sourceId);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

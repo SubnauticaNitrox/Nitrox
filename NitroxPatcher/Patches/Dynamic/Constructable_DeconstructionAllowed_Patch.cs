@@ -9,9 +9,9 @@ using System.Reflection;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal class Constructable_DeconstructionAllowed_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Constructable_DeconstructionAllowed_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.DeconstructionAllowed(out Reflect.Ref<string>.Field));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.DeconstructionAllowed(out Reflect.Ref<string>.Field));
 
     public static void Postfix(Constructable __instance, ref bool __result, ref string reason)
     {
@@ -35,10 +35,5 @@ internal class Constructable_DeconstructionAllowed_Patch : NitroxPatch, IDynamic
             __result = false;
             reason = "[Safe Building] This base is currently desynced so you can't modify it unless you resync buildings (in Nitrox settings)";
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

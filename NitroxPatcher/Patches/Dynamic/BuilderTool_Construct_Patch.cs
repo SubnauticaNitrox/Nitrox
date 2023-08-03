@@ -1,4 +1,3 @@
-using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.Helpers;
 using NitroxModel.DataStructures;
@@ -7,9 +6,9 @@ using System.Reflection;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal class BuilderTool_Construct_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class BuilderTool_Construct_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static MethodInfo TARGET_METHOD = Reflect.Method((BuilderTool t) => t.Construct(default, default, default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BuilderTool t) => t.Construct(default, default, default));
 
     public static bool Prefix(Constructable c)
     {
@@ -27,10 +26,5 @@ internal class BuilderTool_Construct_Patch : NitroxPatch, IDynamicPatch
         }
 
         return true;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

@@ -10,14 +10,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using NitroxClient.Unity.Helper;
-using static System.Reflection.Emit.OpCodes;
 using NitroxClient.GameLogic.Spawning.Bases;
+using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
 
     public static readonly InstructionsPattern AddInstructionPattern1 = new()
     {
@@ -99,10 +99,5 @@ internal class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
         module.ParentId = parentId;
         Log.Debug($"Sending module: {module}");
         Resolve<IPacketSender>().Send(new PlaceModule(module));
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

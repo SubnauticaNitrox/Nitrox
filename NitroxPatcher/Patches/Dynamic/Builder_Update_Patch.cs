@@ -1,4 +1,3 @@
-using HarmonyLib;
 using NitroxModel.Helper;
 using System.Reflection;
 using NitroxClient.GameLogic.Bases;
@@ -9,9 +8,9 @@ using NitroxClient.Helpers;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal class Builder_Update_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Builder_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.Update());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.Update());
 
     public static void Postfix()
     {
@@ -43,10 +42,5 @@ internal class Builder_Update_Patch : NitroxPatch, IDynamicPatch
             }
             Builder.ghostStructureMaterial.SetColor(ShaderPropertyID._Tint, safeColor);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

@@ -7,9 +7,9 @@ using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal class Constructable_DeconstructAsync_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Constructable_DeconstructAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Constructable t) => t.DeconstructAsync(default, default)));
+    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Constructable t) => t.DeconstructAsync(default, default)));
 
     public static readonly InstructionsPattern InstructionsPattern = new()
     {
@@ -34,9 +34,4 @@ internal class Constructable_DeconstructAsync_Patch : NitroxPatch, IDynamicPatch
             }
             return null;
         });
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
-    }
 }
