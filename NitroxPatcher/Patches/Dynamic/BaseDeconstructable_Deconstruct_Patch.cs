@@ -11,9 +11,9 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxClient.GameLogic.Spawning.Bases;
 using static System.Reflection.Emit.OpCodes;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
-using NitroxClient.GameLogic.Spawning.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic;
 

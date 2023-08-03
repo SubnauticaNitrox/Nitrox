@@ -25,7 +25,10 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             yield return new WaitUntil(LargeWorldStreamer.main.IsWorldSettled);
+            // Make sure all building-related prefabs are fully loaded (happen to bug when launching multiple clients locally)
             yield return Base.InitializeAsync();
+            yield return BaseGhost.InitializeAsync();
+            yield return BaseDeconstructable.InitializeAsync();
 
             BuildingHandler.Main.InitializeOperations(packet.BuildOperationIds);
 

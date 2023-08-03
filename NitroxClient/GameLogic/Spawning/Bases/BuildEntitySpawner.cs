@@ -82,11 +82,10 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
     {
         Func<byte[], byte[]> c = SerializationHelper.CompressBytes;
 
-        BaseData baseData = new();
-        if (targetBase.baseShape != null)
+        BaseData baseData = new()
         {
-            baseData.BaseShape = targetBase.baseShape.ToInt3().ToDto();
-        }
+            BaseShape = targetBase.baseShape.ToInt3().ToDto()
+        };
         if (targetBase.faces != null)
         {
             baseData.Faces = c(Array.ConvertAll(targetBase.faces, faceType => (byte)faceType));
@@ -100,10 +99,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             baseData.Links = c(targetBase.links);
             baseData.PrecompressionSize = targetBase.links.Length;
         }
-        if (targetBase.cellOffset != null)
-        {
-            baseData.CellOffset = targetBase.cellOffset.ToDto();
-        }
+        baseData.CellOffset = targetBase.cellOffset.ToDto();
         if (targetBase.masks != null)
         {
             baseData.Masks = c(targetBase.masks);
@@ -112,10 +108,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         {
             baseData.IsGlass = c(Array.ConvertAll(targetBase.isGlass, isGlass => isGlass ? (byte)1 : (byte)0));
         }
-        if (targetBase.anchor != null)
-        {
-            baseData.Anchor = targetBase.anchor.ToDto();
-        }
+        baseData.Anchor = targetBase.anchor.ToDto();
         return baseData;
     }
 
@@ -124,11 +117,8 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         Func<byte[], int, byte[]> d = SerializationHelper.DecompressBytes;
         int size = baseData.PrecompressionSize;
 
-        if (baseData.BaseShape != null)
-        {
-            @base.baseShape = new(); // Reset it so that the following instruction is understood as a change
-            @base.SetSize(baseData.BaseShape.ToUnity());
-        }
+        @base.baseShape = new(); // Reset it so that the following instruction is understood as a change
+        @base.SetSize(baseData.BaseShape.ToUnity());
         if (baseData.Faces != null)
         {
             @base.faces = Array.ConvertAll(d(baseData.Faces, size * 6), faceType => (Base.FaceType)faceType);
@@ -141,10 +131,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         {
             @base.links = d(baseData.Links, size);
         }
-        if (baseData.CellOffset != null)
-        {
-            @base.cellOffset = new(baseData.CellOffset.ToUnity());
-        }
+        @base.cellOffset = new(baseData.CellOffset.ToUnity());
         if (baseData.Masks != null)
         {
             @base.masks = d(baseData.Masks, size);
@@ -153,10 +140,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         {
             @base.isGlass = Array.ConvertAll(d(baseData.IsGlass, size), num => num == 1);
         }
-        if (baseData.Anchor != null)
-        {
-            @base.anchor = new(baseData.Anchor.ToUnity());
-        }
+        @base.anchor = new(baseData.Anchor.ToUnity());
     }
 
     public static IEnumerator SetupBase(BuildEntity buildEntity, Base @base, TaskResult<Optional<GameObject>> result = null)

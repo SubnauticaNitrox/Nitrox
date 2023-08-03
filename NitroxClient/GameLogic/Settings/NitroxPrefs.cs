@@ -9,8 +9,8 @@ namespace NitroxClient.GameLogic.Settings
         public static readonly NitroxPref<bool> HideIp = new("Nitrox.hideIp");
         public static readonly NitroxPref<bool> SilenceChat = new("Nitrox.silenceChat");
         public static readonly NitroxPref<bool> ChatUsed = new("Nitrox.chatUsed");
-        public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding");
-        public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog");
+        public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding", true);
+        public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog", true);
     }
 
     public abstract class NitroxPref { }
