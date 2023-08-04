@@ -1,6 +1,6 @@
 using System;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
 
 namespace NitroxModel.MultiplayerSession;
@@ -15,10 +15,9 @@ public class PlayerContext
     public PlayerSettings PlayerSettings { get; }
     public bool IsMuted { get; set; }
     public NitroxGameMode GameMode { get; set; }
-    public SetIntroCinematicMode.IntroCinematicMode IntroCinematicMode { get; set; }
+    public IntroCinematicMode IntroCinematicMode { get; set; }
 
-    public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted,
-                         NitroxGameMode gameMode, SetIntroCinematicMode.IntroCinematicMode introCinematicMode)
+    public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted, NitroxGameMode gameMode, IntroCinematicMode introCinematicMode)
     {
         PlayerName = playerName;
         PlayerId = playerId;

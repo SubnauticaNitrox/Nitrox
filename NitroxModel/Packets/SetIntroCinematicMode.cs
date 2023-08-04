@@ -1,17 +1,11 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets;
 
 [Serializable]
 public class SetIntroCinematicMode : Packet
 {
-    public enum IntroCinematicMode
-    {
-        LOADING,
-        WAITING,
-        START,
-        COMPLETED
-    }
     public ushort PlayerId { get; }
     public IntroCinematicMode Mode { get; }
 
