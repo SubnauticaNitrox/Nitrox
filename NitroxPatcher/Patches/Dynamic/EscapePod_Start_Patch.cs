@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class EscapePod_Start_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class EscapePod_Start_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo targetMethod = Reflect.Method((EscapePod e) => e.Start());
 
@@ -99,10 +99,5 @@ public class EscapePod_Start_Patch : NitroxPatch, IDynamicPatch
         yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => code));
         yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Application.Quit(default)));
         yield return new CodeInstruction(OpCodes.Ret).WithLabels(returnJump);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, targetMethod);
     }
 }

@@ -28,6 +28,7 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         this.localPlayer = localPlayer;
 
         AddStep(sync => SetPlayerPermissions(sync.Permissions));
+        AddStep(sync => SetPlayerIntroCinematicMode(sync.IntroCinematicMode));
         AddStep(sync => SetPlayerGameObjectId(sync.PlayerGameObjectId));
         AddStep(sync => AddStartingItemsToPlayer(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerStats(sync.PlayerStatsData));
@@ -37,6 +38,12 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
     private void SetPlayerPermissions(Perms permissions)
     {
         localPlayer.Permissions = permissions;
+    }
+
+    private void SetPlayerIntroCinematicMode(IntroCinematicMode introCinematicMode)
+    {
+        localPlayer.IntroCinematicMode = introCinematicMode;
+        Log.Info($"Received initial sync player IntroCinematicMode: {introCinematicMode}");
     }
 
     private void SetPlayerGameObjectId(NitroxId id)
