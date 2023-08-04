@@ -1,4 +1,5 @@
 using System.Linq;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -19,15 +20,14 @@ public class SetIntroCinematicModeProcessor : AuthenticatedPacketProcessor<SetIn
         player.PlayerContext.IntroCinematicMode = packet.Mode;
         playerManager.SendPacketToOtherPlayers(packet, player);
 
-        if (playerManager.GetAllPlayers().Count(p => p.PlayerContext?.IntroCinematicMode == SetIntroCinematicMode.IntroCinematicMode.WAITING) >= 2)
+        Player[] allWaitingPlayers = playerManager.ConnectedPlayers().Where(p => p.PlayerContext.IntroCinematicMode == IntroCinematicMode.WAITING).ToArray();
+        if (allWaitingPlayers.Length >= 2)
         {
-            Log.Info("Starting Cinematic");
+            Log.Info($"Starting IntroCinematic for {allWaitingPlayers[0].PlayerContext.PlayerName} and {allWaitingPlayers[1].PlayerContext.PlayerName}");
 
-            Player[] pairedPlayers = playerManager.GetAllPlayers().Where(p => p.PlayerContext.IntroCinematicMode == SetIntroCinematicMode.IntroCinematicMode.WAITING).Take(2).ToArray();
-
-            pairedPlayers[0].PlayerContext.IntroCinematicMode = pairedPlayers[1].PlayerContext.IntroCinematicMode = SetIntroCinematicMode.IntroCinematicMode.START;
-            pairedPlayers[0].SendPacket(new SetIntroCinematicMode(pairedPlayers[1].Id, SetIntroCinematicMode.IntroCinematicMode.START));
-            pairedPlayers[1].SendPacket(new SetIntroCinematicMode(pairedPlayers[0].Id, SetIntroCinematicMode.IntroCinematicMode.START));
+            allWaitingPlayers[0].PlayerContext.IntroCinematicMode = allWaitingPlayers[1].PlayerContext.IntroCinematicMode = IntroCinematicMode.START;
+            allWaitingPlayers[0].SendPacket(new SetIntroCinematicMode(allWaitingPlayers[1].Id, IntroCinematicMode.START));
+            allWaitingPlayers[1].SendPacket(new SetIntroCinematicMode(allWaitingPlayers[0].Id, IntroCinematicMode.START));
         }
     }
 }

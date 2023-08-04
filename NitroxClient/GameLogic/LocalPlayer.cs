@@ -39,6 +39,7 @@ public class LocalPlayer : ILocalNitroxPlayer
     public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
     public Perms Permissions;
+    public IntroCinematicMode IntroCinematicMode;
 
     public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
     {
@@ -49,6 +50,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
         bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
         Permissions = Perms.PLAYER;
+        IntroCinematicMode = IntroCinematicMode.NONE;
     }
 
     public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)

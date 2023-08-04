@@ -4,10 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.PlayerLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -19,6 +19,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         return new CodeMatcher(instructions)
+               // Insert custom check if cinematic should be started => waiting for other player & enable skip functionality
                .MatchEndForward(
                    new CodeMatch(OpCodes.Ldfld, Reflect.Field((uGUI_SceneIntro si) => si.moveNext)),
                    new CodeMatch(OpCodes.Brfalse))
@@ -27,6 +28,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                    new CodeInstruction(OpCodes.Call, Reflect.Method(() => IsRemoteCinematicReady(default))),
                    new CodeInstruction(OpCodes.And)
                )
+               // Run our prepare code when cinematic starts
                .MatchEndForward(
                    new CodeMatch(OpCodes.Ldsfld, Reflect.Field(() => EscapePod.main)),
                    new CodeMatch(OpCodes.Callvirt, Reflect.Method(() => EscapePod.main.TriggerIntroCinematic()))
@@ -35,10 +37,26 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                .Insert(
                    new CodeInstruction(OpCodes.Call, Reflect.Method(() => StartRemoteCinematic()))
                )
+               // Disable cinematic skip when cinematic already started
+               .MatchStartForward(
+                   new CodeMatch(OpCodes.Call, Reflect.Property(() => Time.time).GetMethod)
+               )
+               .SetInstructionAndAdvance(
+                   new CodeInstruction(OpCodes.Ldc_R4, -1f)
+               )
+               .Advance(1)
+               .Insert(
+                   new CodeInstruction(OpCodes.Ldloc_1),
+                   new CodeInstruction(OpCodes.Ldfld, Reflect.Field((uGUI_SceneIntro si) => si.skipText)),
+                   new CodeInstruction(OpCodes.Ldc_R4, 0f),
+                   new CodeInstruction(OpCodes.Call, Reflect.Method(() => TMProExtensions.SetAlpha(default, default(float))))
+               )
+               // Replace intro text
                .MatchEndForward(
                    new CodeMatch(OpCodes.Ldstr, "IntroUWEPresents")
                )
                .SetOperandAndAdvance("Nitrox_IntroUWEPresents")
+               // Run our cleanup code when cinematic ends
                .MatchEndForward(
                    new CodeMatch(OpCodes.Ldloc_1),
                    new CodeMatch(OpCodes.Ldc_I4_0),
@@ -59,22 +77,30 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     private static bool IsRemoteCinematicReady(uGUI_SceneIntro uGuiSceneIntro)
     {
         if (callbackRun) return true;
+
+        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
+        {
+            uGuiSceneIntro.Stop(true);
+            EndRemoteCinematic();
+        }
+
         if (!uGuiSceneIntro.moveNext) return false;
 
         if (!packetSend)
         {
+            uGuiSceneIntro.skipHintStartTime = Time.time;
             uGuiSceneIntro.mainText.SetText("Waiting for partner to join");
             uGuiSceneIntro.mainText.SetState(true);
 
-            ushort playerId = Resolve<IMultiplayerSession>().Reservation.PlayerId;
-            Resolve<IPacketSender>().Send(new SetIntroCinematicMode(playerId, SetIntroCinematicMode.IntroCinematicMode.WAITING));
+            Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.WAITING);
             packetSend = true;
             return false;
         }
 
-        if (Resolve<PlayerManager>().GetAll().Any(r => r.PlayerContext.IntroCinematicMode == SetIntroCinematicMode.IntroCinematicMode.START))
+        RemotePlayer[] allReadyRemotePlayers = Resolve<PlayerManager>().GetAll().Where(r => r.PlayerContext.IntroCinematicMode == IntroCinematicMode.START).ToArray();
+        if (allReadyRemotePlayers.Length > 0)
         {
-            partner = Resolve<PlayerManager>().GetAll().First(r => r.PlayerContext.IntroCinematicMode == SetIntroCinematicMode.IntroCinematicMode.START);
+            partner = allReadyRemotePlayers.First();
 
             uGuiSceneIntro.moveNext = false;
             uGuiSceneIntro.mainText.FadeOut(0.2f, uGuiSceneIntro.Callback);
@@ -133,7 +159,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                 seatRight.Find("life_pod_seat_01_right_damaged_jnt3")
             ];
 
-            seatArmRestLeft =  modelRoot.Find("life_pod_seat_01_left_damaged_jnt4/life_pod_seat_01_left_damaged_jnt5");
+            seatArmRestLeft = modelRoot.Find("life_pod_seat_01_left_damaged_jnt4/life_pod_seat_01_left_damaged_jnt5");
             seatArmRestRight = modelRoot.Find("life_pod_seat_01_right_damaged_jnt4/life_pod_seat_01_right_damaged_jnt5");
 
             seatBarRendererRight = modelRoot.parent.Find("lifepod_damaged_03_geo/life_pod_seat_01_R").GetComponentsInChildren<SkinnedMeshRenderer>();
@@ -223,6 +249,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                 {
                     seatPartsRight[i].localRotation = seatPartsLeft[i].localRotation;
                 }
+
                 seatArmRestRight.localPosition = -seatArmRestLeft.localPosition;
             }
 
@@ -255,7 +282,6 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         partner.ArmsController.enabled = true;
         partner.AnimationController.UpdatePlayerAnimations = true;
 
-        ushort playerId = Resolve<IMultiplayerSession>().Reservation.PlayerId;
-        Resolve<IPacketSender>().Send(new SetIntroCinematicMode(playerId, SetIntroCinematicMode.IntroCinematicMode.COMPLETED));
+        Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
     }
 }

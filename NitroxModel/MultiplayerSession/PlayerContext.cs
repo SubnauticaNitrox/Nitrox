@@ -1,6 +1,6 @@
 using System;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
 
 namespace NitroxModel.MultiplayerSession;
@@ -19,10 +19,10 @@ public class PlayerContext
     /// Not null if the player is currently driving a vehicle.
     /// </summary>
     public NitroxId DrivingVehicle { get; set; }
-    public SetIntroCinematicMode.IntroCinematicMode IntroCinematicMode { get; set; }
+    public IntroCinematicMode IntroCinematicMode { get; set; }
 
     public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted,
-                         NitroxGameMode gameMode, NitroxId drivingVehicle, SetIntroCinematicMode.IntroCinematicMode introCinematicMode)
+                         NitroxGameMode gameMode, NitroxId drivingVehicle, IntroCinematicMode introCinematicMode)
     {
         PlayerName = playerName;
         PlayerId = playerId;

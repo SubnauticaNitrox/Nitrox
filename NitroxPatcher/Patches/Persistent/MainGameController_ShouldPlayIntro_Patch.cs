@@ -1,3 +1,4 @@
+#if DEBUG
 using System.Reflection;
 using NitroxModel.Helper;
 
@@ -9,6 +10,7 @@ public partial class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IPe
 
     public static void Postfix(ref bool __result)
     {
-        //__result = true;
+        __result = false;
     }
 }
+#endif
