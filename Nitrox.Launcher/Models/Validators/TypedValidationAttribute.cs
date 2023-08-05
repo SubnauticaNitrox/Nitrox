@@ -14,4 +14,10 @@ public abstract class TypedValidationAttribute<T> : ValidationAttribute
         }
         return IsValid(typedValue, context);
     }
+    
+    protected static TResult ReadProperty<TResult>(ValidationContext context, string propertyName)
+    {
+        object value = context.ObjectType.GetProperty(propertyName)?.GetValue(context.ObjectInstance);
+        return value is TResult tValue ? tValue : default;
+    }
 }

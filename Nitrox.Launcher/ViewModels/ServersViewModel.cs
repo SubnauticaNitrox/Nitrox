@@ -32,10 +32,8 @@ public partial class ServersViewModel : RoutableViewModelBase
         // Load servers from the saves folder
         foreach (WorldManager.Listing listing in WorldManager.GetSaves())
         {
-            //NOTE: This line below is a backup in case the CanExecute commands for the Start/Manage Server buttons don't end up working out
-            //if (listing.Version < SaveDataUpgrade.MinimumSaveVersion || listing.Version > NitroxEnvironment.Version) continue;
-
-            SubnauticaServerConfig server = SubnauticaServerConfig.Load(Path.Combine(WorldManager.SavesFolderDir, listing.Name));
+            string saveDir = Path.Combine(WorldManager.SavesFolderDir, listing.Name);
+            SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
             Servers.Add(new ServerEntry
             {
                 Name = server.SaveName,
@@ -49,7 +47,7 @@ public partial class ServersViewModel : RoutableViewModelBase
                 AutoPortForward = server.AutoPortForward,
                 AllowLanDiscovery = server.LANDiscoveryEnabled,
                 AllowCommands = !server.DisableConsole,
-                IsNewServer = false,
+                IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
                 Version = listing.Version
             });
         }

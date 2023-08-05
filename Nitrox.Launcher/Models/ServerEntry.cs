@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -9,6 +10,7 @@ using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.Serialization.Upgrade;
+using NitroxServer.Serialization.World;
 
 namespace Nitrox.Launcher.Models;
 
@@ -45,17 +47,23 @@ public partial class ServerEntry : ObservableObject
     private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
     [ObservableProperty]
     private bool allowCommands = !serverDefaults.DisableConsole;
-    /// <summary>
-    /// TODO: This should be inferred from the save having a "WorldData" save file or not, since that is where the seed is stored after it is used/generated.
-    /// </summary>
+    [ObservableProperty]
+    private Version version = NitroxEnvironment.Version;
+    
     [ObservableProperty]
     private bool isNewServer = true;
     [ObservableProperty]
-    private Version version = NitroxEnvironment.Version;
-
+    private string saveFileDirectory;
+    
     public ServerEntry()
     {
         PropertyChanged += OnPropertyChanged;
+
+        SaveFileDirectory = Path.Combine(WorldManager.SavesFolderDir, Name ?? "");
+        //if (File.Exists(Path.Combine(SaveFileDirectory, "WorldData.json")))
+        //{
+        //    IsNewServer = false;
+        //}
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -66,6 +74,7 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand(CanExecute = nameof(CanStart))]
     public void Start()
     {
+        //
         IsNewServer = false;
         IsOnline = true;
     }
@@ -76,5 +85,39 @@ public partial class ServerEntry : ObservableObject
     public void Stop()
     {
         IsOnline = false;
+    }
+
+    public void SaveSettings(string originalSaveName)
+    {
+        // If world name was changed, rename save folder to match it (DOESN'T WORK)
+        
+        //SaveFileDirectory = WorldManager.ChangeSaveName(originalSaveName, Name);  // Try 1
+        //WorldManager.ChangeSaveName(originalSaveName, Name);
+        
+        //SaveFileDirectory = Path.Combine(WorldManager.SavesFolderDir, Name);  // Try 2
+        
+        string oldDir = Path.Combine(WorldManager.SavesFolderDir, originalSaveName);  // Try 3
+        SaveFileDirectory = Path.Combine(WorldManager.SavesFolderDir, Name);
+        if (oldDir != SaveFileDirectory)
+        {
+            Directory.Move(oldDir, SaveFileDirectory); // These two lines are needed to handle names that change in capitalization,
+            //Directory.Move($"{SaveFileDirectory} temp", SaveFileDirectory);   // since Windows still thinks of the two names as the same.
+        }
+
+        SubnauticaServerConfig config = SubnauticaServerConfig.Load(SaveFileDirectory);
+        using (config.Update(SaveFileDirectory))
+        {
+            config.SaveName = Name;
+            config.ServerPassword = Password;
+            if (IsNewServer) { config.Seed = Seed; }
+            config.GameMode = GameMode;
+            config.DefaultPlayerPerm = PlayerPermissions;
+            config.SaveInterval = AutoSaveInterval*1000;  // Convert seconds to milliseconds
+            config.MaxConnections = MaxPlayers;
+            config.ServerPort = Port;
+            config.AutoPortForward = AutoPortForward;
+            config.LANDiscoveryEnabled = AllowLanDiscovery;
+            config.DisableConsole = !AllowCommands;
+        }
     }
 }

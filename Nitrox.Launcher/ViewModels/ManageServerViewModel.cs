@@ -19,6 +19,7 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class ManageServerViewModel : RoutableViewModelBase
 {
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
+    public string OriginalServerName => Server?.Name;
 
     private ServerEntry server;
     /// <summary>
@@ -46,7 +47,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyDataErrorInfo]
     [Required]
     [FileName]
-    [NitroxUniqueSaveName]
+    [NitroxUniqueSaveName(nameof(OriginalServerName))]
     private string serverName;
 
     [ObservableProperty]
@@ -163,6 +164,9 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
+
+        Server.SaveSettings(OriginalServerName);
+        //OriginalServerName = Server.Name;
 
         worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
 
