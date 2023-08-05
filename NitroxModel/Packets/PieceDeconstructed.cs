@@ -1,16 +1,18 @@
+using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
 namespace NitroxModel.Packets;
 
+[Serializable]
 public class PieceDeconstructed : OrderedBuildPacket
 {
-    public NitroxId BaseId;
-    public NitroxId PieceId;
-    public BuildPieceIdentifier BuildPieceIdentifier;
-    public GhostEntity ReplacerGhost;
-    public BaseData BaseData;
+    public NitroxId BaseId { get; }
+    public NitroxId PieceId { get; }
+    public BuildPieceIdentifier BuildPieceIdentifier { get; }
+    public GhostEntity ReplacerGhost { get; }
+    public BaseData BaseData { get; set;  }
 
     public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, BaseData baseData, int operationId) : base(operationId)
     {
@@ -19,10 +21,5 @@ public class PieceDeconstructed : OrderedBuildPacket
         BuildPieceIdentifier = buildPieceIdentifier;
         ReplacerGhost = replacerGhost;
         BaseData = baseData;
-    }
-
-    public override string ToString()
-    {
-        return $"PieceDeconstructed [{OperationId}] [BaseId: {BaseId}, PieceId: {PieceId}, PieceIdentifier: {BuildPieceIdentifier}, ReplacerGhost: {ReplacerGhost}]";
     }
 }
