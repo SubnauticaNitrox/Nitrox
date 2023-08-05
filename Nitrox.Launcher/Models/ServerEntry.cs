@@ -92,9 +92,9 @@ public partial class ServerEntry : ObservableObject
         // If world name was changed, rename save folder to match it (DOESN'T WORK)
         
         //SaveFileDirectory = WorldManager.ChangeSaveName(originalSaveName, Name);  // Try 1
-        //WorldManager.ChangeSaveName(originalSaveName, Name);
         
-        //SaveFileDirectory = Path.Combine(WorldManager.SavesFolderDir, Name);  // Try 2
+        //WorldManager.ChangeSaveName(originalSaveName, Name);  // Try 2
+        //SaveFileDirectory = Path.Combine(WorldManager.SavesFolderDir, Name);
         
         string oldDir = Path.Combine(WorldManager.SavesFolderDir, originalSaveName);  // Try 3
         SaveFileDirectory = Path.Combine(WorldManager.SavesFolderDir, Name);
