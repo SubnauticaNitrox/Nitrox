@@ -15,6 +15,10 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
     private int viewModelLayer;
     private readonly PlayerManager playerManager;
 
+    private NitroxId previousItemId;
+    public delegate void HeldItemChanged(Optional<NitroxId> previousId);
+    public static event HeldItemChanged OnHeldItemChanged;
+
     public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
     {
         this.playerManager = playerManager;
@@ -48,6 +52,9 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
 
         ItemsContainer inventory = opPlayer.Value.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
+
+        OnHeldItemChanged?.Invoke(previousItemId);
+        previousItemId = NitroxEntity.TryGetEntityFrom(opItem.Value, out NitroxEntity entity) ? entity.Id : null;
 
         // Copied from QuickSlots
         switch (packet.Type)
