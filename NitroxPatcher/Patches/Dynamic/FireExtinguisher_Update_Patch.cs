@@ -1,14 +1,13 @@
-﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using System.Reflection;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class FireExtinguisher_Update_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class FireExtinguisher_Update_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FireExtinguisher t) => t.Update());
 
@@ -32,14 +31,9 @@ public class FireExtinguisher_Update_Patch : NitroxPatch, IDynamicPatch
     public static void Postfix(FireExtinguisher __instance)
     {
         if (!__instance.transform.TryGetComponentInAscendance(2, out RemotePlayerIdentifier _) &&
-            NitroxEntity.TryGetEntityFrom(__instance.gameObject, out NitroxEntity entity))
+            __instance.TryGetNitroxId(out NitroxId extinguisherId))
         {
-            Resolve<FireExtinguisherManager>().BroadcastFireExtinguisherState(entity.Id, __instance);
+            Resolve<FireExtinguisherManager>().BroadcastFireExtinguisherState(extinguisherId, __instance);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
     }
 }

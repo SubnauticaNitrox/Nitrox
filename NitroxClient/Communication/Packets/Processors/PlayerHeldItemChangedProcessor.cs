@@ -1,10 +1,11 @@
-﻿using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -53,8 +54,8 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
         ItemsContainer inventory = opPlayer.Value.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
 
-        OnHeldItemChanged?.Invoke(previousItemId);
-        previousItemId = NitroxEntity.TryGetEntityFrom(opItem.Value, out NitroxEntity entity) ? entity.Id : null;
+        OnHeldItemChanged?.Invoke(Optional.OfNullable(previousItemId));
+        previousItemId = item.GetId().OrNull();
 
         // Copied from QuickSlots
         switch (packet.Type)
