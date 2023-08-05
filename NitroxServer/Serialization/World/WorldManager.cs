@@ -106,20 +106,6 @@ public static class WorldManager
         return Directory.Exists(saveFileDirectory) || !File.Exists(Path.Combine(saveFileDirectory, "server.cfg")) || File.Exists(Path.Combine(saveFileDirectory, "Version.json"));
     }
     
-    public static string ChangeSaveName(string oldName, string newName)
-    {
-        string oldDir = Path.Combine(SavesFolderDir, oldName);
-        string newDir = Path.Combine(SavesFolderDir, newName);
-        
-        if (oldDir != newDir)
-        {
-            Directory.Move(oldDir, $"{newDir} temp");   // These two lines are needed to handle names that change in capitalization,
-            Directory.Move($"{newDir} temp", newDir);   // since Windows still thinks of the two names as the same.
-        }
-        
-        return newDir;
-    }
-    
     public static void DeleteSave(string saveFileDirectory)
     {
         try

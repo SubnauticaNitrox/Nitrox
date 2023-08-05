@@ -10,6 +10,7 @@ using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.Serialization.World;
 using ReactiveUI;
@@ -47,7 +48,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyDataErrorInfo]
     [Required]
     [FileName]
-    [NitroxUniqueSaveName(nameof(OriginalServerName))]
+    [NitroxUniqueSaveName(true, nameof(OriginalServerName))]
     private string serverName;
 
     [ObservableProperty]
@@ -104,7 +105,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private bool ServerIsOnline => Server.IsOnline;
 
-    private string worldFolderDirectory;
+    private string WorldFolderDirectory => Path.Combine(WorldManager.SavesFolderDir, Server.Name);
 
     private bool HasChanges() => ServerName != Server.Name ||
                                  ServerPassword != Server.Password ||
@@ -152,10 +153,18 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanSave))]
     private void Save()
     {
-        Server.Name = ServerName;
-        Server.Password = ServerPassword;
+        // If world name was changed, rename save folder to match it
+        string newDir = Path.Combine(WorldManager.SavesFolderDir, ServerName.Trim());
+        if (WorldFolderDirectory != newDir)
+        {
+            Directory.Move(WorldFolderDirectory, $"{newDir} temp");   // These two lines are needed to handle names that change in capitalization,
+            Directory.Move($"{newDir} temp", newDir);   // since Windows still thinks of the two names as the same.
+        }
+        
+        Server.Name = ServerName.Trim();
+        Server.Password = ServerPassword?.Trim();
         Server.GameMode = ServerGameMode;
-        Server.Seed = ServerSeed;
+        Server.Seed = ServerSeed?.ToUpper();
         Server.PlayerPermissions = ServerDefaultPlayerPerm;
         Server.AutoSaveInterval = ServerAutoSaveInterval;
         Server.MaxPlayers = ServerMaxPlayers;
@@ -164,12 +173,24 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
-
-        Server.SaveSettings(OriginalServerName);
-        //OriginalServerName = Server.Name;
-
-        worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
-
+        
+        SubnauticaServerConfig config = SubnauticaServerConfig.Load(WorldFolderDirectory);
+        using (config.Update(WorldFolderDirectory))
+        {
+            config.ServerPassword = Server.Password;
+            if (Server.IsNewServer) { config.Seed = Server.Seed; }
+            config.GameMode = Server.GameMode;
+            config.DefaultPlayerPerm = Server.PlayerPermissions;
+            config.SaveInterval = Server.AutoSaveInterval*1000;  // Convert seconds to milliseconds
+            config.MaxConnections = Server.MaxPlayers;
+            config.ServerPort = Server.Port;
+            config.AutoPortForward = Server.AutoPortForward;
+            config.LANDiscoveryEnabled = Server.AllowLanDiscovery;
+            config.DisableConsole = !Server.AllowCommands;
+        }
+        
+        Undo(); // Used to update the UI with corrected values (Trims and ToUppers)
+        
         BackCommand.NotifyCanExecuteChanged();
         StartServerCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
@@ -208,7 +229,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = worldFolderDirectory,
+            FileName = WorldFolderDirectory,
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
@@ -224,7 +245,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void DeleteServer()
     {
         // TODO: Delete this specific server's files after showing a confirmation popup
-        WorldManager.DeleteSave(worldFolderDirectory);
+        WorldManager.DeleteSave(WorldFolderDirectory);
         Router.NavigateBack.Execute();
     }
 
@@ -233,7 +254,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     public void LoadFrom(ServerEntry serverEntry)
     {
         Server = serverEntry;
-        worldFolderDirectory = Path.Combine(WorldManager.SavesFolderDir, Server.Name);
 
         ServerName = Server.Name;
         ServerPassword = Server.Password;

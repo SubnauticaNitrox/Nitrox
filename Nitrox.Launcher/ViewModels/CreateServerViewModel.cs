@@ -13,7 +13,6 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class CreateServerViewModel : ModalViewModelBase
 {
-    // TODO: Validate that the server name isn't a duplicate of another save
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
     [NotifyDataErrorInfo]
@@ -36,10 +35,9 @@ public partial class CreateServerViewModel : ModalViewModelBase
     private void Create(Window window)
     {
         DialogResult = true;
-        WorldManager.CreateEmptySave(Path.Combine(WorldManager.SavesFolderDir, Name));
+        WorldManager.CreateEmptySave(Path.Combine(WorldManager.SavesFolderDir, Name.Trim()));
         Close(window);
     }
-
-    // TODO: Validate that the name isn't a duplicate of another save
+    
     private bool CanCreate() => !HasErrors;
 }
