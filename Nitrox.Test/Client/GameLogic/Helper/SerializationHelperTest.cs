@@ -19,6 +19,29 @@ public class SerializationHelperTest
         }
     }
 
+    [TestMethod]
+    public void TestAllZeroBytes()
+    {
+        List<int> lengths = new() { 10000, 100000, 300000, 500000 };
+        foreach (int length in lengths)
+        {
+            byte[] data = new byte[length];
+            TestSerialization(data);
+        }
+    }
+
+    [TestMethod]
+    public void TestAllMaxBytes()
+    {
+        List<int> lengths = new() { 10000, 100000, 300000, 500000 };
+        foreach (int length in lengths)
+        {
+            byte[] data = new byte[length];
+            data.AsSpan().Fill(byte.MaxValue);
+            TestSerialization(data);
+        }
+    }
+
     /// <summary>
     /// Generates bytes to emulate Base data arrays
     /// </summary>
@@ -46,8 +69,8 @@ public class SerializationHelperTest
 
     public void TestSerialization(byte[] original)
     {
-        byte[] compressed = SerializationHelper.CompressBytes(original);
-        byte[] decompressed = SerializationHelper.DecompressBytes(compressed, original.Length);
+        byte[] compressed = BaseSerializationHelper.CompressBytes(original);
+        byte[] decompressed = BaseSerializationHelper.DecompressBytes(compressed, original.Length);
         Log.Info($"Size: [Original: {original.Length}, Compressed: {compressed.Length}, Decompressed: {decompressed.Length}]");
         Log.Info($"Original: {string.Join(", ", original.Take(100))}");
         Log.Info($"Compressed: {string.Join(", ", compressed.Take(100))}");

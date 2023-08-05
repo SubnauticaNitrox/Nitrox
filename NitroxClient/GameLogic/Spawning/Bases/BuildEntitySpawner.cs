@@ -80,7 +80,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     public static BaseData GetBaseData(Base targetBase)
     {
-        Func<byte[], byte[]> c = SerializationHelper.CompressBytes;
+        Func<byte[], byte[]> c = BaseSerializationHelper.CompressBytes;
 
         BaseData baseData = new()
         {
@@ -114,7 +114,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     public static void ApplyBaseData(BaseData baseData, Base @base)
     {
-        Func<byte[], int, byte[]> d = SerializationHelper.DecompressBytes;
+        Func<byte[], int, byte[]> d = BaseSerializationHelper.DecompressBytes;
         int size = baseData.PrecompressionSize;
 
         @base.baseShape = new(); // Reset it so that the following instruction is understood as a change
