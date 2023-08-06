@@ -45,8 +45,5 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
         return bitmap;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 }

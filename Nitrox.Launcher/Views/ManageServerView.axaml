@@ -102,7 +102,7 @@
                 <Grid ColumnDefinitions="*,30,*,30,*">
                     <StackPanel>
                         <TextBlock Text="SEED" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Watermark="Server seed" Text="{Binding ServerSeed}"
+                        <TextBox Watermark="Server seed" Text="{Binding ServerSeed, Converter={converters:ToStringConverter}, ConverterParameter=upper}"
                                  MaxLength="10" IsEnabled="{Binding !ServerIsOnline}"
                                  IsReadOnly="{Binding !Server.IsNewServer}">
                             <TextBox.Styles>

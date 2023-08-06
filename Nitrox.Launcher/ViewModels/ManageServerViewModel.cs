@@ -164,9 +164,9 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         }
 
         Server.Name = ServerName.Trim();
-        Server.Password = ServerPassword?.Trim();
+        Server.Password = ServerPassword.Trim();
         Server.GameMode = ServerGameMode;
-        Server.Seed = ServerSeed?.ToUpper();
+        Server.Seed = ServerSeed;
         Server.PlayerPermissions = ServerDefaultPlayerPerm;
         Server.AutoSaveInterval = ServerAutoSaveInterval;
         Server.MaxPlayers = ServerMaxPlayers;
