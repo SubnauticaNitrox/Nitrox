@@ -34,7 +34,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+      <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
+    <!-- Ensure server files are available for launcher. -->
+    <Target Name="BuildServer" AfterTargets="Build">
+        <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj"
+                 Targets="Build"
+                 Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
+    </Target>
 </Project>

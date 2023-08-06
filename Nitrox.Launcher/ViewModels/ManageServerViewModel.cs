@@ -12,7 +12,6 @@ using Nitrox.Launcher.Views;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
-using NitroxServer.Serialization.World;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -105,7 +104,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private bool ServerIsOnline => Server.IsOnline;
 
-    private string WorldFolderDirectory => Path.Combine(WorldManager.SavesFolderDir, Server.Name);
+    private string WorldFolderDirectory => Path.Combine(ServersViewModel.SavesFolderDir, Server.Name);
 
     private bool HasChanges() => ServerName != Server.Name ||
                                  ServerPassword != Server.Password ||
@@ -139,7 +138,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         DeleteServerCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanGoBackAndStartServer() =>!HasChanges();
+    private bool CanGoBackAndStartServer() => !HasChanges();
 
     [RelayCommand]
     public void StopServer()
@@ -154,13 +153,16 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void Save()
     {
         // If world name was changed, rename save folder to match it
-        string newDir = Path.Combine(WorldManager.SavesFolderDir, ServerName.Trim());
+        string newDir = Path.Combine(ServersViewModel.SavesFolderDir, ServerName.Trim());
         if (WorldFolderDirectory != newDir)
         {
-            Directory.Move(WorldFolderDirectory, $"{newDir} temp");   // These two lines are needed to handle names that change in capitalization,
-            Directory.Move($"{newDir} temp", newDir);   // since Windows still thinks of the two names as the same.
+            // Windows, by default, ignores case when renaming folders. We circumvent this by changing the name to a random one, and then to the desired name.
+            DirectoryInfo temp = Directory.CreateTempSubdirectory();
+            temp.Delete();
+            Directory.Move(WorldFolderDirectory, temp.FullName);
+            Directory.Move(temp.FullName, newDir);
         }
-        
+
         Server.Name = ServerName.Trim();
         Server.Password = ServerPassword?.Trim();
         Server.GameMode = ServerGameMode;
@@ -173,7 +175,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
-        
+
         SubnauticaServerConfig config = SubnauticaServerConfig.Load(WorldFolderDirectory);
         using (config.Update(WorldFolderDirectory))
         {
@@ -188,9 +190,9 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             config.LANDiscoveryEnabled = Server.AllowLanDiscovery;
             config.DisableConsole = !Server.AllowCommands;
         }
-        
+
         Undo(); // Used to update the UI with corrected values (Trims and ToUppers)
-        
+
         BackCommand.NotifyCanExecuteChanged();
         StartServerCommand.NotifyCanExecuteChanged();
         UndoCommand.NotifyCanExecuteChanged();
@@ -245,7 +247,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void DeleteServer()
     {
         // TODO: Delete this specific server's files after showing a confirmation popup
-        WorldManager.DeleteSave(WorldFolderDirectory);
+        Directory.Delete(WorldFolderDirectory, true);
         Router.NavigateBack.Execute();
     }
 

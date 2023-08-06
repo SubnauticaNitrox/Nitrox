@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using NitroxServer.Serialization.World;
+using Nitrox.Launcher.ViewModels;
 
 namespace Nitrox.Launcher.Models.Validators;
 
@@ -23,23 +21,22 @@ public sealed class NitroxUniqueSaveName : TypedValidationAttribute<string>
 
     protected override ValidationResult IsValid(string value, ValidationContext context)
     {
-        value = value.Trim();
-        
         static bool SaveFolderExists(string folderName, bool matchExact)
         {
             if (!matchExact)
             {
-                foreach (string dir in Directory.EnumerateDirectories(WorldManager.SavesFolderDir))
+                foreach (string dir in Directory.EnumerateDirectories(ServersViewModel.SavesFolderDir))
                 {
                     if (Path.GetFileName(dir).Equals(folderName, StringComparison.Ordinal)) return true;
                 }
                 return false;
             }
 
-            return Path.Exists(Path.Combine(WorldManager.SavesFolderDir, folderName));
+            return Path.Exists(Path.Combine(ServersViewModel.SavesFolderDir, folderName));
         }
 
-        if (!Directory.Exists(WorldManager.SavesFolderDir))
+        value = value.Trim();
+        if (!Directory.Exists(ServersViewModel.SavesFolderDir))
         {
             return ValidationResult.Success;
         }

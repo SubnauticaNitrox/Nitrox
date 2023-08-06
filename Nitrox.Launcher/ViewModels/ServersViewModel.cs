@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.Input;
@@ -6,17 +8,16 @@ using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
-using NitroxServer.Serialization.Upgrade;
-using NitroxServer.Serialization.World;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
 public partial class ServersViewModel : RoutableViewModelBase
 {
+    public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
+
     public AvaloniaList<ServerEntry> Servers { get; } = new();
 
     public ServersViewModel(IScreen hostScreen) : base(hostScreen)
@@ -29,28 +30,8 @@ public partial class ServersViewModel : RoutableViewModelBase
             }
         });
 
-        // Load servers from the saves folder
-        foreach (WorldManager.Listing listing in WorldManager.GetSaves())
-        {
-            string saveDir = Path.Combine(WorldManager.SavesFolderDir, listing.Name);
-            SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
-            Servers.Add(new ServerEntry
-            {
-                Name = server.SaveName,
-                Password = server.ServerPassword,
-                Seed = server.Seed,
-                GameMode = server.GameMode,
-                PlayerPermissions = server.DefaultPlayerPerm,
-                AutoSaveInterval = server.SaveInterval/1000,
-                MaxPlayers = server.MaxConnections,
-                Port = server.ServerPort,
-                AutoPortForward = server.AutoPortForward,
-                AllowLanDiscovery = server.LANDiscoveryEnabled,
-                AllowCommands = !server.DisableConsole,
-                IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
-                Version = listing.Version
-            });
-        }
+
+        Servers = new AvaloniaList<ServerEntry>(GetSavesOnDisk());
     }
 
     [RelayCommand]
@@ -65,15 +46,13 @@ public partial class ServersViewModel : RoutableViewModelBase
         AddServer(result.Name, result.SelectedGameMode);
     }
 
-    [RelayCommand(CanExecute = nameof(CanManageServer))]
+    [RelayCommand]
     public void ManageServer(ServerEntry server)
     {
         ManageServerViewModel viewModel = AppViewLocator.GetSharedViewModel<ManageServerViewModel>();
         viewModel.LoadFrom(server);
         MainViewModel.Router.Navigate.Execute(viewModel);
     }
-
-    private static bool CanManageServer(ServerEntry server) => server.Version >= SaveDataUpgrade.MinimumSaveVersion && server.Version <= NitroxEnvironment.Version;
 
     private void AddServer(string name, ServerGameMode gameMode)
     {
@@ -83,5 +62,38 @@ public partial class ServersViewModel : RoutableViewModelBase
             GameMode = gameMode,
             Seed = ""
         });
+    }
+
+    public IEnumerable<ServerEntry> GetSavesOnDisk()
+    {
+        static bool ValidateSave(string saveDir) => !File.Exists(Path.Combine(saveDir, "server.cfg")) || File.Exists(Path.Combine(saveDir, "Version.json"));
+
+        foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
+        {
+            // Don't add the file to the list if it doesn't validate
+            if (!ValidateSave(folder))
+            {
+                continue;
+            }
+
+            string saveName = Path.GetFileName(folder);
+            string saveDir = Path.Combine(SavesFolderDir, saveName);
+            SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
+            yield return new ServerEntry
+            {
+                Name = saveName,
+                Password = server.ServerPassword,
+                Seed = server.Seed,
+                GameMode = server.GameMode,
+                PlayerPermissions = server.DefaultPlayerPerm,
+                AutoSaveInterval = server.SaveInterval / 1000,
+                MaxPlayers = server.MaxConnections,
+                Port = server.ServerPort,
+                AutoPortForward = server.AutoPortForward,
+                AllowLanDiscovery = server.LANDiscoveryEnabled,
+                AllowCommands = !server.DisableConsole,
+                IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
+            };
+        }
     }
 }

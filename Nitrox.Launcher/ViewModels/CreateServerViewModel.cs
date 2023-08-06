@@ -6,8 +6,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
-using NitroxServer.Serialization.World;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -35,9 +35,22 @@ public partial class CreateServerViewModel : ModalViewModelBase
     private void Create(Window window)
     {
         DialogResult = true;
-        WorldManager.CreateEmptySave(Path.Combine(WorldManager.SavesFolderDir, Name.Trim()));
+        CreateEmptySave(Name.Trim());
         Close(window);
     }
-    
+
+    public static void CreateEmptySave(string saveName)
+    {
+        string saveDir = Path.Combine(ServersViewModel.SavesFolderDir, saveName);
+        Directory.CreateDirectory(saveDir);
+        SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(saveDir);
+        string fileEnding = "json";
+        if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+        {
+            fileEnding = "nitrox";
+        }
+        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).DisposeAsync();
+    }
+
     private bool CanCreate() => !HasErrors;
 }
