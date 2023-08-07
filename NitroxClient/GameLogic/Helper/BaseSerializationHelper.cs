@@ -18,7 +18,6 @@ public static class BaseSerializationHelper
     {
         using MemoryStream input = new(array);
         using DeflateStream stream = new(input, CompressionMode.Decompress);
-
         return DecompressStream(stream, size);
     }
 
@@ -29,26 +28,15 @@ public static class BaseSerializationHelper
         ushort zeroCounter = 0;
         foreach (byte value in array)
         {
-            if (value == 0)
+            if (value == 0 && zeroCounter != ushort.MaxValue)
             {
-                if (zeroCounter != ushort.MaxValue)
-                {
-                    zeroCounter++;
-                }
-                else
-                {
-                    writer.Write(zeroCounter);
-                    writer.Write(value);
-                    zeroCounter = 0;
-                }
-
+                zeroCounter++;
             }
             else
             {
                 writer.Write(zeroCounter);
-                zeroCounter = 0;
-
                 writer.Write(value);
+                zeroCounter = 0;
             }
         }
 

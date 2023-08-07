@@ -7,7 +7,7 @@ using System.Linq;
 namespace NitroxClient.GameLogic.Helper;
 
 [TestClass]
-public class SerializationHelperTest
+public class BaseSerializationHelperTest
 {
     [TestMethod]
     public void TestBytesRestoring()
@@ -45,7 +45,7 @@ public class SerializationHelperTest
     /// <summary>
     /// Generates bytes to emulate Base data arrays
     /// </summary>
-    private byte[] GenerateRealisticBytes(int length)
+    private static byte[] GenerateRealisticBytes(int length)
     {
         byte[] generated = new byte[length];
         byte[] randomBytes = new byte[length];
@@ -67,7 +67,7 @@ public class SerializationHelperTest
         return generated;
     }
 
-    public void TestSerialization(byte[] original)
+    private static void TestSerialization(byte[] original)
     {
         byte[] compressed = BaseSerializationHelper.CompressBytes(original);
         byte[] decompressed = BaseSerializationHelper.DecompressBytes(compressed, original.Length);
