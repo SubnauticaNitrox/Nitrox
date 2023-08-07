@@ -58,7 +58,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         Servers.Insert(0, new ServerEntry
         {
-            Name = name.Trim(),
+            Name = name,
             GameMode = gameMode,
             Seed = ""
         });

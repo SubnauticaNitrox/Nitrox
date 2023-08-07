@@ -35,7 +35,6 @@ public sealed class NitroxUniqueSaveName : TypedValidationAttribute<string>
             return Path.Exists(Path.Combine(ServersViewModel.SavesFolderDir, folderName));
         }
 
-        value = value.Trim();
         if (!Directory.Exists(ServersViewModel.SavesFolderDir))
         {
             return ValidationResult.Success;

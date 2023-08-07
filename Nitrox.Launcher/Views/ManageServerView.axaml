@@ -81,13 +81,13 @@
                 <Grid ColumnDefinitions="*,30,*">
                     <StackPanel>
                         <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}"
+                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName, Converter={converters:TrimConverter}}"
                                  IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
-                        <TextBox Classes="revealPasswordButton" Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"
+                        <TextBox Classes="revealPasswordButton" Watermark="Server password" Text="{Binding ServerPassword, Converter={converters:TrimConverter}}" PasswordChar="●"
                                  IsEnabled="{Binding !ServerIsOnline}"/>
                     </StackPanel>
                 </Grid>

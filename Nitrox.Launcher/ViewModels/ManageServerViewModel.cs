@@ -153,7 +153,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void Save()
     {
         // If world name was changed, rename save folder to match it
-        string newDir = Path.Combine(ServersViewModel.SavesFolderDir, ServerName.Trim());
+        string newDir = Path.Combine(ServersViewModel.SavesFolderDir, ServerName);
         if (WorldFolderDirectory != newDir)
         {
             // Windows, by default, ignores case when renaming folders. We circumvent this by changing the name to a random one, and then to the desired name.
@@ -163,8 +163,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             Directory.Move(temp.FullName, newDir);
         }
 
-        Server.Name = ServerName.Trim();
-        Server.Password = ServerPassword.Trim();
+        Server.Name = ServerName;
+        Server.Password = ServerPassword;
         Server.GameMode = ServerGameMode;
         Server.Seed = ServerSeed;
         Server.PlayerPermissions = ServerDefaultPlayerPerm;

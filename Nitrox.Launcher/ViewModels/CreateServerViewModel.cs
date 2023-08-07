@@ -35,7 +35,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     private void Create(Window window)
     {
         DialogResult = true;
-        CreateEmptySave(Name.Trim());
+        CreateEmptySave(Name);
         Close(window);
     }
 

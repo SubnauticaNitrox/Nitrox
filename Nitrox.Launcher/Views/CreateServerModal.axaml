@@ -6,6 +6,7 @@
         xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
         xmlns:launcher="clr-namespace:Nitrox.Launcher"
         xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static launcher:DesignData.CreateServerViewModel}"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"
         design:NitroxAttached.Theme="LIGHT"
@@ -18,7 +19,7 @@
             <TextBlock Text="Create a server" Classes="modalHeader" />
             <StackPanel>
                 <TextBlock Text="SERVER NAME" />
-                <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Name}" MaxWidth="400" MaxLength="120" />
+                <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Name, Converter={converters:TrimConverter}}" MaxWidth="400" MaxLength="120" />
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="GAMEMODE" />
