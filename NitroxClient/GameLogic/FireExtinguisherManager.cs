@@ -65,16 +65,17 @@ public class FireExtinguisherManager
             {
                 fireExtinguisher.fmodIndexInWater = fireExtinguisher.soundEmitter.GetParameterIndex("in_water");
             }
-            // TODO: Only play sound if close enough
             fireExtinguisher.soundEmitter.SetParameterValue(fireExtinguisher.fmodIndexInWater, num);
         }
+
+        Quaternion playerRotation = identifier.RemotePlayer.AnimationController.AimingRotation;
 
         // Equivalent of UpdateTarget but with references to the remote player
         fireExtinguisher.fireTarget = null;
         Vector3 vector = default;
         GameObject gameObject = null;
         
-        TraceRemotePlayerTargetPosition(identifier.gameObject, 8f, ref gameObject, ref vector, true);
+        TraceRemotePlayerTargetPosition(identifier.transform.position, playerRotation, identifier.gameObject, 8f, ref gameObject, ref vector, true);
         if (gameObject)
         {
             Fire componentInHierarchy = UWE.Utils.GetComponentInHierarchy<Fire>(gameObject);
@@ -83,12 +84,9 @@ public class FireExtinguisherManager
                 fireExtinguisher.fireTarget = componentInHierarchy;
             }
         }
-        else
-        {
-            // Added line to make sure that the FX is in the right direction
-            fireExtinguisher.fxControl.transform.eulerAngles = identifier.RemotePlayer.AnimationController.AimingRotation.eulerAngles;
-        }
         // end of UpdateTarget
+        // Added line to make sure that the FX is in the right direction
+        fireExtinguisher.fxControl.transform.eulerAngles = playerRotation.eulerAngles;
 
         if (usedThisFrame)
         {
@@ -99,7 +97,11 @@ public class FireExtinguisherManager
                 fireExtinguisher.fxIsPlaying = true;
             }
             // end of UseExtinguisher
-            fireExtinguisher.soundEmitter.Play();
+            // TODO: When sound overhaul is merged (#1780), update this sound emission (2d sound)
+            if (Vector3.Distance(Player.main.transform.position, fireExtinguisher.transform.position) < 30)
+            {
+                fireExtinguisher.soundEmitter.Play();
+            }
         }
         else
         {
@@ -118,16 +120,15 @@ public class FireExtinguisherManager
     /// Replacement for <see cref="UWE.Utils.TraceFPSTargetPosition(GameObject, float, ref GameObject, ref Vector3, out Vector3, bool)"/>
     /// because it originally uses the main camera while we want to use the remote player's view
     /// </summary>
-    private static bool TraceRemotePlayerTargetPosition(GameObject ignoreObj, float maxDist, ref GameObject closestObj, ref Vector3 position, bool includeUseableTriggers = true)
+    private static bool TraceRemotePlayerTargetPosition(Vector3 playerPosition, Quaternion rotation, GameObject ignoreObj, float maxDist, ref GameObject closestObj, ref Vector3 position, bool includeUseableTriggers = true)
     {
-        // TODO: Make it so that the camera reference is replaced by the remote player's stuff
         bool result = false;
-        Camera camera = MainCamera.camera;
-        Vector3 position2 = camera.transform.position;
-        int num = UWE.Utils.RaycastIntoSharedBuffer(new Ray(position2, camera.transform.forward), maxDist, -2097153);
+
+        Vector3 position2 = playerPosition + new Vector3(0, -0.1f, 0);
+        int num = UWE.Utils.RaycastIntoSharedBuffer(new Ray(position2, rotation * Vector3.forward), maxDist, -2097153);
         if (num == 0)
         {
-            num = UWE.Utils.SpherecastIntoSharedBuffer(position2, 0.7f, camera.transform.forward, maxDist, -2097153);
+            num = UWE.Utils.SpherecastIntoSharedBuffer(position2, 0.7f, rotation * Vector3.forward, maxDist, -2097153);
         }
 
         closestObj = null;
