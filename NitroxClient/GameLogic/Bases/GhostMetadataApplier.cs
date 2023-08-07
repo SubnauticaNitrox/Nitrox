@@ -1,6 +1,6 @@
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Bases.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
 using NitroxModel_Subnautica.DataStructures;
 using System.Collections;
 using UnityEngine;
@@ -36,7 +36,7 @@ public static class GhostMetadataApplier
         {
             BaseAddWaterPark or BaseAddPartitionDoorGhost or BaseAddModuleGhost or BaseAddFaceGhost => GetBaseAnchoredFaceMetadata(baseGhost),
             BaseAddPartitionGhost => GetBaseAnchoredCellMetadata(baseGhost),
-            _ => From<BasicGhostMetadata>(baseGhost),
+            _ => From<GhostMetadata>(baseGhost),
         };
         return metadata;
     }
@@ -48,6 +48,7 @@ public static class GhostMetadataApplier
             Log.Error($"Trying to apply metadata to a ghost that is not of type {nameof(GhostMetadata)} : [{entityMetadata.GetType()}]");
             yield break;
         }
+
         if (BuildUtils.IsUnderBaseDeconstructable(baseGhost, true) && entityMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
         {
             yield return deconstructableMetadata.ApplyBaseDeconstructableMetadataTo(baseGhost, @base);
@@ -64,12 +65,14 @@ public static class GhostMetadataApplier
                 {
                     faceMetadata.ApplyBaseAnchoredFaceMetadataTo(baseGhost);
                 }
+
                 break;
             case BaseAddPartitionGhost:
                 if (ghostMetadata is BaseAnchoredCellGhostMetadata cellMetadata)
                 {
                     cellMetadata.ApplyBaseAnchoredCellMetadataTo(baseGhost);
                 }
+
                 break;
             default:
                 ghostMetadata.ApplyBasicMetadataTo(baseGhost);
@@ -86,6 +89,7 @@ public static class GhostMetadataApplier
         {
             metadata.AnchoredCell = ghost.anchoredCell.Value.ToDto();
         }
+
         return metadata;
     }
 
@@ -152,6 +156,7 @@ public static class GhostMetadataApplier
                 metadata.ClassId = identifier.ClassId;
             }
         }
+
         return metadata;
     }
 
@@ -166,6 +171,7 @@ public static class GhostMetadataApplier
                 Log.Error($"Couldn't find an interior piece's parent ConstructableBase to apply a {nameof(BaseDeconstructableGhostMetadata)} to.");
                 yield break;
             }
+
             constructableBase.moduleFace = ghostMetadata.ModuleFace.Value.ToUnity();
 
             IPrefabRequest request = PrefabDatabase.GetPrefabAsync(ghostMetadata.ClassId);
@@ -177,10 +183,12 @@ public static class GhostMetadataApplier
                 Log.Error($"Couldn't find a prefab for module of interior piece of ClassId: {ghostMetadata.ClassId}");
                 yield break;
             }
+
             if (!baseGhost.targetBase)
             {
                 baseGhost.targetBase = @base;
             }
+
             Base.Face face = ghostMetadata.ModuleFace.Value.ToUnity();
             face.cell += baseGhost.targetBase.GetAnchor();
             GameObject moduleObject = baseGhost.targetBase.SpawnModule(prefab, face);
@@ -190,6 +198,7 @@ public static class GhostMetadataApplier
                 Log.Error("Module couldn't be spawned for interior piece");
                 yield break;
             }
+
             if (moduleObject.TryGetComponent(out IBaseModule baseModule))
             {
                 baseModule.constructed = constructableBase.constructedAmount;

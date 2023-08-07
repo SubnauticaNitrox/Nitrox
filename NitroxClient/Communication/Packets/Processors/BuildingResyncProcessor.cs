@@ -28,7 +28,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
     }
 
     public override void Process(BuildingResync packet)
-    {        
+    {
         if (!BuildingHandler.Main)
         {
             return;
@@ -45,13 +45,13 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         yield return CoroutineHelper.SafelyYieldEnumerator(UpdateEntities<Base, BuildEntity>(
             entities.Keys.OfType<BuildEntity>().ToList(), OverwriteBase, (entity, reference) =>
             {
-                return NitroxVector3.Distance(entity.LocalPosition, reference) < 0.001f;
+                return NitroxVector3.Distance(entity.Transform.LocalPosition, reference) < 0.001f;
             }
         ), exception => Log.Error($"Encountered an exception while resyncing BuildEntities:\n{exception}"));
         yield return CoroutineHelper.SafelyYieldEnumerator(UpdateEntities<Constructable, ModuleEntity>(
             entities.Keys.OfType<ModuleEntity>().ToList(), OverwriteModule, (entity, reference) =>
             {
-                return NitroxVector3.Distance(entity.LocalPosition, reference) < 0.001f;
+                return NitroxVector3.Distance(entity.Transform.LocalPosition, reference) < 0.001f;
             }
         ), exception => Log.Error($"Encountered an exception while resyncing ModuleEntities:\n{exception}"));
         BuildingHandler.Main.Resyncing = false;

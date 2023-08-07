@@ -11,7 +11,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 public class MapRoomEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
-    public NitroxInt3 Cell;
+    public NitroxInt3 Cell { get; set; }
 
     [IgnoreConstructor]
     protected MapRoomEntity()
@@ -29,19 +29,10 @@ public class MapRoomEntity : GlobalRootEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public MapRoomEntity(NitroxInt3 cell, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public MapRoomEntity(NitroxInt3 cell, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         Cell = cell;
-
-        Id = id;
-        TechType = techType;
-        Metadata = metadata;
-        ParentId = parentId;
-        Transform = transform;
-        ChildEntities = childEntities;
-        Level = level;
-        ClassId = classId;
-        SpawnedByServer = spawnedByServer;
     }
 
     public override string ToString()

@@ -4,6 +4,7 @@ using NitroxModel.DataStructures.Unity;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures.GameLogic.Bases;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
@@ -14,7 +15,7 @@ public class InteriorPieceEntity : GlobalRootEntity
     public NitroxBaseFace BaseFace;
 
     [IgnoreDataMember]
-    public bool IsWaterPark => waterparkClassIds.Contains(ClassId);
+    public bool IsWaterPark => ClassId is "31662630-7cba-4583-8456-2fa1c4cc31aa" or "c2a91864-0f0f-4d8a-99b8-9867571763dd"; // classIds for WaterPark.prefab and WaterParkLarge.prefab
 
     [IgnoreConstructor]
     protected InteriorPieceEntity()
@@ -24,42 +25,18 @@ public class InteriorPieceEntity : GlobalRootEntity
 
     public static InteriorPieceEntity MakeEmpty()
     {
-        return new();
-    }
-
-    public InteriorPieceEntity(NitroxId id, NitroxId parentId, NitroxBaseFace baseFace)
-    {
-        Id = id;
-        ParentId = parentId;
-        BaseFace = baseFace;
-
-        Transform = new();
+        return new InteriorPieceEntity();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InteriorPieceEntity(NitroxBaseFace baseFace, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InteriorPieceEntity(NitroxBaseFace baseFace, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         BaseFace = baseFace;
-
-        Id = id;
-        TechType = techType;
-        Metadata = metadata;
-        ParentId = parentId;
-        Transform = transform;
-        ChildEntities = childEntities;
-        Level = level;
-        ClassId = classId;
-        SpawnedByServer = spawnedByServer;
     }
 
     public override string ToString()
     {
         return $"[InteriorPieceEntity Id: {Id}, ParentId: {ParentId}, BaseFace: {BaseFace}]";
     }
-
-    /// <summary>
-    /// classIds for WaterPark.prefab and WaterParkLarge.prefab
-    /// </summary>
-    [IgnoreDataMember()]
-    private readonly List<string> waterparkClassIds = new() { "31662630-7cba-4583-8456-2fa1c4cc31aa", "c2a91864-0f0f-4d8a-99b8-9867571763dd" };
 }

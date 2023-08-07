@@ -1,73 +1,85 @@
+using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
 namespace NitroxModel.DataStructures.GameLogic.Bases;
 
 [DataContract]
-public class BaseData
+public class BaseData : IEquatable<BaseData>
 {
     [DataMember(Order = 1)]
     public NitroxInt3 BaseShape;
 
     [DataMember(Order = 2)]
-    public byte[] Faces;
-
-    [DataMember(Order = 3)]
-    public byte[] Cells;
-
-    [DataMember(Order = 4)]
-    public byte[] Links;
-
-    [DataMember(Order = 5)]
     public NitroxInt3 CellOffset;
 
-    [DataMember(Order = 6)]
-    public byte[] Masks;
-
-    [DataMember(Order = 7)]
-    public byte[] IsGlass;
-
-    [DataMember(Order = 8)]
+    [DataMember(Order = 3)]
     public NitroxInt3 Anchor;
 
-    [DataMember(Order = 9)]
-    public int PrecompressionSize;
+    [DataMember(Order = 4)]
+    public int PreCompressionSize;
 
-    public override string ToString()
+    [DataMember(Order = 5)]
+    public byte[] Faces;
+
+    [DataMember(Order = 6)]
+    public byte[] Cells;
+
+    [DataMember(Order = 7)]
+    public byte[] Links;
+
+    [DataMember(Order = 8)]
+    public byte[] Masks;
+
+    [DataMember(Order = 9)]
+    public byte[] IsGlass;
+
+    public bool Equals(BaseData other)
     {
-        StringBuilder builder = new();
-        if (BaseShape != null)
+        if (ReferenceEquals(null, other))
         {
-            builder.AppendLine($"BaseShape: [{string.Join(";", BaseShape)}]");
+            return false;
         }
-        if (Faces != null)
+
+        if (ReferenceEquals(this, other))
         {
-            builder.AppendLine($"Faces: {string.Join(", ", Faces)}");
+            return true;
         }
-        if (Cells != null)
+
+        return BaseShape.Equals(other.BaseShape) &&
+               CellOffset.Equals(other.CellOffset) &&
+               Anchor.Equals(other.Anchor) &&
+               PreCompressionSize == other.PreCompressionSize &&
+               Faces.SequenceEqual(other.Faces) &&
+               Cells.SequenceEqual(other.Cells) &&
+               Links.SequenceEqual(other.Links) &&
+               Masks.SequenceEqual(other.Masks) &&
+               IsGlass.SequenceEqual(other.IsGlass);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((BaseData)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            builder.AppendLine($"Cells: {string.Join(", ", Cells)}");
+            int hashCode = BaseShape.GetHashCode();
+            hashCode = (hashCode * 397) ^ CellOffset.GetHashCode();
+            hashCode = (hashCode * 397) ^ Anchor.GetHashCode();
+            hashCode = (hashCode * 397) ^ PreCompressionSize;
+            hashCode = (hashCode * 397) ^ (Faces != null ? Faces.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (Cells != null ? Cells.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (Links != null ? Links.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (Masks != null ? Masks.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (IsGlass != null ? IsGlass.GetHashCode() : 0);
+            return hashCode;
         }
-        if (Links != null)
-        {
-            builder.AppendLine($"Links: {string.Join(", ", Links)}");
-        }
-        if (CellOffset != null)
-        {
-            builder.AppendLine($"CellOffset: [{string.Join(";", CellOffset)}]");
-        }
-        if (Masks != null)
-        {
-            builder.AppendLine($"Masks: {string.Join(", ", Masks)}");
-        }
-        if (IsGlass != null)
-        {
-            builder.AppendLine($"IsGlass: {string.Join(", ", IsGlass)}");
-        }
-        if (Anchor != null)
-        {
-            builder.AppendLine($"CellOffset: [{string.Join(";", Anchor)}]");
-        }
-        return builder.ToString();
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NitroxModel.DataStructures;
+namespace NitroxModel.DataStructures.GameLogic.Bases;
 
 [Serializable, DataContract]
 public struct NitroxBaseFace : IEquatable<NitroxBaseFace>
