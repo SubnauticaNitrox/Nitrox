@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.Input;
@@ -31,7 +32,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         });
 
 
-        Servers = new AvaloniaList<ServerEntry>(GetSavesOnDisk());
+        Servers = new AvaloniaList<ServerEntry>(GetSavesOnDisk().OrderByDescending(entry => entry.LastAccessedTime));
     }
 
     [RelayCommand]
@@ -79,6 +80,8 @@ public partial class ServersViewModel : RoutableViewModelBase
             string saveName = Path.GetFileName(folder);
             string saveDir = Path.Combine(SavesFolderDir, saveName);
             SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
+            string fileEnding = "json";
+            if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
             yield return new ServerEntry
             {
                 Name = saveName,
@@ -93,6 +96,11 @@ public partial class ServersViewModel : RoutableViewModelBase
                 AllowLanDiscovery = server.LANDiscoveryEnabled,
                 AllowCommands = !server.DisableConsole,
                 IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
+                LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}")) ?
+                                                             // This file is affected by server saving
+                                                             Path.Combine(folder, $"WorldData.{fileEnding}") :
+                                                             // If the above file doesn't exist (server was never ran), use the Version file instead
+                                                             Path.Combine(folder, $"Version.{fileEnding}"))
             };
         }
     }
