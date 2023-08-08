@@ -13,7 +13,7 @@ public sealed partial class EscapePod_StopIntroCinematic_Patch : NitroxPatch, ID
     {
         if (isInterrupted)
         {
-            //TODO: Currently this is sent as an unauthenticated packet when skipping the intro up front (Configuration=Debug) and is therefor not processed by the server.
+            //TODO: Currently this is sent as an unauthenticated packet when skipping the intro up front (Configuration=Debug) and is therefore not processed by the server.
             Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
         }
     }
