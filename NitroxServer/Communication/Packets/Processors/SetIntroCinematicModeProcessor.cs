@@ -17,6 +17,12 @@ public class SetIntroCinematicModeProcessor : AuthenticatedPacketProcessor<SetIn
 
     public override void Process(SetIntroCinematicMode packet, Player player)
     {
+        if (packet.PlayerId != player.Id)
+        {
+            Log.Warn($"Received {nameof(SetIntroCinematicMode)} packet where packet.{nameof(SetIntroCinematicMode.PlayerId)} was not equal to sending playerId");
+            return;
+        }
+
         player.PlayerContext.IntroCinematicMode = packet.Mode;
         playerManager.SendPacketToOtherPlayers(packet, player);
 

@@ -86,7 +86,8 @@ public class PlayerManager
         }
     }
 
-    public int GetTotalPlayerCount() => playersById.Count + 1; //Multiplayer-player(s) + you
+    /// <returns>Remote players + You => X + 1</returns>
+    public int GetTotalPlayerCount() => playersById.Count + 1;
 
     public delegate void OnCreateDelegate(string playerId, RemotePlayer remotePlayer);
     public delegate void OnRemoveDelegate(string playerId, RemotePlayer remotePlayer);
