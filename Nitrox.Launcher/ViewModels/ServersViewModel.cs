@@ -86,7 +86,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             {
                 Name = saveName,
                 Password = server.ServerPassword,
-                Seed = server.Seed,
+                Seed = server.Seed ?? "",
                 GameMode = server.GameMode,
                 PlayerPermissions = server.DefaultPlayerPerm,
                 AutoSaveInterval = server.SaveInterval / 1000,
