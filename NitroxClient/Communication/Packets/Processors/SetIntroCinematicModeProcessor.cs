@@ -6,16 +6,16 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCinematicMode>
 {
-    private readonly PlayerManager remotePlayerManager;
+    private readonly PlayerManager playerManager;
 
-    public SetIntroCinematicModeProcessor(PlayerManager remotePlayerManager)
+    public SetIntroCinematicModeProcessor(PlayerManager playerManager)
     {
-        this.remotePlayerManager = remotePlayerManager;
+        this.playerManager = playerManager;
     }
 
     public override void Process(SetIntroCinematicMode packet)
     {
-        if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
         {
             remotePlayer.PlayerContext.IntroCinematicMode = packet.Mode;
         }
