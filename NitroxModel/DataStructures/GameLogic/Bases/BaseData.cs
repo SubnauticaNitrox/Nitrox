@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace NitroxModel.DataStructures.GameLogic.Bases;
 
@@ -54,7 +53,7 @@ public class BaseData : IEquatable<BaseData>
                Faces.SequenceEqual(other.Faces) &&
                Cells.SequenceEqual(other.Cells) &&
                Links.SequenceEqual(other.Links) &&
-               Masks.SequenceEqual(other.Masks) &&
+               Masks.SequenceEqualOrBothNull(other.Masks) &&
                IsGlass.SequenceEqual(other.IsGlass);
     }
 

@@ -1,5 +1,5 @@
-using System;
 using NitroxModel.DataStructures;
+using System;
 
 namespace NitroxModel.Packets;
 
@@ -7,8 +7,8 @@ namespace NitroxModel.Packets;
 public sealed class ModifyConstructedAmount : Packet
 {
     // TODO: Add resourcemap sync
-    public NitroxId GhostId;
-    public float ConstructedAmount;
+    public NitroxId GhostId { get; }
+    public float ConstructedAmount { get; }
 
     public ModifyConstructedAmount(NitroxId ghostId, float constructedAmount)
     {

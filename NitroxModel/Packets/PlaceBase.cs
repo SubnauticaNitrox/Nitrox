@@ -1,6 +1,6 @@
-using System;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using System;
 
 namespace NitroxModel.Packets;
 

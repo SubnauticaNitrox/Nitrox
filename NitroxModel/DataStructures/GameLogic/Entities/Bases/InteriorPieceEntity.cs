@@ -1,10 +1,10 @@
 using BinaryPack.Attributes;
+using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using NitroxModel.DataStructures.GameLogic.Bases;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 

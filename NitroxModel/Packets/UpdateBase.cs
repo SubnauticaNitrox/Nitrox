@@ -1,7 +1,7 @@
-using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
+using System;
 using System.Collections.Generic;
 
 namespace NitroxModel.Packets;

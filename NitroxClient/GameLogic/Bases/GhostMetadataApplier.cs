@@ -65,15 +65,15 @@ public static class GhostMetadataApplier
                 {
                     faceMetadata.ApplyBaseAnchoredFaceMetadataTo(baseGhost);
                 }
-
                 break;
+
             case BaseAddPartitionGhost:
                 if (ghostMetadata is BaseAnchoredCellGhostMetadata cellMetadata)
                 {
                     cellMetadata.ApplyBaseAnchoredCellMetadataTo(baseGhost);
                 }
-
                 break;
+
             default:
                 ghostMetadata.ApplyBasicMetadataTo(baseGhost);
                 break;
@@ -116,6 +116,7 @@ public static class GhostMetadataApplier
             BaseAddFaceGhost ghost => ghost.anchoredFace?.ToDto(),
             _ => null
         };
+
         return metadata;
     }
 

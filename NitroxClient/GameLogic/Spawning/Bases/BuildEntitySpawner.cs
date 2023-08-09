@@ -68,9 +68,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             buildEntity.Id = baseId;
         }
 
-        buildEntity.Transform.LocalPosition = targetBase.transform.localPosition.ToDto();
-        buildEntity.Transform.LocalRotation = targetBase.transform.localRotation.ToDto();
-        buildEntity.Transform.LocalScale = targetBase.transform.localScale.ToDto();
+        buildEntity.Transform = targetBase.transform.ToLocalDto();
 
         buildEntity.BaseData = GetBaseData(targetBase);
         buildEntity.ChildEntities.AddRange(BuildUtils.GetChildEntities(targetBase, baseId));

@@ -35,6 +35,6 @@ public class MoonpoolEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[MoonpoolEntity Id: {Id}, Cell: {Cell}, Children count: {ChildEntities.Count}]";
+        return $"[MoonpoolEntity Id: {Id}, Cell: {Cell}]";
     }
 }

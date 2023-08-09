@@ -129,9 +129,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         {
             moduleEntity.ParentId = parentId;
         }
-        moduleEntity.Transform.LocalPosition = constructable.transform.localPosition.ToDto();
-        moduleEntity.Transform.LocalRotation = constructable.transform.localRotation.ToDto();
-        moduleEntity.Transform.LocalScale = constructable.transform.localScale.ToDto();
+        moduleEntity.Transform = constructable.transform.ToLocalDto();
         moduleEntity.TechType = constructable.techType.ToDto();
         moduleEntity.ConstructedAmount = constructable.constructedAmount;
         moduleEntity.IsInside = constructable.isInside;
