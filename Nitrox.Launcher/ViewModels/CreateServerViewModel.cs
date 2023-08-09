@@ -35,21 +35,27 @@ public partial class CreateServerViewModel : ModalViewModelBase
     private void Create(Window window)
     {
         DialogResult = true;
-        CreateEmptySave(Name);
+        CreateEmptySave(Name, SelectedGameMode);
         Close(window);
     }
 
-    public static void CreateEmptySave(string saveName)
+    public static void CreateEmptySave(string saveName, ServerGameMode saveGameMode)
     {
         string saveDir = Path.Combine(ServersViewModel.SavesFolderDir, saveName);
         Directory.CreateDirectory(saveDir);
-        SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(saveDir);
+        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
         string fileEnding = "json";
-        if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+        if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
         {
             fileEnding = "nitrox";
         }
         File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).DisposeAsync();
+        
+        using (config.Update(saveDir))
+        {
+            config.SaveName = saveName;
+            config.GameMode = saveGameMode;
+        }
     }
 
     private bool CanCreate() => !HasErrors;

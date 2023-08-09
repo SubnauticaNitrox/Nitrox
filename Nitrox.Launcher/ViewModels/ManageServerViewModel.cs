@@ -179,6 +179,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         SubnauticaServerConfig config = SubnauticaServerConfig.Load(WorldFolderDirectory);
         using (config.Update(WorldFolderDirectory))
         {
+            config.SaveName = Server.Name;
             config.ServerPassword = Server.Password;
             if (Server.IsNewServer) { config.Seed = Server.Seed; }
             config.GameMode = Server.GameMode;

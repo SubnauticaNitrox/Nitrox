@@ -14,6 +14,10 @@ public class ToStringConverter : Converter<ToStringConverter>, IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
+        if (value == null)
+        {
+            return null;
+        }
         if (value?.GetType().IsEnum ?? false)
         {
             value = value.ToString();
