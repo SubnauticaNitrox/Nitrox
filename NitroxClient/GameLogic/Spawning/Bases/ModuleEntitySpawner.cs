@@ -31,7 +31,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
     public override IEnumerator SpawnAsync(ModuleEntity entity, TaskResult<Optional<GameObject>> result)
     {
         Log.Debug($"Spawning a ModuleEntity: {entity.Id}");
-        
+
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
             Log.Error("Trying to respawn an already spawned module without a proper resync process.");
@@ -89,9 +89,9 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         GameObject moduleObject = UnityEngine.Object.Instantiate(prefab);
         Transform moduleTransform = moduleObject.transform;
         moduleTransform.parent = parent;
-        moduleTransform.localPosition = moduleEntity.LocalPosition.ToUnity();
-        moduleTransform.localRotation = moduleEntity.LocalRotation.ToUnity();
-        moduleTransform.localScale = moduleEntity.LocalScale.ToUnity();
+        moduleTransform.localPosition = moduleEntity.Transform.LocalPosition.ToUnity();
+        moduleTransform.localRotation = moduleEntity.Transform.LocalRotation.ToUnity();
+        moduleTransform.localScale = moduleEntity.Transform.LocalScale.ToUnity();
         ApplyModuleData(moduleEntity, moduleObject, result);
         yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, moduleEntity.Id);
     }
@@ -129,9 +129,9 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         {
             moduleEntity.ParentId = parentId;
         }
-        moduleEntity.LocalPosition = constructable.transform.localPosition.ToDto();
-        moduleEntity.LocalRotation = constructable.transform.localRotation.ToDto();
-        moduleEntity.LocalScale = constructable.transform.localScale.ToDto();
+        moduleEntity.Transform.LocalPosition = constructable.transform.localPosition.ToDto();
+        moduleEntity.Transform.LocalRotation = constructable.transform.localRotation.ToDto();
+        moduleEntity.Transform.LocalScale = constructable.transform.localScale.ToDto();
         moduleEntity.TechType = constructable.techType.ToDto();
         moduleEntity.ConstructedAmount = constructable.constructedAmount;
         moduleEntity.IsInside = constructable.isInside;

@@ -12,16 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 public class BuildEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
-    public NitroxVector3 LocalPosition;
-
-    [DataMember(Order = 2)]
-    public NitroxQuaternion LocalRotation;
-
-    [DataMember(Order = 3)]
-    public NitroxVector3 LocalScale;
-
-    [DataMember(Order = 4)]
-    public BaseData BaseData;
+    public BaseData BaseData { get; set; }
 
     [IgnoredMember]
     public int OperationId;
@@ -34,37 +25,14 @@ public class BuildEntity : GlobalRootEntity
 
     public static BuildEntity MakeEmpty()
     {
-        return new();
-    }
-
-    public BuildEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, BaseData baseData)
-    {
-        Id = id;
-        LocalPosition = localPosition;
-        LocalRotation = localRotation;
-        LocalScale = localScale;
-        BaseData = baseData;
-
-        Transform = new();
+        return new BuildEntity();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public BuildEntity(BaseData baseData, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public BuildEntity(BaseData baseData, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         BaseData = baseData;
-        LocalPosition = localPosition;
-        LocalRotation = localRotation;
-        LocalScale = localScale;
-
-        Id = id;
-        TechType = techType;
-        Metadata = metadata;
-        ParentId = parentId;
-        Transform = transform;
-        ChildEntities = childEntities;
-        Level = level;
-        ClassId = classId;
-        SpawnedByServer = spawnedByServer;
     }
 
     public override string ToString()

@@ -1,8 +1,10 @@
+using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
 namespace NitroxModel.Packets;
 
+[Serializable]
 public sealed class BaseDeconstructed : Packet
 {
     public NitroxId FormerBaseId;
@@ -12,10 +14,5 @@ public sealed class BaseDeconstructed : Packet
     {
         FormerBaseId = formerBaseId;
         ReplacerGhost = replacerGhost;
-    }
-
-    public override string ToString()
-    {
-        return $"BaseDeconstructed [FormerBaseId: {FormerBaseId}, ReplacerGhost: {ReplacerGhost}]";
     }
 }

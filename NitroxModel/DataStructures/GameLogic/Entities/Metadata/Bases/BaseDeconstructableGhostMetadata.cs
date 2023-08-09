@@ -1,25 +1,26 @@
 using System;
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures.GameLogic.Bases;
 
-namespace NitroxModel.DataStructures.GameLogic.Bases.Metadata;
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
 
 [Serializable, DataContract]
 public class BaseDeconstructableGhostMetadata : GhostMetadata
 {
     [DataMember(Order = 1)]
-    public NitroxBaseFace? ModuleFace;
+    public NitroxBaseFace? ModuleFace { get; set; }
 
     [DataMember(Order = 2)]
-    public string ClassId;
+    public string ClassId { get; set; }
 
     public BaseDeconstructableGhostMetadata()
     {
-        // Constructor to be able to use this type as a generic type
+        // Constructor for ProtoBuf deserialization.
     }
 
-    public BaseDeconstructableGhostMetadata(NitroxInt3 targetOffset, NitroxBaseFace? moduleFace, string classId)
+    /// <remarks>Used for json deserialization</remarks>
+    public BaseDeconstructableGhostMetadata(NitroxBaseFace? moduleFace, string classId, NitroxInt3 targetOffset) : base(targetOffset)
     {
-        TargetOffset = targetOffset;
         ModuleFace = moduleFace;
         ClassId = classId;
     }

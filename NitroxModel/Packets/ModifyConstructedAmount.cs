@@ -1,7 +1,9 @@
+using System;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets;
 
+[Serializable]
 public sealed class ModifyConstructedAmount : Packet
 {
     // TODO: Add resourcemap sync
@@ -12,10 +14,5 @@ public sealed class ModifyConstructedAmount : Packet
     {
         GhostId = ghostId;
         ConstructedAmount = constructedAmount;
-    }
-
-    public override string ToString()
-    {
-        return $"ModifyConstructedAmount [GhostId: {GhostId}, ConstructedAmount: {ConstructedAmount}]";
     }
 }

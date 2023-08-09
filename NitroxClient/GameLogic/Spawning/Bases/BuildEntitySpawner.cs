@@ -34,7 +34,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         }
 
         DateTimeOffset beginTime = DateTimeOffset.Now;
-        GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, entity.LocalPosition.ToUnity(), entity.LocalRotation.ToUnity(), entity.LocalScale.ToUnity(), false);
+        GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, entity.Transform.LocalPosition.ToUnity(), entity.Transform.LocalRotation.ToUnity(), entity.Transform.LocalScale.ToUnity(), false);
         if (LargeWorld.main)
         {
             LargeWorld.main.streamer.cellManager.RegisterEntity(newBase);
@@ -68,9 +68,9 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             buildEntity.Id = baseId;
         }
 
-        buildEntity.LocalPosition = targetBase.transform.localPosition.ToDto();
-        buildEntity.LocalRotation = targetBase.transform.localRotation.ToDto();
-        buildEntity.LocalScale = targetBase.transform.localScale.ToDto();
+        buildEntity.Transform.LocalPosition = targetBase.transform.localPosition.ToDto();
+        buildEntity.Transform.LocalRotation = targetBase.transform.localRotation.ToDto();
+        buildEntity.Transform.LocalScale = targetBase.transform.localScale.ToDto();
 
         buildEntity.BaseData = GetBaseData(targetBase);
         buildEntity.ChildEntities.AddRange(BuildUtils.GetChildEntities(targetBase, baseId));
@@ -80,7 +80,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     public static BaseData GetBaseData(Base targetBase)
     {
-        Func<byte[], byte[]> c = SerializationHelper.CompressBytes;
+        Func<byte[], byte[]> c = BaseSerializationHelper.CompressBytes;
 
         BaseData baseData = new()
         {
@@ -97,7 +97,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         if (targetBase.links != null)
         {
             baseData.Links = c(targetBase.links);
-            baseData.PrecompressionSize = targetBase.links.Length;
+            baseData.PreCompressionSize = targetBase.links.Length;
         }
         baseData.CellOffset = targetBase.cellOffset.ToDto();
         if (targetBase.masks != null)
@@ -114,8 +114,8 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     public static void ApplyBaseData(BaseData baseData, Base @base)
     {
-        Func<byte[], int, byte[]> d = SerializationHelper.DecompressBytes;
-        int size = baseData.PrecompressionSize;
+        Func<byte[], int, byte[]> d = BaseSerializationHelper.DecompressBytes;
+        int size = baseData.PreCompressionSize;
 
         @base.baseShape = new(); // Reset it so that the following instruction is understood as a change
         @base.SetSize(baseData.BaseShape.ToUnity());

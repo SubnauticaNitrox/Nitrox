@@ -4,10 +4,11 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 
 namespace NitroxServer.GameLogic.Entities;
 
-public class GlobalRootData : EntityData
+[DataContract]
+public class GlobalRootData
 {
     [DataMember(Order = 1)]
-    public new List<GlobalRootEntity> Entities = new();
+    public List<GlobalRootEntity> Entities = new();
 
     public static GlobalRootData From(List<GlobalRootEntity> entities)
     {
