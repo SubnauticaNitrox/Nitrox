@@ -9,7 +9,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
-using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
@@ -113,10 +112,10 @@ namespace NitroxClient.MonoBehaviours
 
         public void ProcessPackets()
         {
-            PacketProcessor ResolveProcessor(Packet packet)
+            static PacketProcessor ResolveProcessor(Packet packet, Dictionary<Type, PacketProcessor> processorCache)
             {
                 Type packetType = packet.GetType();
-                if (packetProcessorCache.TryGetValue(packetType, out PacketProcessor processor))
+                if (processorCache.TryGetValue(packetType, out PacketProcessor processor))
                 {
                     return processor;
                 }
@@ -124,7 +123,7 @@ namespace NitroxClient.MonoBehaviours
                 try
                 {
                     Type packetProcessorType = typeof(ClientPacketProcessor<>).MakeGenericType(packetType);
-                    return packetProcessorCache[packetType] = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
+                    return processorCache[packetType] = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
                 }
                 catch (Exception ex)
                 {
@@ -134,17 +133,17 @@ namespace NitroxClient.MonoBehaviours
                 return null;
             }
 
-            foreach (Packet packet in packetReceiver.GetReceivedPackets())
+            packetReceiver.ConsumePackets(static (packet, processorCache) =>
             {
                 try
                 {
-                    ResolveProcessor(packet)?.ProcessPacket(packet, null);
+                    ResolveProcessor(packet, processorCache)?.ProcessPacket(packet, null);
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, $"Error while processing packet {packet}");
                 }
-            }
+            }, packetProcessorCache);
         }
 
         public IEnumerator StartSession()
