@@ -94,7 +94,7 @@
             <Setter.Value>
                 <DataTemplate DataType="design:TitleBarItem">
                     <Panel>
-                        <Button Command="{Binding Command}" />
+                        <Button Command="{Binding Command}" Tag="{Binding HoverBackgroundColor}" />
                         <Image Source="{Binding Icon, Converter={converters:BitmapAssetValueConverter}}" />
                     </Panel>
                 </DataTemplate>
@@ -115,6 +115,12 @@
         <Setter Property="Width" Value="46" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
     </Style>
     <Style Selector="Panel.titleBar ContentPresenter:nth-child(1) Button">
         <Setter Property="CornerRadius" Value="0 0 0 8" />

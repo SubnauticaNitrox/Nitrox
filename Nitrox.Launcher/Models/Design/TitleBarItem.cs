@@ -1,12 +1,14 @@
 using System.Windows.Input;
+using Avalonia.Media;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.Models.Design;
 
 public class TitleBarItem : ReactiveObject
 {
-    private string icon;
-    private ICommand command;
+    private string icon = "";
+    private ICommand command = ReactiveCommand.Create(() => { });
+    private SolidColorBrush hoverBackgroundColor = new(Color.Parse("#333333"));
 
     public string Icon
     {
@@ -20,9 +22,9 @@ public class TitleBarItem : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref command, value);
     }
 
-    public TitleBarItem()
+    public SolidColorBrush HoverBackgroundColor
     {
-        icon = "";
-        command = ReactiveCommand.Create(() => { });
+        get => hoverBackgroundColor;
+        set => this.RaiseAndSetIfChanged(ref hoverBackgroundColor, value);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Media;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -48,7 +49,8 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             new()
             {
                 Command = ReactiveCommand.Create(() => MainWindow.Close()),
-                Icon = "/Assets/Images/material-design-icons/close-w-10.png"
+                Icon = "/Assets/Images/material-design-icons/close-w-10.png",
+                HoverBackgroundColor = new SolidColorBrush(Colors.Red)
             }
         };
 
