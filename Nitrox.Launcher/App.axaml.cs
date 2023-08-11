@@ -23,6 +23,7 @@ public partial class App : Application
 
         SplatRegistrations.Register<MainWindowViewModel>();
         SplatRegistrations.Register<CreateServerViewModel>();
+        SplatRegistrations.Register<ConfirmationBoxViewModel>();
         SplatRegistrations.Register<ErrorViewModel>();
         SplatRegistrations.SetupIOC();
     }

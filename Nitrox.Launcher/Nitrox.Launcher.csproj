@@ -37,6 +37,13 @@
       <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Views\ConfirmationBoxModal.axaml.cs">
+        <DependentUpon>UserConfimationModal.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
     <!-- Ensure server files are available for launcher. -->
     <Target Name="BuildServer" AfterTargets="Build">
         <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj"

@@ -46,6 +46,7 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
             MainWindowViewModel => typeof(MainWindow),
             ErrorViewModel => typeof(ErrorModal),
             CreateServerViewModel => typeof(CreateServerModal),
+            ConfirmationBoxViewModel => typeof(ConfirmationBoxModal),
             PlayViewModel => typeof(PlayView),
             ServersViewModel vm when vm.Servers.Any() => typeof(ServersView),
             ServersViewModel vm when !vm.Servers.Any() => typeof(EmptyServersView),

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models;
@@ -245,9 +246,14 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
-    private void DeleteServer()
+    private async Task DeleteServer()
     {
-        // TODO: Delete this specific server's files after showing a confirmation popup
+        ConfirmationBoxViewModel result = await MainViewModel.ShowDialogAsync<ConfirmationBoxViewModel>(); // TODO: NEED TO FIND OUT HOW TO PASS A PARAMETER HERE
+        if (result == null)
+        {
+            return;
+        }
+        
         Directory.Delete(WorldFolderDirectory, true);
         Router.NavigateBack.Execute();
     }
