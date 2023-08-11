@@ -1,7 +1,7 @@
-using BinaryPack.Attributes;
-using ProtoBufNet;
 using System;
 using System.Runtime.Serialization;
+using BinaryPack.Attributes;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
 

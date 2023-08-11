@@ -1,8 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
-using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -13,14 +16,10 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UWE;
-using static NitroxClient.GameLogic.Bases.BuildingHandler;
 using static System.Reflection.Emit.OpCodes;
+using static NitroxClient.GameLogic.Bases.BuildingHandler;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -80,7 +79,7 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
                 CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entityId));
                 return;
             }
-            CoroutineHost.StartCoroutine(EntityPostSpawner.ApplyPostSpawner(constructable.gameObject, entityId));
+            CoroutineHost.StartCoroutine(BuildingPostSpawner.ApplyPostSpawner(constructable.gameObject, entityId));
         }
         // update as a normal module
 
@@ -175,7 +174,7 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
 
         if (moduleObject)
         {
-            yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, entityId);
+            yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, entityId);
         }
     }
 }

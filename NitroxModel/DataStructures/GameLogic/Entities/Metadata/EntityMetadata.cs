@@ -1,7 +1,7 @@
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
-using ProtoBufNet;
 using System;
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 {

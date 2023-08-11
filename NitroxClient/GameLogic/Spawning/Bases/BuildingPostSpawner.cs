@@ -1,21 +1,34 @@
-using NitroxClient.MonoBehaviours.Overrides;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using System;
 using System.Collections;
+using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Overrides;
+using NitroxModel.DataStructures;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
+namespace NitroxClient.GameLogic.Spawning.Bases;
 
-/// <summary>
-/// For better immersion we split the Bench in three parts (left/center/right). On each can sit one player.
-/// </summary>
-public class BenchPostSpawner : IConstructablePostSpawner
+public static class BuildingPostSpawner
 {
-    public TechType TechType => TechType.Bench;
+    public static IEnumerator ApplyPostSpawner(GameObject gameObject, NitroxId objectId)
+    {
+        // If we end up having more than 2-3 ifs in here in the future, create a PostSpawner generic class with detection of the required components from gameObject
+        if (gameObject.TryGetComponent(out Constructable constructable) && constructable.techType.Equals(TechType.Bench))
+        {
+            return SetupBench(constructable.gameObject, objectId);
+        }
+        else if (gameObject.TryGetComponent(out LargeRoomWaterPark largeRoomWaterPark))
+        {
+            return SetupLargeRoomWaterPark(largeRoomWaterPark, objectId);
+        }
+        return null;
+    }
+
     private const int LAYER_USEABLE = 13;
 
-    public IEnumerator PostSpawnAsync(GameObject gameObject, NitroxId benchId)
+    /// <summary>
+    /// For better immersion we split the Bench in three parts (left/center/right). On each can sit one player.
+    /// </summary>
+    public static IEnumerator SetupBench(GameObject gameObject, NitroxId benchId)
     {
         Log.Debug($"BenchPostSpawner.PostSpawnAsync({benchId})");
         if (gameObject.TryGetComponent(out Bench bench))
@@ -66,6 +79,16 @@ public class BenchPostSpawner : IConstructablePostSpawner
                 Log.Error(ex);
             }
         }
+        yield break;
+    }
+
+    public static IEnumerator SetupLargeRoomWaterPark(LargeRoomWaterPark baseModule, NitroxId waterParkId)
+    {
+        NitroxId leftId = waterParkId.Increment();
+        NitroxId rightId = leftId.Increment();
+
+        NitroxEntity.SetNewId(baseModule.planters.leftPlanter.gameObject, leftId);
+        NitroxEntity.SetNewId(baseModule.planters.rightPlanter.gameObject, rightId);
         yield break;
     }
 }

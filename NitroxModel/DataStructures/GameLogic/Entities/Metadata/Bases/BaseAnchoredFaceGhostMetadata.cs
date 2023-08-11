@@ -1,7 +1,7 @@
-using BinaryPack.Attributes;
-using NitroxModel.DataStructures.GameLogic.Bases;
 using System;
 using System.Runtime.Serialization;
+using BinaryPack.Attributes;
+using NitroxModel.DataStructures.GameLogic.Bases;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
 

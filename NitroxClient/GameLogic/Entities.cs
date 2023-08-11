@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -8,7 +9,6 @@ using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -109,7 +109,7 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
-                    yield return CoroutineHelper.SafelyYieldEnumerator(SpawnAsync(entity), Log.Error);
+                    yield return SpawnAsync(entity).OnYieldError(Log.Error);
                 }
             }
         }
@@ -146,10 +146,10 @@ namespace NitroxClient.GameLogic
         public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false)
         {
             int timeSkips = 0;
-
-            float timeOffset = 0.0069f;// = 1s/144 FPS
-            float timeLimit = Time.realtimeSinceStartup + timeOffset;
-            DateTimeOffset beginTime = DateTimeOffset.Now;
+            
+            float allottedTimePerFrame = 1f / Application.targetFrameRate;
+            float timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             foreach (Entity entity in batch)
             {
                 IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
@@ -161,7 +161,7 @@ namespace NitroxClient.GameLogic
                     if (coroutine != null)
                     {
                         yield return CoroutineUtils.YieldSafe(coroutine, exception);
-                        timeLimit = Time.realtimeSinceStartup + timeOffset;                        
+                        timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
                     }
                     else
                     {
@@ -201,7 +201,7 @@ namespace NitroxClient.GameLogic
                         if (coroutine != null)
                         {
                             yield return CoroutineUtils.YieldSafe(coroutine, exception);
-                            timeLimit = Time.realtimeSinceStartup + timeOffset;
+                            timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
                         }
                         else
                         {
@@ -232,7 +232,7 @@ namespace NitroxClient.GameLogic
                     if (Time.realtimeSinceStartup > timeLimit)
                     {
                         yield return null;
-                        timeLimit = Time.realtimeSinceStartup + timeOffset;
+                        timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
                         timeSkips++;
                     }
                 }
@@ -244,12 +244,11 @@ namespace NitroxClient.GameLogic
                 if (Time.realtimeSinceStartup > timeLimit)
                 {
                     yield return null;
-                    timeLimit = Time.realtimeSinceStartup + timeOffset;
+                    timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
                     timeSkips++;
                 }
             }
-            DateTimeOffset endTime = DateTimeOffset.Now;
-            Log.Debug($"Optimized spawning took {(endTime - beginTime).TotalMilliseconds}ms with {timeSkips} time skips");
+            Log.Debug($"Optimized spawning took {stopwatch.ElapsedMilliseconds}ms with {timeSkips} time skips");
         }
 
         public List<Entity> GetChildrenRecursively(Entity entity, bool forceRespawn = false)
@@ -279,7 +278,7 @@ namespace NitroxClient.GameLogic
                     yield return SpawnAsync(childEntity);
                 }
             }
-            
+
             if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
             {
                 foreach (WorldEntity child in pendingEntities)
@@ -308,7 +307,7 @@ namespace NitroxClient.GameLogic
 
             opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
             opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
-            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();            
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
         }
 
         private void AddPendingParentEntity(Entity entity)

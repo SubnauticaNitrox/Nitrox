@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
@@ -33,7 +34,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             yield break;
         }
 
-        DateTimeOffset beginTime = DateTimeOffset.Now;
+        Stopwatch stopwatch = Stopwatch.StartNew();
         GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, entity.Transform.LocalPosition.ToUnity(), entity.Transform.LocalRotation.ToUnity(), entity.Transform.LocalScale.ToUnity(), false);
         if (LargeWorld.main)
         {
@@ -45,9 +46,8 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             Log.Debug("No Base component found");
             yield break;
         }
-        yield return SetupBase(entity, @base, result);
-        DateTimeOffset endTime = DateTimeOffset.Now;
-        Log.Debug(string.Format("Took {0}ms to create the Base", (endTime - beginTime).TotalMilliseconds));
+        yield return SetupBase(entity, @base, entities, result);
+        Log.Debug($"Took {stopwatch.ElapsedMilliseconds}ms to create the Base");
 
         yield return entities.SpawnAsync(entity.ChildEntities.OfType<PlayerWorldEntity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
@@ -141,7 +141,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         @base.anchor = new(baseData.Anchor.ToUnity());
     }
 
-    public static IEnumerator SetupBase(BuildEntity buildEntity, Base @base, TaskResult<Optional<GameObject>> result = null)
+    public static IEnumerator SetupBase(BuildEntity buildEntity, Base @base, Entities entities, TaskResult<Optional<GameObject>> result = null)
     {
         GameObject baseObject = @base.gameObject;
 
@@ -152,7 +152,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         {
             if (childEntity is InteriorPieceEntity || (childEntity is ModuleEntity && childEntity is not GhostEntity))
             {
-                yield return Resolve<Entities>().SpawnAsync(childEntity);
+                yield return entities.SpawnAsync(childEntity);
             }
         }
 

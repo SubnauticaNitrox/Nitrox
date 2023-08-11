@@ -1,6 +1,6 @@
-global using static NitroxModel.Extensions;
-global using NitroxModel.Logger;
 global using NitroxClient.Helpers;
+global using NitroxModel.Logger;
+global using static NitroxModel.Extensions;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
@@ -21,7 +21,6 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
-using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Map;
@@ -112,18 +111,6 @@ namespace NitroxClient
                             .AsSelf()
                             .SingleInstance();
 
-            containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<IConstructablePostSpawner>()
-                            .As<IConstructablePostSpawner>()
-                            .AsSelf()
-                            .SingleInstance();
-
-            containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<IBaseModulePostSpawner>()
-                            .As<IBaseModulePostSpawner>()
-                            .AsSelf()
-                            .SingleInstance();
-
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
@@ -155,7 +142,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<EntityPostSpawner>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)

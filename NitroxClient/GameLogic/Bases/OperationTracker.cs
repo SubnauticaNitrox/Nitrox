@@ -1,7 +1,5 @@
-using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
 using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxClient.GameLogic.Bases;
 
@@ -49,10 +47,5 @@ public class OperationTracker
     public bool IsDesynced()
     {
         return MissedOperations + FailedOperations > 0;
-    }
-
-    public void AskForResync()
-    {
-        Resolve<IPacketSender>().Send(new BuildingResyncRequest(BuildId));
     }
 }

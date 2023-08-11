@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using ProtoBufNet;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace NitroxServer.GameLogic.Entities;
 

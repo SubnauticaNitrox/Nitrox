@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
-using Nitrox.Test.Helper;
 using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer;
@@ -23,7 +21,7 @@ namespace NitroxModel.Packets.Processors
         [TestMethod]
         public void ClientPacketProcessorSanity()
         {
-            typeof(Multiplayer).Assembly.GetTypes()
+            typeof(ClientPacketProcessor<>).Assembly.GetTypes()
                                .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                                .ToList()
                                .ForEach(processor =>

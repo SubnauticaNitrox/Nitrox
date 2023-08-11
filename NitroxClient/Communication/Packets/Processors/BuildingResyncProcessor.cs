@@ -1,3 +1,8 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
@@ -10,10 +15,6 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -39,25 +40,24 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
 
     public IEnumerator ResyncEntities(Dictionary<Entity, int> entities)
     {
-        DateTimeOffset resyncStart = DateTimeOffset.Now;
-
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        
         BuildingHandler.Main.StartResync(entities);
-        yield return CoroutineHelper.SafelyYieldEnumerator(UpdateEntities<Base, BuildEntity>(
+        yield return UpdateEntities<Base, BuildEntity>(
             entities.Keys.OfType<BuildEntity>().ToList(), OverwriteBase, (entity, reference) =>
             {
                 return NitroxVector3.Distance(entity.Transform.LocalPosition, reference) < 0.001f;
             }
-        ), exception => Log.Error($"Encountered an exception while resyncing BuildEntities:\n{exception}"));
-        yield return CoroutineHelper.SafelyYieldEnumerator(UpdateEntities<Constructable, ModuleEntity>(
+        ).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing BuildEntities"));
+        yield return UpdateEntities<Constructable, ModuleEntity>(
             entities.Keys.OfType<ModuleEntity>().ToList(), OverwriteModule, (entity, reference) =>
             {
                 return NitroxVector3.Distance(entity.Transform.LocalPosition, reference) < 0.001f;
             }
-        ), exception => Log.Error($"Encountered an exception while resyncing ModuleEntities:\n{exception}"));
+        ).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing ModuleEntities"));
         BuildingHandler.Main.Resyncing = false;
 
-        DateTimeOffset resyncEnd = DateTimeOffset.Now;
-        ErrorMessage.AddMessage($"Finished resyncing {entities.Count} entities, took {(resyncEnd - resyncStart).TotalSeconds}s");
+        ErrorMessage.AddMessage($"Finished resyncing {entities.Count} entities, took {stopwatch.ElapsedMilliseconds}ms");
     }
 
     public IEnumerator UpdateEntities<C,E>(List<E> entitiesToUpdate, Func<C, E, IEnumerator> overwrite, Func<E, NitroxVector3, bool> correspondingPredicate) where C : Component where E : Entity
@@ -73,7 +73,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
                     E correspondingEntity = entitiesToUpdate.Find(entity => entity.Id.Equals(id));
                     if (correspondingEntity != null)
                     {
-                        yield return CoroutineHelper.SafelyYieldEnumerator(overwrite(component, correspondingEntity), Log.Error);
+                        yield return overwrite(component, correspondingEntity).OnYieldError(Log.Error);
                         entitiesToUpdate.Remove(correspondingEntity);
                         continue;
                     }
@@ -87,7 +87,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
             E entity = entitiesToUpdate[i];
             C associatedComponent = unmarkedComponents.Find(c =>
                 correspondingPredicate(entity, c.transform.localPosition.ToDto()));
-            yield return CoroutineHelper.SafelyYieldEnumerator(overwrite(associatedComponent, entity), Log.Error);
+            yield return overwrite(associatedComponent, entity).OnYieldError(Log.Error);
 
             unmarkedComponents.Remove(associatedComponent);
             entitiesToUpdate.RemoveAt(i);
@@ -101,7 +101,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         foreach (E entity in entitiesToUpdate)
         {
             Log.Debug($"[{typeof(E)} RESYNC] spawning entity {entity.Id}");
-            yield return CoroutineHelper.SafelyYieldEnumerator(entities.SpawnAsync(entity), Log.Error);
+            yield return entities.SpawnAsync(entity).OnYieldError(Log.Error);
         }
     }
 
@@ -109,7 +109,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
     {
         Log.Debug($"[Base RESYNC] Overwriting base with id {buildEntity.Id}");
         ClearBaseChildren(@base);
-        yield return BuildEntitySpawner.SetupBase(buildEntity, @base);
+        yield return BuildEntitySpawner.SetupBase(buildEntity, @base, entities);
         yield return MoonpoolManager.RestoreMoonpools(buildEntity.ChildEntities.OfType<MoonpoolEntity>(), @base);
         foreach (MapRoomEntity mapRoomEntity in buildEntity.ChildEntities.OfType<MapRoomEntity>())
         {

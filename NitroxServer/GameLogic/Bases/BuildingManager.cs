@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -7,9 +10,6 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace NitroxServer.GameLogic.Bases;
 

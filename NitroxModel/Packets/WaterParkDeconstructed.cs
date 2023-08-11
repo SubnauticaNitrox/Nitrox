@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using System;
-using System.Collections.Generic;
 
 namespace NitroxModel.Packets;
 

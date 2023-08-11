@@ -5,18 +5,18 @@ namespace NitroxClient.Unity.Helper;
 
 public static class CoroutineHelper
 {
-    public static IEnumerator SafelyYieldEnumerator(IEnumerator enumerator, Action<Exception> exceptionCallback)
+    public static IEnumerator OnYieldError(this IEnumerator enumerator, Action<Exception> exceptionCallback)
     {
-        return SafelyYieldEnumerator<Exception>(enumerator, exceptionCallback);
+        return enumerator.OnYieldError<Exception>(exceptionCallback);
     }
 
-    public static IEnumerator SafelyYieldEnumerator<T>(IEnumerator enumerator, Action<T> exceptionCallback = null) where T : Exception
+    public static IEnumerator OnYieldError<T>(this IEnumerator enumerator, Action<T> exceptionCallback = null) where T : Exception
     {
         if (enumerator == null)
         {
             yield break;
         }
-        for (; ; )
+        while (true)
         {
             try
             {

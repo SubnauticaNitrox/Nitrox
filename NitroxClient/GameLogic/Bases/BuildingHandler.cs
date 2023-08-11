@@ -5,7 +5,6 @@ using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
-using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -63,10 +62,7 @@ public class BuildingHandler : MonoBehaviour
     private IEnumerator SafelyTreatNextBuildCommand()
     {
         Packet packet = BuildQueue.Dequeue();
-        yield return CoroutineHelper.SafelyYieldEnumerator(TreatBuildCommand(packet), (exception) =>
-        {
-            Log.Error($"An error happened when treating build command {packet}:\n{exception}");
-        });
+        yield return TreatBuildCommand(packet).OnYieldError(exception => Log.Error($"An error happened when treating build command {packet}:\n{exception}"));
         working = false;
     }
 
@@ -146,7 +142,7 @@ public class BuildingHandler : MonoBehaviour
             else if (modifyConstructedAmount.ConstructedAmount == 1f)
             {
                 constructable.SetState(true, true);
-                yield return EntityPostSpawner.ApplyPostSpawner(gameObject, modifyConstructedAmount.GhostId);
+                yield return BuildingPostSpawner.ApplyPostSpawner(gameObject, modifyConstructedAmount.GhostId);
                 yield break;
             }
             constructable.SetState(false, false);
@@ -192,7 +188,7 @@ public class BuildingHandler : MonoBehaviour
             // In the case the built piece was an interior piece, we'll want to transfer the id to it.
             if (BuildUtils.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase, out GameObject moduleObject))
             {
-                yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, updateBase.FormerGhostId);
+                yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, updateBase.FormerGhostId);
             }
             yield break;
         }

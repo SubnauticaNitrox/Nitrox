@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
@@ -93,7 +92,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         moduleTransform.localRotation = moduleEntity.Transform.LocalRotation.ToUnity();
         moduleTransform.localScale = moduleEntity.Transform.LocalScale.ToUnity();
         ApplyModuleData(moduleEntity, moduleObject, result);
-        yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, moduleEntity.Id);
+        yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, moduleEntity.Id);
     }
 
     public static void ApplyModuleData(ModuleEntity moduleEntity, GameObject moduleObject, TaskResult<Optional<GameObject>> result = null)

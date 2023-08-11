@@ -1,4 +1,6 @@
-using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
@@ -9,9 +11,6 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
@@ -108,7 +107,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         if (moduleObject)
         {
             NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
-            yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
+            yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
             EntityMetadataProcessor.ApplyMetadata(moduleObject, interiorPiece.Metadata);
             result.Set(moduleObject);
         }
