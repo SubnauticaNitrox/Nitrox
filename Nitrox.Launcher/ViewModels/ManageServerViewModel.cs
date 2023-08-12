@@ -248,12 +248,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
     private async Task DeleteServer()
     {
-        ConfirmationBoxViewModel result = await MainViewModel.ShowDialogAsync<ConfirmationBoxViewModel>(); // TODO: NEED TO FIND OUT HOW TO PASS A PARAMETER HERE
-        if (result == null)
+        ConfirmationBoxViewModel modalViewModel = await MainViewModel.ShowDialogAsync<ConfirmationBoxViewModel, string>(static (model, serverName) =>
+        {
+            model.ConfirmationText = $"Are you sure you want to delete the server '{serverName}'?";
+        }, ServerName);
+        if (!modalViewModel)
         {
             return;
         }
-        
+
         Directory.Delete(WorldFolderDirectory, true);
         Router.NavigateBack.Execute();
     }

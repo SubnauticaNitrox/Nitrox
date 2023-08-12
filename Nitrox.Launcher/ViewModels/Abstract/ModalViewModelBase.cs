@@ -17,4 +17,9 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
     {
         window.Close(DialogResult);
     }
+
+    public static implicit operator bool(ModalViewModelBase self)
+    {
+        return self is { DialogResult: true };
+    }
 }

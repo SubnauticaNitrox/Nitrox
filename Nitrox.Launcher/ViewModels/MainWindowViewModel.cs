@@ -105,15 +105,17 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
         };
     }
 
-    public async Task<T> ShowDialogAsync<T>(Action<T> setup = null) where T : ModalViewModelBase
+    public async Task<T> ShowDialogAsync<T, TExtra>(Action<T, TExtra> setup = null, TExtra extraParameter = default) where T : ModalViewModelBase
     {
         T viewModel = dialogService.CreateViewModel<T>();
-        setup?.Invoke(viewModel);
+        setup?.Invoke(viewModel, extraParameter);
         bool? result = await dialogService.ShowDialogAsync<T>(this, viewModel);
         if (result == true)
         {
             return viewModel;
         }
-        return null;
+        return default;
     }
+
+    public Task<T> ShowDialogAsync<T>(Action<T> setup = null) where T : ModalViewModelBase => ShowDialogAsync<T,Action<T>>((model, act) => act?.Invoke(model), setup);
 }

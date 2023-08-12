@@ -11,5 +11,5 @@ public static class DesignData
     public static MainWindowViewModel MainWindowViewModel { get; } = new(null);
     public static CreateServerViewModel CreateServerViewModel { get; } = new() { Name = "My Server Name", SelectedGameMode = ServerGameMode.CREATIVE };
     public static ManageServerViewModel ManageServerViewModel { get; } = new(null) { ServerName = "My fun server" };
-    public static ConfirmationBoxViewModel ConfirmationBoxViewModel { get; } = new("Confirmation Text");
+    public static ConfirmationBoxViewModel ConfirmationBoxViewModel { get; } = new() { ConfirmationText = "Confirmation Text" };
 }

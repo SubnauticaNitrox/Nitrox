@@ -17,7 +17,8 @@
         </StackPanel>
         <ContentControl Classes="footer">
             <Panel>
-                <Button Classes="nitrox" Content="Yes" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="80" HotKey="{Binding YesHotkey}"
+                <!-- The yes button doesn't have a hotkey to prevent accidental confirmation. -->
+                <Button Classes="nitrox" Content="Yes" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="80"
                         Command="{Binding YesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                 <Button Classes="nitrox primary" Content="No" HorizontalAlignment="Right" HorizontalContentAlignment="Center" Width="80" HotKey="{Binding NoHotkey}"
                         Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />

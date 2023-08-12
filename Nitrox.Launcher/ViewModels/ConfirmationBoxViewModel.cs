@@ -1,28 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.IO;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Serialization;
-using NitroxModel.Server;
 
 namespace Nitrox.Launcher.ViewModels;
 
+/// <summary>
+///     Simple yes/no confirmation box. The yes button doesn't have a hotkey to prevent accidental confirmation.
+/// </summary>
 public partial class ConfirmationBoxViewModel : ModalViewModelBase
 {
-    [ObservableProperty]
-    private string confirmationText;
-    
-    public KeyGesture NoHotkey { get; } = new(Key.Escape);
-    public KeyGesture YesHotkey { get; } = new(Key.Return);
+    [ObservableProperty] private string confirmationText;
 
-    public ConfirmationBoxViewModel(string confirmationBoxText)
-    {
-        ConfirmationText = confirmationBoxText ?? "Are you sure you want to delete this server?"; // Null check replacement message is temp
-    }
+    public KeyGesture NoHotkey { get; } = new(Key.Escape);
 
     [RelayCommand]
     private void Yes(Window window)
@@ -30,5 +21,4 @@ public partial class ConfirmationBoxViewModel : ModalViewModelBase
         DialogResult = true;
         Close(window);
     }
-
 }
