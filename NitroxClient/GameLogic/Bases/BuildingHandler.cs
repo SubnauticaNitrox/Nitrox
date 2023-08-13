@@ -23,7 +23,7 @@ public class BuildingHandler : MonoBehaviour
 
     public Queue<Packet> BuildQueue;
     private bool working;
-    
+
     public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
     public DateTimeOffset LatestResyncRequestTimeOffset;
 
@@ -277,7 +277,7 @@ public class BuildingHandler : MonoBehaviour
         }
         LatestResyncRequestTimeOffset = DateTimeOffset.Now;
 
-        Resolve<IPacketSender>().Send(new BuildingResyncRequest());
+        this.Resolve<IPacketSender>().Send(new BuildingResyncRequest());
         ErrorMessage.AddMessage("Issued a resync request for bases");
         // TODO: Localize
     }
@@ -299,7 +299,7 @@ public class BuildingHandler : MonoBehaviour
         }
     }
 
-    
+
     public static Transform GetParentOrGlobalRoot(NitroxId id)
     {
         if (id != null && NitroxEntity.TryGetObjectFrom(id, out GameObject parentObject))

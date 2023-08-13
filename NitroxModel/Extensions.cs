@@ -41,16 +41,6 @@ public static class Extensions
 
     public static int GetIndex<T>(this T[] list, T itemToFind) => Array.IndexOf(list, itemToFind);
 
-    /// <summary>
-    ///     Resolves a type using <see cref="NitroxServiceLocator.LocateService{T}" />. If the result is not null it will cache and return the same type on future calls.
-    /// </summary>
-    /// <typeparam name="T">Type to get and cache from <see cref="NitroxServiceLocator" /></typeparam>
-    /// <returns>The requested type or null if not available.</returns>
-    public static T Resolve<T>(bool prelifeTime = false) where T : class
-    {
-        return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePreLifetime : NitroxServiceLocator.Cache<T>.Value;
-    }
-
     public static string AsByteUnitText(this uint byteSize)
     {
         // Uint can't go past 4GiB, so we don't need to worry about overflow.
