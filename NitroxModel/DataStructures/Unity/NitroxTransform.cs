@@ -23,7 +23,7 @@ namespace NitroxModel.DataStructures.Unity
         {
             get
             {
-                Matrix4x4 cachedMatrix = Matrix4x4Extension.Compose(LocalPosition, LocalRotation, LocalScale);
+                Matrix4x4 cachedMatrix = Matrix4x4Extension.Compose(LocalPosition, LocalRotation, LocalScale); // its not cached yet
 
                 return Parent != null ? cachedMatrix * Parent.LocalToWorldMatrix : cachedMatrix;
             }
@@ -36,13 +36,11 @@ namespace NitroxModel.DataStructures.Unity
         {
             get
             {
-                Matrix4x4 matrix = Parent?.LocalToWorldMatrix ?? Matrix4x4.Identity;
-                return matrix.Transform(LocalPosition);
+                return TransformPoint(LocalPosition);
             }
             set
             {
-                Matrix4x4 matrix = Parent != null ? Matrix4x4Extension.Compose(value, LocalRotation, LocalScale) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4Extension.Compose(value, LocalRotation, LocalScale);
-                LocalPosition = (NitroxVector3)matrix.Translation;
+                LocalPosition = InverseTransformPoint(value);
             }
         }
 
@@ -58,7 +56,7 @@ namespace NitroxModel.DataStructures.Unity
             }
             set
             {
-                Matrix4x4 matrix = Parent != null ? Matrix4x4Extension.Compose(LocalPosition, value, LocalScale) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4Extension.Compose(LocalPosition, value, LocalScale);
+                Matrix4x4 matrix = Parent != null ? Matrix4x4.CreateFromQuaternion((Quaternion)value) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4Extension.Compose(LocalPosition, value, LocalScale);
                 Matrix4x4.Decompose(matrix, out Vector3 _, out Quaternion rotation, out Vector3 _);
 
                 LocalRotation = (NitroxQuaternion)rotation;
@@ -89,6 +87,20 @@ namespace NitroxModel.DataStructures.Unity
             LocalPosition = localPosition;
             LocalRotation = localRotation;
             LocalScale = scale;
+        }
+
+        public NitroxVector3 InverseTransformPoint(NitroxVector3 point)
+        {
+            Matrix4x4 pointMatrix = Parent != null ? Matrix4x4.CreateTranslation((Vector3)point) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4.CreateTranslation((Vector3)point);
+
+            return (NitroxVector3)pointMatrix.Translation;
+        }
+
+        public NitroxVector3 TransformPoint(NitroxVector3 localPoint)
+        {
+            Matrix4x4 pointMatrix = Parent != null ? Matrix4x4.CreateTranslation((Vector3)localPoint) * Parent.LocalToWorldMatrix : Matrix4x4.CreateTranslation((Vector3)localPoint);
+
+            return (NitroxVector3)pointMatrix.Translation;
         }
 
         public override string ToString()

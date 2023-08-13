@@ -82,11 +82,9 @@ public class Vehicles
 
             if (mvc)
             {
-                mvc.SetPositionVelocityRotation(
+                mvc.SetPositionRotation(
                     vehicleModel.Position.ToUnity(),
-                    vehicleModel.Velocity.ToUnity(),
-                    vehicleModel.Rotation.ToUnity(),
-                    vehicleModel.AngularVelocity.ToUnity()
+                    vehicleModel.Rotation.ToUnity()
                 );
                 mvc.SetThrottle(vehicleModel.AppliedThrottle);
                 mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
@@ -98,7 +96,8 @@ public class Vehicles
             RemotePlayer playerInstance = player.Value;
             playerInstance.SetVehicle(vehicle);
             playerInstance.SetSubRoot(subRoot);
-            playerInstance.SetPilotingChair(subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>());
+            PilotingChair pilotingChair = subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>();
+            playerInstance.SetPilotingChair(pilotingChair);
             playerInstance.AnimationController.UpdatePlayerAnimations = false;
         }
     }

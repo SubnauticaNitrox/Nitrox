@@ -31,7 +31,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (player.Id == packet.PlayerId)
             {
-                player.Position = packet.VehicleMovementData.DriverPosition ?? packet.Position;
+                player.Position = packet.VehicleMovementData.DriverPosition;
+                player.Rotation = packet.VehicleMovementData.DriverRotation; ;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

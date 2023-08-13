@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -23,13 +23,13 @@ namespace NitroxClient.MonoBehaviours
             this["is_underwater"] = true;
         }
 
-        public void FixedUpdate()
+        public void Update()
         {
             if (UpdatePlayerAnimations)
             {
                 Vector3 rotationCorrectedVelocity = gameObject.transform.rotation.GetInverse() * Velocity;
 
-                smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, rotationCorrectedVelocity, Vector3.Normalize(rotationCorrectedVelocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
+                smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, rotationCorrectedVelocity, Vector3.Normalize(rotationCorrectedVelocity - smoothedVelocity) * SMOOTHING_SPEED * Time.deltaTime);
 
                 animator.SetFloat("move_speed", smoothedVelocity.magnitude);
                 animator.SetFloat("move_speed_x", smoothedVelocity.x);
@@ -43,7 +43,7 @@ namespace NitroxClient.MonoBehaviours
                 }
 
                 viewPitch = -viewPitch;
-                smoothViewPitch = Mathf.Lerp(smoothViewPitch, viewPitch, 4f * Time.fixedDeltaTime);
+                smoothViewPitch = Mathf.Lerp(smoothViewPitch, viewPitch, 4f * Time.deltaTime);
                 animator.SetFloat("view_pitch", smoothViewPitch);
             }
         }

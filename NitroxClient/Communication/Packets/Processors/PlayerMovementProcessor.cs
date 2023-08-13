@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -26,14 +26,7 @@ public class PlayerMovementProcessor : ClientPacketProcessor<PlayerMovement>
             return;
         }
 
-        Multiplayer.Main.StartCoroutine(QueueForFixedUpdate(remotePlayer.Value, movement));
-    }
-
-    private IEnumerator QueueForFixedUpdate(RemotePlayer player, PlayerMovement movement)
-    {
-        yield return Yielders.WaitForFixedUpdate;
-        player.UpdatePosition(movement.Position.ToUnity(),
-                              movement.Velocity.ToUnity(),
+        remotePlayer.Value.UpdatePosition(movement.Position.ToUnity(),
                               movement.BodyRotation.ToUnity(),
                               movement.AimingRotation.ToUnity());
     }

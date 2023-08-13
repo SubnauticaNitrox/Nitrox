@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FMOD.Studio;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
@@ -25,7 +25,7 @@ public sealed partial class FMOD_CustomEmitter_Start_Patch : NitroxPatch, IDynam
             return;
         }
 
-        if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
+        if (!__instance.transform.TryGetComponentInAscendance(10, out NitroxEntity entity))
         {
             Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
             return;

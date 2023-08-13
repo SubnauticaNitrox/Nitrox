@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -14,8 +14,6 @@ namespace NitroxModel.Packets
 
         [IgnoredMember]
         public override NitroxVector3 Position => VehicleMovementData.Position;
-        [IgnoredMember]
-        public override NitroxVector3 Velocity => VehicleMovementData.Velocity;
         [IgnoredMember]
         public override NitroxQuaternion BodyRotation => VehicleMovementData.Rotation;
         [IgnoredMember]

@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
@@ -13,9 +13,9 @@ namespace NitroxModel_Subnautica.Helper
             switch (techType)
             {
                 case TechType.Exosuit:
-                    return new ExosuitMovementData(techType.ToDto(), id, position.ToDto(), rotation.ToDto(), velocity.ToDto(), angularVelocity.ToDto(), steeringWheelYaw, steeringWheelPitch, appliedThrottle, leftAimTarget.ToDto(), rightAimTarget.ToDto());
+                    return new ExosuitMovementData(techType.ToDto(), id, position.ToDto(), rotation.ToDto(), steeringWheelYaw, steeringWheelPitch, appliedThrottle, leftAimTarget.ToDto(), rightAimTarget.ToDto());
                 default:
-                    return new BasicVehicleMovementData(techType.ToDto(), id, position.ToDto(), rotation.ToDto(), velocity.ToDto(), angularVelocity.ToDto(), steeringWheelYaw, steeringWheelPitch, appliedThrottle);
+                    return new BasicVehicleMovementData(techType.ToDto(), id, position.ToDto(), rotation.ToDto(), steeringWheelYaw, steeringWheelPitch, appliedThrottle);
             }
         }
     }

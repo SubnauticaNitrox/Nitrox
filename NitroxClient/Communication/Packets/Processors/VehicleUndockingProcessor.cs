@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
@@ -56,7 +56,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 vehicle.mainAnimator.SetBool("player_in", true);
                 playerInstance.Attach(vehicle.playerPosition.transform);
                 // It can happen that the player turns in circles around himself in the vehicle. This stops it.
-                playerInstance.RigidBody.angularVelocity = Vector3.zero;
+                // playerInstance.RigidBody.angularVelocity = Vector3.zero; // May not happen anymore needs verifying
                 playerInstance.ArmsController.SetWorldIKTarget(vehicle.leftHandPlug, vehicle.rightHandPlug);
                 playerInstance.AnimationController["in_seamoth"] = vehicle is SeaMoth;
                 playerInstance.AnimationController["in_exosuit"] = playerInstance.AnimationController["using_mechsuit"] = vehicle is Exosuit;

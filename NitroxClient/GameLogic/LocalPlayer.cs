@@ -57,7 +57,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         }
         else
         {
-            movement = new PlayerMovement(PlayerId, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
+            movement = new PlayerMovement(PlayerId, location.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
         }
 
         packetSender.Send(movement);
