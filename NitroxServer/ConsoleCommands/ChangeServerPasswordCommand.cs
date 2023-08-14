@@ -1,17 +1,17 @@
 ﻿using System.IO;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeServerPasswordCommand : Command
     {
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
 
-        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
+        public ChangeServerPasswordCommand(SubnauticaServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
             AddParameter(new TypeString("password", false, "The new server password"));
 
@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
         {
             string password = args.Get(0) ?? string.Empty;
 
-            using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
+            using (serverConfig.Update(Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)))
             {
                 serverConfig.ServerPassword = password;
             }

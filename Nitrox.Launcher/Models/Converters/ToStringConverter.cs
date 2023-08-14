@@ -10,8 +10,14 @@ namespace Nitrox.Launcher.Models.Converters;
 /// </summary>
 public class ToStringConverter : Converter<ToStringConverter>, IValueConverter
 {
+    private static readonly CultureInfo enUsCulture = new("en-US", false);
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
+        if (value == null)
+        {
+            return null;
+        }
         if (value?.GetType().IsEnum ?? false)
         {
             value = value.ToString();
@@ -24,17 +30,13 @@ public class ToStringConverter : Converter<ToStringConverter>, IValueConverter
         switch (parameter)
         {
             case "upper":
-            case "SQL":
-            case "sql":
-                return sourceText.ToUpper();
+                return sourceText.ToUpperInvariant();
             case "lower":
-                return sourceText.ToLower();
-            case "title":
+                return sourceText.ToLowerInvariant();
             default:
-                TextInfo txtinfo = new CultureInfo("en-US", false).TextInfo;
-                return txtinfo.ToTitleCase(sourceText.ToLower().Replace("_", " "));
+                return enUsCulture.TextInfo.ToTitleCase(sourceText.ToLower().Replace("_", " "));
         }
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value;
 }

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication
 {
@@ -26,7 +26,7 @@ namespace NitroxServer.Communication
         protected readonly Dictionary<int, NitroxConnection> connectionsByRemoteIdentifier = new();
         protected readonly PlayerManager playerManager;
 
-        public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
+        public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;

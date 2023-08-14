@@ -24,7 +24,30 @@
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.3" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.3" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.0.0" />
         <PackageReference Include="ReactiveUI.Validation" Version="3.1.7" />
+        <PackageReference Include="Splat.DependencyInjection.SourceGenerator" Version="1.1.93">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\ConfirmationBoxModal.axaml.cs">
+        <DependentUpon>UserConfimationModal.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <!-- Ensure server files are available for launcher. -->
+    <Target Name="BuildServer" AfterTargets="Build">
+        <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj"
+                 Targets="Build"
+                 Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
+    </Target>
 </Project>

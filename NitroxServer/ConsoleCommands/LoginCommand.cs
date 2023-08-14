@@ -1,15 +1,15 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class LoginCommand : Command
     {
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
 
-        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, PermsFlag.NO_CONSOLE, "Log in to server as admin (requires password)")
+        public LoginCommand(SubnauticaServerConfig serverConfig) : base("login", Perms.PLAYER, PermsFlag.NO_CONSOLE, "Log in to server as admin (requires password)")
         {
             AddParameter(new TypeString("password", true, "The admin password for the server"));
 

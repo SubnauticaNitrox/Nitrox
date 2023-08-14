@@ -5,6 +5,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <DockPanel LastChildFill="True">
+                    <!-- TODO: Figure out why entries are duplicated in the DataValidationErrors.Errors, without breaking MVVM Toolkit validation code. -->
                     <ContentControl DockPanel.Dock="Right"
                                     ContentTemplate="{TemplateBinding ErrorTemplate}"
                                     DataContext="{TemplateBinding Owner}"

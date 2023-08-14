@@ -13,6 +13,8 @@ namespace NitroxServer.Serialization.Upgrade
 
         public abstract Version TargetVersion { get; }
 
+        public static readonly Version MinimumSaveVersion = new(1, 8, 0, 0);
+        
         public void UpgradeSaveFiles(string saveDir, string fileEnding)
         {
             Log.Info($"┌── Executing {GetType().Name}");

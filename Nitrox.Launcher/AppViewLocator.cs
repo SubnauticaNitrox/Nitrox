@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using HanumanInstitute.MvvmDialogs;
+using HanumanInstitute.MvvmDialogs.Avalonia;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
@@ -11,12 +13,12 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher;
 
-internal sealed class Locator : IViewLocator
+internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
 {
     private static readonly ConcurrentDictionary<Type, RoutableViewModelBase> viewModelCache = new();
     private static MainWindow mainWindow;
     private static RoutingState mainRouter;
-    private static IViewFor lastView;
+    public static Lazy<AppViewLocator> Instance { get; } = new(new AppViewLocator());
 
     public static MainWindow MainWindow
     {
@@ -37,6 +39,26 @@ internal sealed class Locator : IViewLocator
 
     public static RoutingState MainRouter => mainRouter ??= MainWindow.ViewModel?.Router ?? throw new Exception($"Tried to get {nameof(MainRouter)} before {nameof(Launcher.MainWindow)} was initialized");
 
+    public override ViewDefinition Locate(object viewModel)
+    {
+        static Type GetViewType(object viewModel) => viewModel switch
+        {
+            MainWindowViewModel => typeof(MainWindow),
+            ErrorViewModel => typeof(ErrorModal),
+            CreateServerViewModel => typeof(CreateServerModal),
+            ConfirmationBoxViewModel => typeof(ConfirmationBoxModal),
+            PlayViewModel => typeof(PlayView),
+            ServersViewModel vm when vm.Servers.Any() => typeof(ServersView),
+            ServersViewModel vm when !vm.Servers.Any() => typeof(EmptyServersView),
+            ManageServerViewModel => typeof(ManageServerView),
+            _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
+        };
+
+        // If the view type is the same as last time, return the same instance.
+        Type newView = GetViewType(viewModel);
+        return new ViewDefinition(newView, () => Activator.CreateInstance(newView));
+    }
+
     public static TViewModel GetSharedViewModel<TViewModel>() where TViewModel : RoutableViewModelBase
     {
         Type key = typeof(TViewModel);
@@ -49,32 +71,6 @@ internal sealed class Locator : IViewLocator
         viewModelCache.TryAdd(typeof(TViewModel), viewModel);
         AttachListenersForViewChange(viewModel);
         return viewModel;
-    }
-
-    /// <summary>
-    ///     Entry point for the <see cref="MainRouter" /> to navigate the views based on the given <see cref="RoutableViewModelBase" />.
-    /// </summary>
-    /// <remarks>
-    ///     If you change a condition in this switch, make sure to listen for it in <see cref="AttachListenersForViewChange{T}" />.
-    /// </remarks>
-    public IViewFor ResolveView<T>(T viewModel, string contract = null)
-    {
-        static Type GetViewType(T viewModel) => viewModel switch
-        {
-            PlayViewModel => typeof(PlayView),
-            ServersViewModel vm when vm.Servers.Any() => typeof(ServersView),
-            ServersViewModel vm when !vm.Servers.Any() => typeof(EmptyServersView),
-            ManageServerViewModel => typeof(ManageServerView),
-            _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
-        };
-
-        // If the view type is the same as last time, return the same instance.
-        Type newView = GetViewType(viewModel);
-        if (lastView != null && lastView.GetType() == newView)
-        {
-            return lastView;
-        }
-        return lastView = (IViewFor)Activator.CreateInstance(newView);
     }
 
     /// <summary>
@@ -92,4 +88,6 @@ internal sealed class Locator : IViewLocator
                 break;
         }
     }
+
+    public IViewFor ResolveView<T>(T viewModel, string contract = null) => (IViewFor)Locate(viewModel).Create();
 }

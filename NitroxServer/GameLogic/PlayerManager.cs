@@ -10,8 +10,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.GameLogic
 {
@@ -28,10 +28,10 @@ namespace NitroxServer.GameLogic
 
         private Timer initialSyncTimer;
 
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
         private ushort currentPlayerId;
 
-        public PlayerManager(List<Player> players, ServerConfig serverConfig)
+        public PlayerManager(List<Player> players, SubnauticaServerConfig serverConfig)
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);

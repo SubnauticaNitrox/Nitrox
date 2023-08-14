@@ -1,10 +1,8 @@
 ﻿using Avalonia.Controls;
-using Avalonia.ReactiveUI;
-using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Views.Abstract;
 
-public abstract class ModalBase<TViewModel> : ReactiveWindow<TViewModel> where TViewModel : ModalViewModelBase
+public abstract class ModalBase : Window
 {
     protected ModalBase()
     {
