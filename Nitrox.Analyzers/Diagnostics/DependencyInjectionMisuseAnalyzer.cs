@@ -16,16 +16,7 @@ namespace Nitrox.Analyzers.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class DependencyInjectionMisuseAnalyzer : DiagnosticAnalyzer
 {
-    public const string MISUSED_DI = "DIMA001";
-
-    private static readonly DiagnosticDescriptor misusedAutofac = new(MISUSED_DI,
-                                                                        "Dependency Injection container is used directly",
-                                                                        "The DI container should not be used directly in type '{0}' as the requested service can be supplied via a constructor parameter.",
-                                                                        "Usage",
-                                                                        DiagnosticSeverity.Warning,
-                                                                        true);
-
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(misusedAutofac);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rules.MisusedDependencyInjection);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -57,24 +48,39 @@ public sealed class DependencyInjectionMisuseAnalyzer : DiagnosticAnalyzer
         {
             return;
         }
-        TypeDeclarationSyntax declaredType = expression.FindInParents<TypeDeclarationSyntax>();
-        if (declaredType == null)
+        TypeDeclarationSyntax declaringType = expression.FindInParents<TypeDeclarationSyntax>();
+        if (declaringType == null)
         {
             return;
         }
-        INamedTypeSymbol declaredTypeSymbol = context.SemanticModel.GetDeclaredSymbol(declaredType);
-        if (declaredTypeSymbol == null)
+        INamedTypeSymbol declaringTypeSymbol = context.SemanticModel.GetDeclaredSymbol(declaringType);
+        if (declaringTypeSymbol == null)
         {
             return;
         }
         foreach (INamedTypeSymbol allowedType in allowedTypesUsingDependencyInjection)
         {
-            if (declaredTypeSymbol.IsType(allowedType))
+            if (declaringTypeSymbol.IsType(allowedType))
             {
                 return;
             }
         }
 
-        context.ReportDiagnostic(Diagnostic.Create(misusedAutofac, expression.GetLocation(), declaredType.GetName()));
+        Rules.ReportMisusedDependencyInjection(context, declaringType);
+    }
+
+    private static class Rules
+    {
+        public static readonly DiagnosticDescriptor MisusedDependencyInjection = new("DIMA001",
+                                                                                     "Dependency Injection container is used directly",
+                                                                                     "The DI container should not be used directly in type '{0}' as the requested service can be supplied via a constructor parameter.",
+                                                                                     "Usage",
+                                                                                     DiagnosticSeverity.Warning,
+                                                                                     true);
+
+        public static void ReportMisusedDependencyInjection(SyntaxNodeAnalysisContext context, TypeDeclarationSyntax declaringType)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(MisusedDependencyInjection, declaringType.GetLocation(), declaringType.GetName()));
+        }
     }
 }
