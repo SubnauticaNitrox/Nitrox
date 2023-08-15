@@ -79,7 +79,12 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
                 CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entityId));
                 return;
             }
-            CoroutineHost.StartCoroutine(BuildingPostSpawner.ApplyPostSpawner(constructable.gameObject, entityId));
+            IEnumerator postSpawner = BuildingPostSpawner.ApplyPostSpawner(constructable.gameObject, entityId);
+            // Can be null if no post spawner is set for the constructable's techtype
+            if (postSpawner != null)
+            {
+                CoroutineHost.StartCoroutine(postSpawner);
+            }
         }
         // update as a normal module
 
