@@ -35,12 +35,15 @@ public sealed class DependencyInjectionMisuseAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeDependencyInjectionMisuse(SyntaxNodeAnalysisContext context, params INamedTypeSymbol[] allowedTypesUsingDependencyInjection)
     {
         InvocationExpressionSyntax expression = (InvocationExpressionSyntax)context.Node;
-        // To avoid calls of NitroxServiceLocator in nameof() or type(), we seek for this precise structure
         if (expression.ChildNodes().FirstOrDefault(n => n is MemberAccessExpressionSyntax) is not MemberAccessExpressionSyntax memberAccessExpression)
         {
             return;
         }
-        if (memberAccessExpression.ChildNodes().FirstOrDefault(n => n is IdentifierNameSyntax) is not IdentifierNameSyntax memberAccessIdentifier)
+        if (memberAccessExpression.DescendantNodes().FirstOrDefault(n => n is IdentifierNameSyntax) is not IdentifierNameSyntax memberAccessIdentifier)
+        {
+            return;
+        }
+        if (memberAccessIdentifier.Parent is TypeOfExpressionSyntax)
         {
             return;
         }
@@ -66,7 +69,7 @@ public sealed class DependencyInjectionMisuseAnalyzer : DiagnosticAnalyzer
             }
         }
 
-        Rules.ReportMisusedDependencyInjection(context, declaringType);
+        Rules.ReportMisusedDependencyInjection(context, declaringType, memberAccessExpression.GetLocation());
     }
 
     private static class Rules
@@ -78,9 +81,9 @@ public sealed class DependencyInjectionMisuseAnalyzer : DiagnosticAnalyzer
                                                                                      DiagnosticSeverity.Warning,
                                                                                      true);
 
-        public static void ReportMisusedDependencyInjection(SyntaxNodeAnalysisContext context, TypeDeclarationSyntax declaringType)
+        public static void ReportMisusedDependencyInjection(SyntaxNodeAnalysisContext context, TypeDeclarationSyntax declaringType, Location location)
         {
-            context.ReportDiagnostic(Diagnostic.Create(MisusedDependencyInjection, declaringType.GetLocation(), declaringType.GetName()));
+            context.ReportDiagnostic(Diagnostic.Create(MisusedDependencyInjection, location, declaringType.GetName()));
         }
     }
 }
