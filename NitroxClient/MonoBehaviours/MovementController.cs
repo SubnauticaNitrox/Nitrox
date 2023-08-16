@@ -33,7 +33,7 @@ namespace NitroxClient.MonoBehaviours
         private void Update()
         {
             BeforeUpdate();
-            if (!rigidbody)
+            if (!rigidbody && IsMoving)
             {
                 transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref Velocity, Scalar * Time.deltaTime);
                 transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, Scalar * Time.deltaTime);
@@ -44,7 +44,7 @@ namespace NitroxClient.MonoBehaviours
         private void FixedUpdate()
         {
             BeforeFixedUpdate();
-            if (rigidbody)
+            if (rigidbody && IsMoving)
             {
                 float timing = Scalar * Time.fixedDeltaTime;
                 Vector3 newPos = Vector3.SmoothDamp(transform.position, TargetPosition, ref Velocity, timing);
@@ -61,7 +61,14 @@ namespace NitroxClient.MonoBehaviours
 
                     Quaternion delta = TargetRotation * transform.rotation.GetInverse();
                     delta.ToAngleAxis(out float angle, out Vector3 axis);
-                    rigidbody.angularVelocity = .9f * Mathf.Deg2Rad * angle / timing * axis;
+                    if (!float.IsInfinity(axis.x) && !float.IsInfinity(axis.y) && !float.IsInfinity(axis.z))
+                    {
+                        rigidbody.angularVelocity = .9f * Mathf.Deg2Rad * angle / timing * axis;
+                    }
+                    else
+                    {
+                        rigidbody.angularVelocity = Vector3.zero;
+                    }
                 }
             }
             AfterFixedUpdate();
