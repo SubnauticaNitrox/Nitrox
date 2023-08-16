@@ -57,7 +57,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public List<T> GetGlobalRootEntities<T>() where T : GlobalRootEntity
         {
-            lock (phasingEntitiesByBatchId)
+            lock (globalRootEntitiesById)
             {
                 return new(globalRootEntitiesById.Values.OfType<T>());
             }

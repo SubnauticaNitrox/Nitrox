@@ -290,6 +290,11 @@ public class BuildingHandler : MonoBehaviour
         InitializeOperations(entities.ToDictionary(pair => pair.Key.Id, pair => pair.Value));
     }
 
+    public void StopResync()
+    {
+        Resyncing = false;
+    }
+
     public void InitializeOperations(Dictionary<NitroxId, int> operations)
     {
         foreach (KeyValuePair<NitroxId, int> pair in operations)

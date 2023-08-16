@@ -1,16 +1,15 @@
 using System;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class TransformDrawer : IDrawer, IParentedDrawer<SceneDebugger>
+public class TransformDrawer : IDrawer
 {
     private const float LABEL_WIDTH = 100;
-    private const float LABEL_SEPARATOR = 40;
     private const float VECTOR_MAX_WIDTH = 405;
 
     public Type[] ApplicableTypes { get; } = { typeof(Transform) };
-    public SceneDebugger ParentTab { get; set; }
 
     private bool showGlobal;
 
@@ -89,7 +88,7 @@ public class TransformDrawer : IDrawer, IParentedDrawer<SceneDebugger>
                     {
                         if (transform.parent)
                         {
-                            ParentTab.JumpToComponent(transform.parent);
+                            NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(transform.parent);
                         }
                         GameObject.Destroy(transform.gameObject);
                     }

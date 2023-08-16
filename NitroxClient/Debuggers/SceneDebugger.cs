@@ -33,7 +33,7 @@ public class SceneDebugger : BaseDebugger
     private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = new();
     private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = new();
 
-    public SceneDebugger(IEnumerable<IDrawer> drawers, IEnumerable<IStructDrawer> structDrawers, IEnumerable<IParentedDrawer<SceneDebugger>> parentedDrawers) : base(650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+    public SceneDebugger(IEnumerable<IDrawer> drawers, IEnumerable<IStructDrawer> structDrawers) : base(650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
         ActiveTab = AddTab("Scenes", RenderTabScenes);
         AddTab("Hierarchy", RenderTabHierarchy);
@@ -44,10 +44,6 @@ public class SceneDebugger : BaseDebugger
             foreach (Type type in drawer.ApplicableTypes)
             {
                 debuggerDrawers.Add(type, drawer);
-            }
-            if (drawer is IParentedDrawer<SceneDebugger> parentedDrawer)
-            {
-                parentedDrawer.ParentTab = this;
             }
         }
 

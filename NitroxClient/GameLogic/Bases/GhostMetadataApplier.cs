@@ -1,8 +1,8 @@
+using System.Collections;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
 using NitroxModel_Subnautica.DataStructures;
-using System.Collections;
 using UnityEngine;
 using UWE;
 
@@ -10,35 +10,9 @@ namespace NitroxClient.GameLogic.Bases;
 
 public static class GhostMetadataApplier
 {
-    public static T From<T>(BaseGhost baseGhost) where T : GhostMetadata, new()
-    {
-        T metadata = new()
-        {
-            TargetOffset = baseGhost.targetOffset.ToDto()
-        };
-        return metadata;
-    }
-
     public static void ApplyBasicMetadataTo(this GhostMetadata ghostMetadata, BaseGhost baseGhost)
     {
         baseGhost.targetOffset = ghostMetadata.TargetOffset.ToUnity();
-    }
-
-    public static GhostMetadata GetMetadataForGhost(BaseGhost baseGhost)
-    {
-        // Specific case in which a piece was deconstructed and resulted in a BaseDeconstructable with a normal BaseGhost
-        if (BuildUtils.IsUnderBaseDeconstructable(baseGhost))
-        {
-            return GetBaseDeconstructableMetadata(baseGhost);
-        }
-
-        GhostMetadata metadata = baseGhost switch
-        {
-            BaseAddWaterPark or BaseAddPartitionDoorGhost or BaseAddModuleGhost or BaseAddFaceGhost => GetBaseAnchoredFaceMetadata(baseGhost),
-            BaseAddPartitionGhost => GetBaseAnchoredCellMetadata(baseGhost),
-            _ => From<GhostMetadata>(baseGhost),
-        };
-        return metadata;
     }
 
     public static IEnumerator ApplyMetadataToGhost(BaseGhost baseGhost, EntityMetadata entityMetadata, Base @base)
@@ -49,9 +23,16 @@ public static class GhostMetadataApplier
             yield break;
         }
 
-        if (BuildUtils.IsUnderBaseDeconstructable(baseGhost, true) && entityMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
+        if (BuildUtils.IsUnderBaseDeconstructable(baseGhost, true))
         {
-            yield return deconstructableMetadata.ApplyBaseDeconstructableMetadataTo(baseGhost, @base);
+            if (entityMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
+            {
+                yield return deconstructableMetadata.ApplyBaseDeconstructableMetadataTo(baseGhost, @base);
+            }
+            else
+            {
+                Log.Error($"[{nameof(GhostMetadataApplier)}] Metadata of type {entityMetadata.GetType()} can't be applied to BaseDeconstructable's ghost");
+            }
             yield break;
         }
 
@@ -64,6 +45,7 @@ public static class GhostMetadataApplier
                 if (ghostMetadata is BaseAnchoredFaceGhostMetadata faceMetadata)
                 {
                     faceMetadata.ApplyBaseAnchoredFaceMetadataTo(baseGhost);
+                    yield break;
                 }
                 break;
 
@@ -71,26 +53,15 @@ public static class GhostMetadataApplier
                 if (ghostMetadata is BaseAnchoredCellGhostMetadata cellMetadata)
                 {
                     cellMetadata.ApplyBaseAnchoredCellMetadataTo(baseGhost);
+                    yield break;
                 }
                 break;
 
             default:
                 ghostMetadata.ApplyBasicMetadataTo(baseGhost);
-                break;
+                yield break;
         }
-    }
-
-    // Specific metadata getters and appliers
-
-    public static BaseAnchoredCellGhostMetadata GetBaseAnchoredCellMetadata(BaseGhost baseGhost)
-    {
-        BaseAnchoredCellGhostMetadata metadata = From<BaseAnchoredCellGhostMetadata>(baseGhost);
-        if (baseGhost is BaseAddPartitionGhost ghost && ghost.anchoredCell.HasValue)
-        {
-            metadata.AnchoredCell = ghost.anchoredCell.Value.ToDto();
-        }
-
-        return metadata;
+        Log.Error($"[{nameof(GhostMetadataApplier)}] Metadata of type {entityMetadata.GetType()} can't be applied to ghost of type {baseGhost.GetType()}");
     }
 
     public static void ApplyBaseAnchoredCellMetadataTo(this BaseAnchoredCellGhostMetadata ghostMetadata, BaseGhost baseGhost)
@@ -103,21 +74,6 @@ public static class GhostMetadataApplier
                 ghost.anchoredCell = ghostMetadata.AnchoredCell.Value.ToUnity();
             }
         }
-    }
-
-    public static BaseAnchoredFaceGhostMetadata GetBaseAnchoredFaceMetadata(BaseGhost baseGhost)
-    {
-        BaseAnchoredFaceGhostMetadata metadata = From<BaseAnchoredFaceGhostMetadata>(baseGhost);
-        metadata.AnchoredFace = baseGhost switch
-        {
-            BaseAddWaterPark ghost => ghost.anchoredFace?.ToDto(),
-            BaseAddPartitionDoorGhost ghost => ghost.anchoredFace?.ToDto(),
-            BaseAddModuleGhost ghost => ghost.anchoredFace?.ToDto(),
-            BaseAddFaceGhost ghost => ghost.anchoredFace?.ToDto(),
-            _ => null
-        };
-
-        return metadata;
     }
 
     public static void ApplyBaseAnchoredFaceMetadataTo(this BaseAnchoredFaceGhostMetadata ghostMetadata, BaseGhost baseGhost)
@@ -141,24 +97,6 @@ public static class GhostMetadataApplier
                     break;
             }
         }
-    }
-
-    public static BaseDeconstructableGhostMetadata GetBaseDeconstructableMetadata(BaseGhost baseGhost)
-    {
-        BaseDeconstructableGhostMetadata metadata = From<BaseDeconstructableGhostMetadata>(baseGhost);
-        if (baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase) && constructableBase.moduleFace.HasValue)
-        {
-            Base.Face moduleFace = constructableBase.moduleFace.Value;
-            metadata.ModuleFace = moduleFace.ToDto();
-            moduleFace.cell += baseGhost.targetBase.GetAnchor();
-            IBaseModule baseModule = baseGhost.targetBase.GetModule(moduleFace);
-            if (baseModule != null && (baseModule as MonoBehaviour).TryGetComponent(out PrefabIdentifier identifier))
-            {
-                metadata.ClassId = identifier.ClassId;
-            }
-        }
-
-        return metadata;
     }
 
     public static IEnumerator ApplyBaseDeconstructableMetadataTo(this BaseDeconstructableGhostMetadata ghostMetadata, BaseGhost baseGhost, Base @base)

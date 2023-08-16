@@ -52,7 +52,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
 
         if (constructableBase.TryGetComponentInChildren(out BaseGhost baseGhost, true))
         {
-            ghost.Metadata = GhostMetadataApplier.GetMetadataForGhost(baseGhost);
+            ghost.Metadata = GhostMetadataRetriever.GetMetadataForGhost(baseGhost);
         }
 
         return ghost;

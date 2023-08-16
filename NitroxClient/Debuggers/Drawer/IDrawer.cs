@@ -2,11 +2,6 @@ using System;
 
 namespace NitroxClient.Debuggers.Drawer;
 
-public interface IParentedDrawer<T>
-{
-    public T ParentTab { get; set; }
-}
-
 public interface IDrawer
 {
     public Type[] ApplicableTypes { get; }
