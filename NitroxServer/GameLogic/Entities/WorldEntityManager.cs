@@ -3,11 +3,11 @@ using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxModel.DataStructures.GameLogic.Entities;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -29,6 +29,9 @@ namespace NitroxServer.GameLogic.Entities
 
         private readonly BatchEntitySpawner batchEntitySpawner;
 
+        private readonly object worldEntitiesLock;
+        private readonly object globalRootEntitiesLock;
+
         public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner)
         {
             List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
@@ -44,6 +47,9 @@ namespace NitroxServer.GameLogic.Entities
                                                    .ToDictionary(group => group.Key, group => group.ToList());
             this.entityRegistry = entityRegistry;
             this.batchEntitySpawner = batchEntitySpawner;
+
+            worldEntitiesLock = new();
+            globalRootEntitiesLock = new();
         }
 
         public List<GlobalRootEntity> GetGlobalRootEntities(bool rootOnly = false)
@@ -57,7 +63,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public List<T> GetGlobalRootEntities<T>() where T : GlobalRootEntity
         {
-            lock (globalRootEntitiesById)
+            lock (globalRootEntitiesLock)
             {
                 return new(globalRootEntitiesById.Values.OfType<T>());
             }
@@ -67,7 +73,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             List<WorldEntity> result;
 
-            lock (phasingEntitiesByBatchId)
+            lock (worldEntitiesLock)
             {
                 if (!phasingEntitiesByBatchId.TryGetValue(batchId, out result))
                 {
@@ -82,7 +88,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             List<WorldEntity> result;
 
-            lock (phasingEntitiesByCellId)
+            lock (worldEntitiesLock)
             {
                 if (!phasingEntitiesByCellId.TryGetValue(cellId, out result))
                 {
@@ -120,7 +126,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public void AddGlobalRootEntity(GlobalRootEntity entity, bool addToRegistry = true)
         {
-            lock (globalRootEntitiesById)
+            lock (globalRootEntitiesLock)
             {
                 if (!globalRootEntitiesById.ContainsKey(entity.Id))
                 {
@@ -141,7 +147,7 @@ namespace NitroxServer.GameLogic.Entities
         public Optional<Entity> RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
         {
             Optional<Entity> removedEntity = Optional.Empty;
-            lock (globalRootEntitiesById)
+            lock (globalRootEntitiesLock)
             {
                 if (removeFromRegistry)
                 {
@@ -175,7 +181,7 @@ namespace NitroxServer.GameLogic.Entities
             }
             else
             {
-                lock (phasingEntitiesByBatchId)
+                lock (worldEntitiesLock)
                 {
                     if (!phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> phasingEntitiesInBatch))
                     {
@@ -185,7 +191,7 @@ namespace NitroxServer.GameLogic.Entities
                     phasingEntitiesInBatch.Add(entity);
                 }
 
-                lock (phasingEntitiesByCellId)
+                lock (worldEntitiesLock)
                 {
                     if (!phasingEntitiesByCellId.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> phasingEntitiesInCell))
                     {
@@ -277,7 +283,7 @@ namespace NitroxServer.GameLogic.Entities
 
             if (oldCell.BatchId != newCell.BatchId)
             {
-                lock (phasingEntitiesByBatchId)
+                lock (worldEntitiesLock)
                 {
                     List<WorldEntity> oldList = GetEntities(oldCell.BatchId);
                     oldList.Remove(entity);
@@ -287,7 +293,7 @@ namespace NitroxServer.GameLogic.Entities
                 }
             }
 
-            lock (phasingEntitiesByCellId)
+            lock (worldEntitiesLock)
             {
                 List<WorldEntity> oldList = GetEntities(oldCell);
                 oldList.Remove(entity);
@@ -305,7 +311,7 @@ namespace NitroxServer.GameLogic.Entities
             }
             else
             {
-                lock (phasingEntitiesByBatchId)
+                lock (worldEntitiesLock)
                 {
                     if (phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> batchEntities))
                     {
@@ -313,7 +319,7 @@ namespace NitroxServer.GameLogic.Entities
                     }
                 }
 
-                lock (phasingEntitiesByCellId)
+                lock (worldEntitiesLock)
                 {
                     if (phasingEntitiesByCellId.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> cellEntities))
                     {
@@ -345,7 +351,7 @@ namespace NitroxServer.GameLogic.Entities
         /// </summary>
         public void UpdateGlobalRootEntity(GlobalRootEntity entity)
         {
-            lock (globalRootEntitiesById)
+            lock (globalRootEntitiesLock)
             {
                 entityRegistry.AddOrUpdate(entity);
                 globalRootEntitiesById[entity.Id] = entity;
