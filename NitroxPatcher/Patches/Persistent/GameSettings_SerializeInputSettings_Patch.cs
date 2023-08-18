@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxClient.Serialization;
@@ -8,7 +7,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class GameSettings_SerializeInputSettings_Patch : NitroxPatch, IPersistentPatch
+    public partial class GameSettings_SerializeInputSettings_Patch : NitroxPatch, IPersistentPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => GameSettings.SerializeInputSettings(default(GameSettings.ISerializer)));
 
@@ -44,11 +43,6 @@ namespace NitroxPatcher.Patches.Persistent
             }
 
             cfg.Serialize(NitroxUser.AppDataPath);
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
@@ -8,9 +7,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class Base_PickFace_Patch : NitroxPatch, IDynamicPatch
+    public partial class Base_PickFace_Patch : NitroxPatch, IDynamicPatch
     {
-        public readonly MethodInfo METHOD = Reflect.Method((Base t) => t.PickFace(default(Transform), out Reflect.Ref<Base.Face>.Field));
+        public static readonly MethodInfo METHOD = Reflect.Method((Base t) => t.PickFace(default(Transform), out Reflect.Ref<Base.Face>.Field));
 
         public static bool Prefix(Base __instance, ref bool __result, ref Base.Face face)
         {
@@ -29,11 +28,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
             }
             return true;
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, METHOD);
         }
     }
 }

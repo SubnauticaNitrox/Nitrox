@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -14,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Broadcasts the FireExtinguisherHolder's metadata when stored and the destruction of the extinguisher entity that is placed onto it.
 /// </summary>
-public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((FireExtinguisherHolder t) => t.TryStoreTank());
 
@@ -36,7 +37,7 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
                  */
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
                 yield return new CodeInstruction(OpCodes.Ldloc_0);
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(FireExtinguisherHolder), default(Pickupable))));
+                yield return new CodeInstruction(OpCodes.Call, ((Action<FireExtinguisherHolder, Pickupable>)Callback).Method);
             }
         }
     }
@@ -52,10 +53,5 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(pickupableId));
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

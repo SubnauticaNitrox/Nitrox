@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures;
@@ -10,7 +9,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.TakeDamage(default(float), default(Vector3), default(DamageType), default(GameObject)));
 
@@ -47,10 +46,5 @@ public class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPatch
                 Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
             }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
     }
 }

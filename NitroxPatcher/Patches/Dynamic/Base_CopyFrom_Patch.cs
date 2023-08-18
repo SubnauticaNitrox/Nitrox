@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -10,9 +9,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
 {
-    public readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.CopyFrom(default, default, default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.CopyFrom(default, default, default));
 
     // TODO: In the future, if faces are directly manipulated, we need to make sure that TrackDeletedFaces is accordingly set
     public static bool TrackDeletedFaces => Multiplayer.Main.InitialSyncCompleted;
@@ -60,11 +59,5 @@ public class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
         }
 
         DeletedFaces[__instance] = null;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

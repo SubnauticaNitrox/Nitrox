@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
@@ -8,7 +7,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class PilotingChair_OnHandClick_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PilotingChair_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.OnHandClick(default(GUIHand)));
 
@@ -58,10 +57,5 @@ public class PilotingChair_OnHandClick_Patch : NitroxPatch, IDynamicPatch
             pilotingChair.gameObject.AddComponent<DenyOwnershipHand>();
             pilotingChair.isValidHandTarget = false;
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

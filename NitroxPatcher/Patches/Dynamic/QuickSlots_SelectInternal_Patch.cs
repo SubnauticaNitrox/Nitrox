@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -9,7 +8,7 @@ using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class QuickSlots_SelectInternal_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class QuickSlots_SelectInternal_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.SelectInternal(default(int)));
 
@@ -36,10 +35,5 @@ public class QuickSlots_SelectInternal_Patch : NitroxPatch, IDynamicPatch
             PlayerHeldItemChanged.ChangeType type = component ? PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL : PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM;
             Resolve<LocalPlayer>().BroadcastHeldItemChanged(itemId, type, __state);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
     }
 }

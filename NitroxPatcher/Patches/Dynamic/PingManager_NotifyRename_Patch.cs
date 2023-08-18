@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
@@ -8,7 +7,7 @@ using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PingManager.NotifyRename(default(PingInstance)));
 
@@ -25,10 +24,5 @@ public class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
             PingRenamed packet = new(id, instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
             Resolve<IPacketSender>().Send(packet);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

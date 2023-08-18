@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class Base_SetFaceType_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Base_SetFaceType_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.SetFaceType(default, default));
 
@@ -100,10 +99,5 @@ public class Base_SetFaceType_Patch : NitroxPatch, IDynamicPatch
             return FindFaceObject(@base, new(Base.GetAdjacent(face.cell, face.direction), face.direction), faceType, false);
         }
         return null;
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

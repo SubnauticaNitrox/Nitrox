@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
 using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class Base_SpawnPiece_Patch : NitroxPatch, IDynamicPatch
+    public sealed partial class Base_SpawnPiece_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.SpawnPiece(default(Base.Piece), default(Int3), default(Quaternion), default(Base.Direction?), default(BaseDeconstructable)));
 
@@ -24,11 +23,6 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             Resolve<GeometryRespawnManager>().BaseObjectRespawned(__result.gameObject);
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

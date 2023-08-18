@@ -1,11 +1,10 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class EnergyMixin_OnAddItem_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class EnergyMixin_OnAddItem_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EnergyMixin t) => t.OnAddItem(default(InventoryItem)));
 
@@ -15,10 +14,5 @@ public class EnergyMixin_OnAddItem_Patch : NitroxPatch, IDynamicPatch
         {
             Resolve<ItemContainers>().BroadcastBatteryAdd(item.item.gameObject, __instance.gameObject, item.techType);
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

@@ -7,10 +7,9 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;
 
-public class MainGameController_StartGame_Patch : NitroxPatch, IPersistentPatch
+public partial class MainGameController_StartGame_Patch : NitroxPatch, IPersistentPatch
 {
-    public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((MainGameController t) => t.StartGame());
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
+    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((MainGameController t) => t.StartGame()));
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     public static readonly object INJECTION_OPERAND = Reflect.Method(() => WaitScreen.Remove(default));
@@ -36,10 +35,5 @@ public class MainGameController_StartGame_Patch : NitroxPatch, IPersistentPatch
                 }
             }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

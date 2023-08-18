@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -7,7 +6,7 @@ using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class QuickSlots_DeselectInternal_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class QuickSlots_DeselectInternal_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.DeselectInternal());
 
@@ -23,10 +22,5 @@ public class QuickSlots_DeselectInternal_Patch : NitroxPatch, IDynamicPatch
                 Resolve<LocalPlayer>().BroadcastHeldItemChanged(itemId, type, null);
             }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

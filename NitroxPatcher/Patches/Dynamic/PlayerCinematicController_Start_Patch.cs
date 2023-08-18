@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
@@ -7,7 +6,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class PlayerCinematicController_Start_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PlayerCinematicController_Start_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.Start());
 
@@ -25,10 +24,5 @@ public class PlayerCinematicController_Start_Patch : NitroxPatch, IDynamicPatch
         }
 
         reference.AddController(__instance);
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, targetMethod);
     }
 }
