@@ -272,14 +272,13 @@ public class BuildingHandler : MonoBehaviour
         if (deltaTime.TotalMilliseconds < RESYNC_REQUEST_COOLDOWN)
         {
             double timeLeft = RESYNC_REQUEST_COOLDOWN * 0.001 - deltaTime.TotalSeconds;
-            ErrorMessage.AddMessage($"On cooldown for resync request for {timeLeft} more seconds");
+            Log.InGame(Language.main.Get("Nitrox_ResyncOnCooldown").Replace("{TIME_LEFT}", timeLeft.ToString()));
             return;
         }
         LatestResyncRequestTimeOffset = DateTimeOffset.Now;
 
         this.Resolve<IPacketSender>().Send(new BuildingResyncRequest());
-        ErrorMessage.AddMessage("Issued a resync request for bases");
-        // TODO: Localize
+        Log.InGame(Language.main.Get("Nitrox_ResyncRequested"));
     }
 
     public void StartResync(Dictionary<Entity, int> entities)

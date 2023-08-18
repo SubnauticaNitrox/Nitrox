@@ -34,8 +34,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         {
             return;
         }
-        // TODO: Localize
-        ErrorMessage.AddMessage($"Received a resync packet for buildings with {packet.Entities.Count} entities");
+
         BuildingHandler.Main.StartCoroutine(ResyncBuildingEntities(packet.Entities));
     }
 
@@ -48,7 +47,9 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         yield return UpdateEntities<Constructable, ModuleEntity>(entities.Keys.OfType<ModuleEntity>().ToList(), OverwriteModule, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing ModuleEntities"));
         BuildingHandler.Main.StopResync();
 
-        ErrorMessage.AddMessage($"Finished resyncing {entities.Count} entities, took {stopwatch.ElapsedMilliseconds}ms");
+        stopwatch.Stop();
+
+        Log.InGame(Language.main.Get("Nitrox_FinishedResyncRequest").Replace("{TIME}", stopwatch.ElapsedMilliseconds.ToString()).Replace("{COUNT}", entities.Count.ToString()));
     }
 
     private bool IsInCloseProximity<C>(WorldEntity entity, C componentInWorld) where C : Component

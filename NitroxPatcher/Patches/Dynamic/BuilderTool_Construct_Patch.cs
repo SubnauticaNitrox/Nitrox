@@ -16,12 +16,14 @@ public sealed partial class BuilderTool_Construct_Patch : NitroxPatch, IDynamicP
         {
             return true;
         }
+
         bool isAllowed = true;
         string message = "";
+
         Constructable_DeconstructionAllowed_Patch.DeconstructionAllowed(parentId, ref isAllowed, ref message);
         if (!isAllowed)
         {
-            ErrorMessage.AddMessage(message);
+            Log.InGame(message);
             return false;
         }
 
