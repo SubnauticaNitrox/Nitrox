@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(VehicleMovement vehicleMovement)
         {
             VehicleMovementData vehicleModel = vehicleMovement.VehicleMovementData;
-            Optional<RemotePlayer> player = remotePlayerManager.Find(vehicleMovement.PlayerId);
+            Optional<RemotePlayer> player = remotePlayerManager.Find(vehicleMovement.Id);
             vehicles.UpdateVehiclePosition(vehicleModel, player);
         }
     }

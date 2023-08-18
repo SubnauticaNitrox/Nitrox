@@ -2,6 +2,7 @@ using System.Collections;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -23,6 +24,12 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
     // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
     // distance - anything more will simply use world spawning (no need to play the animation anyways).
     private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
+    private readonly SimulationOwnership simulationOwnership;
+
+    internal VehicleWorldEntitySpawner(SimulationOwnership simulationOwnership)
+    {
+        this.simulationOwnership = simulationOwnership;
+    }
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
@@ -41,12 +48,17 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             {
                 MobileVehicleBay.TransmitLocalSpawns = false;
                 yield return SpawnViaConstructor(vehicleEntity, constructor, result);
+                result.value.Value.EnsureComponent<MovementController>();
+
+                simulationOwnership.RequestSimulationLock(vehicleEntity.Id, SimulationLockType.TRANSIENT);
                 MobileVehicleBay.TransmitLocalSpawns = true;
                 yield break;
             }
         }
 
-        yield return SpawnInWorld(vehicleEntity, result, parent);            
+        yield return SpawnInWorld(vehicleEntity, result, parent);
+        result.value.Value.EnsureComponent<MovementController>();
+        simulationOwnership.RequestSimulationLock(vehicleEntity.Id, SimulationLockType.TRANSIENT);
     }
 
     private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)

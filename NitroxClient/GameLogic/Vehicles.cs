@@ -173,16 +173,6 @@ public class Vehicles
         vehicleMovementSuppressor.Dispose();
     }
 
-    public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, TechType techType, GameObject gameObject, float cooldown)
-    {
-        yield return new WaitForSeconds(cooldown);
-
-        VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(techType.ToDto(), id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
-        ushort playerId = ushort.MaxValue;
-
-        packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
-    }
-
     public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
     {
         if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))

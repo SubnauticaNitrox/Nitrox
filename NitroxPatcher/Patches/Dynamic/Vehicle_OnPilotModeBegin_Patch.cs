@@ -1,5 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -11,5 +12,9 @@ public sealed partial class Vehicle_OnPilotModeBegin_Patch : NitroxPatch, IDynam
     public static void Prefix(Vehicle __instance)
     {
         Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance, true);
+        if (__instance.TryGetComponent(out MovementController mc))
+        {
+            mc.SetBroadcasting(false);
+        }
     }
 }

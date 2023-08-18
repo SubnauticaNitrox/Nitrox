@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +79,8 @@ namespace NitroxModel.Packets
             DEFAULT = 0,
             PLAYER_MOVEMENT = 1,
             VEHICLE_MOVEMENT = 2,
-            PLAYER_STATS = 3
+            PLAYER_STATS = 3,
+            MISC_MOVEMENT = 4
         }
 
         public byte[] Serialize()

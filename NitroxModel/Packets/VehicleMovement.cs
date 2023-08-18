@@ -1,5 +1,6 @@
 using System;
 using BinaryPack.Attributes;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Networking;
@@ -9,19 +10,18 @@ namespace NitroxModel.Packets
     [Serializable]
     public class VehicleMovement : Movement
     {
-        public override ushort PlayerId { get; }
+        public override NitroxId Id { get; }
         public VehicleMovementData VehicleMovementData { get; }
 
         [IgnoredMember]
         public override NitroxVector3 Position => VehicleMovementData.Position;
         [IgnoredMember]
-        public override NitroxQuaternion BodyRotation => VehicleMovementData.Rotation;
-        [IgnoredMember]
-        public override NitroxQuaternion AimingRotation => VehicleMovementData.Rotation;
+        public override NitroxQuaternion Rotation => VehicleMovementData.Rotation;
 
-        public VehicleMovement(ushort playerId, VehicleMovementData vehicleMovementData)
+        /// <param name="id">Player Id</param>
+        public VehicleMovement(NitroxId id, VehicleMovementData vehicleMovementData)
         {
-            PlayerId = playerId;
+            Id = id;
             VehicleMovementData = vehicleMovementData;
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;

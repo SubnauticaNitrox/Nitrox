@@ -24,6 +24,7 @@ public class LocalPlayer : ILocalNitroxPlayer
     private readonly Lazy<GameObject> body;
     private readonly Lazy<GameObject> playerModel;
     private readonly Lazy<GameObject> bodyPrototype;
+    private readonly NitroxEntity entity;
 
     public GameObject Body => body.Value;
 
@@ -37,28 +38,34 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public Perms Permissions;
 
-    public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
-    {
-        this.multiplayerSession = multiplayerSession;
-        this.packetSender = packetSender;
-        this.throttledPacketSender = throttledPacketSender;
-        body = new Lazy<GameObject>(() => Player.main.RequireGameObject("body"));
-        playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
-        bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
-        Permissions = Perms.PLAYER;
-    }
+        public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
+        {
+            this.multiplayerSession = multiplayerSession;
+            this.packetSender = packetSender;
+            this.throttledPacketSender = throttledPacketSender;
+            body = new Lazy<GameObject>(() => Player.main.RequireGameObject("body"));
+            playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
+            bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
+            Permissions = Perms.PLAYER;
 
-    public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
-    {
-        Movement movement;
-        if (vehicle.HasValue)
-        {
-            movement = new VehicleMovement(PlayerId, vehicle.Value);
+            if (!Player.mainObject.TryGetComponent(out NitroxEntity nitroxEntity))
+            {
+                nitroxEntity = Player.mainObject.AddComponent<NitroxEntity>();
+            }
+            entity = nitroxEntity;
         }
-        else
+
+        public void BroadcastLocation(Vector3 location, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
-            movement = new PlayerMovement(PlayerId, location.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
-        }
+            Movement movement;
+            if (vehicle.HasValue)
+            {
+                movement = new VehicleMovement(entity.Id, vehicle.Value);
+            }
+            else
+            {
+                movement = new PlayerMovement(entity.Id, location.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
+            }
 
         packetSender.Send(movement);
     }

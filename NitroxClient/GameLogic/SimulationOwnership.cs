@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Simulation;
 using NitroxModel.DataStructures;
@@ -12,6 +13,9 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
         private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = new Dictionary<NitroxId, LockRequestBase>();
+
+        public event Action<NitroxId> StoppedSimulatingEntity;
+        public event Action<NitroxId> StartedSimulatingEntity;
 
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
@@ -68,11 +72,20 @@ namespace NitroxClient.GameLogic
         public void SimulateEntity(NitroxId id, SimulationLockType lockType)
         {
             simulatedIdsByLockType[id] = lockType;
+            if (StartedSimulatingEntity != null)
+            {
+                StartedSimulatingEntity(id);
+            }
         }
 
         public void StopSimulatingEntity(NitroxId id)
         {
             simulatedIdsByLockType.Remove(id);
+
+            if (StoppedSimulatingEntity != null)
+            {
+                StoppedSimulatingEntity(id);
+            }
         }
     }
 }

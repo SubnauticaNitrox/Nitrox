@@ -8,29 +8,27 @@ using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    class PlayerMovementProcessor : AuthenticatedPacketProcessor<PlayerMovement>
+    class BasicMovementPacketProcessor : AuthenticatedPacketProcessor<BasicMovement>
     {
         private readonly PlayerManager playerManager;
         private readonly EntityRegistry entityRegistry;
 
-        public PlayerMovementProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+        public BasicMovementPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
         {
             this.playerManager = playerManager;
             this.entityRegistry = entityRegistry;
         }
 
-        public override void Process(PlayerMovement packet, Player player)
+        public override void Process(BasicMovement packet, Player player)
         {
-            Optional<PlayerWorldEntity> playerEntity = entityRegistry.GetEntityById<PlayerWorldEntity>(player.PlayerContext.PlayerNitroxId);
+            Optional<WorldEntity> entity = entityRegistry.GetEntityById<WorldEntity>(packet.Id);
 
-            if (playerEntity.HasValue)
+            if (entity.HasValue)
             {
-                playerEntity.Value.Transform.Position = packet.Position;
-                playerEntity.Value.Transform.Rotation = packet.Rotation;
+                entity.Value.Transform.Position = packet.Position;
+                entity.Value.Transform.Rotation = packet.Rotation;
             }
 
-            player.Position = packet.Position;
-            player.Rotation = packet.Rotation;
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

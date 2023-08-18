@@ -50,7 +50,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool IsMoving(GameObject go)
         {
-            return go.TryGetComponent(out MovementController mc) && mc.IsMoving;
+            return go.TryGetComponent(out MovementController mc) && mc.Receiving;
         }
     }
 }

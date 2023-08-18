@@ -80,7 +80,10 @@ namespace NitroxClient.MonoBehaviours
 
             if (gameObject.TryGetComponent(out NitroxEntity entity))
             {
-                gameObjectsById.Remove(entity.Id);
+                if (entity.Id != null)
+                {
+                    gameObjectsById.Remove(entity.Id);
+                }
             }
             else
             {

@@ -15,12 +15,12 @@ public class MobileVehicleBay
     public static GameObject MostRecentlyCrafted { get; set; }
 
     private readonly IPacketSender packetSender;
-    private readonly Vehicles vehicles;
+    private readonly SimulationOwnership simulationOwnership;
 
-    public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles)
+    public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles, SimulationOwnership simulationOwnership)
     {
         this.packetSender = packetSender;
-        this.vehicles = vehicles;
+        this.simulationOwnership = simulationOwnership;
     }
 
     public void BeginCrafting(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
@@ -42,11 +42,12 @@ public class MobileVehicleBay
 
         NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
+        MovementController mc = constructedObject.AddComponent<MovementController>();
+
         VehicleWorldEntity vehicleEntity = new(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), string.Empty, false, constructedObjectId, techType.ToDto(), null);
         VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
 
         packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
-
-        constructor.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(constructedObjectId, techType, constructedObject, duration + 10.0f));
+        simulationOwnership.RequestSimulationLock(constructedObjectId, SimulationLockType.TRANSIENT);
     }
 }

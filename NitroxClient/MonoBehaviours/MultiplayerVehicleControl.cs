@@ -56,13 +56,12 @@ namespace NitroxClient.MonoBehaviours
 
         internal virtual void Enter()
         {
-            movementController.IsMoving = true;
+            movementController.SetReceiving(true);
             enabled = true;
         }
 
         public virtual void Exit()
         {
-            movementController.IsMoving = false;
             enabled = false;
         }
 

@@ -29,7 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 worldVehicle.Transform.Rotation = packet.VehicleMovementData.Rotation;
             }
 
-            if (player.Id == packet.PlayerId)
+            if (player.GameObjectId == packet.Id)
             {
                 player.Position = packet.VehicleMovementData.DriverPosition;
                 player.Rotation = packet.VehicleMovementData.DriverRotation; ;

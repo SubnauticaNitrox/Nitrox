@@ -1,7 +1,8 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -50,6 +51,10 @@ public sealed partial class PilotingChair_OnHandClick_Patch : NitroxPatch, IDyna
         {
             skipPrefix = true;
             pilotingChair.OnHandClick(context.GuiHand);
+            if (pilotingChair.subRoot.TryGetComponent(out MovementController mc))
+            {
+                mc.SetBroadcasting(false);
+            }
             skipPrefix = false;
         }
         else

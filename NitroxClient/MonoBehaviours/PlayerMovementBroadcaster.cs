@@ -41,7 +41,6 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         }
 
         Vector3 currentPosition = Player.main.transform.position;
-        Vector3 playerVelocity = Player.main.playerController.velocity;
 
         // IDEA: possibly only CameraRotation is of interest, because bodyrotation is extracted from that.
         Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
@@ -55,7 +54,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             vehicle.Value.DriverRotation = Player.main.transform.rotation.ToDto();
         }
 
-        localPlayer.BroadcastLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
+        localPlayer.BroadcastLocation(currentPosition, bodyRotation, aimingRotation, vehicle);
     }
 
     private Optional<VehicleMovementData> GetVehicleMovement()
@@ -80,6 +79,11 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             if (!vehicle.TryGetIdOrWarn(out id))
             {
                 return Optional.Empty;
+            }
+
+            if (vehicle.TryGetComponent(out MovementController mc))
+            {
+                mc.SetReceiving(false);
             }
 
             Transform vehicleTransform = vehicle.transform;

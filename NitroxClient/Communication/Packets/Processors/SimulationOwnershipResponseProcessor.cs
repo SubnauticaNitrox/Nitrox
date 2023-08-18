@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -37,6 +37,8 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 RemoveRemoteController(response.Id);
             }
+
+            SwapMovementController(response.Id, response.LockAcquired);
         }
 
         private void RemoveRemoteController(NitroxId id)
@@ -47,6 +49,18 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 RemotelyControlled remotelyControlled = gameObject.Value.GetComponent<RemotelyControlled>();
                 Object.Destroy(remotelyControlled);
+            }
+        }
+
+        private void SwapMovementController(NitroxId id, bool lockAcquired)
+        {
+            Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(id);
+
+            if (gameObject.HasValue)
+            {
+                MovementController movementController = gameObject.Value.GetComponent<MovementController>();
+                movementController.SetBroadcasting(lockAcquired);
+                movementController.SetReceiving(!lockAcquired);
             }
         }
     }

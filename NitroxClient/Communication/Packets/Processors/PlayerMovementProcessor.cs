@@ -20,14 +20,14 @@ public class PlayerMovementProcessor : ClientPacketProcessor<PlayerMovement>
 
     public override void Process(PlayerMovement movement)
     {
-        Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(movement.PlayerId);
+        Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(movement.Id);
         if (!remotePlayer.HasValue)
         {
             return;
         }
 
         remotePlayer.Value.UpdatePosition(movement.Position.ToUnity(),
-                              movement.BodyRotation.ToUnity(),
+                              movement.Rotation.ToUnity(),
                               movement.AimingRotation.ToUnity());
     }
 }

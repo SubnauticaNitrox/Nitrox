@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,7 +29,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservationAsync(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext).RunSynchronously();
 
             // Assert
             serverClient.IsConnected.Should().BeTrue();
@@ -52,7 +52,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservationAsync(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext).RunSynchronously();
 
             // Assert
             serverClient.Received().Send(Arg.Any<MultiplayerSessionPolicyRequest>());
@@ -75,7 +75,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservationAsync(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext).RunSynchronously();
 
             // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<EstablishingSessionPolicy>());

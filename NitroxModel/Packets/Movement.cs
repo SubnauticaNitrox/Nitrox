@@ -1,13 +1,14 @@
 using System;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Networking;
 
 namespace NitroxModel.Packets;
 
 [Serializable]
 public abstract class Movement : Packet
 {
-    public abstract ushort PlayerId { get; }
+    public abstract NitroxId Id { get; }
     public abstract NitroxVector3 Position { get; }
-    public abstract NitroxQuaternion BodyRotation { get; }
-    public abstract NitroxQuaternion AimingRotation { get; }
+    public abstract NitroxQuaternion Rotation { get; }
 }

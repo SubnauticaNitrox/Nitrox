@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -22,6 +22,10 @@ public sealed partial class Vehicle_OnPilotModeEnd_Patch : NitroxPatch, IDynamic
         if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            if (__instance.TryGetComponent(out MovementController mc))
+            {
+                mc.SetBroadcasting(true);
+            }
         }
     }
 }

@@ -119,7 +119,7 @@ namespace NitroxClient.GameLogic
             SetVehicle(null);
             SetPilotingChair(null);
 
-            MovementController.IsMoving = true;
+            MovementController.SetReceiving(true);
 
             MovementController.TargetPosition = position;
             MovementController.TargetRotation = bodyRotation;
@@ -177,7 +177,10 @@ namespace NitroxClient.GameLogic
 
                 RigidBody.isKinematic = AnimationController["cyclops_steering"] = isInPilotingChair;
                 RigidBody.interpolation = isInPilotingChair ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate;
-                MovementController.IsMoving = !isInPilotingChair;
+                if (isInPilotingChair)
+                {
+                    MovementController.SetReceiving(false);
+                }
             }
         }
 
@@ -254,7 +257,10 @@ namespace NitroxClient.GameLogic
 
                 RigidBody.interpolation = Vehicle ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate;
                 RigidBody.isKinematic = Vehicle;
-                MovementController.IsMoving = !Vehicle;
+                if (Vehicle)
+                {
+                    MovementController.SetReceiving(false);
+                }
 
                 AnimationController["in_seamoth"] = newVehicle is SeaMoth;
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;

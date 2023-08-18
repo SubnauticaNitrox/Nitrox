@@ -18,13 +18,58 @@ public class WorldEntitySpawner : EntitySpawner<WorldEntity>
     private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
     private readonly Dictionary<Int3, BatchCells> batchCellsById;
 
-    public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
+    public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, SimulationOwnership simulationOwnership, Entities entities)
     {
-        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer, entities);
+        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer, simulationOwnership, entities);
 
-        if (NitroxEnvironment.IsNormal)
+            if (NitroxEnvironment.IsNormal)
+            {
+                batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;
+            }
+        }
+
+        public override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
         {
-            batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;
+            LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
+
+            EntityCell cellRoot = EnsureCell(entity);
+
+            Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
+
+            IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
+
+            return entitySpawner.SpawnAsync(entity, parent, cellRoot, result);
+        }
+        public override bool SpawnsOwnChildren(WorldEntity entity)
+        {
+            IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
+            return entitySpawner.SpawnsOwnChildren();
+        }
+
+        private EntityCell EnsureCell(WorldEntity entity)
+        {
+            EntityCell entityCell;
+
+            Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
+            Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
+
+            if (!batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
+            {
+                batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
+            }
+
+            entityCell = batchCells.Get(cellId, entity.AbsoluteEntityCell.Level);
+
+            if (entityCell == null)
+            {
+                entityCell = batchCells.Add(cellId, entity.AbsoluteEntityCell.Level);
+                entityCell.Initialize();
+            }
+
+            entityCell.EnsureRoot();
+
+            return entityCell;
+>>>>>>> ddf37665 (first round of bug fixes)
         }
     }
 

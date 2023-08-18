@@ -10,9 +10,9 @@ public sealed partial class Vehicle_ShouldSetKinematic_Patch : NitroxPatch, IDyn
 
     public static bool Prefix(Vehicle __instance, ref bool __result)
     {
-        if (__instance.TryGetComponent(out MovementController movementController))
+        if (__instance.TryGetComponent(out MovementController movementController) && movementController.Receiving)
         {
-            __result = !movementController.IsMoving;
+            __result = true;
             return false;
         }
         return true;
