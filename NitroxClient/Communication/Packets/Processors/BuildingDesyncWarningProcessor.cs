@@ -15,16 +15,17 @@ public class BuildingDesyncWarningProcessor : ClientPacketProcessor<BuildingDesy
         {
             return;
         }
+
         foreach (KeyValuePair<NitroxId, int> operation in packet.Operations)
         {
             OperationTracker tracker = BuildingHandler.Main.EnsureTracker(operation.Key);
             tracker.LastOperationId = operation.Value;
             tracker.FailedOperations++;
         }
+
         if (NitroxPrefs.SafeBuildingLog.Value)
         {
-            // TODO: Localize
-            ErrorMessage.AddMessage($"Server detected a desync with the local client's buildings (go to Nitrox settings to request a resync)");
+            Log.InGame(Language.main.Get("Nitrox_BuildingDesyncDetected"));
         }
     }
 }

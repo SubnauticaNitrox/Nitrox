@@ -137,7 +137,6 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        // TODO: Localize
         /// <remarks>
         /// Yield returning takes too much time and it quickly gets out of hand with long function call hierarchies so
         /// we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS)
@@ -155,6 +154,7 @@ namespace NitroxClient.GameLogic
                 IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
                 TaskResult<Optional<GameObject>> entityResult = new();
                 TaskResult<Exception> exception = new();
+
                 if (!entitySpawner.SpawnSyncSafe(entity, entityResult, exception) && exception.Get() == null)
                 {
                     IEnumerator coroutine = entitySpawner.SpawnAsync(entity, entityResult);
@@ -169,6 +169,7 @@ namespace NitroxClient.GameLogic
                         continue;
                     }
                 }
+
                 if (exception.Get() != null)
                 {
                     Log.Error($"Failed to spawn entity {entity.Id} during a batch spawning:\n{exception.Get()}");
@@ -209,6 +210,7 @@ namespace NitroxClient.GameLogic
                             continue;
                         }
                     }
+
                     if (exception.Get() != null)
                     {
                         Log.Error($"Failed to spawn entity {childEntity.Id} during a batch spawning:\n{exception.Get()}");

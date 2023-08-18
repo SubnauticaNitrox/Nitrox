@@ -24,16 +24,15 @@ public sealed partial class Constructable_DeconstructionAllowed_Patch : NitroxPa
 
     public static void DeconstructionAllowed(NitroxId baseId, ref bool __result, ref string reason)
     {
-        // TODO: Localize those strings string (same for PrefixToolConstruct)
         if (BuildingHandler.Main.BasesCooldown.ContainsKey(baseId))
         {
             __result = false;
-            reason = "You can't modify a base that was recently updated by another player";
+            reason = Language.main.Get("Nitrox_ErrorRecentBuildUpdate");
         }
         else if (BuildingHandler.Main.EnsureTracker(baseId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
         {
             __result = false;
-            reason = "[Safe Building] This base is currently desynced so you can't modify it unless you resync buildings (in Nitrox settings)";
+            reason = Language.main.Get("Nitrox_ErrorDesyncDetected");
         }
     }
 }

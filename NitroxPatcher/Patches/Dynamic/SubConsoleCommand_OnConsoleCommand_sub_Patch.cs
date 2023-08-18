@@ -13,7 +13,7 @@ public sealed partial class SubConsoleCommand_OnConsoleCommand_sub_Patch : Nitro
 
     public static bool Prefix()
     {
-        ErrorMessage.AddMessage(Language.main.Get("Nitrox_CommandNotAvailable"));
+        Log.InGame(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
     }
 }
