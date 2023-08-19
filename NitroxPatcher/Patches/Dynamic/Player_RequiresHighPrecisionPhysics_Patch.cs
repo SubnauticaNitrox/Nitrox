@@ -18,11 +18,11 @@ public sealed partial class Player_RequiresHighPrecisionPhysics_Patch : NitroxPa
     {
         if (Player.main.currentSub)
         {
-            MultiplayerCyclops cyclops = Player.main.currentSub.GetComponent<MultiplayerCyclops>();
+            MovementController movementController = Player.main.currentSub.GetComponent<MovementController>();
 
-            if (cyclops)
+            if (movementController && movementController.Receiving)
             {
-                __result = (cyclops.CurrentPlayer != null);
+                __result = false;
                 return false;
             }
         }
