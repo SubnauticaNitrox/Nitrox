@@ -30,6 +30,16 @@ public partial class ServersViewModel : RoutableViewModelBase
                 ManageServerCommand.NotifyCanExecuteChanged();
             }
         });
+        WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
+        {
+            for (int i = Servers.Count - 1; i >= 0; i--)
+            {
+                if (Servers[i].Name == message.SaveName)
+                {
+                    Servers.RemoveAt(i);
+                }
+            }
+        });
 
         Servers = new AvaloniaList<ServerEntry>(GetSavesOnDisk().OrderByDescending(entry => entry.LastAccessedTime));
     }

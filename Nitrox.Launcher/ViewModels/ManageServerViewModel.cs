@@ -6,7 +6,9 @@ using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
+using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
@@ -258,7 +260,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         }
 
         Directory.Delete(WorldFolderDirectory, true);
-        Router.NavigateBack.Execute();
+        WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
     }
 
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;
