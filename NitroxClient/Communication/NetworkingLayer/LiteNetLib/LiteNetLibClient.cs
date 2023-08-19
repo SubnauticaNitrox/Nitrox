@@ -88,7 +88,7 @@ public class LiteNetLibClient : IClient
         {
             reader.GetBytes(packetData, packetDataLength);
             Packet packet = Packet.Deserialize(packetData);
-            packetReceiver.PacketReceived(packet);
+            packetReceiver.Add(packet);
             networkDebugger?.PacketReceived(packet, packetDataLength);
         }
         finally
