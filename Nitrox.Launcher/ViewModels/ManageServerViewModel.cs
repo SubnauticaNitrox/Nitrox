@@ -261,6 +261,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
         Directory.Delete(WorldFolderDirectory, true);
         WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
+        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<ServersViewModel>());
     }
 
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;

@@ -48,8 +48,7 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
             CreateServerViewModel => typeof(CreateServerModal),
             ConfirmationBoxViewModel => typeof(ConfirmationBoxModal),
             PlayViewModel => typeof(PlayView),
-            ServersViewModel vm when vm.Servers.Any() => typeof(ServersView),
-            ServersViewModel vm when !vm.Servers.Any() => typeof(EmptyServersView),
+            ServersViewModel => typeof(ServersView),
             ManageServerViewModel => typeof(ManageServerView),
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
         };
@@ -69,24 +68,7 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
 
         TViewModel viewModel = (TViewModel)key.GetConstructor(BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, new[] { typeof(IScreen) })!.Invoke(new[] { MainWindow.ViewModel });
         viewModelCache.TryAdd(typeof(TViewModel), viewModel);
-        AttachListenersForViewChange(viewModel);
         return viewModel;
-    }
-
-    /// <summary>
-    ///     Any conditions used in mapping method <see cref="ResolveView{T}" /> should be listened to, so the view updates when the condition changes.
-    /// </summary>
-    /// <remarks>
-    ///     TODO: Use source generators to implement this method based on member access operations after ViewModel types in <see cref="ResolveView{T}" />.
-    /// </remarks>
-    private static void AttachListenersForViewChange<T>(T viewModel)
-    {
-        switch (viewModel)
-        {
-            case ServersViewModel vm:
-                vm.Servers.PropertyChanged += (_, _) => MainRouter.Navigate.Execute(vm);
-                break;
-        }
     }
 
     public IViewFor ResolveView<T>(T viewModel, string contract = null) => (IViewFor)Locate(viewModel).Create();
