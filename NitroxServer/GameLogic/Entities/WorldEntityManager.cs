@@ -155,7 +155,9 @@ namespace NitroxServer.GameLogic.Entities
                     // to make sure that they won't be removed
                     if (entityRegistry.TryGetEntityById(entityId, out GlobalRootEntity globalRootEntity))
                     {
-                        foreach (PlayerWorldEntity childPlayerEntity in FindPlayerEntitiesInChildrenRecursively(globalRootEntity))
+                        List<PlayerWorldEntity> playerEntities = new();
+                        FindPlayerEntitiesInChildrenRecursively(globalRootEntity, playerEntities);
+                        foreach (PlayerWorldEntity childPlayerEntity in playerEntities)
                         {
                             // Reparent the entity on top of GlobalRoot
                             globalRootEntity.ChildEntities.Remove(childPlayerEntity);
@@ -358,9 +360,8 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private List<PlayerWorldEntity> FindPlayerEntitiesInChildrenRecursively(Entity parentEntity)
+        private void FindPlayerEntitiesInChildrenRecursively(Entity parentEntity, List<PlayerWorldEntity> playerEntities)
         {
-            List<PlayerWorldEntity> playerEntities = new();
             foreach (Entity childEntity in parentEntity.ChildEntities)
             {
                 if (childEntity is PlayerWorldEntity playerWorldEntity)
@@ -368,9 +369,8 @@ namespace NitroxServer.GameLogic.Entities
                     playerEntities.Add(playerWorldEntity);
                     continue;
                 }
-                playerEntities.AddRange(FindPlayerEntitiesInChildrenRecursively(childEntity));
+                FindPlayerEntitiesInChildrenRecursively(childEntity, playerEntities);
             }
-            return playerEntities;
         }
     }
 }
