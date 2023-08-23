@@ -58,7 +58,7 @@ public class WorldEntitySpawner : EntitySpawner<WorldEntity>
         return entitySpawner.SpawnsOwnChildren();
     }
 
-    private EntityCell EnsureCell(WorldEntity entity)
+    public EntityCell EnsureCell(WorldEntity entity)
     {
         EntityCell entityCell;
 
