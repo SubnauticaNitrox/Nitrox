@@ -3,12 +3,16 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Nitrox.Launcher.Models.Exceptions;
 using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.ViewModels;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 
@@ -52,20 +56,9 @@ public partial class ServerEntry : ObservableObject
     private bool isNewServer = true;
     [ObservableProperty]
     private DateTime lastAccessedTime = DateTime.Now;
-    
-    
-    // Server Variables
-    public const string SERVER_EXECUTABLE = "NitroxServer-Subnautica.exe";
-    public bool IsManagedByLauncher => IsEmbedded && IsServerRunning;
-    public bool IsServerRunning => !serverProcess?.HasExited ?? false;
-    public bool IsEmbedded { get; private set; }
-    public event EventHandler<ServerStartEventArgs> ServerStarted;
-    public event DataReceivedEventHandler ServerDataReceived;
-    public event EventHandler ServerExited;
 
-    private Process serverProcess;
-    
-    
+    private ServerProcess serverProcess;
+
     public ServerEntry()
     {
         PropertyChanged += OnPropertyChanged;
@@ -79,122 +72,85 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand]
     public void Start()
     {
-        string saveDir = Path.Combine(ServersViewModel.SavesFolderDir, Name);
-        bool standalone = true;
-        
         try
         {
-            if (IsServerRunning)
+            if (serverProcess?.IsRunning ?? false)
             {
-                throw new Exception("An instance of Nitrox Server is already running");
+                throw new DuplicateSingularApplicationException("Nitrox Server");
             }
-            
-            string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            string serverPath = Path.Combine(launcherDir, "server", SERVER_EXECUTABLE);
+            // Start server and add notify when server closed.
+            serverProcess = ServerProcess.Start(Name, () => Dispatcher.UIThread.InvokeAsync(Stop));
+        }
+        catch (Exception ex)
+        {
+            // TODO: Display these errors as warnings in UI:
+            // - "An instance of the Nitrox server is already running, please close it to start another server."
+            // - Any error returned from starting the server.
+            Log.Error(ex);
+            return;
+        }
+
+        IsNewServer = false;
+        IsOnline = true;
+    }
+
+    [RelayCommand]
+    public void Stop()
+    {
+        serverProcess?.Close();
+        IsOnline = false;
+    }
+
+    private class ServerProcess : IDisposable
+    {
+        public string SaveName { get; init; }
+        public bool IsRunning => !serverProcess?.HasExited ?? false;
+        public string SaveDir => Path.Combine(ServersViewModel.SavesFolderDir, SaveName);
+        private Process serverProcess;
+
+        private ServerProcess(string saveName, Action onExited)
+        {
+            SaveName = saveName;
+
+            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, "Server", "NitroxServer-Subnautica.exe");
             ProcessStartInfo startInfo = new(serverPath)
             {
-                WorkingDirectory = launcherDir
+                WorkingDirectory = NitroxUser.CurrentExecutablePath,
+                Verb = "open",
+                Arguments = $@"""{SaveDir}"""
             };
-            
-            if (!standalone)
-            {
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
-                startInfo.RedirectStandardInput = true;
-                startInfo.CreateNoWindow = true;
-            }
-            else
-            {
-                startInfo.Verb = "open";
-            }
-
-            startInfo.Arguments = $@"""{saveDir}""";
 
             serverProcess = Process.Start(startInfo);
             if (serverProcess != null)
             {
                 serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
-
-                if (!standalone)
+                serverProcess.Exited += (_, _) =>
                 {
-                    serverProcess.OutputDataReceived += ServerProcessOnOutputDataReceived;
-                    serverProcess.BeginOutputReadLine();
-                }
-
-                serverProcess.Exited += (sender, args) => OnStopServer();
-                OnStartServer(!standalone);
+                    onExited?.Invoke();
+                };
             }
-        }
-        catch (Exception ex)
-        {
-            if (ex.ToString().Contains("An instance of Nitrox Server is already running"))
+
+            if (File.Exists(Path.Combine(SaveDir, "WorldData.json")))
             {
-                //LauncherNotifier.Error("An instance of the Nitrox server is already running, please close it to start another server.");
-                Debug.WriteLine("An instance of the Nitrox server is already running, please close it to start another server.");
+                File.SetLastWriteTime(Path.Combine(SaveDir, "WorldData.json"), DateTime.Now);
             }
-            else
-            {
-                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine(ex.ToString());
-            }
-            return;
-        }
-        
-        if (File.Exists(Path.Combine(saveDir, "WorldData.json")))
-        {
-            File.SetLastWriteTime(Path.Combine(saveDir, "WorldData.json"), DateTime.Now);
-        }
-        
-        IsNewServer = false;
-        IsOnline = true;
-    }
-
-    private void OnStartServer(bool embedded)
-    {
-        IsEmbedded = embedded;
-        ServerStarted?.Invoke(serverProcess, new ServerStartEventArgs(embedded));
-    }
-    
-    [RelayCommand]
-    public void Stop()
-    {
-        if (IsEmbedded)
-        {
-            SendServerCommand("stop\n");
         }
 
-        serverProcess?.Dispose();
-        serverProcess = null;
-        
-        IsOnline = false;
-    }
-    
-    private void OnStopServer()
-    {
-        IsEmbedded = false;
-        ServerExited?.Invoke(serverProcess, EventArgs.Empty);
-    }
-    
-    private void SendServerCommand(string inputText)
-    {
-        if (!IsServerRunning)
+        public void Close()
         {
-            return;
+            serverProcess?.CloseMainWindow();
+            serverProcess?.Dispose();
+            serverProcess = null;
         }
 
-        try
+        public void Dispose()
         {
-            serverProcess.StandardInput.WriteLine(inputText);
+            serverProcess?.Dispose();
         }
-        catch (Exception ex)
+
+        public static ServerProcess Start(string saveName, Action onExited)
         {
-            //Log.Error(ex);
+            return new(saveName, onExited);
         }
     }
-    
-    private void ServerProcessOnOutputDataReceived(object sender, DataReceivedEventArgs e)
-    {
-        ServerDataReceived?.Invoke(sender, e);
-    }
-    
 }
