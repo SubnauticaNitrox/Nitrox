@@ -102,6 +102,44 @@ public class Items
                 droppedItem.ParentId = parentId;
             }
         }
+
+        if (droppedItem is not GlobalRootEntity && gameObject.TryGetComponent(out LargeWorldEntity largeWorldEntity) &&
+            largeWorldEntity.initialCellLevel == LargeWorldEntity.CellLevel.Global)
+        {
+            droppedItem = GlobalRootEntity.From(droppedItem);
+        }
+
+        if (gameObject.TryGetComponent(out OxygenPipe oxygenPipe))
+        {
+            // We can't spawn an OxygenPipe without its parent and root
+            // Dropped patch is called in OxygenPipe.PlaceInWorld which is why OxygenPipe.ghostModel is valid
+            IPipeConnection parentConnection = OxygenPipe.ghostModel.GetParent();
+            if (parentConnection == null || !parentConnection.GetGameObject() ||
+                !parentConnection.GetGameObject().TryGetNitroxId(out NitroxId parentPipeId))
+            {
+                Log.Error($"Couldn't find a valid reference to the OxygenPipe's parent pipe");
+                return;
+            }
+            IPipeConnection rootConnection = parentConnection.GetRoot();
+            if (rootConnection == null || !rootConnection.GetGameObject() ||
+                !rootConnection.GetGameObject().TryGetNitroxId(out NitroxId rootPipeId))
+            {
+                Log.Error($"Couldn't find a valid reference to the OxygenPipe's root pipe");
+                return;
+            }
+
+            OxygenPipeEntity pipeEntity = OxygenPipeEntity.From(droppedItem);
+            
+            // Updating the local pipe's references to replace the UniqueIdentifier's id by their NitroxEntity's id
+            oxygenPipe.rootPipeUID = rootPipeId.ToString();
+            oxygenPipe.parentPipeUID = parentPipeId.ToString();
+            
+            pipeEntity.RootPipeId = rootPipeId;
+            pipeEntity.ParentPipeId = parentPipeId;
+            pipeEntity.ParentPosition = parentConnection.GetAttachPoint().ToDto();
+            droppedItem = pipeEntity;
+        }
+
         Log.Debug($"Dropping item: {droppedItem}");
 
         packetSender.Send(new EntitySpawnedByClient(droppedItem));

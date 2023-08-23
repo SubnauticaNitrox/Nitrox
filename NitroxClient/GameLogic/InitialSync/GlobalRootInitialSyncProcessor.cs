@@ -42,3 +42,5 @@ public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
         yield return entities.SpawnBatchAsync(packet.GlobalRootEntities);
     }
 }
+}
+}
