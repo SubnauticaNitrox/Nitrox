@@ -1,23 +1,26 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
+using NitroxLauncher.Models.Patching;
+using NitroxLauncher.Models.Utils;
 using NitroxLauncher.Pages;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
-using DiscordStore = NitroxModel.Platforms.Store.Discord;
 using NitroxModel.Platforms.Store.Interfaces;
-using NitroxLauncher.Models.Patching;
-using System.Windows;
-using System.Windows.Threading;
-using NitroxLauncher.Models.Utils;
-using System.Windows.Controls;
-using System.Diagnostics;
+using NitroxServer.Serialization.World;
+using DiscordStore = NitroxModel.Platforms.Store.Discord;
 
 namespace NitroxLauncher
 {
@@ -31,7 +34,7 @@ namespace NitroxLauncher
         public static ServerLogic Server { get; private set; }
 
         private NitroxEntryPatch nitroxEntryPatch;
-        private ProcessEx gameProcess;
+        private List<ProcessEx> gameProcesses;
 
         private Task<string> lastFindSubnauticaTask;
 
@@ -40,6 +43,7 @@ namespace NitroxLauncher
             Config = new LauncherConfig();
             Server = new ServerLogic();
             Instance = this;
+            gameProcesses = new();
         }
 
         public void Dispose()
@@ -55,7 +59,10 @@ namespace NitroxLauncher
                 Log.Error(ex, "Error while disposing the launcher");
             }
 
-            gameProcess?.Dispose();
+            foreach (ProcessEx gameProcess in gameProcesses)
+            {
+                gameProcess.Dispose();
+            }
             Server?.Dispose();
             LauncherNotifier.Shutdown();
         }
@@ -183,10 +190,10 @@ namespace NitroxLauncher
             }
 #endif
             nitroxEntryPatch.Remove();
-            gameProcess = await StartSubnauticaAsync();
+            gameProcesses.Add(await StartSubnauticaAsync());
         }
 
-        internal async Task StartMultiplayerAsync()
+        internal async Task StartMultiplayerAsync(bool specialDevLaunch = false)
         {
             if (string.IsNullOrWhiteSpace(Config.SubnauticaPath) || !Directory.Exists(Config.SubnauticaPath))
             {
@@ -239,16 +246,39 @@ namespace NitroxLauncher
                 LauncherNotifier.Info("Detected QModManager in the game folder");
             }
 
-            gameProcess = await StartSubnauticaAsync();
+            if (specialDevLaunch)
+            {
+                WorldManager.Listing listing = WorldManager.GetSaves().FirstOrDefault();
+                if (listing != null)
+                {
+                    Process process = Server.StartServer(true, listing.WorldSaveDir);
+                    if (process != null)
+                    {
+                        await Task.Delay(5000);
+                        for (int i = 0; i < 2; i++) // Could be set to "n" instances
+                        {
+                            gameProcesses.Add(await StartSubnauticaAsync(specialDevLaunch, i));
+                            await Task.Delay(3000);
+                        }
+                        return;
+                    }
+                }
+            }
+            gameProcesses.Add(await StartSubnauticaAsync());
         }
 
-        private async Task<ProcessEx> StartSubnauticaAsync()
+        private async Task<ProcessEx> StartSubnauticaAsync(bool specialDevLaunch = false, int instanceNumber = 0)
         {
             string subnauticaPath = Config.SubnauticaPath;
             string subnauticaLaunchArguments = Config.SubnauticaLaunchArguments;
             string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
             IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
             
+            if (specialDevLaunch)
+            {
+                subnauticaLaunchArguments += $" -specialDevLaunch{instanceNumber}";
+            }
+
             // Start game & gaming platform if needed.
             using ProcessEx game = platform switch
             {

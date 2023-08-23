@@ -74,6 +74,9 @@
                     </StackPanel>
                 </Grid>
 
+                <CheckBox x:Name="FastLaunchBox" HorizontalAlignment="Center" VerticalContentAlignment="Center" IsChecked="True">
+                    <TextBlock HorizontalAlignment="Center" FontSize="10" Foreground="White"><Run Text="2 clients and automatically connect to server"/></TextBlock>
+                </CheckBox>
                 <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch Subnautica with multiplayer enabled" Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="24,16,24,8" Height="62">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="White"><Run Text="PLAY"/></TextBlock>

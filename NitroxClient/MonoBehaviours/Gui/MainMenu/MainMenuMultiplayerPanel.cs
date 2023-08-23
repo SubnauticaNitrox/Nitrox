@@ -111,6 +111,15 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
+        public static async System.Threading.Tasks.Task OpenJoinServerMenuAsyncAndJoin(string serverIp, string serverPort, int playerId, Color color)
+        {
+            Main.JoinServer.OnConnected = () =>
+            {
+                Main.JoinServer.JoinWithPreferences(playerId, color);
+            };
+            await OpenJoinServerMenuAsync(serverIp, serverPort);
+        }
+
         public static async System.Threading.Tasks.Task OpenJoinServerMenuAsync(string serverIp, string serverPort)
         {
             if (Main == null)

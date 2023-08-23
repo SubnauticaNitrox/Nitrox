@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using NitroxLauncher.Models;
@@ -46,7 +46,7 @@ namespace NitroxLauncher.Pages
         {
             try
             {
-                await LauncherLogic.Instance.StartMultiplayerAsync();
+                await LauncherLogic.Instance.StartMultiplayerAsync(FastLaunchBox.IsChecked ?? false);
             }
             catch (Exception ex)
             {

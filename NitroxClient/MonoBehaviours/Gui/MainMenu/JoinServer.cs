@@ -38,6 +38,8 @@ public class JoinServer : MonoBehaviour
     private GameObject joinServerMenu;
     public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
 
+    public Action OnConnected;
+
     public void Setup(GameObject saveGameMenu)
     {
         JoinServerServerList.InitializeServerList(saveGameMenu, out joinServerMenu, out RectTransform joinServerBackground);
@@ -169,6 +171,14 @@ public class JoinServer : MonoBehaviour
         Hide();
     }
 
+    public void JoinWithPreferences(int playerId, Color color)
+    {
+        string playerName = $"{joinWindow.PlayerName}{playerId}";
+        AuthenticationContext authenticationContext = new(playerName, Optional.Empty);
+
+        multiplayerSession.RequestSessionReservation(new PlayerSettings(color.ToDto()), authenticationContext);
+    }
+
     private void OnJoinClick()
     {
         string playerName = joinWindow.PlayerName;
@@ -209,6 +219,7 @@ public class JoinServer : MonoBehaviour
                 Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
                 MainMenuRightSide.main.OpenGroup("Join Server");
                 FocusPlayerNameTextBox();
+                OnConnected?.Invoke();
                 break;
 
             case MultiplayerSessionConnectionStage.SESSION_RESERVED:
