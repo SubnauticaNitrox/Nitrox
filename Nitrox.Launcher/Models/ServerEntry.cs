@@ -139,13 +139,13 @@ public partial class ServerEntry : ObservableObject
         public void Close()
         {
             serverProcess?.CloseMainWindow();
-            serverProcess?.Dispose();
-            serverProcess = null;
+            Dispose();
         }
 
         public void Dispose()
         {
             serverProcess?.Dispose();
+            serverProcess = null;
         }
 
         public static ServerProcess Start(string saveName, Action onExited)
