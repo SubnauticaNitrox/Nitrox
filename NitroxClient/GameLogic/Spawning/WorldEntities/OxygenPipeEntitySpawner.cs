@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -10,23 +10,20 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class OxygenPipeEntitySpawner : EntitySpawner<OxygenPipeEntity>
+public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
 {
     private readonly Entities entities;
     private readonly WorldEntitySpawner worldEntitySpawner;
-    private readonly InitialPlayerSyncProcessor initialPlayerSyncProcessor;
 
-    private readonly Dictionary<NitroxId, List<OxygenPipe>> childrenPipeEntitiesByParentId;
+    private readonly Dictionary<NitroxId, List<OxygenPipe>> childrenPipeEntitiesByParentId = new();
 
-    public OxygenPipeEntitySpawner(Entities entities, IEntitySpawner worldEntitySpawner)
+    public OxygenPipeEntitySpawner(Entities entities, WorldEntitySpawner worldEntitySpawner)
     {
         this.entities = entities;
-        this.worldEntitySpawner = (WorldEntitySpawner)worldEntitySpawner;
-
-        childrenPipeEntitiesByParentId = new();
+        this.worldEntitySpawner = worldEntitySpawner;
     }
 
-    public override IEnumerator SpawnAsync(OxygenPipeEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(OxygenPipeEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: entity.ClassId))
         {
@@ -40,53 +37,51 @@ public class OxygenPipeEntitySpawner : EntitySpawner<OxygenPipeEntity>
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = Object.Instantiate(prefab);
-        if (!IsSpawnedPrefabValid(entity, gameObject, out OxygenPipe oxygenPipe, out string errorLog))
+        GameObject gameObject = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity, false);
+        if (!VerifyCanSpawnOrError(entity, gameObject, out OxygenPipe oxygenPipe))
         {
-            Log.Error(errorLog);
-            result.Set(Optional.Empty);
             yield break;
         }
-        NitroxEntity.TryGetComponentFrom(entity.ParentPipeId, out IPipeConnection parentConnection);
-        NitroxEntity.TryGetComponentFrom(entity.RootPipeId, out IPipeConnection rootConnection);
-        SetupObject(entity, gameObject, oxygenPipe, parentConnection, rootConnection);
+
+        SetupObject(entity, gameObject, oxygenPipe);
+        gameObject.SetActive(true);
 
         result.Set(Optional.Of(gameObject));
     }
 
-    public override bool SpawnSync(OxygenPipeEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override bool SpawnSync(OxygenPipeEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: entity.ClassId))
         {
             return false;
         }
 
-        GameObject gameObject = Object.Instantiate(prefab);
-        if (!IsSpawnedPrefabValid(entity, gameObject, out OxygenPipe oxygenPipe, out string errorLog))
+        GameObject gameObject = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity, false);
+        if (!VerifyCanSpawnOrError(entity, gameObject, out OxygenPipe oxygenPipe))
         {
-            Log.Error(errorLog);
             return true;
         }
-        NitroxEntity.TryGetComponentFrom(entity.ParentPipeId, out IPipeConnection parentConnection);
-        NitroxEntity.TryGetComponentFrom(entity.RootPipeId, out IPipeConnection rootConnection);
-        SetupObject(entity, gameObject, oxygenPipe, parentConnection, rootConnection);
-        
+
+        SetupObject(entity, gameObject, oxygenPipe);
+        gameObject.SetActive(true);
+
         result.Set(gameObject);
         return true;
     }
 
-    private bool IsSpawnedPrefabValid(OxygenPipeEntity entity, GameObject prefabObject, out OxygenPipe oxygenPipe, out string errorLog)
+    protected override bool SpawnsOwnChildren(OxygenPipeEntity entity) => false;
+
+    private bool VerifyCanSpawnOrError(OxygenPipeEntity entity, GameObject prefabObject, out OxygenPipe oxygenPipe)
     {
         if (prefabObject.TryGetComponent(out oxygenPipe))
         {
-            errorLog = string.Empty;
             return true;
         }
-        errorLog = $"Couldn't find component {nameof(OxygenPipe)} on prefab with ClassId: {entity.ClassId}";
+        Log.Error($"Couldn't find component {nameof(OxygenPipe)} on prefab with ClassId: {entity.ClassId}");
         return false;
     }
 
-    private void SetupObject(OxygenPipeEntity entity, GameObject gameObject, OxygenPipe oxygenPipe, IPipeConnection parentConnection, IPipeConnection rootConnection)
+    private void SetupObject(OxygenPipeEntity entity, GameObject gameObject, OxygenPipe oxygenPipe)
     {
         EntityCell cellRoot = worldEntitySpawner.EnsureCell(entity);
 
@@ -96,12 +91,13 @@ public class OxygenPipeEntitySpawner : EntitySpawner<OxygenPipeEntity>
         gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
         gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
 
+        // The reference IDs must be set even if the target is not spawned yet
         oxygenPipe.parentPipeUID = entity.ParentPipeId.ToString();
         oxygenPipe.rootPipeUID = entity.RootPipeId.ToString();
         oxygenPipe.parentPosition = entity.ParentPosition.ToUnity();
 
         // It can happen that the parent connection hasn't loaded yet (normal behaviour)
-        if (parentConnection != null)
+        if (NitroxEntity.TryGetComponentFrom(entity.ParentPipeId, out IPipeConnection parentConnection))
         {
             oxygenPipe.parentPosition = parentConnection.GetAttachPoint();
             parentConnection.AddChild(oxygenPipe);
@@ -127,10 +123,5 @@ public class OxygenPipeEntitySpawner : EntitySpawner<OxygenPipeEntity>
 
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(oxygenPipe.rigidBody, true, false);
         oxygenPipe.UpdatePipe();
-    }
-
-    public override bool SpawnsOwnChildren(OxygenPipeEntity entity)
-    {
-        return true;
     }
 }

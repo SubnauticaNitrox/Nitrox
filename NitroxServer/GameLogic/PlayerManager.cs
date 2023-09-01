@@ -45,6 +45,11 @@ namespace NitroxServer.GameLogic
             return ConnectedPlayers().ToList();
         }
 
+        public List<Player> GetConnectedPlayersExcept(Player excludePlayer)
+        {
+            return ConnectedPlayers().Where(player => player != excludePlayer).ToList();
+        }
+
         public IEnumerable<Player> GetAllPlayers()
         {
             return allPlayersByName.Values;

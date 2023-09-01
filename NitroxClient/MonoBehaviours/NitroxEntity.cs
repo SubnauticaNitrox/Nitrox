@@ -63,13 +63,13 @@ namespace NitroxClient.MonoBehaviours
         public static bool TryGetObjectFrom(NitroxId id, out GameObject gameObject)
         {
             gameObject = null;
-            return id != null && gameObjectsById.TryGetValue(id, out gameObject);
+            return id != null && gameObjectsById.TryGetValue(id, out gameObject) && gameObject;
         }
 
         public static bool TryGetComponentFrom<T>(NitroxId id, out T component)
         {
             component = default;
-            return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) &&
+            return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) && gameObject &&
                    gameObject.TryGetComponent(out component);
         }
 
@@ -86,7 +86,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 entity = gameObject.AddComponent<NitroxEntity>();
             }
-            if (gameObject.GetComponent<IPipeConnection>() != null && gameObject.TryGetComponent(out UniqueIdentifier uniqueIdentifier))
+            if (gameObject.TryGetComponent(out UniqueIdentifier uniqueIdentifier))
             {
                 uniqueIdentifier.Id = id.ToString();
             }

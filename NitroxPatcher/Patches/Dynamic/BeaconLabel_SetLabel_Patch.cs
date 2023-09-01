@@ -5,15 +5,21 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class BeaconLabel_SetLabel_Patch : NitroxPatch, IDynamicPatch
+/// <summary>
+/// Adds a callback to broadcast beacon label change when edited.
+/// </summary>
+public sealed partial class BeaconLabel_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((BeaconLabel t) => t.SetLabel(default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((BeaconLabel t) => t.OnHandClick(default));
 
     public static void Postfix(BeaconLabel __instance)
     {
-        if (__instance.transform.parent && __instance.transform.parent.TryGetIdOrWarn(out NitroxId id))
+        uGUI.main.userInput.callback += _ =>
         {
-            Resolve<Entities>().EntityMetadataChanged(__instance, id);
-        }
+            if (__instance.transform.parent && __instance.transform.parent.TryGetIdOrWarn(out NitroxId id))
+            {
+                Resolve<Entities>().EntityMetadataChanged(__instance.transform.parent.GetComponent<Beacon>(), id);
+            }
+        };
     }
 }

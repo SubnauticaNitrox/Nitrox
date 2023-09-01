@@ -164,7 +164,6 @@ namespace NitroxServer
                 return worldEntity is GlobalRootEntity || HasCellLoaded(worldEntity.AbsoluteEntityCell);
             }
 
-            // Assume all other entity types are in global root
             return true;
         }
 
