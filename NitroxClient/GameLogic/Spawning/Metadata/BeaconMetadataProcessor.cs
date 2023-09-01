@@ -13,6 +13,8 @@ public class BeaconMetadataProcessor : GenericEntityMetadataProcessor<BeaconMeta
         {
             using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
             {
+                // Must set Beacon.label so that Beacon.Start() doesn't overwrite Beacon.beaconLabel's label
+                beacon.label = metadata.Label;
                 beacon.beaconLabel.SetLabel(metadata.Label);
             }
         }
