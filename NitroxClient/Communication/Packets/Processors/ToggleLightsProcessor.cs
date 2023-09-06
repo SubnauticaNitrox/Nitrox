@@ -1,36 +1,22 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.FMOD;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.ToggleLights>
 {
-    class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.ToggleLights>
+    public override void Process(NitroxModel.Packets.ToggleLights packet)
     {
-        private readonly IPacketSender packetSender;
+        GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+        ToggleLights toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
 
-        public ToggleLightsProcessor(IPacketSender packetSender)
+        if (packet.IsOn != toggleLights.GetLightsActive())
         {
-            this.packetSender = packetSender;
-        }
-        public override void Process(NitroxModel.Packets.ToggleLights packet)
-        {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
-            if (!toggleLights)
+            using (PacketSuppressor<NitroxModel.Packets.ToggleLights>.Suppress())
             {
-                toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
-            }
-
-            if (packet.IsOn != toggleLights.GetLightsActive())
-            {
-                using (PacketSuppressor<NitroxModel.Packets.ToggleLights>.Suppress())
-                using (FMODSystem.SuppressSounds())
-                {
-                    toggleLights.SetLightsActive(packet.IsOn);
-                }
+                toggleLights.SetLightsActive(packet.IsOn);
             }
         }
     }

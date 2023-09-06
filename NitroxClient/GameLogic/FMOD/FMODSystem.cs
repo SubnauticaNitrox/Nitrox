@@ -1,4 +1,6 @@
-﻿using NitroxClient.Communication.Abstract;
+using System;
+using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
@@ -9,6 +11,11 @@ namespace NitroxClient.GameLogic.FMOD;
 
 public class FMODSystem : FMODWhitelist
 {
+    private static readonly Type[] fmodPacketTypes = {
+        typeof(FMODAssetPacket), typeof(FMODEventInstancePacket), typeof(FMODCustomEmitterPacket), typeof(FMODCustomLoopingEmitterPacket),
+        typeof(FMODStudioEmitterPacket)
+    };
+
     private readonly IPacketSender packetSender;
 
     public FMODSystem(IPacketSender packetSender) : base(GameInfo.Subnautica)
@@ -16,10 +23,15 @@ public class FMODSystem : FMODWhitelist
         this.packetSender = packetSender;
     }
 
-    public static FMODSuppressor SuppressSounds()
+    /// <summary>
+    /// Suppresses sounds played by base Subnautica, not any sounds triggered by Nitrox
+    /// </summary>
+    public static FMODSuppressor SuppressSubnauticaSounds()
     {
         return new FMODSuppressor();
     }
+
+    public static MultiplePacketsSuppressor SuppressSendingSounds() => MultiplePacketsSuppressor.Suppress(fmodPacketTypes);
 
     public void PlayAsset(string path, NitroxVector3 position, float volume) => packetSender.Send(new FMODAssetPacket(path, position, volume));
 

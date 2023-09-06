@@ -34,7 +34,7 @@ namespace NitroxClient.Helpers
 
         public bool SendThrottled<T>(T packet, Func<T, object> dedupeMethod, float throttleTime = 0.2f) where T : Packet
         {
-            if (PacketSuppressor<T>.IsSuppressed)
+            if (PacketSuppressor<T>.IsSuppressed || MultiplePacketsSuppressor.IsSuppressed(typeof(T)))
             {
                 return false;
             }

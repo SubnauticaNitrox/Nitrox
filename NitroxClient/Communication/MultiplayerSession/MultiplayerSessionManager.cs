@@ -124,7 +124,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public bool Send<T>(T packet) where T : Packet
         {
-            if (!PacketSuppressor<T>.IsSuppressed)
+            if (!PacketSuppressor<T>.IsSuppressed && !MultiplePacketsSuppressor.IsSuppressed(typeof(T)))
             {
                 Client.Send(packet);
                 return true;

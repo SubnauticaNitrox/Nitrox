@@ -36,7 +36,7 @@ public class SeamothMetadataProcessor : GenericEntityMetadataProcessor<SeamothMe
 
     private void SetLights(SeaMoth seamoth, bool lightsOn)
     {
-        using (FMODSystem.SuppressSounds())
+        using (FMODSystem.SuppressSubnauticaSounds())
         {
             seamoth.toggleLights.SetLightsActive(lightsOn);
         }
