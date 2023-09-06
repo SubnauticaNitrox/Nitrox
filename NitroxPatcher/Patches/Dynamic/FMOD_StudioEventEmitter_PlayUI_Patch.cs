@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -18,15 +18,11 @@ public sealed partial class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, 
 
     public static void Postfix(FMOD_StudioEventEmitter __instance, float ____lastTimePlayed)
     {
-        if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path))
+        if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path) &&
+            (____lastTimePlayed == 0.0 || Time.time > ____lastTimePlayed + __instance.minInterval) &&
+            __instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
         {
-            if (____lastTimePlayed == 0.0 || Time.time > ____lastTimePlayed + __instance.minInterval)
-            {
-                if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
-                {
-                    Resolve<FMODSystem>().PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, true, false);
-                }
-            }
+            Resolve<FMODSystem>().PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, false);
         }
     }
 }

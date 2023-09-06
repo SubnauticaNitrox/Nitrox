@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -18,10 +18,10 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(ItemPosition),
             typeof(PlayerStats),
             typeof(StoryGoalExecuted),
-            typeof(PlayFMODAsset),
-            typeof(PlayFMODCustomEmitter),
-            typeof(PlayFMODCustomLoopingEmitter),
-            typeof(PlayFMODStudioEmitter),
+            typeof(FMODAssetPacket),
+            typeof(FMODCustomEmitterPacket),
+            typeof(FMODCustomLoopingEmitterPacket),
+            typeof(FMODStudioEmitterPacket),
             typeof(PlayerCinematicControllerCall)
         };
 

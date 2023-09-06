@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -17,12 +17,17 @@ public sealed partial class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, ID
 
     public static void Postfix(FMOD_StudioEventEmitter __instance, bool allowFadeout)
     {
-        if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path))
+        if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path))
         {
-            if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
-            {
-                Resolve<FMODSystem>().PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, false, allowFadeout);
-            }
+            return;
         }
+
+        if (!__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
+        {
+            Log.Warn($"[FMOD_StudioEventEmitter_Stop_Patch] - No NitroxEntity found for {__instance.asset.path} at {__instance.GetFullHierarchyPath()}");
+            return;
+        }
+
+        Resolve<FMODSystem>().StopStudioEmitter(nitroxEntity.Id, __instance.asset.path, allowFadeout);
     }
 }

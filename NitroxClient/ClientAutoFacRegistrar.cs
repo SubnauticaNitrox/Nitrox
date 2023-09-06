@@ -27,6 +27,7 @@ using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.Helper;
@@ -146,7 +147,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<FMODSystem>().As<FMODWhitelist>().AsSelf().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ThrottledPacketSender>().InstancePerLifetimeScope();

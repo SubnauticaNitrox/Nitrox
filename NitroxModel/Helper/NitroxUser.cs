@@ -14,21 +14,12 @@ namespace NitroxModel.Helper
         public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
         private const string PREFERRED_GAMEPATH_REGKEY = @"SOFTWARE\Nitrox\PreferredGamePath";
         private static string appDataPath;
-        private static string launcherPath;
+        internal static string launcherPath;
         private static string gamePath;
 
         private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
         {
-            () => Environment.GetEnvironmentVariable(LAUNCHER_PATH_ENV_KEY),
-            () =>
-            {
-                Assembly currentAsm = Assembly.GetEntryAssembly();
-                if (currentAsm?.GetName().Name.Equals("NitroxLauncher") ?? false)
-                {
-                    return Path.GetDirectoryName(currentAsm.Location);
-                }
-                return null;
-            }
+            () => Environment.GetEnvironmentVariable(LAUNCHER_PATH_ENV_KEY)
         };
 
         public static string AppDataPath { get; } = appDataPath ??= Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");

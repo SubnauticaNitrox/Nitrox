@@ -1,19 +1,18 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlayFMODCustomEmitter : Packet
+    public class FMODEventInstancePacket : FMODAssetPacket
     {
         public NitroxId Id { get; }
-        public string AssetPath { get; }
         public bool Play { get; }
 
-        public PlayFMODCustomEmitter(NitroxId id, string assetPath, bool play)
+        public FMODEventInstancePacket(NitroxId id, bool play, string assetPath, NitroxVector3 position, float volume) : base(assetPath, position, volume)
         {
             Id = id;
-            AssetPath = assetPath;
             Play = play;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -17,12 +17,14 @@ public sealed partial class FMOD_CustomLoopingEmitter_OnPlay_Patch : NitroxPatch
 
     public static void Postfix(FMOD_CustomLoopingEmitter __instance)
     {
-        if (__instance.assetStart && Resolve<FMODSystem>().IsWhitelisted(__instance.assetStart.path))
+        if (!__instance.assetStart || !Resolve<FMODSystem>().IsWhitelisted(__instance.assetStart.path))
         {
-            if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
-            {
-                Resolve<FMODSystem>().PlayCustomLoopingEmitter(nitroxEntity.Id, __instance.assetStart.path);
-            }
+            return;
+        }
+
+        if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
+        {
+            Resolve<FMODSystem>().PlayCustomLoopingEmitter(nitroxEntity.Id, __instance.assetStart.path);
         }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using FMOD;
+using FMODUnity;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -13,7 +15,7 @@ namespace NitroxModel_Subnautica.DataStructures
     /// </summary>
     /// <remarks>
     ///     The abbreviation "DTO" means Data Transfer Object which is a common term used in REST APIs.
-    ///     Its purpose is to be a serializable type and to transfer the least amount of data necessary per request (e.g. API call). 
+    ///     Its purpose is to be a serializable type and to transfer the least amount of data necessary per request (e.g. API call).
     /// </remarks>
     public static class DataExtensions
     {
@@ -35,6 +37,21 @@ namespace NitroxModel_Subnautica.DataStructures
         public static Vector3 ToUnity(this NitroxVector3 v)
         {
             return new Vector3(v.X, v.Y, v.Z);
+        }
+
+        public static ATTRIBUTES_3D To3DAttributes(this NitroxVector3 pos)
+        {
+            return new ATTRIBUTES_3D
+            {
+                forward = Vector3.forward.ToFMODVector(),
+                up = Vector3.up.ToFMODVector(),
+                position = new VECTOR
+                {
+                    x = pos.X,
+                    y = pos.Y,
+                    z = pos.Z
+                }
+            };
         }
 
         public static NitroxVector4 ToDto(this Vector4 v)
