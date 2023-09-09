@@ -33,16 +33,16 @@ public sealed partial class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDyna
         {
             if (is3D)
             {
-                Resolve<FMODSystem>().PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path);
+                Resolve<FMODSystem>().SendCustomEmitterPlay(nitroxEntity.Id, __instance.asset.path);
             }
             else
             {
-                Resolve<FMODSystem>().PlayEventInstance(nitroxEntity.Id, __instance.asset.path, __instance.transform.position.ToDto(), volume);
+                Resolve<FMODSystem>().SendEventInstancePlay(nitroxEntity.Id, __instance.asset.path, __instance.transform.position.ToDto(), volume);
             }
         }
         else
         {
-            Resolve<FMODSystem>().PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume);
+            Resolve<FMODSystem>().SendAssetPlay(__instance.asset.path, __instance.transform.position.ToDto(), volume);
         }
     }
 }

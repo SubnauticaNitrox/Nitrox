@@ -18,7 +18,7 @@ public sealed partial class Utils_PlayFMODAsset_Patch : NitroxPatch, IDynamicPat
     {
         if (Resolve<FMODSystem>().IsWhitelisted(asset.path))
         {
-            Resolve<FMODSystem>().PlayAsset(asset.path, Player.main.transform.position.ToDto(), 1f);
+            Resolve<FMODSystem>().SendAssetPlay(asset.path, Player.main.transform.position.ToDto(), 1f);
         }
     }
 }

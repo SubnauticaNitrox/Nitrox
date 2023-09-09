@@ -28,6 +28,6 @@ public sealed partial class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, ID
             return;
         }
 
-        Resolve<FMODSystem>().StopStudioEmitter(nitroxEntity.Id, __instance.asset.path, allowFadeout);
+        Resolve<FMODSystem>().SendStudioEmitterStop(nitroxEntity.Id, __instance.asset.path, allowFadeout);
     }
 }

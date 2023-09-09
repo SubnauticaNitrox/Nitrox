@@ -19,7 +19,11 @@ public sealed partial class FMOD_StudioEventEmitter_Start_Patch : NitroxPatch, I
 
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
-            Log.Warn($"[FMOD_StudioEventEmitter_Start_Patch] - No NitroxEntity found for {__instance.asset.path} at {__instance.GetFullHierarchyPath()}");
+            if (__instance.GetRootParent().gameObject.name != "__LIGHTMAPPED_PREFAB__") // ignore calls from "blueprint prefabs"
+            {
+                Log.Warn($"[FMOD_StudioEventEmitter_Start_Patch] - No NitroxEntity found for {__instance.asset.path} at {__instance.gameObject.GetFullHierarchyPath()}");
+            }
+
             return;
         }
 

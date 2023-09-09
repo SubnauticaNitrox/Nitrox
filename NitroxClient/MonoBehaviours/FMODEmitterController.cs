@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
+using NitroxModel.GameLogic.FMOD;
 using UnityEngine;
+
 #pragma warning disable 618
 
 namespace NitroxClient.MonoBehaviours;
@@ -11,16 +14,20 @@ namespace NitroxClient.MonoBehaviours;
 public class FMODEmitterController : MonoBehaviour
 {
     private readonly Dictionary<string, FMOD_CustomEmitter> customEmitters = new();
-    private readonly Dictionary<string, Tuple<FMOD_CustomLoopingEmitter, float>> loopingEmitters = new();
+    private readonly Dictionary<string, Tuple<FMOD_CustomLoopingEmitter, bool, float>> loopingEmitters = new(); // Tuple<emitter, is3D, maxDistance>
     private readonly Dictionary<string, FMOD_StudioEventEmitter> studioEmitters = new();
     private readonly Dictionary<string, EventInstance> eventInstances = new(); // 2D Sounds
 
-    public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float radius)
+    public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float maxDistance)
     {
         if (!customEmitters.ContainsKey(path))
         {
-            customEmitter.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-            customEmitter.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radius);
+            if (!customEmitter.evt.hasHandle())
+            {
+                customEmitter.CacheEventInstance();
+            };
+            customEmitter.evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+            customEmitter.evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
 
             customEmitters.Add(path, customEmitter);
         }
@@ -30,11 +37,18 @@ public class FMODEmitterController : MonoBehaviour
         }
     }
 
-    public void AddEmitter(string path, FMOD_CustomLoopingEmitter loopingEmitter, float radius)
+    public void AddEmitter(string path, FMOD_CustomLoopingEmitter loopingEmitter, float maxDistance)
     {
-        if (!customEmitters.ContainsKey(path))
+        if (!loopingEmitters.ContainsKey(path))
         {
-            loopingEmitters.Add(path, new Tuple<FMOD_CustomLoopingEmitter, float>(loopingEmitter, radius));
+            if (!loopingEmitter.evt.hasHandle())
+            {
+                loopingEmitter.CacheEventInstance();
+            }
+            loopingEmitter.evt.getDescription(out EventDescription description);
+            description.is3D(out bool is3D);
+
+            loopingEmitters.Add(path, new Tuple<FMOD_CustomLoopingEmitter, bool, float>(loopingEmitter, is3D, maxDistance));
         }
         else
         {
@@ -42,14 +56,16 @@ public class FMODEmitterController : MonoBehaviour
         }
     }
 
-    public void AddEmitter(string path, FMOD_StudioEventEmitter studioEmitter, float radius)
+    public void AddEmitter(string path, FMOD_StudioEventEmitter studioEmitter, float maxDistance)
     {
         if (!customEmitters.ContainsKey(path))
         {
-            EventInstance evt = studioEmitter.evt;
-            evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-            evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radius);
-            studioEmitter.evt = evt;
+            if (!studioEmitter.evt.hasHandle())
+            {
+                studioEmitter.CacheEventInstance();
+            }
+            studioEmitter.evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+            studioEmitter.evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
 
             studioEmitters.Add(path, studioEmitter);
         }
@@ -80,11 +96,13 @@ public class FMODEmitterController : MonoBehaviour
 
     public void PlayCustomLoopingEmitter(string path)
     {
-        FMOD_CustomLoopingEmitter loopingEmitter = loopingEmitters[path].Item1;
+        (FMOD_CustomLoopingEmitter loopingEmitter, bool is3D, float maxDistance) = loopingEmitters[path];
         EventInstance eventInstance = FMODUWE.GetEvent(path);
         eventInstance.set3DAttributes(loopingEmitter.transform.To3DAttributes());
         eventInstance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-        eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, loopingEmitters[path].Item2);
+        eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
+        eventInstance.setVolume(is3D ? 1f : FMODSystem.CalculateVolume(loopingEmitter.transform.position, Player.main.transform.position, maxDistance, 1f));
+
         eventInstance.start();
         eventInstance.release();
         loopingEmitter.timeLastStopSound = Time.time;

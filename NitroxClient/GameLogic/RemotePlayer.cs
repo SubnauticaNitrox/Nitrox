@@ -222,7 +222,8 @@ namespace NitroxClient.GameLogic
                     ArmsController.SetWorldIKTarget(newVehicle.leftHandPlug, newVehicle.rightHandPlug);
 
                     // From here, a basic issue can happen.
-                    // When a vehicle is docked since we joined a game and another player undocks him before the local player does, no MultiplayerVehicleControl can be found on the vehicle because they are only created when receiving VehicleMovement packets
+                    // When a vehicle is docked since we joined a game and another player undocks him before the local player does,
+                    // no MultiplayerVehicleControl can be found on the vehicle because they are only created when receiving VehicleMovement packets
                     // Therefore we need to make sure that the MultiplayerVehicleControl component exists before using it
                     switch (newVehicle)
                     {

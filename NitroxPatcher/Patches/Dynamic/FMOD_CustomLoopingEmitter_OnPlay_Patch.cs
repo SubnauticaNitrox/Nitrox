@@ -24,7 +24,7 @@ public sealed partial class FMOD_CustomLoopingEmitter_OnPlay_Patch : NitroxPatch
 
         if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
         {
-            Resolve<FMODSystem>().PlayCustomLoopingEmitter(nitroxEntity.Id, __instance.assetStart.path);
+            Resolve<FMODSystem>().SendCustomLoopingEmitterPlay(nitroxEntity.Id, __instance.assetStart.path);
         }
     }
 }

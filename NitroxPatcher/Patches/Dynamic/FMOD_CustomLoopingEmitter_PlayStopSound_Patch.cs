@@ -24,7 +24,7 @@ public sealed partial class FMOD_CustomLoopingEmitter_PlayStopSound_Patch : Nitr
 
         if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
         {
-            Resolve<FMODSystem>().PlayCustomLoopingEmitter(nitroxEntity.Id, __instance.assetStop.path);
+            Resolve<FMODSystem>().SendCustomLoopingEmitterPlay(nitroxEntity.Id, __instance.assetStop.path);
         }
     }
 }

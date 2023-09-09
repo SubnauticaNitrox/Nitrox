@@ -28,11 +28,11 @@ public sealed partial class FMOD_CustomEmitter_OnStop_Patch : NitroxPatch, IDyna
 
             if (is3D)
             {
-                Resolve<FMODSystem>().StopCustomEmitter(nitroxEntity.Id, __instance.asset.path);
+                Resolve<FMODSystem>().SendCustomEmitterStop(nitroxEntity.Id, __instance.asset.path);
             }
             else
             {
-                Resolve<FMODSystem>().StopEventInstance(nitroxEntity.Id, __instance.asset.path, __instance.transform.position.ToDto(), volume);
+                Resolve<FMODSystem>().SendEventInstanceStop(nitroxEntity.Id, __instance.asset.path, __instance.transform.position.ToDto(), volume);
             }
         }
     }

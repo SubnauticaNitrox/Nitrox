@@ -20,7 +20,10 @@ public sealed partial class FMOD_CustomEmitter_Start_Patch : NitroxPatch, IDynam
 
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
-            Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
+            if (__instance.GetRootParent().gameObject.name != "__LIGHTMAPPED_PREFAB__") // ignore calls from "blueprint prefabs"
+            {
+                Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity found for {__instance.asset.path} at {__instance.gameObject.GetFullHierarchyPath()}");
+            }
             return;
         }
 

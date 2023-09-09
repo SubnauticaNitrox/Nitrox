@@ -19,7 +19,7 @@ public sealed partial class FMODUWE_PlayOneShotImpl_Patch : NitroxPatch, IDynami
     {
         if (Resolve<FMODSystem>().IsWhitelisted(eventPath))
         {
-            Resolve<FMODSystem>().PlayAsset(eventPath, position.ToDto(), volume);
+            Resolve<FMODSystem>().SendAssetPlay(eventPath, position.ToDto(), volume);
         }
     }
 }
