@@ -14,15 +14,14 @@ public sealed partial class PlayerCinematicController_Start_Patch : NitroxPatch,
     {
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
         {
-            Log.Warn($"[PlayerCinematicController_Start_Patch] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
+            if (__instance.GetRootParent().gameObject.name != "__LIGHTMAPPED_PREFAB__") // ignore calls from "blueprint prefabs"
+            {
+                Log.Warn($"[PlayerCinematicController_Start_Patch] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
+            }
+
             return;
         }
 
-        if (!entity.gameObject.TryGetComponent(out MultiplayerCinematicReference reference))
-        {
-            reference = entity.gameObject.AddComponent<MultiplayerCinematicReference>();
-        }
-
-        reference.AddController(__instance);
+        entity.gameObject.EnsureComponent<MultiplayerCinematicReference>().AddController(__instance);
     }
 }
