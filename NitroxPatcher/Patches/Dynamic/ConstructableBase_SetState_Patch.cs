@@ -19,7 +19,7 @@ public sealed partial class ConstructableBase_SetState_Patch : NitroxPatch, IDyn
      * Make it become
 	 * if (Builder.CanDestroyObject(gameObject))
 	 * {
-	 *     Constructable_SetState_Patch.Callback(gameObject); <==========
+	 *     ConstructableBase_SetState_Patch.BeforeDestroy(gameObject); <==========
 	 *     UnityEngine.Object.Destroy(gameObject);
 	 * }
      */

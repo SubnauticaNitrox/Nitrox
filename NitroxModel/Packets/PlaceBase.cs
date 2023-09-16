@@ -15,4 +15,9 @@ public sealed class PlaceBase : Packet
         FormerGhostId = formerGhostId;
         BuildEntity = buildEntity;
     }
+
+    public void Deflate()
+    {
+        BuildEntity = null;
+    }
 }

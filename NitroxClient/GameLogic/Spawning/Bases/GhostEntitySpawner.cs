@@ -5,7 +5,6 @@ using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -26,7 +25,6 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             }
             Log.Debug($"Resynced GhostEntity {entity.Id}");
             GameObject.Destroy(gameObject);
-            yield return null;
         }
         Transform parent = BuildingHandler.GetParentOrGlobalRoot(entity.ParentId);
         yield return RestoreGhost(parent, entity, result);
@@ -74,70 +72,72 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             prefab = prefabResult.Get();
         }
 
+        // The instructions for ghost spawning are written in a VERY PRECISE order which needs to be respected even if
+        // it looks like it can be optimized. Swapping some lines may break the full spawning behaviour.
         bool isInBase = parent.TryGetComponent(out Base @base);
 
+        // Instantiating the ghost, gathering some useful references and giving it some basic data
         GameObject ghostObject = UnityEngine.Object.Instantiate(prefab);
         Transform ghostTransform = ghostObject.transform;
-        MoveGhostToTransform(ghostEntity, ghostTransform);
-
         ConstructableBase constructableBase = ghostObject.GetComponent<ConstructableBase>();
         GameObject ghostModel = constructableBase.model;
         BaseGhost baseGhost = ghostModel.GetComponent<BaseGhost>();
         Base ghostBase = ghostModel.GetComponent<Base>();
         bool isBaseDeconstructable = ghostObject.name.Equals("BaseDeconstructable(Clone)");
+
+        MoveTransformToGhostEntity(ghostTransform, ghostEntity, false);
         if (isBaseDeconstructable && ghostEntity.TechType != null)
         {
             constructableBase.techType = ghostEntity.TechType.ToUnity();
         }
-        constructableBase.constructedAmount = ghostEntity.ConstructedAmount;
 
+        // only useful instruction in Builder.CreateGhost()
         baseGhost.SetupGhost();
-
-        yield return GhostMetadataApplier.ApplyMetadataToGhost(baseGhost, ghostEntity.Metadata, @base);
-
-        // Necessary to wait for BaseGhost.Start()
-        yield return null;
-        // Verify that the metadata didn't destroy the GameObject
-        if (!ghostObject)
-        {
-            yield break;
-        }
-
+        // ghost's Base should then be assigned its data (from BaseGhost.UpdatePlacement)
         BuildEntitySpawner.ApplyBaseData(ghostEntity.BaseData, ghostBase);
         ghostBase.OnProtoDeserialize(null);
+        @base.SetPlacementGhost(baseGhost);
+        baseGhost.targetBase = @base;
+
+        // Little fix for cell objects being already generated (wrongly)
         if (ghostBase.cellObjects != null)
         {
             Array.Clear(ghostBase.cellObjects, 0, ghostBase.cellObjects.Length);
         }
         ghostBase.FinishDeserialization();
 
-        if (isInBase)
+        // Apply the right metadata accordingly
+        IEnumerator baseDeconstructableInstructions = GhostMetadataApplier.ApplyMetadataToGhost(baseGhost, ghostEntity.Metadata, @base);
+        if (baseDeconstructableInstructions != null)
         {
-            @base.SetPlacementGhost(baseGhost);
-            baseGhost.targetBase = @base;
-            @base.RegisterBaseGhost(baseGhost);
+            yield return baseDeconstructableInstructions;
         }
-        else
-        {
-            ghostTransform.parent = parent;
-        }
-        constructableBase.SetGhostVisible(false);
 
-        Log.Debug(BuildEntitySpawner.GetBaseData(ghostBase));
+        // Verify that the metadata didn't destroy the GameObject (possible in GhostMetadataApplier.ApplyBaseDeconstructableMetadataTo)
+        if (!ghostObject)
+        {
+            yield break;
+        }
+
+        // The rest is from Builder.TryPlace
         if (!isBaseDeconstructable)
         {
+            // Not executed by BaseDeconstructable
             baseGhost.Place();
         }
 
         if (isInBase)
         {
             ghostTransform.parent = parent;
-            MoveGhostToTransform(ghostEntity, ghostTransform);
+            MoveTransformToGhostEntity(ghostTransform, ghostEntity);
         }
-        constructableBase.SetState(false, false);
-        constructableBase.UpdateMaterial();
 
-        if (BuildUtils.IsUnderBaseDeconstructable(baseGhost, true) && ghostEntity.Metadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
+        constructableBase.SetState(false, false);
+        constructableBase.constructedAmount = ghostEntity.ConstructedAmount;
+        // Addition to ensure visuals appear correctly (would be called from OnGlobalEntitiesLoaded)
+        yield return constructableBase.ReplaceMaterialsAsync();
+
+        if (isBaseDeconstructable)
         {
             baseGhost.DisableGhostModelScripts();
         }
@@ -146,10 +146,19 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
         result?.Set(ghostObject);
     }
 
-    public static void MoveGhostToTransform(GhostEntity ghostEntity, Transform transform)
+    private static void MoveTransformToGhostEntity(Transform transform, GhostEntity ghostEntity, bool localCoordinates = true)
     {
-        transform.localPosition = ghostEntity.Transform.LocalPosition.ToUnity();
-        transform.localRotation = ghostEntity.Transform.LocalRotation.ToUnity();
-        transform.localScale = ghostEntity.Transform.LocalScale.ToUnity();
+        if (localCoordinates)
+        {
+            transform.localPosition = ghostEntity.Transform.LocalPosition.ToUnity();
+            transform.localRotation = ghostEntity.Transform.LocalRotation.ToUnity();
+            transform.localScale = ghostEntity.Transform.LocalScale.ToUnity();
+        }
+        else
+        {
+            transform.position = ghostEntity.Transform.LocalPosition.ToUnity();
+            transform.rotation = ghostEntity.Transform.LocalRotation.ToUnity();
+            transform.localScale = ghostEntity.Transform.LocalScale.ToUnity();
+        }
     }
 }

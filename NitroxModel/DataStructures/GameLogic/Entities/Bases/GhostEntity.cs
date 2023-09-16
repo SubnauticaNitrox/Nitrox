@@ -38,6 +38,6 @@ public class GhostEntity : ModuleEntity
 
     public override string ToString()
     {
-        return $"[GhostEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}, BaseFace: [{BaseFace}], BaseData: {BaseData}";
+        return $"[GhostEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, Metadata: {Metadata}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}, BaseFace: [{BaseFace}], BaseData: {BaseData}]";
     }
 }

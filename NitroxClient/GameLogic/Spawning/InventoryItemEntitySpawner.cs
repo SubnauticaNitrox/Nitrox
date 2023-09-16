@@ -40,8 +40,8 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
         }
         if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
         {
-            Log.Info(errorLog);
-            return false;
+            Log.Error(errorLog);
+            return true;
         }
 
         GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);

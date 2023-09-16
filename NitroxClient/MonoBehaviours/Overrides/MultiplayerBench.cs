@@ -1,5 +1,5 @@
-using NitroxClient.Unity.Helper;
 using System;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Overrides

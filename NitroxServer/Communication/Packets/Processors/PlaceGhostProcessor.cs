@@ -12,7 +12,7 @@ public class PlaceGhostProcessor : BuildingProcessor<PlaceGhost>
     {
         if (buildingManager.AddGhost(packet))
         {
-            base.Process(packet, player);
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

@@ -13,7 +13,7 @@ public class PieceDeconstructedProcessor : BuildingProcessor<PieceDeconstructed>
         if (buildingManager.ReplacePieceByGhost(player, packet, out _, out int operationId))
         {
             packet.BaseData = null;
-            ProcessWithOperationId(packet, player, operationId);
+            SendToOtherPlayersWithOperationId(packet, player, operationId);
         }
     }
 }

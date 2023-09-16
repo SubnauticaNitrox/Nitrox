@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
@@ -34,7 +34,9 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             yield break;
         }
 
+#if DEBUG
         Stopwatch stopwatch = Stopwatch.StartNew();
+#endif
         GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, entity.Transform.LocalPosition.ToUnity(), entity.Transform.LocalRotation.ToUnity(), entity.Transform.LocalScale.ToUnity(), false);
         if (LargeWorld.main)
         {
@@ -47,8 +49,9 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             yield break;
         }
         yield return SetupBase(entity, @base, entities, result);
-        Log.Debug($"Took {stopwatch.ElapsedMilliseconds}ms to create the Base");
-
+#if DEBUG
+        Log.Verbose($"Took {stopwatch.ElapsedMilliseconds}ms to create the Base");
+#endif
         yield return entities.SpawnAsync(entity.ChildEntities.OfType<PlayerWorldEntity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
         foreach (MapRoomEntity mapRoomEntity in entity.ChildEntities.OfType<MapRoomEntity>())
@@ -78,66 +81,32 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     public static BaseData GetBaseData(Base targetBase)
     {
-        Func<byte[], byte[]> c = BaseSerializationHelper.CompressBytes;
-
-        BaseData baseData = new()
+        return new BaseData()
         {
-            BaseShape = targetBase.baseShape.ToInt3().ToDto()
+            BaseShape = targetBase.baseShape.ToInt3().ToDto(),
+            Faces = BaseSerializationHelper.CompressData(targetBase.faces, faceType => (byte)faceType),
+            Cells = BaseSerializationHelper.CompressData(targetBase.cells, cellType => (byte)cellType),
+            Links = BaseSerializationHelper.CompressBytes(targetBase.links),
+            PreCompressionSize = targetBase.links.Length,
+            CellOffset = targetBase.cellOffset.ToDto(),
+            Masks = BaseSerializationHelper.CompressBytes(targetBase.masks),
+            IsGlass = BaseSerializationHelper.CompressData(targetBase.isGlass, isGlass => isGlass ? (byte)1 : (byte)0),
+            Anchor = targetBase.anchor.ToDto()
         };
-        if (targetBase.faces != null)
-        {
-            baseData.Faces = c(Array.ConvertAll(targetBase.faces, faceType => (byte)faceType));
-        }
-        if (targetBase.cells != null)
-        {
-            baseData.Cells = c(Array.ConvertAll(targetBase.cells, cellType => (byte)cellType));
-        }
-        if (targetBase.links != null)
-        {
-            baseData.Links = c(targetBase.links);
-            baseData.PreCompressionSize = targetBase.links.Length;
-        }
-        baseData.CellOffset = targetBase.cellOffset.ToDto();
-        if (targetBase.masks != null)
-        {
-            baseData.Masks = c(targetBase.masks);
-        }
-        if (targetBase.isGlass != null)
-        {
-            baseData.IsGlass = c(Array.ConvertAll(targetBase.isGlass, isGlass => isGlass ? (byte)1 : (byte)0));
-        }
-        baseData.Anchor = targetBase.anchor.ToDto();
-        return baseData;
     }
 
     public static void ApplyBaseData(BaseData baseData, Base @base)
     {
-        Func<byte[], int, byte[]> d = BaseSerializationHelper.DecompressBytes;
         int size = baseData.PreCompressionSize;
 
         @base.baseShape = new(); // Reset it so that the following instruction is understood as a change
         @base.SetSize(baseData.BaseShape.ToUnity());
-        if (baseData.Faces != null)
-        {
-            @base.faces = Array.ConvertAll(d(baseData.Faces, size * 6), faceType => (Base.FaceType)faceType);
-        }
-        if (baseData.Cells != null)
-        {
-            @base.cells = Array.ConvertAll(d(baseData.Cells, size), cellType => (Base.CellType)cellType);
-        }
-        if (baseData.Links != null)
-        {
-            @base.links = d(baseData.Links, size);
-        }
+        @base.faces = BaseSerializationHelper.DecompressData(baseData.Faces, size * 6, faceType => (Base.FaceType)faceType);
+        @base.cells = BaseSerializationHelper.DecompressData(baseData.Cells, size, cellType => (Base.CellType)cellType);
+        @base.links = BaseSerializationHelper.DecompressBytes(baseData.Links, size);
         @base.cellOffset = new(baseData.CellOffset.ToUnity());
-        if (baseData.Masks != null)
-        {
-            @base.masks = d(baseData.Masks, size);
-        }
-        if (baseData.IsGlass != null)
-        {
-            @base.isGlass = Array.ConvertAll(d(baseData.IsGlass, size), num => num == 1);
-        }
+        @base.masks = BaseSerializationHelper.DecompressBytes(baseData.Masks, size);
+        @base.isGlass = BaseSerializationHelper.DecompressData(baseData.IsGlass, size, num => num == 1);
         @base.anchor = new(baseData.Anchor.ToUnity());
     }
 
@@ -148,17 +117,26 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         NitroxEntity.SetNewId(@base.gameObject, buildEntity.Id);
         ApplyBaseData(buildEntity.BaseData, @base);
 
+        // Ghosts need an active base to be correctly spawned onto it
+        // While the rest must be spawned earlier for the base to load correctly (mostly InteriorPieceEntity)
+        // Which is why the spawn loops are separated by the SetActive instruction
+        List<GhostEntity> ghostChildrenEntities = new();
         foreach (Entity childEntity in buildEntity.ChildEntities)
         {
-            if (childEntity is InteriorPieceEntity || (childEntity is ModuleEntity && childEntity is not GhostEntity))
+            if (childEntity is InteriorPieceEntity || childEntity is ModuleEntity)
             {
+                if (childEntity is GhostEntity ghostEntity)
+                {
+                    ghostChildrenEntities.Add(ghostEntity);
+                    continue;
+                }
                 yield return entities.SpawnAsync(childEntity);
             }
         }
 
         baseObject.SetActive(true);
 
-        foreach (GhostEntity childGhostEntity in buildEntity.ChildEntities.OfType<GhostEntity>())
+        foreach (GhostEntity childGhostEntity in ghostChildrenEntities)
         {
             yield return GhostEntitySpawner.RestoreGhost(@base.transform, childGhostEntity);
         }

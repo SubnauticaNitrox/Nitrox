@@ -12,7 +12,7 @@ public class PlaceModuleProcessor : BuildingProcessor<PlaceModule>
     {
         if (buildingManager.AddModule(packet))
         {
-            base.Process(packet, player);
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

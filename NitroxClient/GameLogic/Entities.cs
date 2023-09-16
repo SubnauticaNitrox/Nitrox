@@ -142,18 +142,23 @@ namespace NitroxClient.GameLogic
         /// we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS)
         /// </remarks>
         /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
-        public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false)
+        public IEnumerator SpawnBatchAsync<T>(IEnumerable<T> batch, bool forceRespawn = false) where T : Entity
         {
             int timeSkips = 0;
             
             float allottedTimePerFrame = 1f / Application.targetFrameRate;
             float timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
+#if DEBUG
             Stopwatch stopwatch = Stopwatch.StartNew();
+#endif
+            TaskResult<Optional<GameObject>> entityResult = new();
+            TaskResult<Exception> exception = new();
             foreach (Entity entity in batch)
             {
+                entityResult.Set(Optional.Empty);
+                exception.Set(null);
+
                 IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
-                TaskResult<Optional<GameObject>> entityResult = new();
-                TaskResult<Exception> exception = new();
 
                 if (!entitySpawner.SpawnSyncSafe(entity, entityResult, exception) && exception.Get() == null)
                 {
@@ -172,7 +177,7 @@ namespace NitroxClient.GameLogic
 
                 if (exception.Get() != null)
                 {
-                    Log.Error($"Failed to spawn entity {entity.Id} during a batch spawning:\n{exception.Get()}");
+                    Log.Error(exception.Get());
                     continue;
                 }
                 else if (!entityResult.Get().Value)
@@ -213,7 +218,7 @@ namespace NitroxClient.GameLogic
 
                     if (exception.Get() != null)
                     {
-                        Log.Error($"Failed to spawn entity {childEntity.Id} during a batch spawning:\n{exception.Get()}");
+                        Log.Error(exception.Get());
                         continue;
                     }
                     else if (!childResult.Get().Value)
@@ -250,7 +255,9 @@ namespace NitroxClient.GameLogic
                     timeSkips++;
                 }
             }
-            Log.Debug($"Optimized spawning took {stopwatch.ElapsedMilliseconds}ms with {timeSkips} time skips");
+#if DEBUG
+            Log.Verbose($"Optimized spawning took {stopwatch.ElapsedMilliseconds}ms with {timeSkips} time skips");
+#endif
         }
 
         public List<Entity> GetChildrenRecursively(Entity entity, bool forceRespawn = false)
@@ -262,13 +269,17 @@ namespace NitroxClient.GameLogic
             List<Entity> children = new(entity.ChildEntities);
             foreach (Entity child in entity.ChildEntities)
             {
-                children.AddRange(GetChildrenRecursively(child, forceRespawn));
+                if (forceRespawn)
+                {
+                    children.AddRange(GetChildrenRecursively(child, forceRespawn));
+                }
+                else
+                {
+                    children.AddRange(GetChildrenRecursively(child, forceRespawn)
+                            .Where(child => !WasAlreadySpawned(child)));
+                }
             }
-            if (forceRespawn)
-            {
-                return children;
-            }
-            return children.Where(child => !WasAlreadySpawned(child)).ToList();
+            return children;
         }
 
         private IEnumerator SpawnChildren(Entity entity)

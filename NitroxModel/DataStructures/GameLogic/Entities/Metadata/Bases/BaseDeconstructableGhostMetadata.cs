@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Bases;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
@@ -13,6 +14,7 @@ public class BaseDeconstructableGhostMetadata : GhostMetadata
     [DataMember(Order = 2)]
     public string ClassId { get; set; }
 
+    [IgnoreConstructor]
     public BaseDeconstructableGhostMetadata()
     {
         // Constructor for ProtoBuf deserialization.

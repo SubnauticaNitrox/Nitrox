@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
@@ -19,136 +18,140 @@ public class BuildingManager
     private readonly WorldEntityManager worldEntityManager;
     private readonly ServerConfig config;
 
-    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager)
+    public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, ServerConfig config)
     {
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
-        config = NitroxServiceLocator.LocateService<ServerConfig>();
+        this.config = config;
     }
 
     public bool AddGhost(PlaceGhost placeGhost)
     {
         GhostEntity ghostEntity = placeGhost.GhostEntity;
-        if (ghostEntity.ParentId != null)
+        if (ghostEntity.ParentId == null)
         {
-            if (entityRegistry.TryGetEntityById(ghostEntity.ParentId, out Entity parentEntity))
+            if (entityRegistry.GetEntityById(ghostEntity.Id).HasValue)
             {
-                if (parentEntity is not BuildEntity)
-                {
-                    Log.Error($"Trying to add a ghost to an entity that is not a building (ParentId: {ghostEntity.ParentId})");
-                    return false;
-                }
-                if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(ghostEntity.Id)))
-                {
-                    Log.Error($"Trying to add a ghost to a building but another child with the same id already exists (GhostId: {ghostEntity.Id})");
-                    return false;
-                }
-                parentEntity.ChildEntities.Add(ghostEntity);
-                worldEntityManager.AddGlobalRootEntity(ghostEntity);
-                Log.Debug($"Added a GhostEntity: {ghostEntity.Id}, under {parentEntity.Id}");
-                return true;
+                Log.Error($"Trying to add a ghost to Global Root but another entity with the same id already exists (GhostId: {ghostEntity.Id})");
+                return false;
             }
+
+            worldEntityManager.AddGlobalRootEntity(ghostEntity);
+            Log.Verbose($"Added a GhostEntity: {ghostEntity.Id}");
+            return true;
+        }
+
+        if (!entityRegistry.TryGetEntityById(ghostEntity.ParentId, out Entity parentEntity))
+        {
             Log.Error($"Trying to add a ghost to a build that isn't registered (ParentId: {ghostEntity.ParentId})");
             return false;
         }
-
-        if (entityRegistry.GetEntityById(ghostEntity.Id).HasValue)
+        if (parentEntity is not BuildEntity)
         {
-            Log.Error($"Trying to add a ghost to Global Root but another entity with the same id already exists (GhostId: {ghostEntity.Id})");
+            Log.Error($"Trying to add a ghost to an entity that is not a building (ParentId: {ghostEntity.ParentId})");
+            return false;
+        }
+        if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(ghostEntity.Id)))
+        {
+            Log.Error($"Trying to add a ghost to a building but another child with the same id already exists (GhostId: {ghostEntity.Id})");
             return false;
         }
 
+        parentEntity.ChildEntities.Add(ghostEntity);
         worldEntityManager.AddGlobalRootEntity(ghostEntity);
-        Log.Debug($"Added a GhostEntity: {ghostEntity.Id}");
+        Log.Verbose($"Added a GhostEntity: {ghostEntity.Id}, under {parentEntity.Id}");
         return true;
     }
 
     public bool AddModule(PlaceModule placeModule)
     {
         ModuleEntity moduleEntity = placeModule.ModuleEntity;
-        if (moduleEntity.ParentId != null)
+        if (moduleEntity.ParentId == null)
         {
-            if (entityRegistry.TryGetEntityById(moduleEntity.ParentId, out Entity parentEntity))
+            if (entityRegistry.GetEntityById(moduleEntity.Id).HasValue)
             {
-                if (parentEntity is not BuildEntity && parentEntity is not VehicleWorldEntity)
-                {
-                    Log.Error($"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
-                    return false;
-                }
-                if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(moduleEntity.Id)))
-                {
-                    Log.Error($"Trying to add a module to a building but another child with the same id already exists (ModuleId: {moduleEntity.Id})");
-                    return false;
-                }
-                parentEntity.ChildEntities.Add(moduleEntity);
-                worldEntityManager.AddGlobalRootEntity(moduleEntity);
-                return true;
+                Log.Error($"Trying to add a module to Global Root but another entity with the same id already exists ({moduleEntity.Id})");
+                return false;
             }
+
+            worldEntityManager.AddGlobalRootEntity(moduleEntity);
+            return true;
+        }
+
+        if (!entityRegistry.TryGetEntityById(moduleEntity.ParentId, out Entity parentEntity))
+        {
             Log.Error($"Trying to add a module to a build that isn't registered (ParentId: {moduleEntity.ParentId})");
             return false;
         }
-
-        if (entityRegistry.GetEntityById(moduleEntity.Id).HasValue)
+        if (parentEntity is not BuildEntity && parentEntity is not VehicleWorldEntity)
         {
-            Log.Error($"Trying to add a module to Global Root but another entity with the same id already exists ({moduleEntity.Id})");
+            Log.Error($"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
+            return false;
+        }
+        if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(moduleEntity.Id)))
+        {
+            Log.Error($"Trying to add a module to a building but another child with the same id already exists (ModuleId: {moduleEntity.Id})");
             return false;
         }
 
+        parentEntity.ChildEntities.Add(moduleEntity);
         worldEntityManager.AddGlobalRootEntity(moduleEntity);
         return true;
     }
 
     public bool ModifyConstructedAmount(ModifyConstructedAmount modifyConstructedAmount)
     {
-        if (entityRegistry.TryGetEntityById(modifyConstructedAmount.GhostId, out Entity entity))
+        if (!entityRegistry.TryGetEntityById(modifyConstructedAmount.GhostId, out Entity entity))
         {
-            if (entity is not GhostEntity && entity is not ModuleEntity)
-            {
-                Log.Error($"Trying to modify the constructed amount of an entity that is not a ghost (Id: {modifyConstructedAmount.GhostId})");
-                return false;
-            }
-            if (modifyConstructedAmount.ConstructedAmount == 0f)
-            {
-                worldEntityManager.RemoveGlobalRootEntity(entity.Id);
-                return true;
-            }
-            if (entity is GhostEntity ghostEntity)
-            {
-                ghostEntity.ConstructedAmount = modifyConstructedAmount.ConstructedAmount;
-            }
-            else if (entity is ModuleEntity moduleEntity)
-            {
-                moduleEntity.ConstructedAmount = modifyConstructedAmount.ConstructedAmount;
-            }
+            Log.Error($"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
+            return false;
+        }
+        if (entity is not GhostEntity && entity is not ModuleEntity)
+        {
+            Log.Error($"Trying to modify the constructed amount of an entity that is not a ghost (Id: {modifyConstructedAmount.GhostId})");
+            return false;
+        }
+        if (modifyConstructedAmount.ConstructedAmount == 0f)
+        {
+            worldEntityManager.RemoveGlobalRootEntity(entity.Id);
             return true;
         }
-        Log.Error($"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
-        return false;
+
+        switch (entity)
+        {
+            case GhostEntity ghostEntity:
+                ghostEntity.ConstructedAmount = modifyConstructedAmount.ConstructedAmount;
+                break;
+            case ModuleEntity moduleEntity:
+                moduleEntity.ConstructedAmount = modifyConstructedAmount.ConstructedAmount;
+                break;
+        }
+        return true;
     }
 
     public bool CreateBase(PlaceBase placeBase)
     {
-        if (entityRegistry.TryGetEntityById(placeBase.FormerGhostId, out Entity entity))
+        if (!entityRegistry.TryGetEntityById(placeBase.FormerGhostId, out Entity entity))
         {
-            if (entity is not GhostEntity)
-            {
-                Log.Error($"Trying to add a new build to Global Root but another build with the same id already exists (GhostId: {placeBase.FormerGhostId})");
-                return false;
-            }
-            worldEntityManager.RemoveGlobalRootEntity(entity.Id);
-
-            worldEntityManager.AddGlobalRootEntity(placeBase.BuildEntity);
-            return true;
+            Log.Error($"Trying to place a base from a non-registered ghost (Id: {placeBase.FormerGhostId})");
+            return false;
         }
-        Log.Error($"Trying to place a base from a non-registered ghost (Id: {placeBase.FormerGhostId})");
-        return false;
+        if (entity is not GhostEntity)
+        {
+            Log.Error($"Trying to add a new build to Global Root but another build with the same id already exists (GhostId: {placeBase.FormerGhostId})");
+            return false;
+        }
+
+        worldEntityManager.RemoveGlobalRootEntity(entity.Id);
+        worldEntityManager.AddGlobalRootEntity(placeBase.BuildEntity);
+        return true;
     }
 
     public bool UpdateBase(Player player, UpdateBase updateBase, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
-            Log.Error($"Tring to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
+            Log.Error($"Trying to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
             operationId = -1;
             return false;
         }
@@ -161,7 +164,6 @@ public class BuildingManager
         int deltaOperations = buildEntity.OperationId + 1 - updateBase.OperationId;
         if (deltaOperations != 0 && config.SafeBuilding)
         {
-            Log.Debug(buildEntity.OperationId);
             Log.Warn($"Ignoring an {nameof(UpdateBase)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(player);
             operationId = -1;
@@ -170,8 +172,6 @@ public class BuildingManager
 
         worldEntityManager.RemoveGlobalRootEntity(updateBase.FormerGhostId);
         buildEntity.BaseData = updateBase.BaseData;
-
-        // TODO: Maybe also update the metadata
 
         foreach (KeyValuePair<NitroxId, NitroxBaseFace> updatedChild in updateBase.UpdatedChildren)
         {
@@ -215,7 +215,7 @@ public class BuildingManager
 
         foreach (NitroxId removedChildId in removedChildIds)
         {
-            if (entityRegistry.TryGetEntityById(removedChildId, out Entity removedEntity))
+            if (entityRegistry.GetEntityById(removedChildId).HasValue)
             {
                 worldEntityManager.RemoveGlobalRootEntity(removedChildId);
             }
@@ -258,7 +258,6 @@ public class BuildingManager
         int deltaOperations = buildEntity.OperationId + 1 - pieceDeconstructed.OperationId;
         if (deltaOperations != 0 && config.SafeBuilding)
         {
-            Log.Debug(buildEntity.OperationId);
             Log.Warn($"Ignoring a {nameof(PieceDeconstructed)} packet from [{player.Name}] which is {Math.Abs(deltaOperations) + (deltaOperations > 0 ? " operations ahead" : " operations late")}");
             NotifyPlayerDesync(player);
             removedEntity = null;
@@ -300,7 +299,7 @@ public class BuildingManager
 
         if (removedEntity != null && waterParkDeconstructed.Transfer)
         {
-            entityRegistry.TransferChildren(removedEntity, newPiece, entity => entity is not PlanterEntity);
+            entityRegistry.TransferChildren(removedEntity, newPiece, e => e is not PlanterEntity);
         }
         return true;
     }
@@ -311,7 +310,7 @@ public class BuildingManager
         player.SendPacket(new BuildingDesyncWarning(operations));
     }
 
-    public Dictionary<NitroxId, int> GetEntitiesOperations(List<GlobalRootEntity> entities)
+    public static Dictionary<NitroxId, int> GetEntitiesOperations(List<GlobalRootEntity> entities)
     {
         return entities.OfType<BuildEntity>().ToDictionary(entity => entity.Id, entity => entity.OperationId);
     }

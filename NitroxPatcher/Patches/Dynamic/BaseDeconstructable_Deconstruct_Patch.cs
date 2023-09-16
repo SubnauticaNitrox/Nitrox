@@ -1,17 +1,17 @@
-using HarmonyLib;
-using NitroxClient.GameLogic.Bases;
-using NitroxModel.DataStructures.GameLogic.Bases;
-using NitroxModel.Helper;
-using NitroxPatcher.PatternMatching;
 using System.Collections.Generic;
 using System.Reflection;
+using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
-using NitroxModel.DataStructures;
-using NitroxModel.Packets;
-using UnityEngine;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Bases;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using NitroxModel.Helper;
+using NitroxModel.Packets;
+using NitroxPatcher.PatternMatching;
+using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 using static NitroxClient.GameLogic.Bases.BuildingHandler;
 
@@ -72,7 +72,6 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
 
     public static void PieceDeconstructed(BaseDeconstructable baseDeconstructable, ConstructableBase constructableBase, Base @base, bool destroyed)
     {
-        Log.Debug("PieceDeconstructed");
         if (!@base.TryGetNitroxId(out NitroxId baseId))
         {
             Log.Error("Couldn't find NitroxEntity on a deconstructed base, which is really problematic");
@@ -84,10 +83,10 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
         if (destroyed)
         {
             // Base was destroyed and replaced with a simple ghost
-            Log.Debug("Transferring id from base to the new ghost");
+            Log.Verbose("Transferring id from base to the new ghost");
             NitroxEntity.SetNewId(constructableBase.gameObject, baseId);
 
-            Log.Debug("Base destroyed and replaced by a simple ghost");
+            Log.Verbose("Base destroyed and replaced by a simple ghost");
             Resolve<IPacketSender>().Send(new BaseDeconstructed(baseId, ghostEntity));
             return;
         }
@@ -123,12 +122,12 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
         {
             Base.Face moduleFace = constructableBase.moduleFace.Value;
             moduleFace.cell += @base.GetAnchor();
-            IBaseModule geometryObject = @base.GetModule(moduleFace);
-            if (geometryObject != null && (geometryObject as MonoBehaviour).TryGetNitroxEntity(out NitroxEntity moduleEntity))
+            Component geometryObject = @base.GetModule(moduleFace).AliveOrNull();
+            if (geometryObject && geometryObject.TryGetNitroxEntity(out NitroxEntity moduleEntity))
             {
                 pieceId = moduleEntity.Id;
                 Object.Destroy(moduleEntity);
-                Log.Debug($"Successfully transferred NitroxEntity from module geometry {moduleEntity.Id}");
+                Log.Verbose($"Successfully transferred NitroxEntity from module geometry {moduleEntity.Id}");
             }
         }
         else
@@ -159,7 +158,7 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
                 default:
                     if (baseDeconstructable.GetComponent<IBaseModuleGeometry>() != null)
                     {
-                        Log.Error("Couldn't find the module's GameObject of IBaseModuleGeometry when transfering the NitroxEntity");
+                        Log.Error("Couldn't find the module's GameObject of IBaseModuleGeometry when transferring the NitroxEntity");
                     }
                     break;
             }
@@ -171,15 +170,21 @@ public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch,
         ghostEntity.Id = pieceId;
         ghostEntity.ParentId = baseId;
 
+        if (cachedPieceIdentifier == default)
+        {
+            BuildingHandler.Main.EnsureTracker(baseId).FailedOperations++;
+            Log.Error($"[{nameof(PieceDeconstructed)}] Couldn't find a CachedPieceIdentifier for deconstructed object {constructableBase.gameObject}");
+            return;
+        }
+
         BuildingHandler.Main.EnsureTracker(baseId).LocalOperations++;
         int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(baseId);
 
         PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null ?
             new PieceDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), operationId) :
             new WaterParkDeconstructed(baseId, pieceId, cachedPieceIdentifier, ghostEntity, BuildEntitySpawner.GetBaseData(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
-        Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
+        Log.Verbose($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
-        BuildingHandler.Main.Temp.Reset();
     }
 }

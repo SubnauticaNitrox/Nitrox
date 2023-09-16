@@ -23,7 +23,7 @@ public class VehicleWorldEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public VehicleWorldEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, string classId, bool spawnedByServer,  NitroxId id, NitroxTechType techType, EntityMetadata metadata) :
+    public VehicleWorldEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata) :
         base(transform, 0, classId, spawnedByServer, id, techType, metadata, null, new List<Entity>())
     {
         SpawnerId = spawnerId;

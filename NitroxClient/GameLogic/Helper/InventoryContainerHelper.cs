@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -9,6 +10,11 @@ namespace NitroxClient.GameLogic.Helper
 {
     public class InventoryContainerHelper
     {
+        private const string LOCKER_REGEX = @"Locker0([0-9])StorageRoot$";
+        private const string LOCKER_BASE_NAME = "submarine_locker_01_0";
+        private const string PLAYER_OBJECT_NAME = "Player";
+        private const string ESCAPEPOD_OBJECT_NAME = "EscapePod";
+        
         public static Optional<ItemsContainer> TryGetContainerByOwner(GameObject owner)
         {
             SeamothStorageContainer seamothStorageContainer = owner.GetComponent<SeamothStorageContainer>();
@@ -26,7 +32,7 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return Optional.Of(baseBioReactor.container);
             }
-            if (owner.name == "Player")
+            if (owner.name == PLAYER_OBJECT_NAME)
             {
                 return Optional.Of(Inventory.Get().container);
             }
@@ -50,7 +56,7 @@ namespace NitroxClient.GameLogic.Helper
                 return false;
             }
 
-            if (parent.GetComponent<Constructable>() || parent.GetComponent<IBaseModule>() != null)
+            if (parent.GetComponent<Constructable>() || parent.GetComponent<IBaseModule>().AliveOrNull())
             {
                 return parent.TryGetIdOrWarn(out ownerId);
             }
@@ -59,26 +65,27 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return true;
             }
-            else if (Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase))
+            else if (Regex.IsMatch(ownerTransform.gameObject.name, LOCKER_REGEX, RegexOptions.IgnoreCase))
             {
                 string lockerId = ownerTransform.gameObject.name.Substring(7, 1);
-                GameObject locker = parent.gameObject.FindChild($"submarine_locker_01_0{lockerId}");
+                string lockerName = $"{LOCKER_BASE_NAME}{lockerId}";
+                GameObject locker = parent.gameObject.FindChild(lockerName);
                 if (!locker)
                 {
-                    Log.Error($"Could not find Locker Object: submarine_locker_01_0{lockerId}");
+                    Log.Error($"Could not find Locker Object: {lockerName}");
                     ownerId = null;
                     return false;
                 }
                 if (!locker.TryGetComponentInChildren(out StorageContainer storageContainer, true))
                 {
-                    Log.Error($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{lockerId}");
+                    Log.Error($"Could not find {nameof(StorageContainer)} From Object: {lockerName}");
                     ownerId = null;
                     return false;
                 }
 
                 return storageContainer.TryGetIdOrWarn(out ownerId);
             }
-            else if (parent.name.StartsWith("EscapePod"))
+            else if (parent.name.StartsWith(ESCAPEPOD_OBJECT_NAME))
             {
                 StorageContainer storageContainer = parent.RequireComponentInChildren<StorageContainer>(true);
                 return storageContainer.TryGetIdOrWarn(out ownerId);

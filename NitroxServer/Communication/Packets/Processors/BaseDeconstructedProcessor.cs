@@ -12,7 +12,7 @@ public class BaseDeconstructedProcessor : BuildingProcessor<BaseDeconstructed>
     {
         if (buildingManager.ReplaceBaseByGhost(packet))
         {
-            base.Process(packet, player);
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

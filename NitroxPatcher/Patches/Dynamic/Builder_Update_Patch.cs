@@ -1,20 +1,24 @@
-using NitroxModel.Helper;
 using System.Reflection;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Settings;
-using NitroxModel.DataStructures;
-using UnityEngine;
 using NitroxClient.Helpers;
+using NitroxModel.DataStructures;
+using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// Changes the piece color during the placing process if the current base is desynced.
+/// </summary>
 public sealed partial class Builder_Update_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.Update());
+    private static readonly Color DESYNCED_COLOR = Color.magenta;
 
     public static void Postfix()
     {
-        if (!Builder.canPlace || !BuildingHandler.Main)
+        if (!Builder.canPlace || !BuildingHandler.Main || !NitroxPrefs.SafeBuilding.Value)
         {
             return;
         }
@@ -31,16 +35,10 @@ public sealed partial class Builder_Update_Patch : NitroxPatch, IDynamicPatch
         }
 
         if (parentBase && parentBase.TryGetNitroxId(out NitroxId parentId) &&
-            BuildingHandler.Main.EnsureTracker(parentId).IsDesynced() && NitroxPrefs.SafeBuilding.Value)
+            BuildingHandler.Main.EnsureTracker(parentId).IsDesynced())
         {
             Builder.canPlace = false;
-            Color safeColor = Color.magenta;
-            IBuilderGhostModel[] components = Builder.ghostModel.GetComponents<IBuilderGhostModel>();
-            for (int i = 0; i < components.Length; i++)
-            {
-                components[i].UpdateGhostModelColor(Builder.canPlace, ref safeColor);
-            }
-            Builder.ghostStructureMaterial.SetColor(ShaderPropertyID._Tint, safeColor);
+            Builder.ghostStructureMaterial.SetColor(ShaderPropertyID._Tint, DESYNCED_COLOR);
         }
     }
 }

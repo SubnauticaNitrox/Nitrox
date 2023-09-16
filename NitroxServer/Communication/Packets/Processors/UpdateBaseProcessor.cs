@@ -12,12 +12,9 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
     {
         if (buildingManager.UpdateBase(player, packet, out int operationId))
         {
-            packet.BaseData = null;
-            packet.BuiltPieceEntity = null;
-            packet.UpdatedChildren = null;
-            packet.UpdatedMoonpools = null;
-            packet.UpdatedMapRooms = null;
-            ProcessWithOperationId(packet, player, operationId);
+            // End-players can process elementary operations without this data (packet would be heavier for no reason)
+            packet.Deflate();
+            SendToOtherPlayersWithOperationId(packet, player, operationId);
         }
     }
 }

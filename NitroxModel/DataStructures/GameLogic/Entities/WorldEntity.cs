@@ -1,10 +1,10 @@
 using System;
-using ProtoBufNet;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.Unity;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
 {
@@ -14,9 +14,9 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
      */
     [Serializable]
     [DataContract]
-    [ProtoInclude(131, typeof(PlaceholderGroupWorldEntity))]
-    [ProtoInclude(132, typeof(CellRootEntity))]
-    [ProtoInclude(140, typeof(GlobalRootEntity))]
+    [ProtoInclude(50, typeof(PlaceholderGroupWorldEntity))]
+    [ProtoInclude(51, typeof(CellRootEntity))]
+    [ProtoInclude(52, typeof(GlobalRootEntity))]
     public class WorldEntity : Entity
     {
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);

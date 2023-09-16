@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases;
 
-public class BuildingHandler : MonoBehaviour
+public partial class BuildingHandler : MonoBehaviour
 {
     public static BuildingHandler Main;
 
@@ -25,25 +25,29 @@ public class BuildingHandler : MonoBehaviour
     private bool working;
 
     public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
-    public DateTimeOffset LatestResyncRequestTimeOffset;
 
+    /// <summary>
+    /// When processing deconstruction-related packets, it's required to pass part of their data to the patches
+    /// so that they can work accordingly (mainly to differentiate local actions from remotely issued ones).
+    /// </summary>
     public TemporaryBuildData Temp;
-    public Dictionary<NitroxId, OperationTracker> Operations;
-    public int FailedOperations;
-
-    public bool Resyncing;
 
     /// <summary>
     /// Time in milliseconds before local player can build on a base that was modified by another player
     /// </summary>
     private const int MULTIPLAYER_BUILD_COOLDOWN = 2000;
-    private const int RESYNC_REQUEST_COOLDOWN = 10000;
 
     public void Start()
     {
+        if (Main)
+        {
+            Log.Error($"Another instance of {nameof(BuildingHandler)} is already running. Deleting the current one.");
+            Destroy(this);
+            return;
+        }
         Main = this;
         BuildQueue = new();
-        LatestResyncRequestTimeOffset = DateTimeOffset.Now;
+        LatestResyncRequestTimeOffset = DateTimeOffset.UtcNow;
         BasesCooldown = new();
         Temp = new();
         Operations = new();
@@ -62,7 +66,7 @@ public class BuildingHandler : MonoBehaviour
     private IEnumerator SafelyTreatNextBuildCommand()
     {
         Packet packet = BuildQueue.Dequeue();
-        yield return TreatBuildCommand(packet).OnYieldError(exception => Log.Error($"An error happened when treating build command {packet}:\n{exception}"));
+        yield return TreatBuildCommand(packet).OnYieldError(exception => Log.Error(exception, $"An error happened when processing build command {packet}"));
         working = false;
     }
 
@@ -77,7 +81,7 @@ public class BuildingHandler : MonoBehaviour
                 yield return BuildModule(placeModule);
                 break;
             case ModifyConstructedAmount modifyConstructedAmount:
-                PeekNextCommand(ref modifyConstructedAmount);
+                PeekNextModifyCommands(ref modifyConstructedAmount);
                 yield return ProgressConstruction(modifyConstructedAmount);
                 break;
             case UpdateBase updateBase:
@@ -92,30 +96,30 @@ public class BuildingHandler : MonoBehaviour
             case PieceDeconstructed pieceDeconstructed:
                 yield return DeconstructPiece(pieceDeconstructed);
                 break;
+            default:
+                Log.Error($"Found an unhandled build command packet: {buildCommand}");
+                break;
         }
     }
 
     /// <summary>
     /// If the next build command is also a ModifyConstructedAmount applied on the same object, we'll just skip the current one to apply the new one.
     /// </summary>
-    private void PeekNextCommand(ref ModifyConstructedAmount currentCommand)
+    private void PeekNextModifyCommands(ref ModifyConstructedAmount currentCommand)
     {
-        if (BuildQueue.Count == 0 || BuildQueue.Peek() is not ModifyConstructedAmount nextCommand || !nextCommand.GhostId.Equals(currentCommand.GhostId))
+        while (BuildQueue.Count > 0 && BuildQueue.Peek() is ModifyConstructedAmount nextCommand && nextCommand.GhostId.Equals(currentCommand.GhostId))
         {
-            return;
+            BuildQueue.Dequeue();
+            currentCommand = nextCommand;
         }
-        BuildQueue.Dequeue();
-        currentCommand = nextCommand;
-        PeekNextCommand(ref currentCommand);
     }
 
     public IEnumerator BuildGhost(PlaceGhost placeGhost)
     {
         GhostEntity ghostEntity = placeGhost.GhostEntity;
-
         Transform parent = GetParentOrGlobalRoot(ghostEntity.ParentId);
         yield return GhostEntitySpawner.RestoreGhost(parent, ghostEntity);
-        BasesCooldown[ghostEntity.ParentId ?? ghostEntity.Id] = DateTimeOffset.Now;
+        BasesCooldown[ghostEntity.ParentId ?? ghostEntity.Id] = DateTimeOffset.UtcNow;
     }
 
     public IEnumerator BuildModule(PlaceModule placeModule)
@@ -123,14 +127,14 @@ public class BuildingHandler : MonoBehaviour
         ModuleEntity moduleEntity = placeModule.ModuleEntity;
         Transform parent = GetParentOrGlobalRoot(moduleEntity.ParentId);
         yield return ModuleEntitySpawner.RestoreModule(parent, moduleEntity);
-        BasesCooldown[moduleEntity.ParentId ?? moduleEntity.Id] = DateTimeOffset.Now;
+        BasesCooldown[moduleEntity.ParentId ?? moduleEntity.Id] = DateTimeOffset.UtcNow;
     }
 
     public IEnumerator ProgressConstruction(ModifyConstructedAmount modifyConstructedAmount)
     {
         if (NitroxEntity.TryGetComponentFrom(modifyConstructedAmount.GhostId, out Constructable constructable))
         {
-            BasesCooldown[modifyConstructedAmount.GhostId] = DateTimeOffset.Now;
+            BasesCooldown[modifyConstructedAmount.GhostId] = DateTimeOffset.UtcNow;
             if (modifyConstructedAmount.ConstructedAmount == 0f)
             {
                 constructable.constructedAmount = 0f;
@@ -139,7 +143,7 @@ public class BuildingHandler : MonoBehaviour
                 BasesCooldown.Remove(modifyConstructedAmount.GhostId);
                 yield break;
             }
-            else if (modifyConstructedAmount.ConstructedAmount == 1f)
+            if (modifyConstructedAmount.ConstructedAmount >= 1f)
             {
                 constructable.SetState(true, true);
                 yield return BuildingPostSpawner.ApplyPostSpawner(gameObject, modifyConstructedAmount.GhostId);
@@ -154,23 +158,22 @@ public class BuildingHandler : MonoBehaviour
 
     public IEnumerator BuildBase(PlaceBase placeBase)
     {
-        if (NitroxEntity.TryGetComponentFrom(placeBase.FormerGhostId, out ConstructableBase constructableBase))
+        if (!NitroxEntity.TryGetComponentFrom(placeBase.FormerGhostId, out ConstructableBase constructableBase))
         {
-            BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
-            constructableBase.SetState(true, true);
-            NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, placeBase.FormerGhostId);
-            BasesCooldown[placeBase.FormerGhostId] = DateTimeOffset.Now;
+            FailedOperations++;
             yield break;
         }
-        FailedOperations++;
+        BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
+        constructableBase.SetState(true, true);
+        NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, placeBase.FormerGhostId);
+        BasesCooldown[placeBase.FormerGhostId] = DateTimeOffset.UtcNow;
     }
 
     public IEnumerator UpdatePlacedBase(UpdateBase updateBase)
     {
-        // Is probably useless check but can probably be useful for desync detection
         if (!NitroxEntity.TryGetComponentFrom<Base>(updateBase.BaseId, out _))
         {
-            Log.Debug("Couldn't find the parentBase");
+            Log.Error($"Couldn't find base with id: {updateBase.BaseId} when processing packet: {updateBase}");
             FailedOperations++;
             yield break;
         }
@@ -178,21 +181,22 @@ public class BuildingHandler : MonoBehaviour
         OperationTracker tracker = EnsureTracker(updateBase.BaseId);
         tracker.RegisterOperation(updateBase.OperationId);
 
-        if (NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
+        if (!NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
         {
-            Temp.ChildrenTransfer = updateBase.ChildrenTransfer;
-
-            BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
-            constructableBase.SetState(true, true);
-            BasesCooldown[updateBase.BaseId] = DateTimeOffset.Now;
-            // In the case the built piece was an interior piece, we'll want to transfer the id to it.
-            if (BuildUtils.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase, out GameObject moduleObject))
-            {
-                yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, updateBase.FormerGhostId);
-            }
+            tracker.FailedOperations++;
+            Log.Error($"Couldn't find ghost with id: {updateBase.FormerGhostId} when processing packet: {updateBase}");
             yield break;
         }
-        tracker.FailedOperations++;
+        Temp.ChildrenTransfer = updateBase.ChildrenTransfer;
+
+        BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
+        constructableBase.SetState(true, true);
+        BasesCooldown[updateBase.BaseId] = DateTimeOffset.UtcNow;
+        // In the case the built piece was an interior piece, we'll want to transfer the id to it.
+        if (BuildUtils.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase, out GameObject moduleObject))
+        {
+            yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, updateBase.FormerGhostId);
+        }
     }
 
     public IEnumerator DeconstructBase(BaseDeconstructed baseDeconstructed)
@@ -200,7 +204,7 @@ public class BuildingHandler : MonoBehaviour
         if (!NitroxEntity.TryGetObjectFrom(baseDeconstructed.FormerBaseId, out GameObject baseObject))
         {
             FailedOperations++;
-            Log.Debug("Couldn't find the parentBase");
+            Log.Error($"Couldn't find base with id: {baseDeconstructed.FormerBaseId} when processing packet: {baseDeconstructed}");
             yield break;
         }
         BaseDeconstructable[] deconstructableChildren = baseObject.GetComponentsInChildren<BaseDeconstructable>(true);
@@ -208,15 +212,15 @@ public class BuildingHandler : MonoBehaviour
 
         if (deconstructableChildren.Length == 1 && deconstructableChildren[0])
         {
-            Log.Debug("Will only deconstruct the base manually");
-            using (new PacketSuppressor<BaseDeconstructed>())
-            using (new PacketSuppressor<PieceDeconstructed>())
+            using (PacketSuppressor<BaseDeconstructed>.Suppress())
+            using (PacketSuppressor<PieceDeconstructed>.Suppress())
             {
                 deconstructableChildren[0].Deconstruct();
             }
-            BasesCooldown[baseDeconstructed.FormerBaseId] = DateTimeOffset.Now;
+            BasesCooldown[baseDeconstructed.FormerBaseId] = DateTimeOffset.UtcNow;
             yield break;
         }
+        Log.Error($"Found multiple {nameof(BaseDeconstructable)} under base {baseObject} while there should be only one");
         EnsureTracker(baseDeconstructed.FormerBaseId).FailedOperations++;
     }
 
@@ -225,7 +229,7 @@ public class BuildingHandler : MonoBehaviour
         if (!NitroxEntity.TryGetComponentFrom(pieceDeconstructed.BaseId, out Base @base))
         {
             FailedOperations++;
-            Log.Debug("Couldn't find the parentBase");
+            Log.Error($"Couldn't find base with id: {pieceDeconstructed.BaseId} when processing packet: {pieceDeconstructed}");
             yield break;
         }
 
@@ -235,7 +239,7 @@ public class BuildingHandler : MonoBehaviour
         Transform cellObject = @base.GetCellObject(pieceIdentifier.BaseCell.ToUnity());
         if (!cellObject)
         {
-            Log.Debug($"Couldn't find cell object {pieceIdentifier.BaseCell} when destructing piece {pieceDeconstructed}");
+            Log.Error($"Couldn't find cell object {pieceIdentifier.BaseCell} when destructing piece {pieceDeconstructed}");
             yield break;
         }
         BaseDeconstructable[] deconstructableChildren = cellObject.GetComponentsInChildren<BaseDeconstructable>(true);
@@ -249,60 +253,17 @@ public class BuildingHandler : MonoBehaviour
             using (PacketSuppressor<BaseDeconstructed>.Suppress())
             using (PacketSuppressor<PieceDeconstructed>.Suppress())
             using (PacketSuppressor<WaterParkDeconstructed>.Suppress())
+            using (Temp.Fill(pieceDeconstructed))
             {
-                Temp.Fill(pieceDeconstructed);
                 baseDeconstructable.Deconstruct();
-                Temp.Reset();
             }
             tracker.RegisterOperation(pieceDeconstructed.OperationId);
-            BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.Now;
+            BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.UtcNow;
             yield break;
         }
-        Log.Error("Couldn't find BaseDeconstructable to be destructed");
+        Log.Error($"Couldn't find the right BaseDeconstructable to be destructed under {pieceDeconstructed.BaseId}");
         tracker.FailedOperations++;
     }
-
-    public void AskForResync()
-    {
-        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
-        {
-            return;
-        }
-        TimeSpan deltaTime = DateTimeOffset.Now - LatestResyncRequestTimeOffset;
-        if (deltaTime.TotalMilliseconds < RESYNC_REQUEST_COOLDOWN)
-        {
-            double timeLeft = RESYNC_REQUEST_COOLDOWN * 0.001 - deltaTime.TotalSeconds;
-            Log.InGame(Language.main.Get("Nitrox_ResyncOnCooldown").Replace("{TIME_LEFT}", timeLeft.ToString()));
-            return;
-        }
-        LatestResyncRequestTimeOffset = DateTimeOffset.Now;
-
-        this.Resolve<IPacketSender>().Send(new BuildingResyncRequest());
-        Log.InGame(Language.main.Get("Nitrox_ResyncRequested"));
-    }
-
-    public void StartResync(Dictionary<Entity, int> entities)
-    {
-        Resyncing = true;
-        FailedOperations = 0;
-        BuildQueue.Clear();
-        InitializeOperations(entities.ToDictionary(pair => pair.Key.Id, pair => pair.Value));
-    }
-
-    public void StopResync()
-    {
-        Resyncing = false;
-    }
-
-    public void InitializeOperations(Dictionary<NitroxId, int> operations)
-    {
-        foreach (KeyValuePair<NitroxId, int> pair in operations)
-        {
-            Log.Debug($"Resetting {pair.Key} to {pair.Value}");
-            EnsureTracker(pair.Key).ResetToId(pair.Value);
-        }
-    }
-
 
     public static Transform GetParentOrGlobalRoot(NitroxId id)
     {
@@ -310,24 +271,64 @@ public class BuildingHandler : MonoBehaviour
         {
             return parentObject.transform;
         }
-        else
-        {
-            return LargeWorldStreamer.main.globalRoot.transform;
-        }
+        return LargeWorldStreamer.main.globalRoot.transform;
     }
 
     private void CleanCooldowns()
     {
-        DateTimeOffset now = DateTimeOffset.Now;
-        List<NitroxId> keysToRemove = BasesCooldown.Where(entry => (now - entry.Value).TotalMilliseconds >= MULTIPLAYER_BUILD_COOLDOWN).Select(e => e.Key).ToList();
-        keysToRemove.ForEach(key => BasesCooldown.Remove(key));
+        BasesCooldown.RemoveWhere(DateTimeOffset.UtcNow, (time, curr) => (curr - time).TotalMilliseconds >= MULTIPLAYER_BUILD_COOLDOWN);
     }
+
+    public class TemporaryBuildData : IDisposable
+    {
+        public NitroxId Id;
+        public InteriorPieceEntity NewWaterPark;
+        public List<NitroxId> MovedChildrenIds;
+        public (NitroxId, NitroxId) ChildrenTransfer;
+        public bool Transfer;
+
+        public void Dispose()
+        {
+            Id = null;
+            NewWaterPark = null;
+            MovedChildrenIds = null;
+            ChildrenTransfer = (null, null);
+            Transfer = false;
+        }
+
+        public TemporaryBuildData Fill(PieceDeconstructed pieceDeconstructed)
+        {
+            Id = pieceDeconstructed.PieceId;
+            if (pieceDeconstructed is WaterParkDeconstructed waterParkDeconstructed)
+            {
+                NewWaterPark = waterParkDeconstructed.NewWaterPark;
+                MovedChildrenIds = waterParkDeconstructed.MovedChildrenIds;
+                Transfer = waterParkDeconstructed.Transfer;
+            }
+            return this;
+        }
+    }
+}
+
+/// <summary>
+/// Building resync-related part of <see cref="BuildingHandler"/>. 
+/// </summary>
+public partial class BuildingHandler
+{
+    private const int RESYNC_REQUEST_COOLDOWN = 10000;
+    private DateTimeOffset LatestResyncRequestTimeOffset;
+
+    private Dictionary<NitroxId, OperationTracker> Operations;
+    // TODO: Should be used to track total fails when more stuff is built towards resyncing
+    public int FailedOperations;
+
+    public bool Resyncing;
 
     public OperationTracker EnsureTracker(NitroxId baseId)
     {
         if (!Operations.TryGetValue(baseId, out OperationTracker tracker))
         {
-            Operations[baseId] = tracker = new(baseId);
+            Operations[baseId] = tracker = new();
         }
         return tracker;
     }
@@ -341,32 +342,45 @@ public class BuildingHandler : MonoBehaviour
         return -1;
     }
 
-    public class TemporaryBuildData
+    public void StartResync<T>(Dictionary<T, int> entities) where T : Entity
     {
-        public NitroxId Id;
-        public InteriorPieceEntity NewWaterPark;
-        public List<NitroxId> MovedChildrenIds;
-        public (NitroxId, NitroxId) ChildrenTransfer;
-        public bool Transfer;
+        Resyncing = true;
+        FailedOperations = 0;
+        BuildQueue.Clear();
+        working = true;
+        InitializeOperations(entities.ToDictionary(pair => pair.Key.Id, pair => pair.Value));
+    }
 
-        public void Fill(PieceDeconstructed pieceDeconstructed)
-        {
-            Id = pieceDeconstructed.PieceId;
-            if (pieceDeconstructed is WaterParkDeconstructed waterParkDeconstructed)
-            {
-                NewWaterPark = waterParkDeconstructed.NewWaterPark;
-                MovedChildrenIds = waterParkDeconstructed.MovedChildrenIds;
-                Transfer = waterParkDeconstructed.Transfer;
-            }
-        }
+    public void StopResync()
+    {
+        working = false;
+        Resyncing = false;
+    }
 
-        public void Reset()
+    public void InitializeOperations(Dictionary<NitroxId, int> operations)
+    {
+        foreach (KeyValuePair<NitroxId, int> pair in operations)
         {
-            Id = null;
-            NewWaterPark = null;
-            MovedChildrenIds = null;
-            ChildrenTransfer = (null, null);
-            Transfer = false;
+            EnsureTracker(pair.Key).ResetToId(pair.Value);
         }
+    }
+
+    public void AskForResync()
+    {
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
+        {
+            return;
+        }
+        TimeSpan deltaTime = DateTimeOffset.UtcNow - LatestResyncRequestTimeOffset;
+        if (deltaTime.TotalMilliseconds < RESYNC_REQUEST_COOLDOWN)
+        {
+            double timeLeft = RESYNC_REQUEST_COOLDOWN * 0.001 - deltaTime.TotalSeconds;
+            Log.InGame(Language.main.Get("Nitrox_ResyncOnCooldown").Replace("{TIME_LEFT}", string.Format("{0:N2}", timeLeft)));
+            return;
+        }
+        LatestResyncRequestTimeOffset = DateTimeOffset.UtcNow;
+
+        this.Resolve<IPacketSender>().Send(new BuildingResyncRequest());
+        Log.InGame(Language.main.Get("Nitrox_ResyncRequested"));
     }
 }

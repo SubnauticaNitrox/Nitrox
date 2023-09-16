@@ -16,12 +16,7 @@ public abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> whe
         this.playerManager = playerManager;
     }
 
-    public override void Process(T packet, Player player)
-    {
-        playerManager.SendPacketToOtherPlayers(packet, player);
-    }
-
-    public void ProcessWithOperationId(T packet, Player player, int operationId)
+    public void SendToOtherPlayersWithOperationId(T packet, Player player, int operationId)
     {
         if (packet is OrderedBuildPacket buildPacket)
         {

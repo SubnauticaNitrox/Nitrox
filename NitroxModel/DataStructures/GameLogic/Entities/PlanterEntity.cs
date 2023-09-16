@@ -1,8 +1,8 @@
 using System;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities;

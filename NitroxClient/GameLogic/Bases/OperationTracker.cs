@@ -1,11 +1,10 @@
 using System;
-using NitroxModel.DataStructures;
 
 namespace NitroxClient.GameLogic.Bases;
 
 public class OperationTracker
 {
-    public NitroxId BuildId;
+    // TODO: Add the target's Id in here if future works requires it
     public int LastOperationId = -1;
     /// <summary>
     /// Accounts for locally-issued build actions
@@ -19,11 +18,6 @@ public class OperationTracker
     /// Number of detected issues when trying to apply actions remotely
     /// </summary>
     public int FailedOperations;
-
-    public OperationTracker(NitroxId buildId)
-    {
-        BuildId = buildId;
-    }
 
     public void RegisterOperation(int newOperationId)
     {

@@ -13,6 +13,7 @@ public abstract class EntitySpawner<T> : IEntitySpawner where T : Entity
 
     public abstract IEnumerator SpawnAsync(T entity, TaskResult<Optional<GameObject>> result);
 
+    /// <inheritdoc cref="SpawnSyncSafe"/>
     public virtual bool SpawnSync(T entity, TaskResult<Optional<GameObject>> result)
     {
         return false;

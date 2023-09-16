@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
@@ -26,12 +26,11 @@ public class MoonpoolManager : MonoBehaviour
     private Base @base;
     private NitroxId baseId;
     private Dictionary<Int3, MoonpoolEntity> moonpoolsByCell;
-    private Dictionary<Int3, MoonpoolEntity> shiftedMoonpools;
     public MoonpoolEntity LatestRegisteredMoonpool { get; private set; }
 
     public void Awake()
     {
-        entities = NitroxServiceLocator.LocateService<Entities>();
+        entities = this.Resolve<Entities>();
 
         if (!TryGetComponent(out @base))
         {
@@ -41,7 +40,6 @@ public class MoonpoolManager : MonoBehaviour
         }
         @base.TryGetNitroxId(out baseId);
         moonpoolsByCell = new();
-        shiftedMoonpools = new();
         @base.onPostRebuildGeometry += OnPostRebuildGeometry;
     }
 
@@ -62,12 +60,6 @@ public class MoonpoolManager : MonoBehaviour
 
     public void OnPostRebuildGeometry(Base _)
     {
-        foreach (KeyValuePair<Int3, MoonpoolEntity> shiftedCell in shiftedMoonpools)
-        {
-            moonpoolsByCell[shiftedCell.Key] = shiftedCell.Value;
-        }
-        shiftedMoonpools.Clear();
-
         foreach (KeyValuePair<Int3, MoonpoolEntity> moonpoolEntry in moonpoolsByCell)
         {
             AssignNitroxEntityToMoonpool(moonpoolEntry.Key, moonpoolEntry.Value.Id);
@@ -80,7 +72,7 @@ public class MoonpoolManager : MonoBehaviour
         Transform baseCellTransform = @base.GetCellObject(relativeCell);
         if (!baseCellTransform)
         {
-            Log.Warn($"[{nameof(MoonpoolManager.AssignNitroxEntityToMoonpool)}] CellObject not found for RelativeCell: {relativeCell}, AbsoluteCell: {absoluteCell}");
+            Log.Warn($"[{nameof(AssignNitroxEntityToMoonpool)}] CellObject not found for RelativeCell: {relativeCell}, AbsoluteCell: {absoluteCell}");
             return;
         }
         if (baseCellTransform.TryGetComponentInChildren(out VehicleDockingBay vehicleDockingBay, true))
@@ -157,6 +149,7 @@ public class MoonpoolManager : MonoBehaviour
         return moonpoolsByCell.ToDictionary(entry => entry.Value.Id, entry => entry.Key.ToDto());
     }
 
+    [Conditional("DEBUG")]
     public void PrintDebug()
     {
         Log.Debug($"MoonpoolManager's registered moonpools (anchor: {@base.GetAnchor()}):");

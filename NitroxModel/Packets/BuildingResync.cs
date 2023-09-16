@@ -1,16 +1,18 @@
 using System;
-using NitroxModel.DataStructures.GameLogic;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
 namespace NitroxModel.Packets;
 
 [Serializable]
-public class BuildingResync : Packet
+public sealed class BuildingResync : Packet
 {
-    public Dictionary<Entity, int> Entities { get; }
+    public Dictionary<BuildEntity, int> BuildEntities { get; }
+    public Dictionary<ModuleEntity, int> ModuleEntities { get; }
 
-    public BuildingResync(Dictionary<Entity, int> entities)
+    public BuildingResync(Dictionary<BuildEntity, int> buildEntities, Dictionary<ModuleEntity, int> moduleEntities)
     {
-        Entities = entities;
+        BuildEntities = buildEntities;
+        ModuleEntities = moduleEntities;
     }
 }

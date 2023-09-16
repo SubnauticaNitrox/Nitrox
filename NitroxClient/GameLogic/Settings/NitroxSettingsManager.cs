@@ -1,7 +1,7 @@
-using NitroxClient.GameLogic.Bases;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using System;
 using System.Collections.Generic;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine.Events;
 
 namespace NitroxClient.GameLogic.Settings;

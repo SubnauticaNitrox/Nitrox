@@ -1,10 +1,10 @@
+using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic.Entities;
-using System.Collections.Generic;
 
 namespace NitroxServer.Communication.Packets.Processors;
 
@@ -21,34 +21,33 @@ public class BuildingResyncRequestProcessor : AuthenticatedPacketProcessor<Build
 
     public override void Process(BuildingResyncRequest packet, Player player)
     {
-        Dictionary<Entity, int> entities = new();
+        Dictionary<BuildEntity, int> buildEntities = new();
+        Dictionary<ModuleEntity, int> moduleEntities = new();
+        void AddEntityToResync(Entity entity)
+        {
+            switch (entity)
+            {
+                case BuildEntity buildEntity:
+                    buildEntities.Add(buildEntity, buildEntity.OperationId);
+                    break;
+                case ModuleEntity moduleEntity:
+                    moduleEntities.Add(moduleEntity, -1);
+                    break;
+            }
+        }
+
         if (packet.ResyncEverything)
         {
             foreach (GlobalRootEntity globalRootEntity in worldEntityManager.GetGlobalRootEntities(true))
             {
-                switch (globalRootEntity)
-                {
-                    case BuildEntity buildEntity:
-                        entities.Add(buildEntity, buildEntity.OperationId);
-                        break;
-                    case ModuleEntity:
-                        entities.Add(globalRootEntity, -1);
-                        break;
-                }
+                AddEntityToResync(globalRootEntity);
             }
         }
         else if (packet.EntityId != null && entityRegistry.TryGetEntityById(packet.EntityId, out Entity entity))
         {
-            if (entity is BuildEntity buildEntity)
-            {
-                entities.Add(buildEntity, buildEntity.OperationId);
-            }
-            else
-            {
-                entities.Add(entity, -1);
-            }
+            AddEntityToResync(entity);
         }
 
-        player.SendPacket(new BuildingResync(entities));
+        player.SendPacket(new BuildingResync(buildEntities, moduleEntities));
     }
 }

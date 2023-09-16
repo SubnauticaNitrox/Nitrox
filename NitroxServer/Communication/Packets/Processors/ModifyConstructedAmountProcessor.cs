@@ -12,7 +12,7 @@ public class ModifyConstructedAmountProcessor : BuildingProcessor<ModifyConstruc
     {
         if (buildingManager.ModifyConstructedAmount(packet))
         {
-            base.Process(packet, player);
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

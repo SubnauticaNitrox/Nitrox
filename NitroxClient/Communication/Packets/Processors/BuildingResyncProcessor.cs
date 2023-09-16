@@ -10,7 +10,6 @@ using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
@@ -35,21 +34,23 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
             return;
         }
 
-        BuildingHandler.Main.StartCoroutine(ResyncBuildingEntities(packet.Entities));
+        BuildingHandler.Main.StartCoroutine(ResyncBuildingEntities(packet.BuildEntities, packet.ModuleEntities));
     }
 
-    public IEnumerator ResyncBuildingEntities(Dictionary<Entity, int> entities)
+    public IEnumerator ResyncBuildingEntities(Dictionary<BuildEntity, int> buildEntities, Dictionary<ModuleEntity, int> moduleEntities)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
+        BuildingHandler.Main.StartResync(buildEntities);
+        yield return UpdateEntities<Base, BuildEntity>(buildEntities.Keys.ToList(), OverwriteBase, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing BuildEntities"));
 
-        BuildingHandler.Main.StartResync(entities);
-        yield return UpdateEntities<Base, BuildEntity>(entities.Keys.OfType<BuildEntity>().ToList(), OverwriteBase, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing BuildEntities"));
-        yield return UpdateEntities<Constructable, ModuleEntity>(entities.Keys.OfType<ModuleEntity>().ToList(), OverwriteModule, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing ModuleEntities"));
+        BuildingHandler.Main.StartResync(moduleEntities);
+        yield return UpdateEntities<Constructable, ModuleEntity>(moduleEntities.Keys.ToList(), OverwriteModule, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing ModuleEntities"));
         BuildingHandler.Main.StopResync();
 
         stopwatch.Stop();
 
-        Log.InGame(Language.main.Get("Nitrox_FinishedResyncRequest").Replace("{TIME}", stopwatch.ElapsedMilliseconds.ToString()).Replace("{COUNT}", entities.Count.ToString()));
+        int totalEntities = buildEntities.Count + moduleEntities.Count;
+        Log.InGame(Language.main.Get("Nitrox_FinishedResyncRequest").Replace("{TIME}", stopwatch.ElapsedMilliseconds.ToString()).Replace("{COUNT}", totalEntities.ToString()));
     }
 
     private bool IsInCloseProximity<C>(WorldEntity entity, C componentInWorld) where C : Component
@@ -143,7 +144,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         for (int i = @base.transform.childCount - 1; i >= 0; i--)
         {
             Transform child = @base.transform.GetChild(i);
-            if (child.GetComponent<IBaseModule>() != null || child.GetComponent<Constructable>())
+            if (child.GetComponent<IBaseModule>().AliveOrNull() || child.GetComponent<Constructable>())
             {
                 UnityEngine.Object.Destroy(child.gameObject);
             }

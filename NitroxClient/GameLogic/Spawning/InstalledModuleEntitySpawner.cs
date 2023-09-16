@@ -38,7 +38,7 @@ public class InstalledModuleEntitySpawner : EntitySpawner<InstalledModuleEntity>
         }
         if (!CanSpawn(entity, out GameObject parentObject, out Equipment equipment, out string errorLog))
         {
-            Log.Info(errorLog);
+            Log.Error(errorLog);
             return true;
         }
 

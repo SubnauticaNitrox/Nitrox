@@ -31,4 +31,13 @@ public sealed class UpdateBase : OrderedBuildPacket
         UpdatedMapRooms = updatedMapRooms;
         ChildrenTransfer = childrenTransfer;
     }
+
+    public void Deflate()
+    {
+        BaseData = null;
+        BuiltPieceEntity = null;
+        UpdatedChildren = null;
+        UpdatedMoonpools = null;
+        UpdatedMapRooms = null;
+    }
 }

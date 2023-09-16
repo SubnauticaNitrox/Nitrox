@@ -17,7 +17,7 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
     {
         if (!CanSpawn(entity, out EnergyMixin energyMixin, out string errorLog))
         {
-            Log.Info(errorLog);
+            Log.Error(errorLog);
             result.Set(Optional.Empty);
             yield break;
         }
@@ -39,7 +39,7 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
         }
         if (!CanSpawn(entity, out EnergyMixin energyMixin, out string errorLog))
         {
-            Log.Info(errorLog);
+            Log.Error(errorLog);
             return true;
         }
 

@@ -90,7 +90,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
                 storyManager.GetTimeData(),
-                buildingManager.GetEntitiesOperations(globalRootEntities)
+                BuildingManager.GetEntitiesOperations(globalRootEntities)
             );
 
             player.SendPacket(initialPlayerSync);

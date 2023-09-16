@@ -15,25 +15,22 @@ public static class GhostMetadataApplier
         baseGhost.targetOffset = ghostMetadata.TargetOffset.ToUnity();
     }
 
+    /// <summary>
+    /// Applies the given metadata to a ghost depending on their types.
+    /// </summary>
+    /// <returns>An extra instruction set to yield for BaseDeconstructable ghosts or null if unrequired.</returns>
     public static IEnumerator ApplyMetadataToGhost(BaseGhost baseGhost, EntityMetadata entityMetadata, Base @base)
     {
         if (entityMetadata is not GhostMetadata ghostMetadata)
         {
             Log.Error($"Trying to apply metadata to a ghost that is not of type {nameof(GhostMetadata)} : [{entityMetadata.GetType()}]");
-            yield break;
+            return null;
         }
 
-        if (BuildUtils.IsUnderBaseDeconstructable(baseGhost, true))
+        if (BuildUtils.IsUnderBaseDeconstructable(baseGhost, false) &&
+            entityMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
         {
-            if (entityMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
-            {
-                yield return deconstructableMetadata.ApplyBaseDeconstructableMetadataTo(baseGhost, @base);
-            }
-            else
-            {
-                Log.Error($"[{nameof(GhostMetadataApplier)}] Metadata of type {entityMetadata.GetType()} can't be applied to BaseDeconstructable's ghost");
-            }
-            yield break;
+            return deconstructableMetadata.ApplyBaseDeconstructableMetadataTo(baseGhost, @base);
         }
 
         switch (baseGhost)
@@ -45,7 +42,7 @@ public static class GhostMetadataApplier
                 if (ghostMetadata is BaseAnchoredFaceGhostMetadata faceMetadata)
                 {
                     faceMetadata.ApplyBaseAnchoredFaceMetadataTo(baseGhost);
-                    yield break;
+                    return null;
                 }
                 break;
 
@@ -53,26 +50,24 @@ public static class GhostMetadataApplier
                 if (ghostMetadata is BaseAnchoredCellGhostMetadata cellMetadata)
                 {
                     cellMetadata.ApplyBaseAnchoredCellMetadataTo(baseGhost);
-                    yield break;
+                    return null;
                 }
                 break;
 
             default:
                 ghostMetadata.ApplyBasicMetadataTo(baseGhost);
-                yield break;
+                return null;
         }
         Log.Error($"[{nameof(GhostMetadataApplier)}] Metadata of type {entityMetadata.GetType()} can't be applied to ghost of type {baseGhost.GetType()}");
+        return null;
     }
 
     public static void ApplyBaseAnchoredCellMetadataTo(this BaseAnchoredCellGhostMetadata ghostMetadata, BaseGhost baseGhost)
     {
         ApplyBasicMetadataTo(ghostMetadata, baseGhost);
-        if (ghostMetadata.AnchoredCell.HasValue)
+        if (ghostMetadata.AnchoredCell.HasValue && baseGhost is BaseAddPartitionGhost ghost)
         {
-            if (baseGhost is BaseAddPartitionGhost ghost)
-            {
-                ghost.anchoredCell = ghostMetadata.AnchoredCell.Value.ToUnity();
-            }
+            ghost.anchoredCell = ghostMetadata.AnchoredCell.Value.ToUnity();
         }
     }
 

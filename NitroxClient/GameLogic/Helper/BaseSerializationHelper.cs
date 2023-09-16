@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.IO.Compression;
 
@@ -7,6 +8,10 @@ public static class BaseSerializationHelper
 {
     public static byte[] CompressBytes(byte[] array)
     {
+        if (array == null)
+        {
+            return null;
+        }
         using MemoryStream output = new();
         using DeflateStream stream = new(output, CompressionLevel.Optimal);
         CompressStream(stream, array);
@@ -16,6 +21,10 @@ public static class BaseSerializationHelper
 
     public static byte[] DecompressBytes(byte[] array, int size)
     {
+        if (array == null)
+        {
+            return null;
+        }
         using MemoryStream input = new(array);
         using DeflateStream stream = new(input, CompressionMode.Decompress);
         return DecompressStream(stream, size);
@@ -77,5 +86,19 @@ public static class BaseSerializationHelper
         }
 
         return result;
+    }
+
+    public static byte[] CompressData<TInput>(TInput[] array, Converter<TInput, byte> converter)
+    {
+        return CompressBytes(Array.ConvertAll(array, converter));
+    }
+
+    public static TInput[] DecompressData<TInput>(byte[] array, int size, Converter<byte, TInput> converter)
+    {
+        if (array == null)
+        {
+            return null;
+        }
+        return Array.ConvertAll(DecompressBytes(array, size), converter);
     }
 }

@@ -6,7 +6,7 @@ using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors;
 
-class VehicleDockingProcessor : AuthenticatedPacketProcessor<VehicleDocking>
+public class VehicleDockingProcessor : AuthenticatedPacketProcessor<VehicleDocking>
 {
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;

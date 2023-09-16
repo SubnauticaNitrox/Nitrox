@@ -15,7 +15,7 @@ public class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDecons
             buildingManager.CreateWaterParkPiece(packet, removedEntity))
         {
             packet.BaseData = null;
-            ProcessWithOperationId(packet, player, operationId);
+            SendToOtherPlayersWithOperationId(packet, player, operationId);
         }
     }
 }

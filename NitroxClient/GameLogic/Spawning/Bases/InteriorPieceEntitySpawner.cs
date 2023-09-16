@@ -126,13 +126,9 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             Log.Warn($"Couldn't find an identifier for the interior piece {module.GetType()}");
         }
 
-        if (gameObject.TryGetNitroxId(out NitroxId entityId))
+        if (gameObject.TryGetIdOrWarn(out NitroxId entityId))
         {
             interiorPiece.Id = entityId;
-        }
-        else
-        {
-            Log.Warn($"Couldn't find a NitroxEntity for the interior piece {module.GetType()}");
         }
 
         if (gameObject.TryGetComponentInParent(out Base parentBase) &&

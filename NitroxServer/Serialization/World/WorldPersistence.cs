@@ -231,7 +231,7 @@ namespace NitroxServer.Serialization.World
 
             world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
 
-            world.BuildingManager = new(world.EntityRegistry, world.WorldEntityManager);
+            world.BuildingManager = new(world.EntityRegistry, world.WorldEntityManager, config);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);

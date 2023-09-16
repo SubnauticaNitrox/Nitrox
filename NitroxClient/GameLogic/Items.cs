@@ -1,20 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using System.Collections.Generic;
-using NitroxModel.Helper;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxModel.DataStructures.GameLogic;
-using System.Linq;
-using NitroxClient.Unity.Helper;
-using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.GameLogic;
 
@@ -69,7 +69,8 @@ public class Items
     /// </summary>
     public void Dropped(GameObject gameObject, TechType? techType = null)
     {
-        techType ??= CraftData.GetTechType(gameObject);// there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
+        // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
+        techType ??= CraftData.GetTechType(gameObject);
         RemoveAnyRemoteControl(gameObject);
 
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);

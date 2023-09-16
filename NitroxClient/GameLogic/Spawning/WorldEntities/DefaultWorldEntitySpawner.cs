@@ -81,6 +81,14 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             return false;
         }
 
+        /// <summary>
+        /// Either gets the prefab reference from the cache or requests it and fills the provided result with it.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="PrefabDatabase"/> requires executing an extra yield instruction which is avoided here.
+        /// Because each yield costs a non-required time (and non-neglectable considering the amount of entities) for batch spawning.
+        /// Pumping a coroutine isn't possible when it contains prefab loading instructions as the one used here.
+        /// </remarks>
         public static IEnumerator RequestPrefab(TechType techType, TaskResult<GameObject> result)
         {
             if (prefabCacheByTechType.TryGetValue(techType, out GameObject prefab))
@@ -94,6 +102,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             result.Set(techPrefabCoroutine.GetResult());
         }
 
+        /// <inheritdoc cref="RequestPrefab(TechType, TaskResult{GameObject})"/>
         public static IEnumerator RequestPrefab(string classId, TaskResult<GameObject> result)
         {
             if (prefabCacheByClassId.TryGetValue(classId, out GameObject prefab))

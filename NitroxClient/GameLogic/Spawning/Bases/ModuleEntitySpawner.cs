@@ -1,6 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
@@ -9,7 +8,6 @@ using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
@@ -52,13 +50,14 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             yield break;
         }
 
-        DateTimeOffset beginTime = DateTimeOffset.Now;
-        List<Entity> rootEntitiesToSpawn = entity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>();
+#if DEBUG
+        Stopwatch stopwatch = Stopwatch.StartNew();
+#endif
+        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InventoryItemEntity>(), true);
 
-        yield return entities.SpawnBatchAsync(rootEntitiesToSpawn, true);
-
-        DateTimeOffset endTime = DateTimeOffset.Now;
-        Log.Debug($"Module complete spawning took {(endTime - beginTime).TotalMilliseconds}ms");
+#if DEBUG
+        Log.Verbose($"Module complete spawning took {stopwatch.ElapsedMilliseconds}ms");
+#endif
 
         if (moduleObject.TryGetComponent(out PowerSource powerSource))
         {

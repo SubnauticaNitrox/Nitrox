@@ -14,9 +14,9 @@ namespace NitroxClient.Unity.Helper
             return component;
         }
 
-        public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
+        public static bool TryGetComponentInParent<T>(this GameObject go, out T component, bool includeInactive = true) where T : Component
         {
-            component = go.GetComponentInParent<T>(true);
+            component = go.GetComponentInParent<T>(includeInactive);
             return component;
         }
 

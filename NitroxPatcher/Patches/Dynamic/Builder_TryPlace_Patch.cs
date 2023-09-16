@@ -1,16 +1,16 @@
+using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using NitroxClient.Unity.Helper;
-using NitroxClient.GameLogic.Spawning.Bases;
 using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -36,7 +36,7 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 
     public static readonly InstructionsPattern AddInstructionPattern2 = new()
     {
-        { Ldloc_S, "Take" },
+        Ldloc_S,
         Ldloc_3,
         Ldloc_S,
         Or,
@@ -45,7 +45,7 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 
     public static readonly List<CodeInstruction> InstructionsToAdd2 = new()
     {
-        new(Ldloc_S),
+        TARGET_METHOD.Ldloc<Constructable>(),
         new(Call, Reflect.Method(() => GhostCreated(default)))
     };
 
@@ -59,13 +59,9 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
             return null;
         }).Transform(AddInstructionPattern2, (label, instruction) =>
         {
-            switch (label)
+            if (label.Equals("Insert2"))
             {
-                case "Take":
-                    InstructionsToAdd2[0].operand = instruction.operand;
-                    break;
-                case "Insert2":
-                    return InstructionsToAdd2;
+                return InstructionsToAdd2;
             }
             return null;
         });
@@ -90,14 +86,16 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
             GhostEntity ghost = GhostEntitySpawner.From(constructableBase);
             ghost.Id = ghostId;
             ghost.ParentId = parentId;
-            Log.Debug($"Sending ghost: {ghost}");
+            Log.Verbose($"Sending ghost: {ghost}");
             Resolve<IPacketSender>().Send(new PlaceGhost(ghost));
-            return;
         }
-        ModuleEntity module = ModuleEntitySpawner.From(constructable);
-        module.Id = ghostId;
-        module.ParentId = parentId;
-        Log.Debug($"Sending module: {module}");
-        Resolve<IPacketSender>().Send(new PlaceModule(module));
+        else
+        {
+            ModuleEntity module = ModuleEntitySpawner.From(constructable);
+            module.Id = ghostId;
+            module.ParentId = parentId;
+            Log.Verbose($"Sending module: {module}");
+            Resolve<IPacketSender>().Send(new PlaceModule(module));
+        }
     }
 }
