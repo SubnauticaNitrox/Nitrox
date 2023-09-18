@@ -13,7 +13,7 @@ public sealed partial class FMOD_CustomEmitter_Start_Patch : NitroxPatch, IDynam
 
     public static void Prefix(FMOD_CustomEmitter __instance)
     {
-        if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out bool _, out float radius))
+        if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out float radius))
         {
             return;
         }
@@ -48,11 +48,11 @@ public sealed partial class FMOD_CustomEmitter_Start_Patch : NitroxPatch, IDynam
         //FMOD_CustomLoopingEmitter has no Start() so we need to add the emitters here
         if (__instance is FMOD_CustomLoopingEmitter looping)
         {
-            if (looping.assetStart && Resolve<FMODSystem>().IsWhitelisted(looping.assetStart.path, out bool _, out float radiusStart))
+            if (looping.assetStart && Resolve<FMODSystem>().IsWhitelisted(looping.assetStart.path, out float radiusStart))
             {
                 fmodController.AddEmitter(looping.assetStart.path, looping, radiusStart);
             }
-            if (looping.assetStop && Resolve<FMODSystem>().IsWhitelisted(looping.assetStop.path, out bool _, out float radiusStop))
+            if (looping.assetStop && Resolve<FMODSystem>().IsWhitelisted(looping.assetStop.path, out float radiusStop))
             {
                 fmodController.AddEmitter(looping.assetStop.path, looping, radiusStop);
             }

@@ -12,7 +12,7 @@ public sealed partial class FMOD_StudioEventEmitter_Start_Patch : NitroxPatch, I
 
     public static void Postfix(FMOD_StudioEventEmitter __instance)
     {
-        if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out bool _, out float radius))
+        if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out float radius))
         {
             return;
         }

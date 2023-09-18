@@ -53,16 +53,14 @@ public class FMODWhitelist
         return whitelistedPaths.Contains(path);
     }
 
-    public bool IsWhitelisted(string path, out bool isGlobal, out float radius)
+    public bool IsWhitelisted(string path, out float radius)
     {
         if (TryGetSoundData(path, out SoundData soundData))
         {
-            isGlobal = soundData.IsGlobal;
             radius = soundData.Radius;
             return soundData.IsWhitelisted;
         }
 
-        isGlobal = false;
         radius = -1f;
         return false;
     }

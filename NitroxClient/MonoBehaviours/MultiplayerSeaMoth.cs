@@ -20,7 +20,7 @@ namespace NitroxClient.MonoBehaviours
             seamoth = GetComponent<SeaMoth>();
             WheelYawSetter = value => seamoth.steeringWheelYaw = value;
             WheelPitchSetter = value => seamoth.steeringWheelPitch = value;
-            
+
             SetUpSound();
             base.Awake();
         }
@@ -70,8 +70,8 @@ namespace NitroxClient.MonoBehaviours
             rpmSound.followParent = true;
             revSound.followParent = true;
 
-            fmodSystem.IsWhitelisted(rpmSound.asset.path, out bool _, out radiusRpmSound);
-            fmodSystem.IsWhitelisted(revSound.asset.path, out bool _, out radiusRevSound);
+            fmodSystem.IsWhitelisted(rpmSound.asset.path, out radiusRpmSound);
+            fmodSystem.IsWhitelisted(revSound.asset.path, out radiusRevSound);
 
             rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
             revSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
