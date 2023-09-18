@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace NitroxClient.GameLogic.FMOD
+namespace NitroxClient.GameLogic.FMOD;
+
+public sealed class FMODSuppressor : IDisposable
 {
-    public class FMODSuppressor : IDisposable
+    public static bool SuppressFMODEvents;
+
+    public FMODSuppressor()
     {
-        public static bool SuppressFMODEvents;
+        SuppressFMODEvents = true;
+    }
 
-        public FMODSuppressor()
-        {
-            SuppressFMODEvents = true;
-        }
-
-        public void Dispose()
-        {
-            SuppressFMODEvents = false;
-        }
+    public void Dispose()
+    {
+        SuppressFMODEvents = false;
     }
 }
