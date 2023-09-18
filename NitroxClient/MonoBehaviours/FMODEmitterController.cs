@@ -98,10 +98,17 @@ public class FMODEmitterController : MonoBehaviour
     {
         (FMOD_CustomLoopingEmitter loopingEmitter, bool is3D, float maxDistance) = loopingEmitters[path];
         EventInstance eventInstance = FMODUWE.GetEvent(path);
-        eventInstance.set3DAttributes(loopingEmitter.transform.To3DAttributes());
-        eventInstance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-        eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
-        eventInstance.setVolume(is3D ? 1f : FMODSystem.CalculateVolume(loopingEmitter.transform.position, Player.main.transform.position, maxDistance, 1f));
+
+        if (is3D)
+        {
+            eventInstance.set3DAttributes(loopingEmitter.transform.To3DAttributes());
+            eventInstance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+            eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
+        }
+        else
+        {
+            eventInstance.setVolume(FMODSystem.CalculateVolume(loopingEmitter.transform.position, Player.main.transform.position, maxDistance, 1f));
+        }
 
         eventInstance.start();
         eventInstance.release();
