@@ -67,12 +67,11 @@ public class FMODWhitelist
 
     public bool TryGetSoundData(string path, out SoundData soundData)
     {
-        if (soundsWhitelist.TryGetValue(path, out SoundData value))
+        if (soundsWhitelist.TryGetValue(path, out soundData))
         {
-            soundData = value;
             return true;
         }
-        soundData = new SoundData();
+        soundData = default;
         return false;
     }
 

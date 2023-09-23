@@ -1,5 +1,5 @@
 #List of every sound and if it should be synced;;;
-#Eventpath;Should be syned;Should ignore subroot;Sound radius
+#Eventpath;Should be synced;Should ignore subroot;Sound radius
 ;;;
 event:/creature/bird_small/flap;false;false;0
 event:/creature/bird_small/idle;false;false;0

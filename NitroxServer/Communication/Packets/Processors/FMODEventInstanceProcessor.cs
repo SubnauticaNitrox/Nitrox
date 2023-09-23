@@ -29,7 +29,9 @@ public class FMODEventInstanceProcessor : AuthenticatedPacketProcessor<FMODEvent
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
             float distance = NitroxVector3.Distance(player.Position, packet.Position);
-            if (player != sendingPlayer && (soundData.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= soundData.Radius)
+            if (player != sendingPlayer && 
+                (soundData.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && 
+                distance <= soundData.Radius)
             {
                 packet.Volume = FMODWhitelist.CalculateVolume(distance, soundData.Radius, packet.Volume);
                 player.SendPacket(packet);
