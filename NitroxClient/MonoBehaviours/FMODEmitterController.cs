@@ -4,55 +4,89 @@ using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
-using NitroxModel.GameLogic.FMOD;
 using UnityEngine;
 
 #pragma warning disable 618
 
 namespace NitroxClient.MonoBehaviours;
 
+[DisallowMultipleComponent]
 public class FMODEmitterController : MonoBehaviour
 {
     private readonly Dictionary<string, FMOD_CustomEmitter> customEmitters = new();
-    private readonly Dictionary<string, Tuple<FMOD_CustomLoopingEmitter, bool, float>> loopingEmitters = new(); // Tuple<emitter, is3D, maxDistance>
+    private readonly Dictionary<string, Tuple<FMOD_CustomLoopingEmitter, bool, float>> loopingEmitters = new(); // Tuple<emitter, is3D, radius>
     private readonly Dictionary<string, FMOD_StudioEventEmitter> studioEmitters = new();
     private readonly Dictionary<string, EventInstance> eventInstances = new(); // 2D Sounds
 
-    public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float maxDistance)
+    /// <summary>
+    /// When <see cref="GameObject"/>s are copied their Start()/Awake() functions don't get called again.
+    /// So the FMOD Start patch that tried to locate a <see cref="NitroxEntity"/> won't find one and will error later.
+    /// This function can late register missed FMOD MonoBehaviours
+    /// </summary>
+    public void LateRegisterEmitter()
     {
-        if (!customEmitters.ContainsKey(path))
+        foreach (MonoBehaviour behaviour in gameObject.GetComponentsInChildren<MonoBehaviour>(true))
         {
-            if (!customEmitter.evt.hasHandle())
+            switch (behaviour)
             {
-                customEmitter.CacheEventInstance();
-            };
-            customEmitter.evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-            customEmitter.evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
-
-            customEmitters.Add(path, customEmitter);
-        }
-        else
-        {
-            Log.Warn($"[FMODEmitterController] customEmitters already contains {path}");
+                case FMOD_CustomEmitter customEmitter when this.Resolve<FMODSystem>().IsWhitelisted(customEmitter.asset.path, out float maxDistance):
+                    AddEmitter(customEmitter.asset.path, customEmitter, maxDistance);
+                    break;
+                case FMOD_StudioEventEmitter studioEmitter when this.Resolve<FMODSystem>().IsWhitelisted(studioEmitter.asset.path, out float maxDistance):
+                    AddEmitter(studioEmitter.asset.path, studioEmitter, maxDistance);
+                    break;
+            }
         }
     }
 
-    public void AddEmitter(string path, FMOD_CustomLoopingEmitter loopingEmitter, float maxDistance)
+    public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float maxDistance)
     {
-        if (!loopingEmitters.ContainsKey(path))
+        if (customEmitters.ContainsKey(path))
         {
-            if (!loopingEmitter.evt.hasHandle())
-            {
-                loopingEmitter.CacheEventInstance();
-            }
-            loopingEmitter.evt.getDescription(out EventDescription description);
-            description.is3D(out bool is3D);
+            return;
+        }
 
-            loopingEmitters.Add(path, new Tuple<FMOD_CustomLoopingEmitter, bool, float>(loopingEmitter, is3D, maxDistance));
+        customEmitter.CacheEventInstance();
+        EventInstance evt = customEmitter.GetEventInstance();
+        evt.getDescription(out EventDescription description);
+        description.is3D(out bool is3D);
+
+        if (is3D)
+        {
+            evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+            evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
+
+            customEmitters.Add(path, customEmitter);
+
+            if (customEmitter is FMOD_CustomLoopingEmitter loopingEmitter)
+            {
+                if (loopingEmitter.assetStart && this.Resolve<FMODSystem>().IsWhitelisted(loopingEmitter.assetStart.path, out float radiusStart))
+                {
+                    AddEmitter(loopingEmitter.assetStart.path, loopingEmitter, radiusStart);
+                }
+
+                if (loopingEmitter.assetStop && this.Resolve<FMODSystem>().IsWhitelisted(loopingEmitter.assetStop.path, out float radiusStop))
+                {
+                    AddEmitter(loopingEmitter.assetStop.path, loopingEmitter, radiusStop);
+                }
+            }
         }
         else
         {
-            Log.Warn($"[FMODEmitterController] loopingEmitters already contains {path}");
+            AddEventInstance(customEmitter.asset.path, evt);
+        }
+    }
+
+    private void AddEmitter(string path, FMOD_CustomLoopingEmitter loopingEmitter, float radius)
+    {
+        if (!loopingEmitters.ContainsKey(path))
+        {
+            loopingEmitter.CacheEventInstance();
+
+            loopingEmitter.evt.getDescription(out EventDescription description);
+            description.is3D(out bool is3D);
+
+            loopingEmitters.Add(path, new Tuple<FMOD_CustomLoopingEmitter, bool, float>(loopingEmitter, is3D, radius));
         }
     }
 
@@ -60,30 +94,17 @@ public class FMODEmitterController : MonoBehaviour
     {
         if (!customEmitters.ContainsKey(path))
         {
-            if (!studioEmitter.evt.hasHandle())
-            {
-                studioEmitter.CacheEventInstance();
-            }
-            studioEmitter.evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-            studioEmitter.evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
+            studioEmitter.CacheEventInstance();
 
             studioEmitters.Add(path, studioEmitter);
         }
-        else
-        {
-            Log.Warn($"[FMODEmitterController] studioEmitters already contains {path}");
-        }
     }
 
-    public void AddEventInstance(string path, EventInstance eventInstance)
+    private void AddEventInstance(string path, EventInstance eventInstance)
     {
         if (!eventInstances.ContainsKey(path))
         {
             eventInstances.Add(path, eventInstance);
-        }
-        else
-        {
-            Log.Warn($"[FMODEmitterController] eventInstances already contains {path}");
         }
     }
 
@@ -96,18 +117,18 @@ public class FMODEmitterController : MonoBehaviour
 
     public void PlayCustomLoopingEmitter(string path)
     {
-        (FMOD_CustomLoopingEmitter loopingEmitter, bool is3D, float maxDistance) = loopingEmitters[path];
+        (FMOD_CustomLoopingEmitter loopingEmitter, bool is3D, float radius) = loopingEmitters[path];
         EventInstance eventInstance = FMODUWE.GetEvent(path);
 
         if (is3D)
         {
             eventInstance.set3DAttributes(loopingEmitter.transform.To3DAttributes());
             eventInstance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-            eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, maxDistance);
+            eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radius);
         }
         else
         {
-            eventInstance.setVolume(FMODSystem.CalculateVolume(loopingEmitter.transform.position, Player.main.transform.position, maxDistance, 1f));
+            eventInstance.setVolume(FMODSystem.CalculateVolume(loopingEmitter.transform.position, Player.main.transform.position, radius, 1f));
         }
 
         eventInstance.start();

@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -8,10 +9,16 @@ public class FMODStudioEventEmitterProcessor : ClientPacketProcessor<FMODStudioE
 {
     public override void Process(FMODStudioEmitterPacket packet)
     {
-        if (NitroxEntity.TryGetComponentFrom(packet.Id, out FMODEmitterController fmodEmitterController))
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject entity))
         {
-            Log.Error($"[FMODStudioEventEmitterProcessor] Couldn't find {nameof(FMODEmitterController)} on entity {packet.Id}");
+            Log.Error($"[FMODStudioEventEmitterProcessor] Couldn't find entity {packet.Id}");
             return;
+        }
+
+        if (!entity.TryGetComponent(out FMODEmitterController fmodEmitterController))
+        {
+            fmodEmitterController = entity.AddComponent<FMODEmitterController>();
+            fmodEmitterController.LateRegisterEmitter();
         }
 
         using (PacketSuppressor<FMODStudioEmitterPacket>.Suppress())

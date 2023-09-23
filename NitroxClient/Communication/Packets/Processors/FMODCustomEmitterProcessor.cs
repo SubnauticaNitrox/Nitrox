@@ -1,6 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -10,10 +9,16 @@ public class FMODCustomEmitterProcessor : ClientPacketProcessor<FMODCustomEmitte
 {
     public override void Process(FMODCustomEmitterPacket packet)
     {
-        if (!NitroxEntity.TryGetComponentFrom(packet.Id, out FMODEmitterController fmodEmitterController))
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject entity))
         {
-            Log.Error($"[FMODCustomEmitterProcessor] Couldn't find {nameof(FMODEmitterController)} on entity {packet.Id}");
+            Log.Error($"[FMODCustomEmitterProcessor] Couldn't find entity {packet.Id}");
             return;
+        }
+
+        if (!entity.TryGetComponent(out FMODEmitterController fmodEmitterController))
+        {
+            fmodEmitterController = entity.AddComponent<FMODEmitterController>();
+            fmodEmitterController.LateRegisterEmitter();
         }
 
         using (PacketSuppressor<FMODCustomEmitterPacket>.Suppress())

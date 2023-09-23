@@ -26,11 +26,12 @@ public sealed partial class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDyna
 
         EventInstance evt = __instance.GetEventInstance();
         evt.getVolume(out float volume, out float _);
-        evt.getDescription(out EventDescription description);
-        description.is3D(out bool is3D);
 
         if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
         {
+            evt.getDescription(out EventDescription description);
+            description.is3D(out bool is3D);
+
             if (is3D)
             {
                 Resolve<FMODSystem>().SendCustomEmitterPlay(nitroxEntity.Id, __instance.asset.path);
