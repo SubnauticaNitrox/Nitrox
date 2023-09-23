@@ -21,6 +21,6 @@ public class FMODAssetDrawer : IDrawer
 
     private static void DrawFMODAsset(FMODAsset asset)
     {
-        GUILayout.TextField(asset.path);
+        GUILayout.TextField(asset ? asset.path : "NULL");
     }
 }

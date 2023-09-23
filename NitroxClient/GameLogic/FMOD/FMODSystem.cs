@@ -34,6 +34,7 @@ public class FMODSystem : FMODWhitelist
 
     public static MultiplePacketsSuppressor SuppressSendingSounds() => MultiplePacketsSuppressor.Suppress(fmodPacketTypes);
 
+    /// <inheritdoc cref="FMODWhitelist.CalculateVolume"/>
     public static float CalculateVolume(Vector3 p1, Vector3 p2, float radius, float volume) => CalculateVolume(Vector3.Distance(p1, p2), radius, volume);
 
     public void SendAssetPlay(string path, NitroxVector3 position, float volume) => packetSender.Send(new FMODAssetPacket(path, position, volume));

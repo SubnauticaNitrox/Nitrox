@@ -15,6 +15,7 @@ namespace NitroxClient.Debuggers;
 public class SoundDebugger : BaseDebugger
 {
     private readonly ReadOnlyDictionary<string, SoundData> assetList;
+    private readonly Dictionary<string, bool> assetIs3D = new();
     private readonly Dictionary<string, EventInstance> eventInstancesByPath = new();
     private Vector2 scrollPosition;
     private string searchText;
@@ -25,9 +26,20 @@ public class SoundDebugger : BaseDebugger
     private bool displayIsGlobal;
     private bool displayWithRadius;
 
-    public SoundDebugger(FMODWhitelist fmodSystem) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+    public SoundDebugger(FMODWhitelist fmodWhitelist) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
-        assetList = fmodSystem.GetWhitelist();
+        assetList = fmodWhitelist.GetWhitelist();
+
+        foreach (KeyValuePair<string,SoundData> pair in assetList)
+        {
+            EventInstance evt = FMODUWE.GetEvent(pair.Key);
+            evt.getDescription(out EventDescription description);
+            description.is3D(out bool is3D);
+            assetIs3D[pair.Key] = is3D;
+            evt.release();
+            evt.clearHandle();
+        }
+
         ActiveTab = AddTab("Sounds", RenderTabAllSounds);
     }
 
@@ -149,15 +161,19 @@ public class SoundDebugger : BaseDebugger
                     {
                         GUILayout.Label(sound.Key, "soundKeyLabel", GUILayout.MaxWidth(370f));
                         GUILayout.FlexibleSpace();
-                        GUILayout.Label("Whitelisted", sound.Value.IsWhitelisted ? "enabled" : "disabled");
+                        GUILayout.Label("Is3D", assetIs3D[sound.Key] ? "enabled" : "disabled");
+                        GUILayout.Space(7f);
+                        GUILayout.Label("Whitelisted", sound.Value.IsWhitelisted ? "enabled" : "disabled", GUILayout.MinWidth(70));
                         GUILayout.Space(7f);
                         GUILayout.Label("Global", sound.Value.IsGlobal ? "enabled" : "disabled");
                         GUILayout.Space(7f);
                         GUILayout.Label($"Radius: {sound.Value.Radius}", GUILayout.Width(70f));
+
                         if (GUILayout.Button("Play"))
                         {
                             PlaySound(sound.Key);
                         }
+
                         if (GUILayout.Button("Stop"))
                         {
                             StopSound(sound.Key);
