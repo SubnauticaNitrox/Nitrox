@@ -46,7 +46,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
         public override void OnHandClick(GUIHand hand)
         {
             // Prevent users from sitting on a not fully-constructed bench
-            if (gameObject.TryGetComponentInParent(out Constructable constructable) && !constructable.constructed)
+            if (gameObject.TryGetComponentInParent(out Constructable constructable, true) && !constructable.constructed)
             {
                 return;
             }

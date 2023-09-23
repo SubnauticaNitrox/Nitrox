@@ -100,7 +100,7 @@ public static class GhostMetadataApplier
         baseGhost.DisableGhostModelScripts();
         if (ghostMetadata.ModuleFace.HasValue)
         {
-            if (!baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase))
+            if (!baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase, true))
             {
                 Log.Error($"Couldn't find an interior piece's parent ConstructableBase to apply a {nameof(BaseDeconstructableGhostMetadata)} to.");
                 yield break;

@@ -17,7 +17,7 @@ public sealed partial class PlayerCinematicController_StartCinematicMode_Patch :
             return;
         }
 
-        if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
+        if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
             Log.Warn($"[{nameof(PlayerCinematicController_StartCinematicMode_Patch)}] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
             return;

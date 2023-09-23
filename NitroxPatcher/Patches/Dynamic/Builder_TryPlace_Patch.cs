@@ -72,7 +72,7 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
         Log.Debug($"GhostCreated: {ghostObject.name} under: {(ghostObject.transform.parent ? ghostObject.transform.parent.name : "nowhere")}");
 
         NitroxId parentId = null;
-        if (ghostObject.TryGetComponentInParent(out SubRoot subRoot) && (subRoot.isBase || subRoot.isCyclops) &&
+        if (ghostObject.TryGetComponentInParent(out SubRoot subRoot, true) && (subRoot.isBase || subRoot.isCyclops) &&
             subRoot.TryGetNitroxId(out NitroxId entityId))
         {
             parentId = entityId;

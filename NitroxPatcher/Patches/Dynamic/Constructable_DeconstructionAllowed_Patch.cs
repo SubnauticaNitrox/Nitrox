@@ -17,7 +17,7 @@ public sealed partial class Constructable_DeconstructionAllowed_Patch : NitroxPa
 
     public static void Postfix(Constructable __instance, ref bool __result, ref string reason)
     {
-        if (!__result || !BuildingHandler.Main || !__instance.TryGetComponentInParent(out NitroxEntity parentEntity))
+        if (!__result || !BuildingHandler.Main || !__instance.TryGetComponentInParent(out NitroxEntity parentEntity, true))
         {
             return;
         }

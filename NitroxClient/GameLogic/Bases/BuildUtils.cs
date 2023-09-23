@@ -18,7 +18,7 @@ public static class BuildUtils
     public static bool TryGetIdentifier(BaseDeconstructable baseDeconstructable, out BuildPieceIdentifier identifier, BaseCell baseCell = null, Base.Face? baseFace = null)
     {
         // It is unimaginable to have a BaseDeconstructable that is not child of a BaseCell
-        if (!baseCell && !baseDeconstructable.TryGetComponentInParent(out baseCell))
+        if (!baseCell && !baseDeconstructable.TryGetComponentInParent(out baseCell, true))
         {
             identifier = default;
             return false;
@@ -223,7 +223,7 @@ public static class BuildUtils
     /// <param name="faceAlreadyLinked">Whether <see cref="ConstructableBase.moduleFace"/> was already set or not</param>
     public static bool IsUnderBaseDeconstructable(BaseGhost baseGhost, bool faceAlreadyLinked)
     {
-        return baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase) &&
+        return baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase, true) &&
             (IsBaseDeconstructable(constructableBase) || !faceAlreadyLinked);
     }
 

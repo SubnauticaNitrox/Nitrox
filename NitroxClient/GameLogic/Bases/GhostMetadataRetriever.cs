@@ -39,7 +39,7 @@ public static class GhostMetadataRetriever
     public static BaseDeconstructableGhostMetadata GetBaseDeconstructableMetadata(this BaseGhost baseGhost)
     {
         BaseDeconstructableGhostMetadata metadata = baseGhost.GetMetadata<BaseDeconstructableGhostMetadata>();
-        if (baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase) && constructableBase.moduleFace.HasValue)
+        if (baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase, true) && constructableBase.moduleFace.HasValue)
         {
             Base.Face moduleFace = constructableBase.moduleFace.Value;
             metadata.ModuleFace = moduleFace.ToDto();

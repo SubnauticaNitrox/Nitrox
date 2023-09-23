@@ -10,7 +10,7 @@ namespace NitroxClient.GameLogic.Helper
 {
     public class InventoryContainerHelper
     {
-        private const string LOCKER_REGEX = @"Locker0([0-9])StorageRoot$";
+        private static readonly Regex LockerRegex = new(@"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
         private const string LOCKER_BASE_NAME = "submarine_locker_01_0";
         private const string PLAYER_OBJECT_NAME = "Player";
         private const string ESCAPEPOD_OBJECT_NAME = "EscapePod";
@@ -60,12 +60,12 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return parent.TryGetIdOrWarn(out ownerId);
             }
-            else if (parent.TryGetComponentInParent(out LargeRoomWaterPark largeRoomWaterPark) &&
+            else if (parent.TryGetComponentInParent(out LargeRoomWaterPark largeRoomWaterPark, true) &&
                 parent.TryGetNitroxId(out ownerId))
             {
                 return true;
             }
-            else if (Regex.IsMatch(ownerTransform.gameObject.name, LOCKER_REGEX, RegexOptions.IgnoreCase))
+            else if (LockerRegex.IsMatch(ownerTransform.gameObject.name))
             {
                 string lockerId = ownerTransform.gameObject.name.Substring(7, 1);
                 string lockerName = $"{LOCKER_BASE_NAME}{lockerId}";
