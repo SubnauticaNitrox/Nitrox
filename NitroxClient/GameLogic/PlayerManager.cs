@@ -4,6 +4,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 
@@ -12,14 +13,16 @@ namespace NitroxClient.GameLogic
     public class PlayerManager
     {
         private readonly PlayerModelManager playerModelManager;
+        private readonly FMODWhitelist fmodWhitelist;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
         public OnCreate onCreate;
         public OnRemove onRemove;
 
-        public PlayerManager(PlayerModelManager playerModelManager)
+        public PlayerManager(PlayerModelManager playerModelManager, FMODWhitelist fmodWhitelist)
         {
             this.playerModelManager = playerModelManager;
+            this.fmodWhitelist = fmodWhitelist;
         }
 
         public Optional<RemotePlayer> Find(ushort playerId)
@@ -47,13 +50,13 @@ namespace NitroxClient.GameLogic
             Validate.NotNull(playerContext);
             Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
 
-            RemotePlayer remotePlayer = new(playerContext, playerModelManager);
-            
+            RemotePlayer remotePlayer = new(playerContext, playerModelManager, fmodWhitelist);
+
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
             onCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
 
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
-            
+
             return remotePlayer;
         }
 
@@ -62,7 +65,7 @@ namespace NitroxClient.GameLogic
             Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.HasValue)
             {
-                opPlayer.Value.Destroy();                
+                opPlayer.Value.Destroy();
                 playersById.Remove(playerId);
                 onRemove(playerId.ToString(), opPlayer.Value);
                 DiscordClient.UpdatePartySize(GetTotalPlayerCount());
