@@ -1,8 +1,8 @@
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.FMOD;
-using NitroxClient.Unity.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -10,21 +10,22 @@ namespace NitroxClient.GameLogic.Spawning.Metadata;
 
 public class SeamothMetadataProcessor : GenericEntityMetadataProcessor<SeamothMetadata>
 {
-    private readonly IPacketSender packetSender;
     private readonly LiveMixinManager liveMixinManager;
+    private readonly float lightsSoundRadius;
 
-    public SeamothMetadataProcessor(IPacketSender packetSender, LiveMixinManager liveMixinManager)
+    public SeamothMetadataProcessor(LiveMixinManager liveMixinManager, FMODWhitelist fmodWhitelist)
     {
-        this.packetSender = packetSender;
         this.liveMixinManager = liveMixinManager;
+
+        fmodWhitelist.IsWhitelisted("event:/sub/seamoth/seamoth_light_on", out lightsSoundRadius);
     }
 
     public override void ProcessMetadata(GameObject gameObject, SeamothMetadata metadata)
     {
-        SeaMoth seamoth = gameObject.GetComponent<SeaMoth>();
-        if (!seamoth)
+        if (!gameObject.TryGetComponent(out SeaMoth seamoth))
         {
             Log.Error($"Could not find seamoth on {gameObject.name}");
+            return;
         }
 
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
@@ -36,15 +37,23 @@ public class SeamothMetadataProcessor : GenericEntityMetadataProcessor<SeamothMe
 
     private void SetLights(SeaMoth seamoth, bool lightsOn)
     {
+        ToggleLights toggleLights = seamoth.toggleLights;
+
+        if (toggleLights.lightsActive == lightsOn)
+        {
+            return;
+        }
+
         using (FMODSystem.SuppressSubnauticaSounds())
         {
-            seamoth.toggleLights.SetLightsActive(lightsOn);
+            toggleLights.SetLightsActive(lightsOn);
         }
+
+        FMODEmitterController.PlayEventOneShot(lightsOn ? toggleLights.lightsOnSound.asset : toggleLights.lightsOffSound.asset, lightsSoundRadius, toggleLights.transform.position);
     }
 
     private void SetHealth(SeaMoth seamoth, float health)
     {
-        LiveMixin liveMixin = seamoth.RequireComponentInChildren<LiveMixin>(true);
-        liveMixinManager.SyncRemoteHealth(liveMixin, health);
+        liveMixinManager.SyncRemoteHealth(seamoth.liveMixin, health);
     }
 }

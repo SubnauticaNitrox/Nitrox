@@ -6,8 +6,6 @@ using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 
-#pragma warning disable 618
-
 namespace NitroxClient.MonoBehaviours;
 
 [DisallowMultipleComponent]
@@ -118,7 +116,7 @@ public class FMODEmitterController : MonoBehaviour
     public void PlayCustomLoopingEmitter(string path)
     {
         (FMOD_CustomLoopingEmitter loopingEmitter, bool is3D, float radius) = loopingEmitters[path];
-        EventInstance eventInstance = FMODUWE.GetEvent(path);
+        EventInstance eventInstance = FMODUWE.GetEventImpl(path);
 
         if (is3D)
         {
@@ -147,5 +145,29 @@ public class FMODEmitterController : MonoBehaviour
     {
         EventInstance eventInstance = eventInstances[path];
         eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
+    public static void PlayEventOneShot(FMODAsset asset, float radius, Vector3 origin, float volume = 1f) => PlayEventOneShot(asset.path, radius, origin, volume);
+
+    public static void PlayEventOneShot(string path, float radius, Vector3 origin, float volume = 1f)
+    {
+        EventInstance evt = FMODUWE.GetEventImpl(path);
+        evt.getDescription(out EventDescription description);
+        description.is3D(out bool is3D);
+
+        if (is3D)
+        {
+            evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+            evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radius);
+            evt.setVolume(volume);
+        }
+        else
+        {
+            evt.setVolume(FMODSystem.CalculateVolume(origin, Player.main.transform.position, radius, volume));
+        }
+
+        evt.set3DAttributes(origin.To3DAttributes());
+        evt.start();
+        evt.release();
     }
 }

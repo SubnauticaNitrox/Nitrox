@@ -1,9 +1,8 @@
-﻿using FMOD.Studio;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-#pragma warning disable CS0618
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -24,12 +23,6 @@ public class FMODAssetProcessor : ClientPacketProcessor<FMODAssetPacket>
             return;
         }
 
-        EventInstance instance = FMODUWE.GetEvent(packet.AssetPath);
-        instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-        instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, soundData.Radius);
-        instance.setVolume(packet.Volume);
-        instance.set3DAttributes(packet.Position.To3DAttributes());
-        instance.start();
-        instance.release();
+        FMODEmitterController.PlayEventOneShot(packet.AssetPath, soundData.Radius, packet.Position.ToUnity(), packet.Volume);
     }
 }
