@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
@@ -24,7 +25,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         this.entities = entities;
     }
 
-    public override IEnumerator SpawnAsync(InteriorPieceEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(InteriorPieceEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (entity.ParentId == null || !NitroxEntity.TryGetComponentFrom(entity.ParentId, out Base @base))
         {
@@ -46,14 +47,12 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             {
                 case InventoryItemEntity:
                 case InstalledModuleEntity:
-                    Log.Debug($"Spawning child entity: {childEntity}");
                     batch.Add(childEntity);
                     break;
 
                 case PlanterEntity:
                     foreach (InventoryItemEntity childItemEntity in childEntity.ChildEntities.OfType<InventoryItemEntity>())
                     {
-                        Log.Debug($"Spawning planter child item entity: {childItemEntity}");
                         batch.Add(childItemEntity);
                     }
                     break;
@@ -85,7 +84,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         }
     }
 
-    public override bool SpawnsOwnChildren(InteriorPieceEntity entity) => true;
+    protected override bool SpawnsOwnChildren(InteriorPieceEntity entity) => true;
 
     public static IEnumerator RestoreInteriorPiece(InteriorPieceEntity interiorPiece, Base @base, TaskResult<Optional<GameObject>> result = null)
     {
@@ -95,7 +94,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(interiorPiece.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                Log.Debug($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
+                Log.Error($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();
@@ -131,7 +130,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             interiorPiece.Id = entityId;
         }
 
-        if (gameObject.TryGetComponentInParent(out Base parentBase) &&
+        if (gameObject.TryGetComponentInParent(out Base parentBase, true) &&
             parentBase.TryGetNitroxId(out NitroxId parentId))
         {
             interiorPiece.ParentId = parentId;
@@ -167,7 +166,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
 
     public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity)
     {
-        Log.Debug($"Restoring MapRoom {mapRoomEntity}");
+        Log.Verbose($"Restoring MapRoom {mapRoomEntity}");
         MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
         if (!mapRoomFunctionality)
         {
@@ -176,6 +175,4 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         }
         NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);
     }
-
-    
 }

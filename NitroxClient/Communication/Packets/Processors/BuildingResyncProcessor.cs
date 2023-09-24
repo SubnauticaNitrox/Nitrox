@@ -110,7 +110,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         foreach (E entity in entitiesToUpdate)
         {
             Log.Debug($"[{typeof(E)} RESYNC] spawning entity {entity.Id}");
-            yield return entities.SpawnAsync(entity).OnYieldError(Log.Error);
+            yield return entities.SpawnEntityAsync(entity).OnYieldError(Log.Error);
         }
     }
 

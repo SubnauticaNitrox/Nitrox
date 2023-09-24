@@ -16,6 +16,7 @@ public class CrashFishBootstrapper : IEntityBootstrapper
         PrefabChildEntity placeholder = new(deterministicBatchGenerator.NextId(), null, TechType.None.ToDto(), 0, null, entity.Id);
         entity.ChildEntities.Add(placeholder);
 
+        // TODO: Fix this. it currently is an issue for PlaceholderGroupWorldEntitySpawner's child spawning
         WorldEntity crashFish = SpawnChild(placeholder, deterministicBatchGenerator, TechType.Crash, "7d307502-46b7-4f86-afb0-65fe8867f893", entity.Level);
         crashFish.Transform.LocalRotation = new NitroxQuaternion(-0.7071068f, 0, 0, 0.7071068f);
         placeholder.ChildEntities.Add(crashFish);

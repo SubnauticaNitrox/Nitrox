@@ -6,6 +6,7 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
@@ -20,7 +21,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using UWE;
 
 namespace NitroxClient.GameLogic
 {
@@ -33,6 +33,10 @@ namespace NitroxClient.GameLogic
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
 
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
+
+#if DEBUG
+        public int SpawningEntitiesCount;
+#endif
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
@@ -92,89 +96,75 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity));
         }
 
-        public IEnumerator SpawnAsync(IEnumerable<Entity> entities)
+        /// <remarks>
+        /// Yield returning takes too much time (at least once per IEnumerator branch) and it quickly gets out of hand with long function call hierarchies so
+        /// we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS).
+        /// Also saves resources by using the IOut instances
+        /// </remarks>
+        /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
+        public IEnumerator SpawnBatchAsync(IEnumerable<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
         {
-            foreach (Entity entity in entities)
+            Dictionary<NitroxTechType, List<float>> distances = new(batch.Count());
+
+            int frameSkips = 0;
+            int syncExecutions = 0;
+            int asyncExecutions = 0;
+            
+            // we divide the FPS by 2.5 because we consider (time for 1 frame + spawning time without a frame + extra computing time)
+            float allottedTimePerFrame = 0.4f / Application.targetFrameRate;
+            float timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
+            Log.Info($"Current time: {Time.realtimeSinceStartup}, allottedTimePerFrame: {allottedTimePerFrame}, timeLimit: {timeLimit}");
+
+#if DEBUG
+            SpawningEntitiesCount += batch.Count();
+            Stopwatch stopwatch = Stopwatch.StartNew();
+#endif
+            TaskResult<Optional<GameObject>> entityResult = new();
+            TaskResult<Exception> exception = new();
+            Stack<Entity> stack = new(batch);
+            while (stack.Count > 0)
             {
+                Entity entity = stack.Pop();
+#if DEBUG
+                SpawningEntitiesCount--;
+#endif
+                entityResult.Set(Optional.Empty);
+                exception.Set(null);
+
+                // Preconditions which may get the spawn process cancelled or postponed
                 if (WasAlreadySpawned(entity))
                 {
                     if (entity is WorldEntity worldEntity)
                     {
                         UpdatePosition(worldEntity);
                     }
+                    continue;
                 }
                 else if (entity.ParentId != null && !IsParentReady(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
-                }
-                else
-                {
-                    yield return SpawnAsync(entity).OnYieldError(Log.Error);
-                }
-            }
-        }
-
-        public IEnumerator SpawnAsync(Entity entity)
-        {
-            MarkAsSpawned(entity);
-
-            IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
-
-            TaskResult<Optional<GameObject>> gameObjectTaskResult = new TaskResult<Optional<GameObject>>();
-            yield return entitySpawner.SpawnAsync(entity, gameObjectTaskResult);
-            Optional<GameObject> gameObject = gameObjectTaskResult.Get();
-
-            if (gameObject.HasValue)
-            {
-                if (!entitySpawner.SpawnsOwnChildren(entity))
-                {
-                    yield return SpawnChildren(entity);
+                    continue;
                 }
 
-                // Apply entity metadata after children have been spawned.  This will allow metadata processors to
-                // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
-                EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
-            }
-        }
-
-        /// <remarks>
-        /// Yield returning takes too much time and it quickly gets out of hand with long function call hierarchies so
-        /// we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS)
-        /// </remarks>
-        /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
-        public IEnumerator SpawnBatchAsync<T>(IEnumerable<T> batch, bool forceRespawn = false) where T : Entity
-        {
-            int timeSkips = 0;
-            
-            float allottedTimePerFrame = 1f / Application.targetFrameRate;
-            float timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-#if DEBUG
-            Stopwatch stopwatch = Stopwatch.StartNew();
-#endif
-            TaskResult<Optional<GameObject>> entityResult = new();
-            TaskResult<Exception> exception = new();
-            foreach (Entity entity in batch)
-            {
-                entityResult.Set(Optional.Empty);
-                exception.Set(null);
-
+                // Executing the spawn instructions whether they're sync or async
                 IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
-
-                if (!entitySpawner.SpawnSyncSafe(entity, entityResult, exception) && exception.Get() == null)
+                if (entitySpawner is not ISyncEntitySpawner syncEntitySpawner ||
+                    (!syncEntitySpawner.SpawnSyncSafe(entity, entityResult, exception) && exception.Get() == null))
                 {
                     IEnumerator coroutine = entitySpawner.SpawnAsync(entity, entityResult);
                     if (coroutine != null)
                     {
-                        yield return CoroutineUtils.YieldSafe(coroutine, exception);
-                        timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
+                        yield return coroutine.OnYieldError(Log.Error);
+                        //timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
+                        asyncExecutions++;
                     }
                     else
                     {
-                        Log.Error($"Spawn coroutine for {entity.Id} is null");
-                        continue;
+                        syncExecutions++;
                     }
                 }
 
+                // Any error in there would make spawning children useless
                 if (exception.Get() != null)
                 {
                     Log.Error(exception.Get());
@@ -187,77 +177,46 @@ namespace NitroxClient.GameLogic
 
                 MarkAsSpawned(entity);
 
-                List<Entity> childrenToSpawn = GetChildrenRecursively(entity, forceRespawn);
-                List<NitroxId> childrenIds = childrenToSpawn.Select(entity => entity.Id).ToList();
-                if (!entitySpawner.SpawnsOwnChildren(entity) &&
-                    pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
-                {
-                    childrenToSpawn.AddRange(pendingEntities.Where(pendingEntity => !childrenIds.Contains(pendingEntity.Id)));
-                    pendingParentEntitiesByParentId.Remove(entity.Id);
-                }
-
-                foreach (Entity childEntity in childrenToSpawn)
-                {
-                    exception.Set(null);
-                    TaskResult<Optional<GameObject>> childResult = new();
-                    IEntitySpawner childSpawner = entitySpawnersByType[childEntity.GetType()];
-                    if (!childSpawner.SpawnSyncSafe(childEntity, childResult, exception) && exception.Get() == null)
-                    {
-                        IEnumerator coroutine = childSpawner.SpawnAsync(childEntity, childResult);
-                        if (coroutine != null)
-                        {
-                            yield return CoroutineUtils.YieldSafe(coroutine, exception);
-                            timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-                        }
-                        else
-                        {
-                            Log.Error($"Spawn coroutine for {entity.Id} is null");
-                            continue;
-                        }
-                    }
-
-                    if (exception.Get() != null)
-                    {
-                        Log.Error(exception.Get());
-                        continue;
-                    }
-                    else if (!childResult.Get().Value)
-                    {
-                        continue;
-                    }
-
-                    MarkAsSpawned(childEntity);
-                    Optional<GameObject> childGameObject = childResult.Get();
-
-                    if (childGameObject.HasValue)
-                    {
-                        // Apply entity metadata after children have been spawned.  This will allow metadata processors to
-                        // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
-                        EntityMetadataProcessor.ApplyMetadata(childGameObject.Value, childEntity.Metadata);
-                    }
-
-                    if (Time.realtimeSinceStartup > timeLimit)
-                    {
-                        yield return null;
-                        timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-                        timeSkips++;
-                    }
-                }
-
-                // Apply entity metadata after children have been spawned.  This will allow metadata processors to
-                // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
                 EntityMetadataProcessor.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
 
-                if (Time.realtimeSinceStartup > timeLimit)
+                // Finding out about all children (can be hidden in the object's hierarchy or in a pending list)
+                
+                if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
-                    yield return null;
+                    SpawningEntitiesCount += entity.ChildEntities.Count;
+                    foreach (Entity childEntity in entity.ChildEntities)
+                    {
+                        stack.Push(childEntity);
+                    }
+                    List<NitroxId> childrenIds = entity.ChildEntities.Select(entity => entity.Id).ToList();
+                    if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
+                    {
+                        foreach (Entity pendingEntity in pendingEntities.Where(e => !childrenIds.Contains(e.Id)))
+                        {
+                            SpawningEntitiesCount++;
+                            stack.Push(pendingEntity);
+                        }
+                        pendingParentEntitiesByParentId.Remove(entity.Id);
+                    }
+                }
+                
+                // Skip a frame to maintain FPS
+                if (Time.realtimeSinceStartup > timeLimit && skipFrames)
+                {
+                    yield return new WaitForEndOfFrame();
                     timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-                    timeSkips++;
+                    frameSkips++;
                 }
             }
 #if DEBUG
-            Log.Verbose($"Optimized spawning took {stopwatch.ElapsedMilliseconds}ms with {timeSkips} time skips");
+            stopwatch.Stop();
+            Log.Verbose($"Optimized spawning took {stopwatch.ElapsedMilliseconds}ms with {frameSkips} frame skips, {asyncExecutions}/{syncExecutions} async/sync executions.");
 #endif
+        }
+
+        public IEnumerator SpawnEntityAsync(Entity entity, bool forceRespawn = false)
+        {
+            return SpawnBatchAsync(Enumerable.Repeat(entity, 1), forceRespawn, skipFrames: false);
         }
 
         public List<Entity> GetChildrenRecursively(Entity entity, bool forceRespawn = false)
@@ -280,30 +239,6 @@ namespace NitroxClient.GameLogic
                 }
             }
             return children;
-        }
-
-        private IEnumerator SpawnChildren(Entity entity)
-        {
-            foreach (Entity childEntity in entity.ChildEntities)
-            {
-                if (!WasAlreadySpawned(childEntity))
-                {
-                    yield return SpawnAsync(childEntity);
-                }
-            }
-
-            if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
-            {
-                foreach (WorldEntity child in pendingEntities)
-                {
-                    if (!WasAlreadySpawned(child))
-                    {
-                        yield return SpawnAsync(child);
-                    }
-                }
-
-                pendingParentEntitiesByParentId.Remove(entity.Id);
-            }
         }
 
         private void UpdatePosition(WorldEntity entity)
@@ -336,7 +271,7 @@ namespace NitroxClient.GameLogic
 
         // Entites can sometimes be spawned as one thing but need to be respawned later as another.  For example, a flare
         // spawned inside an Inventory as an InventoryItemEntity can later be dropped in the world as a WorldEntity. Another
-        // example would be a base ghost that needs to be respawned a completed piece. 
+        // example would be a base ghost that needs to be respawned a completed piece.
         public bool WasAlreadySpawned(Entity entity)
         {
             if (spawnedAsType.TryGetValue(entity.Id, out Type type))

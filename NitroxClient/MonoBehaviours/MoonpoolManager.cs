@@ -119,7 +119,7 @@ public class MoonpoolManager : MonoBehaviour
             VehicleWorldEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleWorldEntity>().FirstOrFallback(null);
             if (moonpoolVehicleEntity != null)
             {
-                yield return entities.SpawnAsync(moonpoolVehicleEntity);
+                yield return entities.SpawnEntityAsync(moonpoolVehicleEntity);
             }
         }
     }

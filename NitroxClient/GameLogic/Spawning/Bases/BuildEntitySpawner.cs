@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -25,9 +26,9 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         this.entities = entities;
     }
 
-    public override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        Log.Debug($"Spawning a BuildEntity: {entity.Id}");
+        Log.Verbose($"Spawning a BuildEntity: {entity.Id}");
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
             Log.Error("Trying to respawn an already spawned Base without a proper resync process.");
@@ -43,16 +44,11 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             LargeWorld.main.streamer.cellManager.RegisterEntity(newBase);
         }
         Base @base = newBase.GetComponent<Base>();
-        if (!@base)
-        {
-            Log.Debug("No Base component found");
-            yield break;
-        }
         yield return SetupBase(entity, @base, entities, result);
 #if DEBUG
         Log.Verbose($"Took {stopwatch.ElapsedMilliseconds}ms to create the Base");
 #endif
-        yield return entities.SpawnAsync(entity.ChildEntities.OfType<PlayerWorldEntity>());
+        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerWorldEntity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
         foreach (MapRoomEntity mapRoomEntity in entity.ChildEntities.OfType<MapRoomEntity>())
         {
@@ -61,7 +57,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         result.Set(@base.gameObject);
     }
 
-    public override bool SpawnsOwnChildren(BuildEntity entity) => true;
+    protected override bool SpawnsOwnChildren(BuildEntity entity) => true;
 
     public static BuildEntity From(Base targetBase)
     {
@@ -130,7 +126,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
                     ghostChildrenEntities.Add(ghostEntity);
                     continue;
                 }
-                yield return entities.SpawnAsync(childEntity);
+                yield return entities.SpawnEntityAsync(childEntity);
             }
         }
 

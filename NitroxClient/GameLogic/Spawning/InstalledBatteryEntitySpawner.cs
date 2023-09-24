@@ -1,5 +1,6 @@
 using System.Collections;
 using NitroxClient.Communication;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
@@ -11,9 +12,9 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntity>
+public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryEntity>
 {
-    public override IEnumerator SpawnAsync(InstalledBatteryEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(InstalledBatteryEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (!CanSpawn(entity, out EnergyMixin energyMixin, out string errorLog))
         {
@@ -31,7 +32,7 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
         result.Set(gameObject);
     }
 
-    public override bool SpawnSync(InstalledBatteryEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override bool SpawnSync(InstalledBatteryEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, entity.TechType.ToUnity()))
         {
@@ -50,6 +51,8 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
         result.Set(gameObject);
         return true;
     }
+
+    protected override bool SpawnsOwnChildren(InstalledBatteryEntity entity) => false;
 
     private bool CanSpawn(Entity entity, out EnergyMixin energyMixin, out string errorLog)
     {
@@ -83,10 +86,5 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
         {
             energyMixin.batterySlot.AddItem(new InventoryItem(gameObject.GetComponent<Pickupable>()));
         }
-    }
-
-    public override bool SpawnsOwnChildren(InstalledBatteryEntity entity)
-    {
-        return false;
     }
 }

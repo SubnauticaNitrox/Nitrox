@@ -1,7 +1,6 @@
 using System.Collections;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -33,11 +32,7 @@ namespace NitroxClient.GameLogic.InitialSync
             BuildingHandler.Main.InitializeOperations(packet.BuildOperationIds);
 
             Log.Info($"Received initial sync packet with {packet.GlobalRootEntities.Count} global root entities");
-            foreach (Entity entity in packet.GlobalRootEntities)
-            {
-                Log.Debug($"Going to spawn: {entity.Id} of type {entity.GetType()}");
-            }
-            yield return entities.SpawnAsync(packet.GlobalRootEntities);
+            yield return entities.SpawnBatchAsync(packet.GlobalRootEntities);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -13,9 +14,9 @@ namespace NitroxClient.GameLogic.Spawning.Bases;
 
 public class GhostEntitySpawner : EntitySpawner<GhostEntity>
 {
-    public override IEnumerator SpawnAsync(GhostEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(GhostEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        Log.Debug($"Spawning a GhostEntity: {entity.Id}");
+        Log.Verbose($"Spawning a GhostEntity: {entity.Id}");
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject))
         {
             if (gameObject.TryGetComponent(out Constructable constructable))
@@ -30,7 +31,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
         yield return RestoreGhost(parent, entity, result);
     }
 
-    public override bool SpawnsOwnChildren(GhostEntity entity) => true;
+    protected override bool SpawnsOwnChildren(GhostEntity entity) => true;
 
     public static GhostEntity From(ConstructableBase constructableBase)
     {
@@ -156,8 +157,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
         }
         else
         {
-            transform.position = ghostEntity.Transform.LocalPosition.ToUnity();
-            transform.rotation = ghostEntity.Transform.LocalRotation.ToUnity();
+            transform.SetPositionAndRotation(ghostEntity.Transform.LocalPosition.ToUnity(), ghostEntity.Transform.LocalRotation.ToUnity());
             transform.localScale = ghostEntity.Transform.LocalScale.ToUnity();
         }
     }

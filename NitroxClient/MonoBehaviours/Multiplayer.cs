@@ -63,7 +63,9 @@ namespace NitroxClient.MonoBehaviours
                 ProcessPackets();
                 throttledPacketSender.Update();
 
-                if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+                // Loading up shouldn't be bothered by entities spawning in the surroundings
+                if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED &&
+                    InitialSyncCompleted)
                 {
                     terrain.UpdateVisibility();
                 }

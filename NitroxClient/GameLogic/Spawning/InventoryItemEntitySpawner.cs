@@ -1,6 +1,7 @@
 using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -12,9 +13,9 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
+public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
 {
-    public override IEnumerator SpawnAsync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
     {        
         if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
         {
@@ -32,7 +33,7 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
         result.Set(Optional.Of(gameObject));
     }
 
-    public override bool SpawnSync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override bool SpawnSync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, entity.TechType.ToUnity(), entity.ClassId))
         {
@@ -51,6 +52,8 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
         result.Set(gameObject);
         return true;
     }
+
+    protected override bool SpawnsOwnChildren(InventoryItemEntity entity) => false;
 
     private bool CanSpawn(InventoryItemEntity entity, out GameObject parentObject, out ItemsContainer container, out string errorLog)
     {
@@ -92,10 +95,5 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
             container.UnsafeAdd(new InventoryItem(pickupable));
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {parentObject.GetFullHierarchyPath()}");
         }
-    }
-
-    public override bool SpawnsOwnChildren(InventoryItemEntity entity)
-    {
-        return false;
     }
 }

@@ -28,19 +28,14 @@ public class WorldEntitySpawnerResolver
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
     {
-        if (entity is PlaceholderGroupWorldEntity)
+        switch (entity)
         {
-            return prefabWorldEntitySpawner;
-        }
-
-        if (entity is PlayerWorldEntity)
-        {
-            return playerWorldEntitySpawner;
-        }
-
-        if (entity is VehicleWorldEntity)
-        {
-            return vehicleWorldEntitySpawner;
+            case PlaceholderGroupWorldEntity:
+                return prefabWorldEntitySpawner;
+            case PlayerWorldEntity:
+                return playerWorldEntitySpawner;
+            case VehicleWorldEntity:
+                return vehicleWorldEntitySpawner;
         }
 
         TechType techType = entity.TechType.ToUnity();
