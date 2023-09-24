@@ -11,7 +11,7 @@ public sealed partial class Utils_PlayFMODAsset_Patch : NitroxPatch, IDynamicPat
 
     public static bool Prefix()
     {
-        return !FMODSuppressor.SuppressFMODEvents;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
     }
 
     public static void Postfix(FMODAsset asset)

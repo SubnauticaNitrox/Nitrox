@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -124,7 +123,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public bool Send<T>(T packet) where T : Packet
         {
-            if (!PacketSuppressor<T>.IsSuppressed && !MultiplePacketsSuppressor.IsSuppressed(typeof(T)))
+            if (!PacketSuppressor<T>.IsSuppressed)
             {
                 Client.Send(packet);
                 return true;

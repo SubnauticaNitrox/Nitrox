@@ -12,7 +12,7 @@ public sealed partial class FMOD_CustomLoopingEmitter_PlayStopSound_Patch : Nitr
 
     public static bool Prefix()
     {
-        return !FMODSuppressor.SuppressFMODEvents;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
     }
 
     public static void Postfix(FMOD_CustomLoopingEmitter __instance)

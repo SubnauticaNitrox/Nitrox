@@ -14,7 +14,7 @@ public sealed partial class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDyna
 
     public static bool Prefix()
     {
-        return !FMODSuppressor.SuppressFMODEvents;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
     }
 
     public static void Postfix(FMOD_CustomEmitter __instance)

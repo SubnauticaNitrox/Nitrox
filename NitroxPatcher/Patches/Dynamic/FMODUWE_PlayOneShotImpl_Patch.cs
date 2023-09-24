@@ -12,7 +12,7 @@ public sealed partial class FMODUWE_PlayOneShotImpl_Patch : NitroxPatch, IDynami
 
     public static bool Prefix()
     {
-        return !FMODSuppressor.SuppressFMODEvents;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
     }
 
     public static void Postfix(string eventPath, Vector3 position, float volume)

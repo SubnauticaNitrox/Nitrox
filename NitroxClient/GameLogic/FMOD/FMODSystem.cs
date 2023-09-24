@@ -24,15 +24,16 @@ public class FMODSystem : FMODWhitelist
         this.packetSender = packetSender;
     }
 
-    /// <summary>
-    /// Suppresses sounds played by base Subnautica, not any sounds triggered by Nitrox
-    /// </summary>
-    public static FMODSuppressor SuppressSubnauticaSounds()
-    {
-        return new FMODSuppressor();
-    }
+    /// <inheritdoc cref="FMODSoundSuppressor"/>
+    public static FMODSoundSuppressor SuppressSubnauticaSounds() => new();
 
-    public static MultiplePacketsSuppressor SuppressSendingSounds() => MultiplePacketsSuppressor.Suppress(fmodPacketTypes);
+    /// <summary>
+    /// Suppresses sending any sound packet
+    /// </summary>
+    public static PacketSuppressor<FMODAssetPacket, FMODEventInstancePacket, FMODCustomEmitterPacket, FMODCustomLoopingEmitterPacket, FMODStudioEmitterPacket> SuppressSendingSounds()
+    {
+        return PacketSuppressor<FMODAssetPacket, FMODEventInstancePacket, FMODCustomEmitterPacket, FMODCustomLoopingEmitterPacket, FMODStudioEmitterPacket>.Suppress();
+    }
 
     /// <inheritdoc cref="FMODWhitelist.CalculateVolume"/>
     public static float CalculateVolume(Vector3 p1, Vector3 p2, float radius, float volume) => CalculateVolume(Vector3.Distance(p1, p2), radius, volume);

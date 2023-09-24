@@ -13,7 +13,7 @@ public sealed partial class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, 
 
     public static bool Prefix()
     {
-        return !FMODSuppressor.SuppressFMODEvents;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
     }
 
     public static void Postfix(FMOD_StudioEventEmitter __instance, float ____lastTimePlayed)

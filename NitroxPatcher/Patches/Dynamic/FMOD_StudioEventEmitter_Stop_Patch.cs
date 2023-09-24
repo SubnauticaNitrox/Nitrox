@@ -12,7 +12,7 @@ public sealed partial class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, ID
 
     public static bool Prefix()
     {
-        return !FMODSuppressor.SuppressFMODEvents;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
     }
 
     public static void Postfix(FMOD_StudioEventEmitter __instance, bool allowFadeout)
