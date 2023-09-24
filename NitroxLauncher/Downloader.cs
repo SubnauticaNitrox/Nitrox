@@ -85,7 +85,7 @@ internal static class Downloader
 
         try
         {
-            //https://developer.wordpress.org/rest-api/reference/posts/#arguments
+            // https://developer.wordpress.org/rest-api/reference/posts/#arguments
             using WebResponse response = await GetResponseFromCacheAsync(CHANGELOGS_URL);
 
             if (response.IsFromCache)

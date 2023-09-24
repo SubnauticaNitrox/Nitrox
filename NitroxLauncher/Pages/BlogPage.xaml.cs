@@ -31,6 +31,10 @@ public partial class BlogPage : PageBase
                 NitroxBlogs = new(blogs);
                 IsLoading = false;
             }
+            catch (OperationCanceledException)
+            {
+                // Ignore
+            }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error while trying to display nitrox blogs");

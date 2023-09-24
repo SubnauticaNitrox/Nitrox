@@ -6,7 +6,7 @@ namespace NitroxModel.Discovery;
 public interface IGameFinder
 {
     /// <summary>
-    ///     Searches for Subnautica installation directory.
+    ///     Searches for game installation directory.
     /// </summary>
     /// <param name="errors">Error messages that can be set if it failed to find the game.</param>
     /// <returns>Nullable game installation</returns>

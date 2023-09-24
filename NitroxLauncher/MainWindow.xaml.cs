@@ -113,7 +113,7 @@ namespace NitroxLauncher
                 }
             };
 
-            logic.SetTargetedSubnauticaPath(NitroxUser.GamePath)
+            logic.SetTargetedSubnauticaPath(LauncherConfig.Instance.GamePath)
                  .ContinueWith(task =>
                  {
                      // TODO: Rework to allow flexibility for BZ

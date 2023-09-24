@@ -25,7 +25,7 @@ public class EnvironmentGameFinder : IGameFinder
 
         if (!Directory.Exists(Path.Combine(path, gameInfo.DataFolder, "Managed")))
         {
-            errors.Add($@"Game installation directory config '{path}' is invalid. Please enter the path to the Subnautica installation.");
+            errors.Add($@"Game installation directory config '{path}' is invalid. Please enter the path to the game installation.");
             return null;
         }
 

@@ -1,19 +1,18 @@
-﻿using System;
+using System;
 
-namespace NitroxLauncher.Models.Events
+namespace NitroxLauncher.Models.Events;
+
+public sealed class ServerStartEventArgs : EventArgs
 {
-    public sealed class ServerStartEventArgs : EventArgs
+    public bool IsEmbedded { get; }
+
+    public ServerStartEventArgs(bool embedded)
     {
-        public bool IsEmbedded { get; }
+        IsEmbedded = embedded;
+    }
 
-        public ServerStartEventArgs(bool embedded)
-        {
-            IsEmbedded = embedded;
-        }
-
-        public override string ToString()
-        {
-            return $"[ServerStartEventArgs - IsEmbedded: {IsEmbedded}]";
-        }
+    public override string ToString()
+    {
+        return $"[ServerStartEventArgs - IsEmbedded: {IsEmbedded}]";
     }
 }

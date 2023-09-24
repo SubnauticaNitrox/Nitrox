@@ -12,7 +12,6 @@ public class ConfigGameFinder : IGameFinder
 {
     public GameInstallation? FindGame(GameInfo gameInfo, IList<string> errors)
     {
-        // TODO: Rework PreferredGamePath ?
         string path = NitroxUser.PreferredGamePath;
 
         if (string.IsNullOrEmpty(path))

@@ -9,16 +9,12 @@ public class ObjectIsInstanceOfTypeConverter : MarkupExtension, IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        if (value == null)
-        {
-            return false;
-        }
-        if (parameter == null)
-        {
-            return false;
-        }
+        if (value is null) return false;
+        if (parameter is null) return false;
+
         Type valueType = value as Type ?? value.GetType();
         Type parameterType = parameter as Type ?? parameter.GetType();
+
         return parameterType.IsAssignableFrom(valueType);
     }
 

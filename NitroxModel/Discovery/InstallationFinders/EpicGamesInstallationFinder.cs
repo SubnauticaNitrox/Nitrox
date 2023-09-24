@@ -8,7 +8,7 @@ namespace NitroxModel.Discovery.InstallationFinders;
 
 public class EpicGamesInstallationFinder : IGameFinder
 {
-    private readonly Regex installLocationRegex = new("\"InstallLocation\"[^\"]*\"(.*)\"");
+    private static readonly Regex installLocationRegex = new("\"InstallLocation\"[^\"]*\"(.*)\"", RegexOptions.Compiled);
 
     public GameInstallation? FindGame(GameInfo gameInfo, IList<string> errors)
     {
@@ -28,11 +28,11 @@ public class EpicGamesInstallationFinder : IGameFinder
 
             if (match.Success && match.Value.Contains(gameInfo.Name))
             {
-                string matchedPath = match.Groups[1].Value;
+                string matchedPath = Path.GetFullPath(match.Groups[1].Value);
 
                 if (!GameInstallationFinder.HasGameExecutable(matchedPath, gameInfo))
                 {
-                    errors.Add($"Found valid installation directory at '{matchedPath}'. But game exe is missing.");
+                    errors.Add($"Found valid installation directory at '{matchedPath}'. But game's '{gameInfo.ExeName}' is missing.");
                     continue;
                 }
 
@@ -45,7 +45,7 @@ public class EpicGamesInstallationFinder : IGameFinder
             }
         }
 
-        errors.Add("Could not find Subnautica installation directory from Epic Games installation records. Verify that Subnautica has been installed with Epic Games Store.");
+        errors.Add("Could not find game installation directory from Epic Games installation records. Verify that game has been installed with Epic Games Store.");
         return null;
     }
 }

@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace NitroxLauncher.Models;
 
-internal static class Extensions
+public static class Extensions
 {
     public static T FindDataContextInAncestors<T>(this Control control)
     {

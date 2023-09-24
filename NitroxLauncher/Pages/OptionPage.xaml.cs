@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,7 +20,7 @@ public partial class OptionPage : PageBase
 {
     public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
     public string PathToSubnautica => NitroxUser.GamePath;
-    public string SubnauticaLaunchArguments => LauncherLogic.Config.SubnauticaLaunchArguments;
+    public string SubnauticaLaunchArguments => LauncherLogic.Config.LaunchArguments;
 
     [ObservableProperty]
     public ObservableCollection<GameInstallation> gameInstallations = new();
@@ -128,7 +127,7 @@ public partial class OptionPage : PageBase
         }
 
         ResetButton.Visibility = SubnauticaLaunchArguments == LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS ? Visibility.Visible : Visibility.Hidden;
-        ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = ArgumentsTextbox.Text.Trim();
+        ArgumentsTextbox.Text = LauncherLogic.Config.LaunchArguments = ArgumentsTextbox.Text.Trim();
         LauncherNotifier.Success("Applied changes");
     }
 
@@ -136,7 +135,7 @@ public partial class OptionPage : PageBase
     {
         if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
         {
-            ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS;
+            ArgumentsTextbox.Text = LauncherLogic.Config.LaunchArguments = LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS;
             ResetButton.Visibility = Visibility.Hidden;
             LauncherNotifier.Success("Applied changes");
             return;

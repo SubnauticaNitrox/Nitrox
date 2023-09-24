@@ -39,12 +39,13 @@
                 </TextBlock>
 
                 <ListView Margin="0,12,0,10"
-                              ItemsSource="{Binding GameInstallations, Mode=OneWay}"
-                              SelectedItem="{Binding SelectedGameInstallation, Mode=TwoWay}"
-                              AlternationCount="2"
-                              IsSynchronizedWithCurrentItem="True"
-                              SelectionMode="Single"
-                              Background="Transparent">
+                            ItemsSource="{Binding GameInstallations, Mode=OneWay}"
+                            SelectedItem="{Binding SelectedGameInstallation, Mode=TwoWay}"
+                            SelectedIndex="-1"
+                            AlternationCount="2"
+                            IsSynchronizedWithCurrentItem="True"
+                            SelectionMode="Single"
+                            Background="Transparent">
 
                     <ListView.Template>
                         <ControlTemplate>

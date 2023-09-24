@@ -1,20 +1,18 @@
-﻿using System.Windows;
+using System.Windows;
 
-namespace NitroxLauncher.Models.Properties
+namespace NitroxLauncher.Models.Properties;
+
+public static class ButtonProperties
 {
-    public static class ButtonProperties
+    public static readonly DependencyProperty SelectedProperty = DependencyProperty.RegisterAttached("Selected", typeof(bool), typeof(ButtonProperties), new UIPropertyMetadata(default(bool)));
+
+    public static bool GetSelected(DependencyObject obj)
     {
-        public static readonly DependencyProperty SelectedProperty =
-            DependencyProperty.RegisterAttached("Selected", typeof(bool), typeof(ButtonProperties), new UIPropertyMetadata(default(bool)));
+        return (bool)obj.GetValue(SelectedProperty);
+    }
 
-        public static bool GetSelected(DependencyObject obj)
-        {
-            return (bool)obj.GetValue(SelectedProperty);
-        }
-
-        public static void SetSelected(DependencyObject obj, bool value)
-        {
-            obj.SetValue(SelectedProperty, value);
-        }
+    public static void SetSelected(DependencyObject obj, bool value)
+    {
+        obj.SetValue(SelectedProperty, value);
     }
 }

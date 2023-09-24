@@ -31,6 +31,10 @@ public partial class UpdatePage : PageBase
                 IList<NitroxChangelog> changelogs = await Downloader.GetChangeLogsAsync(cancellationTokenSource.Token);
                 NitroxChangelogs = new(changelogs);
             }
+            catch (OperationCanceledException)
+            {
+                // Ignore
+            }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error while trying to display nitrox changelogs");
