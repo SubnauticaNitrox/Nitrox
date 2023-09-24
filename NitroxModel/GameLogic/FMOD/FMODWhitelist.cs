@@ -76,18 +76,6 @@ public class FMODWhitelist
     }
 
     public ReadOnlyDictionary<string, SoundData> GetWhitelist() => new(soundsWhitelist);
-
-    /// <summary>
-    ///     Volume calculation based on <paramref name="distance"/>, <paramref name="radius"/> and max <paramref name="volume"/> (not 100% realistic)
-    /// </summary>
-    public static float CalculateVolume(float distance, float radius, float volume)
-    {
-        if (0f <= distance && distance < radius)
-        {
-            return Mathf.Clamp01((1f - distance / radius) * volume);
-        }
-        return 0f;
-    }
 }
 
 public readonly struct SoundData

@@ -4,6 +4,7 @@ using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
+using NitroxModel.GameLogic.FMOD;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -27,10 +28,10 @@ public class FMODEmitterController : MonoBehaviour
         {
             switch (behaviour)
             {
-                case FMOD_CustomEmitter customEmitter when this.Resolve<FMODSystem>().IsWhitelisted(customEmitter.asset.path, out float maxDistance):
+                case FMOD_CustomEmitter customEmitter when this.Resolve<FMODWhitelist>().IsWhitelisted(customEmitter.asset.path, out float maxDistance):
                     AddEmitter(customEmitter.asset.path, customEmitter, maxDistance);
                     break;
-                case FMOD_StudioEventEmitter studioEmitter when this.Resolve<FMODSystem>().IsWhitelisted(studioEmitter.asset.path, out float maxDistance):
+                case FMOD_StudioEventEmitter studioEmitter when this.Resolve<FMODWhitelist>().IsWhitelisted(studioEmitter.asset.path, out float maxDistance):
                     AddEmitter(studioEmitter.asset.path, studioEmitter, maxDistance);
                     break;
             }
@@ -58,12 +59,12 @@ public class FMODEmitterController : MonoBehaviour
 
             if (customEmitter is FMOD_CustomLoopingEmitter loopingEmitter)
             {
-                if (loopingEmitter.assetStart && this.Resolve<FMODSystem>().IsWhitelisted(loopingEmitter.assetStart.path, out float radiusStart))
+                if (loopingEmitter.assetStart && this.Resolve<FMODWhitelist>().IsWhitelisted(loopingEmitter.assetStart.path, out float radiusStart))
                 {
                     AddEmitter(loopingEmitter.assetStart.path, loopingEmitter, radiusStart);
                 }
 
-                if (loopingEmitter.assetStop && this.Resolve<FMODSystem>().IsWhitelisted(loopingEmitter.assetStop.path, out float radiusStop))
+                if (loopingEmitter.assetStop && this.Resolve<FMODWhitelist>().IsWhitelisted(loopingEmitter.assetStop.path, out float radiusStop))
                 {
                     AddEmitter(loopingEmitter.assetStop.path, loopingEmitter, radiusStop);
                 }

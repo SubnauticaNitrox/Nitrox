@@ -1,7 +1,7 @@
 using System.Reflection;
-using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -12,7 +12,7 @@ public sealed partial class FMOD_StudioEventEmitter_Start_Patch : NitroxPatch, I
 
     public static void Postfix(FMOD_StudioEventEmitter __instance)
     {
-        if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out float radius))
+        if (!Resolve<FMODWhitelist>().IsWhitelisted(__instance.asset.path, out float radius))
         {
             return;
         }

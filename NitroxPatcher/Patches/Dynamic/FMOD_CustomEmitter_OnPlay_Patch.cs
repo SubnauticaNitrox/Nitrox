@@ -5,6 +5,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.GameLogic.FMOD;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -19,7 +20,7 @@ public sealed partial class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDyna
 
     public static void Postfix(FMOD_CustomEmitter __instance)
     {
-        if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path))
+        if (!Resolve<FMODWhitelist>().IsWhitelisted(__instance.asset.path))
         {
             return;
         }

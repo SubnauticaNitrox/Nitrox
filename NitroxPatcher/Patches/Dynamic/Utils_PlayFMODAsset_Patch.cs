@@ -2,6 +2,7 @@ using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.GameLogic.FMOD;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -16,7 +17,7 @@ public sealed partial class Utils_PlayFMODAsset_Patch : NitroxPatch, IDynamicPat
 
     public static void Postfix(FMODAsset asset)
     {
-        if (Resolve<FMODSystem>().IsWhitelisted(asset.path))
+        if (Resolve<FMODWhitelist>().IsWhitelisted(asset.path))
         {
             Resolve<FMODSystem>().SendAssetPlay(asset.path, Player.main.transform.position.ToDto(), 1f);
         }

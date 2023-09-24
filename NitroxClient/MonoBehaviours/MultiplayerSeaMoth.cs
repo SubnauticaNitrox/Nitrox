@@ -1,6 +1,5 @@
 ﻿using FMOD.Studio;
-using NitroxClient.GameLogic.FMOD;
-using NitroxModel.Core;
+using NitroxModel.GameLogic.FMOD;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -63,15 +62,14 @@ namespace NitroxClient.MonoBehaviours
 
         private void SetUpSound()
         {
-            FMODSystem fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
             rpmSound = seamoth.engineSound.engineRpmSFX;
             revSound = seamoth.engineSound.engineRevUp;
 
             rpmSound.followParent = true;
             revSound.followParent = true;
 
-            fmodSystem.IsWhitelisted(rpmSound.asset.path, out radiusRpmSound);
-            fmodSystem.IsWhitelisted(revSound.asset.path, out radiusRevSound);
+            this.Resolve<FMODWhitelist>().IsWhitelisted(rpmSound.asset.path, out radiusRpmSound);
+            this.Resolve<FMODWhitelist>().IsWhitelisted(revSound.asset.path, out radiusRevSound);
 
             rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
             revSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);

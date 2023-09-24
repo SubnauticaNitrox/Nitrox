@@ -2,6 +2,7 @@ using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -17,7 +18,7 @@ public sealed partial class FMOD_CustomLoopingEmitter_OnPlay_Patch : NitroxPatch
 
     public static void Postfix(FMOD_CustomLoopingEmitter __instance)
     {
-        if (!__instance.assetStart || !Resolve<FMODSystem>().IsWhitelisted(__instance.assetStart.path))
+        if (!__instance.assetStart || !Resolve<FMODWhitelist>().IsWhitelisted(__instance.assetStart.path))
         {
             return;
         }

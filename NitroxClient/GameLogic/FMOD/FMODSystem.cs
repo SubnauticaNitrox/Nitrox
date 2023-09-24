@@ -1,7 +1,5 @@
-using System;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.GameLogic.FMOD;
@@ -10,16 +8,11 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.FMOD;
 
-public class FMODSystem : FMODWhitelist
+public class FMODSystem
 {
-    private static readonly Type[] fmodPacketTypes = {
-        typeof(FMODAssetPacket), typeof(FMODEventInstancePacket), typeof(FMODCustomEmitterPacket), typeof(FMODCustomLoopingEmitterPacket),
-        typeof(FMODStudioEmitterPacket)
-    };
-
     private readonly IPacketSender packetSender;
 
-    public FMODSystem(IPacketSender packetSender) : base(GameInfo.Subnautica)
+    public FMODSystem(IPacketSender packetSender)
     {
         this.packetSender = packetSender;
     }
@@ -35,8 +28,8 @@ public class FMODSystem : FMODWhitelist
         return PacketSuppressor<FMODAssetPacket, FMODEventInstancePacket, FMODCustomEmitterPacket, FMODCustomLoopingEmitterPacket, FMODStudioEmitterPacket>.Suppress();
     }
 
-    /// <inheritdoc cref="FMODWhitelist.CalculateVolume"/>
-    public static float CalculateVolume(Vector3 p1, Vector3 p2, float radius, float volume) => CalculateVolume(Vector3.Distance(p1, p2), radius, volume);
+    /// <inheritdoc cref="SoundHelper.CalculateVolume"/>
+    public static float CalculateVolume(Vector3 p1, Vector3 p2, float radius, float volume) => SoundHelper.CalculateVolume(Vector3.Distance(p1, p2), radius, volume);
 
     public void SendAssetPlay(string path, NitroxVector3 position, float volume) => packetSender.Send(new FMODAssetPacket(path, position, volume));
 
