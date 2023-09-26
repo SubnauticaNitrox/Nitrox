@@ -13,6 +13,10 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
+/// <remarks>
+/// This spawner can't hold a SpawnSync function because it is also responsible for spawning its children
+/// so the <see cref="SpawnAsync"/> function will still use sync spawning when possible and fall back to async when required.
+/// </remarks>
 public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 {
     private readonly WorldEntitySpawnerResolver spawnerResolver;
@@ -24,7 +28,6 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         this.defaultSpawner = defaultSpawner;
     }
 
-    // This spawner can't hold a SpawnSync function because it is also responsible for spawning its children
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
         TaskResult<Optional<GameObject>> prefabPlaceholderGroupTaskResult = new();
@@ -128,12 +131,11 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
     {
         TaskResult<GameObject> goResult = new();
         yield return DefaultWorldEntitySpawner.CreateGameObject(TechType.None, prefabPlaceholder.prefabClassId, goResult);
-        if (!goResult.value)
+        
+        if (goResult.value)
         {
-            yield break;
+            SetupPlaceholder(goResult.value, prefabPlaceholder, entity, result);
         }
-
-        SetupPlaceholder(goResult.value, prefabPlaceholder, entity, result);
     }
 
     private bool SpawnChildPlaceholderSync(PrefabPlaceholder prefabPlaceholder, PrefabPlaceholderEntity entity, TaskResult<Optional<GameObject>> result, out IEnumerator asyncInstructions)

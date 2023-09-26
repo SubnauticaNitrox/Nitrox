@@ -16,7 +16,7 @@ public sealed partial class FPSCounter_UpdateDisplay_Patch : NitroxPatch, IDynam
         {
             return;
         }
-        __instance.strBuffer.AppendLine($"Loading entities: {Resolve<Entities>().SpawningEntitiesCount}");
+        __instance.strBuffer.AppendLine($"Loading entities: {Resolve<Entities>().EntitiesToSpawn.Count}");
         __instance.text.SetText(__instance.strBuffer);
     }
 }

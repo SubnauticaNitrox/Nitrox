@@ -16,7 +16,6 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
 {
     protected override IEnumerator SpawnAsync(GhostEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        Log.Verbose($"Spawning a GhostEntity: {entity.Id}");
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject))
         {
             if (gameObject.TryGetComponent(out Constructable constructable))
@@ -24,7 +23,6 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
                 constructable.constructedAmount = 0;
                 yield return constructable.ProgressDeconstruction();
             }
-            Log.Debug($"Resynced GhostEntity {entity.Id}");
             GameObject.Destroy(gameObject);
         }
         Transform parent = BuildingHandler.GetParentOrGlobalRoot(entity.ParentId);
@@ -59,8 +57,6 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
 
     public static IEnumerator RestoreGhost(Transform parent, GhostEntity ghostEntity, TaskResult<Optional<GameObject>> result = null)
     {
-        Log.Debug($"Restoring ghost {ghostEntity}");
-
         if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: ghostEntity.ClassId))
         {
             TaskResult<GameObject> prefabResult = new();

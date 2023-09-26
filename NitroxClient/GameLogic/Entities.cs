@@ -34,14 +34,13 @@ namespace NitroxClient.GameLogic
 
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
-#if DEBUG
-        public int SpawningEntitiesCount;
-#endif
+        public List<Entity> EntitiesToSpawn { get; private init; }
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
+            EntitiesToSpawn = new();
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
             entitySpawnersByType[typeof(PathBasedChildEntity)] = new PathBasedChildEntitySpawner();
@@ -102,10 +101,8 @@ namespace NitroxClient.GameLogic
         /// Also saves resources by using the IOut instances
         /// </remarks>
         /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
-        public IEnumerator SpawnBatchAsync(IEnumerable<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
+        public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
         {
-            Dictionary<NitroxTechType, List<float>> distances = new(batch.Count());
-
             int frameSkips = 0;
             int syncExecutions = 0;
             int asyncExecutions = 0;
@@ -113,23 +110,19 @@ namespace NitroxClient.GameLogic
             // we divide the FPS by 2.5 because we consider (time for 1 frame + spawning time without a frame + extra computing time)
             float allottedTimePerFrame = 0.4f / Application.targetFrameRate;
             float timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-            Log.Info($"Current time: {Time.realtimeSinceStartup}, allottedTimePerFrame: {allottedTimePerFrame}, timeLimit: {timeLimit}");
-
 #if DEBUG
-            SpawningEntitiesCount += batch.Count();
             Stopwatch stopwatch = Stopwatch.StartNew();
 #endif
             TaskResult<Optional<GameObject>> entityResult = new();
             TaskResult<Exception> exception = new();
-            Stack<Entity> stack = new(batch);
-            while (stack.Count > 0)
+            
+            while (batch.Count > 0)
             {
-                Entity entity = stack.Pop();
-#if DEBUG
-                SpawningEntitiesCount--;
-#endif
                 entityResult.Set(Optional.Empty);
                 exception.Set(null);
+
+                Entity entity = batch[0];
+                batch.RemoveAt(0);
 
                 // Preconditions which may get the spawn process cancelled or postponed
                 if (WasAlreadySpawned(entity))
@@ -183,19 +176,13 @@ namespace NitroxClient.GameLogic
                 
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
-                    SpawningEntitiesCount += entity.ChildEntities.Count;
-                    foreach (Entity childEntity in entity.ChildEntities)
-                    {
-                        stack.Push(childEntity);
-                    }
+                    batch.InsertRange(0, entity.ChildEntities);
+
                     List<NitroxId> childrenIds = entity.ChildEntities.Select(entity => entity.Id).ToList();
                     if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
                     {
-                        foreach (Entity pendingEntity in pendingEntities.Where(e => !childrenIds.Contains(e.Id)))
-                        {
-                            SpawningEntitiesCount++;
-                            stack.Push(pendingEntity);
-                        }
+                        IEnumerable<Entity> childrenToAdd = pendingEntities.Where(e => !childrenIds.Contains(e.Id));
+                        batch.InsertRange(0, childrenToAdd);
                         pendingParentEntitiesByParentId.Remove(entity.Id);
                     }
                 }
@@ -216,29 +203,7 @@ namespace NitroxClient.GameLogic
 
         public IEnumerator SpawnEntityAsync(Entity entity, bool forceRespawn = false)
         {
-            return SpawnBatchAsync(Enumerable.Repeat(entity, 1), forceRespawn, skipFrames: false);
-        }
-
-        public List<Entity> GetChildrenRecursively(Entity entity, bool forceRespawn = false)
-        {
-            if (entitySpawnersByType[entity.GetType()].SpawnsOwnChildren(entity))
-            {
-                return new();
-            }
-            List<Entity> children = new(entity.ChildEntities);
-            foreach (Entity child in entity.ChildEntities)
-            {
-                if (forceRespawn)
-                {
-                    children.AddRange(GetChildrenRecursively(child, forceRespawn));
-                }
-                else
-                {
-                    children.AddRange(GetChildrenRecursively(child, forceRespawn)
-                            .Where(child => !WasAlreadySpawned(child)));
-                }
-            }
-            return children;
+            return SpawnBatchAsync(new() { entity }, forceRespawn, skipFrames: false);
         }
 
         private void UpdatePosition(WorldEntity entity)

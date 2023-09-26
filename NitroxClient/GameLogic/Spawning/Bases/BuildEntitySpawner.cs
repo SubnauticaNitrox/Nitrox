@@ -28,7 +28,6 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     protected override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        Log.Verbose($"Spawning a BuildEntity: {entity.Id}");
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
             Log.Error("Trying to respawn an already spawned Base without a proper resync process.");
@@ -48,7 +47,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 #if DEBUG
         Log.Verbose($"Took {stopwatch.ElapsedMilliseconds}ms to create the Base");
 #endif
-        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerWorldEntity>());
+        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
         foreach (MapRoomEntity mapRoomEntity in entity.ChildEntities.OfType<MapRoomEntity>())
         {

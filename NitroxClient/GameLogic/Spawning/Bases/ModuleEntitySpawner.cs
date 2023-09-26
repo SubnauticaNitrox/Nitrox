@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
@@ -9,6 +8,7 @@ using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
@@ -28,8 +28,6 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
 
     protected override IEnumerator SpawnAsync(ModuleEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        Log.Verbose($"Spawning a ModuleEntity: {entity.Id}");
-
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
             Log.Error("Trying to respawn an already spawned module without a proper resync process.");
@@ -51,14 +49,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             yield break;
         }
 
-#if DEBUG
-        Stopwatch stopwatch = Stopwatch.StartNew();
-#endif
-        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InventoryItemEntity>(), true);
-
-#if DEBUG
-        Log.Verbose($"Module complete spawning took {stopwatch.ElapsedMilliseconds}ms");
-#endif
+        yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<InventoryItemEntity>().ToList<Entity>(), true);
 
         if (moduleObject.TryGetComponent(out PowerSource powerSource))
         {
@@ -71,8 +62,6 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
 
     public static IEnumerator RestoreModule(Transform parent, ModuleEntity moduleEntity, TaskResult<Optional<GameObject>> result = null)
     {
-        Log.Verbose($"Restoring module {moduleEntity.ClassId}");
-
         if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, classId: moduleEntity.ClassId))
         {
             TaskResult<GameObject> prefabResult = new();
