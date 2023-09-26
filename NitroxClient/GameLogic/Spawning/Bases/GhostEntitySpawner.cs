@@ -93,7 +93,10 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
         // ghost's Base should then be assigned its data (from BaseGhost.UpdatePlacement)
         BuildEntitySpawner.ApplyBaseData(ghostEntity.BaseData, ghostBase);
         ghostBase.OnProtoDeserialize(null);
-        @base.SetPlacementGhost(baseGhost);
+        if (@base)
+        {
+            @base.SetPlacementGhost(baseGhost);
+        }
         baseGhost.targetBase = @base;
 
         // Little fix for cell objects being already generated (wrongly)
