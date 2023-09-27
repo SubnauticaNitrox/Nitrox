@@ -20,7 +20,6 @@ public class SpawnEntitiesProcessor : ClientPacketProcessor<SpawnEntities>
     public SpawnEntitiesProcessor(Entities entities)
     {
         this.entities = entities;
-        CoroutineHost.StartCoroutine(SpawnQueue());
     }
 
     public override void Process(SpawnEntities packet)
@@ -30,21 +29,22 @@ public class SpawnEntitiesProcessor : ClientPacketProcessor<SpawnEntities>
             CleanupExistingEntities(packet.Entities);
         }
 
-        entities.EntitiesToSpawn.AddRange(packet.Entities);
-    }
-
-    public IEnumerator SpawnQueue()
-    {
-        while (true)
+        if (packet.Entities.Count > 0)
         {
-            if (!spawning && entities.EntitiesToSpawn.Count > 0)
+            entities.EntitiesToSpawn.AddRange(packet.Entities);
+            // Packet processing is done in the main thread so there's no issue with using the spawning bool like so
+            if (!spawning)
             {
                 spawning = true;
-                yield return entities.SpawnBatchAsync(entities.EntitiesToSpawn).OnYieldError(Log.Error);
-                spawning = false;
+                CoroutineHost.StartCoroutine(SpawnNewEntities());
             }
-            yield return null;
         }
+    }
+
+    public IEnumerator SpawnNewEntities()
+    {
+        yield return entities.SpawnBatchAsync(entities.EntitiesToSpawn).OnYieldError(Log.Error);
+        spawning = false;
     }
 
     private void CleanupExistingEntities(List<Entity> dirtyEntities)

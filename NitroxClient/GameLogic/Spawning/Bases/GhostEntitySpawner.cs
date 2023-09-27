@@ -156,6 +156,8 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
         }
         else
         {
+            // TODO: Once fixed, use NitroxTransform.Position and Rotation instead of locals
+            // Current issue is NitroxTransform doesn't have a reparenting behaviour when deserialized on client-side
             transform.SetPositionAndRotation(ghostEntity.Transform.LocalPosition.ToUnity(), ghostEntity.Transform.LocalRotation.ToUnity());
             transform.localScale = ghostEntity.Transform.LocalScale.ToUnity();
         }

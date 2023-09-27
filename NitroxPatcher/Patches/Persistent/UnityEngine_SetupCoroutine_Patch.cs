@@ -9,6 +9,7 @@ namespace NitroxPatcher.Patches.Persistent;
 /// </summary>
 public sealed partial class UnityEngine_SetupCoroutine_Patch : NitroxPatch, IPersistentPatch
 {
+    // UnityEngine DLLs aren't publicized so we can't access this class as done in other patches
     public static readonly MethodInfo TARGET_METHOD = Assembly.GetAssembly(typeof(GameObject))
                                                               .GetType("UnityEngine.SetupCoroutine")
                                                               .GetMethod("InvokeMoveNext", BindingFlags.Public | BindingFlags.Static);
