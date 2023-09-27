@@ -21,6 +21,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic
 {
@@ -35,6 +36,7 @@ namespace NitroxClient.GameLogic
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
         public List<Entity> EntitiesToSpawn { get; private init; }
+        private bool spawningEntities;
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
@@ -93,6 +95,22 @@ namespace NitroxClient.GameLogic
         public void BroadcastEntitySpawnedByClient(WorldEntity entity)
         {
             packetSender.Send(new EntitySpawnedByClient(entity));
+        }
+
+        public IEnumerator SpawnNewEntities()
+        {
+            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
+            spawningEntities = false;
+        }
+
+        public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
+        {
+            EntitiesToSpawn.AddRange(entitiesToEnqueue);
+            if (!spawningEntities)
+            {
+                spawningEntities = true;
+                CoroutineHost.StartCoroutine(SpawnNewEntities());
+            }
         }
 
         /// <remarks>
@@ -204,6 +222,21 @@ namespace NitroxClient.GameLogic
         public IEnumerator SpawnEntityAsync(Entity entity, bool forceRespawn = false)
         {
             return SpawnBatchAsync(new() { entity }, forceRespawn, skipFrames: false);
+        }
+
+        public void CleanupExistingEntities(List<Entity> dirtyEntities)
+        {
+            foreach (Entity entity in dirtyEntities)
+            {
+                RemoveEntityHierarchy(entity);
+
+                Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(entity.Id);
+
+                if (gameObject.HasValue)
+                {
+                    UnityEngine.Object.Destroy(gameObject.Value);
+                }
+            }
         }
 
         private void UpdatePosition(WorldEntity entity)
