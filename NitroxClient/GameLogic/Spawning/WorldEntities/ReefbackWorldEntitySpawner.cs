@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -38,6 +39,11 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             {
                 if (childEntity is WorldEntity worldChild)
                 {
+                    if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1)
+                    {
+                        worldChild.ClassId = entity.ClassId; // Reefback Migration
+                    }
+
                     TaskResult<Optional<GameObject>> childTaskResult = new();
                     yield return defaultSpawner.SpawnAsync(worldChild, reefback, cellRoot, childTaskResult);
                     Optional<GameObject> child = childTaskResult.Get();

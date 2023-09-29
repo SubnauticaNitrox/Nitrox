@@ -19,7 +19,7 @@ public class WorldEntitySpawnerResolver
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Reefback] = new ReefbackWorldEntitySpawner(defaultEntitySpawner);
-        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner();
+        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(simulationOwnership);
 
         vehicleWorldEntitySpawner = new(entities);
         prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(this, defaultEntitySpawner);

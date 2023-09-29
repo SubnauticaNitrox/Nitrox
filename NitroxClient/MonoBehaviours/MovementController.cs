@@ -137,12 +137,11 @@ namespace NitroxClient.MonoBehaviours
             {
                 float timing = Scalar * Time.fixedDeltaTime;
                 Vector3 newPos = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, timing);
-                Quaternion newRot = Quaternion.Lerp(transform.rotation, TargetRotation, timing);
 
                 if (rigidbody.isKinematic)
                 {
                     rigidbody.MovePosition(newPos);
-                    rigidbody.MoveRotation(newRot);
+                    rigidbody.MoveRotation(TargetRotation);
                 }
                 else
                 {
@@ -150,8 +149,14 @@ namespace NitroxClient.MonoBehaviours
 
                     Quaternion delta = TargetRotation * transform.rotation.GetInverse();
                     delta.ToAngleAxis(out float angle, out Vector3 axis);
+                    
                     if (!float.IsInfinity(axis.x) && !float.IsInfinity(axis.y) && !float.IsInfinity(axis.z))
                     {
+                        if (angle > 180f)
+                        {
+                            angle -= 360f;
+                        }
+
                         rigidbody.angularVelocity = .9f * Mathf.Deg2Rad * angle / timing * axis;
                     }
                     else
