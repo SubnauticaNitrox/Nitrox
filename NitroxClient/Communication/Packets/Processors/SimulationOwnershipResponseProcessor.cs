@@ -58,7 +58,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (gameObject.HasValue)
             {
-                MovementController movementController = gameObject.Value.GetComponent<MovementController>();
+                MovementController movementController = gameObject.Value.EnsureComponent<MovementController>();
                 movementController.SetBroadcasting(lockAcquired);
                 movementController.SetReceiving(!lockAcquired);
             }
