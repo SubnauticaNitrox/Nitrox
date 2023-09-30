@@ -63,10 +63,7 @@ public sealed partial class SubRoot_OnPlayerEntered_Patch : NitroxPatch, IDynami
 
     public static void Prefix()
     {
-        PlayerMotor motor = Player.main.playerController.activeController;
-        if (motor is GroundMotor groundMotor)
-        {
-            groundMotor.movingPlatform.movementTransfer = GroundMotor.MovementTransferOnJump.PermaLocked;
-        }
+        GroundMotor motor = Player.main.groundMotor;
+        motor.movingPlatform.movementTransfer = GroundMotor.MovementTransferOnJump.PermaLocked;
     }
 }
