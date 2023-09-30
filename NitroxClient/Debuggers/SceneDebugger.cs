@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -29,6 +29,7 @@ public class SceneDebugger : BaseDebugger
     private readonly Dictionary<Type, IStructDrawer> structDebuggerDrawers = new();
 
     private readonly Dictionary<int, bool> componentsVisibilityByID = new();
+    private readonly Dictionary<int, PropertyInfo[]> cachedPropertiesByComponentID = new();
     private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = new();
     private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = new();
     private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = new();
@@ -279,11 +280,13 @@ public class SceneDebugger : BaseDebugger
                         {
                             drawer.Draw(component);
                         }
-                        else if (monoBehaviour)
+                        else if (component)
                         {
-                            DrawFields(monoBehaviour);
+                            DrawFields(component);
                             GUILayout.Space(20);
-                            DrawMonoBehaviourMethods(monoBehaviour);
+                            DrawProperties(component);
+                            GUILayout.Space(20);
+                            DrawMonoBehaviourMethods(component);
                         }
                         else
                         {
@@ -294,6 +297,119 @@ public class SceneDebugger : BaseDebugger
                     }
 
                     GUILayout.Space(3);
+                }
+            }
+        }
+    }
+
+    private void DrawProperties(UnityEngine.Object target)
+    {
+        if (!cachedPropertiesByComponentID.TryGetValue(target.GetInstanceID(), out PropertyInfo[] properties))
+        {
+            properties = cachedPropertiesByComponentID[target.GetInstanceID()] = target.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+        }
+
+        foreach (PropertyInfo property in properties)
+        {
+            if (!property.CanRead)
+            {
+                continue;
+            }
+
+            using (new GUILayout.HorizontalScope("box", GUILayout.MinHeight(35)))
+            {
+                GUILayout.Label($"[{property.PropertyType.ToString().Split('.').Last()}]: {property.Name}, CanWrite: {property.CanWrite}, CanRead: {property.CanRead}", "options_label");
+                
+                if (!property.CanRead)
+                {
+                    continue;
+                }
+
+                object propertyValue = property.GetValue(target);
+
+                NitroxGUILayout.Separator();
+
+                if (propertyValue == null)
+                {
+                    GUILayout.Box("Property is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+                }
+                else if (propertyValue is Component component)
+                {
+                    if (GUILayout.Button("Goto"))
+                    {
+                        JumpToComponent(component);
+                    }
+                }
+                else if (debuggerDrawers.TryGetValue(property.PropertyType, out IDrawer drawer))
+                {
+                    drawer.Draw(propertyValue);
+                }
+                else if (structDebuggerDrawers.TryGetValue(property.PropertyType, out IStructDrawer structDrawer))
+                {
+                    if (property.CanWrite)
+                    {
+                        property.SetValue(target, structDrawer.Draw(propertyValue));
+                    }
+                    else
+                    {
+                        structDrawer.Draw(propertyValue);
+                    }
+                }
+                else
+                {
+                    GUILayout.FlexibleSpace();
+
+                    switch (propertyValue)
+                    {
+                        case ScriptableObject scriptableObject:
+                            if (GUILayout.Button(property.Name, GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
+                            {
+                                DrawFields(scriptableObject);
+                                DrawProperties(scriptableObject);
+                            }
+
+                            break;
+                        case GameObject gameObject:
+                            if (GUILayout.Button(property.Name, GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
+                            {
+                                UpdateSelectedObject(gameObject);
+                            }
+
+                            break;
+                        case bool boolValue:
+                            if (GUILayout.Button(boolValue.ToString(), GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
+                            {
+                                if (property.CanWrite)
+                                {
+                                    property.SetValue(target, !boolValue);
+                                }
+                            }
+
+                            break;
+                        case short:
+                        case ushort:
+                        case int:
+                        case uint:
+                        case long:
+                        case ulong:
+                        case float:
+                        case double:
+                            if (property.CanWrite)
+                            {
+                                property.SetValue(target, NitroxGUILayout.ConvertibleField((IConvertible)propertyValue));
+                            }
+                            else
+                            {
+                                NitroxGUILayout.ConvertibleField((IConvertible)propertyValue);
+                            }
+                            break;
+                        case Enum enumValue:
+                            DrawEnum(target, property, enumValue);
+                            break;
+                        default:
+                            GUILayout.TextArea(propertyValue.ToString(), "options", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+                            break;
+                    }
                 }
             }
         }
@@ -315,6 +431,11 @@ public class SceneDebugger : BaseDebugger
                 GUILayout.Label($"[{field.FieldType.ToString().Split('.').Last()}]: {field.Name}", "options_label");
                 NitroxGUILayout.Separator();
 
+
+                if (fieldValue == null)
+                {
+                    GUILayout.Box("Field is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+                }
                 if (fieldValue is Component component)
                 {
                     if (GUILayout.Button("Goto"))
@@ -336,9 +457,6 @@ public class SceneDebugger : BaseDebugger
 
                     switch (fieldValue)
                     {
-                        case null:
-                            GUILayout.Box("Field is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
-                            break;
                         case ScriptableObject scriptableObject:
                             if (GUILayout.Button(field.Name, GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
                             {
@@ -430,7 +548,63 @@ public class SceneDebugger : BaseDebugger
         }
     }
 
-    private void DrawMonoBehaviourMethods(MonoBehaviour monoBehaviour)
+
+    /// <summary>
+    /// Draws an enum property on a component.
+    /// </summary>
+    /// <param name="target">The target containing the property.</param>
+    /// <param name="property">The enum property</param>
+    /// <param name="enumValue">The selected enum value.</param>
+    private void DrawEnum(UnityEngine.Object target, PropertyInfo property, Enum enumValue)
+    {
+        // This is the first time enountering this target type
+        if (!enumVisibilityByComponentIDAndEnumType.TryGetValue(target.GetInstanceID(), out IDictionary<Type, bool> enumVisibilityByType))
+        {
+            // Add an empty subdictionary, it will be handled by the statement below.
+            enumVisibilityByType = new Dictionary<Type, bool>();
+            enumVisibilityByComponentIDAndEnumType.Add(target.GetInstanceID(), enumVisibilityByType);
+        }
+
+        // This is the first time we are encountering this enum type on this component
+        if (!enumVisibilityByType.TryGetValue(property.PropertyType, out _))
+        {
+            enumVisibilityByType.Add(property.PropertyType, false);
+        }
+
+        using (new GUILayout.VerticalScope())
+        {
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
+
+                // Toggle the visibility and save it in the subdictionary
+                if (GUILayout.Button("Show / Hide", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
+                {
+                    enumVisibilityByType[property.PropertyType] = !enumVisibilityByType[property.PropertyType];
+                }
+            }
+
+            // Show the enum list.
+            if (enumVisibilityByType[property.PropertyType])
+            {
+                GUILayout.Space(5);
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    if (property.CanWrite)
+                    {
+                        property.SetValue(target, NitroxGUILayout.EnumPopup(enumValue, 250));
+                    }
+                    else
+                    {
+                        NitroxGUILayout.EnumPopup(enumValue, 250);
+                    }
+                }
+            }
+        }
+    }
+
+    private void DrawMonoBehaviourMethods(Component component)
     {
         using (new GUILayout.HorizontalScope("box"))
         {
@@ -438,9 +612,9 @@ public class SceneDebugger : BaseDebugger
             showUnityMethods = GUILayout.Toggle(showUnityMethods, "Show Unity inherit methods", GUILayout.Height(25));
         }
 
-        if (!cachedMethodsByComponentID.TryGetValue(monoBehaviour.GetInstanceID(), out MethodInfo[] methods))
+        if (!cachedMethodsByComponentID.TryGetValue(component.GetInstanceID(), out MethodInfo[] methods))
         {
-            methods = cachedMethodsByComponentID[monoBehaviour.GetInstanceID()] = monoBehaviour.GetType().GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
+            methods = cachedMethodsByComponentID[component.GetInstanceID()] = component.GetType().GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
                                                                                                .OrderBy(m => m.Name).ToArray();
         }
 
@@ -461,7 +635,7 @@ public class SceneDebugger : BaseDebugger
 
                     if (GUILayout.Button("Invoke", GUILayout.MaxWidth(150)))
                     {
-                        object result = method.Invoke(method.IsStatic ? null : monoBehaviour, Array.Empty<object>());
+                        object result = method.Invoke(method.IsStatic ? null : component, Array.Empty<object>());
                         Log.InGame($"Invoked method {method.Name}");
 
                         if (method.ReturnType != typeof(void))
