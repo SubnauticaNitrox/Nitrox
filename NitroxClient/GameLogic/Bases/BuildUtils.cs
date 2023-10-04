@@ -89,7 +89,6 @@ public static class BuildUtils
     /// </returns>
     public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase, out GameObject moduleObject)
     {
-        Log.Debug($"TryTransferIdFromGhostToModule({baseGhost},{id})");
         // 1. Find the face of the target piece
         Base.Face? face = null;
         bool isWaterPark = baseGhost is BaseAddWaterPark;
@@ -187,13 +186,11 @@ public static class BuildUtils
             // If the WaterPark is higher than one, it means that the newly built WaterPark will be merged with one that already has a NitroxEntity
             if (module is WaterPark waterPark && waterPark.height > 1)
             {
-                Log.Debug($"Found WaterPark higher than 1 [{waterPark.height}], not transferring NitroxEntity to it");
                 // as the WaterPark is necessarily merged, we won't need to do anything about it
                 moduleObject = null;
                 return false;
             }
 
-            Log.Debug($"Successfully transferred NitroxEntity to {module} [{id}]");
             moduleObject = (module as Component).gameObject;
             NitroxEntity.SetNewId(moduleObject, id);
             return true;
@@ -279,7 +276,6 @@ public static class BuildUtils
                 {
                     continue;
                 }
-                Log.Verbose($"MapRoom found {mapRoomId} in {mapRoomFunctionality.gameObject} under {mapRoomFunctionality.transform.parent}");
                 AddChild(CreateMapRoomEntityFrom(mapRoomFunctionality, targetBase, mapRoomId, baseId));
             }
             else if (transform.TryGetComponent(out IBaseModule baseModule))
@@ -290,18 +286,15 @@ public static class BuildUtils
                     continue;
                 }
                 MonoBehaviour moduleMB = baseModule as MonoBehaviour;
-                Log.Verbose($"Base module found: {baseModule.GetType().FullName}  in {moduleMB.gameObject} under {moduleMB.transform.parent}");
                 AddChild(InteriorPieceEntitySpawner.From(baseModule));
             }
             else if (transform.TryGetComponent(out Constructable constructable))
             {
                 if (constructable is ConstructableBase constructableBase)
                 {
-                    Log.Verbose($"BaseConstructable found: {constructableBase.name}");
                     AddChild(GhostEntitySpawner.From(constructableBase));
                     continue;
                 }
-                Log.Verbose($"Constructable found: {constructable.name}");
                 AddChild(ModuleEntitySpawner.From(constructable));
             }
         }

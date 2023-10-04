@@ -63,7 +63,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(ghostEntity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                Log.Debug($"Couldn't find a prefab for ghost of ClassId {ghostEntity.ClassId}");
+                Log.Error($"Couldn't find a prefab for ghost of ClassId {ghostEntity.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();

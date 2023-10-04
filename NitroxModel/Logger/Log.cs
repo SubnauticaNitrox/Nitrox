@@ -44,7 +44,7 @@ namespace NitroxModel.Logger
 
             PlayerName = "";
             logger = new LoggerConfiguration()
-                     .MinimumLevel.Verbose()
+                     .MinimumLevel.Debug()
                      .WriteTo.Logger(cnf =>
                      {
                          if (!useConsoleLogging)

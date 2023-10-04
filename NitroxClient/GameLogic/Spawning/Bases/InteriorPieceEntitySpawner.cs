@@ -166,7 +166,6 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
 
     public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity)
     {
-        Log.Verbose($"Restoring MapRoom {mapRoomEntity}");
         MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
         if (!mapRoomFunctionality)
         {

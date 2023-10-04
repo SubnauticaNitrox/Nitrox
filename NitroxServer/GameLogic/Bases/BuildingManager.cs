@@ -37,7 +37,6 @@ public class BuildingManager
             }
 
             worldEntityManager.AddGlobalRootEntity(ghostEntity);
-            Log.Verbose($"Added a GhostEntity: {ghostEntity.Id}");
             return true;
         }
 
@@ -59,7 +58,6 @@ public class BuildingManager
 
         parentEntity.ChildEntities.Add(ghostEntity);
         worldEntityManager.AddGlobalRootEntity(ghostEntity);
-        Log.Verbose($"Added a GhostEntity: {ghostEntity.Id}, under {parentEntity.Id}");
         return true;
     }
 
@@ -203,7 +201,6 @@ public class BuildingManager
 
         if (updateBase.ChildrenTransfer.Item1 != null && updateBase.ChildrenTransfer.Item2 != null)
         {
-            Log.Debug($"Transferring children from {updateBase.ChildrenTransfer.Item1} to {updateBase.ChildrenTransfer.Item2}");
             // NB: we don't want certain entities to be transferred (e.g. planters)
             entityRegistry.TransferChildren(updateBase.ChildrenTransfer.Item1, updateBase.ChildrenTransfer.Item2, entity => entity is not PlanterEntity);
         }

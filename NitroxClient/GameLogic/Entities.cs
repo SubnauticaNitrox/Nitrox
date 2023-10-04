@@ -143,7 +143,7 @@ namespace NitroxClient.GameLogic
                 batch.RemoveAt(0);
 
                 // Preconditions which may get the spawn process cancelled or postponed
-                if (WasAlreadySpawned(entity))
+                if (WasAlreadySpawned(entity) && !forceRespawn)
                 {
                     if (entity is WorldEntity worldEntity)
                     {

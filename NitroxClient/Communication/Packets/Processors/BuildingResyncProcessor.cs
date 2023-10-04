@@ -10,6 +10,7 @@ using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
@@ -104,22 +105,23 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
 
         for (int i = unmarkedComponents.Count - 1; i >= 0; i--)
         {
-            Log.Debug($"[{typeof(E)} RESYNC] Destroyed GameObject {unmarkedComponents[i].gameObject}");
+            Log.Info($"[{typeof(E)} RESYNC] Destroyed GameObject {unmarkedComponents[i].gameObject}");
             GameObject.Destroy(unmarkedComponents[i].gameObject);
         }
         foreach (E entity in entitiesToUpdate)
         {
-            Log.Debug($"[{typeof(E)} RESYNC] spawning entity {entity.Id}");
+            Log.Info($"[{typeof(E)} RESYNC] spawning entity {entity.Id}");
             yield return entities.SpawnEntityAsync(entity).OnYieldError(Log.Error);
         }
     }
 
     public IEnumerator OverwriteBase(Base @base, BuildEntity buildEntity)
     {
-        Log.Debug($"[Base RESYNC] Overwriting base with id {buildEntity.Id}");
+        Log.Info($"[Base RESYNC] Overwriting base with id {buildEntity.Id}");
         ClearBaseChildren(@base);
         yield return BuildEntitySpawner.SetupBase(buildEntity, @base, entities);
         yield return MoonpoolManager.RestoreMoonpools(buildEntity.ChildEntities.OfType<MoonpoolEntity>(), @base);
+        yield return entities.SpawnBatchAsync(buildEntity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>(), true, false);
         foreach (MapRoomEntity mapRoomEntity in buildEntity.ChildEntities.OfType<MapRoomEntity>())
         {
             yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
@@ -128,7 +130,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
 
     public IEnumerator OverwriteModule(Constructable constructable, ModuleEntity moduleEntity)
     {
-        Log.Debug($"[Module RESYNC] Overwriting module with id {moduleEntity.Id}");
+        Log.Info($"[Module RESYNC] Overwriting module with id {moduleEntity.Id}");
         ModuleEntitySpawner.ApplyModuleData(moduleEntity, constructable.gameObject);
         yield break;
     }

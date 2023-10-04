@@ -73,6 +73,7 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
          */
         if (amount == 1f)
         {
+            Resolve<ThrottledPacketSender>().RemovePendingPackets(entityId);
             if (constructable is ConstructableBase constructableBase)
             {
                 CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entityId));
@@ -86,7 +87,6 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
                 CoroutineHost.StartCoroutine(postSpawner);
             }
             // To avoid any unrequired throttled packet to be sent we clean the pending throttled packets for this object
-            Resolve<ThrottledPacketSender>().RemovePendingPackets(entityId);
             Resolve<IPacketSender>().Send(new ModifyConstructedAmount(entityId, 1f));
             return;
         }
@@ -184,7 +184,6 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
         int operationId = BuildingHandler.Main.GetCurrentOperationIdOrDefault(baseId);
 
         UpdateBase updateBase = new(baseId, pieceId, BuildEntitySpawner.GetBaseData(@base), builtPieceEntity, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
-        Log.Verbose($"Sending UpdateBase packet: {updateBase}");
 
         // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
         Resolve<IPacketSender>().Send(updateBase);

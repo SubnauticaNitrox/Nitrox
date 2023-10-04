@@ -69,7 +69,6 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
     public static void GhostCreated(Constructable constructable)
     {
         GameObject ghostObject = constructable.gameObject;
-        Log.Debug($"GhostCreated: {ghostObject.name} under: {(ghostObject.transform.parent ? ghostObject.transform.parent.name : "nowhere")}");
 
         NitroxId parentId = null;
         if (ghostObject.TryGetComponentInParent(out SubRoot subRoot, true) && (subRoot.isBase || subRoot.isCyclops) &&
@@ -86,7 +85,6 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
             GhostEntity ghost = GhostEntitySpawner.From(constructableBase);
             ghost.Id = ghostId;
             ghost.ParentId = parentId;
-            Log.Verbose($"Sending ghost: {ghost}");
             Resolve<IPacketSender>().Send(new PlaceGhost(ghost));
         }
         else
@@ -94,7 +92,6 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
             ModuleEntity module = ModuleEntitySpawner.From(constructable);
             module.Id = ghostId;
             module.ParentId = parentId;
-            Log.Verbose($"Sending module: {module}");
             Resolve<IPacketSender>().Send(new PlaceModule(module));
         }
     }

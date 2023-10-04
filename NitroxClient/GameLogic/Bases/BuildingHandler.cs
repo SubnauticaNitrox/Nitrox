@@ -208,7 +208,6 @@ public partial class BuildingHandler : MonoBehaviour
             yield break;
         }
         BaseDeconstructable[] deconstructableChildren = baseObject.GetComponentsInChildren<BaseDeconstructable>(true);
-        Log.Debug($"Found {deconstructableChildren.Length} BaseDeconstructable in the base");
 
         if (deconstructableChildren.Length == 1 && deconstructableChildren[0])
         {
@@ -249,7 +248,6 @@ public partial class BuildingHandler : MonoBehaviour
             {
                 continue;
             }
-            Log.Debug($"[{pieceDeconstructed.OperationId}] Found a BaseDeconstructable {baseDeconstructable.name}, will now deconstruct it manually");
             using (PacketSuppressor<BaseDeconstructed>.Suppress())
             using (PacketSuppressor<PieceDeconstructed>.Suppress())
             using (PacketSuppressor<WaterParkDeconstructed>.Suppress())

@@ -30,7 +30,6 @@ public static class BuildingPostSpawner
     /// </summary>
     public static IEnumerator SetupBench(GameObject gameObject, NitroxId benchId)
     {
-        Log.Debug($"BenchPostSpawner.PostSpawnAsync({benchId})");
         if (gameObject.TryGetComponent(out Bench bench))
         {
             try

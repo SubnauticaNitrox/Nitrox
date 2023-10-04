@@ -72,7 +72,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         {
             parentObject = null;
             container = null;
-            errorLog = $"Could not find container field on GameObject {parentObject.GetFullHierarchyPath()}";
+            errorLog = $"Could not find container field on GameObject {parentObject.AliveOrNull()?.GetFullHierarchyPath()}";
             return false;
         }
 

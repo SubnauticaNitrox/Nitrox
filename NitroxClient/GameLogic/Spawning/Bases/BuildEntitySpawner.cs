@@ -125,7 +125,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
                     ghostChildrenEntities.Add(ghostEntity);
                     continue;
                 }
-                yield return entities.SpawnEntityAsync(childEntity);
+                yield return entities.SpawnEntityAsync(childEntity, true);
             }
         }
 

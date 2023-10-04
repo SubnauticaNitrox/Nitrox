@@ -30,8 +30,6 @@ public class EntityReparentedProcessor : AuthenticatedPacketProcessor<EntityRepa
             return;
         }
         
-        Log.Debug($"Supposed parentid is {entity.ParentId}");
-        Log.Debug($"Found entity to reparent: {entity.Id}, parent: {parentEntity.Id}");
         entityRegistry.ReparentEntity(packet.Id, packet.NewParentId);
         playerManager.SendPacketToOtherPlayers(packet, player);
     }

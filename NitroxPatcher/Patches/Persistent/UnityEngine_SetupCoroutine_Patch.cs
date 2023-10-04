@@ -16,12 +16,10 @@ public sealed partial class UnityEngine_SetupCoroutine_Patch : NitroxPatch, IPer
 
     public static Exception Finalizer(Exception __exception)
     {
-        if (__exception == null)
+        if (__exception != null)
         {
-            return null;
+            Log.Error(__exception);
         }
-        // TODO: Remove before merging
-        Log.Info($"Finalizer skipped an exception: {__exception}");
         return null;
     }
 }

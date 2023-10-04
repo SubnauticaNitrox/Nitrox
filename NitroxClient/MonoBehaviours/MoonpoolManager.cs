@@ -167,6 +167,5 @@ public class MoonpoolManager : MonoBehaviour
         moonpoolManager.LoadMoonpools(moonpoolEntities);
         moonpoolManager.OnPostRebuildGeometry(@base);
         yield return moonpoolManager.SpawnVehicles();
-        Log.Debug($"Restored moonpools: {moonpoolManager.GetSavedMoonpools().Count}");
     }
 }
