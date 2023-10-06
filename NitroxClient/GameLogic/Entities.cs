@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -97,7 +96,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity));
         }
 
-        public IEnumerator SpawnNewEntities()
+        private IEnumerator SpawnNewEntities()
         {
             yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
             spawningEntities = false;
@@ -105,7 +104,7 @@ namespace NitroxClient.GameLogic
 
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
         {
-            EntitiesToSpawn.AddRange(entitiesToEnqueue);
+            EntitiesToSpawn.InsertRange(0, entitiesToEnqueue);
             if (!spawningEntities)
             {
                 spawningEntities = true;
@@ -121,16 +120,10 @@ namespace NitroxClient.GameLogic
         /// <param name="forceRespawn">Should children be spawned even if already marked as spawned</param>
         public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
         {
-            int frameSkips = 0;
-            int syncExecutions = 0;
-            int asyncExecutions = 0;
-            
             // we divide the FPS by 2.5 because we consider (time for 1 frame + spawning time without a frame + extra computing time)
             float allottedTimePerFrame = 0.4f / Application.targetFrameRate;
             float timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-#if DEBUG
-            Stopwatch stopwatch = Stopwatch.StartNew();
-#endif
+
             TaskResult<Optional<GameObject>> entityResult = new();
             TaskResult<Exception> exception = new();
             
@@ -139,8 +132,8 @@ namespace NitroxClient.GameLogic
                 entityResult.Set(Optional.Empty);
                 exception.Set(null);
 
-                Entity entity = batch[0];
-                batch.RemoveAt(0);
+                Entity entity = batch[^1];
+                batch.RemoveAt(batch.Count - 1);
 
                 // Preconditions which may get the spawn process cancelled or postponed
                 if (WasAlreadySpawned(entity) && !forceRespawn)
@@ -166,12 +159,6 @@ namespace NitroxClient.GameLogic
                     if (coroutine != null)
                     {
                         yield return coroutine.OnYieldError(Log.Error);
-                        //timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-                        asyncExecutions++;
-                    }
-                    else
-                    {
-                        syncExecutions++;
                     }
                 }
 
@@ -194,29 +181,24 @@ namespace NitroxClient.GameLogic
                 
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
-                    batch.InsertRange(0, entity.ChildEntities);
+                    batch.AddRange(entity.ChildEntities);
 
                     List<NitroxId> childrenIds = entity.ChildEntities.Select(entity => entity.Id).ToList();
                     if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
                     {
                         IEnumerable<Entity> childrenToAdd = pendingEntities.Where(e => !childrenIds.Contains(e.Id));
-                        batch.InsertRange(0, childrenToAdd);
+                        batch.AddRange(childrenToAdd);
                         pendingParentEntitiesByParentId.Remove(entity.Id);
                     }
                 }
                 
                 // Skip a frame to maintain FPS
-                if (Time.realtimeSinceStartup > timeLimit && skipFrames)
+                if (Time.realtimeSinceStartup >= timeLimit && skipFrames)
                 {
                     yield return new WaitForEndOfFrame();
                     timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
-                    frameSkips++;
                 }
             }
-#if DEBUG
-            stopwatch.Stop();
-            Log.Verbose($"Optimized spawning took {stopwatch.ElapsedMilliseconds}ms with {frameSkips} frame skips, {asyncExecutions}/{syncExecutions} async/sync executions.");
-#endif
         }
 
         public IEnumerator SpawnEntityAsync(Entity entity, bool forceRespawn = false)
