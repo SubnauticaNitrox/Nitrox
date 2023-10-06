@@ -1,14 +1,16 @@
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PlayerCinematicController_StartCinematicMode_Patch : NitroxPatch, IDynamicPatch
 {
-    // private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.StartCinematicMode(default));
+    private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.StartCinematicMode(default));
 
     public static void Prefix(PlayerCinematicController __instance)
     {

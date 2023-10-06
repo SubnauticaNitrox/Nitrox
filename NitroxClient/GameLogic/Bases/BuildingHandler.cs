@@ -33,9 +33,9 @@ public partial class BuildingHandler : MonoBehaviour
     public TemporaryBuildData Temp;
 
     /// <summary>
-    /// Time in milliseconds before local player can build on a base that was modified by another player
+    /// TimeSpan before which local player can build on a base that was modified by another player
     /// </summary>
-    private const int MULTIPLAYER_BUILD_COOLDOWN = 2000;
+    private static readonly TimeSpan MultiplayerBuildCooldown = TimeSpan.FromSeconds(2);
 
     public void Start()
     {
@@ -274,7 +274,7 @@ public partial class BuildingHandler : MonoBehaviour
 
     private void CleanCooldowns()
     {
-        BasesCooldown.RemoveWhere(DateTimeOffset.UtcNow, (time, curr) => (curr - time).TotalMilliseconds >= MULTIPLAYER_BUILD_COOLDOWN);
+        BasesCooldown.RemoveWhere(DateTimeOffset.UtcNow, (time, curr) => (curr - time) >= MultiplayerBuildCooldown);
     }
 
     public class TemporaryBuildData : IDisposable
@@ -313,7 +313,7 @@ public partial class BuildingHandler : MonoBehaviour
 /// </summary>
 public partial class BuildingHandler
 {
-    private const int RESYNC_REQUEST_COOLDOWN = 10000;
+    private static readonly TimeSpan ResyncRequestCooldown = TimeSpan.FromSeconds(10);
     private DateTimeOffset LatestResyncRequestTimeOffset;
 
     private Dictionary<NitroxId, OperationTracker> Operations;
@@ -370,9 +370,9 @@ public partial class BuildingHandler
             return;
         }
         TimeSpan deltaTime = DateTimeOffset.UtcNow - LatestResyncRequestTimeOffset;
-        if (deltaTime.TotalMilliseconds < RESYNC_REQUEST_COOLDOWN)
+        if (deltaTime < ResyncRequestCooldown)
         {
-            double timeLeft = RESYNC_REQUEST_COOLDOWN * 0.001 - deltaTime.TotalSeconds;
+            double timeLeft = ResyncRequestCooldown.TotalSeconds - deltaTime.TotalSeconds;
             Log.InGame(Language.main.Get("Nitrox_ResyncOnCooldown").Replace("{TIME_LEFT}", string.Format("{0:N2}", timeLeft)));
             return;
         }

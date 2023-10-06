@@ -69,8 +69,8 @@ public class Items
     /// </summary>
     public void Dropped(GameObject gameObject, TechType? techType = null)
     {
-        // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         techType ??= CraftData.GetTechType(gameObject);
+        // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         RemoveAnyRemoteControl(gameObject);
 
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);

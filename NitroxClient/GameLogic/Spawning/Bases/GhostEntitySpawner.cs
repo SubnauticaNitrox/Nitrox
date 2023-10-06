@@ -119,6 +119,10 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             yield break;
         }
 
+        // From ConstructableBase.OnProtoDeserialize()
+        // NB: Very important to fix the ghost visual glitch where the renderer is wrongly placed
+        constructableBase.SetGhostVisible(false);
+
         // The rest is from Builder.TryPlace
         if (!isBaseDeconstructable)
         {
