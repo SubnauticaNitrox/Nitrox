@@ -18,7 +18,7 @@ public class TimeManager
 
     /// <summary>
     ///     Calculates the current exact time from an offset (<see cref="latestRegisteredTime"/>) and the delta time between
-    ///     <see cref="DateTimeOffset.Now"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
+    ///     <see cref="DateTimeOffset.UtcNow"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
     /// </summary>
     /// <remarks>
     ///     This should only be used for DayNigthCycle internal calculations so that we don't use different times during the same frame.
@@ -33,7 +33,7 @@ public class TimeManager
             {
                 return DEFAULT_TIME;
             }
-            return (DateTimeOffset.Now - latestRegistrationTime).TotalMilliseconds * 0.001 + latestRegisteredTime;
+            return (DateTimeOffset.UtcNow - latestRegistrationTime).TotalMilliseconds * 0.001 + latestRegisteredTime;
         }
     }
 

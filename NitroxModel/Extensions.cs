@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -58,4 +59,44 @@ public static class Extensions
         AggregateException ex => ex.InnerExceptions.FirstOrDefault(e => e is not AggregateException)?.Message ?? ex.Message,
         _ => exception.Message
     };
+
+
+    /// <returns>
+    /// <inheritdoc cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource})"/><br />
+    /// <see langword="true" /> if both IEnumerables are null.
+    /// </returns>
+    /// <remarks><see cref="ArgumentNullException"/> can't be thrown because of <paramref name="first"/> or <paramref name="second"/> being null.</remarks>
+    /// <inheritdoc cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource})"/>
+    public static bool SequenceEqualOrBothNull<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second)
+    {
+        if (first != null && second != null)
+        {
+            return first.SequenceEqual(second);
+        }
+        return first == second;
+    }
+
+    public static void RemoveWhere<TKey, TValue, TParameter>(this IDictionary<TKey, TValue> dictionary, TParameter extraParameter, Func<TValue, TParameter, bool> predicate)
+    {
+        int toRemoveIndex = 0;
+        TKey[] toRemove = ArrayPool<TKey>.Shared.Rent(dictionary.Count);
+        try
+        {
+            foreach (KeyValuePair<TKey, TValue> item in dictionary)
+            {
+                if (predicate.Invoke(item.Value, extraParameter))
+                {
+                    toRemove[toRemoveIndex++] = item.Key;
+                }
+            }
+            for (int i = 0; i < toRemoveIndex; i++)
+            {
+                dictionary.Remove(toRemove[i]);
+            }
+        }
+        finally
+        {
+            ArrayPool<TKey>.Shared.Return(toRemove, true);
+        }
+    }
 }

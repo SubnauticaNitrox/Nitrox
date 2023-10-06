@@ -1,64 +1,98 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.GameLogic;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Spawning.Bases;
+using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
+using NitroxPatcher.PatternMatching;
 using UnityEngine;
+using static System.Reflection.Emit.OpCodes;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 {
-    public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
+
+    public static readonly InstructionsPattern AddInstructionPattern1 = new()
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
+        Ldloc_0,
+        Ldc_I4_0,
+        Ldc_I4_1,
+        new() { OpCode = Callvirt, Operand = new(nameof(Constructable), nameof(Constructable.SetState)) },
+        { Pop, "Insert1" }
+    };
 
-        public static readonly OpCode PLACE_BASE_INJECTION_OPCODE = OpCodes.Callvirt;
-        public static readonly object PLACE_BASE_INJECTION_OPERAND = Reflect.Method((BaseGhost t) => t.Place());
+    public static readonly List<CodeInstruction> InstructionsToAdd1 = new()
+    {
+        new(Ldloc_0),
+        new(Call, Reflect.Method(() => GhostCreated(default)))
+    };
 
-        public static readonly OpCode PLACE_FURNITURE_INJECTION_OPCODE = OpCodes.Call;
-        public static readonly object PLACE_FURNITURE_INJECTION_OPERAND = Reflect.Method(() => SkyEnvironmentChanged.Send(default(GameObject), default(Component)));
+    public static readonly InstructionsPattern AddInstructionPattern2 = new()
+    {
+        Ldloc_S,
+        Ldloc_3,
+        Ldloc_S,
+        Or,
+        { new() { OpCode = Callvirt, Operand = new(nameof(Constructable), nameof(Constructable.SetIsInside)) }, "Insert2" }
+    };
 
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    public static readonly List<CodeInstruction> InstructionsToAdd2 = new()
+    {
+        TARGET_METHOD.Ldloc<Constructable>(),
+        new(Call, Reflect.Method(() => GhostCreated(default)))
+    };
+
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
+        instructions.Transform(AddInstructionPattern1, (label, instruction) =>
         {
-            Validate.NotNull(PLACE_BASE_INJECTION_OPERAND);
-            Validate.NotNull(PLACE_FURNITURE_INJECTION_OPERAND);
-
-            foreach (CodeInstruction instruction in instructions)
+            if (label.Equals("Insert1"))
             {
-                yield return instruction;
-
-                if (instruction.opcode.Equals(PLACE_BASE_INJECTION_OPCODE) && instruction.operand.Equals(PLACE_BASE_INJECTION_OPERAND))
-                {
-                    /*
-                     *  Multiplayer.Logic.Building.PlaceBasePiece(componentInParent, component.TargetBase, CraftData.GetTechType(Builder.prefab), Builder.placeRotation);
-                     */
-                    yield return TranspilerHelper.LocateService<Building>();
-                    yield return new CodeInstruction(OpCodes.Ldloc_1);
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Ldloc_1);
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((BaseGhost t) => t.TargetBase).GetMethod);
-                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.prefab));
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => CraftData.GetTechType(default(GameObject))));
-                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.placeRotation));
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Building t) => t.PlaceBasePiece(default(BaseGhost), default(ConstructableBase), default(Base), default(TechType), default(Quaternion))));
-                }
-
-                if (instruction.opcode.Equals(PLACE_FURNITURE_INJECTION_OPCODE) && instruction.operand.Equals(PLACE_FURNITURE_INJECTION_OPERAND))
-                {
-                    /*
-                     *  Multiplayer.Logic.Building.PlaceFurniture(gameObject, CraftData.GetTechType(Builder.prefab), Builder.ghostModel.transform.position, Builder.placeRotation);
-                     */
-                    yield return TranspilerHelper.LocateService<Building>();
-                    yield return new CodeInstruction(OpCodes.Ldloc_2);
-                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.prefab));
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => CraftData.GetTechType(default(GameObject))));
-                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.ghostModel));
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((GameObject t) => t.transform).GetMethod);
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((Transform t) => t.position).GetMethod);
-                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.placeRotation));
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Building t) => t.PlaceFurniture(default(GameObject), default(TechType), default(Vector3), default(Quaternion))));
-                }
+                return InstructionsToAdd1;
             }
+            return null;
+        }).Transform(AddInstructionPattern2, (label, instruction) =>
+        {
+            if (label.Equals("Insert2"))
+            {
+                return InstructionsToAdd2;
+            }
+            return null;
+        });
+
+    public static void GhostCreated(Constructable constructable)
+    {
+        GameObject ghostObject = constructable.gameObject;
+
+        NitroxId parentId = null;
+        if (ghostObject.TryGetComponentInParent(out SubRoot subRoot, true) && (subRoot.isBase || subRoot.isCyclops) &&
+            subRoot.TryGetNitroxId(out NitroxId entityId))
+        {
+            parentId = entityId;
+        }
+
+        // Assign a NitroxId to the ghost now
+        NitroxId ghostId = new();
+        NitroxEntity.SetNewId(ghostObject, ghostId);
+        if (constructable is ConstructableBase constructableBase)
+        {
+            GhostEntity ghost = GhostEntitySpawner.From(constructableBase);
+            ghost.Id = ghostId;
+            ghost.ParentId = parentId;
+            Resolve<IPacketSender>().Send(new PlaceGhost(ghost));
+        }
+        else
+        {
+            ModuleEntity module = ModuleEntitySpawner.From(constructable);
+            module.Id = ghostId;
+            module.ParentId = parentId;
+            Resolve<IPacketSender>().Send(new PlaceModule(module));
         }
     }
 }

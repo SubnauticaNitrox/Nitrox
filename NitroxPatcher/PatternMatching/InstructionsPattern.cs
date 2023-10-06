@@ -49,7 +49,7 @@ public class InstructionsPattern : IEnumerable<InstructionPattern>
         for (int i = 0; i < il.Length; i++)
         {
             // If pattern can't fit in remaining instructions, abort.
-            if (i + pattern.Count >= il.Length)
+            if (i + pattern.Count > il.Length)
             {
                 break;
             }

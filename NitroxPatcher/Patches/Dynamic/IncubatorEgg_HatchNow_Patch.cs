@@ -47,8 +47,8 @@ public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicP
 
             NitroxId babyId = NitroxEntity.GenerateNewId(baby);
 
-            WorldEntity entity = new WorldEntity(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", false, babyId, null, false, null);
-            NitroxServiceLocator.LocateService<Entities>().BroadcastEntitySpawnedByClient(entity);
+            WorldEntity entity = new(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", false, babyId, null);
+            Resolve<Entities>().BroadcastEntitySpawnedByClient(entity);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -10,7 +10,7 @@ public sealed partial class SpeedConsoleCommand_OnConsoleCommand_speed_Patch : N
     // The command is skipped because simulating speed reliable is totally out of scope
     public static bool Prefix()
     {
-        ErrorMessage.AddMessage(Language.main.Get("Nitrox_CommandNotAvailable"));
+        Log.InGame(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
     }
 }

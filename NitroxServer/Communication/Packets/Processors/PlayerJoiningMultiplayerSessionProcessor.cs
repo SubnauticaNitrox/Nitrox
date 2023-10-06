@@ -10,6 +10,7 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.World;
 
@@ -22,14 +23,16 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
+        private readonly BuildingManager buildingManager;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, BuildingManager buildingManager)
         {
             this.scheduleKeeper = scheduleKeeper;
             this.storyManager = storyManager;
             this.playerManager = playerManager;
             this.world = world;
             this.entityRegistry = entityRegistry;
+            this.buildingManager = buildingManager;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
@@ -66,12 +69,12 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 RespawnExistingEntity(player);
             }
+            List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
                 assignedEscapePodId,
                 equippedItems,
-                world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 player.UsedItems,
                 player.QuickSlotsBindingIds,
                 world.GameData.PDAState.GetInitialPDAData(),
@@ -81,12 +84,13 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.SubRootId,
                 player.Stats,
                 GetOtherPlayers(player),
-                world.WorldEntityManager.GetGlobalRootEntities(),
+                globalRootEntities,
                 simulations,
                 world.GameMode,
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
-                storyManager.GetTimeData()
+                storyManager.GetTimeData(),
+                BuildingManager.GetEntitiesOperations(globalRootEntities)
             );
 
             player.SendPacket(initialPlayerSync);
@@ -102,7 +106,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-            PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, null, true, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddEntity(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             playerManager.SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);
@@ -118,7 +122,8 @@ namespace NitroxServer.Communication.Packets.Processors
             }
             else
             {
-                Log.Error($"Unable to find player entity for {player.Name}");
+                Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
+                SetupPlayerEntity(player);
             }
         }
     }

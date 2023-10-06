@@ -1,5 +1,4 @@
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -20,6 +19,17 @@ public class EntityReparentedProcessor : AuthenticatedPacketProcessor<EntityRepa
 
     public override void Process(EntityReparented packet, Player player)
     {
+        if (!entityRegistry.TryGetEntityById(packet.Id, out Entity entity))
+        {
+            Log.Error($"Couldn't find entity for {packet.Id}");
+            return;
+        }
+        if (!entityRegistry.TryGetEntityById(packet.NewParentId, out Entity parentEntity))
+        {
+            Log.Error($"Couldn't find parent entity for {packet.NewParentId}");
+            return;
+        }
+        
         entityRegistry.ReparentEntity(packet.Id, packet.NewParentId);
         playerManager.SendPacketToOtherPlayers(packet, player);
     }

@@ -12,10 +12,10 @@ namespace NitroxServer.Serialization.World
         public WorldData WorldData { get; set; } = new WorldData();
 
         [DataMember(Order = 2)]
-        public BaseData BaseData { get; set; }
+        public PlayerData PlayerData { get; set; }
 
         [DataMember(Order = 3)]
-        public PlayerData PlayerData { get; set; }
+        public GlobalRootData GlobalRootData { get; set; }
 
         [DataMember(Order = 4)]
         public EntityData EntityData { get; set; }
@@ -24,23 +24,23 @@ namespace NitroxServer.Serialization.World
         {
             return new PersistedWorldData
             {
-                BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
-                PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
-                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities()),
                 WorldData =
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager, world.TimeKeeper),
                     Seed = world.Seed
-                }
+                },
+                PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
+                GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetGlobalRootEntities(true)),
+                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities(true))
             };
         }
 
         public bool IsValid()
         {
             return WorldData.IsValid() &&
-                   BaseData != null &&
                    PlayerData != null &&
+                   GlobalRootData != null &&
                    EntityData != null;
         }
     }

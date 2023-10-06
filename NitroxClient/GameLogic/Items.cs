@@ -1,20 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using NitroxModel.DataStructures.GameLogic.Entities;
-using System.Collections.Generic;
-using NitroxModel.Helper;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
-using NitroxModel.DataStructures.GameLogic;
-using System.Linq;
-using NitroxClient.Unity.Helper;
-using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.GameLogic;
 
@@ -70,21 +70,40 @@ public class Items
     public void Dropped(GameObject gameObject, TechType? techType = null)
     {
         techType ??= CraftData.GetTechType(gameObject);
-
         // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         RemoveAnyRemoteControl(gameObject);
 
-        Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
         Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
         bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.Value.ToDto());
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
-        WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
+
+        WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
         {
             ChildEntities = GetPrefabChildren(gameObject, id).ToList()
         };
 
+        // There are two specific cases which we need to notice:
+        // 1. If the item is dropped in a WaterPark
+        if (gameObject.GetComponent<Pickupable>() && TryGetCurrentWaterParkId(out NitroxId waterParkId))
+        {
+            droppedItem.ParentId = waterParkId;
+            // We cast it to an entity type that is always seeable by clients
+            // therefore, the packet will be redirected to everyone
+            droppedItem = GlobalRootEntity.From(droppedItem);
+        }
+        else
+        {
+            // 2. You can't drop items in bases but you can place small objects like figures and posters which are put right under the base object
+            // NB: They are recognizable by their PlaceTool from which the Place() function executes the current code
+            SubRoot currentSub = Player.main.GetCurrentSub();
+            if (currentSub && currentSub.TryGetNitroxId(out NitroxId parentId))
+            {
+                droppedItem.ParentId = parentId;
+            }
+        }
         Log.Debug($"Dropping item: {droppedItem}");
+
         packetSender.Send(new EntitySpawnedByClient(droppedItem));
     }
 
@@ -128,7 +147,7 @@ public class Items
         }
     }
 
-    private InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject)
+    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject)
     {
         NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(gameObject); // id may not exist, create if missing
         string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
@@ -157,20 +176,34 @@ public class Items
         UnityEngine.Object.Destroy(gameObject.GetComponent<RemotelyControlled>());
     }
 
-    private Optional<NitroxId> GetCurrentWaterParkId()
+    private bool TryGetCurrentWaterParkId(out NitroxId waterParkId)
     {
-        Player player = Utils.GetLocalPlayer().GetComponent<Player>();
-        if (player == null)
+        if (Player.main && Player.main.currentWaterPark &&
+            Player.main.currentWaterPark.TryGetNitroxId(out waterParkId))
         {
-            return Optional.Empty;
+            return true;
         }
+        waterParkId = null;
+        return false;
+    }
 
-        WaterPark currentWaterPark = player.currentWaterPark;
-        if (currentWaterPark == null)
+    public static List<InstalledModuleEntity> GetEquipmentModuleEntities(Equipment equipment, NitroxId equipmentId)
+    {
+        List<InstalledModuleEntity> entities = new();
+        foreach (KeyValuePair<string, InventoryItem> itemEntry in equipment.equipment)
         {
-            return Optional.Empty;
-        }
+            InventoryItem item = itemEntry.Value;
+            if (item != null)
+            {
+                Pickupable pickupable = item.item;
+                string classId = pickupable.RequireComponent<PrefabIdentifier>().ClassId;
+                NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(pickupable.gameObject);
+                Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(pickupable.gameObject);
+                List<Entity> children = GetPrefabChildren(pickupable.gameObject, itemId).ToList();
 
-        return currentWaterPark.GetId();
+                entities.Add(new(itemEntry.Key, classId, itemId, pickupable.GetTechType().ToDto(), metadata.OrNull(), equipmentId, children));
+            }
+        }
+        return entities;
     }
 }

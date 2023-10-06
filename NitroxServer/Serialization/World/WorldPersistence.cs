@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -65,9 +66,9 @@ namespace NitroxServer.Serialization.World
                 }
 
                 Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
-                Serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
                 Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
                 Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
+                Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
                 Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
                 using (config.Update(saveDir))
@@ -113,11 +114,11 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData = new()
                 {
-                    BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}")),
                     PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}")),
                     WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}")),
+                    GlobalRootData = Serializer.Deserialize<GlobalRootData>(Path.Combine(saveDir, $"GlobalRootData{FileEnding}")),
                     EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"))
-                };
+            };
 
                 if (!persistedData.IsValid())
                 {
@@ -158,7 +159,6 @@ namespace NitroxServer.Serialization.World
         {
             PersistedWorldData pWorldData = new()
             {
-                BaseData = BaseData.From(new List<BasePiece>(), new List<BasePiece>()),
                 EntityData = EntityData.From(new List<Entity>()),
                 PlayerData = PlayerData.From(new List<Player>()),
                 WorldData = new WorldData()
@@ -171,7 +171,8 @@ namespace NitroxServer.Serialization.World
                     },
                     ParsedBatchCells = new List<NitroxInt3>(),
                     Seed = config.Seed
-                }
+                },
+                GlobalRootData = new()
             };
 
             return CreateWorld(pWorldData, config.GameMode);
@@ -193,13 +194,16 @@ namespace NitroxServer.Serialization.World
 
             EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
             entityRegistry.AddEntities(pWorldData.EntityData.Entities);
+            foreach (Entity entity in pWorldData.GlobalRootData.Entities)
+            {
+                Log.Debug($"Adding GlobalRootEntity: {entity.Id} of type: {entity.GetType()}");
+            }
+            entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
 
             World world = new()
             {
                 SimulationOwnershipData = new SimulationOwnershipData(),
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
-
-                BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
 
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
 
@@ -226,6 +230,8 @@ namespace NitroxServer.Serialization.World
             );
 
             world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
+
+            world.BuildingManager = new(world.EntityRegistry, world.WorldEntityManager, config);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);

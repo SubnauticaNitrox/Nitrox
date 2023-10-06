@@ -57,6 +57,12 @@ public class EquipmentSlots
         }
         else
         {
+            // Reactor rod can't be unequipped so this will only happen when a Nuclear Reactor is destroyed (in which case we don't need this code)
+            if (pickupable.GetTechType() == TechType.ReactorRod)
+            {
+                return;
+            }
+
             // UWE also sends module events here as they are technically equipment of the vehicles.
             ModuleRemoved moduleRemoved = new(itemId, ownerId);
             packetSender.Send(moduleRemoved);

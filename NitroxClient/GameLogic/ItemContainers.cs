@@ -37,9 +37,13 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            EntityReparented reparented = new EntityReparented(itemId, InventoryContainerHelper.GetOwnerId(containerTransform));
-
-            if (packetSender.Send(reparented))
+            if (!InventoryContainerHelper.TryGetOwnerId(containerTransform, out NitroxId ownerId))
+            {
+                // Error logging is done in the function
+                return;
+            }
+            
+            if (packetSender.Send(new EntityReparented(itemId, ownerId)))
             {
                 Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }

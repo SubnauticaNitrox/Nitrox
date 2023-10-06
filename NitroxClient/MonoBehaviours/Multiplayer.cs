@@ -6,6 +6,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
@@ -62,7 +63,9 @@ namespace NitroxClient.MonoBehaviours
                 ProcessPackets();
                 throttledPacketSender.Update();
 
-                if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+                // Loading up shouldn't be bothered by entities spawning in the surroundings
+                if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED &&
+                    InitialSyncCompleted)
                 {
                     terrain.UpdateVisibility();
                 }
@@ -163,7 +166,7 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
-            gameObject.AddComponent<ThrottledBuilder>();
+            gameObject.AddComponent<BuildingHandler>();
         }
 
         public void StopCurrentSession()

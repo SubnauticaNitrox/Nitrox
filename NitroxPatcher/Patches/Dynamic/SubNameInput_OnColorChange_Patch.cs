@@ -24,15 +24,15 @@ public sealed partial class SubNameInput_OnColorChange_Patch : NitroxPatch, IDyn
             return;
         }
 
-        if (subName.TryGetComponentInParent(out Rocket rocket))
+        if (subName.TryGetComponentInParent(out Rocket rocket, true))
         {
             // For some reason only the rocket has a full functioning ghost with a different NitroxId when spawning/constructing, so we are ignoring it.
-            if (rocket.TryGetComponentInChildren(out VFXConstructing constructing) && !constructing.isDone)
+            if (rocket.TryGetComponentInChildren(out VFXConstructing constructing, true) && !constructing.isDone)
             {
                 return;
             }
         }
-        else if (!subName.TryGetComponent(out Vehicle _) && !subName.TryGetComponentInParent(out SubRoot _))
+        else if (!subName.TryGetComponent(out Vehicle _) && !subName.TryGetComponentInParent(out SubRoot _, true))
         {
             Log.Error($"[SubNameInput_OnColorChange_Patch] The GameObject {subName.gameObject.name} doesn't have a Vehicle/SubRoot/Rocket component.");
             return;
