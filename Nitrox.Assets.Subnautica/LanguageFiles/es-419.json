@@ -43,6 +43,7 @@
     "Nitrox_PlayerKicked": "Has sido expulsado del servidor",
     "Nitrox_PlayerListTabName": "Lista de Jugadores",
     "Nitrox_RejectedSessionPolicy": "Reserva Rechazada…",
+    "Nitrox_RemotePlayerObstacle": "Otro jugador está dentro o demasiado cerca del objetivo para destruirlo.",
     "Nitrox_RequestingSessionPolicy": "Solicitando la información sobre la política de sesiones…",
     "Nitrox_ServerStopped": "El servidor se detuvo",
     "Nitrox_ShowPing": "Mostrar Latencia",

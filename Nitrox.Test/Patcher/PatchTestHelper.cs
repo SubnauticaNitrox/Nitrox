@@ -52,7 +52,7 @@ namespace NitroxTest.Patcher
         public static void TestPattern(MethodInfo targetMethod, InstructionsPattern pattern, out IEnumerable<CodeInstruction> originalIl, out IEnumerable<CodeInstruction> transformedIl)
         {
             bool shouldHappen = false;
-            originalIl = GetInstructionsFromMethod(targetMethod);
+            originalIl = PatchProcessor.GetCurrentInstructions(targetMethod);
             transformedIl = originalIl
                             .Transform(pattern, (_, _) =>
                             {

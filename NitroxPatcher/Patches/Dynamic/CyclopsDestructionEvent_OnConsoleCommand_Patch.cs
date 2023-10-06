@@ -14,7 +14,7 @@ public sealed class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch
 
     public static bool PrefixRestore()
     {
-        ErrorMessage.AddWarning(Language.main.Get("Nitrox_CommandNotAvailable"));
+        Log.InGame(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
     }
 

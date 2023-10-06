@@ -27,20 +27,16 @@ public class PlaceholderGroupWorldEntity : WorldEntity
         Level = worldEntity.Level;
         ClassId = worldEntity.ClassId;
         SpawnedByServer = worldEntity.SpawnedByServer;
-        WaterParkId = worldEntity.WaterParkId;
-        ExistsInGlobalRoot = worldEntity.ExistsInGlobalRoot;
         ChildEntities = prefabPlaceholders;
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public PlaceholderGroupWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public PlaceholderGroupWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
         Transform = transform;
         Level = level;
         ClassId = classId;
         SpawnedByServer = spawnedByServer;
-        WaterParkId = waterParkId;
-        ExistsInGlobalRoot = existsInGlobalRoot;
         Id = id;
         TechType = techType;
         Metadata = metadata;

@@ -46,8 +46,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 bool isOtherPlayer = player != playerWhoSpawned;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
-                    SpawnEntities cellEntities = new SpawnEntities(entity);
-                    player.SendPacket(cellEntities);
+                    player.SendPacket(new SpawnEntities(entity, packet.RequireRespawn));
                 }
             }
         }

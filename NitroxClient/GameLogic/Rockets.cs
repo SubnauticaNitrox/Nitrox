@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -68,7 +68,7 @@ namespace NitroxClient.GameLogic
                 player.PlayerModel.SetActive(false);
             }
 
-            ErrorMessage.AddMessage(Language.main.Get("Nitrox_ThankForPlaying"));
+            Log.InGame(Language.main.Get("Nitrox_ThankForPlaying"));
         }
     }
 }

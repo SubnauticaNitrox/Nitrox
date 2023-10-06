@@ -21,15 +21,15 @@ public sealed partial class SubNameInput_OnNameChange_Patch : NitroxPatch, IDyna
         SubName subName = __instance.target;
         if (subName)
         {
-            if (subName.TryGetComponentInParent(out Rocket rocket))
+            if (subName.TryGetComponentInParent(out Rocket rocket, true))
             {
                 // For some reason only the rocket has a full functioning ghost with a different NitroxId when spawning/constructing, so we are ignoring it.
-                if (rocket.TryGetComponentInChildren(out VFXConstructing constructing) && !constructing.isDone)
+                if (rocket.TryGetComponentInChildren(out VFXConstructing constructing, true) && !constructing.isDone)
                 {
                     return;
                 }
             }
-            else if (!subName.TryGetComponent(out Vehicle _) && !subName.TryGetComponentInParent(out SubRoot _))
+            else if (!subName.TryGetComponent(out Vehicle _) && !subName.TryGetComponentInParent(out SubRoot _, true))
             {
                 Log.Error($"[SubNameInput_OnNameChange_Patch] The GameObject {subName.gameObject.name} doesn't have a Vehicle/SubRoot/Rocket component.");
                 return;

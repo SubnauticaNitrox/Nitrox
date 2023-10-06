@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -15,7 +15,8 @@ public sealed partial class Utils_GetEntityRoot_Patch : NitroxPatch, IDynamicPat
 
     public static bool Prefix(GameObject go, ref GameObject __result)
     {
-        if (go.TryGetComponent(out RemotePlayerIdentifier remotePlayerIdentifier) || go.TryGetComponentInParent(out remotePlayerIdentifier))
+        if (go.TryGetComponent(out RemotePlayerIdentifier remotePlayerIdentifier) ||
+            go.TryGetComponentInParent(out remotePlayerIdentifier, true))
         {
             __result = remotePlayerIdentifier.gameObject;
             return false;
