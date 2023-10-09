@@ -7,16 +7,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper;
 using Nitrox.Test.Helper.Faker;
-using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxServer_Subnautica;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Serialization.World;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
 
 namespace NitroxServer.Serialization;
 
@@ -124,75 +124,6 @@ public class WorldPersistenceTest
         Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
         Assert.AreEqual(storyTiming.AuroraCountdownTime, storyTimingAfter.AuroraCountdownTime);
         Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
-    public void BaseDataTest(PersistedWorldData worldDataAfter, string serializerName)
-    {
-        AssertHelper.IsListEqual(worldData.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), worldDataAfter.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), BasePieceTest);
-        AssertHelper.IsListEqual(worldData.BaseData.CompletedBasePieceHistory.OrderBy(x => x.Id), worldDataAfter.BaseData.CompletedBasePieceHistory.OrderBy(x => x.Id), BasePieceTest);
-    }
-
-    private static void BasePieceTest(BasePiece basePiece, BasePiece basePieceAfter)
-    {
-        Assert.AreEqual(basePiece.Id, basePieceAfter.Id);
-        Assert.AreEqual(basePiece.ItemPosition, basePieceAfter.ItemPosition);
-        Assert.AreEqual(basePiece.Rotation, basePieceAfter.Rotation);
-        Assert.AreEqual(basePiece.TechType, basePieceAfter.TechType);
-        Assert.AreEqual(basePiece.ParentId.HasValue, basePieceAfter.ParentId.HasValue);
-        Assert.AreEqual(basePiece.ParentId.Value, basePieceAfter.ParentId.Value);
-        Assert.AreEqual(basePiece.CameraPosition, basePieceAfter.CameraPosition);
-        Assert.AreEqual(basePiece.CameraRotation, basePieceAfter.CameraRotation);
-        Assert.AreEqual(basePiece.ConstructionAmount, basePieceAfter.ConstructionAmount);
-        Assert.AreEqual(basePiece.ConstructionCompleted, basePieceAfter.ConstructionCompleted);
-        Assert.AreEqual(basePiece.IsFurniture, basePieceAfter.IsFurniture);
-        Assert.AreEqual(basePiece.BaseId, basePieceAfter.BaseId);
-        Assert.AreEqual(basePiece.BuildIndex, basePieceAfter.BuildIndex);
-
-        switch (basePiece.RotationMetadata.Value)
-        {
-            case AnchoredFaceBuilderMetadata anchoredMetadata when basePieceAfter.RotationMetadata.Value is AnchoredFaceBuilderMetadata anchoredMetadataAfter:
-                Assert.AreEqual(anchoredMetadata.Cell, anchoredMetadataAfter.Cell);
-                Assert.AreEqual(anchoredMetadata.Direction, anchoredMetadataAfter.Direction);
-                Assert.AreEqual(anchoredMetadata.FaceType, anchoredMetadataAfter.FaceType);
-                Assert.AreEqual(anchoredMetadata.Anchor, anchoredMetadataAfter.Anchor);
-                break;
-            case BaseModuleBuilderMetadata baseModuleMetadata when basePieceAfter.RotationMetadata.Value is BaseModuleBuilderMetadata baseModuleMetadataAfter:
-                Assert.AreEqual(baseModuleMetadata.Cell, baseModuleMetadataAfter.Cell);
-                Assert.AreEqual(baseModuleMetadata.Direction, baseModuleMetadataAfter.Direction);
-                break;
-            case CorridorBuilderMetadata corridorMetadata when basePieceAfter.RotationMetadata.Value is CorridorBuilderMetadata corridorMetadataAfter:
-                Assert.AreEqual(corridorMetadata.Rotation, corridorMetadataAfter.Rotation);
-                Assert.AreEqual(corridorMetadata.Position, corridorMetadataAfter.Position);
-                Assert.AreEqual(corridorMetadata.HasTargetBase, corridorMetadataAfter.HasTargetBase);
-                Assert.AreEqual(corridorMetadata.Cell, corridorMetadataAfter.Cell);
-                break;
-            case MapRoomBuilderMetadata mapRoomMetadata when basePieceAfter.RotationMetadata.Value is MapRoomBuilderMetadata mapRoomMetadataAfter:
-                Assert.AreEqual(mapRoomMetadata.CellType, mapRoomMetadataAfter.CellType);
-                Assert.AreEqual(mapRoomMetadata.Rotation, mapRoomMetadataAfter.Rotation);
-                break;
-            case null when basePieceAfter.RotationMetadata.Value is null:
-                break;
-            default:
-                Assert.Fail($"{nameof(BasePiece)}.{nameof(BasePiece.RotationMetadata)} is not equal");
-                break;
-        }
-
-        switch (basePiece.Metadata.Value)
-        {
-            case SignMetadata signMetadata when basePieceAfter.Metadata.Value is SignMetadata signMetadataAfter:
-                Assert.AreEqual(signMetadata.Text, signMetadataAfter.Text);
-                Assert.AreEqual(signMetadata.ColorIndex, signMetadataAfter.ColorIndex);
-                Assert.AreEqual(signMetadata.ScaleIndex, signMetadataAfter.ScaleIndex);
-                Assert.IsTrue(signMetadata.Elements.SequenceEqual(signMetadataAfter.Elements));
-                Assert.AreEqual(signMetadata.Background, signMetadataAfter.Background);
-                break;
-            case null when basePieceAfter.Metadata.Value is null:
-                break;
-            default:
-                Assert.Fail($"{nameof(BasePiece)}.{nameof(BasePiece.Metadata)} is not equal");
-                break;
-        }
     }
 
     [DataTestMethod, DynamicWorldDataAfter]
@@ -345,6 +276,35 @@ public class WorldPersistenceTest
                     Assert.AreEqual(equippedItem.TechType, equippedItemAfter.TechType);
                 });
                 break;
+            case GhostMetadata ghostMetadata when entityAfter.Metadata is GhostMetadata ghostMetadataAfter:
+                Assert.AreEqual(ghostMetadata.TargetOffset, ghostMetadataAfter.TargetOffset);
+
+                if (ghostMetadata.GetType() != ghostMetadataAfter.GetType())
+                {
+                    Assert.Fail($"Runtime type of {nameof(GhostMetadata)} in {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {ghostMetadata.GetType().Name} - {ghostMetadataAfter.GetType().Name}");
+                }
+
+                switch (ghostMetadata)
+                {
+                    case BaseAnchoredCellGhostMetadata metadata when ghostMetadataAfter is BaseAnchoredCellGhostMetadata metadataAfter:
+                        Assert.AreEqual(metadata.AnchoredCell, metadataAfter.AnchoredCell);
+                        break;
+                    case BaseAnchoredFaceGhostMetadata metadata when ghostMetadataAfter is BaseAnchoredFaceGhostMetadata metadataAfter:
+                        Assert.AreEqual(metadata.AnchoredFace, metadataAfter.AnchoredFace);
+                        break;
+                    case BaseDeconstructableGhostMetadata metadata when ghostMetadataAfter is BaseDeconstructableGhostMetadata metadataAfter:
+                        Assert.AreEqual(metadata.ModuleFace, metadataAfter.ModuleFace);
+                        Assert.AreEqual(metadata.ClassId, metadataAfter.ClassId);
+                        break;
+                }
+
+                break;
+            case WaterParkCreatureMetadata metadata when entityAfter.Metadata is WaterParkCreatureMetadata metadataAfter:
+                Assert.AreEqual(metadata.Age, metadataAfter.Age);
+                Assert.AreEqual(metadata.MatureTime, metadataAfter.MatureTime);
+                Assert.AreEqual(metadata.TimeNextBreed, metadataAfter.TimeNextBreed);
+                Assert.AreEqual(metadata.BornInside, metadataAfter.BornInside);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
@@ -359,8 +319,6 @@ public class WorldPersistenceTest
                 Assert.AreEqual(worldEntity.Level, worldEntityAfter.Level);
                 Assert.AreEqual(worldEntity.ClassId, worldEntityAfter.ClassId);
                 Assert.AreEqual(worldEntity.SpawnedByServer, worldEntityAfter.SpawnedByServer);
-                Assert.AreEqual(worldEntity.WaterParkId, worldEntityAfter.WaterParkId);
-                Assert.AreEqual(worldEntity.ExistsInGlobalRoot, worldEntityAfter.ExistsInGlobalRoot);
 
                 if (worldEntity.GetType() != worldEntityAfter.GetType())
                 {
@@ -372,18 +330,62 @@ public class WorldPersistenceTest
                     {
                         case PlaceholderGroupWorldEntity _ when worldEntityAfter is PlaceholderGroupWorldEntity _:
                             break;
-                        case EscapePodWorldEntity escapePodWorldEntity when worldEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
-                            Assert.AreEqual(escapePodWorldEntity.Damaged, escapePodWorldEntityAfter.Damaged);
-                            Assert.IsTrue(escapePodWorldEntity.Players.SequenceEqual(escapePodWorldEntityAfter.Players));
-                            break;
-                        case PlayerWorldEntity _ when worldEntityAfter is PlayerWorldEntity _:
-                            break;
-                        case VehicleWorldEntity vehicleWorldEntity when worldEntityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
-                            Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
-                            Assert.AreEqual(vehicleWorldEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
-                            break;
                         case CellRootEntity _ when worldEntityAfter is CellRootEntity _:
                             break;
+                        case GlobalRootEntity globalRootEntity when worldEntityAfter is GlobalRootEntity globalRootEntityAfter:
+                            if (globalRootEntity.GetType() != typeof(GlobalRootEntity))
+                            {
+                                switch (globalRootEntity)
+                                {
+                                    case BuildEntity buildEntity when globalRootEntityAfter is BuildEntity buildEntityAfter:
+                                        Assert.AreEqual(buildEntity.BaseData, buildEntityAfter.BaseData);
+                                        break;
+                                    case EscapePodWorldEntity escapePodWorldEntity when globalRootEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
+                                        Assert.AreEqual(escapePodWorldEntity.Damaged, escapePodWorldEntityAfter.Damaged);
+                                        Assert.IsTrue(escapePodWorldEntity.Players.SequenceEqual(escapePodWorldEntityAfter.Players));
+                                        break;
+                                    case InteriorPieceEntity interiorPieceEntity when globalRootEntityAfter is InteriorPieceEntity interiorPieceEntityAfter:
+                                        Assert.AreEqual(interiorPieceEntity.BaseFace, interiorPieceEntityAfter.BaseFace);
+                                        break;
+                                    case MapRoomEntity mapRoomEntity when globalRootEntityAfter is MapRoomEntity mapRoomEntityAfter:
+                                        Assert.AreEqual(mapRoomEntity.Cell, mapRoomEntityAfter.Cell);
+                                        break;
+                                    case ModuleEntity moduleEntity when globalRootEntityAfter is ModuleEntity moduleEntityAfter:
+                                        Assert.AreEqual(moduleEntity.ConstructedAmount, moduleEntityAfter.ConstructedAmount);
+                                        Assert.AreEqual(moduleEntity.IsInside, moduleEntityAfter.IsInside);
+
+                                        if (moduleEntity.GetType() != moduleEntityAfter.GetType())
+                                        {
+                                            Assert.Fail($"Runtime type of {nameof(ModuleEntity)} is not equal: {moduleEntity.GetType().Name} - {moduleEntityAfter.GetType().Name}");
+                                        }
+
+                                        switch (moduleEntity)
+                                        {
+                                            case GhostEntity ghostEntity when moduleEntityAfter is GhostEntity ghostEntityAfter:
+                                                Assert.AreEqual(ghostEntity.BaseFace, ghostEntityAfter.BaseFace);
+                                                Assert.AreEqual(ghostEntity.BaseData, ghostEntityAfter.BaseData);
+                                                break;
+                                        }
+
+                                        break;
+                                    case MoonpoolEntity moonpoolEntity when globalRootEntityAfter is MoonpoolEntity moonpoolEntityAfter:
+                                        Assert.AreEqual(moonpoolEntity.Cell, moonpoolEntityAfter.Cell);
+                                        break;
+                                    case PlanterEntity _ when globalRootEntityAfter is PlanterEntity:
+                                        break;
+                                    case PlayerWorldEntity _ when globalRootEntityAfter is PlayerWorldEntity:
+                                        break;
+                                    case VehicleWorldEntity vehicleWorldEntity when globalRootEntityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
+                                        Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
+                                        Assert.AreEqual(vehicleWorldEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
+                                        break;
+                                    default:
+                                        Assert.Fail($"Runtime type of {nameof(WorldEntity)} is not equal even after the check: {worldEntity.GetType().Name} - {globalRootEntityAfter.GetType().Name}");
+                                        break;
+                                }
+                            }
+                            break;
+
                         default:
                             Assert.Fail($"Runtime type of {nameof(WorldEntity)} is not equal even after the check: {worldEntity.GetType().Name} - {worldEntityAfter.GetType().Name}");
                             break;

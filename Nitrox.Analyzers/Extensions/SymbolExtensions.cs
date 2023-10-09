@@ -11,6 +11,10 @@ public static class SymbolExtensions
 
     public static bool IsType(this ITypeSymbol symbol, ITypeSymbol targetingSymbol)
     {
+        if (symbol == null || targetingSymbol == null)
+        {
+            return false;
+        }
         if (SymbolEqualityComparer.Default.Equals(symbol, targetingSymbol))
         {
             return true;

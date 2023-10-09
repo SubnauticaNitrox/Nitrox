@@ -1,7 +1,7 @@
 using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -23,7 +23,6 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
 
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor)); // Make sure the player is configured
-            DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Players can be spawned in buildings
             DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // Players can be spawned in entities in the global root (such as vehicles/escape pod)
         }
 

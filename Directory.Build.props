@@ -12,6 +12,7 @@
         <BuildGenDllDir>$(BuildGenDir)publicized_assemblies\</BuildGenDllDir>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Prefer32Bit>false</Prefer32Bit>
+        <DebugType>embedded</DebugType>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <ImplicitUsings>disable</ImplicitUsings>
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>

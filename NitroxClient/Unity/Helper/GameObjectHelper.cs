@@ -136,7 +136,6 @@ namespace NitroxClient.Unity.Helper
             return root;
         }
 
-
         public static bool TryGetComponentInAscendance<T>(this Transform transform, int degree, out T component)
         {
             while (degree > 0)

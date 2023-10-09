@@ -1,6 +1,6 @@
 using System.Collections;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 
@@ -16,7 +16,6 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
             this.simulationOwnership = simulationOwnership;
 
-            DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
             DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor));
         }
 

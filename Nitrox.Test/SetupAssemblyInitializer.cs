@@ -1,3 +1,4 @@
+global using Nitrox.Test.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.Helper;
 using NitroxModel.Logger;

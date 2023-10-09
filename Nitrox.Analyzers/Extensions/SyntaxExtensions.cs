@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -30,6 +29,28 @@ public static class SyntaxExtensions
     public static string GetName(this MemberDeclarationSyntax member) => member switch
     {
         FieldDeclarationSyntax field => field.Declaration.Variables.FirstOrDefault()?.Identifier.ValueText ?? "",
+        TypeDeclarationSyntax type => type.Identifier.Text,
         _ => ""
+    };
+
+    public static T FindInParents<T>(this SyntaxNode node) where T : SyntaxNode
+    {
+        if (node == null)
+        {
+            return null;
+        }
+        SyntaxNode cur = node.Parent;
+        while (cur != null && cur is not T)
+        {
+            cur = cur.Parent;
+        }
+        return (T)cur;
+    }
+
+    public static string GetName(this SyntaxNode node) => node switch
+    {
+        FieldDeclarationSyntax field => field.Declaration.Variables.FirstOrDefault()?.Identifier.ValueText ?? "",
+        TypeDeclarationSyntax type => type.Identifier.ValueText,
+        _ => node.TryGetInferredMemberName()
     };
 }
