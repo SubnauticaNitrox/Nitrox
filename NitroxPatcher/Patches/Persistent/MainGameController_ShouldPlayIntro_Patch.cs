@@ -9,6 +9,6 @@ public partial class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IPe
 
     public static void Postfix(ref bool __result)
     {
-        __result = false;
+        //__result = true;
     }
 }
