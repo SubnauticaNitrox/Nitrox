@@ -43,7 +43,7 @@ public class PlayerManager
         return Optional.OfNullable(remotePlayer);
     }
 
-    internal IEnumerable<RemotePlayer> GetAll()
+    public IEnumerable<RemotePlayer> GetAll()
     {
         return playersById.Values;
     }
