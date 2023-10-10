@@ -1,5 +1,6 @@
 using System;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets;
 using NitroxModel.Server;
 
 namespace NitroxModel.MultiplayerSession;
@@ -14,8 +15,10 @@ public class PlayerContext
     public PlayerSettings PlayerSettings { get; }
     public bool IsMuted { get; set; }
     public NitroxGameMode GameMode { get; set; }
+    public SetIntroCinematicMode.IntroCinematicMode IntroCinematicMode { get; set; }
 
-    public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted, NitroxGameMode gameMode)
+    public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted,
+                         NitroxGameMode gameMode, SetIntroCinematicMode.IntroCinematicMode introCinematicMode)
     {
         PlayerName = playerName;
         PlayerId = playerId;
@@ -24,10 +27,11 @@ public class PlayerContext
         PlayerSettings = playerSettings;
         IsMuted = isMuted;
         GameMode = gameMode;
+        IntroCinematicMode = introCinematicMode;
     }
 
     public override string ToString()
     {
-        return $"[PlayerContext - PlayerName: {PlayerName}, PlayerId: {PlayerId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}]";
+        return $"[PlayerContext - PlayerName: {PlayerName}, PlayerId: {PlayerId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, IntroCinematicMode: {IntroCinematicMode}]";
     }
 }
