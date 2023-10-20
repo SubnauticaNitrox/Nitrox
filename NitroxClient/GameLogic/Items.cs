@@ -11,7 +11,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -21,13 +20,12 @@ namespace NitroxClient.GameLogic;
 public class Items
 {
     private readonly IPacketSender packetSender;
-    private readonly IMap map;
     private readonly Entities entities;
+    public GameObject PickingUpObject;
 
-    public Items(IPacketSender packetSender, IMap map, Entities entities)
+    public Items(IPacketSender packetSender, Entities entities)
     {
         this.packetSender = packetSender;
-        this.map = map;
         this.entities = entities;
     }
 
@@ -39,6 +37,7 @@ public class Items
 
     public void PickedUp(GameObject gameObject, TechType techType)
     {
+        PickingUpObject = gameObject;
         // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
         RemoveAnyRemoteControl(gameObject);
 
@@ -62,6 +61,7 @@ public class Items
 
         PickupItem pickupItem = new(id, inventoryItemEntity);
         packetSender.Send(pickupItem);
+        PickingUpObject = null;
     }
 
     /// <summary>

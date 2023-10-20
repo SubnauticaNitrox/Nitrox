@@ -282,7 +282,7 @@ namespace NitroxClient.GameLogic
 
         public bool IsParentReady(NitroxId id)
         {
-            return WasParentSpawned(id) || (NitroxEntity.TryGetObjectFrom(id, out GameObject o) && o);
+            return WasParentSpawned(id) || NitroxEntity.TryGetObjectFrom(id, out GameObject _);
         }
 
         public bool WasParentSpawned(NitroxId id)
