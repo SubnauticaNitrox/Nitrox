@@ -6,5 +6,6 @@ public enum IntroCinematicMode : byte
     LOADING,
     WAITING,
     START,
+    SINGLEPLAYER,
     COMPLETED
 }
