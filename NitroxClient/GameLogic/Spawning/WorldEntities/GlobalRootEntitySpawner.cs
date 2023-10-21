@@ -1,6 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -8,16 +9,34 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class GlobalRootEntitySpawner : EntitySpawner<GlobalRootEntity>
+public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
 {
-    // TODO: Add a sync entity spawner
     protected override IEnumerator SpawnAsync(GlobalRootEntity entity, TaskResult<Optional<GameObject>> result)
     {
         TaskResult<GameObject> gameObjectResult = new();
-        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, gameObjectResult);
+        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, entity.Id, gameObjectResult);
         GameObject gameObject = gameObjectResult.Get();
-        NitroxEntity.SetNewId(gameObject, entity.Id);
 
+        SetupObject(entity, gameObject);
+
+        result.Set(gameObject);
+    }
+
+    protected override bool SpawnSync(GlobalRootEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        if (!DefaultWorldEntitySpawner.TryGetCachedPrefab(out GameObject prefab, entity.TechType.ToUnity(), entity.ClassId))
+        {
+            return false;
+        }
+        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
+        SetupObject(entity, gameObject);
+
+        result.Set(gameObject);
+        return true;
+    }
+
+    private void SetupObject(GlobalRootEntity entity, GameObject gameObject)
+    {
         LargeWorldEntity largeWorldEntity = gameObject.EnsureComponent<LargeWorldEntity>();
         largeWorldEntity.cellLevel = LargeWorldEntity.CellLevel.Global;
         LargeWorld.main.streamer.cellManager.RegisterEntity(largeWorldEntity);
@@ -33,8 +52,6 @@ public class GlobalRootEntitySpawner : EntitySpawner<GlobalRootEntity>
         {
             PlacedWorldEntitySpawner.AdditionalSpawningSteps(gameObject);
         }
-
-        result.Set(Optional.Of(gameObject));
     }
 
     protected override bool SpawnsOwnChildren(GlobalRootEntity entity) => false;

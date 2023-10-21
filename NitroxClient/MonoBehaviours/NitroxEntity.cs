@@ -86,9 +86,18 @@ namespace NitroxClient.MonoBehaviours
             {
                 entity = gameObject.AddComponent<NitroxEntity>();
             }
-            if (gameObject.TryGetComponent(out UniqueIdentifier uniqueIdentifier))
+            if (gameObject.TryGetComponent(out UniqueIdentifier uniqueIdentifier) && uniqueIdentifier.id != id.ToString())
             {
-                uniqueIdentifier.Id = id.ToString();
+                // To avoid unrequired error spams, we do the id setting manually
+                // If the current UID was already registered, we unregister it
+                if (!string.IsNullOrEmpty(uniqueIdentifier.id)
+                    && UniqueIdentifier.identifiers.TryGetValue(uniqueIdentifier.Id, out UniqueIdentifier registeredIdentifier) &&
+                    registeredIdentifier == uniqueIdentifier)
+                {
+                    UniqueIdentifier.identifiers.Remove(uniqueIdentifier.id);
+                }
+                uniqueIdentifier.id = id.ToString();
+                UniqueIdentifier.identifiers[id.ToString()] = uniqueIdentifier;
             }
 
             entity.Id = id;

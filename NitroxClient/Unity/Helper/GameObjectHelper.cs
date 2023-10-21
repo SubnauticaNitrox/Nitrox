@@ -1,5 +1,7 @@
 using System;
 using System.Text;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -136,6 +138,48 @@ namespace NitroxClient.Unity.Helper
                 degree--;
             }
             return transform.TryGetComponent(out component);
+        }
+
+        /// <summary>
+        /// Custom wrapper for prefab spawning which ensures a NitroxEntity is present
+        /// on the newly created object before its components are enabled (Awake is not fired).
+        /// </summary>
+        public static GameObject InstantiateInactiveWithId(GameObject original, NitroxId nitroxId, Vector3 position = default, Quaternion rotation = default)
+        {
+            GameObject copy = Object.Instantiate(original, position, rotation, false);
+            NitroxEntity.SetNewId(copy, nitroxId);
+            return copy;
+        }
+
+        /// <inheritdoc cref="InstantiateInactiveWithId(GameObject, NitroxId, Vector3, Quaternion)"/>
+        /// <remarks>
+        /// Sets the GameObject to active after spawning it with a NitroxEntity.
+        /// </remarks>
+        public static GameObject InstantiateWithId(GameObject original, NitroxId nitroxId, Vector3 position = default, Quaternion rotation = default)
+        {
+            GameObject copy = InstantiateInactiveWithId(original, nitroxId, position, rotation);
+            copy.SetActive(true);
+            return copy;
+        }
+
+        /// <summary>
+        /// Override for <see cref="Utils.CreateGenericLoot"/> using our own <see cref="InstantiateWithId"/> wrapper
+        /// </summary>
+        public static GameObject CreateGenericLoot(TechType techType, NitroxId nitroxId)
+        {
+            GameObject gameObject = SpawnFromPrefab(Utils.genericLootPrefab, nitroxId);
+            gameObject.GetComponent<Pickupable>().SetTechTypeOverride(techType, lootCube: true);
+            return gameObject;
+        }
+
+        /// <summary>
+        /// Override for <see cref="Utils.SpawnFromPrefab"/> using our own <see cref="InstantiateWithId"/> wrapper
+        /// </summary>
+        public static GameObject SpawnFromPrefab(GameObject prefab, NitroxId nitroxId, Transform parent = null)
+        {
+            GameObject gameObject = InstantiateWithId(prefab, nitroxId);
+            gameObject.transform.parent = parent;
+            return gameObject;
         }
     }
 }

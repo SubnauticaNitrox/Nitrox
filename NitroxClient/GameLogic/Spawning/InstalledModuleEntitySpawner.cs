@@ -23,7 +23,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         }
 
         TaskResult<GameObject> gameObjectResult = new();
-        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, gameObjectResult);
+        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, entity.Id, gameObjectResult);
         GameObject gameObject = gameObjectResult.Get();
 
         SetupObject(entity, gameObject, parentObject, equipment);
@@ -43,7 +43,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
             return true;
         }
 
-        GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
+        GameObject gameObject = GameObjectHelper.SpawnFromPrefab(prefab, entity.Id);
 
         SetupObject(entity, gameObject, parentObject, equipment);
 
@@ -77,8 +77,6 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
 
     private void SetupObject(InstalledModuleEntity entity, GameObject gameObject, GameObject parentObject, Equipment equipment)
     {
-        NitroxEntity.SetNewId(gameObject, entity.Id);
-
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
         pickupable.Initialize();
 
