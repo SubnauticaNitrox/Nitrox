@@ -22,7 +22,7 @@ public sealed partial class Player_RequiresHighPrecisionPhysics_Patch : NitroxPa
 
             if (movementController && movementController.Receiving)
             {
-                __result = false;
+                __result = true;
                 return false;
             }
         }
