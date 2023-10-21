@@ -42,13 +42,11 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                .Insert(
                    new CodeInstruction(OpCodes.Call, Reflect.Method(() => StartRemoteCinematic()))
                )
-               // Disable cinematic skip when cinematic already started
+               // Disable cinematic skip when cinematic already started in duo mode
                .MatchStartForward(
                    new CodeMatch(OpCodes.Call, Reflect.Property(() => Time.time).GetMethod)
                )
-               .SetInstructionAndAdvance(
-                   new CodeInstruction(OpCodes.Ldc_R4, -1f)
-               )
+               .SetOperandAndAdvance(Reflect.Method(() => GetSkipTime()))
                .Advance(1)
                .Insert(
                    new CodeInstruction(OpCodes.Ldloc_1),
@@ -74,6 +72,8 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
                .InstructionEnumeration();
     }
 
+    public static bool IsWaitingForPartner { get; private set; }
+
     private static RemotePlayer partner;
     private static bool callbackRun;
     private static bool packetSend;
@@ -81,6 +81,12 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     private static bool AnyKeyDownOrModeCompleted()
     {
         return GameInput.AnyKeyDown() || Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED;
+    }
+
+    private static float GetSkipTime()
+    {
+        // Return Time.time when starting solo and disable skip button when staring duo
+        return Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.SINGLEPLAYER ? Time.time : -1f;
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
@@ -99,39 +105,48 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         if (!packetSend)
         {
             uGuiSceneIntro.skipHintStartTime = Time.time;
-            uGuiSceneIntro.mainText.SetText("Waiting for partner to join");
+            uGuiSceneIntro.mainText.SetText(Language.main.GetFormat("Nitrox_IntroWaitingPartner", uGUI.FormatButton(GameInput.Button.UIMenu)));
             uGuiSceneIntro.mainText.SetState(true);
 
             Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.WAITING);
             packetSend = true;
+            IsWaitingForPartner = true;
             return false;
         }
 
-        RemotePlayer firstWaitingRemotePlayer = Resolve<PlayerManager>().GetAll().FirstOrDefault(r => r.PlayerContext.IntroCinematicMode == IntroCinematicMode.START);
+        // See NitroxServer.Communication.Packets.Processors.SetIntroCinematicModeProcessor
+        RemotePlayer firstWaitingRemotePlayer = Resolve<PlayerManager>().GetAll().FirstOrDefault(r => r.PlayerContext.IntroCinematicMode is IntroCinematicMode.START);
         if (firstWaitingRemotePlayer != null)
         {
             partner = firstWaitingRemotePlayer;
-
-            uGuiSceneIntro.moveNext = false;
-            uGuiSceneIntro.mainText.FadeOut(0.2f, uGuiSceneIntro.Callback);
-            callbackRun = true;
+            EnqueueStartCinematic(uGuiSceneIntro);
         }
 
         return false;
     }
 
+    public static void EnqueueStartCinematic(uGUI_SceneIntro uGuiSceneIntro)
+    {
+        IsWaitingForPartner = false;
+        uGuiSceneIntro.skipHintStartTime = -1;
+        uGuiSceneIntro.moveNext = false;
+        uGuiSceneIntro.mainText.FadeOut(0.2f, uGuiSceneIntro.Callback);
+        callbackRun = true;
+    }
+
     private static void StartRemoteCinematic()
     {
-        Validate.NotNull(partner);
+        if (partner != null) // Is null when RunCinematicSingleplayer() is called
+        {
+            partner.PlayerModel.transform.localScale = new Vector3(-1, 1, 1);
+            partner.ArmsController.enabled = false;
+            partner.AnimationController.UpdatePlayerAnimations = false;
+            partner.AnimationController["cinematics_enabled"] = true;
+            partner.AnimationController["escapepod_intro"] = true;
 
-        partner.PlayerModel.transform.localScale = new Vector3(-1, 1, 1); //-1
-        partner.ArmsController.enabled = false;
-        partner.AnimationController.UpdatePlayerAnimations = false;
-        partner.AnimationController["cinematics_enabled"] = true;
-        partner.AnimationController["escapepod_intro"] = true;
-
-        IntroCinematicUpdater.Partner = partner;
-        partner.Body.AddComponent<IntroCinematicUpdater>();
+            IntroCinematicUpdater.Partner = partner;
+            partner.Body.AddComponent<IntroCinematicUpdater>();
+        }
     }
 
     private static void EndRemoteCinematic()
