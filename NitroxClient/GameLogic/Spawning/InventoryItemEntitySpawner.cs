@@ -25,7 +25,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         }
 
         TaskResult<GameObject> gameObjectResult = new();
-        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, gameObjectResult);
+        yield return DefaultWorldEntitySpawner.CreateGameObject(entity.TechType.ToUnity(), entity.ClassId, entity.Id, gameObjectResult);
         GameObject gameObject = gameObjectResult.Get();
 
         SetupObject(entity, gameObject, parentObject, container);
@@ -45,7 +45,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
             return true;
         }
 
-        GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
+        GameObject gameObject = GameObjectHelper.SpawnFromPrefab(prefab, entity.Id);
 
         SetupObject(entity, gameObject, parentObject, container);
 
@@ -84,8 +84,6 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
 
     private void SetupObject(InventoryItemEntity entity, GameObject gameObject, GameObject parentObject, ItemsContainer container)
     {
-        NitroxEntity.SetNewId(gameObject, entity.Id);
-
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
         pickupable.Initialize();
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -37,7 +38,7 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity, false);
+        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject, out OxygenPipe oxygenPipe))
         {
             yield break;
@@ -56,7 +57,7 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
             return false;
         }
 
-        GameObject gameObject = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity, false);
+        GameObject gameObject = GameObjectHelper.InstantiateInactiveWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject, out OxygenPipe oxygenPipe))
         {
             return true;
@@ -85,7 +86,6 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
     {
         EntityCell cellRoot = worldEntitySpawner.EnsureCell(entity);
 
-        NitroxEntity.SetNewId(gameObject, entity.Id);
         gameObject.transform.SetParent(cellRoot.liveRoot.transform, false);
         gameObject.transform.position = entity.Transform.Position.ToUnity();
         gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();

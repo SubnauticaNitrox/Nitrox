@@ -3,6 +3,7 @@ using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -25,9 +26,9 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
 
         TaskResult<GameObject> prefabResult = new();
         yield return DefaultWorldEntitySpawner.RequestPrefab(entity.TechType.ToUnity(), prefabResult);
-        GameObject gameObject = UnityEngine.Object.Instantiate(prefabResult.Get());
+        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefabResult.Get(), entity.Id);
 
-        SetupObject(entity, gameObject, energyMixin);
+        SetupObject(gameObject, energyMixin);
 
         result.Set(gameObject);
     }
@@ -44,9 +45,9 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
             return true;
         }
 
-        GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
+        GameObject gameObject = GameObjectHelper.SpawnFromPrefab(prefab, entity.Id);
 
-        SetupObject(entity, gameObject, energyMixin);
+        SetupObject(gameObject, energyMixin);
 
         result.Set(gameObject);
         return true;
@@ -74,12 +75,10 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
         return true;
     }
 
-    private void SetupObject(Entity entity, GameObject gameObject, EnergyMixin energyMixin)
+    private void SetupObject(GameObject gameObject, EnergyMixin energyMixin)
     {
         energyMixin.Initialize();
         energyMixin.RestoreBattery();
-
-        NitroxEntity.SetNewId(gameObject, entity.Id);
 
         using (PacketSuppressor<EntityReparented>.Suppress())
         using (PacketSuppressor<EntitySpawnedByClient>.Suppress())

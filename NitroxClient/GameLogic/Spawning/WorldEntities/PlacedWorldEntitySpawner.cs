@@ -1,6 +1,5 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -32,7 +31,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
             prefab = prefabResult.Get();
         }
 
-        GameObject gameObject = Object.Instantiate(prefab);
+        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject))
         {
             yield break;
@@ -49,7 +48,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
             return false;
         }
 
-        GameObject gameObject = Object.Instantiate(prefab);
+        GameObject gameObject = GameObjectHelper.InstantiateWithId(prefab, entity.Id);
         if (!VerifyCanSpawnOrError(entity, gameObject))
         {
             return true;
@@ -93,7 +92,6 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
     {
         EntityCell cellRoot = worldEntitySpawner.EnsureCell(entity);
 
-        NitroxEntity.SetNewId(gameObject, entity.Id);
         gameObject.transform.SetParent(cellRoot.liveRoot.transform, false);
         gameObject.transform.position = entity.Transform.Position.ToUnity();
         gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
