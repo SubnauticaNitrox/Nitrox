@@ -86,7 +86,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 GetOtherPlayers(player),
                 globalRootEntities,
                 simulations,
-                world.GameMode,
+                player.GameMode,
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
                 storyManager.GetTimeData(),

@@ -10,6 +10,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Server;
 using NitroxServer.Communication;
 using NitroxServer.Serialization;
 
@@ -115,9 +116,10 @@ namespace NitroxServer.GameLogic
             bool hasSeenPlayerBefore = player != null;
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
+            NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
 
             // TODO: At some point, store the muted state of a player
-            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false);
+            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode);
             string reservationKey = Guid.NewGuid().ToString();
 
             reservations.Add(reservationKey, playerContext);
@@ -196,6 +198,7 @@ namespace NitroxServer.GameLogic
                     Optional.Empty,
                     serverConfig.DefaultPlayerPerm,
                     serverConfig.DefaultPlayerStats,
+                    serverConfig.GameMode,
                     new List<NitroxTechType>(),
                     Array.Empty<Optional<NitroxId>>(),
                     new List<EquippedItemData>(),

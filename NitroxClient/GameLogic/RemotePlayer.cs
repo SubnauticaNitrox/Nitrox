@@ -8,6 +8,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.Unity.Helper;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Server;
 using UnityEngine;
 using UWE;
 using Object = UnityEngine.Object;
@@ -88,6 +89,7 @@ namespace NitroxClient.GameLogic
             SetupSkyAppliers();
 
             vitals = playerVitalsManager.CreateOrFindForPlayer(this);
+            RefreshVitalsVisibility();
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -337,6 +339,20 @@ namespace NitroxClient.GameLogic
             skyApplier.emissiveFromPower = false;
             skyApplier.dynamic = true;
             skyApplier.renderers = Body.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+        }
+
+        public void SetGameMode(NitroxGameMode gameMode)
+        {
+            PlayerContext.GameMode = gameMode;
+            RefreshVitalsVisibility();
+        }
+
+        private void RefreshVitalsVisibility()
+        {
+            if (vitals)
+            {
+                vitals.gameObject.SetActive(PlayerContext.GameMode != NitroxGameMode.CREATIVE);
+            }
         }
     }
 }

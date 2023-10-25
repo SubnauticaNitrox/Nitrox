@@ -1,4 +1,5 @@
 using NitroxClient.GameLogic;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -13,7 +14,12 @@ public class PlayerStatsBroadcaster : MonoBehaviour
     public void Awake()
     {
         localPlayer = this.Resolve<LocalPlayer>();
-        survival = Player.main.GetComponent<Survival>();
+        survival = Player.main.AliveOrNull()?.GetComponent<Survival>();
+        if (!survival)
+        {
+            Log.Error($"Couldn't find the {nameof(Survival)} instance on the main {nameof(Player)} instance. Destroying {nameof(PlayerStatsBroadcaster)}");
+            Destroy(this);
+        }
     }
 
     public void Update()
@@ -25,16 +31,13 @@ public class PlayerStatsBroadcaster : MonoBehaviour
         {
             time = 0;
 
-            if (survival)
-            {
-                float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
-                float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();
-                float health = Player.main.liveMixin.health;
-                float food = survival.food;
-                float water = survival.water;
-                float infectionAmount = Player.main.infectedMixin.GetInfectedAmount();
-                localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water, infectionAmount);
-            }
+            float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
+            float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();
+            float health = Player.main.liveMixin.health;
+            float food = survival.food;
+            float water = survival.water;
+            float infectionAmount = Player.main.infectedMixin.GetInfectedAmount();
+            localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water, infectionAmount);
         }
     }
 }
