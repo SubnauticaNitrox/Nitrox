@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxModel.DataStructures;
@@ -12,14 +13,16 @@ namespace NitroxClient.GameLogic
     public class PlayerManager
     {
         private readonly PlayerModelManager playerModelManager;
+        private readonly PlayerVitalsManager playerVitalsManager;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
         public OnCreate onCreate;
         public OnRemove onRemove;
 
-        public PlayerManager(PlayerModelManager playerModelManager)
+        public PlayerManager(PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager)
         {
             this.playerModelManager = playerModelManager;
+            this.playerVitalsManager = playerVitalsManager;
         }
 
         public Optional<RemotePlayer> Find(ushort playerId)
@@ -47,7 +50,7 @@ namespace NitroxClient.GameLogic
             Validate.NotNull(playerContext);
             Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
 
-            RemotePlayer remotePlayer = new(playerContext, playerModelManager);
+            RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager);
             
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
             onCreate(remotePlayer.PlayerId.ToString(), remotePlayer);

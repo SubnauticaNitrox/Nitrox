@@ -1,40 +1,39 @@
-﻿using NitroxClient.GameLogic;
-using NitroxModel.Core;
+using NitroxClient.GameLogic;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours
+namespace NitroxClient.MonoBehaviours;
+
+public class PlayerStatsBroadcaster : MonoBehaviour
 {
-    public class PlayerStatsBroadcaster : MonoBehaviour
+    private float time;
+    private const float BROADCAST_INTERVAL = 3f;
+    private LocalPlayer localPlayer;
+    private Survival survival;
+
+    public void Awake()
     {
-        private float time;
-        private const float INTERPOLATION_PERIOD = 4.00f;
-        private LocalPlayer localPlayer;
+        localPlayer = this.Resolve<LocalPlayer>();
+        survival = Player.main.GetComponent<Survival>();
+    }
 
-        public void Awake()
+    public void Update()
+    {
+        time += Time.deltaTime;
+
+        // Only do on a specific cadence to avoid hammering server
+        if (time >= BROADCAST_INTERVAL)
         {
-            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-        }
+            time = 0;
 
-        public void Update()
-        {
-            time += Time.deltaTime;
-
-            // Only do on a specific cadence to avoid hammering server
-            if (time >= INTERPOLATION_PERIOD)
+            if (survival)
             {
-                time = 0;
-                Survival survival = Player.main.GetComponent<Survival>();
-
-                if (survival != null && !survival.freezeStats)
-                {
-                    float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
-                    float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();
-                    float health = Player.main.liveMixin.health;
-                    float food = survival.food;
-                    float water = survival.water;
-                    float infectionAmount = Player.main.infectedMixin.GetInfectedAmount();
-                    localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water, infectionAmount);
-                }
+                float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
+                float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();
+                float health = Player.main.liveMixin.health;
+                float food = survival.food;
+                float water = survival.water;
+                float infectionAmount = Player.main.infectedMixin.GetInfectedAmount();
+                localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water, infectionAmount);
             }
         }
     }

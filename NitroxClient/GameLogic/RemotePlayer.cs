@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.Unity.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace NitroxClient.GameLogic
         private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
         private readonly PlayerModelManager playerModelManager;
+        private readonly PlayerVitalsManager playerVitalsManager;
 
         public PlayerContext PlayerContext { get; }
         public GameObject Body { get; private set; }
@@ -28,6 +30,7 @@ namespace NitroxClient.GameLogic
         public AnimationController AnimationController { get; private set; }
         public ItemsContainer Inventory { get; private set; }
         public Transform ItemAttachPoint { get; private set; }
+        public RemotePlayerVitals vitals { get; private set; }
 
         public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -42,10 +45,11 @@ namespace NitroxClient.GameLogic
 
         public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
 
-        public RemotePlayer(PlayerContext playerContext, PlayerModelManager modelManager)
+        public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager)
         {
             PlayerContext = playerContext;
-            playerModelManager = modelManager;
+            this.playerModelManager = playerModelManager;
+            this.playerVitalsManager = playerVitalsManager;
         }
 
         public void InitializeGameObject(GameObject playerBody)
@@ -82,6 +86,8 @@ namespace NitroxClient.GameLogic
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             SetupBody();
             SetupSkyAppliers();
+
+            vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
