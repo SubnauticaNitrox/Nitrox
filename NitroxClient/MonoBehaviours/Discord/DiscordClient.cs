@@ -1,13 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using DiscordGameSDKWrapper;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel;
 using NitroxModel.Core;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxModel.Platforms.Store;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,6 +14,7 @@ namespace NitroxClient.MonoBehaviours.Discord;
 public class DiscordClient : MonoBehaviour
 {
     private const long CLIENT_ID = 405122994348752896;
+    private const int RETRY_INTERVAL = 60;
 
     private static DiscordClient main;
     private static DiscordGameSDKWrapper.Discord discord;
@@ -23,39 +22,41 @@ public class DiscordClient : MonoBehaviour
     private static Activity activity;
     private static bool showingWindow;
 
-    private void OnEnable()
+    private void Awake()
     {
         if (main)
         {
             Log.Error($"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
             return;
         }
-
+        activity = new();
         main = this;
         DontDestroyOnLoad(gameObject);
-
         Log.Info("[Discord] Starting Discord client");
+        StartDiscordHook();
+    }
 
-        discord = new DiscordGameSDKWrapper.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
-        discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, $"[Discord] {message}"));
-
+    private void StartDiscordHook()
+    {
         try
         {
+            discord = new DiscordGameSDKWrapper.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
+            discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, $"[Discord] {message}"));
             activityManager = discord.GetActivityManager();
-
+            
             activityManager.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
             activityManager.OnActivityJoinRequest += ActivityJoinRequest;
             activityManager.OnActivityJoin += ActivityJoin;
+            if (!string.IsNullOrEmpty(activity.State))
+            {
+                UpdateActivity();
+            }
         }
         catch (Exception ex)
         {
-            if (NitroxUser.GamePlatform is Steam)
-            {
-                Log.Error($"[Discord] Unable to register Steam : {ex.Message}");
-            }
+            DisposeAndScheduleHookRestart();
+            Log.ErrorOnce($"Encountered an error while starting Discord hook, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
-
-        activity = new Activity();
     }
 
     private void OnDisable()
@@ -64,9 +65,34 @@ public class DiscordClient : MonoBehaviour
         discord?.Dispose();
     }
 
+    private void OnDestroy()
+    {
+        if (main == this)
+        {
+            main = null;
+            activity = default;
+        }
+    }
+
     private void Update()
     {
-        discord?.RunCallbacks();
+        try
+        {
+            discord?.RunCallbacks();
+        }
+        catch (Exception ex)
+        {
+            // Happens when Discord is closed while Nitrox has its Discord hook running (and for other reason)
+            DisposeAndScheduleHookRestart();
+            Log.ErrorOnce($"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+        }
+    }
+
+    private void DisposeAndScheduleHookRestart()
+    {
+        discord?.Dispose();
+        discord = null;
+        Invoke(nameof(StartDiscordHook), RETRY_INTERVAL);
     }
 
     private void ActivityJoin(string secret)
