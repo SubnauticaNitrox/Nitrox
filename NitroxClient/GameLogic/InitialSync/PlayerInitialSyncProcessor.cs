@@ -104,7 +104,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Player.main.GetPDA().Close();
         }
 
-        private void SetPlayerGameMode(ServerGameMode gameMode)
+        private void SetPlayerGameMode(NitroxGameMode gameMode)
         {
             Log.Info($"Received initial sync packet with gamemode {gameMode}");
             GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);

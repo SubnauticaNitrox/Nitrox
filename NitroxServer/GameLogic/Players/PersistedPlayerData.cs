@@ -6,6 +6,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Server;
 
 namespace NitroxServer.GameLogic.Players;
 
@@ -40,24 +41,27 @@ public class PersistedPlayerData
     public PlayerStatsData CurrentStats { get; set; }
 
     [DataMember(Order = 10)]
-    public NitroxId SubRootId { get; set; }
+    public NitroxGameMode GameMode { get; set; }
 
     [DataMember(Order = 11)]
-    public Perms Permissions { get; set; }
+    public NitroxId SubRootId { get; set; }
 
     [DataMember(Order = 12)]
-    public NitroxId NitroxId { get; set; }
+    public Perms Permissions { get; set; }
 
     [DataMember(Order = 13)]
+    public NitroxId NitroxId { get; set; }
+
+    [DataMember(Order = 14)]
     public bool IsPermaDeath { get; set; }
 
     /// <summary>
     /// Those goals are unlocked individually (e.g. opening PDA, eating, picking up a fire extinguisher for the first time)
     /// </summary>
-    [DataMember(Order = 14)]
+    [DataMember(Order = 15)]
     public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; } = new Dictionary<string, float>();
 
-    [DataMember(Order = 15)]
+    [DataMember(Order = 16)]
     public SubnauticaPlayerPreferences PlayerPreferences { get; set; }
 
     public Player ToPlayer()
@@ -73,6 +77,7 @@ public class PersistedPlayerData
                           Optional.OfNullable(SubRootId),
                           Permissions,
                           CurrentStats,
+                          GameMode,
                           UsedItems,
                           QuickSlotsBindingIds,
                           EquippedItems,
@@ -95,6 +100,7 @@ public class PersistedPlayerData
             SpawnPosition = player.Position,
             SpawnRotation = player.Rotation,
             CurrentStats = player.Stats,
+            GameMode = player.GameMode,
             SubRootId = player.SubRootId.OrNull(),
             Permissions = player.Permissions,
             NitroxId = player.GameObjectId,
