@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.Helpers;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Packets;
@@ -15,13 +13,6 @@ public class RocketMetadataProcessor : GenericEntityMetadataProcessor<RocketMeta
 {
     // For newly connected players, we will only build the previous stage with construction bots for a certain time period.
     private const float MAX_ALLOWABLE_TIME_FOR_CONSTRUCTOR_BOTS = 10;
-
-    private IPacketSender packetSender;
-
-    public RocketMetadataProcessor(IPacketSender packetSender)
-    {
-        this.packetSender = packetSender;
-    }
 
     /** Rocket states :
      * 0 : Launch Platform

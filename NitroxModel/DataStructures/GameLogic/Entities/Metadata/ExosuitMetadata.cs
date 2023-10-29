@@ -7,24 +7,19 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 [Serializable]
 [DataContract]
-public class SeamothMetadata : VehicleMetadata
+public class ExosuitMetadata : VehicleMetadata
 {
-    [DataMember(Order = 1)]
-    public bool LightsOn { get; }
-
     [IgnoreConstructor]
-    protected SeamothMetadata()
+    protected ExosuitMetadata()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public SeamothMetadata(bool lightsOn, float health, string name, NitroxVector3[] colors) : base(health, name, colors)
-    {
-        LightsOn = lightsOn;
-    }
+    public ExosuitMetadata(float health, string name, NitroxVector3[] colors) : base(health, name, colors)
+    { }
 
     public override string ToString()
     {
-        return $"[{nameof(SeamothMetadata)} LightsOn: {LightsOn}, {FieldsToString()}]";
+        return $"[{nameof(ExosuitMetadata)} {FieldsToString()}]";
     }
 }
