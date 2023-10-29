@@ -74,13 +74,13 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void EntityMetadataChangedThrottled(object o, NitroxId id)
+        public void EntityMetadataChangedThrottled(object o, NitroxId id, float throttleTime = 0.2f)
         {
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);
 
             if (metadata.HasValue)
             {
-                BroadcastMetadataUpdateThrottled(id, metadata.Value);
+                BroadcastMetadataUpdateThrottled(id, metadata.Value, throttleTime);
             }
         }
 
@@ -89,9 +89,9 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntityMetadataUpdate(id, metadata));
         }
 
-        public void BroadcastMetadataUpdateThrottled(NitroxId id, EntityMetadata metadata)
+        public void BroadcastMetadataUpdateThrottled(NitroxId id, EntityMetadata metadata, float throttleTime = 0.2f)
         {
-            throttledPacketSender.SendThrottled(new EntityMetadataUpdate(id, metadata), (packet) => ((EntityMetadataUpdate)packet).Id);
+            throttledPacketSender.SendThrottled(new EntityMetadataUpdate(id, metadata), packet => packet.Id, throttleTime);
         }
 
         public void BroadcastEntitySpawnedByClient(WorldEntity entity)

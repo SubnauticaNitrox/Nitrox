@@ -1,16 +1,13 @@
-using System.Linq;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class SubNameInputMetadataExtractor : GenericEntityMetadataExtractor<SubNameInput, SubNameInputMetadata>
+public class SubNameInputMetadataExtractor : NamedColoredMetadataExtractor<SubNameInput, SubNameInputMetadata>
 {
     public override SubNameInputMetadata Extract(SubNameInput subNameInput)
     {
-        NitroxVector3[] colors = subNameInput.target.GetColors().Select(color => color.ToDto()).ToArray();
-
-        return new(subNameInput.inputField.text, colors);
+        SubName subName = subNameInput.target;
+        return new(subNameInput.selectedColorIndex, GetName(subName), GetColors(subName));
     }
 }

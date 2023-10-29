@@ -1,37 +1,31 @@
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.FMOD;
-using NitroxClient.Unity.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata;
 
-public class SeamothMetadataProcessor : GenericEntityMetadataProcessor<SeamothMetadata>
+public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata>
 {
-    private readonly IPacketSender packetSender;
-    private readonly LiveMixinManager liveMixinManager;
-
-    public SeamothMetadataProcessor(IPacketSender packetSender, LiveMixinManager liveMixinManager)
-    {
-        this.packetSender = packetSender;
-        this.liveMixinManager = liveMixinManager;
-    }
+    public SeamothMetadataProcessor(LiveMixinManager liveMixinManager) : base(liveMixinManager)
+    { }
 
     public override void ProcessMetadata(GameObject gameObject, SeamothMetadata metadata)
     {
-        SeaMoth seamoth = gameObject.GetComponent<SeaMoth>();
-        if (!seamoth)
+        if (!gameObject.TryGetComponent(out SeaMoth seamoth))
         {
-            Log.Error($"Could not find seamoth on {gameObject.name}");
+            Log.ErrorOnce($"[{nameof(SeamothMetadataProcessor)}] Could not find {nameof(SeaMoth)} on {gameObject}");
+            return;
         }
 
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetLights(seamoth, metadata.LightsOn);
-            SetHealth(seamoth, metadata.Health);
         }
+
+        base.ProcessMetadata(gameObject, metadata);
     }
 
     private void SetLights(SeaMoth seamoth, bool lightsOn)
@@ -40,11 +34,5 @@ public class SeamothMetadataProcessor : GenericEntityMetadataProcessor<SeamothMe
         {
             seamoth.toggleLights.SetLightsActive(lightsOn);
         }
-    }
-
-    private void SetHealth(SeaMoth seamoth, float health)
-    {
-        LiveMixin liveMixin = seamoth.RequireComponentInChildren<LiveMixin>(true);
-        liveMixinManager.SyncRemoteHealth(liveMixin, health);
     }
 }
