@@ -5,12 +5,14 @@ using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -126,7 +128,12 @@ public partial class BuildingHandler : MonoBehaviour
     {
         ModuleEntity moduleEntity = placeModule.ModuleEntity;
         Transform parent = GetParentOrGlobalRoot(moduleEntity.ParentId);
-        yield return ModuleEntitySpawner.RestoreModule(parent, moduleEntity);
+        TaskResult<Optional<GameObject>> result = new();
+        yield return ModuleEntitySpawner.RestoreModule(parent, moduleEntity, result);
+        if (result.value.HasValue)
+        {
+            this.Resolve<EntityMetadataManager>().ApplyMetadata(result.value.Value.gameObject, moduleEntity.Metadata);
+        }
         BasesCooldown[moduleEntity.ParentId ?? moduleEntity.Id] = DateTimeOffset.UtcNow;
     }
 

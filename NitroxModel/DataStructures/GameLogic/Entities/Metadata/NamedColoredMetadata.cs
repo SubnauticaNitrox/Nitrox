@@ -2,10 +2,13 @@ using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.Unity;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 [Serializable, DataContract]
+[ProtoInclude(50, typeof(VehicleMetadata))]
+[ProtoInclude(51, typeof(SubNameInputMetadata))]
 public abstract class NamedColoredMetadata : EntityMetadata
 {
     [DataMember(Order = 1)]
@@ -26,13 +29,8 @@ public abstract class NamedColoredMetadata : EntityMetadata
         Colors = colors;
     }
 
-    public string FieldsToString()
-    {
-        return $"Name: {Name}, Colors: {string.Join(";", Colors)}";
-    }
-
     public override string ToString()
     {
-        return $"[{nameof(NamedColoredMetadata)} {FieldsToString()}]";
+        return $"[{nameof(NamedColoredMetadata)} Name: {Name}, Colors: {string.Join(";", Colors)} {base.ToString()}]";
     }
 }

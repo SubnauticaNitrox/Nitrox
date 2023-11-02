@@ -3,7 +3,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class SeamothMetadataExtractor : VehicleMetadataExtractor<SeaMoth, SeamothMetadata>
+public class SeamothMetadataExtractor : EntityMetadataExtractor<SeaMoth, SeamothMetadata>
 {
     public override SeamothMetadata Extract(SeaMoth seamoth)
     {
@@ -11,6 +11,6 @@ public class SeamothMetadataExtractor : VehicleMetadataExtractor<SeaMoth, Seamot
         LiveMixin liveMixin = seamoth.liveMixin;
         SubName subName = seamoth.subName;
 
-        return new(lightsOn, GetHealth(liveMixin), GetName(subName), GetColors(subName));
+        return new(lightsOn, liveMixin.health, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
     }
 }

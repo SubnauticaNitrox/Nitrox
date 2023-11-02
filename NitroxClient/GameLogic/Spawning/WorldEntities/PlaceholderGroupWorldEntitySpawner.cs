@@ -20,11 +20,13 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 {
     private readonly WorldEntitySpawnerResolver spawnerResolver;
     private readonly DefaultWorldEntitySpawner defaultSpawner;
+    private readonly EntityMetadataManager entityMetadataManager;
 
-    public PlaceholderGroupWorldEntitySpawner(WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner)
+    public PlaceholderGroupWorldEntitySpawner(WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner, EntityMetadataManager entityMetadataManager)
     {
         this.spawnerResolver = spawnerResolver;
         this.defaultSpawner = defaultSpawner;
+        this.entityMetadataManager = entityMetadataManager;
     }
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
@@ -114,7 +116,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                 continue;
             }
 
-            EntityMetadataProcessor.ApplyMetadata(childResult.value.Value, current.Metadata);
+            entityMetadataManager.ApplyMetadata(childResult.value.Value, current.Metadata);
             // Adding children to be spawned by this loop
             foreach (WorldEntity slotEntityChild in current.ChildEntities.OfType<WorldEntity>())
             {

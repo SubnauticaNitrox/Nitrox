@@ -1,8 +1,9 @@
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class WaterParkCreatureMetadataExtractor : GenericEntityMetadataExtractor<WaterParkCreature, WaterParkCreatureMetadata>
+public class WaterParkCreatureMetadataExtractor : EntityMetadataExtractor<WaterParkCreature, WaterParkCreatureMetadata>
 {
     public override WaterParkCreatureMetadata Extract(WaterParkCreature entity)
     {

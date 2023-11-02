@@ -25,6 +25,6 @@ public class SeamothMetadata : VehicleMetadata
 
     public override string ToString()
     {
-        return $"[{nameof(SeamothMetadata)} LightsOn: {LightsOn}, {FieldsToString()}]";
+        return $"[{nameof(SeamothMetadata)} LightsOn: {LightsOn} {base.ToString()}]";
     }
 }

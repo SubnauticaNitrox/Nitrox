@@ -5,8 +5,7 @@ using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
-[Serializable]
-[DataContract]
+[Serializable, DataContract]
 public class ExosuitMetadata : VehicleMetadata
 {
     [IgnoreConstructor]
@@ -20,6 +19,6 @@ public class ExosuitMetadata : VehicleMetadata
 
     public override string ToString()
     {
-        return $"[{nameof(ExosuitMetadata)} {FieldsToString()}]";
+        return $"[{nameof(ExosuitMetadata)} {base.ToString()}]";
     }
 }

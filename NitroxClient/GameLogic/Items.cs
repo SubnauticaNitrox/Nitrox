@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -21,12 +21,14 @@ public class Items
 {
     private readonly IPacketSender packetSender;
     private readonly Entities entities;
-    public GameObject PickingUpObject { get; private set; }
+    public static GameObject PickingUpObject { get; private set; }
+    private readonly EntityMetadataManager entityMetadataManager;
 
-    public Items(IPacketSender packetSender, Entities entities)
+    public Items(IPacketSender packetSender, Entities entities, EntityMetadataManager entityMetadataManager)
     {
         this.packetSender = packetSender;
         this.entities = entities;
+        this.entityMetadataManager = entityMetadataManager;
     }
 
     public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
@@ -49,7 +51,7 @@ public class Items
 
         EntityPositionBroadcaster.StopWatchingEntity(id);
 
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject);
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
 
         // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
         // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
@@ -74,11 +76,11 @@ public class Items
         RemoveAnyRemoteControl(gameObject);
 
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
-        Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
 
         WorldEntity droppedItem;
-        List<Entity> childrenEntities = GetPrefabChildren(gameObject, id).ToList();
+        List<Entity> childrenEntities = GetPrefabChildren(gameObject, id, entityMetadataManager).ToList();
 
         // If the item is dropped in a WaterPark we need to handle it differently
         NitroxId parentId = null;
@@ -133,10 +135,10 @@ public class Items
         RemoveAnyRemoteControl(gameObject);
 
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
-        Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
 
-        List<Entity> childrenEntities = GetPrefabChildren(gameObject, id).ToList();
+        List<Entity> childrenEntities = GetPrefabChildren(gameObject, id, entityMetadataManager).ToList();
         WorldEntity placedItem;
 
         // If the object is dropped in the water, it'll be parented to a CellRoot so we let it as WorldEntity (see Items.Dropped)
@@ -163,7 +165,7 @@ public class Items
 
     public void Created(GameObject gameObject)
     {
-        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject);
+        InventoryItemEntity inventoryItemEntity = ConvertToInventoryItemEntity(gameObject, entityMetadataManager);
         entities.MarkAsSpawned(inventoryItemEntity);
 
         if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity, true)))
@@ -175,7 +177,7 @@ public class Items
     // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable'
     // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
     // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity.
-    public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
+    public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId, EntityMetadataManager entityMetadataManager)
     {
         foreach (IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
                                                                               .Where(prefab => prefab.gameObject != gameObject)
@@ -186,7 +188,7 @@ public class Items
             foreach (PrefabIdentifier prefab in prefabGroup)
             {
                 NitroxId id = NitroxEntity.GetIdOrGenerateNew(prefab.gameObject); // We do this here bc a MetadataExtractor could be requiring the id to increment or so
-                Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(prefab.gameObject);
+                Optional<EntityMetadata> metadata = entityMetadataManager.Extract(prefab.gameObject);
 
                 if (metadata.HasValue)
                 {
@@ -201,13 +203,13 @@ public class Items
         }
     }
 
-    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject)
+    public static InventoryItemEntity ConvertToInventoryItemEntity(GameObject gameObject, EntityMetadataManager entityMetadataManager)
     {
         NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(gameObject); // id may not exist, create if missing
         string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
         TechType techType = gameObject.RequireComponent<Pickupable>().GetTechType();
-        Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
-        List<Entity> children = GetPrefabChildren(gameObject, itemId).ToList();
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
+        List<Entity> children = GetPrefabChildren(gameObject, itemId, entityMetadataManager).ToList();
 
         // Newly created objects are always placed into the player's inventory.
         if (!Player.main.TryGetNitroxId(out NitroxId ownerId))
@@ -241,7 +243,7 @@ public class Items
         return false;
     }
 
-    public static List<InstalledModuleEntity> GetEquipmentModuleEntities(Equipment equipment, NitroxId equipmentId)
+    public static List<InstalledModuleEntity> GetEquipmentModuleEntities(Equipment equipment, NitroxId equipmentId, EntityMetadataManager entityMetadataManager)
     {
         List<InstalledModuleEntity> entities = new();
         foreach (KeyValuePair<string, InventoryItem> itemEntry in equipment.equipment)
@@ -252,8 +254,8 @@ public class Items
                 Pickupable pickupable = item.item;
                 string classId = pickupable.RequireComponent<PrefabIdentifier>().ClassId;
                 NitroxId itemId = NitroxEntity.GetIdOrGenerateNew(pickupable.gameObject);
-                Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(pickupable.gameObject);
-                List<Entity> children = GetPrefabChildren(pickupable.gameObject, itemId).ToList();
+                Optional<EntityMetadata> metadata = entityMetadataManager.Extract(pickupable.gameObject);
+                List<Entity> children = GetPrefabChildren(pickupable.gameObject, itemId, entityMetadataManager).ToList();
 
                 entities.Add(new(itemEntry.Key, classId, itemId, pickupable.GetTechType().ToDto(), metadata.OrNull(), equipmentId, children));
             }

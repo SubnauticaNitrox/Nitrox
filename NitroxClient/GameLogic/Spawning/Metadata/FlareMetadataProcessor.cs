@@ -1,9 +1,10 @@
+using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata;
 
-public class FlareMetadataProcessor : GenericEntityMetadataProcessor<FlareMetadata>
+public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
 {
     public override void ProcessMetadata(GameObject gameObject, FlareMetadata metadata)
     {
