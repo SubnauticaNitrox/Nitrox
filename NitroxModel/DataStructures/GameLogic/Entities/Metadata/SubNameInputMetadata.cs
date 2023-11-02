@@ -25,6 +25,6 @@ public class SubNameInputMetadata : NamedColoredMetadata
 
     public override string ToString()
     {
-        return $"[{nameof(SubNameInputMetadata)} SelectedColorIndex: {SelectedColorIndex}, {FieldsToString()}]";
+        return $"[{nameof(SubNameInputMetadata)} SelectedColorIndex: {SelectedColorIndex} {base.ToString()}]";
     }
 }

@@ -2,10 +2,13 @@ using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.Unity;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 [Serializable, DataContract]
+[ProtoInclude(50, typeof(SeamothMetadata))]
+[ProtoInclude(60, typeof(ExosuitMetadata))]
 public abstract class VehicleMetadata : NamedColoredMetadata
 {
     [DataMember(Order = 1)]
@@ -22,13 +25,8 @@ public abstract class VehicleMetadata : NamedColoredMetadata
         Health = health;
     }
 
-    public new string FieldsToString()
-    {
-        return $"Health: {Health}, {base.FieldsToString()}";
-    }
-
     public override string ToString()
     {
-        return $"[{nameof(VehicleMetadata)} {FieldsToString()}]";
+        return $"[{nameof(VehicleMetadata)} Health: {Health} {base.ToString()}]";
     }
 }

@@ -22,7 +22,8 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -54,7 +55,7 @@ namespace NitroxClient
             RegisterInitialSyncProcessors(containerBuilder);
         }
 
-        private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
+        private void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
 #if DEBUG
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
@@ -136,13 +137,16 @@ namespace NitroxClient
         private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<EntityMetadataExtractor>()
-                            .As<EntityMetadataExtractor>()
-                            .InstancePerLifetimeScope();
+                            .AssignableTo<IEntityMetadataExtractor>()
+                            .As<IEntityMetadataExtractor>()
+                            .AsSelf()
+                            .SingleInstance();
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<EntityMetadataProcessor>()
-                            .As<EntityMetadataProcessor>()
-                            .InstancePerLifetimeScope();
+                            .AssignableTo<IEntityMetadataProcessor>()
+                            .As<IEntityMetadataProcessor>()
+                            .AsSelf()
+                            .SingleInstance();
+            containerBuilder.RegisterType<EntityMetadataManager>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)

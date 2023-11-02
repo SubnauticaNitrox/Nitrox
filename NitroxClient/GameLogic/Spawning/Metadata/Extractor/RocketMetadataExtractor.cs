@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class RocketMetadataExtractor : GenericEntityMetadataExtractor<Rocket, RocketMetadata>
+public class RocketMetadataExtractor : EntityMetadataExtractor<Rocket, RocketMetadata>
 {
     public override RocketMetadata Extract(Rocket rocket)
     {

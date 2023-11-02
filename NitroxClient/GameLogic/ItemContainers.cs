@@ -2,26 +2,28 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
-using UnityEngine;
 using NitroxModel_Subnautica.DataStructures;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class ItemContainers
     {
         private readonly IPacketSender packetSender;
+        private readonly EntityMetadataManager entityMetadataManager;
 
-        public ItemContainers(IPacketSender packetSender)
+        public ItemContainers(IPacketSender packetSender, EntityMetadataManager entityMetadataManager)
         {
             this.packetSender = packetSender;
+            this.entityMetadataManager = entityMetadataManager;
         }
 
         public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform)
@@ -85,7 +87,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
+            Optional<EntityMetadata> metadata = entityMetadataManager.Extract(gameObject);
 
             InstalledBatteryEntity installedBattery = new(id, techType.ToDto(), metadata.OrNull(), parentId, new());
 

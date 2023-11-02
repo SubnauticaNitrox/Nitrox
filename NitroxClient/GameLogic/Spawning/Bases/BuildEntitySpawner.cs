@@ -5,6 +5,7 @@ using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -58,7 +59,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     protected override bool SpawnsOwnChildren(BuildEntity entity) => true;
 
-    public static BuildEntity From(Base targetBase)
+    public static BuildEntity From(Base targetBase, EntityMetadataManager entityMetadataManager)
     {
         BuildEntity buildEntity = BuildEntity.MakeEmpty();
         if (targetBase.TryGetNitroxId(out NitroxId baseId))
@@ -69,7 +70,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         buildEntity.Transform = targetBase.transform.ToLocalDto();
 
         buildEntity.BaseData = GetBaseData(targetBase);
-        buildEntity.ChildEntities.AddRange(BuildUtils.GetChildEntities(targetBase, baseId));
+        buildEntity.ChildEntities.AddRange(BuildUtils.GetChildEntities(targetBase, baseId, entityMetadataManager));
 
         return buildEntity;
     }
