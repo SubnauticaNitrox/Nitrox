@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +21,15 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
     }
 
     // The steps are ordered like their call order in Player.OnProtoDeserialize
-    public override List<IEnumerator> GetSteps(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+    public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } = new()
     {
-        return new List<IEnumerator> {
-            RestoreKnownTech(packet),
-            RestorePDALog(packet),
-            RestoreEncyclopediaEntries(packet),
-            RestorePDAScanner(packet)
-        };
-    }
+        RestoreKnownTech,
+        RestorePDALog,
+        RestoreEncyclopediaEntries,
+        RestorePDAScanner
+    };
 
-    private IEnumerator RestoreKnownTech(InitialPlayerSync packet)
+    private static IEnumerator RestoreKnownTech(InitialPlayerSync packet)
     {
         List<TechType> knownTech = packet.PDAData.KnownTechTypes.Select(techType => techType.ToUnity()).ToList();
         HashSet<TechType> analyzedTech = packet.PDAData.AnalyzedTechTypes.Select(techType => techType.ToUnity()).ToHashSet();
@@ -43,7 +42,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
-    private IEnumerator RestorePDALog(InitialPlayerSync packet)
+    private static IEnumerator RestorePDALog(InitialPlayerSync packet)
     {
         List<PDALogEntry> logEntries = packet.PDAData.PDALogEntries;
         Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
@@ -56,7 +55,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
-    private IEnumerator RestoreEncyclopediaEntries(InitialPlayerSync packet)
+    private static IEnumerator RestoreEncyclopediaEntries(InitialPlayerSync packet)
     {
         List<string> entries = packet.PDAData.EncyclopediaEntries;
         Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
@@ -72,7 +71,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
-    private IEnumerator RestorePDAScanner(InitialPlayerSync packet)
+    private static IEnumerator RestorePDAScanner(InitialPlayerSync packet)
     {
         InitialPDAData pdaData = packet.PDAData;
 
