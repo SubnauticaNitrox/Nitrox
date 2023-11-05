@@ -165,8 +165,8 @@ namespace NitroxClient
         {
             containerBuilder
                 .RegisterAssemblyTypes(currentAssembly)
-                .AssignableTo<InitialSyncProcessor>()
-                .As<InitialSyncProcessor>()
+                .AssignableTo<IInitialSyncProcessor>()
+                .As<IInitialSyncProcessor>()
                 .InstancePerLifetimeScope();
         }
     }

@@ -3,41 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Abstract;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using Story;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
 public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 {
-    public override List<IEnumerator> GetSteps(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+    private readonly TimeManager timeManager;
+
+    public StoryGoalInitialSyncProcessor(TimeManager timeManager)
     {
-        return new List<IEnumerator> {
-            SetTimeData(packet),
-            SetupStoryGoalManager(packet),
-            SetupTrackers(packet),
-            SetupAuroraAndSunbeam(packet),
-            SetScheduledGoals(packet),
-            RefreshWithLatestData()
-        };
+        this.timeManager = timeManager;
+
+        AddStep(SetTimeData);
+        AddStep(SetupStoryGoalManager);
+        AddStep(SetupTrackers);
+        AddStep(SetupAuroraAndSunbeam);
+        AddStep(SetScheduledGoals);
+        AddStep(RefreshStoryWithLatestData);
     }
 
-    private IEnumerator SetTimeData(InitialPlayerSync packet)
-    {
-        NitroxServiceLocator.LocateService<TimeManager>().ProcessUpdate(packet.TimeData.TimePacket);
-        yield break;
-    }
-
-    private IEnumerator SetupStoryGoalManager(InitialPlayerSync packet)
+    private static IEnumerator SetupStoryGoalManager(InitialPlayerSync packet)
     {
         List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
         List<string> radioQueue = packet.StoryGoalData.RadioQueue;
         Dictionary<string, float> personalGoals = packet.StoryGoalData.PersonalCompletedGoalsWithTimestamp;
         StoryGoalManager storyGoalManager = StoryGoalManager.main;
-
 
         storyGoalManager.completedGoals.AddRange(completedGoals);
 
@@ -57,7 +50,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         PlayerWorldArrows.main.completedCustomGoals.AddRange(personalGoals.Keys);
 
         // Deactivate the current arrow if it was completed
-        if (personalGoals.Any(goal => goal.Equals(WorldArrowManager.main.currentGoalText)))
+        if (personalGoals.Any(goal => goal.Key.Equals(WorldArrowManager.main.currentGoalText)))
         {
             WorldArrowManager.main.DeactivateArrow();
         }
@@ -71,7 +64,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
-    private IEnumerator SetupTrackers(InitialPlayerSync packet)
+    private static IEnumerator SetupTrackers(InitialPlayerSync packet)
     {
         List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
         StoryGoalManager storyGoalManager = StoryGoalManager.main;
@@ -101,16 +94,16 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     }
 
     // Must happen after CompletedGoals
-    private IEnumerator SetupAuroraAndSunbeam(InitialPlayerSync packet)
+    private static IEnumerator SetupAuroraAndSunbeam(InitialPlayerSync packet)
     {
         TimeData timeData = packet.TimeData;
 
-        AuroraWarnings auroraWarnings = GameObject.FindObjectOfType<AuroraWarnings>();
+        AuroraWarnings auroraWarnings = UnityEngine.Object.FindObjectOfType<AuroraWarnings>();
         auroraWarnings.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         auroraWarnings.OnProtoDeserialize(null);
 
         CrashedShipExploder.main.version = 2;
-        StoryManager.UpdateAuroraData(timeData.AuroraEventData);        
+        StoryManager.UpdateAuroraData(timeData.AuroraEventData);
         CrashedShipExploder.main.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         CrashedShipExploder.main.OnProtoDeserialize(null);
 
@@ -127,10 +120,9 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     }
 
     // Must happen after CompletedGoals
-    private IEnumerator SetScheduledGoals(InitialPlayerSync packet)
+    private static IEnumerator SetScheduledGoals(InitialPlayerSync packet)
     {
         List<NitroxScheduledGoal> scheduledGoals = packet.StoryGoalData.ScheduledGoals;
-        List<string> goalKeys = scheduledGoals.ConvertAll((goal) => goal.GoalKey);
 
         foreach (NitroxScheduledGoal scheduledGoal in scheduledGoals)
         {
@@ -153,7 +145,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     }
 
     // Must happen after CompletedGoals
-    private IEnumerator RefreshWithLatestData()
+    private static IEnumerator RefreshStoryWithLatestData()
     {
         // If those aren't set up yet, they'll initialize correctly in time
         // Else, we need to force them to acquire the right data
@@ -166,5 +158,10 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             PrecursorGunStoryEvents.main.Start();
         }
         yield break;
+    }
+
+    private void SetTimeData(InitialPlayerSync packet)
+    {
+        timeManager.ProcessUpdate(packet.TimeData.TimePacket);
     }
 }
