@@ -1,13 +1,36 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
 {
-    public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
+    private readonly LocalPlayer localPlayer;
+    private readonly PlayerManager playerManager;
+
+    public GameModeChangedProcessor(LocalPlayer localPlayer, PlayerManager playerManager)
     {
-        public override void Process(GameModeChanged packet)
+        this.localPlayer = localPlayer;
+        this.playerManager = playerManager;
+    }
+
+    public override void Process(GameModeChanged packet)
+    {
+        if (packet.AllPlayers || packet.PlayerId == localPlayer.PlayerId)
         {
             GameModeUtils.SetGameMode((GameModeOption)(int)packet.GameMode, GameModeOption.None);
+        }
+        if (packet.AllPlayers)
+        {
+            foreach (RemotePlayer remotePlayer in playerManager.GetAll())
+            {
+                remotePlayer.SetGameMode(packet.GameMode);
+            }
+        }
+        else if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        {
+            remotePlayer.SetGameMode(packet.GameMode);
         }
     }
 }

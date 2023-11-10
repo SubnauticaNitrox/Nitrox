@@ -28,10 +28,11 @@ namespace NitroxModel.Helper
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
 
-                string currentAsmFolder = Path.GetDirectoryName(currentAsm?.Location) ?? string.Empty;
-                if (Directory.Exists(Path.Combine(currentAsmFolder, "LanguageFiles")))
+                Assembly execAsm = Assembly.GetExecutingAssembly();
+                string execAsmFolder = Path.GetDirectoryName(execAsm?.Location) ?? string.Empty;
+                if (Directory.Exists(Path.Combine(execAsmFolder, "LanguageFiles")))
                 {
-                    return currentAsmFolder;
+                    return execAsmFolder;
                 }
                 return null;
             }

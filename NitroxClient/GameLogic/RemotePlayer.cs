@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.Unity.Helper;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Server;
 using UnityEngine;
 using UWE;
 
@@ -17,6 +20,7 @@ public class RemotePlayer : INitroxPlayer
     private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
     private readonly PlayerModelManager playerModelManager;
+    private readonly PlayerVitalsManager playerVitalsManager;
     private readonly FMODWhitelist fmodWhitelist;
 
     public PlayerContext PlayerContext { get; }
@@ -28,6 +32,7 @@ public class RemotePlayer : INitroxPlayer
     public AnimationController AnimationController { get; private set; }
     public ItemsContainer Inventory { get; private set; }
     public Transform ItemAttachPoint { get; private set; }
+    public RemotePlayerVitals vitals { get; private set; }
 
     public ushort PlayerId => PlayerContext.PlayerId;
     public string PlayerName => PlayerContext.PlayerName;
@@ -42,10 +47,11 @@ public class RemotePlayer : INitroxPlayer
 
     public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
 
-    public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, FMODWhitelist fmodWhitelist)
+    public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
     {
         PlayerContext = playerContext;
         this.playerModelManager = playerModelManager;
+        this.playerVitalsManager = playerVitalsManager;
         this.fmodWhitelist = fmodWhitelist;
     }
 
@@ -84,6 +90,9 @@ public class RemotePlayer : INitroxPlayer
         SetupBody();
         SetupSkyAppliers();
         SetupPlayerSounds();
+
+        vitals = playerVitalsManager.CreateOrFindForPlayer(this);
+        RefreshVitalsVisibility();
     }
 
     public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -383,6 +392,20 @@ public class RemotePlayer : INitroxPlayer
         if (fmodWhitelist.IsWhitelisted(diveStartCustomEmitter.asset.path, out float diveSoundRadius))
         {
             emitterController.AddEmitter(diveStartCustomEmitter.asset.path, diveStartCustomEmitter, diveSoundRadius);
+        }
+    }
+
+    public void SetGameMode(NitroxGameMode gameMode)
+    {
+        PlayerContext.GameMode = gameMode;
+        RefreshVitalsVisibility();
+    }
+
+    private void RefreshVitalsVisibility()
+    {
+        if (vitals)
+        {
+            vitals.gameObject.SetActive(PlayerContext.GameMode != NitroxGameMode.CREATIVE);
         }
     }
 }

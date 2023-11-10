@@ -178,7 +178,7 @@ namespace NitroxServer.Serialization.World
             return CreateWorld(pWorldData, config.GameMode);
         }
 
-        public World CreateWorld(PersistedWorldData pWorldData, ServerGameMode gameMode)
+        public World CreateWorld(PersistedWorldData pWorldData, NitroxGameMode gameMode)
         {
             string seed = pWorldData.WorldData.Seed;
             if (string.IsNullOrWhiteSpace(seed))

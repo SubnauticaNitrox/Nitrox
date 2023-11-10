@@ -1,35 +1,37 @@
 using System.Collections;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 
-namespace NitroxClient.GameLogic.InitialSync
+namespace NitroxClient.GameLogic.InitialSync;
+
+class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
 {
-    class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
+    private readonly SimulationOwnership simulationOwnership;
+
+    public SimulationOwnershipInitialSyncProcessor(SimulationOwnership simulationOwnership)
     {
-        private readonly IPacketSender packetSender;
-        private readonly SimulationOwnership simulationOwnership;
+        this.simulationOwnership = simulationOwnership;
 
-        public SimulationOwnershipInitialSyncProcessor(IPacketSender packetSender, SimulationOwnership simulationOwnership)
+        AddDependency<GlobalRootInitialSyncProcessor>();
+    }
+
+    public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+    {
+        int idsSynced = 0;
+        foreach (NitroxId entityId in packet.InitialSimulationOwnerships)
         {
-            this.packetSender = packetSender;
-            this.simulationOwnership = simulationOwnership;
+            // Initial locks are transient
+            simulationOwnership.SimulateEntity(entityId, SimulationLockType.TRANSIENT);
+            Log.Debug($"Transient simulation ownership for {entityId} from initial sync");
 
-            DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor));
-        }
-
-        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
-        {
-            int idsSynced = 0;
-            foreach (NitroxId entityId in packet.InitialSimulationOwnerships)
+            if (idsSynced++ % 5 == 0)
             {
-                waitScreenItem.SetProgress(idsSynced++, packet.InitialSimulationOwnerships.Count);
-                // Initial locks are transient
-                simulationOwnership.SimulateEntity(entityId, SimulationLockType.TRANSIENT);
-                Log.Debug($"Transient simulation ownership for {entityId} from initial sync");
+                waitScreenItem.SetProgress(idsSynced, packet.InitialSimulationOwnerships.Count);
+                yield return null;
             }
-            yield return null;
         }
+
+        yield return null;
     }
 }
