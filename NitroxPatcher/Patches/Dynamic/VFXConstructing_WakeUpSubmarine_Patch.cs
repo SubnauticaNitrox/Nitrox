@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class VFXConstructing_WakeUpSubmarine_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((VFXConstructing t) => t.WakeUpSubmarine());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((VFXConstructing t) => t.WakeUpSubmarine());
 
     public static void Postfix(VFXConstructing __instance)
     {

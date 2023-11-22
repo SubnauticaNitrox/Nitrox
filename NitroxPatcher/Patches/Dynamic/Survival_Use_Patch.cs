@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Survival_Use_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Survival t) => t.Use(default(GameObject)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Survival t) => t.Use(default(GameObject)));
 
     public static void Postfix(bool __result, GameObject useObj)
     {

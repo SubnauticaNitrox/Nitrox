@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Base_OnPreDestroy_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.OnPreDestroy());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Base t) => t.OnPreDestroy());
 
     public static void Prefix(Base __instance)
     {

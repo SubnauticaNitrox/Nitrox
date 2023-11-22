@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Welder_Weld_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Welder t) => t.Weld());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Welder t) => t.Weld());
 
     private static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     private static readonly object INJECTION_OPERAND = Reflect.Method(() => AddHealthOverride(default(LiveMixin), default(float), default(Welder)));

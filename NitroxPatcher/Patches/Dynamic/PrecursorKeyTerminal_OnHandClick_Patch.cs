@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PrecursorKeyTerminal_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrecursorKeyTerminal t) => t.OnHandClick(default(GUIHand)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PrecursorKeyTerminal t) => t.OnHandClick(default(GUIHand)));
 
     public static void Postfix(PrecursorKeyTerminal __instance)
     {

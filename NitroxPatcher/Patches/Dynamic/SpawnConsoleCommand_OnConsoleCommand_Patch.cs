@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class SpawnConsoleCommand_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnConsoleCommand t) => t.OnConsoleCommand_spawn(default(NotificationCenter.Notification)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((SpawnConsoleCommand t) => t.OnConsoleCommand_spawn(default(NotificationCenter.Notification)));
 
     private static readonly OpCode INJECTION_CODE = OpCodes.Call;
     private static readonly object INJECTION_OPERAND = Reflect.Method(() => Utils.CreatePrefab(default(GameObject), default(float), default(bool)));

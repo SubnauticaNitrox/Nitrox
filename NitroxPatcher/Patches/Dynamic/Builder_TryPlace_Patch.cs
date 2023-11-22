@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
@@ -17,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => Builder.TryPlace());
 
     public static readonly InstructionsPattern AddInstructionPattern1 = new()
     {
@@ -43,11 +44,16 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
         { new() { OpCode = Callvirt, Operand = new(nameof(Constructable), nameof(Constructable.SetIsInside)) }, "Insert2" }
     };
 
-    public static readonly List<CodeInstruction> InstructionsToAdd2 = new()
+    public static List<CodeInstruction> InstructionsToAdd2;
+
+    public Builder_TryPlace_Patch()
     {
-        TARGET_METHOD.Ldloc<Constructable>(),
-        new(Call, Reflect.Method(() => GhostCreated(default)))
-    };
+        InstructionsToAdd2 = new()
+        {
+            targetMethod.Ldloc<Constructable>(),
+            new(Call, Reflect.Method(() => GhostCreated(default)))
+        };
+    }
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
         instructions.Transform(AddInstructionPattern1, (label, instruction) =>

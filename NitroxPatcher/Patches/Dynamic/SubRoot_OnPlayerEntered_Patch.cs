@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class SubRoot_OnPlayerEntered_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubRoot t) => t.OnPlayerEntered(default(Player)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((SubRoot t) => t.OnPlayerEntered(default(Player)));
     private static readonly OpCode START_INJECTION_CODE = OpCodes.Ldarg_0;
     private static readonly OpCode START_INJECTION_CODE_INVINCIBLE = OpCodes.Stfld;
     private static readonly FieldInfo LIVEMIXIN_INVINCIBLE = Reflect.Field((LiveMixin t) => t.invincible);

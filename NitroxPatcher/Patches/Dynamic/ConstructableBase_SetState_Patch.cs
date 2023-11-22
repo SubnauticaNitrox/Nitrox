@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class ConstructableBase_SetState_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ConstructableBase t) => t.SetState(default, default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((ConstructableBase t) => t.SetState(default, default));
 
     /*
      * Make it become
@@ -29,11 +29,16 @@ public sealed partial class ConstructableBase_SetState_Patch : NitroxPatch, IDyn
         { Brfalse, "Insert" }
     };
 
-    public static readonly List<CodeInstruction> InstructionsToAdd = new()
+    public static List<CodeInstruction> InstructionsToAdd;
+    public ConstructableBase_SetState_Patch()
     {
-        TARGET_METHOD.Ldloc<GameObject>(),
-        new(Call, Reflect.Method(() => BeforeDestroy(default)))
-    };
+        InstructionsToAdd = new()
+        {
+            targetMethod.Ldloc<GameObject>(),
+            new(Call, Reflect.Method(() => BeforeDestroy(default)))
+        };
+
+    }
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
         instructions.Transform(InstructionPattern, (label, instruction) =>

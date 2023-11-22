@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Vehicle_OnPilotModeEnd_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Vehicle t) => t.OnPilotModeEnd());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Vehicle t) => t.OnPilotModeEnd());
 
     public static void Prefix(Vehicle __instance)
     {

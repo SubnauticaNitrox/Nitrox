@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class KnownTech_NotifyAdd_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => KnownTech.NotifyAdd(default, default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => KnownTech.NotifyAdd(default, default));
 
     public static void Prefix(TechType techType, bool verbose)
     {

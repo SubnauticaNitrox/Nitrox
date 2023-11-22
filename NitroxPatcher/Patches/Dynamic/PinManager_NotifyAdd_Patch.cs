@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PinManager_NotifyAdd_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((PinManager t) => t.NotifyAdd(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PinManager t) => t.NotifyAdd(default));
 
     public static void Prefix(TechType techType)
     {

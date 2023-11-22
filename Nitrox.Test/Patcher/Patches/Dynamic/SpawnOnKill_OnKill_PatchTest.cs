@@ -15,8 +15,8 @@ public class SpawnOnKill_OnKill_PatchTest
     [TestMethod]
     public void Sanity()
     {
-        ReadOnlyCollection<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(TARGET_METHOD);
-        IEnumerable<CodeInstruction> transformedIl = Transpiler(TARGET_METHOD, originalIl);
+        ReadOnlyCollection<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(new SpawnOnKill_OnKill_Patch().targetMethod);
+        IEnumerable<CodeInstruction> transformedIl = Transpiler(new SpawnOnKill_OnKill_Patch().targetMethod, originalIl);
         originalIl.Count.Should().Be(transformedIl.Count() - 3);
     }
 }

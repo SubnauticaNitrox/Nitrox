@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((StoryGoalScheduler t) => t.Schedule(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((StoryGoalScheduler t) => t.Schedule(default));
 
     // __state is true if the entry was already scheduled before, in which case we cancel the scheduling
     public static bool Prefix(StoryGoal goal, out bool __state)

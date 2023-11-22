@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ToggleLights t) => t.SetLightsActive(default(bool)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((ToggleLights t) => t.SetLightsActive(default(bool)));
 
     private static readonly HashSet<Type> syncedParents = new()
     {

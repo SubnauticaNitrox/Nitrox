@@ -103,6 +103,12 @@ internal sealed class HarmonyRegisterPatchGenerator : IIncrementalGenerator
         {
             return false;
         }
+
+        if (type.Members.OfType<MethodDeclarationSyntax>().Any(m => m.AttributeLists.Any(a => a.Attributes.Any(attr => attr.Name.ToString() == "NitroxInLineAttribute"))))
+        {
+            return true;
+        }
+
         // Skip if "Patch" method is already defined.
         if (type.Members.OfType<MethodDeclarationSyntax>().Any(m => m.Modifiers.Any(SyntaxKind.OverrideKeyword) && m.Identifier.ValueText == "Patch"))
         {

@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class CyclopsSonarButton_SonarPing_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.SonarPing());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsSonarButton t) => t.SonarPing());
 
     public static bool Prefix(CyclopsSonarButton __instance)
     {

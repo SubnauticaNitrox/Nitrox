@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PrecursorDoorway_ToggleDoor_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrecursorDoorway t) => t.ToggleDoor(default(bool)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PrecursorDoorway t) => t.ToggleDoor(default(bool)));
 
     public static void Postfix(PrecursorDoorway __instance)
     {

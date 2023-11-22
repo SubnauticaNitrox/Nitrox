@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class GhostCrafter_OnCraftingBegin_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GhostCrafter t) => t.OnCraftingBegin(default(TechType), default(float)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((GhostCrafter t) => t.OnCraftingBegin(default(TechType), default(float)));
 
     public static void Postfix(GhostCrafter __instance, TechType techType, float duration)
     {

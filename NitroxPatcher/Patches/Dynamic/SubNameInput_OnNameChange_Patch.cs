@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubNameInput t) => t.OnNameChange(default(string)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((SubNameInput t) => t.OnNameChange(default(string)));
 
     public static void Postfix(SubNameInput __instance)
     {

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class IngameMenu_OnSelect_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.OnSelect(default(bool)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((IngameMenu t) => t.OnSelect(default(bool)));
     private static readonly MethodInfo UPDATE_BUTTONS_METHOD = Reflect.Method((IngameMenu t) => t.UpdateButtons());
 
     public static void Postfix()

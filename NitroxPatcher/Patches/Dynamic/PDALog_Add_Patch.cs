@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PDALog_Add_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDALog.Add(default, default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => PDALog.Add(default, default));
     public static List<string> IgnoreKeys = new();
 
     public static void Postfix(string key, PDALog.EntryData __result)

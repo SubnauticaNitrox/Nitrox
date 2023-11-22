@@ -15,8 +15,9 @@ public class BreakableResource_SpawnResourceFromPrefab_PatchTest
     [TestMethod]
     public void Sanity()
     {
-        ReadOnlyCollection<CodeInstruction> originalIL = PatchTestHelper.GetInstructionsFromMethod(TARGET_METHOD);
-        IEnumerable<CodeInstruction> transformedIL = Transpiler(TARGET_METHOD, originalIL);
+        BreakableResource_SpawnResourceFromPrefab_Patch patch = new();
+        ReadOnlyCollection<CodeInstruction> originalIL = PatchTestHelper.GetInstructionsFromMethod(patch.targetMethod);
+        IEnumerable<CodeInstruction> transformedIL = Transpiler(patch.targetMethod, originalIL);
         originalIL.Count.Should().Be(transformedIL.Count() - 2);
     }
 }

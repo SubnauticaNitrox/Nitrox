@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class CellManager_TryLoadCacheBatchCells_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CellManager t) => t.TryLoadCacheBatchCells(default(BatchCells)));
+        public override MethodInfo targetMethod { get; } = Reflect.Method((CellManager t) => t.TryLoadCacheBatchCells(default(BatchCells)));
         private static readonly MethodInfo PATH_PREFIX_GETTER = Reflect.Property((LargeWorldStreamer t) => t.pathPrefix).GetMethod;
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

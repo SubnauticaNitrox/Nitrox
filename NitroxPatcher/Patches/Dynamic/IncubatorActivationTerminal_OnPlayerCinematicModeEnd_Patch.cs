@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class IncubatorActivationTerminal_OnPlayerCinematicModeEnd_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IncubatorActivationTerminal t) => t.OnPlayerCinematicModeEnd(default(PlayerCinematicController)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((IncubatorActivationTerminal t) => t.OnPlayerCinematicModeEnd(default(PlayerCinematicController)));
 
     public static void Prefix(IncubatorActivationTerminal __instance)
     {

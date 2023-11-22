@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Stalker_CheckLoseTooth_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Stalker t) => t.CheckLoseTooth(default(GameObject)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Stalker t) => t.CheckLoseTooth(default(GameObject)));
 
     //GetComponent<HardnessMixin> was returning null for everything instead of a HardnessMixin with a hardness value. Since this component
     //isn't used for anything else than the stalker teeth drop, we hard-code the values and bingo.

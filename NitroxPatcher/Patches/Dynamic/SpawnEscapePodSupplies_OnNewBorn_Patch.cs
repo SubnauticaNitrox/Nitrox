@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class SpawnEscapePodSupplies_OnNewBorn_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnEscapePodSupplies t) => t.OnNewBorn());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((SpawnEscapePodSupplies t) => t.OnNewBorn());
 
     public static bool Prefix()
     {

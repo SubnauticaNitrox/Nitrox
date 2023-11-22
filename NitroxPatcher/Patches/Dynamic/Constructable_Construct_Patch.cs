@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.Construct());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Constructable t) => t.Construct());
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 

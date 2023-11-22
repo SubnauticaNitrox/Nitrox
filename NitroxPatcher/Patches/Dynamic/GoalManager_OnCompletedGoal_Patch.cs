@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => GoalManager.main.OnCompleteGoal(default, default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => GoalManager.main.OnCompleteGoal(default, default));
 
     public static void Prefix(string goalIdentifier, out bool __state)
     {

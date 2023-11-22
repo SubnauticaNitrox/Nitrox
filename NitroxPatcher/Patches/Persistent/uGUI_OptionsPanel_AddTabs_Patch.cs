@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class uGUI_OptionsPanel_AddTabs_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_OptionsPanel t) => t.AddTabs());
+        public override MethodInfo targetMethod { get; } = Reflect.Method((uGUI_OptionsPanel t) => t.AddTabs());
         private static NitroxSettingsManager nitroxSettingsManager;
 
         public static void Postfix(uGUI_OptionsPanel __instance)

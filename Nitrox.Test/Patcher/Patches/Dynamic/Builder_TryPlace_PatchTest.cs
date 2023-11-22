@@ -13,7 +13,9 @@ public class Builder_TryPlace_PatchTest
     [TestMethod]
     public void Sanity()
     {
-        IEnumerable<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(Builder_TryPlace_Patch.TARGET_METHOD);
+        
+        Builder_TryPlace_Patch patch = new();
+        IEnumerable<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(patch.targetMethod);
         IEnumerable<CodeInstruction> transformedIl = Builder_TryPlace_Patch.Transpiler(null, originalIl);
         originalIl.Count().Should().Be(transformedIl.Count() - (Builder_TryPlace_Patch.InstructionsToAdd1.Count + Builder_TryPlace_Patch.InstructionsToAdd2.Count));
     }

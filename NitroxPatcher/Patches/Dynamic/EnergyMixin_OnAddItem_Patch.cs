@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class EnergyMixin_OnAddItem_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EnergyMixin t) => t.OnAddItem(default(InventoryItem)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((EnergyMixin t) => t.OnAddItem(default(InventoryItem)));
 
     public static void Postfix(EnergyMixin __instance, InventoryItem item)
     {

@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.Update());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsSonarButton t) => t.Update());
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
     internal static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);

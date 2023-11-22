@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IncubatorEgg t) => t.HatchNow());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((IncubatorEgg t) => t.HatchNow());
 
     public static bool Prefix(IncubatorEgg __instance)
     {

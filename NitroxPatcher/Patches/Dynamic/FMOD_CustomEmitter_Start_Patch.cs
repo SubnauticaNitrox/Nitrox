@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FMOD.Studio;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class FMOD_CustomEmitter_Start_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.Start());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((FMOD_CustomEmitter t) => t.Start());
 
     public static void Prefix(FMOD_CustomEmitter __instance)
     {

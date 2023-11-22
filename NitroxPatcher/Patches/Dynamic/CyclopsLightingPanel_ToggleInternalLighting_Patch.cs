@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsLightingPanel_ToggleInternalLighting_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsLightingPanel t) => t.ToggleInternalLighting());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsLightingPanel t) => t.ToggleInternalLighting());
 
     public static bool Prefix(CyclopsLightingPanel __instance, out bool __state)
     {

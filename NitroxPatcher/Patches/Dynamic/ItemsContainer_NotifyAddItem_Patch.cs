@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class ItemsContainer_NotifyAddItem_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.NotifyAddItem(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((ItemsContainer t) => t.NotifyAddItem(default));
 
     public static void Postfix(ItemsContainer __instance, InventoryItem item)
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
@@ -23,8 +24,23 @@ public abstract class NitroxPatch : INitroxPatch
     ///     List of patches defined by the class that inherits.
     /// </summary>
     private readonly List<MethodBase> activePatches = new();
+    private readonly string[] harmonyMethodTypes = { "prefix", "postfix", "transpiler", "finalizer", "manipulator" };
 
-    public abstract void Patch(Harmony harmony);
+    public virtual MethodInfo targetMethod { get; }
+
+
+    [NitroxInLine]
+    public virtual void Patch(Harmony harmony)
+    {
+        Type curType = GetType();
+        MethodInfo prefix = curType.GetMethod(harmonyMethodTypes[0]);
+        MethodInfo postfix = curType.GetMethod(harmonyMethodTypes[1]);
+        MethodInfo transpiler = curType.GetMethod(harmonyMethodTypes[2]);
+        MethodInfo finalizer = curType.GetMethod(harmonyMethodTypes[3]);
+        MethodInfo manipulator = curType.GetMethod(harmonyMethodTypes[4]);
+
+        PatchMultiple(harmony, targetMethod, prefix, postfix, transpiler, finalizer, manipulator);
+    }
 
     /// <summary>
     ///     Removes the (previously applied) patches from the process.

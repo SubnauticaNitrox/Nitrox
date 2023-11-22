@@ -6,6 +6,7 @@
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Nullable>disable</Nullable>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <Configurations>Debug;Release;LinuxRelease</Configurations>
     </PropertyGroup>
 
     <ItemGroup>

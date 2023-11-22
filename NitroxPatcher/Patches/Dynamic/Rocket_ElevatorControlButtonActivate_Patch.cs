@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Rocket_ElevatorControlButtonActivate_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Rocket t) => t.ElevatorControlButtonActivate());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Rocket t) => t.ElevatorControlButtonActivate());
 
     public static void Prefix(Rocket __instance, out RocketElevatorStates __state)
     {

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,8 +22,8 @@ namespace NitroxPatcher.Patches.Dynamic
         [TestMethod]
         public void InjectionSanity()
         {
-            IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(LaunchRocket_OnHandClick_Patch.TARGET_METHOD);
-            IEnumerable<CodeInstruction> result = LaunchRocket_OnHandClick_Patch.Transpiler(LaunchRocket_OnHandClick_Patch.TARGET_METHOD, beforeInstructions);
+            IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(new LaunchRocket_OnHandClick_Patch().targetMethod);
+            IEnumerable<CodeInstruction> result = LaunchRocket_OnHandClick_Patch.Transpiler(new LaunchRocket_OnHandClick_Patch().targetMethod, beforeInstructions);
 
             // We remove a lot of instructions in this transpiler
             Assert.IsTrue(beforeInstructions.Count() > result.Count());

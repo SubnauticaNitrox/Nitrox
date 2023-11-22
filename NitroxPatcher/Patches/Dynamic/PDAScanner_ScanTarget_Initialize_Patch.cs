@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class PDAScanner_ScanTarget_Initialize_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PDAScanner.ScanTarget t) => t.Initialize(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PDAScanner.ScanTarget t) => t.Initialize(default));
 
     public static void Postfix(PDAScanner.ScanTarget __instance)
     {

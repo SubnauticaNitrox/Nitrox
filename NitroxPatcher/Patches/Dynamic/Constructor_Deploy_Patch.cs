@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Constructor_Deploy_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructor t) => t.Deploy(default(bool)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Constructor t) => t.Deploy(default(bool)));
 
     public static void Prefix(Constructor __instance, bool value)
     {

@@ -5,6 +5,7 @@
 
 # DocFx-specific files
 _site/
+api/
 
 # User-specific files
 *.rsuser

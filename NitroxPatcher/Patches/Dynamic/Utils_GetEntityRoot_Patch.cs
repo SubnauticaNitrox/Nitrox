@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Utils_GetEntityRoot_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => UWE.Utils.GetEntityRoot(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => UWE.Utils.GetEntityRoot(default));
 
     public static bool Prefix(GameObject go, ref GameObject __result)
     {

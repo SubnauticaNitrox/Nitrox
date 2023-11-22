@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PingManager.NotifyRename(default(PingInstance)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => PingManager.NotifyRename(default(PingInstance)));
 
     public static void Postfix(PingInstance instance)
     {

@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((EntityCell t) => t.SleepAsync(default(ProtobufSerializer))));
+    public override MethodInfo targetMethod { get; } = AccessTools.EnumeratorMoveNext(Reflect.Method((EntityCell t) => t.SleepAsync(default(ProtobufSerializer))));
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
     public static readonly object INJECTION_OPERAND = Reflect.Field((EntityCell entityCell) => entityCell.state);

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using NitroxModel.Helper;
@@ -25,7 +25,7 @@ public sealed partial class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
         Reflect.Method((DevConsole t) => t.SetState(default(bool)))
     };
 
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((DevConsole t) => t.Update());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((DevConsole t) => t.Update());
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {

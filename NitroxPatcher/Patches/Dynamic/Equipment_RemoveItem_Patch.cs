@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Equipment_RemoveItem_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Equipment t) => t.RemoveItem(default(string), default(bool), default(bool)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Equipment t) => t.RemoveItem(default(string), default(bool), default(bool)));
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Stloc_1;
 

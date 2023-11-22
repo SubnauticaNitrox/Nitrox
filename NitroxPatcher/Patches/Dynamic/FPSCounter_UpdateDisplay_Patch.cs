@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class FPSCounter_UpdateDisplay_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((FPSCounter t) => t.UpdateDisplay());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((FPSCounter t) => t.UpdateDisplay());
 
     public static void Postfix(FPSCounter __instance)
     {

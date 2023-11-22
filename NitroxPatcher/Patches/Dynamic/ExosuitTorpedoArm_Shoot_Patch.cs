@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class ExosuitTorpedoArm_Shoot_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitTorpedoArm t) => t.Shoot(default(TorpedoType), default(Transform), default(bool)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((ExosuitTorpedoArm t) => t.Shoot(default(TorpedoType), default(Transform), default(bool)));
 
     public static void Prefix(ExosuitTorpedoArm __instance, bool __result, TorpedoType torpedoType, Transform siloTransform)
     {

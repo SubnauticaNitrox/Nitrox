@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.SetTabs(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((uGUI_PDA t) => t.SetTabs(default));
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Blt;
 

@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.AddHealth(default(float)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((LiveMixin t) => t.AddHealth(default(float)));
 
     public static bool Prefix(out float? __state, LiveMixin __instance)
     {

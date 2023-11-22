@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class SeaMoth_OnUpgradeModuleUse_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeaMoth t) => t.OnUpgradeModuleUse(default(TechType), default(int)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((SeaMoth t) => t.OnUpgradeModuleUse(default(TechType), default(int)));
 
     public static bool Prefix(SeaMoth __instance, TechType techType, int slotID)
     {

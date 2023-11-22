@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using NitroxModel.Helper;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
 
     internal static readonly object triggerOperand = Reflect.Property(() => SaveLoadManager.main).GetMethod;
     internal static readonly object injectionOperand = Reflect.Method(() => Application.Quit());

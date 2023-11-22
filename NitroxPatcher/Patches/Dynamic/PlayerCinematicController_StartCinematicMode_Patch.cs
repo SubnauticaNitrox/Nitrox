@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PlayerCinematicController_StartCinematicMode_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo targetMethod = Reflect.Method((PlayerCinematicController t) => t.StartCinematicMode(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PlayerCinematicController t) => t.StartCinematicMode(default));
 
     public static void Prefix(PlayerCinematicController __instance)
     {

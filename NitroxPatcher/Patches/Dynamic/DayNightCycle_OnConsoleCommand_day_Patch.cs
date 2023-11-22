@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class DayNightCycle_OnConsoleCommand_day_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((DayNightCycle t) => t.OnConsoleCommand_day(default(NotificationCenter.Notification)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((DayNightCycle t) => t.OnConsoleCommand_day(default(NotificationCenter.Notification)));
 
     public static bool Prefix()
     {

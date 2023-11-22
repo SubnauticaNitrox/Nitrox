@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class SubConsoleCommand_OnConsoleCommand_sub_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubConsoleCommand t) => t.OnConsoleCommand_sub(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((SubConsoleCommand t) => t.OnConsoleCommand_sub(default));
 
     public static bool Prefix()
     {

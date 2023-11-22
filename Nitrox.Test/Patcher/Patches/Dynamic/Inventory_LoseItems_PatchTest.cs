@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,8 +22,8 @@ public class Inventory_LoseItems_PatchTest
     [TestMethod]
     public void InjectionSanity()
     {
-        IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(Inventory_LoseItems_Patch.TARGET_METHOD);
-        IEnumerable<CodeInstruction> result = Inventory_LoseItems_Patch.Transpiler(Inventory_LoseItems_Patch.TARGET_METHOD, beforeInstructions);
+        IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(new Inventory_LoseItems_Patch().targetMethod);
+        IEnumerable<CodeInstruction> result = Inventory_LoseItems_Patch.Transpiler(new Inventory_LoseItems_Patch().targetMethod, beforeInstructions);
 
         Assert.IsTrue(beforeInstructions.Count() > result.Count());
     }

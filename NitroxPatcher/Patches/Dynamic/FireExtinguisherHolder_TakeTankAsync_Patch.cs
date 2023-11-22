@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class FireExtinguisherHolder_TakeTankAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((FireExtinguisherHolder t) => t.TakeTankAsync()));
+    public override MethodInfo targetMethod { get; } = AccessTools.EnumeratorMoveNext(Reflect.Method((FireExtinguisherHolder t) => t.TakeTankAsync()));
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     public static readonly object INJECTION_OPERAND = Reflect.Method(() => CraftData.AddToInventoryAsync(default(TechType), default(IOut<GameObject>), default(int), default(bool), default(bool)));

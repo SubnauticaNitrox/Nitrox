@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class CyclopsDamagePoint_OnRepair_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsDamagePoint t) => t.OnRepair());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsDamagePoint t) => t.OnRepair());
 
     public static void Postfix(CyclopsDamagePoint __instance)
     {

@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method(() => BreakableResource.SpawnResourceFromPrefab(default, default, default)));
+    public override MethodInfo targetMethod { get; } = AccessTools.EnumeratorMoveNext(Reflect.Method(() => BreakableResource.SpawnResourceFromPrefab(default, default, default)));
 
     private static readonly InstructionsPattern SpawnResFromPrefPattern = new()
     {

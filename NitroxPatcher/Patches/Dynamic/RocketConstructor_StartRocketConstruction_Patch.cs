@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class RocketConstructor_StartRocketConstruction_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((RocketConstructor t) => t.StartRocketConstruction());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((RocketConstructor t) => t.StartRocketConstruction());
     private static readonly OpCode INJECTION_CODE = OpCodes.Stloc_2;
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)

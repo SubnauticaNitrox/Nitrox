@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class GameSettings_SerializeInputSettings_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => GameSettings.SerializeInputSettings(default(GameSettings.ISerializer)));
+        public override MethodInfo targetMethod { get; } = Reflect.Method(() => GameSettings.SerializeInputSettings(default(GameSettings.ISerializer)));
 
         public static void Postfix(GameSettings.ISerializer serializer)
         {

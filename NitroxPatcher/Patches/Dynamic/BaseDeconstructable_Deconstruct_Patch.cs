@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
     private static BuildPieceIdentifier cachedPieceIdentifier;

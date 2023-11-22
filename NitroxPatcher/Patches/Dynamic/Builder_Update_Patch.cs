@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Builder_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.Update());
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => Builder.Update());
     private static readonly Color DESYNCED_COLOR = Color.magenta;
 
     public static void Postfix()

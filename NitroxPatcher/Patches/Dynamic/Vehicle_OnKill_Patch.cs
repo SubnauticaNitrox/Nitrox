@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Vehicle_OnKill_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Vehicle t) => t.OnKill());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Vehicle t) => t.OnKill());
 
     public static void Prefix(Vehicle __instance)
     {

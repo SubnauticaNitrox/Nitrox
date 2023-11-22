@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic;
  */
 public sealed partial class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((CrafterLogic t) => t.TryPickupSingleAsync(default(TechType), default(IOut<bool>))));
+    public override MethodInfo targetMethod { get; } = AccessTools.EnumeratorMoveNext(Reflect.Method((CrafterLogic t) => t.TryPickupSingleAsync(default(TechType), default(IOut<bool>))));
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     public static readonly object INJECTION_OPERAND = Reflect.Method(() => CrafterLogic.NotifyCraftEnd(default(GameObject), default(TechType)));

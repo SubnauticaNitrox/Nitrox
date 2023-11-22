@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Pickupable_Drop_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Pickupable t) => t.Drop(default, default, default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Pickupable t) => t.Drop(default, default, default));
 
     public static void Postfix(Pickupable __instance)
     {

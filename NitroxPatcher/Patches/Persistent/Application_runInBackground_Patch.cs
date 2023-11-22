@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
+using HarmonyLib;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace NitroxPatcher.Patches.Persistent;
 /// </remarks>
 public sealed partial class Application_runInBackground_Patch : NitroxPatch, IPersistentPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Property(() => Application.runInBackground).GetSetMethod();
+    public override MethodInfo targetMethod { get; } = Reflect.Property(() => Application.runInBackground).GetSetMethod();
 
     public static bool Prefix(bool value)
     {

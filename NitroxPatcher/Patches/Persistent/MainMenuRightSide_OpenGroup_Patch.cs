@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Helper;
 
@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class MainMenuRightSide_OpenGroup_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((MainMenuRightSide t) => t.OpenGroup(default(string)));
+        public override MethodInfo targetMethod { get; } = Reflect.Method((MainMenuRightSide t) => t.OpenGroup(default(string)));
 
         public static void Prefix(string target)
         {

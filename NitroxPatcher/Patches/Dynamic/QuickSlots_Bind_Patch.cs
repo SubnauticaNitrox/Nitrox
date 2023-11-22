@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.Bind(default(int), default(InventoryItem)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((QuickSlots t) => t.Bind(default(int), default(InventoryItem)));
 
     public static void Postfix(QuickSlots __instance)
     {

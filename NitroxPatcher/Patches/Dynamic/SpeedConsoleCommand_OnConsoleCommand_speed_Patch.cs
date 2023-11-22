@@ -5,7 +5,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class SpeedConsoleCommand_OnConsoleCommand_speed_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpeedConsoleCommand t) => t.OnConsoleCommand_speed(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((SpeedConsoleCommand t) => t.OnConsoleCommand_speed(default));
 
     // The command is skipped because simulating speed reliable is totally out of scope
     public static bool Prefix()

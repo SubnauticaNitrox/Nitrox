@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsMotorModeButton_OnClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsMotorModeButton t) => t.OnClick());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsMotorModeButton t) => t.OnClick());
 
     public static bool Prefix(CyclopsMotorModeButton __instance, out bool __state)
     {

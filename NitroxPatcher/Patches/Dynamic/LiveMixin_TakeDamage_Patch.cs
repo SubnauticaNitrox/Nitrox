@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.TakeDamage(default(float), default(Vector3), default(DamageType), default(GameObject)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((LiveMixin t) => t.TakeDamage(default(float), default(Vector3), default(DamageType), default(GameObject)));
 
     public static bool Prefix(out float? __state, LiveMixin __instance, GameObject dealer)
     {

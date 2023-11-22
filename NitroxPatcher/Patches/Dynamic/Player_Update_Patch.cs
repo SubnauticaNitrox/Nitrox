@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Player_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.Update());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Player t) => t.Update());
 
     public static void Postfix(Player __instance)
     {

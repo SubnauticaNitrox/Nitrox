@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PropulsionCannon_ReleaseGrabbedObject_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((PropulsionCannon t) => t.ReleaseGrabbedObject());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PropulsionCannon t) => t.ReleaseGrabbedObject());
 
     public static bool Prefix(PropulsionCannon __instance)
     {

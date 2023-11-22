@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class ExosuitGrapplingArm_OnHit_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitGrapplingArm t) => t.OnHit());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((ExosuitGrapplingArm t) => t.OnHit());
 
     public static bool Prefix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
     {

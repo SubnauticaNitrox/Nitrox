@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class QuickSlots_DeselectInternal_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.DeselectInternal());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((QuickSlots t) => t.DeselectInternal());
 
     public static void Prefix(InventoryItem ____heldItem)
     {

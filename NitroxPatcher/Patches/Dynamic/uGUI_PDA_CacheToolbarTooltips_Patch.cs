@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using NitroxClient.GameLogic.HUD;
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.CacheToolbarTooltips());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((uGUI_PDA t) => t.CacheToolbarTooltips());
 
     public static void Postfix(uGUI_PDA __instance)
     {

@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default, default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Player t) => t.SetCurrentSub(default, default));
 
     public static void Prefix(Player __instance, SubRoot sub)
     {

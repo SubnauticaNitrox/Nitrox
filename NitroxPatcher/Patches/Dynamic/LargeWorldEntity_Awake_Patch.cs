@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class LargeWorldEntity_Awake_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LargeWorldEntity t) => t.Awake());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((LargeWorldEntity t) => t.Awake());
 
     public static void Prefix(LargeWorldEntity __instance)
     {

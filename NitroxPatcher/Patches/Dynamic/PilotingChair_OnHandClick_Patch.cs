@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PilotingChair_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.OnHandClick(default(GUIHand)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PilotingChair t) => t.OnHandClick(default(GUIHand)));
 
     private static bool skipPrefix;
 

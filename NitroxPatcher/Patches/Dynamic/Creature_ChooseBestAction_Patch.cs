@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default(float)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((Creature t) => t.ChooseBestAction(default(float)));
 
     private static CreatureAction previousAction;
 

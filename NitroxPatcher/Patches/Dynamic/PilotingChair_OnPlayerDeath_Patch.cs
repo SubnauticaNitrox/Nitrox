@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PilotingChair_OnPlayerDeath_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.OnPlayerDeath(default(Player)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((PilotingChair t) => t.OnPlayerDeath(default(Player)));
 
     public static void Postfix(PilotingChair __instance)
     {

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxModel.Core;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((DockedVehicleHandTarget t) => t.OnHandClick(default(GUIHand)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((DockedVehicleHandTarget t) => t.OnHandClick(default(GUIHand)));
 
     private static bool skipPrefix;
 

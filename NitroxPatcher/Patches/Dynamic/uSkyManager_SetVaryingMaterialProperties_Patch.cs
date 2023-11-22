@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class uSkyManager_SetVaryingMaterialProperties_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((uSkyManager t) => t.SetVaryingMaterialProperties(default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((uSkyManager t) => t.SetVaryingMaterialProperties(default));
 
     /// <summary>
     ///     This pattern detects the <see cref="UnityEngine.Time.time" /> property in the following line

@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class DayNightCycle_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((DayNightCycle t) => t.Update());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((DayNightCycle t) => t.Update());
 
     public static bool Prefix(DayNightCycle __instance)
     {

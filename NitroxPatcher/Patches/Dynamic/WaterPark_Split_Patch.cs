@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class WaterPark_Split_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.Split(default, default));
+    public override MethodInfo targetMethod { get; } = Reflect.Method(() => WaterPark.Split(default, default));
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 

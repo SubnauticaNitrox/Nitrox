@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EnergyMixin t) => t.ModifyCharge(default(float)));
+    public override MethodInfo targetMethod { get; } = Reflect.Method((EnergyMixin t) => t.ModifyCharge(default(float)));
 
     public static void Postfix(EnergyMixin __instance, float __result)
     {

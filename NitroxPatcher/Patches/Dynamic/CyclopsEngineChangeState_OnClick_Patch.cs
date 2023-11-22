@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsEngineChangeState_OnClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsEngineChangeState t) => t.OnClick());
+    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsEngineChangeState t) => t.OnClick());
 
     public static void Postfix(CyclopsEngineChangeState __instance)
     {
