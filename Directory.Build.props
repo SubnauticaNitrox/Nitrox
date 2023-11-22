@@ -7,7 +7,7 @@
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
         <UnityModLibrary>false</UnityModLibrary>
-        <BuildToolDir>$(SolutionDir)Nitrox.BuildTool\bin\</BuildToolDir>
+        <BuildToolDir>$(MSBuildThisFileDirectory)Nitrox.BuildTool\bin\</BuildToolDir>
         <BuildGenDir>$(BuildToolDir)generated_files\</BuildGenDir>
         <BuildGenDllDir>$(BuildGenDir)publicized_assemblies\</BuildGenDllDir>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -61,11 +61,11 @@
         <When Condition="'$(UnityModLibrary)' == 'true'">
             <ItemGroup>
                 <!-- Require other Nitrox projects (that need game DLLs) to wait on BuildTool. -->
-                <ProjectReference Include="$(SolutionDir)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
+                <ProjectReference Include="$(MSBuildThisFileDirectory)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
                     <Name>Nitrox.BuildTool</Name>
                     <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
                 </ProjectReference>
-                <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
+                <ProjectReference Include="$(MSBuildThisFileDirectory)NitroxModel\NitroxModel.csproj">
                     <Name>NitroxModel</Name>
                 </ProjectReference>
             </ItemGroup>

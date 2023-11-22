@@ -1,0 +1,50 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": ".",
+          "files": [
+            "**/*.csproj"
+          ],
+          "exclude": [
+            "**/NitroxLauncher.csproj"
+          ]
+        }
+      ],
+      "dest": "api",
+      "memberLayout": "separatePages",
+      "namespaceLayout": "nested"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "Nitrox",
+      "_appTitle": "Nitrox",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}

@@ -10,8 +10,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{9BFAD807-A48B-4860-BCF8-2E94FD7B6908}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		docfx.json = docfx.json
+		index.md = index.md
+		toc.yml = toc.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxLauncher", "NitroxLauncher\NitroxLauncher.csproj", "{59EB8953-864F-4147-A210-7FC97E1A5294}"
@@ -30,12 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Test", "Nitrox.Test\
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Assets.Subnautica", "Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.shproj", "{79E92B6D-5D25-4254-AC9F-FA9A1CD3CBC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Analyzers", "Nitrox.Analyzers\Nitrox.Analyzers.csproj", "{EB99BD64-EF43-4B06-BBFB-EB5DFA96E55D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Analyzers", "Nitrox.Analyzers\Nitrox.Analyzers.csproj", "{EB99BD64-EF43-4B06-BBFB-EB5DFA96E55D}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.projitems*{79e92b6d-5d25-4254-ac9f-fa9a1cd3cbc6}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -87,5 +88,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC56EA37-FBBC-4D19-8796-29A42A2331A2}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.projitems*{79e92b6d-5d25-4254-ac9f-fa9a1cd3cbc6}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# DocFx-specific files
+_site/
+
 # User-specific files
 *.rsuser
 *.suo
