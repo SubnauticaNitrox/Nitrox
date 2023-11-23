@@ -4,7 +4,7 @@
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>NitroxModel_Subnautica</RootNamespace>
     <Nullable>disable</Nullable>
-    <Configurations>Debug;Release;LinuxRelease</Configurations>
+      <Configurations>Debug;Release;Linux</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

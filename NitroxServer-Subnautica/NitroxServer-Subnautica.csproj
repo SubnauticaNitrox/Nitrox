@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
@@ -6,7 +6,7 @@
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Nullable>disable</Nullable>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <Configurations>Debug;Release;LinuxRelease</Configurations>
+        <Configurations>Debug;Release;Linux</Configurations>
     </PropertyGroup>
 
     <ItemGroup>

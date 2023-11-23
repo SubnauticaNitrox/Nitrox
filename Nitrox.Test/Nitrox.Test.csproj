@@ -4,7 +4,7 @@
         <TargetFramework>net472</TargetFramework>
         <Nullable>disable</Nullable>
         <IsPackable>false</IsPackable>
-        <Configurations>Debug;Release;LinuxRelease</Configurations>
+        <Configurations>Debug;Release;Linux</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
