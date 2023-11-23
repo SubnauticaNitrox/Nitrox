@@ -83,7 +83,6 @@ namespace NitroxServer.Serialization
                 {
                     CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
 
-
                     byte[] serialData = new byte[cellHeader.DataLength];
                     stream.Read(serialData, 0, cellHeader.DataLength);
                     ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out bool wasLegacy);
@@ -92,7 +91,7 @@ namespace NitroxServer.Serialization
                     {
                         byte[] legacyData = new byte[cellHeader.LegacyDataLength];
                         stream.Read(legacyData, 0, cellHeader.LegacyDataLength);
-                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out wasLegacy);
+                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out _);
 
                         byte[] waiterData = new byte[cellHeader.WaiterDataLength];
                         stream.Read(waiterData, 0, cellHeader.WaiterDataLength);
@@ -137,7 +136,6 @@ namespace NitroxServer.Serialization
 
                 if (gameObject.TotalComponents > 0)
                 {
-
                     AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId, cellId, level);
                     NitroxTransform transform = gameObject.GetComponent<NitroxTransform>();
                     spawnPoints.AddRange(entitySpawnPointFactory.From(absoluteEntityCell, transform, gameObject));
@@ -239,6 +237,8 @@ namespace NitroxServer.Serialization
 
         [ProtoMember(5)]
         public int WaiterDataLength;
+
+        // There's no point in spawning allowSpawnRestrictions as SpawnRestrictionEnforcer doesn't load any restrictions
     }
 
     [ProtoContract]

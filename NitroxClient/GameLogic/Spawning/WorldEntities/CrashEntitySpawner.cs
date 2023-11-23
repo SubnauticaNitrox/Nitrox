@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             {
                 CrashHome crashHome = parent.Value.GetComponent<CrashHome>();
 
-                GameObject gameObject = Object.Instantiate(crashHome.crashPrefab, Vector3.zero, Quaternion.Euler(-90f, 0f, 0f));
+                GameObject gameObject = Object.Instantiate(crashHome.crashPrefab, Vector3.zero, Quaternion.identity);
                 gameObject.transform.SetParent(crashHome.transform, false);
                 crashHome.crash = gameObject.GetComponent<Crash>();
                 crashHome.spawnTime = -1;

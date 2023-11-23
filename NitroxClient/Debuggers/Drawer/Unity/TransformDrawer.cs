@@ -93,6 +93,10 @@ public class TransformDrawer : IDrawer
                         GameObject.Destroy(transform.gameObject);
                     }
                 }
+                if (GUILayout.Button("Goto", GUILayout.MaxWidth(75)) && Player.main)
+                {
+                    Player.main.SetPosition(transform.position);
+                }
             }
         }
     }

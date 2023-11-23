@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Unity;
 using NitroxServer.Serialization;
@@ -7,6 +7,7 @@ namespace NitroxServer.UnityStubs
 {
     public class GameObject
     {
+        public bool CreateEmptyObject { get; }
         public bool IsActive { get; }
         public int Layer { get; }
         public string Tag { get; }
@@ -20,6 +21,7 @@ namespace NitroxServer.UnityStubs
 
         public GameObject(GameObjectData goData)
         {
+            CreateEmptyObject = goData.CreateEmptyObject;
             IsActive = goData.IsActive;
             Layer = goData.Layer;
             Tag = goData.Tag;

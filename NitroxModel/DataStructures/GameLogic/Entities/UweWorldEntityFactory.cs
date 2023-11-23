@@ -1,9 +1,7 @@
-﻿using NitroxModel.DataStructures.Util;
-
 namespace NitroxModel.DataStructures.GameLogic.Entities
 {
     public abstract class UweWorldEntityFactory
     {
-        public abstract Optional<UweWorldEntity> From(string classId);
+        public abstract bool TryFind(string classId, out UweWorldEntity uweWorldEntity);
     }
 }

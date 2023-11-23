@@ -22,7 +22,7 @@ public class WorldEntitySpawnerResolver
         customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner();
 
         vehicleWorldEntitySpawner = new(entities);
-        prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(this, defaultEntitySpawner);
+        prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
     }
 

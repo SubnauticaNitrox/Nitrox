@@ -1,16 +1,9 @@
-﻿namespace NitroxModel.DataStructures.GameLogic.Entities
-{
-    public class UwePrefab
-    {
-        public string ClassId { get; }
-        public float Probability { get; }
-        public int Count { get; }
+namespace NitroxModel.DataStructures.GameLogic.Entities;
 
-        public UwePrefab(string classId, float probability, int count)
-        {
-            ClassId = classId;
-            Probability = probability;
-            Count = count;
-        }
-    }
+public record struct UwePrefab(string ClassId, int Count, float Probability, bool IsFragment)
+{
+    public string ClassId { get; } = ClassId;
+    public int Count { get; } = Count;
+    public float Probability { get; set; } = Probability;
+    public bool IsFragment { get; } = IsFragment;
 }

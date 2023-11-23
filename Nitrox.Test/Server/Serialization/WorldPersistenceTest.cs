@@ -328,7 +328,8 @@ public class WorldPersistenceTest
                 {
                     switch (worldEntity)
                     {
-                        case PlaceholderGroupWorldEntity _ when worldEntityAfter is PlaceholderGroupWorldEntity _:
+                        case PlaceholderGroupWorldEntity placeholderGroupWorldEntity when worldEntityAfter is PlaceholderGroupWorldEntity placeholderGroupWorldEntityAfter:
+                            Assert.AreEqual(placeholderGroupWorldEntity.ComponentIndex, placeholderGroupWorldEntityAfter.ComponentIndex);
                             break;
                         case CellRootEntity _ when worldEntityAfter is CellRootEntity _:
                             break;
@@ -398,7 +399,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(prefabChildEntity.ClassId, prefabChildEntityAfter.ClassId);
                 break;
             case PrefabPlaceholderEntity prefabPlaceholderEntity when entityAfter is PrefabPlaceholderEntity prefabPlaceholderEntityAfter:
-                Assert.AreEqual(prefabPlaceholderEntity.ClassId, prefabPlaceholderEntityAfter.ClassId);
+                Assert.AreEqual(prefabPlaceholderEntity.ComponentIndex, prefabPlaceholderEntityAfter.ComponentIndex);
                 break;
             case InventoryEntity inventoryEntity when entityAfter is InventoryEntity inventoryEntityAfter:
                 Assert.AreEqual(inventoryEntity.ComponentIndex, inventoryEntityAfter.ComponentIndex);

@@ -1,19 +1,14 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxServer.Resources;
 
-public class PrefabPlaceholdersGroupAsset
+public record struct PrefabPlaceholdersGroupAsset(string ClassId, IPrefabAsset[] PrefabAssets) : IPrefabAsset
 {
+    public NitroxTransform Transform { get; set; }
+    public string ClassId { get; } = ClassId;
+
     /// <summary>
-    /// All attached PrefabPlaceholders. Is in sync with PrefabPlaceholdersGroup.prefabPlaceholders
+    /// All attached PrefabPlaceholders (and PrefabPlaceholdersGroup). Is in sync with PrefabPlaceholdersGroup.prefabPlaceholders
     /// </summary>
-    public PrefabPlaceholderAsset[] PrefabPlaceholders { get; }
-
-    public NitroxTechType TechType { get;}
-
-    public PrefabPlaceholdersGroupAsset(PrefabPlaceholderAsset[] prefabPlaceholders, NitroxTechType techType)
-    {
-        PrefabPlaceholders = prefabPlaceholders;
-        TechType = techType;
-    }
+    public IPrefabAsset[] PrefabPlaceholders { get; } = PrefabAssets;
 }
