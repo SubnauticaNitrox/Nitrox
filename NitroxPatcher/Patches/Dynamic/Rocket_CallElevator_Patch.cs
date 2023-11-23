@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Rocket_CallElevator_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Rocket t) => t.CallElevator(default(bool)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Rocket t) => t.CallElevator(default(bool)));
 
     public static void Prefix(Rocket __instance, out Rocket.RocketElevatorStates __state)
     {

@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class BaseDeconstructable_DeconstructionAllowed_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((BaseDeconstructable t) => t.DeconstructionAllowed(out Reflect.Ref<string>.Field));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.DeconstructionAllowed(out Reflect.Ref<string>.Field));
 
     public static void Postfix(BaseDeconstructable __instance, ref bool __result, ref string reason)
     {

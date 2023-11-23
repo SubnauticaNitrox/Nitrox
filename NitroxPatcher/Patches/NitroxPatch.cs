@@ -24,8 +24,6 @@ public abstract class NitroxPatch : INitroxPatch
     /// </summary>
     private readonly List<MethodBase> activePatches = new();
 
-    public virtual MethodInfo targetMethod { get; }
-
     public abstract void Patch(Harmony harmony);
 
     /// <summary>

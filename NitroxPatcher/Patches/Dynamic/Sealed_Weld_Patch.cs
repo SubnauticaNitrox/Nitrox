@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Sealed_Weld_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Sealed t) => t.Weld(default(float)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Sealed t) => t.Weld(default(float)));
 
     public static void Postfix(Sealed __instance)
     {

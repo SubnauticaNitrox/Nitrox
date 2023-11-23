@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PDAEncyclopedia_Add_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => PDAEncyclopedia.Add(default, default, default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAEncyclopedia.Add(default, default, default));
 
     public static void Postfix(string key, bool verbose, PDAEncyclopedia.EntryData __result)
     {

@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Planter_AddItem_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Planter p) => p.AddItem(default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Planter p) => p.AddItem(default));
 
     public static void Prefix(InventoryItem item)
     {

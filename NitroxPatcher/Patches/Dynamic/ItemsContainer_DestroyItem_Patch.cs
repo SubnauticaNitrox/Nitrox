@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((ItemsContainer t) => t.DestroyItem(default(TechType)));
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.DestroyItem(default(TechType)));
 
     private static readonly InstructionsPattern removeItemPattern = new()
     {

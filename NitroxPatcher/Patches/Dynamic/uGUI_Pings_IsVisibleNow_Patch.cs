@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class uGUI_Pings_IsVisibleNow_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((uGUI_Pings t) => t.IsVisibleNow());
+    internal static readonly MethodInfo TargetMethod = Reflect.Method((uGUI_Pings t) => t.IsVisibleNow());
 
     private static readonly object injectionCall = Reflect.Method(() => IsVisible());
 

@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((SubNameInput t) => t.OnColorChange(default(ColorChangeEventData)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubNameInput t) => t.OnColorChange(default(ColorChangeEventData)));
 
     public static void Postfix(SubNameInput __instance)
     {

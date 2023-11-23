@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((FireExtinguisherHolder t) => t.TryStoreTank());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((FireExtinguisherHolder t) => t.TryStoreTank());
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
     public static readonly object INJECTION_OPERAND = Reflect.Method((GameObject gameObject) => gameObject.SetActive(default(bool)));

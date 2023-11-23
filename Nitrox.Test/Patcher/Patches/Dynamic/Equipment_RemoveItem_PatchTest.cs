@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using HarmonyLib;
@@ -23,8 +23,8 @@ namespace NitroxPatcher.Patches.Dynamic
         [TestMethod]
         public void InjectionSanity()
         {
-            ReadOnlyCollection<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(new Equipment_RemoveItem_Patch().targetMethod);
-            IEnumerable<CodeInstruction> result = Equipment_RemoveItem_Patch.Transpiler(new Equipment_RemoveItem_Patch().targetMethod, beforeInstructions);
+            ReadOnlyCollection<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(Equipment_RemoveItem_Patch.TARGET_METHOD);
+            IEnumerable<CodeInstruction> result = Equipment_RemoveItem_Patch.Transpiler(Equipment_RemoveItem_Patch.TARGET_METHOD, beforeInstructions);
 
             Assert.IsTrue(beforeInstructions.Count < result.Count());
         }

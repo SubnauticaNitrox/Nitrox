@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class GameInput_Initialize_Patch : NitroxPatch, IPersistentPatch
     {
-        public override MethodInfo targetMethod { get; } = Reflect.Method((GameInput t) => t.Initialize());
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GameInput t) => t.Initialize());
 
         private static readonly OpCode INJECTION_OPCODE = OpCodes.Stsfld;
         private static readonly object INJECTION_OPERAND = Reflect.Field(() => GameInput.numButtons);

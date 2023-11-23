@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class KnownTech_NotifyAnalyze_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => KnownTech.NotifyAnalyze(default, default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => KnownTech.NotifyAnalyze(default, default));
 
     public static void Prefix(KnownTech.AnalysisTech analysis, bool verbose)
     {

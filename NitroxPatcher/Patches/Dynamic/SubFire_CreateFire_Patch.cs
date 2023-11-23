@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class SubFire_CreateFire_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((SubFire t) => t.CreateFire(default(SubFire.RoomFire)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubFire t) => t.CreateFire(default(SubFire.RoomFire)));
 
     public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
     {

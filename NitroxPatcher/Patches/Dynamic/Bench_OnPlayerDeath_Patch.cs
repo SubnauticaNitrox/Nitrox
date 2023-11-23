@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Bench_OnPlayerDeath_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Bench t) => t.OnPlayerDeath(default(Player)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bench t) => t.OnPlayerDeath(default(Player)));
 
     public static void Postfix(Bench __instance)
     {

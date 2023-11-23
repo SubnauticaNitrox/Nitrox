@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxModel.DataStructures;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsDestructionEvent t) => t.DestroyCyclops());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsDestructionEvent t) => t.DestroyCyclops());
 
     public static void Prefix(CyclopsDestructionEvent __instance)
     {

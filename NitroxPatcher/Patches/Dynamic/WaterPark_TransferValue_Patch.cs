@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class WaterPark_TransferValue_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => WaterPark.TransferValue(default, default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.TransferValue(default, default));
 
     private static TemporaryBuildData Temp => BuildingHandler.Main.Temp;
 

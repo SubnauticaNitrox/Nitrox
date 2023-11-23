@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsLightingPanel_ToggleFloodlights_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsLightingPanel t) => t.ToggleFloodlights());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsLightingPanel t) => t.ToggleFloodlights());
 
     public static bool Prefix(CyclopsLightingPanel __instance, out bool __state)
     {

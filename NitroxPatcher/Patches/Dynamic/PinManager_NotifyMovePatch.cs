@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PinManager_NotifyMove_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((PinManager t) => t.NotifyMove(default, default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((PinManager t) => t.NotifyMove(default, default));
 
     public static void Prefix()
     {

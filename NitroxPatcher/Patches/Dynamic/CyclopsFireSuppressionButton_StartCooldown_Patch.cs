@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
  */
 public sealed partial class CyclopsFireSuppressionButton_StartCooldown_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsFireSuppressionSystemButton t) => t.StartCooldown());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsFireSuppressionSystemButton t) => t.StartCooldown());
 
     public static void Postfix(CyclopsFireSuppressionSystemButton __instance)
     {

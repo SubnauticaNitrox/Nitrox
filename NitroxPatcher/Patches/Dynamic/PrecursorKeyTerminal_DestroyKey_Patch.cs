@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((PrecursorKeyTerminal t) => t.DestroyKey());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrecursorKeyTerminal t) => t.DestroyKey());
 
     public static void Prefix(PrecursorKeyTerminal __instance)
     {

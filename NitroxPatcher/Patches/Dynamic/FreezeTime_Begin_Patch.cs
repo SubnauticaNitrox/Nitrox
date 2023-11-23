@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class FreezeTime_Begin_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => FreezeTime.Begin(default(FreezeTime.Id)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FreezeTime.Begin(default(FreezeTime.Id)));
 
     private static readonly HashSet<FreezeTime.Id> allowedFreezeIds = new() { FreezeTime.Id.Quit, FreezeTime.Id.WaitScreen };
 

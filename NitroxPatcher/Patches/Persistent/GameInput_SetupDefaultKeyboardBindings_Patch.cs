@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Persistent;
 
 public partial class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch, IPersistentPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => GameInput.SetupDefaultKeyboardBindings());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => GameInput.SetupDefaultKeyboardBindings());
 
     public static void Postfix()
     {

@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class ExosuitClawArm_OnPickup_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((ExosuitClawArm t) => t.OnPickup());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitClawArm t) => t.OnPickup());
 
     public static bool Prefix(ExosuitClawArm __instance)
     {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((LaunchRocket t) => t.OnHandClick(default));
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((LaunchRocket t) => t.OnHandClick(default));
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     internal static readonly object INJECTION_OPERAND = Reflect.Method(() => LaunchRocket.SetLaunchStarted());

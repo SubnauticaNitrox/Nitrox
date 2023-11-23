@@ -1,11 +1,11 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsHelmHUDManager_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsHelmHUDManager t) => t.Update());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsHelmHUDManager t) => t.Update());
 
     public static void Postfix(CyclopsHelmHUDManager __instance)
     {

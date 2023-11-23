@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Equipment_AddItem_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Equipment t) => t.AddItem(default, default, default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Equipment t) => t.AddItem(default, default, default));
 
     public static void Postfix(Equipment __instance, bool __result, string slot, InventoryItem newItem)
     {

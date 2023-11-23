@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((SpawnOnKill t) => t.OnKill());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnOnKill t) => t.OnKill());
 
     private static readonly InstructionsPattern spawnInstanceOnKillPattern = new()
     {

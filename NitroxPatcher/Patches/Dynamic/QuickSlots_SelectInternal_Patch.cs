@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class QuickSlots_SelectInternal_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((QuickSlots t) => t.SelectInternal(default(int)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.SelectInternal(default(int)));
 
     public static void Prefix(QuickSlots __instance, int slotID, ref NitroxTechType __state)
     {

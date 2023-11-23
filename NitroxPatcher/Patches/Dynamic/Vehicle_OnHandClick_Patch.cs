@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Vehicle_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Vehicle t) => t.OnHandClick(default(GUIHand)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Vehicle t) => t.OnHandClick(default(GUIHand)));
 
     private static bool skipPrefix;
 

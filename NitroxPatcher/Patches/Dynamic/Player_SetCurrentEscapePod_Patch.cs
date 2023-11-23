@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Player_SetCurrentEscapePod_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Property((Player p) => p.currentEscapePod).GetSetMethod();
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Property((Player p) => p.currentEscapePod).GetSetMethod();
 
     public static void Prefix(EscapePod value)
     {

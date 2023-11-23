@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class SplineFollowing_GoTo_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((SplineFollowing t) => t.GoTo(default(Vector3), default(Vector3), default(float)));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SplineFollowing t) => t.GoTo(default(Vector3), default(Vector3), default(float)));
 
     public static void Prefix(SplineFollowing __instance, Vector3 targetPos, Vector3 targetDir, float velocity)
     {

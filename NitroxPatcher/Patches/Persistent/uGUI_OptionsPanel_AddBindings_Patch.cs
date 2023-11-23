@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class uGUI_OptionsPanel_AddBindings_Patch : NitroxPatch, IPersistentPatch
     {
-        public override MethodInfo targetMethod { get; } = Reflect.Method((uGUI_OptionsPanel t) => t.AddBindings(default(int), default(GameInput.Device)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_OptionsPanel t) => t.AddBindings(default(int), default(GameInput.Device)));
 
         public static void Postfix(uGUI_OptionsPanel __instance, int tabIndex, GameInput.Device device)
         {

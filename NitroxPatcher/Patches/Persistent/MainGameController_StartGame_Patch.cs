@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Persistent;
 
 public partial class MainGameController_StartGame_Patch : NitroxPatch, IPersistentPatch
 {
-    public override MethodInfo targetMethod { get; } = AccessTools.EnumeratorMoveNext(Reflect.Method((MainGameController t) => t.StartGame()));
+    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((MainGameController t) => t.StartGame()));
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     public static readonly object INJECTION_OPERAND = Reflect.Method(() => WaitScreen.Remove(default));

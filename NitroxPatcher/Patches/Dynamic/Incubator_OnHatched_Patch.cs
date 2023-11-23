@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Incubator_OnHatched_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Incubator t) => t.OnHatched());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Incubator t) => t.OnHatched());
 
     public static void Prefix(Incubator __instance)
     {

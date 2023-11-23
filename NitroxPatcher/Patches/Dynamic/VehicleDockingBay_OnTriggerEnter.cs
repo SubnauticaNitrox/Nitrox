@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class VehicleDockingBay_OnTriggerEnter : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((VehicleDockingBay t) => t.OnTriggerEnter(default(Collider)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((VehicleDockingBay t) => t.OnTriggerEnter(default(Collider)));
     private static Vehicle prevInterpolatingVehicle;
 
     public static bool Prefix(VehicleDockingBay __instance, Collider other)

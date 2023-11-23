@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 // to hatch the eggs using the enzymes.
 public sealed partial class Incubator_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Incubator t) => t.OnHandClick(default(GUIHand)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Incubator t) => t.OnHandClick(default(GUIHand)));
 
     private static bool skipPrefix;
 

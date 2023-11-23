@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((GhostCrafter t) => t.OnCraftingEnd());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GhostCrafter t) => t.OnCraftingEnd());
 
     public static bool Prefix(GhostCrafter __instance)
     {

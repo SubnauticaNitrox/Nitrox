@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsShieldButton_OnClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((CyclopsShieldButton t) => t.OnClick());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsShieldButton t) => t.OnClick());
     public static readonly OpCode START_CUT_CODE = OpCodes.Ldsfld;
     public static readonly OpCode START_CUT_CODE_CALL = OpCodes.Callvirt;
     public static readonly FieldInfo PLAYER_MAIN_FIELD = Reflect.Field(() => Player.main);

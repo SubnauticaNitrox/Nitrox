@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Bench t) => t.ExitSittingMode(default, default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bench t) => t.ExitSittingMode(default, default));
 
     public static void Prefix(ref bool __runOriginal)
     {

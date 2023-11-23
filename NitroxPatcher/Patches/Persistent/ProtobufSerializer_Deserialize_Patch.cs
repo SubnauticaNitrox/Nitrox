@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using NitroxClient.Helpers;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class ProtobufSerializer_Deserialize_Patch : NitroxPatch, IPersistentPatch
     {
-        public override MethodInfo targetMethod { get; } = Reflect.Method((ProtobufSerializer t) => t.Deserialize(default(Stream), default(object), default(Type), default(bool)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ProtobufSerializer t) => t.Deserialize(default(Stream), default(object), default(Type), default(bool)));
         private static readonly NitroxProtobufSerializer serializer = Resolve<NitroxProtobufSerializer>(true);
 
         public static bool Prefix(Stream stream, object target, Type type, bool verbose)

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
@@ -15,8 +15,8 @@ public class ItemsContainer_DestroyItem_PatchTest
     [TestMethod]
     public void Sanity()
     {
-        ReadOnlyCollection<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(new ItemsContainer_DestroyItem_Patch().targetMethod) ;
-        IEnumerable<CodeInstruction> transformedIl = Transpiler(new ItemsContainer_DestroyItem_Patch().targetMethod, originalIl);
+        ReadOnlyCollection<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(TARGET_METHOD);
+        IEnumerable<CodeInstruction> transformedIl = Transpiler(TARGET_METHOD, originalIl);
         originalIl.Count.Should().Be(transformedIl.Count() - 2);
     }
 }

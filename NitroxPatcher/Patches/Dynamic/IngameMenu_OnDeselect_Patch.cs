@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Helper;
 
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class IngameMenu_OnDeselect_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((IngameMenu t) => t.OnDeselect());
+    private static MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.OnDeselect());
 
     // OnDeselect happens when you deselect the modal (by clicking outside or pressing escape)
     // Therefore, if we prevent it from happening it certain cases, it will force the user to click one of the buttons of the modal

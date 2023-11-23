@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     partial class EscapePodFirstUseCinematicsController_Initialize_Patch : NitroxPatch, IPersistentPatch
     {
-        public override MethodInfo targetMethod { get; } = Reflect.Method((EscapePodFirstUseCinematicsController t) => t.Initialize());
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((EscapePodFirstUseCinematicsController t) => t.Initialize());
 
         public static bool Prefix(EscapePodFirstUseCinematicsController __instance)
         {

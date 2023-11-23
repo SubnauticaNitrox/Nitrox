@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => StoryGoal.Execute(default, default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => StoryGoal.Execute(default, default));
 
     /// <summary>
     /// Notifies the server of the execution of StoryGoals (except of PDA type)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using NitroxClient.Helpers;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public partial class ProtobufSerializer_Serialize_Patch : NitroxPatch, IPersistentPatch
     {
-        public override MethodInfo targetMethod { get; } = Reflect.Method((ProtobufSerializer t) => t.Serialize(default(Stream), default(object), default(Type)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ProtobufSerializer t) => t.Serialize(default(Stream), default(object), default(Type)));
 
         /// <summary>
         ///     This patch is in a hot path so it needs this optimization.

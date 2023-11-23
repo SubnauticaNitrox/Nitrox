@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class IngameMenu_QuitGame_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((IngameMenu t) => t.QuitGame(default(bool)));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.QuitGame(default(bool)));
 
     public static void Prefix()
     {

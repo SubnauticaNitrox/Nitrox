@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Inventory_LoseItems_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Inventory t) => t.LoseItems());
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((Inventory t) => t.LoseItems());
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     internal static readonly object INJECTION_OPERAND = Reflect.Method((Inventory t) => t.InternalDropItem(default, default));

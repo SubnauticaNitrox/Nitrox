@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Exosuit_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Exosuit t) => t.Update());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Exosuit t) => t.Update());
 
     public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     public static readonly object INJECTION_OPERAND = Reflect.Method((Exosuit t) => t.UpdateSounds());

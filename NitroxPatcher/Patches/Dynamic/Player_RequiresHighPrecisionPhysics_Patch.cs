@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Player_RequiresHighPrecisionPhysics_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((Player t) => t.RequiresHighPrecisionPhysics());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.RequiresHighPrecisionPhysics());
 
     public static bool Prefix(ref bool __result)
     {

@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((SubRoot t) => t.OnTakeDamage(default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubRoot t) => t.OnTakeDamage(default));
 
     public static bool Prefix(SubRoot __instance, DamageInfo damageInfo)
     {

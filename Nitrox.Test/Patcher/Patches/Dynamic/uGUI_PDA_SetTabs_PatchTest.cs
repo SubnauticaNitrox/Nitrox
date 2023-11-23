@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using HarmonyLib;
@@ -16,15 +16,15 @@ public class uGUI_PDA_SetTabs_PatchTest
         List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
         instructions.Add(new CodeInstruction(uGUI_PDA_SetTabs_Patch.INJECTION_OPCODE));
 
-        IEnumerable<CodeInstruction> result = uGUI_PDA_SetTabs_Patch.Transpiler(new uGUI_PDA_SetTabs_Patch().targetMethod, instructions);
+        IEnumerable<CodeInstruction> result = uGUI_PDA_SetTabs_Patch.Transpiler(uGUI_PDA_SetTabs_Patch.TARGET_METHOD, instructions);
         Assert.AreEqual(instructions.Count + 3, result.Count());
     }
 
     [TestMethod]
     public void InjectionSanity()
     {
-        ReadOnlyCollection<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(new uGUI_PDA_SetTabs_Patch().targetMethod);
-        IEnumerable<CodeInstruction> result = uGUI_PDA_SetTabs_Patch.Transpiler(new uGUI_PDA_SetTabs_Patch().targetMethod, beforeInstructions);
+        ReadOnlyCollection<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(uGUI_PDA_SetTabs_Patch.TARGET_METHOD);
+        IEnumerable<CodeInstruction> result = uGUI_PDA_SetTabs_Patch.Transpiler(uGUI_PDA_SetTabs_Patch.TARGET_METHOD, beforeInstructions);
 
         Assert.IsTrue(beforeInstructions.Count < result.Count());
     }

@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </remarks>
 public sealed partial class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => PDAScanner.Scan());
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAScanner.Scan());
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
     internal static readonly object INJECTION_OPERAND = Reflect.Method((GameObject t) => t.SendMessage(default, default, default));

@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class EntityCell_QueueForAwake_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method((EntityCell t) => t.QueueForAwake(default(IQueue<EntityCell>)));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EntityCell t) => t.QueueForAwake(default(IQueue<EntityCell>)));
 
     public static void Prefix(EntityCell __instance)
     {

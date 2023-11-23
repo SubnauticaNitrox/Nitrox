@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class PlatformUtils_GetDevToolsEnabled_Patch : NitroxPatch, IDynamicPatch
 {
-    public override MethodInfo targetMethod { get; } = Reflect.Method(() => PlatformUtils.GetDevToolsEnabled());
+    public static readonly MethodInfo TargetMethod = Reflect.Method(() => PlatformUtils.GetDevToolsEnabled());
 
     /// <summary>
     ///     Disable dev console if server has disabled cheats.

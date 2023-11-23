@@ -12,7 +12,6 @@ namespace NitroxPatcher.Patches.Dynamic;
 [TestClass]
 public class CyclopsSonarButton_Update_PatchTest
 {
-    CyclopsSonarButton_Update_Patch patch = new();
     [TestMethod]
     public void Sanity()
     {
@@ -21,15 +20,15 @@ public class CyclopsSonarButton_Update_PatchTest
         instructions.Add(new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Player player) => player.GetMode())));
         instructions.Add(new CodeInstruction(OpCodes.Brtrue));
 
-        IEnumerable<CodeInstruction> result = CyclopsSonarButton_Update_Patch.Transpiler(patch.targetMethod, instructions, patch.targetMethod.GetILGenerator());
+        IEnumerable<CodeInstruction> result = CyclopsSonarButton_Update_Patch.Transpiler(CyclopsSonarButton_Update_Patch.TARGET_METHOD, instructions, CyclopsSonarButton_Update_Patch.TARGET_METHOD.GetILGenerator());
         Assert.AreEqual(instructions.Count + 3, result.Count());
     }
 
     [TestMethod]
     public void InjectionSanity()
     {
-        List<CodeInstruction> beforeInstructions = PatchProcessor.GetCurrentInstructions(patch.targetMethod);
-        IEnumerable<CodeInstruction> result = CyclopsSonarButton_Update_Patch.Transpiler(patch.targetMethod, beforeInstructions, patch.targetMethod.GetILGenerator());
+        List<CodeInstruction> beforeInstructions = PatchProcessor.GetCurrentInstructions(CyclopsSonarButton_Update_Patch.TARGET_METHOD);
+        IEnumerable<CodeInstruction> result = CyclopsSonarButton_Update_Patch.Transpiler(CyclopsSonarButton_Update_Patch.TARGET_METHOD, beforeInstructions, CyclopsSonarButton_Update_Patch.TARGET_METHOD.GetILGenerator());
 
         Assert.IsTrue(beforeInstructions.Count < result.Count());
     }
@@ -37,7 +36,7 @@ public class CyclopsSonarButton_Update_PatchTest
     [TestMethod]
     public void CheckMethodValidity()
     {
-        ReadOnlyCollection<CodeInstruction> instructions = PatchTestHelper.GetInstructionsFromMethod(patch.targetMethod);
+        ReadOnlyCollection<CodeInstruction> instructions = PatchTestHelper.GetInstructionsFromMethod(CyclopsSonarButton_Update_Patch.TARGET_METHOD);
         for (int i = 0; i < instructions.Count; i++)
         {
             CodeInstruction instruction = instructions[i];
