@@ -1,5 +1,4 @@
 using System;
-using NitroxClient.GameLogic;
 using NitroxClient.Unity.Smoothing;
 using UnityEngine;
 
@@ -29,7 +28,6 @@ namespace NitroxClient.MonoBehaviours
         {
             SmoothYaw.FixedUpdate();
             SmoothPitch.FixedUpdate();
-
 
             WheelYawSetter(SmoothYaw.SmoothValue);
             WheelPitchSetter(SmoothPitch.SmoothValue);

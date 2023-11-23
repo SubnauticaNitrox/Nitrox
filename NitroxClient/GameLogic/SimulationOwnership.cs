@@ -14,8 +14,8 @@ namespace NitroxClient.GameLogic
         private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
         private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = new Dictionary<NitroxId, LockRequestBase>();
 
-        public event Action<NitroxId> StoppedSimulatingEntity;
         public event Action<NitroxId> StartedSimulatingEntity;
+        public event Action<NitroxId> StoppedSimulatingEntity;
 
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
@@ -72,20 +72,14 @@ namespace NitroxClient.GameLogic
         public void SimulateEntity(NitroxId id, SimulationLockType lockType)
         {
             simulatedIdsByLockType[id] = lockType;
-            if (StartedSimulatingEntity != null)
-            {
-                StartedSimulatingEntity(id);
-            }
+            StartedSimulatingEntity?.Invoke(id);
         }
 
         public void StopSimulatingEntity(NitroxId id)
         {
             simulatedIdsByLockType.Remove(id);
 
-            if (StoppedSimulatingEntity != null)
-            {
-                StoppedSimulatingEntity(id);
-            }
+            StoppedSimulatingEntity?.Invoke(id);
         }
     }
 }

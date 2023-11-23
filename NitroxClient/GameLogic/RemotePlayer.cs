@@ -141,7 +141,6 @@ namespace NitroxClient.GameLogic
             if (PilotingChair != newPilotingChair)
             {
                 PilotingChair = newPilotingChair;
-                bool isInPilotingChair = newPilotingChair != null;
 
                 MultiplayerCyclops mpCyclops = null;
 
@@ -175,6 +174,7 @@ namespace NitroxClient.GameLogic
                     }
                 }
 
+                bool isInPilotingChair = newPilotingChair != null;
                 RigidBody.isKinematic = AnimationController["cyclops_steering"] = isInPilotingChair;
                 RigidBody.interpolation = isInPilotingChair ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate;
                 if (isInPilotingChair)

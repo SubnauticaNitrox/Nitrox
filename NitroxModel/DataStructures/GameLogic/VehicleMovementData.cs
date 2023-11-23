@@ -21,19 +21,19 @@ namespace NitroxModel.DataStructures.GameLogic
         [DataMember(Order = 4)]
         public NitroxQuaternion Rotation { get; }
 
-        [DataMember(Order = 7)]
+        [DataMember(Order = 5)]
         public float SteeringWheelYaw { get; }
 
-        [DataMember(Order = 8)]
+        [DataMember(Order = 6)]
         public float SteeringWheelPitch { get; }
 
-        [DataMember(Order = 9)]
+        [DataMember(Order = 7)]
         public bool AppliedThrottle { get; }
 
-        [DataMember(Order = 10)]
+        [DataMember(Order = 8)]
         public NitroxVector3 DriverPosition { get; set; }
 
-        [DataMember(Order = 11)]
+        [DataMember(Order = 9)]
         public NitroxQuaternion DriverRotation { get; set; }
 
         [IgnoreConstructor]

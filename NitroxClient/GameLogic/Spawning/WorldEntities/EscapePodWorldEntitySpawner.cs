@@ -18,6 +18,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
          * EscapePod.main to the new escape pod.
          */
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
+
         private SimulationOwnership simulationOwnership;
 
         public EscapePodWorldEntitySpawner(SimulationOwnership simulationOwnership)
@@ -57,16 +58,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
 
             EntityMetadataProcessor.ApplyMetadata(escapePod, escapePodEntity.Metadata);
 
-            Rigidbody rigidbody = escapePod.GetComponent<Rigidbody>();/*
-            if (rigidbody != null)
-            {
-                rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-            }
-            else
-            {
-                Log.Error("Escape pod did not have a rigid body!");
-            }
-            */
             escapePod.transform.position = escapePodEntity.Transform.Position.ToUnity();
 
             FixStartMethods(escapePod);

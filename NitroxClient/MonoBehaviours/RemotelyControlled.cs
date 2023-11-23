@@ -1,4 +1,3 @@
-using NitroxClient.GameLogic;
 using NitroxClient.Unity.Smoothing;
 using UnityEngine;
 

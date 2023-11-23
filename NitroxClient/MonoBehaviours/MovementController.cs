@@ -4,12 +4,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using Serilog.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours

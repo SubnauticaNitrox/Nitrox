@@ -14,19 +14,18 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 {
     private readonly Entities entities;
-
-    public VehicleWorldEntitySpawner(Entities entities)
-    {
-        this.entities = entities;
-    }
+    private readonly SimulationOwnership simulationOwnership;
 
     // The constructor has mixed results when the remote player is a long distance away.  UWE even has a built in distance tracker to ensure
     // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
     // distance - anything more will simply use world spawning (no need to play the animation anyways).
     private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
-    private readonly SimulationOwnership simulationOwnership;
 
-    internal VehicleWorldEntitySpawner(SimulationOwnership simulationOwnership)
+    public VehicleWorldEntitySpawner(Entities entities)
+    {
+        this.entities = entities;
+    }
+    public VehicleWorldEntitySpawner(SimulationOwnership simulationOwnership)
     {
         this.simulationOwnership = simulationOwnership;
     }

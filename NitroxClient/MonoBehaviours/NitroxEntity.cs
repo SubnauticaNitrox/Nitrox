@@ -16,6 +16,7 @@ namespace NitroxClient.MonoBehaviours
     public class NitroxEntity : MonoBehaviour, IProtoTreeEventListener
     {
         private static readonly Dictionary<NitroxId, GameObject> gameObjectsById = new();
+        private static readonly Dictionary<NitroxId, MovementController> movementControllersById = new();
 
         [DataMember(Order = 1)]
         [ProtoMember(1)]
@@ -71,6 +72,32 @@ namespace NitroxClient.MonoBehaviours
             component = default;
             return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) && gameObject &&
                    gameObject.TryGetComponent(out component);
+        }
+
+        public static bool TryGetMovementControllerFrom(NitroxId id, out MovementController mc)
+        {
+            mc = null;
+            if (id == null) // Early Exit
+            {
+                return false;
+            }
+
+
+            if (!movementControllersById.TryGetValue(id, out mc))
+            {
+                if (!TryGetObjectFrom(id, out GameObject gameObject))
+                {
+                    return false;
+                }
+                
+                if (gameObject.TryGetComponent(out mc) && mc)
+                {
+                    movementControllersById.Add(id, mc);
+                    return true;
+                }
+            }
+
+            return mc;
         }
 
         public static void SetNewId(GameObject gameObject, NitroxId id)

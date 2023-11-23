@@ -42,7 +42,7 @@ public class MobileVehicleBay
 
         NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
-        MovementController mc = constructedObject.AddComponent<MovementController>();
+        constructedObject.AddComponent<MovementController>();
 
         VehicleWorldEntity vehicleEntity = new(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), string.Empty, false, constructedObjectId, techType.ToDto(), null);
         VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
