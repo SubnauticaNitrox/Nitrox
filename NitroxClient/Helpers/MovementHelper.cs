@@ -49,7 +49,7 @@ namespace NitroxClient.Helpers
             return remoteVelocity;
         }
 
-        public static Vector3 GetCorrectedAngularVelocity(Quaternion remoteRotation, Vector3 angularVelocty, GameObject gameObject, float correctionTime)
+        public static Vector3 GetCorrectedAngularVelocity(Quaternion remoteRotation, GameObject gameObject, float correctionTime)
         {
             Quaternion delta = remoteRotation * gameObject.transform.rotation.GetInverse();
 
@@ -58,7 +58,7 @@ namespace NitroxClient.Helpers
             // We get an infinite axis in the event that our rotation is already aligned.
             if (float.IsInfinity(axis.x))
             {
-                return angularVelocty;
+                return Vector3.zero;
             }
 
             if (angle > 180f)
@@ -69,7 +69,7 @@ namespace NitroxClient.Helpers
             // Here I drop down to 0.9f times the desired movement,
             // since we'd rather undershoot and ease into the correct angle
             // than overshoot and oscillate around it in the event of errors.
-            return 0.9f * Mathf.Deg2Rad * angle / correctionTime * axis + angularVelocty;
+            return 0.9f * Mathf.Deg2Rad * angle / correctionTime * axis;
         }
     }
 }
