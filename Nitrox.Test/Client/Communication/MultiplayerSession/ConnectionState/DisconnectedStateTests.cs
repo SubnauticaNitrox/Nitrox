@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
     public class DisconnectedStateTests
     {
         [TestMethod]
-        public void NegotiateShouldStartTheClientOnTheContext()
+        public async Task NegotiateShouldStartTheClientOnTheContext()
         {
             // Arrange
             IClient serverClient = Substitute.For<IClient>();
@@ -29,14 +29,14 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservationAsync(connectionContext).RunSynchronously();
+            await connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             serverClient.IsConnected.Should().BeTrue();
         }
 
         [TestMethod]
-        public void NegotiateShouldSendMultiplayerSessionPolicyRequestPacketToClient()
+        public async Task NegotiateShouldSendMultiplayerSessionPolicyRequestPacketToClient()
         {
             // Arrange
             IClient serverClient = Substitute.For<IClient>();
@@ -52,14 +52,14 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservationAsync(connectionContext).RunSynchronously();
+            await connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             serverClient.Received().Send(Arg.Any<MultiplayerSessionPolicyRequest>());
         }
 
         [TestMethod]
-        public void NegotiateShouldTransitionToEstablishingSessionPolicyState()
+        public async Task NegotiateShouldTransitionToEstablishingSessionPolicyState()
         {
             // Arrange
             IClient serverClient = Substitute.For<IClient>();
@@ -75,7 +75,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservationAsync(connectionContext).RunSynchronously();
+            await connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<EstablishingSessionPolicy>());

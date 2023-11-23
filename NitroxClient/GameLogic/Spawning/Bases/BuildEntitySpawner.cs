@@ -34,7 +34,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         }
 
 #if DEBUG
-        Stopwatch stopwatch = Stopwatch.StartNew();
+        System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 #endif
         GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, entity.Transform.LocalPosition.ToUnity(), entity.Transform.LocalRotation.ToUnity(), entity.Transform.LocalScale.ToUnity(), false);
         if (LargeWorld.main)

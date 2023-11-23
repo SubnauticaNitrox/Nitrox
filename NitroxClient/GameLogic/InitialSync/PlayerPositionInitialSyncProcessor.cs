@@ -78,9 +78,9 @@ public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
             yield break;
         }
 
-            Player.main.cinematicModeActive = false;
-            Player.main.UpdateIsUnderwater();
-        }
+        Player.main.cinematicModeActive = false;
+        Player.main.UpdateIsUnderwater();
+    }
 
     private void AttachPlayerToEscapePod(NitroxId escapePodId)
     {
@@ -94,5 +94,4 @@ public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 
         Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
     }
-
 }

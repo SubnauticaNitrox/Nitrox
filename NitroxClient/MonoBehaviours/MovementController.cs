@@ -1,10 +1,11 @@
+using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -13,26 +14,21 @@ public class MovementController : MonoBehaviour
 {
     public const float LOCATION_BROADCAST_TIME = 0.04f;
 
-    public float Scalar { get; set; } = 1f;
+    private static readonly Dictionary<NitroxId, MovementController> movementControllersById = new();
+
+    public float TimeScalar { get; set; } = 1f;
     public Vector3 TargetPosition { get; set; }
     public Quaternion TargetRotation { get; set; }
     public bool Receiving { get; private set; }
     public bool Broadcasting { get; private set; }
-    public Vector3 Velocity
-    {
-        get
-        {
-            return velocity;
-        }
-    }
+    public Vector3 Velocity { get; private set; }
 
-    public event Action BeforeUpdate = () => {};
-    public event Action BeforeFixedUpdate = () => {};
-    public event Action AfterUpdate = () => {};
-    public event Action AfterFixedUpdate = () => {};
+    public event Action BeforeUpdate = () => { };
+    public event Action BeforeFixedUpdate = () => { };
+    public event Action AfterUpdate = () => { };
+    public event Action AfterFixedUpdate = () => { };
 
-    private Vector3 velocity;
-    private float curTime;
+    private float timeSinceLastBroadcast;
     private Rigidbody rigidbody;
     private IPacketSender packetSender;
     private SimulationOwnership simulationOwnership;
@@ -56,25 +52,45 @@ public class MovementController : MonoBehaviour
         }
     }
 
+    public static bool TryGetMovementControllerFrom(NitroxId id, out MovementController mc)
+    {
+        mc = null;
+        if (id == null) // Early Exit
+        {
+            return false;
+        }
+
+
+        if (!movementControllersById.TryGetValue(id, out mc))
+        {
+            if (!NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
+            {
+                return false;
+            }
+
+            if (gameObject.TryGetComponent(out mc) && mc)
+            {
+                movementControllersById.Add(id, mc);
+                return true;
+            }
+        }
+
+        return mc;
+    }
+
     private static void StartedSimulatingEntity(NitroxId id)
     {
-        if (NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
+        if (NitroxEntity.TryGetComponentFrom(id, out MovementController mc))
         {
-            if (gameObject.TryGetComponent(out MovementController mc))
-            {
-                mc.SetBroadcasting(true);
-            }
+            mc.SetBroadcasting(true);
         }
     }
 
     private static void StoppedSimulatingEntity(NitroxId id)
     {
-        if (NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
+        if (NitroxEntity.TryGetComponentFrom(id, out MovementController mc))
         {
-            if (gameObject.TryGetComponent(out MovementController mc))
-            {
-                mc.SetReceiving(true);
-            }
+            mc.SetReceiving(true);
         }
     }
 
@@ -102,8 +118,9 @@ public class MovementController : MonoBehaviour
 
         if (!rigidbody && Receiving)
         {
-            transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, Scalar * Time.deltaTime);
-            transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, Scalar * Time.deltaTime);
+            Vector3 velocity = Velocity;
+            transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, TimeScalar * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, TimeScalar * Time.deltaTime);
         }
 
         AfterUpdate();
@@ -115,10 +132,10 @@ public class MovementController : MonoBehaviour
 
         if (Broadcasting && simulationOwnership.HasAnyLockType(entity.Id))
         {
-            curTime += Time.fixedDeltaTime;
-            if (curTime >= LOCATION_BROADCAST_TIME)
+            timeSinceLastBroadcast += Time.fixedDeltaTime;
+            if (timeSinceLastBroadcast >= LOCATION_BROADCAST_TIME)
             {
-                curTime = 0f;
+                timeSinceLastBroadcast = 0f;
 
                 packetSender.Send(new BasicMovement(entity.Id, transform.position.ToDto(), transform.rotation.ToDto()));
             }
@@ -126,7 +143,8 @@ public class MovementController : MonoBehaviour
 
         if (rigidbody && Receiving)
         {
-            float timing = Scalar * Time.fixedDeltaTime;
+            Vector3 velocity = Velocity;
+            float timing = TimeScalar * Time.fixedDeltaTime;
             Vector3 newPos = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, timing);
 
             if (rigidbody.isKinematic)
@@ -147,7 +165,7 @@ public class MovementController : MonoBehaviour
     private void OnEnable()
     {
         simulationOwnership.StartedSimulatingEntity += StartedSimulatingEntity;
-        simulationOwnership.StoppedSimulatingEntity -= StoppedSimulatingEntity;
+        simulationOwnership.StoppedSimulatingEntity += StoppedSimulatingEntity;
     }
 
     private void OnDisable()

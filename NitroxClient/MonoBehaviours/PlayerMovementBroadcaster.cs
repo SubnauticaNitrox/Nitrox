@@ -1,10 +1,10 @@
 using NitroxClient.GameLogic;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.DataStructures;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -18,7 +18,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
     public const float LOCATION_BROADCAST_TIME = 0.04f;
 
     private LocalPlayer localPlayer;
-    private float nextLocationBroadcast;
+    private float timeSinceLastLocationBroadcast;
 
     public void Awake()
     {
@@ -27,10 +27,14 @@ public class PlayerMovementBroadcaster : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (Time.fixedTime >= nextLocationBroadcast)
+        timeSinceLastLocationBroadcast += Time.fixedDeltaTime;
+
+        if (timeSinceLastLocationBroadcast <= LOCATION_BROADCAST_TIME)
         {
-            nextLocationBroadcast = Time.fixedTime + LOCATION_BROADCAST_TIME;
+            return;
         }
+
+        timeSinceLastLocationBroadcast = 0;
 
         // Freecam does disable main camera control
         // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)

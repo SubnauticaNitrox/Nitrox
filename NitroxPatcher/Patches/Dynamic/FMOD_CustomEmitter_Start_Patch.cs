@@ -25,7 +25,7 @@ public sealed partial class FMOD_CustomEmitter_Start_Patch : NitroxPatch, IDynam
             return;
         }
 
-        if (!__instance.transform.TryGetComponentInParent(out NitroxEntity entity))
+        if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
         {
             Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
             return;

@@ -1,34 +1,30 @@
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 
-namespace NitroxServer.Communication.Packets.Processors
+namespace NitroxServer.Communication.Packets.Processors;
+
+public class BasicMovementPacketProcessor : AuthenticatedPacketProcessor<BasicMovement>
 {
-    class BasicMovementPacketProcessor : AuthenticatedPacketProcessor<BasicMovement>
+    private readonly PlayerManager playerManager;
+    private readonly EntityRegistry entityRegistry;
+
+    public BasicMovementPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
     {
-        private readonly PlayerManager playerManager;
-        private readonly EntityRegistry entityRegistry;
+        this.playerManager = playerManager;
+        this.entityRegistry = entityRegistry;
+    }
 
-        public BasicMovementPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+    public override void Process(BasicMovement packet, Player player)
+    {
+        if (entityRegistry.TryGetEntityById(packet.Id, out WorldEntity entity))
         {
-            this.playerManager = playerManager;
-            this.entityRegistry = entityRegistry;
+            entity.Transform.Position = packet.Position;
+            entity.Transform.Rotation = packet.Rotation;
         }
 
-        public override void Process(BasicMovement packet, Player player)
-        {
-            Optional<WorldEntity> entity = entityRegistry.GetEntityById<WorldEntity>(packet.Id);
-
-            if (entity.HasValue)
-            {
-                entity.Value.Transform.Position = packet.Position;
-                entity.Value.Transform.Rotation = packet.Rotation;
-            }
-
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        playerManager.SendPacketToOtherPlayers(packet, player);
     }
 }

@@ -25,6 +25,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
     {
         this.entities = entities;
     }
+
     public VehicleWorldEntitySpawner(SimulationOwnership simulationOwnership)
     {
         this.simulationOwnership = simulationOwnership;
@@ -173,7 +174,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
     private void RemoveConstructionAnimations(GameObject gameObject)
     {
         VFXConstructing[] vfxConstructions = gameObject.GetComponentsInChildren<VFXConstructing>();
-        
+
         foreach (VFXConstructing vfxConstructing in vfxConstructions)
         {
             vfxConstructing.EndGracefully();
@@ -198,19 +199,19 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             return;
         }
 
-        dockingBay.DockVehicle(vehicle);        
+        dockingBay.DockVehicle(vehicle);
     }
 
     public bool SpawnsOwnChildren()
     {
         return false;
     }
-    
+
     private float GetCraftDuration(TechType techType)
     {
         // UWE hard codes the build times into if/else logic inside ConstructorInput.Craft().
 
-        switch(techType)
+        switch (techType)
         {
             case TechType.Seamoth:
                 return 10f;

@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test.Client.Communication;
 using NitroxClient.Map;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
@@ -23,6 +24,10 @@ public class DeferredPacketReceiverTest
     public void TestInitialize()
     {
         packetReceiver = new PacketReceiver();
+        ClientAutoFacRegistrar registrar = new ClientAutoFacRegistrar();
+        NitroxServiceLocator.InitializeDependencyContainer(registrar);
+        NitroxServiceLocator.BeginNewLifetimeScope();
+
         loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
         visibleCells.Add(loadedCell);
     }

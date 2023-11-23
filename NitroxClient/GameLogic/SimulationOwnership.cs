@@ -78,7 +78,6 @@ namespace NitroxClient.GameLogic
         public void StopSimulatingEntity(NitroxId id)
         {
             simulatedIdsByLockType.Remove(id);
-
             StoppedSimulatingEntity?.Invoke(id);
         }
     }

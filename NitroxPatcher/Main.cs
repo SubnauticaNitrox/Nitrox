@@ -1,6 +1,7 @@
 extern alias JB;
 global using NitroxModel.Logger;
 global using static NitroxClient.Helpers.NitroxEntityExtensions;
+global using static NitroxModel.Extensions;
 using System;
 using System.IO;
 using System.Reflection;
@@ -105,6 +106,9 @@ public static class Main
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         };
+
+        uint forGlobalUsing = 0;
+        forGlobalUsing.AsByteUnitText(); // added so Code Cleanup does not nuke NitroxModel.Extensions
 
         Log.Info($"Using Nitrox {NitroxEnvironment.ReleasePhase} V{NitroxEnvironment.Version} built on {NitroxEnvironment.BuildDate}");
         try
