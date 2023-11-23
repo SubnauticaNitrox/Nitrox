@@ -48,7 +48,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             {
                 MobileVehicleBay.TransmitLocalSpawns = false;
                 yield return SpawnViaConstructor(vehicleEntity, constructor, result);
-                result.value.Value.EnsureComponent<MovementController>();
+                result.value.Value.EnsureComponent<MultiplayerMovementController>();
 
                 simulationOwnership.RequestSimulationLock(vehicleEntity.Id, SimulationLockType.TRANSIENT);
                 MobileVehicleBay.TransmitLocalSpawns = true;
@@ -57,7 +57,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         }
 
         yield return SpawnInWorld(vehicleEntity, result, parent);
-        result.value.Value.EnsureComponent<MovementController>();
+        result.value.Value.EnsureComponent<MultiplayerMovementController>();
         simulationOwnership.RequestSimulationLock(vehicleEntity.Id, SimulationLockType.TRANSIENT);
     }
 

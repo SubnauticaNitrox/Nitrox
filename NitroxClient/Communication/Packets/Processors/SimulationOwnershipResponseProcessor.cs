@@ -53,7 +53,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             if (NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
             {
-                MovementController movementController = gameObject.EnsureComponent<MovementController>();
+                MultiplayerMovementController movementController = gameObject.EnsureComponent<MultiplayerMovementController>();
                 movementController.SetBroadcasting(lockAcquired);
                 movementController.SetReceiving(!lockAcquired);
             }

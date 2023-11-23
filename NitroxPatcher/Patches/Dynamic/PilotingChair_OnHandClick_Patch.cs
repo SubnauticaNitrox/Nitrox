@@ -51,7 +51,7 @@ public sealed partial class PilotingChair_OnHandClick_Patch : NitroxPatch, IDyna
         {
             skipPrefix = true;
             pilotingChair.OnHandClick(context.GuiHand);
-            if (pilotingChair.subRoot.TryGetComponent(out MovementController mc))
+            if (pilotingChair.subRoot.TryGetComponent(out MultiplayerMovementController mc))
             {
                 mc.SetBroadcasting(false);
             }

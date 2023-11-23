@@ -22,7 +22,7 @@ public sealed partial class Vehicle_OnPilotModeEnd_Patch : NitroxPatch, IDynamic
         if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
-            if (__instance.TryGetComponent(out MovementController mc))
+            if (__instance.TryGetComponent(out MultiplayerMovementController mc))
             {
                 mc.SetBroadcasting(true);
             }

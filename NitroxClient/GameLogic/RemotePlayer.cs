@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
         public ItemsContainer Inventory { get; private set; }
         public Transform ItemAttachPoint { get; private set; }
         public RemotePlayerVitals vitals { get; private set; }
-        public MovementController MovementController { get; private set; }
+        public MultiplayerMovementController MovementController { get; private set; }
 
         public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -63,7 +63,7 @@ namespace NitroxClient.GameLogic
             RigidBody.useGravity = false;
             RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
             RigidBody.isKinematic = true;
-            MovementController = Body.EnsureComponent<MovementController>();
+            MovementController = Body.EnsureComponent<MultiplayerMovementController>();
             MovementController.AfterUpdate += OnUpdate;
 
             NitroxEntity.SetNewId(Body, PlayerContext.PlayerNitroxId);

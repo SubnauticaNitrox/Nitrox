@@ -6,7 +6,7 @@ namespace NitroxClient.MonoBehaviours
 {
     public abstract class MultiplayerVehicleControl : MonoBehaviour
     {
-        private MovementController movementController;
+        private MultiplayerMovementController movementController;
 
         protected readonly SmoothParameter SmoothYaw = new SmoothParameter();
         protected readonly SmoothParameter SmoothPitch = new SmoothParameter();
@@ -17,7 +17,7 @@ namespace NitroxClient.MonoBehaviours
 
         protected virtual void Awake()
         {
-            movementController = gameObject.EnsureComponent<MovementController>();
+            movementController = gameObject.EnsureComponent<MultiplayerMovementController>();
 
             // For now, we assume the set position and rotation is equal to the server one.
             movementController.TargetPosition = transform.position;

@@ -48,6 +48,6 @@ public sealed partial class FreezeRigidbodyWhenFar_FixedUpdate_Patch : NitroxPat
 
     public static bool IsMoving(GameObject go)
     {
-        return go.TryGetComponent(out MovementController mc) && mc.Receiving;
+        return go.TryGetComponent(out MultiplayerMovementController mc) && mc.Receiving;
     }
 }

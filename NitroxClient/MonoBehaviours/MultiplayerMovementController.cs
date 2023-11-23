@@ -10,11 +10,11 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class MovementController : MonoBehaviour
+public class MultiplayerMovementController : MonoBehaviour
 {
     public const float LOCATION_BROADCAST_TIME = 0.04f;
 
-    private static readonly Dictionary<NitroxId, MovementController> movementControllersById = new();
+    private static readonly Dictionary<NitroxId, MultiplayerMovementController> movementControllersById = new();
 
     public float TimeScalar { get; set; } = 1f;
     public Vector3 TargetPosition { get; set; }
@@ -52,7 +52,7 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    public static bool TryGetMovementControllerFrom(NitroxId id, out MovementController mc)
+    public static bool TryGetMovementControllerFrom(NitroxId id, out MultiplayerMovementController mc)
     {
         mc = null;
         if (id == null) // Early Exit
@@ -80,7 +80,7 @@ public class MovementController : MonoBehaviour
 
     private static void StartedSimulatingEntity(NitroxId id)
     {
-        if (NitroxEntity.TryGetComponentFrom(id, out MovementController mc))
+        if (NitroxEntity.TryGetComponentFrom(id, out MultiplayerMovementController mc))
         {
             mc.SetBroadcasting(true);
         }
@@ -88,7 +88,7 @@ public class MovementController : MonoBehaviour
 
     private static void StoppedSimulatingEntity(NitroxId id)
     {
-        if (NitroxEntity.TryGetComponentFrom(id, out MovementController mc))
+        if (NitroxEntity.TryGetComponentFrom(id, out MultiplayerMovementController mc))
         {
             mc.SetReceiving(true);
         }

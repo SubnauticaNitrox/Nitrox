@@ -12,7 +12,7 @@ public sealed partial class Vehicle_OnPilotModeBegin_Patch : NitroxPatch, IDynam
     public static void Prefix(Vehicle __instance)
     {
         Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance, true);
-        if (__instance.TryGetComponent(out MovementController mc))
+        if (__instance.TryGetComponent(out MultiplayerMovementController mc))
         {
             mc.SetBroadcasting(false);
         }

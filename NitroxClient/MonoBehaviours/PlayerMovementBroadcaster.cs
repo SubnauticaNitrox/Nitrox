@@ -85,7 +85,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
                 return Optional.Empty;
             }
 
-            if (vehicle.TryGetComponent(out MovementController mc))
+            if (vehicle.TryGetComponent(out MultiplayerMovementController mc))
             {
                 mc.SetReceiving(false);
             }

@@ -10,9 +10,9 @@ public class BasicMovementProcessor : ClientPacketProcessor<BasicMovement>
 {
     public override void Process(BasicMovement movement)
     {
-        if (!MovementController.TryGetMovementControllerFrom(movement.Id, out MovementController mc) && NitroxEntity.TryGetObjectFrom(movement.Id, out GameObject gameObject))
+        if (!MultiplayerMovementController.TryGetMovementControllerFrom(movement.Id, out MultiplayerMovementController mc) && NitroxEntity.TryGetObjectFrom(movement.Id, out GameObject gameObject))
         {
-            mc = gameObject.EnsureComponent<MovementController>();
+            mc = gameObject.EnsureComponent<MultiplayerMovementController>();
         }
 
         if (mc)

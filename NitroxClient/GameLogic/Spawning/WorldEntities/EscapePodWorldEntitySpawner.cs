@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = true;
 
             GameObject escapePod = CreateNewEscapePod(escapePodEntity);
-            escapePod.EnsureComponent<MovementController>();
+            escapePod.EnsureComponent<MultiplayerMovementController>();
             simulationOwnership.RequestSimulationLock(entity.Id, SimulationLockType.TRANSIENT);
 
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;

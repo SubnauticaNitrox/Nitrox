@@ -18,7 +18,7 @@ public sealed partial class Player_RequiresHighPrecisionPhysics_Patch : NitroxPa
     {
         if (Player.main.currentSub)
         {
-            MovementController movementController = Player.main.currentSub.GetComponent<MovementController>();
+            MultiplayerMovementController movementController = Player.main.currentSub.GetComponent<MultiplayerMovementController>();
 
             if (movementController && movementController.Receiving)
             {
