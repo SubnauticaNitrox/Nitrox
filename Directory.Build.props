@@ -43,15 +43,10 @@
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
                 </PackageReference>
-            </ItemGroup>
-        </When>
-    </Choose>
-
-    <!-- Include our analyzer and code gen library to all Nitrox projects -->
-    <Choose>
-        <When Condition="'$(NitroxLibrary)' == 'true'">
-            <ItemGroup>
-                <ProjectReference Include="$(MSBuildThisFileDirectory)Nitrox.Analyzers\Nitrox.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+                <PackageReference Include="Nitrox.Analyzers" Version="1.0.6">
+                    <PrivateAssets>all</PrivateAssets>
+                    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+                </PackageReference>
             </ItemGroup>
         </When>
     </Choose>
