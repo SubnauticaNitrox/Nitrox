@@ -23,6 +23,7 @@ using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer_Subnautica;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
 public class Program
 {
     private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new();

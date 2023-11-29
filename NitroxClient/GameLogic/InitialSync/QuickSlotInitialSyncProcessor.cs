@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -12,8 +11,8 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
 {
     public QuickSlotInitialSyncProcessor()
     {
-        DependentProcessors.Add(typeof(PlayerInitialSyncProcessor));  // the player needs to be configured before we can set quick slots.
-        DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // we need to have the items spawned into our inventory before we can quick slot them.
+        AddDependency<PlayerInitialSyncProcessor>();  // the player needs to be configured before we can set quick slots.
+        AddDependency<EquippedItemInitialSyncProcessor>(); // we need to have the items spawned into our inventory before we can quick slot them.
     }
 
     public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)

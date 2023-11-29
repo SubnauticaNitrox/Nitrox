@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
@@ -6,7 +7,6 @@ namespace NitroxClient.Debuggers.Drawer.Unity;
 public class TransformDrawer : IDrawer
 {
     private const float LABEL_WIDTH = 100;
-    private const float LABEL_SEPARATOR = 40;
     private const float VECTOR_MAX_WIDTH = 405;
 
     public Type[] ApplicableTypes { get; } = { typeof(Transform) };
@@ -76,9 +76,23 @@ public class TransformDrawer : IDrawer
 
             GUILayout.Space(5);
 
-            if (GUILayout.Button("Toggle Local/Global", GUILayout.MaxWidth(125)))
+            using (new GUILayout.HorizontalScope())
             {
-                showGlobal = !showGlobal;
+                if (GUILayout.Button("Toggle Local/Global", GUILayout.MaxWidth(125)))
+                {
+                    showGlobal = !showGlobal;
+                }
+                if (GUILayout.Button("Destroy GameObject", GUILayout.MaxWidth(150)))
+                {
+                    if (transform)
+                    {
+                        if (transform.parent)
+                        {
+                            NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(transform.parent);
+                        }
+                        GameObject.Destroy(transform.gameObject);
+                    }
+                }
             }
         }
     }

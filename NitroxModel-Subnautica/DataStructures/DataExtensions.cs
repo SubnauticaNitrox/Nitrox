@@ -1,6 +1,7 @@
 using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -163,6 +164,16 @@ namespace NitroxModel_Subnautica.DataStructures
         public static PDAScanner.Entry ToUnity(this PDAEntry entry)
         {
             return new() { techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked };
+        }
+
+        public static Base.Face ToUnity(this NitroxBaseFace baseFace)
+        {
+            return new(baseFace.Cell.ToUnity(), (Base.Direction)baseFace.Direction);
+        }
+
+        public static NitroxBaseFace ToDto(this Base.Face face)
+        {
+            return new(face.cell.ToDto(), (int)face.direction);
         }
     }
 }

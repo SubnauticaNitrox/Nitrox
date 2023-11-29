@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -152,6 +152,20 @@ namespace NitroxModel.Logger
             logOnceCache.Add(hash);
         }
 
+        public static void ErrorOnce(string message)
+        {
+            int hash = message?.GetHashCode() ?? 0;
+            if (logOnceCache.Add(hash))
+            {
+                Error(message);
+            }
+        }
+
+        public static void Verbose(string message)
+        {
+            Write(LogLevel.Verbose, message);
+        }
+
         public static void InGame(string message)
         {
             inGameLogger.Information(message);
@@ -300,6 +314,7 @@ namespace NitroxModel.Logger
 
     public enum LogLevel
     {
+        Verbose = 0,
         Debug = 1,
         Information = 2,
         Warning = 3,

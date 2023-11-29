@@ -1,22 +1,27 @@
-﻿using NitroxModel.Packets;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
-namespace NitroxServer.Communication.Packets.Processors
+namespace NitroxServer.Communication.Packets.Processors;
+
+public class PlayerStatsProcessor : AuthenticatedPacketProcessor<PlayerStats>
 {
-    class PlayerStatsProcessor : AuthenticatedPacketProcessor<PlayerStats>
+    private readonly PlayerManager playerManager;
+
+    public PlayerStatsProcessor(PlayerManager playerManager)
     {
-        private readonly PlayerManager playerManager;
+        this.playerManager = playerManager;
+    }
 
-        public PlayerStatsProcessor(PlayerManager playerManager)
+    public override void Process(PlayerStats packet, Player player)
+    {
+        if (packet.PlayerId != player.Id)
         {
-            this.playerManager = playerManager;
+            Log.WarnOnce($"[{nameof(PlayerStatsProcessor)}] Player ID mismatch (received: {packet.PlayerId}, real: {player.Id})");
+            packet.PlayerId = player.Id;
         }
-
-        public override void Process(PlayerStats packet, Player player)
-        {
-            player.Stats = new NitroxModel.DataStructures.GameLogic.PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
-            playerManager.SendPacketToOtherPlayers(packet, player);
-        }
+        player.Stats = new PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
+        playerManager.SendPacketToOtherPlayers(packet, player);
     }
 }

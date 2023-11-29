@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -8,7 +9,7 @@ namespace NitroxClient.GameLogic.Spawning;
 
 public class PathBasedChildEntitySpawner : EntitySpawner<PathBasedChildEntity>
 {
-    public override IEnumerator SpawnAsync(PathBasedChildEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(PathBasedChildEntity entity, TaskResult<Optional<GameObject>> result)
     {
         Optional<GameObject> owner = NitroxEntity.GetObjectFrom(entity.ParentId);
 
@@ -33,9 +34,6 @@ public class PathBasedChildEntitySpawner : EntitySpawner<PathBasedChildEntity>
 
         result.Set(gameObject);
     }
- 
-    public override bool SpawnsOwnChildren(PathBasedChildEntity entity)
-    {
-        return false;
-    }
+
+    protected override bool SpawnsOwnChildren(PathBasedChildEntity entity) => false;
 }

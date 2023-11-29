@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -87,8 +87,8 @@ namespace NitroxServer.Serialization
 
         public string AdminPassword { get; set; } = StringHelper.GenerateRandomString(12);
 
-        [PropertyDescription("Possible values:", typeof(ServerGameMode))]
-        public ServerGameMode GameMode { get; set; } = ServerGameMode.SURVIVAL;
+        [PropertyDescription("Possible values:", typeof(NitroxGameMode))]
+        public NitroxGameMode GameMode { get; set; } = NitroxGameMode.SURVIVAL;
 
         [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
         public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.JSON;
@@ -107,12 +107,15 @@ namespace NitroxServer.Serialization
         [PropertyDescription("Recommended to keep at 0.1f which is the default starting value. If set to 0 then new players are cured by default.")]
         public float DefaultInfectionValue { get; set; } = 0.1f;
 
-        public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
+        public bool IsHardcore => GameMode == NitroxGameMode.HARDCORE;
         public bool IsPasswordRequired => ServerPassword != string.Empty;
         public PlayerStatsData DefaultPlayerStats => new(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
         [PropertyDescription("If set to true, the server will try to open port on your router via UPnP")]
         public bool AutoPortForward { get; set; } = true;
         [PropertyDescription("Determines whether the server will listen for and reply to LAN discovery requests.")]
         public bool LANDiscoveryEnabled { get; set; } = true;
+
+        [PropertyDescription("When true, will reject any build actions detected as desynced")]
+        public bool SafeBuilding { get; set; } = true;
     }
 }

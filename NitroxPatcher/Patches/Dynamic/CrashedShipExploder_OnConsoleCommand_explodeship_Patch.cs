@@ -7,8 +7,10 @@ using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <remarks>
 /// We just want to disable all these commands on client-side and redirect them as ConsoleCommand
 /// TODO: Remove this file when we'll have the command system
+/// </remarks>
 public sealed class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD_COUNTDOWNSHIP = Reflect.Method((CrashedShipExploder t) => t.OnConsoleCommand_countdownship());

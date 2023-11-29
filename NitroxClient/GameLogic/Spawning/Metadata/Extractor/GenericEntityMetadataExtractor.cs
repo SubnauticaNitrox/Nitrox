@@ -16,7 +16,7 @@ public abstract class GenericEntityMetadataExtractor<I, O> : EntityMetadataExtra
     {
         EntityMetadata result = Extract((I)o);
 
-        return Optional.Of(result);
+        return Optional.OfNullable(result);
     }
 }
 

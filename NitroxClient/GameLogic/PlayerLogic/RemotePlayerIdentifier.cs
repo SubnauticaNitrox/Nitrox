@@ -12,7 +12,7 @@ public class RemotePlayerIdentifier : MonoBehaviour, IObstacle
 {
     public RemotePlayer RemotePlayer;
 
-    public bool IsDeconstructionObstacle() => false;
+    public bool IsDeconstructionObstacle() => true;
 
     public bool CanDeconstruct(out string reason)
     {

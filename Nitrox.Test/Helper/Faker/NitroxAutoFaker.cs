@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using BinaryPack.Attributes;
+using NitroxModel.Logger;
 
 namespace Nitrox.Test.Helper.Faker;
 
@@ -178,9 +180,21 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
                                 throw new ArgumentOutOfRangeException();
                         }
                     }
-                    else
+                    else if(propertyInfo.CanWrite)
                     {
                         propertyInfo.SetValue(obj, parameterValues[index]);
+                    }
+                    else
+                    {
+                        Regex backingFieldNameRegex = new($"\\A<{propertyInfo.Name}>k__BackingField\\Z");
+                        FieldInfo backingField = propertyInfo.DeclaringType.GetRuntimeFields().FirstOrDefault(a => backingFieldNameRegex.IsMatch(a.Name));
+
+                        if (backingField == null)
+                        {
+                            throw new InvalidOperationException($"{propertyInfo.DeclaringType}.{propertyInfo.Name} is not accessible for writing");
+                        }
+
+                        backingField.SetValue(obj, parameterValues[index]);
                     }
 
                     break;
