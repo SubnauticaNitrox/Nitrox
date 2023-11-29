@@ -49,6 +49,8 @@ public class CircularBufferTest
         buffer[2].Should().Be("3");
         buffer.Add("6");
         buffer[2].Should().Be("6");
+        buffer.Add("7");
+        buffer.Should().ContainInOrder("7", "5", "6");
     }
 
     [TestMethod]
@@ -91,7 +93,11 @@ public class CircularBufferTest
         buffer.Add(6);
         buffer.LastChangedIndex.Should().Be(2);
         buffer.Add(7);
-        buffer.Should().ContainInOrder(7, 5, 6);
+        buffer.LastChangedIndex.Should().Be(0);
+        buffer.Add(8);
+        buffer.LastChangedIndex.Should().Be(1);
+        buffer.Clear();
+        buffer.LastChangedIndex.Should().Be(-1);
     }
 
     [TestMethod]

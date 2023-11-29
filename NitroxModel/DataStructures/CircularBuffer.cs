@@ -85,7 +85,7 @@ public class CircularBuffer<T> : IList<T>
     public void Clear()
     {
         data.Clear();
-        LastChangedIndex = 0;
+        LastChangedIndex = -1;
     }
 
     public bool Contains(T item)
