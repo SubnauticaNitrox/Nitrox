@@ -90,21 +90,22 @@ namespace NitroxServer.Serialization.World
 
         public bool BackUp(string saveDir)
         {
+            string backupDir = Path.Combine(saveDir, "Backups");
+            if (!Directory.Exists(backupDir))
+            {
+                Directory.CreateDirectory(backupDir);
+            }
+
+            // Backup up the save files
+            string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now:yyyyMMddHHmmss}");
+
             try
             {
-                string backupDir = Path.Combine(saveDir, "Backups");
-                if (!Directory.Exists(backupDir))
-                {
-                    Directory.CreateDirectory(backupDir);
-                }
-
-                // Backup up the save files
-                string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now:yyyy MMM dd, HHmm ss}");
                 Directory.CreateDirectory(outZip);
 
                 foreach (string file in Directory.GetFiles(saveDir))
                 {
-                    File.Copy(Path.Combine(saveDir, file), Path.Combine(outZip, file));
+                    File.Copy(file, Path.Combine(outZip, Path.GetFileName(file)));
                 }
 
                 FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
@@ -124,11 +125,13 @@ namespace NitroxServer.Serialization.World
 
                 if (backups.Count > config.MaxBackups)
                 {
-                    for (int i = 1; i < backups.Count; i++)
+                    int j = 0;
+                    for (int i = 0; i < backups.Count; i++)
                     {
-                        if (i > config.MaxBackups - 1)
+                        if (i >= config.MaxBackups)
                         {
-                            File.Delete(backups.ElementAt(i));
+                            File.Delete(backups.ElementAt(j));
+                            j++;
                         }
                     }
                 }
@@ -140,6 +143,10 @@ namespace NitroxServer.Serialization.World
             catch (Exception ex)
             {
                 Log.Error(ex, $"Could not back up world :");
+                if (Directory.Exists(outZip))
+                {
+                    Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left 
+                }
                 return false;
             }
         }
@@ -190,12 +197,10 @@ namespace NitroxServer.Serialization.World
                 // Check if the world was newly created using the world manager
                 if (new FileInfo(Path.Combine(saveDir, $"Version{FileEnding}")).Length > 0)
                 {
-                    Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+                    // Give error saying that world could not be used, and to restore a backup
+                    Log.Error($"Could not load world, please restore one of your backups to continue using this world. : {ex.GetType()} {ex.Message}");
 
-                    // Backup world if loading fails
-                    string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                    Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
-                    FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
+                    throw new NotImplementedException();
                 }
             }
 
@@ -342,11 +347,5 @@ namespace NitroxServer.Serialization.World
                 Log.Info($"Save file was upgraded to {NitroxEnvironment.Version}");
             }
         }
-
-        //private class BackupFile
-        //{
-        //    public string Directory { get; set; }
-        //    public DateTime FileLastAccessed { get; set; }
-        //}
     }
 }
