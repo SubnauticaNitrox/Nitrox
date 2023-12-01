@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -96,11 +94,11 @@ namespace NitroxServer.Serialization.World
                 Directory.CreateDirectory(backupDir);
             }
 
-            // Backup up the save files
             string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now:yyyyMMddHHmmss}");
 
             try
             {
+                // Back up the save files
                 Directory.CreateDirectory(outZip);
 
                 foreach (string file in Directory.GetFiles(saveDir))
@@ -125,19 +123,15 @@ namespace NitroxServer.Serialization.World
 
                 if (backups.Count > config.MaxBackups)
                 {
-                    int j = 0;
-                    for (int i = 0; i < backups.Count; i++)
+                    int numBackupsToDelete = backups.Count - config.MaxBackups;
+                    for (int i = 0; i < numBackupsToDelete; i++)
                     {
-                        if (i >= config.MaxBackups)
-                        {
-                            File.Delete(backups.ElementAt(j));
-                            j++;
-                        }
+                        File.Delete(backups.ElementAt(i));
                     }
                 }
 
                 // Done
-                Log.Info("World state saved and backed up");
+                Log.Info("World backed up");
                 return true;
             }
             catch (Exception ex)
