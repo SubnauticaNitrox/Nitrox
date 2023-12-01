@@ -244,7 +244,7 @@ namespace NitroxServer
 
             Save();
 
-            worldPersistence.BackUp(serverConfig.SaveName);
+            worldPersistence.BackUp(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName));
         }
 
         private async Task LogHowToConnectAsync()
