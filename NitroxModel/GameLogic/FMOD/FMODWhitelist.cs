@@ -18,7 +18,7 @@ public class FMODWhitelist
 
         if (string.IsNullOrWhiteSpace(fileData))
         {
-            Log.Error($"[FMODSystem]: Provided sound whitelist at {filePath} is null or whitespace");
+            Log.Error($"[{nameof(FMODWhitelist)}]: Provided sound whitelist at {filePath} is null or whitespace");
             return;
         }
 
@@ -43,7 +43,7 @@ public class FMODWhitelist
             }
             else
             {
-                Log.Error($"[FMODWhitelist]: Error while parsing {filePath} at line {entry}");
+                Log.Error($"[{nameof(FMODWhitelist)}]: Error while parsing {filePath} at line {entry}");
             }
         }
     }
@@ -55,7 +55,7 @@ public class FMODWhitelist
 
     public bool IsWhitelisted(string path, out float radius)
     {
-        if (TryGetSoundData(path, out SoundData soundData))
+        if (soundsWhitelist.TryGetValue(path, out SoundData soundData))
         {
             radius = soundData.Radius;
             return soundData.IsWhitelisted;
@@ -67,12 +67,7 @@ public class FMODWhitelist
 
     public bool TryGetSoundData(string path, out SoundData soundData)
     {
-        if (soundsWhitelist.TryGetValue(path, out soundData))
-        {
-            return true;
-        }
-        soundData = default;
-        return false;
+        return soundsWhitelist.TryGetValue(path, out soundData);
     }
 
     public ReadOnlyDictionary<string, SoundData> GetWhitelist() => new(soundsWhitelist);

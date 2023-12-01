@@ -3,7 +3,7 @@
 namespace NitroxClient.GameLogic.FMOD;
 
 /// <summary>
-/// Suppresses sounds played by base Subnautica, not any sounds triggered by Nitrox
+/// Suppresses sounds played by base Subnautica, but not by Nitrox
 /// </summary>
 public readonly struct FMODSoundSuppressor : IDisposable
 {

@@ -9,15 +9,15 @@ public class FMODCustomLoopingEmitterProcessor : ClientPacketProcessor<FMODCusto
 {
     public override void Process(FMODCustomLoopingEmitterPacket packet)
     {
-        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject entity))
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject emitterControllerEntity))
         {
-            Log.Error($"[FMODCustomLoopingEmitterProcessor] Couldn't find entity {packet.Id}");
+            Log.ErrorOnce($"[{nameof(FMODCustomLoopingEmitterProcessor)}] Couldn't find entity {packet.Id}");
             return;
         }
 
-        if (!entity.TryGetComponent(out FMODEmitterController fmodEmitterController))
+        if (!emitterControllerEntity.TryGetComponent(out FMODEmitterController fmodEmitterController))
         {
-            fmodEmitterController = entity.AddComponent<FMODEmitterController>();
+            fmodEmitterController = emitterControllerEntity.AddComponent<FMODEmitterController>();
             fmodEmitterController.LateRegisterEmitter();
         }
 

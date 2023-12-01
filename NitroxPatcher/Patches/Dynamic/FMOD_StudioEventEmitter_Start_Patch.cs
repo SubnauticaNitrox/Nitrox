@@ -1,6 +1,7 @@
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel_Subnautica.Helper;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 
@@ -19,9 +20,9 @@ public sealed partial class FMOD_StudioEventEmitter_Start_Patch : NitroxPatch, I
 
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
-            if (__instance.GetRootParent().gameObject.name != "__LIGHTMAPPED_PREFAB__") // ignore calls from "blueprint prefabs"
+            if (__instance.GetRootParent().gameObject.name != SubnauticaConstants.LIGHTMAPPED_PREFAB_NAME) // ignore calls from "blueprint prefabs"
             {
-                Log.Warn($"[FMOD_StudioEventEmitter_Start_Patch] - No NitroxEntity found for {__instance.asset.path} at {__instance.gameObject.GetFullHierarchyPath()}");
+                Log.Warn($"[{nameof(FMOD_StudioEventEmitter_Start_Patch)}] - No NitroxEntity found for {__instance.asset.path} at {__instance.gameObject.GetFullHierarchyPath()}");
             }
 
             return;

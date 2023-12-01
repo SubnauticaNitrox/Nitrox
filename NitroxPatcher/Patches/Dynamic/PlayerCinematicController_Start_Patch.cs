@@ -2,6 +2,7 @@ using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
+using NitroxModel_Subnautica.Helper;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -14,7 +15,7 @@ public sealed partial class PlayerCinematicController_Start_Patch : NitroxPatch,
     {
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
-            if (__instance.GetRootParent().gameObject.name != "__LIGHTMAPPED_PREFAB__") // ignore calls from "blueprint prefabs"
+            if (__instance.GetRootParent().gameObject.name != SubnauticaConstants.LIGHTMAPPED_PREFAB_NAME) // ignore calls from "blueprint prefabs"
             {
                 Log.Warn($"[PlayerCinematicController_Start_Patch] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
             }

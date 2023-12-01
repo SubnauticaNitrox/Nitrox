@@ -21,7 +21,7 @@ public class FMODEventInstanceProcessor : AuthenticatedPacketProcessor<FMODEvent
     {
         if (!fmodWhitelist.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
-            Log.Error($"[FMODAssetProcessor] Whitelist has no item for {packet.AssetPath}.");
+            Log.Error($"[{nameof(FMODEventInstanceProcessor)}] Whitelist has no item for {packet.AssetPath}.");
             return;
         }
 
@@ -30,7 +30,7 @@ public class FMODEventInstanceProcessor : AuthenticatedPacketProcessor<FMODEvent
             float distance = NitroxVector3.Distance(player.Position, packet.Position);
             if (player != sendingPlayer &&
                 (soundData.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) &&
-                distance <= soundData.Radius)
+                distance < soundData.Radius)
             {
                 packet.Volume = SoundHelper.CalculateVolume(distance, soundData.Radius, packet.Volume);
                 player.SendPacket(packet);

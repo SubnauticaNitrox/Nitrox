@@ -18,6 +18,11 @@ public sealed partial class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, ID
 
     public static void Postfix(FMOD_StudioEventEmitter __instance, bool allowFadeout)
     {
+        if (!__instance.evt.hasHandle())
+        {
+            return;
+        }
+
         if (!Resolve<FMODWhitelist>().IsWhitelisted(__instance.asset.path))
         {
             return;
@@ -25,7 +30,7 @@ public sealed partial class FMOD_StudioEventEmitter_Stop_Patch : NitroxPatch, ID
 
         if (!__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
         {
-            Log.Warn($"[FMOD_StudioEventEmitter_Stop_Patch] - No NitroxEntity found for {__instance.asset.path} at {__instance.GetFullHierarchyPath()}");
+            Log.Warn($"[{nameof(FMOD_StudioEventEmitter_Stop_Patch)}] - No NitroxEntity found for {__instance.asset.path} at {__instance.GetFullHierarchyPath()}");
             return;
         }
 

@@ -352,7 +352,8 @@ public class RemotePlayer : INitroxPlayer
     /// </summary>
     private void SetupPlayerSounds()
     {
-        GameObject remotePlayerSoundsRoot = Object.Instantiate(new GameObject("RemotePlayerSounds"), Body.transform);
+        GameObject remotePlayerSoundsRoot = new("RemotePlayerSounds");
+        remotePlayerSoundsRoot.transform.SetParent(Body.transform);
         FMODEmitterController emitterController = Body.AddComponent<FMODEmitterController>();
 
         static void CopyEmitter(FMOD_CustomEmitter src, FMOD_CustomEmitter dst)
@@ -365,7 +366,7 @@ public class RemotePlayer : INitroxPlayer
         }
 
         // Bubbles
-        PlayerBreathBubbles localPlayerBubbles = Player.main.GetComponentInChildren<PlayerBreathBubbles>();
+        PlayerBreathBubbles localPlayerBubbles = Player.main.GetComponentInChildren<PlayerBreathBubbles>(true);
         FMOD_CustomEmitter bubblesCustomEmitter = remotePlayerSoundsRoot.AddComponent<FMOD_CustomEmitter>();
         CopyEmitter(localPlayerBubbles.bubbleSound, bubblesCustomEmitter);
 
@@ -373,9 +374,13 @@ public class RemotePlayer : INitroxPlayer
         {
             emitterController.AddEmitter(bubblesCustomEmitter.asset.path, bubblesCustomEmitter, bubblesSoundRadius);
         }
+        else
+        {
+            Log.Error($"[{nameof(RemotePlayer)}] Manual created FMOD emitter for {nameof(PlayerBreathBubbles)} but linked sound is not whitelisted: ({bubblesCustomEmitter.asset.path})");
+        }
 
         // Breathing
-        BreathingSound breathingSound = Player.main.GetComponentInChildren<BreathingSound>();
+        BreathingSound breathingSound = Player.main.GetComponentInChildren<BreathingSound>(true);
         FMOD_CustomEmitter breathingSoundCustomEmitter = remotePlayerSoundsRoot.AddComponent<FMOD_CustomEmitter>();
         breathingSoundCustomEmitter.asset = breathingSound.loopingBreathingSound.asset;
 
@@ -383,15 +388,23 @@ public class RemotePlayer : INitroxPlayer
         {
             emitterController.AddEmitter(breathingSoundCustomEmitter.asset.path, breathingSoundCustomEmitter, breathingSoundRadius);
         }
+        else
+        {
+            Log.Error($"[{nameof(RemotePlayer)}] Manual created FMOD emitter for {nameof(BreathingSound)} but linked sound is not whitelisted: ({breathingSoundCustomEmitter.asset.path})");
+        }
 
         // Diving
-        WaterAmbience waterAmbience = Player.main.GetComponentInChildren<WaterAmbience>();
+        WaterAmbience waterAmbience = Player.main.GetComponentInChildren<WaterAmbience>(true);
         FMOD_CustomEmitter diveStartCustomEmitter = remotePlayerSoundsRoot.AddComponent<FMOD_CustomEmitter>();
         CopyEmitter(waterAmbience.diveStartSplash, diveStartCustomEmitter);
 
         if (fmodWhitelist.IsWhitelisted(diveStartCustomEmitter.asset.path, out float diveSoundRadius))
         {
             emitterController.AddEmitter(diveStartCustomEmitter.asset.path, diveStartCustomEmitter, diveSoundRadius);
+        }
+        else
+        {
+            Log.Error($"[{nameof(RemotePlayer)}] Manual created FMOD emitter for {nameof(WaterAmbience)} but linked sound is not whitelisted: ({diveStartCustomEmitter.asset.path})");
         }
     }
 

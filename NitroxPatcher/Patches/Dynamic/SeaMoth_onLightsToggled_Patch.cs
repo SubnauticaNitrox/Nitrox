@@ -15,7 +15,7 @@ public sealed partial class SeaMoth_onLightsToggled_Patch : NitroxPatch, IDynami
     {
         if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
-            SeamothMetadata metadata = SeamothMetadataExtractor.ExtractStatic(__instance);
+            SeamothMetadata metadata = Resolve<SeamothMetadataExtractor>().Extract(__instance);
             Resolve<Entities>().BroadcastMetadataUpdate(id, metadata);
         }
     }

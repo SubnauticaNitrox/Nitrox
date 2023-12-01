@@ -21,7 +21,7 @@ public class FMODAssetProcessor : AuthenticatedPacketProcessor<FMODAssetPacket>
     {
         if (!fmodWhitelist.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
-            Log.Error($"[FMODAssetProcessor] Whitelist has no item for {packet.AssetPath}.");
+            Log.Error($"[{nameof(FMODAssetProcessor)}] Whitelist has no item for {packet.AssetPath}.");
             return;
         }
 

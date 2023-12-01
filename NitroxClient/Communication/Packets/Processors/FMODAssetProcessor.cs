@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -19,7 +19,7 @@ public class FMODAssetProcessor : ClientPacketProcessor<FMODAssetPacket>
     {
         if (!fmodWhitelist.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
-            Log.Error($"[FMODAssetProcessor] Whitelist has no item for {packet.AssetPath}.");
+            Log.ErrorOnce($"[{nameof(FMODAssetProcessor)}] Whitelist has no item for {packet.AssetPath}.");
             return;
         }
 

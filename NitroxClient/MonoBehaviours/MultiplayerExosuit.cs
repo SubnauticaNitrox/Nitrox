@@ -1,6 +1,5 @@
 ﻿using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Smoothing;
-using NitroxModel.Core;
 using NitroxModel.GameLogic.FMOD;
 using UnityEngine;
 
@@ -22,7 +21,7 @@ public class MultiplayerExosuit : MultiplayerVehicleControl
         base.Awake();
         SmoothRotation = new ExosuitSmoothRotation(gameObject.transform.rotation);
 
-        NitroxServiceLocator.Cache<FMODWhitelist>.Value.TryGetSoundData(exosuit.loopingJetSound.asset.path, out SoundData jetSoundData);
+        this.Resolve<FMODWhitelist>().TryGetSoundData(exosuit.loopingJetSound.asset.path, out SoundData jetSoundData);
         jetLoopingSoundDistance = jetSoundData.Radius;
     }
 
@@ -66,15 +65,21 @@ public class MultiplayerExosuit : MultiplayerVehicleControl
 
     private void Update()
     {
-        float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
-        if (exosuit.loopingJetSound.playing && exosuit.loopingJetSound.evt.hasHandle())
+        if (exosuit.loopingJetSound.playing)
         {
-            exosuit.loopingJetSound.evt.setVolume(volume);
+            if (exosuit.loopingJetSound.evt.hasHandle())
+            {
+                float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
+                exosuit.loopingJetSound.evt.setVolume(volume);
+            }
         }
-
-        if (!exosuit.loopingJetSound.playing && exosuit.loopingJetSound.evtStop.hasHandle())
+        else
         {
-            exosuit.loopingJetSound.evtStop.setVolume(volume);
+            if (exosuit.loopingJetSound.evtStop.hasHandle())
+            {
+                float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
+                exosuit.loopingJetSound.evtStop.setVolume(volume);
+            }
         }
     }
 

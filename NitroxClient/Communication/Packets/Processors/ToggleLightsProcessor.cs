@@ -21,32 +21,33 @@ public class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.T
         GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
         ToggleLights toggleLights = gameObject.RequireComponent<ToggleLights>();
 
-        if (packet.IsOn != toggleLights.GetLightsActive())
+        if (packet.IsOn == toggleLights.GetLightsActive())
         {
-            using (PacketSuppressor<NitroxModel.Packets.ToggleLights>.Suppress())
-            using (FMODSystem.SuppressSendingSounds())
+            return;
+        }
+
+        using (PacketSuppressor<NitroxModel.Packets.ToggleLights>.Suppress())
+        using (FMODSystem.SuppressSendingSounds())
+        {
+            using (FMODSystem.SuppressSubnauticaSounds())
             {
-                using (FMODSystem.SuppressSubnauticaSounds())
-                {
-                    toggleLights.SetLightsActive(packet.IsOn);
-                }
+                toggleLights.SetLightsActive(packet.IsOn);
+            }
 
-                FMODAsset soundAsset;
+            FMODAsset soundAsset;
 
-                if (packet.IsOn)
-                {
-                    soundAsset = toggleLights.lightsOnSound ? toggleLights.lightsOnSound.asset : toggleLights.onSound;
-                }
-                else
-                {
-                    soundAsset = toggleLights.lightsOffSound ? toggleLights.lightsOffSound.asset : toggleLights.offSound;
-                }
+            if (packet.IsOn)
+            {
+                soundAsset = toggleLights.lightsOnSound ? toggleLights.lightsOnSound.asset : toggleLights.onSound;
+            }
+            else
+            {
+                soundAsset = toggleLights.lightsOffSound ? toggleLights.lightsOffSound.asset : toggleLights.offSound;
+            }
 
-                if (soundAsset)
-                {
-                    fmodWhitelist.TryGetSoundData(soundAsset.path, out SoundData soundData);
-                    FMODEmitterController.PlayEventOneShot(soundAsset, soundData.Radius, toggleLights.transform.position);
-                }
+            if (soundAsset && fmodWhitelist.TryGetSoundData(soundAsset.path, out SoundData soundData))
+            {
+                FMODEmitterController.PlayEventOneShot(soundAsset, soundData.Radius, toggleLights.transform.position);
             }
         }
     }
