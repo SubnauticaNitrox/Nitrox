@@ -52,7 +52,14 @@ namespace NitroxServer
             saveTimer.AutoReset = true;
             saveTimer.Elapsed += delegate
             {
-                Save();
+                if (!serverConfig.DisableAutoBackup)
+                {
+                    BackUp();
+                }
+                else
+                {
+                    Save();
+                }
             };
         }
 
@@ -228,6 +235,18 @@ namespace NitroxServer
             Log.Info("Nitrox Server Stopped");
         }
 
+        public void BackUp()
+        {
+            if (!IsRunning)
+            {
+                return;
+            }
+
+            Save();
+
+            worldPersistence.BackUp(serverConfig.SaveName);
+        }
+
         private async Task LogHowToConnectAsync()
         {
             Task<IPAddress> localIp = Task.Run(NetHelper.GetLanIp);
@@ -268,6 +287,17 @@ namespace NitroxServer
         public void DisablePeriodicSaving()
         {
             saveTimer.Stop();
+        }
+
+        public void EnablePeriodicBackup()
+        {
+            // Not meant to update the config file (that's handled within the AutoBackupCommand), just meant to update it here for use in the saveTimer
+            serverConfig.DisableAutoBackup = false;
+        }
+
+        public void DisablePeriodicBackup()
+        {
+            serverConfig.DisableAutoBackup = true;
         }
 
         public void PauseServer()

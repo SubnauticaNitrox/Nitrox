@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -82,6 +84,62 @@ namespace NitroxServer.Serialization.World
             catch (Exception ex)
             {
                 Log.Error(ex, $"Could not save world :");
+                return false;
+            }
+        }
+
+        public bool BackUp(string saveDir)
+        {
+            try
+            {
+                string backupDir = Path.Combine(saveDir, "Backups");
+                if (!Directory.Exists(backupDir))
+                {
+                    Directory.CreateDirectory(backupDir);
+                }
+
+                // Backup up the save files
+                string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now:yyyy MMM dd, HHmm ss}");
+                Directory.CreateDirectory(outZip);
+
+                foreach (string file in Directory.GetFiles(saveDir))
+                {
+                    File.Copy(Path.Combine(saveDir, file), Path.Combine(outZip, file));
+                }
+
+                FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
+                Directory.Delete(outZip, true);
+
+                // Check for total number of backups and prune as necessary
+                List<string> backups = new();
+                foreach (string file in Directory.EnumerateFiles(backupDir))
+                {
+                    FileInfo fileInfo = new(file);
+
+                    if (fileInfo.Extension != ".zip" || !fileInfo.Name.Contains($"Backup - "))
+                    { continue; }
+
+                    backups.Add(file);
+                }
+
+                if (backups.Count > config.MaxBackups)
+                {
+                    for (int i = 1; i < backups.Count; i++)
+                    {
+                        if (i > config.MaxBackups - 1)
+                        {
+                            File.Delete(backups.ElementAt(i));
+                        }
+                    }
+                }
+
+                // Done
+                Log.Info("World state saved and backed up");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Could not back up world :");
                 return false;
             }
         }
@@ -284,5 +342,11 @@ namespace NitroxServer.Serialization.World
                 Log.Info($"Save file was upgraded to {NitroxEnvironment.Version}");
             }
         }
+
+        //private class BackupFile
+        //{
+        //    public string Directory { get; set; }
+        //    public DateTime FileLastAccessed { get; set; }
+        //}
     }
 }

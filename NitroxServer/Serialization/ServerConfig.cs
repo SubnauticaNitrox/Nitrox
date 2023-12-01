@@ -17,6 +17,8 @@ namespace NitroxServer.Serialization
 
         private int saveIntervalSetting = 120000;
 
+        private int maxBackupsSetting = 10;
+
         private string postSaveCommandPath = string.Empty;
 
         private string saveNameSetting = "My World";
@@ -36,6 +38,21 @@ namespace NitroxServer.Serialization
             {
                 Validate.IsTrue(value >= 1000, "SaveInterval must be greater than 1000");
                 saveIntervalSetting = value;
+            }
+        }
+
+        [PropertyDescription("Leave blank for no backup limit")]
+        public int MaxBackups
+        {
+            get => maxBackupsSetting;
+
+            set
+            {
+                if (!string.IsNullOrEmpty(value.ToString()))
+                {
+                    Validate.IsTrue(value > 0, "MaxBackups must be greater than 0");
+                }
+                maxBackupsSetting = value;
             }
         }
 
@@ -71,6 +88,8 @@ namespace NitroxServer.Serialization
         public bool DisableConsole { get; set; }
 
         public bool DisableAutoSave { get; set; }
+
+        public bool DisableAutoBackup { get; set; }
 
         public string SaveName
         {
