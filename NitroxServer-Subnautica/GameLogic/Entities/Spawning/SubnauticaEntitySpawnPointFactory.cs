@@ -17,7 +17,14 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
             EntitySlotsPlaceholder entitySlotsPlaceholder = gameObject.GetComponent<EntitySlotsPlaceholder>();
 
-            if (!ReferenceEquals(entitySlotsPlaceholder, null))
+            if (gameObject.CreateEmptyObject)
+            {
+                SerializedEntitySpawnPoint entitySpawnPoint = new(gameObject.SerializedComponents, gameObject.Layer, absoluteEntityCell, transform);
+
+                HandleParenting(spawnPoints, entitySpawnPoint, gameObject);
+                spawnPoints.Add(entitySpawnPoint);
+            }
+            else if (!ReferenceEquals(entitySlotsPlaceholder, null))
             {
                 foreach (EntitySlotData entitySlotData in entitySlotsPlaceholder.slotsData)
                 {

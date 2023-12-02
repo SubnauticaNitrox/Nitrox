@@ -25,7 +25,7 @@ public class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, World
                 slotType = (EntitySlot.Type)info["slotType"].AsInt,
                 prefabZUp = info["prefabZUp"].AsBool,
                 cellLevel = (LargeWorldEntity.CellLevel)info["cellLevel"].AsInt,
-                localScale = info["localScale"].AsVector3()
+                localScale = info["localScale"].ToVector3()
             };
 
             worldEntitiesByClassId.Add(entityData.classId, entityData);

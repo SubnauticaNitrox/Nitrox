@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
-using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
@@ -133,8 +132,10 @@ namespace NitroxServer.Serialization
             for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
             {
                 GameObject gameObject = DeserializeGameObject(stream);
+                DeserializeComponents(stream, gameObject);
 
-                if (gameObject.TotalComponents > 0)
+                // If it is an "Empty" GameObject, we need it to have serialized components
+                if (!gameObject.CreateEmptyObject || gameObject.SerializedComponents.Count > 0)
                 {
                     AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId, cellId, level);
                     NitroxTransform transform = gameObject.GetComponent<NitroxTransform>();
@@ -145,16 +146,12 @@ namespace NitroxServer.Serialization
 
         private GameObject DeserializeGameObject(Stream stream)
         {
-            GameObjectData goData = serializer.Deserialize<GameObjectData>(stream);
-
-            GameObject gameObject = new GameObject(goData);
-            DeserializeComponents(stream, gameObject);
-
-            return gameObject;
+            return new(serializer.Deserialize<GameObjectData>(stream));
         }
 
         private void DeserializeComponents(Stream stream, GameObject gameObject)
         {
+            gameObject.SerializedComponents.Clear();
             LoopHeader components = serializer.Deserialize<LoopHeader>(stream);
 
             for (int componentCounter = 0; componentCounter < components.Count; componentCounter++)
@@ -171,9 +168,21 @@ namespace NitroxServer.Serialization
                 Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
 
                 object component = FormatterServices.GetUninitializedObject(type);
+                long startPosition = stream.Position;
                 serializer.Deserialize(stream, component, type);
 
                 gameObject.AddComponent(component, type);
+                // SerializedComponents only matter if this is an "Empty" GameObject
+                if (gameObject.CreateEmptyObject && !type.Name.Equals("NitroxTransform") && !type.Name.Equals("LargeWorldEntity"))
+                {
+                    int length = (int)(stream.Position - startPosition);
+                    byte[] data = new byte[length];
+                    stream.Position = startPosition;
+                    stream.Read(data, 0, length);
+                    SerializedComponent serializedComponent = new(componentHeader.TypeName, componentHeader.IsEnabled, data);
+                    gameObject.SerializedComponents.Add(serializedComponent);
+                }
+
             }
         }
     }

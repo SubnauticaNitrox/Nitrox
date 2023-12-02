@@ -12,6 +12,7 @@ public class WorldEntitySpawnerResolver
 
     private readonly PlaceholderGroupWorldEntitySpawner prefabWorldEntitySpawner;
     private readonly PlayerWorldEntitySpawner playerWorldEntitySpawner;
+    private readonly SerializedWorldEntitySpawner serializedWorldEntitySpawner;
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
@@ -24,6 +25,7 @@ public class WorldEntitySpawnerResolver
         vehicleWorldEntitySpawner = new(entities);
         prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
+        serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
     }
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
@@ -36,6 +38,8 @@ public class WorldEntitySpawnerResolver
                 return playerWorldEntitySpawner;
             case VehicleWorldEntity:
                 return vehicleWorldEntitySpawner;
+            case SerializedWorldEntity:
+                return serializedWorldEntitySpawner;
         }
 
         TechType techType = entity.TechType.ToUnity();

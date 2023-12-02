@@ -10,6 +10,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [Serializable, DataContract]
 public class PlaceholderGroupWorldEntity : WorldEntity
 {
+    [DataMember(Order = 1)]
     public int ComponentIndex { get; set; }
 
     [IgnoreConstructor]

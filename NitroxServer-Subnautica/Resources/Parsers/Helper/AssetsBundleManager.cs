@@ -105,7 +105,7 @@ public class AssetsBundleManager : AssetsManager
         AssetTypeValueField transformRef = componentArray[0]["component"];
         AssetTypeValueField transformField = GetExtAsset(assetFileInst, transformRef).baseField;
 
-        return new(transformField["m_LocalPosition"].AsNitroxVector3(), transformField["m_LocalRotation"].AsNitroxQuaternion(), transformField["m_LocalScale"].AsNitroxVector3());
+        return new(transformField["m_LocalPosition"].ToNitroxVector3(), transformField["m_LocalRotation"].ToNitroxQuaternion(), transformField["m_LocalScale"].ToNitroxVector3());
     }
 
     public new void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)

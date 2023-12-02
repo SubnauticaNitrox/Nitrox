@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
@@ -336,6 +335,15 @@ public class BatchEntitySpawner : IEntitySpawner
         List<Entity> entities = new();
         foreach (EntitySpawnPoint esp in entitySpawnPoints)
         {
+            if (esp is SerializedEntitySpawnPoint serializedEsp)
+            {
+                // We add the cell's coordinate because this entity isn't parented so it needs to know about its global position
+                NitroxTransform transform = new(serializedEsp.LocalPosition + serializedEsp.AbsoluteEntityCell.Position, serializedEsp.LocalRotation, serializedEsp.Scale);
+                SerializedWorldEntity entity = new(serializedEsp.SerializedComponents, serializedEsp.Layer, transform, deterministicBatchGenerator.NextId(), parentEntity?.Id, serializedEsp.AbsoluteEntityCell);
+                entities.Add(entity);
+                continue;
+            }
+
             if (esp.Density > 0)
             {
                 List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
@@ -347,10 +355,6 @@ public class BatchEntitySpawner : IEntitySpawner
                 else if (!string.IsNullOrEmpty(esp.ClassId))
                 {
                     entities.AddRange(SpawnEntitiesStaticly(esp, deterministicBatchGenerator, parentEntity));
-                }
-                else
-                {
-                    // TODO: Properly create the empty GameObjects
                 }
             }
         }

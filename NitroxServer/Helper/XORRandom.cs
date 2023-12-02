@@ -8,30 +8,36 @@ namespace NitroxServer.Helper;
 /// </summary>
 public static class XORRandom
 {
-    public static uint x, y, z, w;
+    private static uint x;
+    private static uint y;
+    private static uint z;
+    private static uint w;
 
-    const uint MT19937 = 1812433253;
+    private const uint MT19937 = 1812433253;
 
-    // Initialize Xorshift using a signed integer seed, calculating the state values using the initialization method from Mersenne Twister (MT19937)
-    // https://en.wikipedia.org/wiki/Mersenne_Twister#Initialization
+    /// <summary>
+    /// Initialize Xorshift using a signed integer seed, calculating the state values using the initialization method from Mersenne Twister (MT19937)
+    /// https://en.wikipedia.org/wiki/Mersenne_Twister#Initialization
+    /// </summary>
     public static void InitSeed(int seed)
     {
         x = (uint)seed;
-        y = (uint)(MT19937 * x + 1);
-        z = (uint)(MT19937 * y + 1);
-        w = (uint)(MT19937 * z + 1);
+        y = (MT19937 * x + 1);
+        z = (MT19937 * y + 1);
+        w = (MT19937 * z + 1);
     }
 
-    // Explicitly set the state parameters
-    public static void InitState(uint _x, uint _y, uint _z, uint _w)
+    /// <summary>
+    /// Explicitly set the state parameters
+    /// </summary>
+    public static void InitState(uint initial_x, uint initial_y, uint initial_z, uint initial_w)
     {
-        x = _x;
-        y = _y;
-        z = _z;
-        w = _w;
+        x = initial_x;
+        y = initial_y;
+        z = initial_x;
+        w = initial_w;
     }
 
-    // XORShift, returns an unsigned 32-bit integer
     public static uint XORShift()
     {
         uint t = x ^ (x << 11);
@@ -39,24 +45,28 @@ public static class XORRandom
         return w = w ^ (w >> 19) ^ t ^ (t >> 8);
     }
 
-    // UInt32 / uint
 
-    // UnityEngine.Random doesn't have any uint functions so these functions behave exactly like int Random.Range
-
-    // Alias of base Next/XORShift
+    /// <summary>
+    /// Alias of base Next/XORShift.
+    /// UnityEngine.Random doesn't have any uint functions so these functions behave exactly like int Random.Range
+    /// </summary>
     public static uint NextUInt()
     {
         return XORShift();
     }
 
-    // Generate a random unsigned 32-bit integer value in the range 0 (inclusive) to max (exclusive)
+    /// <returns>
+    /// A random unsigned 32-bit integer value in the range 0 (inclusive) to max (exclusive)
+    /// </returns>
     public static uint NextUIntMax(uint max)
     {
         if (max == 0) return 0;
         return XORShift() % max;
     }
 
-    // Generate random unsigned 32-bit integer value in the range min (inclusive) to max (exclusive)
+    /// <returns>
+    /// A random unsigned 32-bit integer value in the range min (inclusive) to max (exclusive)
+    /// </returns>
     public static uint NextUIntRange(uint min, uint max)
     {
         if (max - min == 0) return min;
@@ -67,9 +77,9 @@ public static class XORRandom
             return min + XORShift() % (max - min);
     }
 
-    // Int32 / int
-
-    // Generate a random signed 32-bit integer value in the range -2,147,483,648 (inclusive) to 2,147,483,647 (inclusive)
+    /// <returns>
+    /// A random signed 32-bit integer value in the range -2,147,483,648 (inclusive) to 2,147,483,647 (inclusive)
+    /// </returns>
     public static int NextInt()
     {
         return (int)(XORShift() % int.MaxValue);
@@ -80,8 +90,12 @@ public static class XORRandom
         return NextInt() % max;
     }
 
-    // Generate a random signed 32-bit integer value in the range min (inclusive) to max (exclusive)
-    // If you only need to generate positive integers, use NextUIntRange instead
+    /// <summary>
+    /// A random signed 32-bit integer value in the range min (inclusive) to max (exclusive)
+    /// </summary>
+    /// <remarks>
+    /// If you only need to generate positive integers, use NextUIntRange instead
+    /// </remarks>
     public static int NextIntRange(int min, int max)
     {
         // If max and min are the same, just return min since it will result in a DivideByZeroException
@@ -89,26 +103,32 @@ public static class XORRandom
 
         // Do operations in Int64 to prevent overflow that might be caused by any of the following operations
         // I'm sure there's a faster/better way to do this and avoid casting, but we prefer equivalence to Unity over performance
-        long minLong = (long)min;
-        long maxLong = (long)max;
+        long minLong = min;
+        long maxLong = max;
         long r = XORShift();
 
         // Flip the first operator if the max is lower than the min,
         if (max < min)
+        {
             return (int)(minLong - r % (maxLong - minLong));
+        }
         else
+        {
             return (int)(minLong + r % (maxLong - minLong));
+        }
     }
 
-    // Single / float
-
-    // Generate a random floating point between 0.0 and 1.0 (inclusive?)
+    /// <returns>
+    /// A random floating point between 0.0 and 1.0 (inclusive?)
+    /// </returns>
     public static float NextFloat()
     {
         return 1.0f - NextFloatRange(0.0f, 1.0f);
     }
 
-    // Generate a random floating point between min (inclusive) and max (exclusive) 
+    /// <returns>
+    /// A random floating point between min (inclusive) and max (exclusive) 
+    /// </returns>
     public static float NextFloatRange(float min, float max)
     {
         return (min - max) * ((float)(XORShift() << 9) / 0xFFFFFFFF) + max;
@@ -116,7 +136,7 @@ public static class XORRandom
 
     public static NitroxVector3 NextInsideSphere(float radius = 1f)
     {
-        NitroxVector3 pointInUnitSphere = new NitroxVector3(NextFloat(), NextFloat(), NextFloat()).normalized;
+        NitroxVector3 pointInUnitSphere = new NitroxVector3(NextFloat(), NextFloat(), NextFloat()).Normalized;
         return pointInUnitSphere * NextFloatRange(0, radius);
     }
 }

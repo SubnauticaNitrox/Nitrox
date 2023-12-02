@@ -261,6 +261,8 @@ namespace NitroxServer.GameLogic.Entities
 
                 cellRoot.ChildEntities = new List<Entity>();
             }
+            // Specific type of entities which is not parented to a CellRootEntity
+            nonCellRootEntities.AddRange(spawnedEntities.OfType<SerializedWorldEntity>());
 
             entityRegistry.AddEntitiesIgnoringDuplicate(nonCellRootEntities.OfType<Entity>().ToList());
 

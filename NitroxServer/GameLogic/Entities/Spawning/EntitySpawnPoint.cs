@@ -15,7 +15,7 @@ public class EntitySpawnPoint
     
     public readonly List<EntitySpawnPoint> Children = new List<EntitySpawnPoint>();
     public AbsoluteEntityCell AbsoluteEntityCell { get; }
-    public NitroxVector3 Scale { get; }
+    public NitroxVector3 Scale { get; protected set; }
     public string ClassId { get; }
     public bool CanSpawnCreature { get; private set; }
     public EntitySpawnPoint Parent { get; set; }
