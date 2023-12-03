@@ -116,12 +116,12 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         // While the rest must be spawned earlier for the base to load correctly (mostly InteriorPieceEntity)
         // Which is why the spawn loops are separated by the SetActive instruction
         // NB: We aim at spawning very precise entity types (InteriorPieceEntity, ModuleEntity and GlobalRootEntity)
-        // Thus we use GetType().Equals instead of "is GlobalRootEntity" so that derived types from it aren't selected
+        // Thus we use GetType() == instead of "is GlobalRootEntity" so that derived types from it aren't selected
         List<GhostEntity> ghostChildrenEntities = new();
         foreach (Entity childEntity in buildEntity.ChildEntities)
         {
             if (childEntity is InteriorPieceEntity || childEntity is ModuleEntity ||
-                childEntity.GetType().Equals(typeof(GlobalRootEntity)))
+                childEntity.GetType() == typeof(GlobalRootEntity))
             {
                 if (childEntity is GhostEntity ghostEntity)
                 {

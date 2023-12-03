@@ -21,7 +21,7 @@ public class Items
 {
     private readonly IPacketSender packetSender;
     private readonly Entities entities;
-    public GameObject PickingUpObject;
+    public GameObject PickingUpObject { get; private set; }
 
     public Items(IPacketSender packetSender, Entities entities)
     {
@@ -86,7 +86,7 @@ public class Items
         {
             // We cast it to an entity type that is always seeable by clients
             // therefore, the packet will be redirected to everyone
-            droppedItem = new GlobalRootEntity(gameObject.transform.ToWorldDto(), 0, classId, true, id, techType.Value.ToDto(), metadata.OrNull(), parentId, childrenEntities);
+            droppedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), 0, classId, true, id, techType.Value.ToDto(), metadata.OrNull(), parentId, childrenEntities);
         }
         else if (gameObject.TryGetComponent(out OxygenPipe oxygenPipe))
         {
@@ -137,28 +137,23 @@ public class Items
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
 
         List<Entity> childrenEntities = GetPrefabChildren(gameObject, id).ToList();
-        WorldEntity placedItem = new(gameObject.transform.ToLocalDto(), 0, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
+        WorldEntity placedItem;
 
         // If the object is dropped in the water, it'll be parented to a CellRoot so we let it as WorldEntity (see Items.Dropped)
         // PlaceTool's object is located under GlobalRoot or under a CellRoot (we differentiate both by giving a different type)
         // Because objects under CellRoots must only spawn when visible while objects under GlobalRoot must be spawned at all times
-        if (IsGlobalRootObject(gameObject))
+        switch (gameObject.AliveOrNull())
         {
-            placedItem = (GlobalRootEntity)placedItem;
-        }
-        else
-        {
-            SubRoot currentSub = Player.main.AliveOrNull()?.GetCurrentSub();
-            if (currentSub && currentSub.TryGetNitroxId(out NitroxId parentId))
-            {
-                placedItem.ParentId = parentId;
-                placedItem = (GlobalRootEntity)placedItem;
-            }
-            // If the object is not under a SubRoot nor in GlobalRoot, it'll be under a CellRoot but we still want to remember its state
-            else
-            {
-                placedItem = (PlacedWorldEntity)placedItem;
-            }
+            case not null when IsGlobalRootObject(gameObject):
+                placedItem = new GlobalRootEntity(gameObject.transform.ToWorldDto(), 0, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
+                break;
+            case not null when Player.main.AliveOrNull()?.GetCurrentSub().AliveOrNull()?.TryGetNitroxId(out NitroxId parentId) == true:
+                placedItem = new GlobalRootEntity(gameObject.transform.ToLocalDto(), 0, classId, true, id, techType.ToDto(), metadata.OrNull(), parentId, childrenEntities);
+                break;
+            default:
+                // If the object is not under a SubRoot nor in GlobalRoot, it'll be under a CellRoot but we still want to remember its state
+                placedItem = new PlacedWorldEntity(gameObject.transform.ToWorldDto(), 0, classId, true, id, techType.ToDto(), metadata.OrNull(), null, childrenEntities);
+                break;
         }
 
         Log.Debug($"Placed object: {placedItem}");

@@ -13,7 +13,7 @@ public class FlareMetadataExtractor : GenericEntityMetadataExtractor<Flare, Flar
 
     public override FlareMetadata Extract(Flare flare)
     {
-        // If the flare is being picked up, its metadata must be set accordingly
+        // If the flare is thrown, set its activation time
         if (flare.flareActiveState && items.PickingUpObject != flare.gameObject)
         {
             return new(flare.energyLeft, flare.hasBeenThrown, flare.flareActivateTime);

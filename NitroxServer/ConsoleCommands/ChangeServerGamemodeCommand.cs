@@ -33,6 +33,10 @@ internal class ChangeServerGamemodeCommand : Command
             {
                 serverConfig.GameMode = sgm;
 
+                foreach (Player player in playerManager.GetAllPlayers())
+                {
+                    player.GameMode = sgm;
+                }
                 playerManager.SendPacketToAllPlayers(GameModeChanged.ForAllPlayers(sgm));
                 SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
             }
