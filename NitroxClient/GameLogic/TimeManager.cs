@@ -45,7 +45,7 @@ public class TimeManager
     /// <para>
     ///     Replaces <see cref="Time.deltaTime"/> because it is capped by <see cref="Time.maximumDeltaTime"/>
     ///     and may not reflect the real time which has passed between two frames once it's higher than the said maximum
-    ///     [<see href="https://docs.unity3d.com/ScriptReference/Time-maximumDeltaTime.html"/>].
+    ///     <br/>See <a href="https://docs.unity3d.com/ScriptReference/Time-maximumDeltaTime.html">Time.maximumDeltaTime</a>
     /// </para>
     /// <para>
     ///     This value is set to <c>0</c> when a time skip occurs to avoid undesired behaviours

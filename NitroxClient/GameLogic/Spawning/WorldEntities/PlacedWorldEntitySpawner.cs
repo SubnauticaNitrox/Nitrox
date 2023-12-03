@@ -74,7 +74,6 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
                 UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, true, false);
             }
             placeTool.OnPlace();
-            Log.Debug($"Applied additional steps to {gameObject}");
         }
     }
 

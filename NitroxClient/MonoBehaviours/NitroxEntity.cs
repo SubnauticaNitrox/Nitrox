@@ -90,8 +90,8 @@ namespace NitroxClient.MonoBehaviours
             {
                 // To avoid unrequired error spams, we do the id setting manually
                 // If the current UID was already registered, we unregister it
-                if (!string.IsNullOrEmpty(uniqueIdentifier.id)
-                    && UniqueIdentifier.identifiers.TryGetValue(uniqueIdentifier.Id, out UniqueIdentifier registeredIdentifier) &&
+                if (!string.IsNullOrEmpty(uniqueIdentifier.id) &&
+                    UniqueIdentifier.identifiers.TryGetValue(uniqueIdentifier.Id, out UniqueIdentifier registeredIdentifier) &&
                     registeredIdentifier == uniqueIdentifier)
                 {
                     UniqueIdentifier.identifiers.Remove(uniqueIdentifier.id);

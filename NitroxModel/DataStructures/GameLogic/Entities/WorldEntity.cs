@@ -85,23 +85,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             SpawnedByServer = spawnedByServer;
         }
 
-        // TO exeriment
-        public T ConvertTo<T>() where T : WorldEntity, new()
-        {
-            return new T
-            {
-                Transform = Transform,
-                Level = Level,
-                ClassId = ClassId,
-                SpawnedByServer = SpawnedByServer,
-                Id = Id,
-                TechType = TechType,
-                Metadata = Metadata,
-                ParentId = ParentId,
-                ChildEntities = ChildEntities
-            };
-        }
-
         public override string ToString()
         {
             return $"[{GetType().Name} Transform: {Transform} Level: {Level} ClassId: {ClassId} SpawnedByServer: {SpawnedByServer} {base.ToString()}]";
