@@ -1,0 +1,24 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxTest.Patcher
+  commentId: N:NitroxTest.Patcher
+  id: NitroxTest.Patcher
+  children:
+  - NitroxTest.Patcher.PatchTestHelper
+  langs:
+  - csharp
+  - vb
+  name: NitroxTest.Patcher
+  nameWithType: NitroxTest.Patcher
+  fullName: NitroxTest.Patcher
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: NitroxTest.Patcher.PatchTestHelper
+  commentId: T:NitroxTest.Patcher.PatchTestHelper
+  href: NitroxTest.Patcher.PatchTestHelper.html
+  name: PatchTestHelper
+  nameWithType: PatchTestHelper
+  fullName: NitroxTest.Patcher.PatchTestHelper
+memberLayout: SeparatePages

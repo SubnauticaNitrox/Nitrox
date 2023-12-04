@@ -1,0 +1,212 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+  commentId: T:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+  id: IInitialSyncProcessor
+  parent: NitroxClient.GameLogic.InitialSync.Abstract
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IInitialSyncProcessor
+  nameWithType: IInitialSyncProcessor
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/GameLogic/InitialSync/Abstract/IInitialSyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IInitialSyncProcessor
+    path: ../NitroxClient/GameLogic/InitialSync/Abstract/IInitialSyncProcessor.cs
+    startLine: 14
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.InitialSync.Abstract
+  syntax:
+    content: 'public interface IInitialSyncProcessor : IInitialSyncProcessor<InitialPlayerSync>'
+    content.vb: Public Interface IInitialSyncProcessor Inherits IInitialSyncProcessor(Of InitialPlayerSync)
+  inheritedMembers:
+  - NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.DependentProcessors
+  - NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.Process(NitroxModel.Packets.InitialPlayerSync,WaitScreen.ManualWaitItem)
+references:
+- uid: NitroxClient.GameLogic.InitialSync.Abstract
+  commentId: N:NitroxClient.GameLogic.InitialSync.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.InitialSync.Abstract
+  nameWithType: NitroxClient.GameLogic.InitialSync.Abstract
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync
+    name: InitialSync
+    href: NitroxClient.GameLogic.InitialSync.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.InitialSync.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync
+    name: InitialSync
+    href: NitroxClient.GameLogic.InitialSync.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.InitialSync.Abstract.html
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.DependentProcessors
+  commentId: P:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.DependentProcessors
+  parent: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}
+  definition: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.DependentProcessors
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.DependentProcessors.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_DependentProcessors
+  name: DependentProcessors
+  nameWithType: IInitialSyncProcessor<InitialPlayerSync>.DependentProcessors
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor<NitroxModel.Packets.InitialPlayerSync>.DependentProcessors
+  nameWithType.vb: IInitialSyncProcessor(Of InitialPlayerSync).DependentProcessors
+  fullName.vb: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor(Of NitroxModel.Packets.InitialPlayerSync).DependentProcessors
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.Process(NitroxModel.Packets.InitialPlayerSync,WaitScreen.ManualWaitItem)
+  commentId: M:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.Process(NitroxModel.Packets.InitialPlayerSync,WaitScreen.ManualWaitItem)
+  parent: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}
+  definition: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.Process(`0,WaitScreen.ManualWaitItem)
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.Process.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_Process__0_WaitScreen_ManualWaitItem_
+  name: Process(InitialPlayerSync, ManualWaitItem)
+  nameWithType: IInitialSyncProcessor<InitialPlayerSync>.Process(InitialPlayerSync, WaitScreen.ManualWaitItem)
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor<NitroxModel.Packets.InitialPlayerSync>.Process(NitroxModel.Packets.InitialPlayerSync, WaitScreen.ManualWaitItem)
+  nameWithType.vb: IInitialSyncProcessor(Of InitialPlayerSync).Process(InitialPlayerSync, WaitScreen.ManualWaitItem)
+  fullName.vb: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor(Of NitroxModel.Packets.InitialPlayerSync).Process(NitroxModel.Packets.InitialPlayerSync, WaitScreen.ManualWaitItem)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.Process(NitroxModel.Packets.InitialPlayerSync,WaitScreen.ManualWaitItem)
+    name: Process
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.Process.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_Process__0_WaitScreen_ManualWaitItem_
+  - name: (
+  - uid: NitroxModel.Packets.InitialPlayerSync
+    name: InitialPlayerSync
+  - name: ','
+  - name: " "
+  - uid: WaitScreen.ManualWaitItem
+    name: ManualWaitItem
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}.Process(NitroxModel.Packets.InitialPlayerSync,WaitScreen.ManualWaitItem)
+    name: Process
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.Process.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_Process__0_WaitScreen_ManualWaitItem_
+  - name: (
+  - uid: NitroxModel.Packets.InitialPlayerSync
+    name: InitialPlayerSync
+  - name: ','
+  - name: " "
+  - uid: WaitScreen.ManualWaitItem
+    name: ManualWaitItem
+    isExternal: true
+  - name: )
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.DependentProcessors
+  commentId: P:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.DependentProcessors
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.DependentProcessors.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_DependentProcessors
+  name: DependentProcessors
+  nameWithType: IInitialSyncProcessor<TPacket>.DependentProcessors
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor<TPacket>.DependentProcessors
+  nameWithType.vb: IInitialSyncProcessor(Of TPacket).DependentProcessors
+  fullName.vb: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor(Of TPacket).DependentProcessors
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}
+  commentId: T:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor{NitroxModel.Packets.InitialPlayerSync}
+  parent: NitroxClient.GameLogic.InitialSync.Abstract
+  definition: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  name: IInitialSyncProcessor<InitialPlayerSync>
+  nameWithType: IInitialSyncProcessor<InitialPlayerSync>
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor<NitroxModel.Packets.InitialPlayerSync>
+  nameWithType.vb: IInitialSyncProcessor(Of InitialPlayerSync)
+  fullName.vb: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor(Of NitroxModel.Packets.InitialPlayerSync)
+  name.vb: IInitialSyncProcessor(Of InitialPlayerSync)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+    name: IInitialSyncProcessor
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  - name: <
+  - uid: NitroxModel.Packets.InitialPlayerSync
+    name: InitialPlayerSync
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+    name: IInitialSyncProcessor
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Packets.InitialPlayerSync
+    name: InitialPlayerSync
+  - name: )
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.Process(`0,WaitScreen.ManualWaitItem)
+  commentId: M:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.Process(`0,WaitScreen.ManualWaitItem)
+  isExternal: true
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.Process.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_Process__0_WaitScreen_ManualWaitItem_
+  name: Process(TPacket, ManualWaitItem)
+  nameWithType: IInitialSyncProcessor<TPacket>.Process(TPacket, WaitScreen.ManualWaitItem)
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor<TPacket>.Process(TPacket, WaitScreen.ManualWaitItem)
+  nameWithType.vb: IInitialSyncProcessor(Of TPacket).Process(TPacket, WaitScreen.ManualWaitItem)
+  fullName.vb: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor(Of TPacket).Process(TPacket, WaitScreen.ManualWaitItem)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.Process(`0,WaitScreen.ManualWaitItem)
+    name: Process
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.Process.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_Process__0_WaitScreen_ManualWaitItem_
+  - name: (
+  - name: TPacket
+  - name: ','
+  - name: " "
+  - uid: WaitScreen.ManualWaitItem
+    name: ManualWaitItem
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1.Process(`0,WaitScreen.ManualWaitItem)
+    name: Process
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.Process.html#NitroxClient_GameLogic_InitialSync_Abstract_IInitialSyncProcessor_1_Process__0_WaitScreen_ManualWaitItem_
+  - name: (
+  - name: TPacket
+  - name: ','
+  - name: " "
+  - uid: WaitScreen.ManualWaitItem
+    name: ManualWaitItem
+    isExternal: true
+  - name: )
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+  commentId: T:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  name: IInitialSyncProcessor<TPacket>
+  nameWithType: IInitialSyncProcessor<TPacket>
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor<TPacket>
+  nameWithType.vb: IInitialSyncProcessor(Of TPacket)
+  fullName.vb: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor(Of TPacket)
+  name.vb: IInitialSyncProcessor(Of TPacket)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+    name: IInitialSyncProcessor
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  - name: <
+  - name: TPacket
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+    name: IInitialSyncProcessor
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TPacket
+  - name: )
+memberLayout: SeparatePages

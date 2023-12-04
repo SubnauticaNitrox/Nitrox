@@ -1,0 +1,478 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.MultiplayerSessionPolicyRequest
+  commentId: T:NitroxModel.Packets.MultiplayerSessionPolicyRequest
+  id: MultiplayerSessionPolicyRequest
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.MultiplayerSessionPolicyRequest.#ctor(System.String)
+  langs:
+  - csharp
+  - vb
+  name: MultiplayerSessionPolicyRequest
+  nameWithType: MultiplayerSessionPolicyRequest
+  fullName: NitroxModel.Packets.MultiplayerSessionPolicyRequest
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/MultiplayerSessionPolicyRequest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MultiplayerSessionPolicyRequest
+    path: ../NitroxModel/Packets/MultiplayerSessionPolicyRequest.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  summary: >-
+    This is a packet that we use to "ping" a server to let it know that we'd like more information
+
+    on the current requirements to submit a reservation to the ongoing game session.
+  example: []
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class MultiplayerSessionPolicyRequest : CorrelatedPacket
+    content.vb: >-
+      <Serializable>
+
+      Public Class MultiplayerSessionPolicyRequest Inherits CorrelatedPacket
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  - NitroxModel.Packets.CorrelatedPacket
+  inheritedMembers:
+  - NitroxModel.Packets.CorrelatedPacket.CorrelationId
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - NitroxModel.Packets.Packet.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.MultiplayerSessionPolicyRequest.#ctor(System.String)
+  commentId: M:NitroxModel.Packets.MultiplayerSessionPolicyRequest.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: NitroxModel.Packets.MultiplayerSessionPolicyRequest
+  langs:
+  - csharp
+  - vb
+  name: MultiplayerSessionPolicyRequest(string)
+  nameWithType: MultiplayerSessionPolicyRequest.MultiplayerSessionPolicyRequest(string)
+  fullName: NitroxModel.Packets.MultiplayerSessionPolicyRequest.MultiplayerSessionPolicyRequest(string)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/MultiplayerSessionPolicyRequest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/MultiplayerSessionPolicyRequest.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public MultiplayerSessionPolicyRequest(string correlationId)
+    parameters:
+    - id: correlationId
+      type: System.String
+    content.vb: Public Sub New(correlationId As String)
+  overload: NitroxModel.Packets.MultiplayerSessionPolicyRequest.#ctor*
+  nameWithType.vb: MultiplayerSessionPolicyRequest.New(String)
+  fullName.vb: NitroxModel.Packets.MultiplayerSessionPolicyRequest.New(String)
+  name.vb: New(String)
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.CorrelatedPacket
+  commentId: T:NitroxModel.Packets.CorrelatedPacket
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.CorrelatedPacket.html
+  name: CorrelatedPacket
+  nameWithType: CorrelatedPacket
+  fullName: NitroxModel.Packets.CorrelatedPacket
+- uid: NitroxModel.Packets.CorrelatedPacket.CorrelationId
+  commentId: P:NitroxModel.Packets.CorrelatedPacket.CorrelationId
+  parent: NitroxModel.Packets.CorrelatedPacket
+  href: NitroxModel.Packets.CorrelatedPacket.CorrelationId.html#NitroxModel_Packets_CorrelatedPacket_CorrelationId
+  name: CorrelationId
+  nameWithType: CorrelatedPacket.CorrelationId
+  fullName: NitroxModel.Packets.CorrelatedPacket.CorrelationId
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.MultiplayerSessionPolicyRequest.#ctor*
+  commentId: Overload:NitroxModel.Packets.MultiplayerSessionPolicyRequest.#ctor
+  href: NitroxModel.Packets.MultiplayerSessionPolicyRequest.-ctor.html#NitroxModel_Packets_MultiplayerSessionPolicyRequest__ctor_System_String_
+  name: MultiplayerSessionPolicyRequest
+  nameWithType: MultiplayerSessionPolicyRequest.MultiplayerSessionPolicyRequest
+  fullName: NitroxModel.Packets.MultiplayerSessionPolicyRequest.MultiplayerSessionPolicyRequest
+  nameWithType.vb: MultiplayerSessionPolicyRequest.New
+  fullName.vb: NitroxModel.Packets.MultiplayerSessionPolicyRequest.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

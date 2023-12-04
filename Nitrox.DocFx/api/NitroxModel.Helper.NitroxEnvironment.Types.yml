@@ -1,0 +1,221 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Helper.NitroxEnvironment.Types
+  commentId: T:NitroxModel.Helper.NitroxEnvironment.Types
+  id: NitroxEnvironment.Types
+  parent: NitroxModel.Helper
+  children:
+  - NitroxModel.Helper.NitroxEnvironment.Types.NORMAL
+  - NitroxModel.Helper.NitroxEnvironment.Types.TESTING
+  langs:
+  - csharp
+  - vb
+  name: NitroxEnvironment.Types
+  nameWithType: NitroxEnvironment.Types
+  fullName: NitroxModel.Helper.NitroxEnvironment.Types
+  type: Enum
+  source:
+    remote:
+      path: NitroxModel/Core/NitroxEnvironment.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Types
+    path: ../NitroxModel/Core/NitroxEnvironment.cs
+    startLine: 43
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public enum NitroxEnvironment.Types
+    content.vb: Public Enum NitroxEnvironment.Types
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxModel.Helper.NitroxEnvironment.Types.NORMAL
+  commentId: F:NitroxModel.Helper.NitroxEnvironment.Types.NORMAL
+  id: NORMAL
+  parent: NitroxModel.Helper.NitroxEnvironment.Types
+  langs:
+  - csharp
+  - vb
+  name: NORMAL
+  nameWithType: NitroxEnvironment.Types.NORMAL
+  fullName: NitroxModel.Helper.NitroxEnvironment.Types.NORMAL
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Core/NitroxEnvironment.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NORMAL
+    path: ../NitroxModel/Core/NitroxEnvironment.cs
+    startLine: 45
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: NORMAL = 0
+    return:
+      type: NitroxModel.Helper.NitroxEnvironment.Types
+- uid: NitroxModel.Helper.NitroxEnvironment.Types.TESTING
+  commentId: F:NitroxModel.Helper.NitroxEnvironment.Types.TESTING
+  id: TESTING
+  parent: NitroxModel.Helper.NitroxEnvironment.Types
+  langs:
+  - csharp
+  - vb
+  name: TESTING
+  nameWithType: NitroxEnvironment.Types.TESTING
+  fullName: NitroxModel.Helper.NitroxEnvironment.Types.TESTING
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Core/NitroxEnvironment.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TESTING
+    path: ../NitroxModel/Core/NitroxEnvironment.cs
+    startLine: 46
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: TESTING = 1
+    return:
+      type: NitroxModel.Helper.NitroxEnvironment.Types
+references:
+- uid: NitroxModel.Helper
+  commentId: N:NitroxModel.Helper
+  href: NitroxModel.html
+  name: NitroxModel.Helper
+  nameWithType: NitroxModel.Helper
+  fullName: NitroxModel.Helper
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.Helper.NitroxEnvironment.Types
+  commentId: T:NitroxModel.Helper.NitroxEnvironment.Types
+  parent: NitroxModel.Helper
+  href: NitroxModel.Helper.NitroxEnvironment.html
+  name: NitroxEnvironment.Types
+  nameWithType: NitroxEnvironment.Types
+  fullName: NitroxModel.Helper.NitroxEnvironment.Types
+  spec.csharp:
+  - uid: NitroxModel.Helper.NitroxEnvironment
+    name: NitroxEnvironment
+    href: NitroxModel.Helper.NitroxEnvironment.html
+  - name: .
+  - uid: NitroxModel.Helper.NitroxEnvironment.Types
+    name: Types
+    href: NitroxModel.Helper.NitroxEnvironment.Types.html
+  spec.vb:
+  - uid: NitroxModel.Helper.NitroxEnvironment
+    name: NitroxEnvironment
+    href: NitroxModel.Helper.NitroxEnvironment.html
+  - name: .
+  - uid: NitroxModel.Helper.NitroxEnvironment.Types
+    name: Types
+    href: NitroxModel.Helper.NitroxEnvironment.Types.html
+memberLayout: SeparatePages

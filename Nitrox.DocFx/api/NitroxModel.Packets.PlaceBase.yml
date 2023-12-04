@@ -1,0 +1,610 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.PlaceBase
+  commentId: T:NitroxModel.Packets.PlaceBase
+  id: PlaceBase
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.PlaceBase.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  - NitroxModel.Packets.PlaceBase.BuildEntity
+  - NitroxModel.Packets.PlaceBase.Deflate
+  - NitroxModel.Packets.PlaceBase.FormerGhostId
+  langs:
+  - csharp
+  - vb
+  name: PlaceBase
+  nameWithType: PlaceBase
+  fullName: NitroxModel.Packets.PlaceBase
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaceBase.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlaceBase
+    path: ../NitroxModel/Packets/PlaceBase.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public sealed class PlaceBase : Packet
+    content.vb: >-
+      <Serializable>
+
+      Public NotInheritable Class PlaceBase Inherits Packet
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  inheritedMembers:
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - NitroxModel.Packets.Packet.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.PlaceBase.FormerGhostId
+  commentId: P:NitroxModel.Packets.PlaceBase.FormerGhostId
+  id: FormerGhostId
+  parent: NitroxModel.Packets.PlaceBase
+  langs:
+  - csharp
+  - vb
+  name: FormerGhostId
+  nameWithType: PlaceBase.FormerGhostId
+  fullName: NitroxModel.Packets.PlaceBase.FormerGhostId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaceBase.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FormerGhostId
+    path: ../NitroxModel/Packets/PlaceBase.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxId FormerGhostId { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public ReadOnly Property FormerGhostId As NitroxId
+  overload: NitroxModel.Packets.PlaceBase.FormerGhostId*
+- uid: NitroxModel.Packets.PlaceBase.BuildEntity
+  commentId: P:NitroxModel.Packets.PlaceBase.BuildEntity
+  id: BuildEntity
+  parent: NitroxModel.Packets.PlaceBase
+  langs:
+  - csharp
+  - vb
+  name: BuildEntity
+  nameWithType: PlaceBase.BuildEntity
+  fullName: NitroxModel.Packets.PlaceBase.BuildEntity
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaceBase.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BuildEntity
+    path: ../NitroxModel/Packets/PlaceBase.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public BuildEntity BuildEntity { get; set; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+    content.vb: Public Property BuildEntity As BuildEntity
+  overload: NitroxModel.Packets.PlaceBase.BuildEntity*
+- uid: NitroxModel.Packets.PlaceBase.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  commentId: M:NitroxModel.Packets.PlaceBase.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  id: '#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)'
+  parent: NitroxModel.Packets.PlaceBase
+  langs:
+  - csharp
+  - vb
+  name: PlaceBase(NitroxId, BuildEntity)
+  nameWithType: PlaceBase.PlaceBase(NitroxId, BuildEntity)
+  fullName: NitroxModel.Packets.PlaceBase.PlaceBase(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaceBase.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/PlaceBase.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public PlaceBase(NitroxId formerGhostId, BuildEntity buildEntity)
+    parameters:
+    - id: formerGhostId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: buildEntity
+      type: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+    content.vb: Public Sub New(formerGhostId As NitroxId, buildEntity As BuildEntity)
+  overload: NitroxModel.Packets.PlaceBase.#ctor*
+  nameWithType.vb: PlaceBase.New(NitroxId, BuildEntity)
+  fullName.vb: NitroxModel.Packets.PlaceBase.New(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  name.vb: New(NitroxId, BuildEntity)
+- uid: NitroxModel.Packets.PlaceBase.Deflate
+  commentId: M:NitroxModel.Packets.PlaceBase.Deflate
+  id: Deflate
+  parent: NitroxModel.Packets.PlaceBase
+  langs:
+  - csharp
+  - vb
+  name: Deflate()
+  nameWithType: PlaceBase.Deflate()
+  fullName: NitroxModel.Packets.PlaceBase.Deflate()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaceBase.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Deflate
+    path: ../NitroxModel/Packets/PlaceBase.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public void Deflate()
+    content.vb: Public Sub Deflate()
+  overload: NitroxModel.Packets.PlaceBase.Deflate*
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.PlaceBase.FormerGhostId*
+  commentId: Overload:NitroxModel.Packets.PlaceBase.FormerGhostId
+  href: NitroxModel.Packets.PlaceBase.FormerGhostId.html#NitroxModel_Packets_PlaceBase_FormerGhostId
+  name: FormerGhostId
+  nameWithType: PlaceBase.FormerGhostId
+  fullName: NitroxModel.Packets.PlaceBase.FormerGhostId
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxModel.Packets.PlaceBase.BuildEntity*
+  commentId: Overload:NitroxModel.Packets.PlaceBase.BuildEntity
+  href: NitroxModel.Packets.PlaceBase.BuildEntity.html#NitroxModel_Packets_PlaceBase_BuildEntity
+  name: BuildEntity
+  nameWithType: PlaceBase.BuildEntity
+  fullName: NitroxModel.Packets.PlaceBase.BuildEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity.html
+  name: BuildEntity
+  nameWithType: BuildEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+- uid: NitroxModel.Packets.PlaceBase.#ctor*
+  commentId: Overload:NitroxModel.Packets.PlaceBase.#ctor
+  href: NitroxModel.Packets.PlaceBase.-ctor.html#NitroxModel_Packets_PlaceBase__ctor_NitroxModel_DataStructures_NitroxId_NitroxModel_DataStructures_GameLogic_Entities_Bases_BuildEntity_
+  name: PlaceBase
+  nameWithType: PlaceBase.PlaceBase
+  fullName: NitroxModel.Packets.PlaceBase.PlaceBase
+  nameWithType.vb: PlaceBase.New
+  fullName.vb: NitroxModel.Packets.PlaceBase.New
+  name.vb: New
+- uid: NitroxModel.Packets.PlaceBase.Deflate*
+  commentId: Overload:NitroxModel.Packets.PlaceBase.Deflate
+  href: NitroxModel.Packets.PlaceBase.Deflate.html#NitroxModel_Packets_PlaceBase_Deflate
+  name: Deflate
+  nameWithType: PlaceBase.Deflate
+  fullName: NitroxModel.Packets.PlaceBase.Deflate
+memberLayout: SeparatePages

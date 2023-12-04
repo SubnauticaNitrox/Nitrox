@@ -1,0 +1,637 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.ExtensionsTest
+  commentId: T:NitroxModel.ExtensionsTest
+  id: ExtensionsTest
+  parent: NitroxModel
+  children:
+  - NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems
+  - NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem
+  - NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem
+  - NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  - NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems
+  - NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  - NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList
+  - NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList
+  langs:
+  - csharp
+  - vb
+  name: ExtensionsTest
+  nameWithType: ExtensionsTest
+  fullName: NitroxModel.ExtensionsTest
+  type: Class
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ExtensionsTest
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 7
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestClass]
+
+      public class ExtensionsTest
+    content.vb: >-
+      <TestClass>
+
+      Public Class ExtensionsTest
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList
+  id: RemoveAllFast_ShouldDoNothingWhenEmptyList
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_ShouldDoNothingWhenEmptyList()
+  nameWithType: ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_ShouldDoNothingWhenEmptyList
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 10
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_ShouldDoNothingWhenEmptyList()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_ShouldDoNothingWhenEmptyList()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  id: RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate()
+  nameWithType: ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 19
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList
+  id: RemoveAllFast_ThrowsErrorIfFixedSizeList
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_ThrowsErrorIfFixedSizeList()
+  nameWithType: ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_ThrowsErrorIfFixedSizeList
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 27
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_ThrowsErrorIfFixedSizeList()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_ThrowsErrorIfFixedSizeList()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem
+  id: RemoveAllFast_CanRemoveFirstItem
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_CanRemoveFirstItem()
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveFirstItem()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_CanRemoveFirstItem
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 34
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_CanRemoveFirstItem()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_CanRemoveFirstItem()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems
+  id: RemoveAllFast_CanRemoveMidItems
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_CanRemoveMidItems()
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveMidItems()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_CanRemoveMidItems
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 42
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_CanRemoveMidItems()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_CanRemoveMidItems()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem
+  id: RemoveAllFast_CanRemoveEndItem
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_CanRemoveEndItem()
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveEndItem()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_CanRemoveEndItem
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 50
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_CanRemoveEndItem()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_CanRemoveEndItem()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems
+  id: RemoveAllFast_CanRemoveAllItems
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_CanRemoveAllItems()
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveAllItems()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_CanRemoveAllItems
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 58
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_CanRemoveAllItems()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_CanRemoveAllItems()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  commentId: M:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  id: RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  parent: NitroxModel.ExtensionsTest
+  langs:
+  - csharp
+  - vb
+  name: RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate()
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate()
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/ExtensionsTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+    path: ../Nitrox.Test/Model/ExtensionsTests.cs
+    startLine: 66
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate()
+  overload: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+references:
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList.html#NitroxModel_ExtensionsTest_RemoveAllFast_ShouldDoNothingWhenEmptyList
+  name: RemoveAllFast_ShouldDoNothingWhenEmptyList
+  nameWithType: ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenEmptyList
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate.html#NitroxModel_ExtensionsTest_RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  name: RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  nameWithType: ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList.html#NitroxModel_ExtensionsTest_RemoveAllFast_ThrowsErrorIfFixedSizeList
+  name: RemoveAllFast_ThrowsErrorIfFixedSizeList
+  nameWithType: ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_ThrowsErrorIfFixedSizeList
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem.html#NitroxModel_ExtensionsTest_RemoveAllFast_CanRemoveFirstItem
+  name: RemoveAllFast_CanRemoveFirstItem
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveFirstItem
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveFirstItem
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems.html#NitroxModel_ExtensionsTest_RemoveAllFast_CanRemoveMidItems
+  name: RemoveAllFast_CanRemoveMidItems
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveMidItems
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveMidItems
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem.html#NitroxModel_ExtensionsTest_RemoveAllFast_CanRemoveEndItem
+  name: RemoveAllFast_CanRemoveEndItem
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveEndItem
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveEndItem
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems.html#NitroxModel_ExtensionsTest_RemoveAllFast_CanRemoveAllItems
+  name: RemoveAllFast_CanRemoveAllItems
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveAllItems
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveAllItems
+- uid: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate*
+  commentId: Overload:NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  href: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate.html#NitroxModel_ExtensionsTest_RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  name: RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  nameWithType: ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+  fullName: NitroxModel.ExtensionsTest.RemoveAllFast_CanRemoveItemsWithExtraParameterInPredicate
+memberLayout: SeparatePages

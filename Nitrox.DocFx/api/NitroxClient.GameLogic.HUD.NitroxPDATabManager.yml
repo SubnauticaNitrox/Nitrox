@@ -1,0 +1,680 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  commentId: T:NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  id: NitroxPDATabManager
+  parent: NitroxClient.GameLogic.HUD
+  children:
+  - NitroxClient.GameLogic.HUD.NitroxPDATabManager.#ctor
+  - NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite(System.String,Atlas.Sprite)
+  - NitroxClient.GameLogic.HUD.NitroxPDATabManager.CustomTabs
+  - NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback(System.String,NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent)
+  - NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite(System.String,Atlas.Sprite@)
+  langs:
+  - csharp
+  - vb
+  name: NitroxPDATabManager
+  nameWithType: NitroxPDATabManager
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxPDATabManager
+    path: ../NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public class NitroxPDATabManager
+    content.vb: Public Class NitroxPDATabManager
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.CustomTabs
+  commentId: F:NitroxClient.GameLogic.HUD.NitroxPDATabManager.CustomTabs
+  id: CustomTabs
+  parent: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  langs:
+  - csharp
+  - vb
+  name: CustomTabs
+  nameWithType: NitroxPDATabManager.CustomTabs
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.CustomTabs
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CustomTabs
+    path: ../NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public readonly Dictionary<PDATab, NitroxPDATab> CustomTabs
+    return:
+      type: System.Collections.Generic.Dictionary{PDATab,NitroxClient.GameLogic.HUD.NitroxPDATab}
+    content.vb: Public ReadOnly CustomTabs As Dictionary(Of PDATab, NitroxPDATab)
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.#ctor
+  commentId: M:NitroxClient.GameLogic.HUD.NitroxPDATabManager.#ctor
+  id: '#ctor'
+  parent: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  langs:
+  - csharp
+  - vb
+  name: NitroxPDATabManager()
+  nameWithType: NitroxPDATabManager.NitroxPDATabManager()
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.NitroxPDATabManager()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public NitroxPDATabManager()
+    content.vb: Public Sub New()
+  overload: NitroxClient.GameLogic.HUD.NitroxPDATabManager.#ctor*
+  nameWithType.vb: NitroxPDATabManager.New()
+  fullName.vb: NitroxClient.GameLogic.HUD.NitroxPDATabManager.New()
+  name.vb: New()
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite(System.String,Atlas.Sprite)
+  commentId: M:NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite(System.String,Atlas.Sprite)
+  id: AddTabSprite(System.String,Atlas.Sprite)
+  parent: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  langs:
+  - csharp
+  - vb
+  name: AddTabSprite(string, Sprite)
+  nameWithType: NitroxPDATabManager.AddTabSprite(string, Atlas.Sprite)
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite(string, Atlas.Sprite)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AddTabSprite
+    path: ../NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+    startLine: 21
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public void AddTabSprite(string spriteName, Atlas.Sprite sprite)
+    parameters:
+    - id: spriteName
+      type: System.String
+    - id: sprite
+      type: Atlas.Sprite
+    content.vb: Public Sub AddTabSprite(spriteName As String, sprite As Atlas.Sprite)
+  overload: NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite*
+  nameWithType.vb: NitroxPDATabManager.AddTabSprite(String, Atlas.Sprite)
+  fullName.vb: NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite(String, Atlas.Sprite)
+  name.vb: AddTabSprite(String, Sprite)
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite(System.String,Atlas.Sprite@)
+  commentId: M:NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite(System.String,Atlas.Sprite@)
+  id: TryGetTabSprite(System.String,Atlas.Sprite@)
+  parent: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  langs:
+  - csharp
+  - vb
+  name: TryGetTabSprite(string, out Sprite)
+  nameWithType: NitroxPDATabManager.TryGetTabSprite(string, out Atlas.Sprite)
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite(string, out Atlas.Sprite)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TryGetTabSprite
+    path: ../NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+    startLine: 31
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public bool TryGetTabSprite(string spriteName, out Atlas.Sprite sprite)
+    parameters:
+    - id: spriteName
+      type: System.String
+    - id: sprite
+      type: Atlas.Sprite
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetTabSprite(spriteName As String, sprite As Atlas.Sprite) As Boolean
+  overload: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite*
+  nameWithType.vb: NitroxPDATabManager.TryGetTabSprite(String, Atlas.Sprite)
+  fullName.vb: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite(String, Atlas.Sprite)
+  name.vb: TryGetTabSprite(String, Sprite)
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback(System.String,NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent)
+  commentId: M:NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback(System.String,NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent)
+  id: SetSpriteLoadedCallback(System.String,NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent)
+  parent: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  langs:
+  - csharp
+  - vb
+  name: SetSpriteLoadedCallback(string, TabSpriteLoadedEvent)
+  nameWithType: NitroxPDATabManager.SetSpriteLoadedCallback(string, NitroxPDATabManager.TabSpriteLoadedEvent)
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback(string, NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SetSpriteLoadedCallback
+    path: ../NitroxClient/GameLogic/HUD/NitroxPDATabManager.cs
+    startLine: 35
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public void SetSpriteLoadedCallback(string tabName, NitroxPDATabManager.TabSpriteLoadedEvent callback)
+    parameters:
+    - id: tabName
+      type: System.String
+    - id: callback
+      type: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+    content.vb: Public Sub SetSpriteLoadedCallback(tabName As String, callback As NitroxPDATabManager.TabSpriteLoadedEvent)
+  overload: NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback*
+  nameWithType.vb: NitroxPDATabManager.SetSpriteLoadedCallback(String, NitroxPDATabManager.TabSpriteLoadedEvent)
+  fullName.vb: NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback(String, NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent)
+  name.vb: SetSpriteLoadedCallback(String, TabSpriteLoadedEvent)
+references:
+- uid: NitroxClient.GameLogic.HUD
+  commentId: N:NitroxClient.GameLogic.HUD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.HUD
+  nameWithType: NitroxClient.GameLogic.HUD
+  fullName: NitroxClient.GameLogic.HUD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.Dictionary{PDATab,NitroxClient.GameLogic.HUD.NitroxPDATab}
+  commentId: T:System.Collections.Generic.Dictionary{PDATab,NitroxClient.GameLogic.HUD.NitroxPDATab}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<PDATab, NitroxPDATab>
+  nameWithType: Dictionary<PDATab, NitroxPDATab>
+  fullName: System.Collections.Generic.Dictionary<PDATab, NitroxClient.GameLogic.HUD.NitroxPDATab>
+  nameWithType.vb: Dictionary(Of PDATab, NitroxPDATab)
+  fullName.vb: System.Collections.Generic.Dictionary(Of PDATab, NitroxClient.GameLogic.HUD.NitroxPDATab)
+  name.vb: Dictionary(Of PDATab, NitroxPDATab)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: PDATab
+    name: PDATab
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATab
+    name: NitroxPDATab
+    href: NitroxClient.GameLogic.HUD.NitroxPDATab.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: PDATab
+    name: PDATab
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATab
+    name: NitroxPDATab
+    href: NitroxClient.GameLogic.HUD.NitroxPDATab.html
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.HUD.NitroxPDATabManager.#ctor
+  href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.-ctor.html#NitroxClient_GameLogic_HUD_NitroxPDATabManager__ctor
+  name: NitroxPDATabManager
+  nameWithType: NitroxPDATabManager.NitroxPDATabManager
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.NitroxPDATabManager
+  nameWithType.vb: NitroxPDATabManager.New
+  fullName.vb: NitroxClient.GameLogic.HUD.NitroxPDATabManager.New
+  name.vb: New
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite*
+  commentId: Overload:NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite
+  href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite.html#NitroxClient_GameLogic_HUD_NitroxPDATabManager_AddTabSprite_System_String_Atlas_Sprite_
+  name: AddTabSprite
+  nameWithType: NitroxPDATabManager.AddTabSprite
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.AddTabSprite
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Atlas.Sprite
+  commentId: T:Atlas.Sprite
+  isExternal: true
+  name: Atlas.Sprite
+  nameWithType: Atlas.Sprite
+  fullName: Atlas.Sprite
+  spec.csharp:
+  - uid: Atlas
+    name: Atlas
+    isExternal: true
+  - name: .
+  - uid: Atlas.Sprite
+    name: Sprite
+    isExternal: true
+  spec.vb:
+  - uid: Atlas
+    name: Atlas
+    isExternal: true
+  - name: .
+  - uid: Atlas.Sprite
+    name: Sprite
+    isExternal: true
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite*
+  commentId: Overload:NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite
+  href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite.html#NitroxClient_GameLogic_HUD_NitroxPDATabManager_TryGetTabSprite_System_String_Atlas_Sprite__
+  name: TryGetTabSprite
+  nameWithType: NitroxPDATabManager.TryGetTabSprite
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TryGetTabSprite
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback*
+  commentId: Overload:NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback
+  href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback.html#NitroxClient_GameLogic_HUD_NitroxPDATabManager_SetSpriteLoadedCallback_System_String_NitroxClient_GameLogic_HUD_NitroxPDATabManager_TabSpriteLoadedEvent_
+  name: SetSpriteLoadedCallback
+  nameWithType: NitroxPDATabManager.SetSpriteLoadedCallback
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.SetSpriteLoadedCallback
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+  commentId: T:NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+  parent: NitroxClient.GameLogic.HUD
+  href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.html
+  name: NitroxPDATabManager.TabSpriteLoadedEvent
+  nameWithType: NitroxPDATabManager.TabSpriteLoadedEvent
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+    name: NitroxPDATabManager
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+    name: TabSpriteLoadedEvent
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+    name: NitroxPDATabManager
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+    name: TabSpriteLoadedEvent
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent.html
+memberLayout: SeparatePages

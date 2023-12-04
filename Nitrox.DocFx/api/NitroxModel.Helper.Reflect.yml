@@ -1,0 +1,1002 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Helper.Reflect
+  commentId: T:NitroxModel.Helper.Reflect
+  id: Reflect
+  parent: NitroxModel.Helper
+  children:
+  - NitroxModel.Helper.Reflect.Constructor(System.Linq.Expressions.Expression{System.Action})
+  - NitroxModel.Helper.Reflect.Field``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  - NitroxModel.Helper.Reflect.Field``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  - NitroxModel.Helper.Reflect.Method(System.Linq.Expressions.Expression{System.Action})
+  - NitroxModel.Helper.Reflect.Method``1(System.Linq.Expressions.Expression{System.Action{``0}})
+  - NitroxModel.Helper.Reflect.Method``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})
+  - NitroxModel.Helper.Reflect.Property``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  - NitroxModel.Helper.Reflect.Property``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  langs:
+  - csharp
+  - vb
+  name: Reflect
+  nameWithType: Reflect
+  fullName: NitroxModel.Helper.Reflect
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Reflect
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  summary: Utility class for reflection API.
+  remarks: >-
+    This class should be used when requiring <xref href="System.Reflection.MethodInfo" data-throw-if-not-resolved="false"></xref> or <xref href="System.Reflection.MemberInfo" data-throw-if-not-resolved="false"></xref> like information from code. This will ensure that compilation only succeeds
+
+    when reflection is used properly.
+  example: []
+  syntax:
+    content: public static class Reflect
+    content.vb: Public Module Reflect
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Helper.Reflect.Constructor(System.Linq.Expressions.Expression{System.Action})
+  commentId: M:NitroxModel.Helper.Reflect.Constructor(System.Linq.Expressions.Expression{System.Action})
+  id: Constructor(System.Linq.Expressions.Expression{System.Action})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Constructor(Expression<Action>)
+  nameWithType: Reflect.Constructor(Expression<Action>)
+  fullName: NitroxModel.Helper.Reflect.Constructor(System.Linq.Expressions.Expression<System.Action>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Constructor
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 17
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static ConstructorInfo Constructor(Expression<Action> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Action}
+    return:
+      type: System.Reflection.ConstructorInfo
+    content.vb: Public Shared Function Constructor(expression As Expression(Of Action)) As ConstructorInfo
+  overload: NitroxModel.Helper.Reflect.Constructor*
+  nameWithType.vb: Reflect.Constructor(Expression(Of Action))
+  fullName.vb: NitroxModel.Helper.Reflect.Constructor(System.Linq.Expressions.Expression(Of System.Action))
+  name.vb: Constructor(Expression(Of Action))
+- uid: NitroxModel.Helper.Reflect.Method(System.Linq.Expressions.Expression{System.Action})
+  commentId: M:NitroxModel.Helper.Reflect.Method(System.Linq.Expressions.Expression{System.Action})
+  id: Method(System.Linq.Expressions.Expression{System.Action})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Method(Expression<Action>)
+  nameWithType: Reflect.Method(Expression<Action>)
+  fullName: NitroxModel.Helper.Reflect.Method(System.Linq.Expressions.Expression<System.Action>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Method
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  summary: >-
+    Given a lambda expression that calls a method, returns the method info.
+
+    If method has parameters then anything can be supplied, the actual method won't be called.
+  example: []
+  syntax:
+    content: public static MethodInfo Method(Expression<Action> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Action}
+      description: The expression.
+    return:
+      type: System.Reflection.MethodInfo
+      description: ''
+    content.vb: Public Shared Function Method(expression As Expression(Of Action)) As MethodInfo
+  overload: NitroxModel.Helper.Reflect.Method*
+  nameWithType.vb: Reflect.Method(Expression(Of Action))
+  fullName.vb: NitroxModel.Helper.Reflect.Method(System.Linq.Expressions.Expression(Of System.Action))
+  name.vb: Method(Expression(Of Action))
+- uid: NitroxModel.Helper.Reflect.Method``1(System.Linq.Expressions.Expression{System.Action{``0}})
+  commentId: M:NitroxModel.Helper.Reflect.Method``1(System.Linq.Expressions.Expression{System.Action{``0}})
+  id: Method``1(System.Linq.Expressions.Expression{System.Action{``0}})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Method<T>(Expression<Action<T>>)
+  nameWithType: Reflect.Method<T>(Expression<Action<T>>)
+  fullName: NitroxModel.Helper.Reflect.Method<T>(System.Linq.Expressions.Expression<System.Action<T>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Method
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 41
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  summary: >-
+    Given a lambda expression that calls a method, returns the method info.
+
+    If method has parameters then anything can be supplied, the actual method won't be called.
+  example: []
+  syntax:
+    content: public static MethodInfo Method<T>(Expression<Action<T>> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Action{{T}}}
+      description: The expression.
+    typeParameters:
+    - id: T
+      description: ''
+    return:
+      type: System.Reflection.MethodInfo
+      description: ''
+    content.vb: Public Shared Function Method(Of T)(expression As Expression(Of Action(Of T))) As MethodInfo
+  overload: NitroxModel.Helper.Reflect.Method*
+  nameWithType.vb: Reflect.Method(Of T)(Expression(Of Action(Of T)))
+  fullName.vb: NitroxModel.Helper.Reflect.Method(Of T)(System.Linq.Expressions.Expression(Of System.Action(Of T)))
+  name.vb: Method(Of T)(Expression(Of Action(Of T)))
+- uid: NitroxModel.Helper.Reflect.Method``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})
+  commentId: M:NitroxModel.Helper.Reflect.Method``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})
+  id: Method``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Method<T, TResult>(Expression<Func<T, TResult>>)
+  nameWithType: Reflect.Method<T, TResult>(Expression<Func<T, TResult>>)
+  fullName: NitroxModel.Helper.Reflect.Method<T, TResult>(System.Linq.Expressions.Expression<System.Func<T, TResult>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Method
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 54
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  summary: >-
+    Given a lambda expression that calls a method, returns the method info.
+
+    If method has parameters then anything can be supplied, the actual method won't be called.
+  example: []
+  syntax:
+    content: public static MethodInfo Method<T, TResult>(Expression<Func<T, TResult>> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Func{{T},{TResult}}}
+      description: The expression.
+    typeParameters:
+    - id: T
+      description: ''
+    - id: TResult
+      description: ''
+    return:
+      type: System.Reflection.MethodInfo
+      description: ''
+    content.vb: Public Shared Function Method(Of T, TResult)(expression As Expression(Of Func(Of T, TResult))) As MethodInfo
+  overload: NitroxModel.Helper.Reflect.Method*
+  nameWithType.vb: Reflect.Method(Of T, TResult)(Expression(Of Func(Of T, TResult)))
+  fullName.vb: NitroxModel.Helper.Reflect.Method(Of T, TResult)(System.Linq.Expressions.Expression(Of System.Func(Of T, TResult)))
+  name.vb: Method(Of T, TResult)(Expression(Of Func(Of T, TResult)))
+- uid: NitroxModel.Helper.Reflect.Field``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  commentId: M:NitroxModel.Helper.Reflect.Field``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  id: Field``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Field<T>(Expression<Func<T>>)
+  nameWithType: Reflect.Field<T>(Expression<Func<T>>)
+  fullName: NitroxModel.Helper.Reflect.Field<T>(System.Linq.Expressions.Expression<System.Func<T>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Field
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 59
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static FieldInfo Field<T>(Expression<Func<T>> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Func{{T}}}
+    typeParameters:
+    - id: T
+    return:
+      type: System.Reflection.FieldInfo
+    content.vb: Public Shared Function Field(Of T)(expression As Expression(Of Func(Of T))) As FieldInfo
+  overload: NitroxModel.Helper.Reflect.Field*
+  nameWithType.vb: Reflect.Field(Of T)(Expression(Of Func(Of T)))
+  fullName.vb: NitroxModel.Helper.Reflect.Field(Of T)(System.Linq.Expressions.Expression(Of System.Func(Of T)))
+  name.vb: Field(Of T)(Expression(Of Func(Of T)))
+- uid: NitroxModel.Helper.Reflect.Field``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  commentId: M:NitroxModel.Helper.Reflect.Field``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  id: Field``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Field<T>(Expression<Func<T, object>>)
+  nameWithType: Reflect.Field<T>(Expression<Func<T, object>>)
+  fullName: NitroxModel.Helper.Reflect.Field<T>(System.Linq.Expressions.Expression<System.Func<T, object>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Field
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 64
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static FieldInfo Field<T>(Expression<Func<T, object>> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Func{{T},System.Object}}
+    typeParameters:
+    - id: T
+    return:
+      type: System.Reflection.FieldInfo
+    content.vb: Public Shared Function Field(Of T)(expression As Expression(Of Func(Of T, Object))) As FieldInfo
+  overload: NitroxModel.Helper.Reflect.Field*
+  nameWithType.vb: Reflect.Field(Of T)(Expression(Of Func(Of T, Object)))
+  fullName.vb: NitroxModel.Helper.Reflect.Field(Of T)(System.Linq.Expressions.Expression(Of System.Func(Of T, Object)))
+  name.vb: Field(Of T)(Expression(Of Func(Of T, Object)))
+- uid: NitroxModel.Helper.Reflect.Property``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  commentId: M:NitroxModel.Helper.Reflect.Property``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  id: Property``1(System.Linq.Expressions.Expression{System.Func{``0}})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Property<T>(Expression<Func<T>>)
+  nameWithType: Reflect.Property<T>(Expression<Func<T>>)
+  fullName: NitroxModel.Helper.Reflect.Property<T>(System.Linq.Expressions.Expression<System.Func<T>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Property
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 69
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static PropertyInfo Property<T>(Expression<Func<T>> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Func{{T}}}
+    typeParameters:
+    - id: T
+    return:
+      type: System.Reflection.PropertyInfo
+    content.vb: Public Shared Function [Property](Of T)(expression As Expression(Of Func(Of T))) As PropertyInfo
+  overload: NitroxModel.Helper.Reflect.Property*
+  nameWithType.vb: Reflect.Property(Of T)(Expression(Of Func(Of T)))
+  fullName.vb: NitroxModel.Helper.Reflect.Property(Of T)(System.Linq.Expressions.Expression(Of System.Func(Of T)))
+  name.vb: Property(Of T)(Expression(Of Func(Of T)))
+- uid: NitroxModel.Helper.Reflect.Property``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  commentId: M:NitroxModel.Helper.Reflect.Property``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  id: Property``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+  parent: NitroxModel.Helper.Reflect
+  langs:
+  - csharp
+  - vb
+  name: Property<T>(Expression<Func<T, object>>)
+  nameWithType: Reflect.Property<T>(Expression<Func<T, object>>)
+  fullName: NitroxModel.Helper.Reflect.Property<T>(System.Linq.Expressions.Expression<System.Func<T, object>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Reflect.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Property
+    path: ../NitroxModel/Helper/Reflect.cs
+    startLine: 74
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static PropertyInfo Property<T>(Expression<Func<T, object>> expression)
+    parameters:
+    - id: expression
+      type: System.Linq.Expressions.Expression{System.Func{{T},System.Object}}
+    typeParameters:
+    - id: T
+    return:
+      type: System.Reflection.PropertyInfo
+    content.vb: Public Shared Function [Property](Of T)(expression As Expression(Of Func(Of T, Object))) As PropertyInfo
+  overload: NitroxModel.Helper.Reflect.Property*
+  nameWithType.vb: Reflect.Property(Of T)(Expression(Of Func(Of T, Object)))
+  fullName.vb: NitroxModel.Helper.Reflect.Property(Of T)(System.Linq.Expressions.Expression(Of System.Func(Of T, Object)))
+  name.vb: Property(Of T)(Expression(Of Func(Of T, Object)))
+references:
+- uid: System.Reflection.MethodInfo
+  commentId: T:System.Reflection.MethodInfo
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  name: MethodInfo
+  nameWithType: MethodInfo
+  fullName: System.Reflection.MethodInfo
+- uid: System.Reflection.MemberInfo
+  commentId: T:System.Reflection.MemberInfo
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.memberinfo
+  name: MemberInfo
+  nameWithType: MemberInfo
+  fullName: System.Reflection.MemberInfo
+- uid: NitroxModel.Helper
+  commentId: N:NitroxModel.Helper
+  href: NitroxModel.html
+  name: NitroxModel.Helper
+  nameWithType: NitroxModel.Helper
+  fullName: NitroxModel.Helper
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Reflection
+  commentId: N:System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Reflection
+  nameWithType: System.Reflection
+  fullName: System.Reflection
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Helper.Reflect.Constructor*
+  commentId: Overload:NitroxModel.Helper.Reflect.Constructor
+  href: NitroxModel.Helper.Reflect.Constructor.html#NitroxModel_Helper_Reflect_Constructor_System_Linq_Expressions_Expression_System_Action__
+  name: Constructor
+  nameWithType: Reflect.Constructor
+  fullName: NitroxModel.Helper.Reflect.Constructor
+- uid: System.Linq.Expressions.Expression{System.Action}
+  commentId: T:System.Linq.Expressions.Expression{System.Action}
+  parent: System.Linq.Expressions
+  definition: System.Linq.Expressions.Expression`1
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<Action>
+  nameWithType: Expression<Action>
+  fullName: System.Linq.Expressions.Expression<System.Action>
+  nameWithType.vb: Expression(Of Action)
+  fullName.vb: System.Linq.Expressions.Expression(Of System.Action)
+  name.vb: Expression(Of Action)
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: System.Reflection.ConstructorInfo
+  commentId: T:System.Reflection.ConstructorInfo
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.constructorinfo
+  name: ConstructorInfo
+  nameWithType: ConstructorInfo
+  fullName: System.Reflection.ConstructorInfo
+- uid: System.Linq.Expressions.Expression`1
+  commentId: T:System.Linq.Expressions.Expression`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<TDelegate>
+  nameWithType: Expression<TDelegate>
+  fullName: System.Linq.Expressions.Expression<TDelegate>
+  nameWithType.vb: Expression(Of TDelegate)
+  fullName.vb: System.Linq.Expressions.Expression(Of TDelegate)
+  name.vb: Expression(Of TDelegate)
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - name: TDelegate
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TDelegate
+  - name: )
+- uid: System.Linq.Expressions
+  commentId: N:System.Linq.Expressions
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Linq.Expressions
+  nameWithType: System.Linq.Expressions
+  fullName: System.Linq.Expressions
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Linq
+    name: Linq
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq
+  - name: .
+  - uid: System.Linq.Expressions
+    name: Expressions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Linq
+    name: Linq
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq
+  - name: .
+  - uid: System.Linq.Expressions
+    name: Expressions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions
+- uid: NitroxModel.Helper.Reflect.Method*
+  commentId: Overload:NitroxModel.Helper.Reflect.Method
+  href: NitroxModel.Helper.Reflect.Method.html#NitroxModel_Helper_Reflect_Method_System_Linq_Expressions_Expression_System_Action__
+  name: Method
+  nameWithType: Reflect.Method
+  fullName: NitroxModel.Helper.Reflect.Method
+- uid: System.Linq.Expressions.Expression{System.Action{{T}}}
+  commentId: T:System.Linq.Expressions.Expression{System.Action{``0}}
+  parent: System.Linq.Expressions
+  definition: System.Linq.Expressions.Expression`1
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<Action<T>>
+  nameWithType: Expression<Action<T>>
+  fullName: System.Linq.Expressions.Expression<System.Action<T>>
+  nameWithType.vb: Expression(Of Action(Of T))
+  fullName.vb: System.Linq.Expressions.Expression(Of System.Action(Of T))
+  name.vb: Expression(Of Action(Of T))
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: System.Linq.Expressions.Expression{System.Func{{T},{TResult}}}
+  commentId: T:System.Linq.Expressions.Expression{System.Func{``0,``1}}
+  parent: System.Linq.Expressions
+  definition: System.Linq.Expressions.Expression`1
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<Func<T, TResult>>
+  nameWithType: Expression<Func<T, TResult>>
+  fullName: System.Linq.Expressions.Expression<System.Func<T, TResult>>
+  nameWithType.vb: Expression(Of Func(Of T, TResult))
+  fullName.vb: System.Linq.Expressions.Expression(Of System.Func(Of T, TResult))
+  name.vb: Expression(Of Func(Of T, TResult))
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+  - name: )
+- uid: NitroxModel.Helper.Reflect.Field*
+  commentId: Overload:NitroxModel.Helper.Reflect.Field
+  href: NitroxModel.Helper.Reflect.Field.html#NitroxModel_Helper_Reflect_Field__1_System_Linq_Expressions_Expression_System_Func___0___
+  name: Field
+  nameWithType: Reflect.Field
+  fullName: NitroxModel.Helper.Reflect.Field
+- uid: System.Linq.Expressions.Expression{System.Func{{T}}}
+  commentId: T:System.Linq.Expressions.Expression{System.Func{``0}}
+  parent: System.Linq.Expressions
+  definition: System.Linq.Expressions.Expression`1
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<Func<T>>
+  nameWithType: Expression<Func<T>>
+  fullName: System.Linq.Expressions.Expression<System.Func<T>>
+  nameWithType.vb: Expression(Of Func(Of T))
+  fullName.vb: System.Linq.Expressions.Expression(Of System.Func(Of T))
+  name.vb: Expression(Of Func(Of T))
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: System.Reflection.FieldInfo
+  commentId: T:System.Reflection.FieldInfo
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.fieldinfo
+  name: FieldInfo
+  nameWithType: FieldInfo
+  fullName: System.Reflection.FieldInfo
+- uid: System.Linq.Expressions.Expression{System.Func{{T},System.Object}}
+  commentId: T:System.Linq.Expressions.Expression{System.Func{``0,System.Object}}
+  parent: System.Linq.Expressions
+  definition: System.Linq.Expressions.Expression`1
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<Func<T, object>>
+  nameWithType: Expression<Func<T, object>>
+  fullName: System.Linq.Expressions.Expression<System.Func<T, object>>
+  nameWithType.vb: Expression(Of Func(Of T, Object))
+  fullName.vb: System.Linq.Expressions.Expression(Of System.Func(Of T, Object))
+  name.vb: Expression(Of Func(Of T, Object))
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  - name: )
+- uid: NitroxModel.Helper.Reflect.Property*
+  commentId: Overload:NitroxModel.Helper.Reflect.Property
+  href: NitroxModel.Helper.Reflect.Property.html#NitroxModel_Helper_Reflect_Property__1_System_Linq_Expressions_Expression_System_Func___0___
+  name: Property
+  nameWithType: Reflect.Property
+  fullName: NitroxModel.Helper.Reflect.Property
+- uid: System.Reflection.PropertyInfo
+  commentId: T:System.Reflection.PropertyInfo
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.propertyinfo
+  name: PropertyInfo
+  nameWithType: PropertyInfo
+  fullName: System.Reflection.PropertyInfo
+memberLayout: SeparatePages

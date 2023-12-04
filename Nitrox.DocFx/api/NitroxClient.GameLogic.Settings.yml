@@ -1,0 +1,144 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Settings
+  commentId: N:NitroxClient.GameLogic.Settings
+  id: Settings
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.Settings.NitroxPref
+  - NitroxClient.GameLogic.Settings.NitroxPref`1
+  - NitroxClient.GameLogic.Settings.NitroxPrefs
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.Settings
+  nameWithType: NitroxClient.GameLogic.Settings
+  fullName: NitroxClient.GameLogic.Settings
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.Settings.NitroxPref
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxPref
+  parent: NitroxClient.GameLogic.Settings
+  href: NitroxClient.GameLogic.Settings.NitroxPref.html
+  name: NitroxPref
+  nameWithType: NitroxPref
+  fullName: NitroxClient.GameLogic.Settings.NitroxPref
+- uid: NitroxClient.GameLogic.Settings.NitroxPref`1
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxPref`1
+  href: NitroxClient.GameLogic.Settings.NitroxPref-1.html
+  name: NitroxPref<T>
+  nameWithType: NitroxPref<T>
+  fullName: NitroxClient.GameLogic.Settings.NitroxPref<T>
+  nameWithType.vb: NitroxPref(Of T)
+  fullName.vb: NitroxClient.GameLogic.Settings.NitroxPref(Of T)
+  name.vb: NitroxPref(Of T)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Settings.NitroxPref`1
+    name: NitroxPref
+    href: NitroxClient.GameLogic.Settings.NitroxPref-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Settings.NitroxPref`1
+    name: NitroxPref
+    href: NitroxClient.GameLogic.Settings.NitroxPref-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.GameLogic.Settings.NitroxPrefs
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxPrefs
+  href: NitroxClient.GameLogic.Settings.NitroxPrefs.html
+  name: NitroxPrefs
+  nameWithType: NitroxPrefs
+  fullName: NitroxClient.GameLogic.Settings.NitroxPrefs
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxSettingsManager
+  href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  name: NitroxSettingsManager
+  nameWithType: NitroxSettingsManager
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  parent: NitroxClient.GameLogic.Settings
+  href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  name: NitroxSettingsManager.Setting
+  nameWithType: NitroxSettingsManager.Setting
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+    name: NitroxSettingsManager
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+    name: Setting
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+    name: NitroxSettingsManager
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+    name: Setting
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.html
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+  parent: NitroxClient.GameLogic.Settings
+  href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  name: NitroxSettingsManager.SettingType
+  nameWithType: NitroxSettingsManager.SettingType
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+    name: NitroxSettingsManager
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+    name: SettingType
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+    name: NitroxSettingsManager
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+    name: SettingType
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType.html
+- uid: NitroxClient.GameLogic.Settings
+  commentId: N:NitroxClient.GameLogic.Settings
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Settings
+  nameWithType: NitroxClient.GameLogic.Settings
+  fullName: NitroxClient.GameLogic.Settings
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings
+    name: Settings
+    href: NitroxClient.GameLogic.Settings.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings
+    name: Settings
+    href: NitroxClient.GameLogic.Settings.html
+memberLayout: SeparatePages

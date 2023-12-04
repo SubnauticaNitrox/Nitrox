@@ -1,0 +1,402 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  id: SnapshotFlags
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  children:
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.ALL
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.HEAP_LIST
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.INHERIT
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE32
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.NO_HEAPS
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.PROCESS
+  - NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.THREAD
+  langs:
+  - csharp
+  - vb
+  name: SnapshotFlags
+  nameWithType: SnapshotFlags
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  type: Enum
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SnapshotFlags
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum SnapshotFlags : uint
+    content.vb: >-
+      <Flags>
+
+      Public Enum SnapshotFlags As UInteger
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.HEAP_LIST
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.HEAP_LIST
+  id: HEAP_LIST
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: HEAP_LIST
+  nameWithType: SnapshotFlags.HEAP_LIST
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.HEAP_LIST
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: HEAP_LIST
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: HEAP_LIST = 1
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.PROCESS
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.PROCESS
+  id: PROCESS
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: PROCESS
+  nameWithType: SnapshotFlags.PROCESS
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.PROCESS
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PROCESS
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: PROCESS = 2
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.THREAD
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.THREAD
+  id: THREAD
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: THREAD
+  nameWithType: SnapshotFlags.THREAD
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.THREAD
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: THREAD
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: THREAD = 4
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE
+  id: MODULE
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: MODULE
+  nameWithType: SnapshotFlags.MODULE
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MODULE
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: MODULE = 8
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE32
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE32
+  id: MODULE32
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: MODULE32
+  nameWithType: SnapshotFlags.MODULE32
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.MODULE32
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MODULE32
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: MODULE32 = 16
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.INHERIT
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.INHERIT
+  id: INHERIT
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: INHERIT
+  nameWithType: SnapshotFlags.INHERIT
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.INHERIT
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: INHERIT
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: INHERIT = 2147483648
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.ALL
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.ALL
+  id: ALL
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: ALL
+  nameWithType: SnapshotFlags.ALL
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.ALL
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ALL
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: ALL = HEAP_LIST | PROCESS | THREAD | MODULE | MODULE32
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+    content.vb: ALL = HEAP_LIST Or PROCESS Or THREAD Or MODULE Or MODULE32
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.NO_HEAPS
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.NO_HEAPS
+  id: NO_HEAPS
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  langs:
+  - csharp
+  - vb
+  name: NO_HEAPS
+  nameWithType: SnapshotFlags.NO_HEAPS
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.NO_HEAPS
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NO_HEAPS
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SnapshotFlags.cs
+    startLine: 14
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: NO_HEAPS = 1073741824
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+references:
+- uid: NitroxModel.Platforms.OS.Windows.Internal
+  commentId: N:NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Windows.Internal
+  nameWithType: NitroxModel.Platforms.OS.Windows.Internal
+  fullName: NitroxModel.Platforms.OS.Windows.Internal
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags.html
+  name: SnapshotFlags
+  nameWithType: SnapshotFlags
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+memberLayout: SeparatePages

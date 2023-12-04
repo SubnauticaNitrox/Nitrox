@@ -1,0 +1,776 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  commentId: T:NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  id: PlayerStatsData
+  parent: NitroxModel.DataStructures.GameLogic
+  children:
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString
+  - NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water
+  langs:
+  - csharp
+  - vb
+  name: PlayerStatsData
+  nameWithType: PlayerStatsData
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerStatsData
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [Serializable]
+
+      [DataContract]
+
+      public class PlayerStatsData
+    content.vb: >-
+      <Serializable>
+
+      <DataContract>
+
+      Public Class PlayerStatsData
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen
+  commentId: P:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen
+  id: Oxygen
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: Oxygen
+  nameWithType: PlayerStatsData.Oxygen
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Oxygen
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public float Oxygen { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public ReadOnly Property Oxygen As Single
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen
+  commentId: P:NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen
+  id: MaxOxygen
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: MaxOxygen
+  nameWithType: PlayerStatsData.MaxOxygen
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MaxOxygen
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public float MaxOxygen { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public ReadOnly Property MaxOxygen As Single
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health
+  commentId: P:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health
+  id: Health
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: Health
+  nameWithType: PlayerStatsData.Health
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Health
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 3)]
+
+      public float Health { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=3)>
+
+      Public ReadOnly Property Health As Single
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 3
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food
+  commentId: P:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food
+  id: Food
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: Food
+  nameWithType: PlayerStatsData.Food
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Food
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 4)]
+
+      public float Food { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=4)>
+
+      Public ReadOnly Property Food As Single
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 4
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water
+  commentId: P:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water
+  id: Water
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: Water
+  nameWithType: PlayerStatsData.Water
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Water
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 5)]
+
+      public float Water { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=5)>
+
+      Public ReadOnly Property Water As Single
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 5
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount
+  commentId: P:NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount
+  id: InfectionAmount
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: InfectionAmount
+  nameWithType: PlayerStatsData.InfectionAmount
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: InfectionAmount
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 24
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 6)]
+
+      public float InfectionAmount { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=6)>
+
+      Public ReadOnly Property InfectionAmount As Single
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 6
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor
+  commentId: M:NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor
+  id: '#ctor'
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: PlayerStatsData()
+  nameWithType: PlayerStatsData.PlayerStatsData()
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.PlayerStatsData()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [IgnoreConstructor]
+
+      protected PlayerStatsData()
+    content.vb: >-
+      <IgnoreConstructor>
+
+      Protected Sub New()
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor*
+  attributes:
+  - type: BinaryPack.Attributes.IgnoreConstructorAttribute
+    ctor: BinaryPack.Attributes.IgnoreConstructorAttribute.#ctor
+    arguments: []
+  nameWithType.vb: PlayerStatsData.New()
+  fullName.vb: NitroxModel.DataStructures.GameLogic.PlayerStatsData.New()
+  name.vb: New()
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  commentId: M:NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  id: '#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)'
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: PlayerStatsData(float, float, float, float, float, float)
+  nameWithType: PlayerStatsData.PlayerStatsData(float, float, float, float, float, float)
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.PlayerStatsData(float, float, float, float, float, float)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 33
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public PlayerStatsData(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
+    parameters:
+    - id: oxygen
+      type: System.Single
+    - id: maxOxygen
+      type: System.Single
+    - id: health
+      type: System.Single
+    - id: food
+      type: System.Single
+    - id: water
+      type: System.Single
+    - id: infectionAmount
+      type: System.Single
+    content.vb: Public Sub New(oxygen As Single, maxOxygen As Single, health As Single, food As Single, water As Single, infectionAmount As Single)
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor*
+  nameWithType.vb: PlayerStatsData.New(Single, Single, Single, Single, Single, Single)
+  fullName.vb: NitroxModel.DataStructures.GameLogic.PlayerStatsData.New(Single, Single, Single, Single, Single, Single)
+  name.vb: New(Single, Single, Single, Single, Single, Single)
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString
+  commentId: M:NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString
+  id: ToString
+  parent: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: PlayerStatsData.ToString()
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel/DataStructures/GameLogic/PlayerStatsData.cs
+    startLine: 43
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.Object.ToString
+  overload: NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString*
+references:
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData_Oxygen
+  name: Oxygen
+  nameWithType: PlayerStatsData.Oxygen
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Oxygen
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData_MaxOxygen
+  name: MaxOxygen
+  nameWithType: PlayerStatsData.MaxOxygen
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.MaxOxygen
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData_Health
+  name: Health
+  nameWithType: PlayerStatsData.Health
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Health
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData_Food
+  name: Food
+  nameWithType: PlayerStatsData.Food
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Food
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData_Water
+  name: Water
+  nameWithType: PlayerStatsData.Water
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.Water
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData_InfectionAmount
+  name: InfectionAmount
+  nameWithType: PlayerStatsData.InfectionAmount
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.InfectionAmount
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.#ctor
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.-ctor.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData__ctor
+  name: PlayerStatsData
+  nameWithType: PlayerStatsData.PlayerStatsData
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.PlayerStatsData
+  nameWithType.vb: PlayerStatsData.New
+  fullName.vb: NitroxModel.DataStructures.GameLogic.PlayerStatsData.New
+  name.vb: New
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString.html#NitroxModel_DataStructures_GameLogic_PlayerStatsData_ToString
+  name: ToString
+  nameWithType: PlayerStatsData.ToString
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

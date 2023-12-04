@@ -1,0 +1,256 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner
+  commentId: T:NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner
+  id: IEntitySpawner
+  parent: NitroxServer.GameLogic.Entities.Spawning
+  children:
+  - NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities(NitroxModel.DataStructures.NitroxInt3,System.Boolean)
+  langs:
+  - csharp
+  - vb
+  name: IEntitySpawner
+  nameWithType: IEntitySpawner
+  fullName: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner
+  type: Interface
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/Spawning/IEntitySpawner.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IEntitySpawner
+    path: ../NitroxServer/GameLogic/Entities/Spawning/IEntitySpawner.cs
+    startLine: 6
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities.Spawning
+  syntax:
+    content: public interface IEntitySpawner
+    content.vb: Public Interface IEntitySpawner
+- uid: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities(NitroxModel.DataStructures.NitroxInt3,System.Boolean)
+  commentId: M:NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities(NitroxModel.DataStructures.NitroxInt3,System.Boolean)
+  id: LoadUnspawnedEntities(NitroxModel.DataStructures.NitroxInt3,System.Boolean)
+  parent: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner
+  langs:
+  - csharp
+  - vb
+  name: LoadUnspawnedEntities(NitroxInt3, bool)
+  nameWithType: IEntitySpawner.LoadUnspawnedEntities(NitroxInt3, bool)
+  fullName: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities(NitroxModel.DataStructures.NitroxInt3, bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/Spawning/IEntitySpawner.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LoadUnspawnedEntities
+    path: ../NitroxServer/GameLogic/Entities/Spawning/IEntitySpawner.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities.Spawning
+  syntax:
+    content: List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId, bool fullCacheCreation = false)
+    parameters:
+    - id: batchId
+      type: NitroxModel.DataStructures.NitroxInt3
+    - id: fullCacheCreation
+      type: System.Boolean
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    content.vb: Function LoadUnspawnedEntities(batchId As NitroxInt3, fullCacheCreation As Boolean = False) As List(Of Entity)
+  overload: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities*
+  nameWithType.vb: IEntitySpawner.LoadUnspawnedEntities(NitroxInt3, Boolean)
+  fullName.vb: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities(NitroxModel.DataStructures.NitroxInt3, Boolean)
+  name.vb: LoadUnspawnedEntities(NitroxInt3, Boolean)
+references:
+- uid: NitroxServer.GameLogic.Entities.Spawning
+  commentId: N:NitroxServer.GameLogic.Entities.Spawning
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities.Spawning
+  nameWithType: NitroxServer.GameLogic.Entities.Spawning
+  fullName: NitroxServer.GameLogic.Entities.Spawning
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+- uid: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities*
+  commentId: Overload:NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities
+  href: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities.html#NitroxServer_GameLogic_Entities_Spawning_IEntitySpawner_LoadUnspawnedEntities_NitroxModel_DataStructures_NitroxInt3_System_Boolean_
+  name: LoadUnspawnedEntities
+  nameWithType: IEntitySpawner.LoadUnspawnedEntities
+  fullName: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner.LoadUnspawnedEntities
+- uid: NitroxModel.DataStructures.NitroxInt3
+  commentId: T:NitroxModel.DataStructures.NitroxInt3
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxInt3.html
+  name: NitroxInt3
+  nameWithType: NitroxInt3
+  fullName: NitroxModel.DataStructures.NitroxInt3
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Entity>
+  nameWithType: List<Entity>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>
+  nameWithType.vb: List(Of Entity)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity)
+  name.vb: List(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: )
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+memberLayout: SeparatePages

@@ -1,0 +1,63 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.ChatUI
+  commentId: N:NitroxClient.GameLogic.ChatUI
+  id: ChatUI
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  - NitroxClient.GameLogic.ChatUI.PlayerChatManager
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.ChatUI
+  nameWithType: NitroxClient.GameLogic.ChatUI
+  fullName: NitroxClient.GameLogic.ChatUI
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  commentId: T:NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  parent: NitroxClient.GameLogic.ChatUI
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.html
+  name: ChatLogEntry
+  nameWithType: ChatLogEntry
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+- uid: NitroxClient.GameLogic.ChatUI.PlayerChatManager
+  commentId: T:NitroxClient.GameLogic.ChatUI.PlayerChatManager
+  href: NitroxClient.GameLogic.ChatUI.PlayerChatManager.html
+  name: PlayerChatManager
+  nameWithType: PlayerChatManager
+  fullName: NitroxClient.GameLogic.ChatUI.PlayerChatManager
+- uid: NitroxClient.GameLogic.ChatUI
+  commentId: N:NitroxClient.GameLogic.ChatUI
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.ChatUI
+  nameWithType: NitroxClient.GameLogic.ChatUI
+  fullName: NitroxClient.GameLogic.ChatUI
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.ChatUI
+    name: ChatUI
+    href: NitroxClient.GameLogic.ChatUI.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.ChatUI
+    name: ChatUI
+    href: NitroxClient.GameLogic.ChatUI.html
+memberLayout: SeparatePages

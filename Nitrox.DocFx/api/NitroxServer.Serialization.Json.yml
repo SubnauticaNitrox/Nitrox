@@ -1,0 +1,39 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Serialization.Json
+  commentId: N:NitroxServer.Serialization.Json
+  id: Json
+  parent: NitroxServer.Serialization
+  children:
+  - NitroxServer.Serialization.Json.AttributeContractResolver
+  - NitroxServer.Serialization.Json.NitroxIdConverter
+  - NitroxServer.Serialization.Json.TechTypeConverter
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.Serialization.Json
+  nameWithType: NitroxServer.Serialization.Json
+  fullName: NitroxServer.Serialization.Json
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Serialization.Json.AttributeContractResolver
+  commentId: T:NitroxServer.Serialization.Json.AttributeContractResolver
+  href: NitroxServer.Serialization.Json.AttributeContractResolver.html
+  name: AttributeContractResolver
+  nameWithType: AttributeContractResolver
+  fullName: NitroxServer.Serialization.Json.AttributeContractResolver
+- uid: NitroxServer.Serialization.Json.NitroxIdConverter
+  commentId: T:NitroxServer.Serialization.Json.NitroxIdConverter
+  href: NitroxServer.Serialization.Json.NitroxIdConverter.html
+  name: NitroxIdConverter
+  nameWithType: NitroxIdConverter
+  fullName: NitroxServer.Serialization.Json.NitroxIdConverter
+- uid: NitroxServer.Serialization.Json.TechTypeConverter
+  commentId: T:NitroxServer.Serialization.Json.TechTypeConverter
+  href: NitroxServer.Serialization.Json.TechTypeConverter.html
+  name: TechTypeConverter
+  nameWithType: TechTypeConverter
+  fullName: NitroxServer.Serialization.Json.TechTypeConverter
+memberLayout: SeparatePages

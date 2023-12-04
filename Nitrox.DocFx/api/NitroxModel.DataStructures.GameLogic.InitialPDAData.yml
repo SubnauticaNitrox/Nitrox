@@ -1,0 +1,895 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  commentId: T:NitroxModel.DataStructures.GameLogic.InitialPDAData
+  id: InitialPDAData
+  parent: NitroxModel.DataStructures.GameLogic
+  children:
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry},System.Collections.Generic.List{System.String},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments
+  - NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial
+  langs:
+  - csharp
+  - vb
+  name: InitialPDAData
+  nameWithType: InitialPDAData
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: InitialPDAData
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class InitialPDAData
+    content.vb: >-
+      <Serializable>
+
+      Public Class InitialPDAData
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes
+  commentId: P:NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes
+  id: KnownTechTypes
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: KnownTechTypes
+  nameWithType: InitialPDAData.KnownTechTypes
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: KnownTechTypes
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public List<NitroxTechType> KnownTechTypes { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public Property KnownTechTypes As List(Of NitroxTechType)
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes*
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes
+  commentId: P:NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes
+  id: AnalyzedTechTypes
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: AnalyzedTechTypes
+  nameWithType: InitialPDAData.AnalyzedTechTypes
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AnalyzedTechTypes
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public List<NitroxTechType> AnalyzedTechTypes { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public Property AnalyzedTechTypes As List(Of NitroxTechType)
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes*
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries
+  commentId: P:NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries
+  id: PDALogEntries
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: PDALogEntries
+  nameWithType: InitialPDAData.PDALogEntries
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PDALogEntries
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public List<PDALogEntry> PDALogEntries { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry}
+    content.vb: Public Property PDALogEntries As List(Of PDALogEntry)
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries*
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries
+  commentId: P:NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries
+  id: EncyclopediaEntries
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: EncyclopediaEntries
+  nameWithType: InitialPDAData.EncyclopediaEntries
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EncyclopediaEntries
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public List<string> EncyclopediaEntries { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: Public Property EncyclopediaEntries As List(Of String)
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries*
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments
+  commentId: P:NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments
+  id: ScannerFragments
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: ScannerFragments
+  nameWithType: InitialPDAData.ScannerFragments
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ScannerFragments
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public List<NitroxId> ScannerFragments { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+    content.vb: Public Property ScannerFragments As List(Of NitroxId)
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments*
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial
+  commentId: P:NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial
+  id: ScannerPartial
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: ScannerPartial
+  nameWithType: InitialPDAData.ScannerPartial
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ScannerPartial
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public List<PDAEntry> ScannerPartial { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry}
+    content.vb: Public Property ScannerPartial As List(Of PDAEntry)
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial*
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete
+  commentId: P:NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete
+  id: ScannerComplete
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: ScannerComplete
+  nameWithType: InitialPDAData.ScannerComplete
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ScannerComplete
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 17
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public List<NitroxTechType> ScannerComplete { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public Property ScannerComplete As List(Of NitroxTechType)
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete*
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor
+  commentId: M:NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor
+  id: '#ctor'
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: InitialPDAData()
+  nameWithType: InitialPDAData.InitialPDAData()
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.InitialPDAData()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [IgnoreConstructor]
+
+      protected InitialPDAData()
+    content.vb: >-
+      <IgnoreConstructor>
+
+      Protected Sub New()
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor*
+  attributes:
+  - type: BinaryPack.Attributes.IgnoreConstructorAttribute
+    ctor: BinaryPack.Attributes.IgnoreConstructorAttribute.#ctor
+    arguments: []
+  nameWithType.vb: InitialPDAData.New()
+  fullName.vb: NitroxModel.DataStructures.GameLogic.InitialPDAData.New()
+  name.vb: New()
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry},System.Collections.Generic.List{System.String},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  commentId: M:NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry},System.Collections.Generic.List{System.String},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  id: '#ctor(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry},System.Collections.Generic.List{System.String},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})'
+  parent: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  langs:
+  - csharp
+  - vb
+  name: InitialPDAData(List<NitroxTechType>, List<NitroxTechType>, List<PDALogEntry>, List<string>, List<NitroxId>, List<PDAEntry>, List<NitroxTechType>)
+  nameWithType: InitialPDAData.InitialPDAData(List<NitroxTechType>, List<NitroxTechType>, List<PDALogEntry>, List<string>, List<NitroxId>, List<PDAEntry>, List<NitroxTechType>)
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.InitialPDAData(System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.PDALogEntry>, System.Collections.Generic.List<string>, System.Collections.Generic.List<NitroxModel.DataStructures.NitroxId>, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.PDAEntry>, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/InitialPDAData.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public InitialPDAData(List<NitroxTechType> knownTechTypes, List<NitroxTechType> analyzedTechTypes, List<PDALogEntry> pDALogEntries, List<string> encyclopediaEntries, List<NitroxId> scannerFragments, List<PDAEntry> scannerPartial, List<NitroxTechType> scannerComplete)
+    parameters:
+    - id: knownTechTypes
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    - id: analyzedTechTypes
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    - id: pDALogEntries
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry}
+    - id: encyclopediaEntries
+      type: System.Collections.Generic.List{System.String}
+    - id: scannerFragments
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+    - id: scannerPartial
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry}
+    - id: scannerComplete
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public Sub New(knownTechTypes As List(Of NitroxTechType), analyzedTechTypes As List(Of NitroxTechType), pDALogEntries As List(Of PDALogEntry), encyclopediaEntries As List(Of String), scannerFragments As List(Of NitroxId), scannerPartial As List(Of PDAEntry), scannerComplete As List(Of NitroxTechType))
+  overload: NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor*
+  nameWithType.vb: InitialPDAData.New(List(Of NitroxTechType), List(Of NitroxTechType), List(Of PDALogEntry), List(Of String), List(Of NitroxId), List(Of PDAEntry), List(Of NitroxTechType))
+  fullName.vb: NitroxModel.DataStructures.GameLogic.InitialPDAData.New(System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType), System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType), System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.PDALogEntry), System.Collections.Generic.List(Of String), System.Collections.Generic.List(Of NitroxModel.DataStructures.NitroxId), System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.PDAEntry), System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType))
+  name.vb: New(List(Of NitroxTechType), List(Of NitroxTechType), List(Of PDALogEntry), List(Of String), List(Of NitroxId), List(Of PDAEntry), List(Of NitroxTechType))
+references:
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes.html#NitroxModel_DataStructures_GameLogic_InitialPDAData_KnownTechTypes
+  name: KnownTechTypes
+  nameWithType: InitialPDAData.KnownTechTypes
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.KnownTechTypes
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<NitroxTechType>
+  nameWithType: List<NitroxTechType>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>
+  nameWithType.vb: List(Of NitroxTechType)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  name.vb: List(Of NitroxTechType)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes.html#NitroxModel_DataStructures_GameLogic_InitialPDAData_AnalyzedTechTypes
+  name: AnalyzedTechTypes
+  nameWithType: InitialPDAData.AnalyzedTechTypes
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.AnalyzedTechTypes
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries.html#NitroxModel_DataStructures_GameLogic_InitialPDAData_PDALogEntries
+  name: PDALogEntries
+  nameWithType: InitialPDAData.PDALogEntries
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.PDALogEntries
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDALogEntry}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<PDALogEntry>
+  nameWithType: List<PDALogEntry>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.PDALogEntry>
+  nameWithType.vb: List(Of PDALogEntry)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.PDALogEntry)
+  name.vb: List(Of PDALogEntry)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.PDALogEntry
+    name: PDALogEntry
+    href: NitroxModel.DataStructures.GameLogic.PDALogEntry.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.PDALogEntry
+    name: PDALogEntry
+    href: NitroxModel.DataStructures.GameLogic.PDALogEntry.html
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries.html#NitroxModel_DataStructures_GameLogic_InitialPDAData_EncyclopediaEntries
+  name: EncyclopediaEntries
+  nameWithType: InitialPDAData.EncyclopediaEntries
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.EncyclopediaEntries
+- uid: System.Collections.Generic.List{System.String}
+  commentId: T:System.Collections.Generic.List{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<string>
+  nameWithType: List<string>
+  fullName: System.Collections.Generic.List<string>
+  nameWithType.vb: List(Of String)
+  fullName.vb: System.Collections.Generic.List(Of String)
+  name.vb: List(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments.html#NitroxModel_DataStructures_GameLogic_InitialPDAData_ScannerFragments
+  name: ScannerFragments
+  nameWithType: InitialPDAData.ScannerFragments
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerFragments
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<NitroxId>
+  nameWithType: List<NitroxId>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.NitroxId>
+  nameWithType.vb: List(Of NitroxId)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.NitroxId)
+  name.vb: List(Of NitroxId)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial.html#NitroxModel_DataStructures_GameLogic_InitialPDAData_ScannerPartial
+  name: ScannerPartial
+  nameWithType: InitialPDAData.ScannerPartial
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerPartial
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.PDAEntry}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<PDAEntry>
+  nameWithType: List<PDAEntry>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.PDAEntry>
+  nameWithType.vb: List(Of PDAEntry)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.PDAEntry)
+  name.vb: List(Of PDAEntry)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.PDAEntry
+    name: PDAEntry
+    href: NitroxModel.DataStructures.GameLogic.PDAEntry.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.PDAEntry
+    name: PDAEntry
+    href: NitroxModel.DataStructures.GameLogic.PDAEntry.html
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete.html#NitroxModel_DataStructures_GameLogic_InitialPDAData_ScannerComplete
+  name: ScannerComplete
+  nameWithType: InitialPDAData.ScannerComplete
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.ScannerComplete
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.InitialPDAData.#ctor
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.-ctor.html#NitroxModel_DataStructures_GameLogic_InitialPDAData__ctor
+  name: InitialPDAData
+  nameWithType: InitialPDAData.InitialPDAData
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData.InitialPDAData
+  nameWithType.vb: InitialPDAData.New
+  fullName.vb: NitroxModel.DataStructures.GameLogic.InitialPDAData.New
+  name.vb: New
+memberLayout: SeparatePages

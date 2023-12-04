@@ -1,0 +1,294 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.Perms
+  commentId: T:NitroxModel.DataStructures.GameLogic.Perms
+  id: Perms
+  parent: NitroxModel.DataStructures.GameLogic
+  children:
+  - NitroxModel.DataStructures.GameLogic.Perms.ADMIN
+  - NitroxModel.DataStructures.GameLogic.Perms.CONSOLE
+  - NitroxModel.DataStructures.GameLogic.Perms.MODERATOR
+  - NitroxModel.DataStructures.GameLogic.Perms.NONE
+  - NitroxModel.DataStructures.GameLogic.Perms.PLAYER
+  langs:
+  - csharp
+  - vb
+  name: Perms
+  nameWithType: Perms
+  fullName: NitroxModel.DataStructures.GameLogic.Perms
+  type: Enum
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Perms.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Perms
+    path: ../NitroxModel/DataStructures/GameLogic/Perms.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: 'public enum Perms : byte'
+    content.vb: Public Enum Perms As Byte
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxModel.DataStructures.GameLogic.Perms.NONE
+  commentId: F:NitroxModel.DataStructures.GameLogic.Perms.NONE
+  id: NONE
+  parent: NitroxModel.DataStructures.GameLogic.Perms
+  langs:
+  - csharp
+  - vb
+  name: NONE
+  nameWithType: Perms.NONE
+  fullName: NitroxModel.DataStructures.GameLogic.Perms.NONE
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Perms.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NONE
+    path: ../NitroxModel/DataStructures/GameLogic/Perms.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: NONE = 0
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Perms
+- uid: NitroxModel.DataStructures.GameLogic.Perms.PLAYER
+  commentId: F:NitroxModel.DataStructures.GameLogic.Perms.PLAYER
+  id: PLAYER
+  parent: NitroxModel.DataStructures.GameLogic.Perms
+  langs:
+  - csharp
+  - vb
+  name: PLAYER
+  nameWithType: Perms.PLAYER
+  fullName: NitroxModel.DataStructures.GameLogic.Perms.PLAYER
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Perms.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PLAYER
+    path: ../NitroxModel/DataStructures/GameLogic/Perms.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: PLAYER = 1
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Perms
+- uid: NitroxModel.DataStructures.GameLogic.Perms.MODERATOR
+  commentId: F:NitroxModel.DataStructures.GameLogic.Perms.MODERATOR
+  id: MODERATOR
+  parent: NitroxModel.DataStructures.GameLogic.Perms
+  langs:
+  - csharp
+  - vb
+  name: MODERATOR
+  nameWithType: Perms.MODERATOR
+  fullName: NitroxModel.DataStructures.GameLogic.Perms.MODERATOR
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Perms.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MODERATOR
+    path: ../NitroxModel/DataStructures/GameLogic/Perms.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: MODERATOR = 2
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Perms
+- uid: NitroxModel.DataStructures.GameLogic.Perms.ADMIN
+  commentId: F:NitroxModel.DataStructures.GameLogic.Perms.ADMIN
+  id: ADMIN
+  parent: NitroxModel.DataStructures.GameLogic.Perms
+  langs:
+  - csharp
+  - vb
+  name: ADMIN
+  nameWithType: Perms.ADMIN
+  fullName: NitroxModel.DataStructures.GameLogic.Perms.ADMIN
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Perms.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ADMIN
+    path: ../NitroxModel/DataStructures/GameLogic/Perms.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: ADMIN = 3
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Perms
+- uid: NitroxModel.DataStructures.GameLogic.Perms.CONSOLE
+  commentId: F:NitroxModel.DataStructures.GameLogic.Perms.CONSOLE
+  id: CONSOLE
+  parent: NitroxModel.DataStructures.GameLogic.Perms
+  langs:
+  - csharp
+  - vb
+  name: CONSOLE
+  nameWithType: Perms.CONSOLE
+  fullName: NitroxModel.DataStructures.GameLogic.Perms.CONSOLE
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Perms.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CONSOLE
+    path: ../NitroxModel/DataStructures/GameLogic/Perms.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: CONSOLE = 4
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Perms
+references:
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.DataStructures.GameLogic.Perms
+  commentId: T:NitroxModel.DataStructures.GameLogic.Perms
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.Perms.html
+  name: Perms
+  nameWithType: Perms
+  fullName: NitroxModel.DataStructures.GameLogic.Perms
+memberLayout: SeparatePages

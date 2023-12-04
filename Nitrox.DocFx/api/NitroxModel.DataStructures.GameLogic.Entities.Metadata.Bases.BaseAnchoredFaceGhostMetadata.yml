@@ -1,0 +1,629 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  id: BaseAnchoredFaceGhostMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  children:
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor(System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace},NitroxModel.DataStructures.NitroxInt3)
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace
+  langs:
+  - csharp
+  - vb
+  name: BaseAnchoredFaceGhostMetadata
+  nameWithType: BaseAnchoredFaceGhostMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BaseAnchoredFaceGhostMetadata
+    path: ../NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  syntax:
+    content: >-
+      [Serializable]
+
+      [DataContract]
+
+      public class BaseAnchoredFaceGhostMetadata : GhostMetadata
+    content.vb: >-
+      <Serializable>
+
+      <DataContract>
+
+      Public Class BaseAnchoredFaceGhostMetadata Inherits GhostMetadata
+  inheritance:
+  - System.Object
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+  inheritedMembers:
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata.TargetOffset
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace
+  commentId: P:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace
+  id: AnchoredFace
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  langs:
+  - csharp
+  - vb
+  name: AnchoredFace
+  nameWithType: BaseAnchoredFaceGhostMetadata.AnchoredFace
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AnchoredFace
+    path: ../NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public NitroxBaseFace? AnchoredFace { get; set; }
+    parameters: []
+    return:
+      type: System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace}
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public Property AnchoredFace As NitroxBaseFace?
+  overload: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor
+  commentId: M:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor
+  id: '#ctor'
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  langs:
+  - csharp
+  - vb
+  name: BaseAnchoredFaceGhostMetadata()
+  nameWithType: BaseAnchoredFaceGhostMetadata.BaseAnchoredFaceGhostMetadata()
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.BaseAnchoredFaceGhostMetadata()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  syntax:
+    content: >-
+      [IgnoreConstructor]
+
+      public BaseAnchoredFaceGhostMetadata()
+    content.vb: >-
+      <IgnoreConstructor>
+
+      Public Sub New()
+  overload: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor*
+  attributes:
+  - type: BinaryPack.Attributes.IgnoreConstructorAttribute
+    ctor: BinaryPack.Attributes.IgnoreConstructorAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BaseAnchoredFaceGhostMetadata.New()
+  fullName.vb: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.New()
+  name.vb: New()
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor(System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace},NitroxModel.DataStructures.NitroxInt3)
+  commentId: M:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor(System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace},NitroxModel.DataStructures.NitroxInt3)
+  id: '#ctor(System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace},NitroxModel.DataStructures.NitroxInt3)'
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  langs:
+  - csharp
+  - vb
+  name: BaseAnchoredFaceGhostMetadata(NitroxBaseFace?, NitroxInt3)
+  nameWithType: BaseAnchoredFaceGhostMetadata.BaseAnchoredFaceGhostMetadata(NitroxBaseFace?, NitroxInt3)
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.BaseAnchoredFaceGhostMetadata(NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace?, NitroxModel.DataStructures.NitroxInt3)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/Entities/Metadata/Bases/BaseAnchoredFaceGhostMetadata.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  remarks: Used for json deserialization
+  example: []
+  syntax:
+    content: public BaseAnchoredFaceGhostMetadata(NitroxBaseFace? anchoredFace, NitroxInt3 targetOffset)
+    parameters:
+    - id: anchoredFace
+      type: System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace}
+    - id: targetOffset
+      type: NitroxModel.DataStructures.NitroxInt3
+    content.vb: Public Sub New(anchoredFace As NitroxBaseFace?, targetOffset As NitroxInt3)
+  overload: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor*
+  nameWithType.vb: BaseAnchoredFaceGhostMetadata.New(NitroxBaseFace?, NitroxInt3)
+  fullName.vb: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.New(NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace?, NitroxModel.DataStructures.NitroxInt3)
+  name.vb: New(NitroxBaseFace?, NitroxInt3)
+references:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata.html
+  name: EntityMetadata
+  nameWithType: EntityMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata.html
+  name: GhostMetadata
+  nameWithType: GhostMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata.TargetOffset
+  commentId: P:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata.TargetOffset
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata.TargetOffset.html#NitroxModel_DataStructures_GameLogic_Entities_Metadata_Bases_GhostMetadata_TargetOffset
+  name: TargetOffset
+  nameWithType: GhostMetadata.TargetOffset
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata.TargetOffset
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace.html#NitroxModel_DataStructures_GameLogic_Entities_Metadata_Bases_BaseAnchoredFaceGhostMetadata_AnchoredFace
+  name: AnchoredFace
+  nameWithType: BaseAnchoredFaceGhostMetadata.AnchoredFace
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.AnchoredFace
+- uid: System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace}
+  commentId: T:System.Nullable{NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace}
+  parent: System
+  definition: System.Nullable`1
+  href: NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace.html
+  name: NitroxBaseFace?
+  nameWithType: NitroxBaseFace?
+  fullName: NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace?
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace
+    name: NitroxBaseFace
+    href: NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace.html
+  - name: '?'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace
+    name: NitroxBaseFace
+    href: NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace.html
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.#ctor
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.-ctor.html#NitroxModel_DataStructures_GameLogic_Entities_Metadata_Bases_BaseAnchoredFaceGhostMetadata__ctor
+  name: BaseAnchoredFaceGhostMetadata
+  nameWithType: BaseAnchoredFaceGhostMetadata.BaseAnchoredFaceGhostMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.BaseAnchoredFaceGhostMetadata
+  nameWithType.vb: BaseAnchoredFaceGhostMetadata.New
+  fullName.vb: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.New
+  name.vb: New
+- uid: NitroxModel.DataStructures.NitroxInt3
+  commentId: T:NitroxModel.DataStructures.NitroxInt3
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxInt3.html
+  name: NitroxInt3
+  nameWithType: NitroxInt3
+  fullName: NitroxModel.DataStructures.NitroxInt3
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+memberLayout: SeparatePages

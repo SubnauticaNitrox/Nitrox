@@ -1,0 +1,414 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes
+  id: SecurityAttributes
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  children:
+  - NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.bInheritHandle
+  - NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.length
+  - NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.lpSecurityDescriptor
+  langs:
+  - csharp
+  - vb
+  name: SecurityAttributes
+  nameWithType: SecurityAttributes
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes
+  type: Struct
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SecurityAttributes
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public struct SecurityAttributes
+    content.vb: Public Structure SecurityAttributes
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.length
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.length
+  id: length
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes
+  langs:
+  - csharp
+  - vb
+  name: length
+  nameWithType: SecurityAttributes.length
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.length
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: length
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public int length
+    return:
+      type: System.Int32
+    content.vb: Public length As Integer
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.lpSecurityDescriptor
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.lpSecurityDescriptor
+  id: lpSecurityDescriptor
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes
+  langs:
+  - csharp
+  - vb
+  name: lpSecurityDescriptor
+  nameWithType: SecurityAttributes.lpSecurityDescriptor
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.lpSecurityDescriptor
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: lpSecurityDescriptor
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public IntPtr lpSecurityDescriptor
+    return:
+      type: System.IntPtr
+    content.vb: Public lpSecurityDescriptor As IntPtr
+- uid: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.bInheritHandle
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.bInheritHandle
+  id: bInheritHandle
+  parent: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes
+  langs:
+  - csharp
+  - vb
+  name: bInheritHandle
+  nameWithType: SecurityAttributes.bInheritHandle
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes.bInheritHandle
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: bInheritHandle
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/SecurityAttributes.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public bool bInheritHandle
+    return:
+      type: System.Boolean
+    content.vb: Public bInheritHandle As Boolean
+references:
+- uid: NitroxModel.Platforms.OS.Windows.Internal
+  commentId: N:NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Windows.Internal
+  nameWithType: NitroxModel.Platforms.OS.Windows.Internal
+  fullName: NitroxModel.Platforms.OS.Windows.Internal
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: IntPtr
+  nameWithType: IntPtr
+  fullName: System.IntPtr
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+memberLayout: SeparatePages

@@ -1,0 +1,124 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.Abstract
+  commentId: N:NitroxClient.GameLogic.Spawning.Abstract
+  id: Abstract
+  parent: NitroxClient.GameLogic.Spawning
+  children:
+  - NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner`1
+  - NitroxClient.GameLogic.Spawning.Abstract.IEntitySpawner
+  - NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  - NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner`1
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.Spawning.Abstract
+  nameWithType: NitroxClient.GameLogic.Spawning.Abstract
+  fullName: NitroxClient.GameLogic.Spawning.Abstract
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner`1
+  commentId: T:NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner`1
+  href: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner-1.html
+  name: EntitySpawner<T>
+  nameWithType: EntitySpawner<T>
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner<T>
+  nameWithType.vb: EntitySpawner(Of T)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner(Of T)
+  name.vb: EntitySpawner(Of T)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner`1
+    name: EntitySpawner
+    href: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner`1
+    name: EntitySpawner
+    href: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Abstract.IEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Abstract.IEntitySpawner
+  parent: NitroxClient.GameLogic.Spawning.Abstract
+  href: NitroxClient.GameLogic.Spawning.Abstract.IEntitySpawner.html
+  name: IEntitySpawner
+  nameWithType: IEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.IEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  parent: NitroxClient.GameLogic.Spawning.Abstract
+  href: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.html
+  name: ISyncEntitySpawner
+  nameWithType: ISyncEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner`1
+  commentId: T:NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner`1
+  href: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner-1.html
+  name: SyncEntitySpawner<T>
+  nameWithType: SyncEntitySpawner<T>
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner<T>
+  nameWithType.vb: SyncEntitySpawner(Of T)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner(Of T)
+  name.vb: SyncEntitySpawner(Of T)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner`1
+    name: SyncEntitySpawner
+    href: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner`1
+    name: SyncEntitySpawner
+    href: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Abstract
+  commentId: N:NitroxClient.GameLogic.Spawning.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Abstract
+  nameWithType: NitroxClient.GameLogic.Spawning.Abstract
+  fullName: NitroxClient.GameLogic.Spawning.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.Spawning.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.Spawning.Abstract.html
+memberLayout: SeparatePages

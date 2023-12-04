@@ -1,0 +1,2084 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.InitialPlayerSync
+  commentId: T:NitroxModel.Packets.InitialPlayerSync
+  id: InitialPlayerSync
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.InitialPlayerSync.#ctor(NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.NitroxId,System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.IEnumerable{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})
+  - NitroxModel.Packets.InitialPlayerSync.#ctor(NitroxModel.DataStructures.NitroxId,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})
+  - NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId
+  - NitroxModel.Packets.InitialPlayerSync.BuildOperationIds
+  - NitroxModel.Packets.InitialPlayerSync.EquippedItems
+  - NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting
+  - NitroxModel.Packets.InitialPlayerSync.GameMode
+  - NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities
+  - NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships
+  - NitroxModel.Packets.InitialPlayerSync.OtherPlayers
+  - NitroxModel.Packets.InitialPlayerSync.PDAData
+  - NitroxModel.Packets.InitialPlayerSync.Permissions
+  - NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId
+  - NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData
+  - NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation
+  - NitroxModel.Packets.InitialPlayerSync.PlayerStatsData
+  - NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId
+  - NitroxModel.Packets.InitialPlayerSync.Preferences
+  - NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds
+  - NitroxModel.Packets.InitialPlayerSync.StoryGoalData
+  - NitroxModel.Packets.InitialPlayerSync.TimeData
+  - NitroxModel.Packets.InitialPlayerSync.UsedItems
+  langs:
+  - csharp
+  - vb
+  name: InitialPlayerSync
+  nameWithType: InitialPlayerSync
+  fullName: NitroxModel.Packets.InitialPlayerSync
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: InitialPlayerSync
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class InitialPlayerSync : Packet
+    content.vb: >-
+      <Serializable>
+
+      Public Class InitialPlayerSync Inherits Packet
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  inheritedMembers:
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - NitroxModel.Packets.Packet.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId
+  id: AssignedEscapePodId
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: AssignedEscapePodId
+  nameWithType: InitialPlayerSync.AssignedEscapePodId
+  fullName: NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AssignedEscapePodId
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxId AssignedEscapePodId { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public ReadOnly Property AssignedEscapePodId As NitroxId
+  overload: NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId*
+- uid: NitroxModel.Packets.InitialPlayerSync.EquippedItems
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.EquippedItems
+  id: EquippedItems
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: EquippedItems
+  nameWithType: InitialPlayerSync.EquippedItems
+  fullName: NitroxModel.Packets.InitialPlayerSync.EquippedItems
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EquippedItems
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public List<EquippedItemData> EquippedItems { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData}
+    content.vb: Public ReadOnly Property EquippedItems As List(Of EquippedItemData)
+  overload: NitroxModel.Packets.InitialPlayerSync.EquippedItems*
+- uid: NitroxModel.Packets.InitialPlayerSync.UsedItems
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.UsedItems
+  id: UsedItems
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: UsedItems
+  nameWithType: InitialPlayerSync.UsedItems
+  fullName: NitroxModel.Packets.InitialPlayerSync.UsedItems
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UsedItems
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 17
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public List<NitroxTechType> UsedItems { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public ReadOnly Property UsedItems As List(Of NitroxTechType)
+  overload: NitroxModel.Packets.InitialPlayerSync.UsedItems*
+- uid: NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds
+  id: QuickSlotsBindingIds
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: QuickSlotsBindingIds
+  nameWithType: InitialPlayerSync.QuickSlotsBindingIds
+  fullName: NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: QuickSlotsBindingIds
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public Optional<NitroxId>[] QuickSlotsBindingIds { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[]
+    content.vb: Public ReadOnly Property QuickSlotsBindingIds As [Optional](Of NitroxId)()
+  overload: NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds*
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId
+  id: PlayerGameObjectId
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: PlayerGameObjectId
+  nameWithType: InitialPlayerSync.PlayerGameObjectId
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerGameObjectId
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxId PlayerGameObjectId { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public ReadOnly Property PlayerGameObjectId As NitroxId
+  overload: NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId*
+- uid: NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting
+  id: FirstTimeConnecting
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: FirstTimeConnecting
+  nameWithType: InitialPlayerSync.FirstTimeConnecting
+  fullName: NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FirstTimeConnecting
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public bool FirstTimeConnecting { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property FirstTimeConnecting As Boolean
+  overload: NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting*
+- uid: NitroxModel.Packets.InitialPlayerSync.PDAData
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.PDAData
+  id: PDAData
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: PDAData
+  nameWithType: InitialPlayerSync.PDAData
+  fullName: NitroxModel.Packets.InitialPlayerSync.PDAData
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PDAData
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public InitialPDAData PDAData { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.InitialPDAData
+    content.vb: Public ReadOnly Property PDAData As InitialPDAData
+  overload: NitroxModel.Packets.InitialPlayerSync.PDAData*
+- uid: NitroxModel.Packets.InitialPlayerSync.StoryGoalData
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.StoryGoalData
+  id: StoryGoalData
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: StoryGoalData
+  nameWithType: InitialPlayerSync.StoryGoalData
+  fullName: NitroxModel.Packets.InitialPlayerSync.StoryGoalData
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: StoryGoalData
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public InitialStoryGoalData StoryGoalData { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+    content.vb: Public ReadOnly Property StoryGoalData As InitialStoryGoalData
+  overload: NitroxModel.Packets.InitialPlayerSync.StoryGoalData*
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData
+  id: PlayerSpawnData
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: PlayerSpawnData
+  nameWithType: InitialPlayerSync.PlayerSpawnData
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerSpawnData
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 23
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxVector3 PlayerSpawnData { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public ReadOnly Property PlayerSpawnData As NitroxVector3
+  overload: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData*
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation
+  id: PlayerSpawnRotation
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: PlayerSpawnRotation
+  nameWithType: InitialPlayerSync.PlayerSpawnRotation
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerSpawnRotation
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 24
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxQuaternion PlayerSpawnRotation { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxQuaternion
+    content.vb: Public ReadOnly Property PlayerSpawnRotation As NitroxQuaternion
+  overload: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation*
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId
+  id: PlayerSubRootId
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: PlayerSubRootId
+  nameWithType: InitialPlayerSync.PlayerSubRootId
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerSubRootId
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public Optional<NitroxId> PlayerSubRootId { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+    content.vb: Public ReadOnly Property PlayerSubRootId As [Optional](Of NitroxId)
+  overload: NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId*
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerStatsData
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.PlayerStatsData
+  id: PlayerStatsData
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: PlayerStatsData
+  nameWithType: InitialPlayerSync.PlayerStatsData
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerStatsData
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerStatsData
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 26
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public PlayerStatsData PlayerStatsData { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+    content.vb: Public ReadOnly Property PlayerStatsData As PlayerStatsData
+  overload: NitroxModel.Packets.InitialPlayerSync.PlayerStatsData*
+- uid: NitroxModel.Packets.InitialPlayerSync.OtherPlayers
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.OtherPlayers
+  id: OtherPlayers
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: OtherPlayers
+  nameWithType: InitialPlayerSync.OtherPlayers
+  fullName: NitroxModel.Packets.InitialPlayerSync.OtherPlayers
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OtherPlayers
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public List<PlayerContext> OtherPlayers { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext}
+    content.vb: Public ReadOnly Property OtherPlayers As List(Of PlayerContext)
+  overload: NitroxModel.Packets.InitialPlayerSync.OtherPlayers*
+- uid: NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities
+  id: GlobalRootEntities
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: GlobalRootEntities
+  nameWithType: InitialPlayerSync.GlobalRootEntities
+  fullName: NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GlobalRootEntities
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 28
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public List<Entity> GlobalRootEntities { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    content.vb: Public ReadOnly Property GlobalRootEntities As List(Of Entity)
+  overload: NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities*
+- uid: NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships
+  id: InitialSimulationOwnerships
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: InitialSimulationOwnerships
+  nameWithType: InitialPlayerSync.InitialSimulationOwnerships
+  fullName: NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: InitialSimulationOwnerships
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public List<NitroxId> InitialSimulationOwnerships { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+    content.vb: Public ReadOnly Property InitialSimulationOwnerships As List(Of NitroxId)
+  overload: NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships*
+- uid: NitroxModel.Packets.InitialPlayerSync.GameMode
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.GameMode
+  id: GameMode
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: GameMode
+  nameWithType: InitialPlayerSync.GameMode
+  fullName: NitroxModel.Packets.InitialPlayerSync.GameMode
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GameMode
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 30
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxGameMode GameMode { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Server.NitroxGameMode
+    content.vb: Public ReadOnly Property GameMode As NitroxGameMode
+  overload: NitroxModel.Packets.InitialPlayerSync.GameMode*
+- uid: NitroxModel.Packets.InitialPlayerSync.Permissions
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.Permissions
+  id: Permissions
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: Permissions
+  nameWithType: InitialPlayerSync.Permissions
+  fullName: NitroxModel.Packets.InitialPlayerSync.Permissions
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Permissions
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 31
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public Perms Permissions { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Perms
+    content.vb: Public ReadOnly Property Permissions As Perms
+  overload: NitroxModel.Packets.InitialPlayerSync.Permissions*
+- uid: NitroxModel.Packets.InitialPlayerSync.Preferences
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.Preferences
+  id: Preferences
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: Preferences
+  nameWithType: InitialPlayerSync.Preferences
+  fullName: NitroxModel.Packets.InitialPlayerSync.Preferences
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Preferences
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 32
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public SubnauticaPlayerPreferences Preferences { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences
+    content.vb: Public ReadOnly Property Preferences As SubnauticaPlayerPreferences
+  overload: NitroxModel.Packets.InitialPlayerSync.Preferences*
+- uid: NitroxModel.Packets.InitialPlayerSync.TimeData
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.TimeData
+  id: TimeData
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: TimeData
+  nameWithType: InitialPlayerSync.TimeData
+  fullName: NitroxModel.Packets.InitialPlayerSync.TimeData
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TimeData
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 33
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public TimeData TimeData { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.TimeData
+    content.vb: Public ReadOnly Property TimeData As TimeData
+  overload: NitroxModel.Packets.InitialPlayerSync.TimeData*
+- uid: NitroxModel.Packets.InitialPlayerSync.BuildOperationIds
+  commentId: P:NitroxModel.Packets.InitialPlayerSync.BuildOperationIds
+  id: BuildOperationIds
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: BuildOperationIds
+  nameWithType: InitialPlayerSync.BuildOperationIds
+  fullName: NitroxModel.Packets.InitialPlayerSync.BuildOperationIds
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BuildOperationIds
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 34
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public Dictionary<NitroxId, int> BuildOperationIds { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32}
+    content.vb: Public ReadOnly Property BuildOperationIds As Dictionary(Of NitroxId, Integer)
+  overload: NitroxModel.Packets.InitialPlayerSync.BuildOperationIds*
+- uid: NitroxModel.Packets.InitialPlayerSync.#ctor(NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.NitroxId,System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.IEnumerable{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})
+  commentId: M:NitroxModel.Packets.InitialPlayerSync.#ctor(NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.NitroxId,System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.IEnumerable{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})
+  id: '#ctor(NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.NitroxId,System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.IEnumerable{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})'
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: InitialPlayerSync(NitroxId, bool, NitroxId, IEnumerable<EquippedItemData>, IEnumerable<NitroxTechType>, Optional<NitroxId>[], InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional<NitroxId>, PlayerStatsData, IEnumerable<PlayerContext>, IEnumerable<Entity>, IEnumerable<NitroxId>, NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary<NitroxId, int>)
+  nameWithType: InitialPlayerSync.InitialPlayerSync(NitroxId, bool, NitroxId, IEnumerable<EquippedItemData>, IEnumerable<NitroxTechType>, Optional<NitroxId>[], InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional<NitroxId>, PlayerStatsData, IEnumerable<PlayerContext>, IEnumerable<Entity>, IEnumerable<NitroxId>, NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary<NitroxId, int>)
+  fullName: NitroxModel.Packets.InitialPlayerSync.InitialPlayerSync(NitroxModel.DataStructures.NitroxId, bool, NitroxModel.DataStructures.NitroxId, System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.GameLogic.EquippedItemData>, System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.GameLogic.NitroxTechType>, NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>[], NitroxModel.DataStructures.GameLogic.InitialPDAData, NitroxModel.DataStructures.GameLogic.InitialStoryGoalData, NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxQuaternion, NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>, NitroxModel.DataStructures.GameLogic.PlayerStatsData, System.Collections.Generic.IEnumerable<NitroxModel.MultiplayerSession.PlayerContext>, System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.GameLogic.Entity>, System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.NitroxId>, NitroxModel.Server.NitroxGameMode, NitroxModel.DataStructures.GameLogic.Perms, NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences, NitroxModel.DataStructures.GameLogic.TimeData, System.Collections.Generic.Dictionary<NitroxModel.DataStructures.NitroxId, int>)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 36
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public InitialPlayerSync(NitroxId playerGameObjectId, bool firstTimeConnecting, NitroxId assignedEscapePodId, IEnumerable<EquippedItemData> equipment, IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds, InitialPDAData pdaData, InitialStoryGoalData storyGoalData, NitroxVector3 playerSpawnData, NitroxQuaternion playerSpawnRotation, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, IEnumerable<PlayerContext> otherPlayers, IEnumerable<Entity> globalRootEntities, IEnumerable<NitroxId> initialSimulationOwnerships, NitroxGameMode gameMode, Perms perms, SubnauticaPlayerPreferences preferences, TimeData timeData, Dictionary<NitroxId, int> buildOperationIds)
+    parameters:
+    - id: playerGameObjectId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: firstTimeConnecting
+      type: System.Boolean
+    - id: assignedEscapePodId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: equipment
+      type: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.EquippedItemData}
+    - id: usedItems
+      type: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    - id: quickSlotsBindingIds
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[]
+    - id: pdaData
+      type: NitroxModel.DataStructures.GameLogic.InitialPDAData
+    - id: storyGoalData
+      type: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+    - id: playerSpawnData
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: playerSpawnRotation
+      type: NitroxModel.DataStructures.Unity.NitroxQuaternion
+    - id: playerSubRootId
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+    - id: playerStatsData
+      type: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+    - id: otherPlayers
+      type: System.Collections.Generic.IEnumerable{NitroxModel.MultiplayerSession.PlayerContext}
+    - id: globalRootEntities
+      type: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.Entity}
+    - id: initialSimulationOwnerships
+      type: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId}
+    - id: gameMode
+      type: NitroxModel.Server.NitroxGameMode
+    - id: perms
+      type: NitroxModel.DataStructures.GameLogic.Perms
+    - id: preferences
+      type: NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences
+    - id: timeData
+      type: NitroxModel.DataStructures.GameLogic.TimeData
+    - id: buildOperationIds
+      type: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32}
+    content.vb: Public Sub New(playerGameObjectId As NitroxId, firstTimeConnecting As Boolean, assignedEscapePodId As NitroxId, equipment As IEnumerable(Of EquippedItemData), usedItems As IEnumerable(Of NitroxTechType), quickSlotsBindingIds As [Optional](Of NitroxId)(), pdaData As InitialPDAData, storyGoalData As InitialStoryGoalData, playerSpawnData As NitroxVector3, playerSpawnRotation As NitroxQuaternion, playerSubRootId As [Optional](Of NitroxId), playerStatsData As PlayerStatsData, otherPlayers As IEnumerable(Of PlayerContext), globalRootEntities As IEnumerable(Of Entity), initialSimulationOwnerships As IEnumerable(Of NitroxId), gameMode As NitroxGameMode, perms As Perms, preferences As SubnauticaPlayerPreferences, timeData As TimeData, buildOperationIds As Dictionary(Of NitroxId, Integer))
+  overload: NitroxModel.Packets.InitialPlayerSync.#ctor*
+  nameWithType.vb: InitialPlayerSync.New(NitroxId, Boolean, NitroxId, IEnumerable(Of EquippedItemData), IEnumerable(Of NitroxTechType), Optional(Of NitroxId)(), InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional(Of NitroxId), PlayerStatsData, IEnumerable(Of PlayerContext), IEnumerable(Of Entity), IEnumerable(Of NitroxId), NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary(Of NitroxId, Integer))
+  fullName.vb: NitroxModel.Packets.InitialPlayerSync.New(NitroxModel.DataStructures.NitroxId, Boolean, NitroxModel.DataStructures.NitroxId, System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.GameLogic.EquippedItemData), System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.GameLogic.NitroxTechType), NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)(), NitroxModel.DataStructures.GameLogic.InitialPDAData, NitroxModel.DataStructures.GameLogic.InitialStoryGoalData, NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxQuaternion, NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId), NitroxModel.DataStructures.GameLogic.PlayerStatsData, System.Collections.Generic.IEnumerable(Of NitroxModel.MultiplayerSession.PlayerContext), System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.GameLogic.Entity), System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.NitroxId), NitroxModel.Server.NitroxGameMode, NitroxModel.DataStructures.GameLogic.Perms, NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences, NitroxModel.DataStructures.GameLogic.TimeData, System.Collections.Generic.Dictionary(Of NitroxModel.DataStructures.NitroxId, Integer))
+  name.vb: New(NitroxId, Boolean, NitroxId, IEnumerable(Of EquippedItemData), IEnumerable(Of NitroxTechType), Optional(Of NitroxId)(), InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional(Of NitroxId), PlayerStatsData, IEnumerable(Of PlayerContext), IEnumerable(Of Entity), IEnumerable(Of NitroxId), NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary(Of NitroxId, Integer))
+- uid: NitroxModel.Packets.InitialPlayerSync.#ctor(NitroxModel.DataStructures.NitroxId,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})
+  commentId: M:NitroxModel.Packets.InitialPlayerSync.#ctor(NitroxModel.DataStructures.NitroxId,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})
+  id: '#ctor(NitroxModel.DataStructures.NitroxId,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType},NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[],NitroxModel.DataStructures.NitroxId,System.Boolean,NitroxModel.DataStructures.GameLogic.InitialPDAData,NitroxModel.DataStructures.GameLogic.InitialStoryGoalData,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},NitroxModel.DataStructures.GameLogic.PlayerStatsData,System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext},System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId},NitroxModel.Server.NitroxGameMode,NitroxModel.DataStructures.GameLogic.Perms,NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences,NitroxModel.DataStructures.GameLogic.TimeData,System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32})'
+  parent: NitroxModel.Packets.InitialPlayerSync
+  langs:
+  - csharp
+  - vb
+  name: InitialPlayerSync(NitroxId, List<EquippedItemData>, List<NitroxTechType>, Optional<NitroxId>[], NitroxId, bool, InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional<NitroxId>, PlayerStatsData, List<PlayerContext>, List<Entity>, List<NitroxId>, NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary<NitroxId, int>)
+  nameWithType: InitialPlayerSync.InitialPlayerSync(NitroxId, List<EquippedItemData>, List<NitroxTechType>, Optional<NitroxId>[], NitroxId, bool, InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional<NitroxId>, PlayerStatsData, List<PlayerContext>, List<Entity>, List<NitroxId>, NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary<NitroxId, int>)
+  fullName: NitroxModel.Packets.InitialPlayerSync.InitialPlayerSync(NitroxModel.DataStructures.NitroxId, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.EquippedItemData>, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>, NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>[], NitroxModel.DataStructures.NitroxId, bool, NitroxModel.DataStructures.GameLogic.InitialPDAData, NitroxModel.DataStructures.GameLogic.InitialStoryGoalData, NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxQuaternion, NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>, NitroxModel.DataStructures.GameLogic.PlayerStatsData, System.Collections.Generic.List<NitroxModel.MultiplayerSession.PlayerContext>, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>, System.Collections.Generic.List<NitroxModel.DataStructures.NitroxId>, NitroxModel.Server.NitroxGameMode, NitroxModel.DataStructures.GameLogic.Perms, NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences, NitroxModel.DataStructures.GameLogic.TimeData, System.Collections.Generic.Dictionary<NitroxModel.DataStructures.NitroxId, int>)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/InitialPlayerSync.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/InitialPlayerSync.cs
+    startLine: 80
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  remarks: Used for deserialization
+  example: []
+  syntax:
+    content: public InitialPlayerSync(NitroxId assignedEscapePodId, List<EquippedItemData> equippedItems, List<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds, NitroxId playerGameObjectId, bool firstTimeConnecting, InitialPDAData pdaData, InitialStoryGoalData storyGoalData, NitroxVector3 playerSpawnData, NitroxQuaternion playerSpawnRotation, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<PlayerContext> otherPlayers, List<Entity> globalRootEntities, List<NitroxId> initialSimulationOwnerships, NitroxGameMode gameMode, Perms permissions, SubnauticaPlayerPreferences preferences, TimeData timeData, Dictionary<NitroxId, int> buildOperationIds)
+    parameters:
+    - id: assignedEscapePodId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: equippedItems
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData}
+    - id: usedItems
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    - id: quickSlotsBindingIds
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[]
+    - id: playerGameObjectId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: firstTimeConnecting
+      type: System.Boolean
+    - id: pdaData
+      type: NitroxModel.DataStructures.GameLogic.InitialPDAData
+    - id: storyGoalData
+      type: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+    - id: playerSpawnData
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: playerSpawnRotation
+      type: NitroxModel.DataStructures.Unity.NitroxQuaternion
+    - id: playerSubRootId
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+    - id: playerStatsData
+      type: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+    - id: otherPlayers
+      type: System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext}
+    - id: globalRootEntities
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    - id: initialSimulationOwnerships
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+    - id: gameMode
+      type: NitroxModel.Server.NitroxGameMode
+    - id: permissions
+      type: NitroxModel.DataStructures.GameLogic.Perms
+    - id: preferences
+      type: NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences
+    - id: timeData
+      type: NitroxModel.DataStructures.GameLogic.TimeData
+    - id: buildOperationIds
+      type: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32}
+    content.vb: Public Sub New(assignedEscapePodId As NitroxId, equippedItems As List(Of EquippedItemData), usedItems As List(Of NitroxTechType), quickSlotsBindingIds As [Optional](Of NitroxId)(), playerGameObjectId As NitroxId, firstTimeConnecting As Boolean, pdaData As InitialPDAData, storyGoalData As InitialStoryGoalData, playerSpawnData As NitroxVector3, playerSpawnRotation As NitroxQuaternion, playerSubRootId As [Optional](Of NitroxId), playerStatsData As PlayerStatsData, otherPlayers As List(Of PlayerContext), globalRootEntities As List(Of Entity), initialSimulationOwnerships As List(Of NitroxId), gameMode As NitroxGameMode, permissions As Perms, preferences As SubnauticaPlayerPreferences, timeData As TimeData, buildOperationIds As Dictionary(Of NitroxId, Integer))
+  overload: NitroxModel.Packets.InitialPlayerSync.#ctor*
+  nameWithType.vb: InitialPlayerSync.New(NitroxId, List(Of EquippedItemData), List(Of NitroxTechType), Optional(Of NitroxId)(), NitroxId, Boolean, InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional(Of NitroxId), PlayerStatsData, List(Of PlayerContext), List(Of Entity), List(Of NitroxId), NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary(Of NitroxId, Integer))
+  fullName.vb: NitroxModel.Packets.InitialPlayerSync.New(NitroxModel.DataStructures.NitroxId, System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.EquippedItemData), System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType), NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)(), NitroxModel.DataStructures.NitroxId, Boolean, NitroxModel.DataStructures.GameLogic.InitialPDAData, NitroxModel.DataStructures.GameLogic.InitialStoryGoalData, NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxQuaternion, NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId), NitroxModel.DataStructures.GameLogic.PlayerStatsData, System.Collections.Generic.List(Of NitroxModel.MultiplayerSession.PlayerContext), System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity), System.Collections.Generic.List(Of NitroxModel.DataStructures.NitroxId), NitroxModel.Server.NitroxGameMode, NitroxModel.DataStructures.GameLogic.Perms, NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences, NitroxModel.DataStructures.GameLogic.TimeData, System.Collections.Generic.Dictionary(Of NitroxModel.DataStructures.NitroxId, Integer))
+  name.vb: New(NitroxId, List(Of EquippedItemData), List(Of NitroxTechType), Optional(Of NitroxId)(), NitroxId, Boolean, InitialPDAData, InitialStoryGoalData, NitroxVector3, NitroxQuaternion, Optional(Of NitroxId), PlayerStatsData, List(Of PlayerContext), List(Of Entity), List(Of NitroxId), NitroxGameMode, Perms, SubnauticaPlayerPreferences, TimeData, Dictionary(Of NitroxId, Integer))
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId
+  href: NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId.html#NitroxModel_Packets_InitialPlayerSync_AssignedEscapePodId
+  name: AssignedEscapePodId
+  nameWithType: InitialPlayerSync.AssignedEscapePodId
+  fullName: NitroxModel.Packets.InitialPlayerSync.AssignedEscapePodId
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxModel.Packets.InitialPlayerSync.EquippedItems*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.EquippedItems
+  href: NitroxModel.Packets.InitialPlayerSync.EquippedItems.html#NitroxModel_Packets_InitialPlayerSync_EquippedItems
+  name: EquippedItems
+  nameWithType: InitialPlayerSync.EquippedItems
+  fullName: NitroxModel.Packets.InitialPlayerSync.EquippedItems
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.EquippedItemData}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<EquippedItemData>
+  nameWithType: List<EquippedItemData>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.EquippedItemData>
+  nameWithType.vb: List(Of EquippedItemData)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.EquippedItemData)
+  name.vb: List(Of EquippedItemData)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.EquippedItemData
+    name: EquippedItemData
+    href: NitroxModel.DataStructures.GameLogic.EquippedItemData.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.EquippedItemData
+    name: EquippedItemData
+    href: NitroxModel.DataStructures.GameLogic.EquippedItemData.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxModel.Packets.InitialPlayerSync.UsedItems*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.UsedItems
+  href: NitroxModel.Packets.InitialPlayerSync.UsedItems.html#NitroxModel_Packets_InitialPlayerSync_UsedItems
+  name: UsedItems
+  nameWithType: InitialPlayerSync.UsedItems
+  fullName: NitroxModel.Packets.InitialPlayerSync.UsedItems
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<NitroxTechType>
+  nameWithType: List<NitroxTechType>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>
+  nameWithType.vb: List(Of NitroxTechType)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  name.vb: List(Of NitroxTechType)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: )
+- uid: NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds
+  href: NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds.html#NitroxModel_Packets_InitialPlayerSync_QuickSlotsBindingIds
+  name: QuickSlotsBindingIds
+  nameWithType: InitialPlayerSync.QuickSlotsBindingIds
+  fullName: NitroxModel.Packets.InitialPlayerSync.QuickSlotsBindingIds
+- uid: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[]
+  isExternal: true
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<NitroxId>[]
+  nameWithType: Optional<NitroxId>[]
+  fullName: NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>[]
+  nameWithType.vb: Optional(Of NitroxId)()
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)()
+  name.vb: Optional(Of NitroxId)()
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId
+  href: NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId.html#NitroxModel_Packets_InitialPlayerSync_PlayerGameObjectId
+  name: PlayerGameObjectId
+  nameWithType: InitialPlayerSync.PlayerGameObjectId
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerGameObjectId
+- uid: NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting
+  href: NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting.html#NitroxModel_Packets_InitialPlayerSync_FirstTimeConnecting
+  name: FirstTimeConnecting
+  nameWithType: InitialPlayerSync.FirstTimeConnecting
+  fullName: NitroxModel.Packets.InitialPlayerSync.FirstTimeConnecting
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.Packets.InitialPlayerSync.PDAData*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.PDAData
+  href: NitroxModel.Packets.InitialPlayerSync.PDAData.html#NitroxModel_Packets_InitialPlayerSync_PDAData
+  name: PDAData
+  nameWithType: InitialPlayerSync.PDAData
+  fullName: NitroxModel.Packets.InitialPlayerSync.PDAData
+- uid: NitroxModel.DataStructures.GameLogic.InitialPDAData
+  commentId: T:NitroxModel.DataStructures.GameLogic.InitialPDAData
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.InitialPDAData.html
+  name: InitialPDAData
+  nameWithType: InitialPDAData
+  fullName: NitroxModel.DataStructures.GameLogic.InitialPDAData
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxModel.Packets.InitialPlayerSync.StoryGoalData*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.StoryGoalData
+  href: NitroxModel.Packets.InitialPlayerSync.StoryGoalData.html#NitroxModel_Packets_InitialPlayerSync_StoryGoalData
+  name: StoryGoalData
+  nameWithType: InitialPlayerSync.StoryGoalData
+  fullName: NitroxModel.Packets.InitialPlayerSync.StoryGoalData
+- uid: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+  commentId: T:NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData.html
+  name: InitialStoryGoalData
+  nameWithType: InitialStoryGoalData
+  fullName: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData
+  href: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData.html#NitroxModel_Packets_InitialPlayerSync_PlayerSpawnData
+  name: PlayerSpawnData
+  nameWithType: InitialPlayerSync.PlayerSpawnData
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnData
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation
+  href: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation.html#NitroxModel_Packets_InitialPlayerSync_PlayerSpawnRotation
+  name: PlayerSpawnRotation
+  nameWithType: InitialPlayerSync.PlayerSpawnRotation
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerSpawnRotation
+- uid: NitroxModel.DataStructures.Unity.NitroxQuaternion
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxQuaternion
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxQuaternion.html
+  name: NitroxQuaternion
+  nameWithType: NitroxQuaternion
+  fullName: NitroxModel.DataStructures.Unity.NitroxQuaternion
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId
+  href: NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId.html#NitroxModel_Packets_InitialPlayerSync_PlayerSubRootId
+  name: PlayerSubRootId
+  nameWithType: InitialPlayerSync.PlayerSubRootId
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerSubRootId
+- uid: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+  commentId: T:NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+  parent: NitroxModel.DataStructures.Util
+  definition: NitroxModel.DataStructures.Util.Optional`1
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<NitroxId>
+  nameWithType: Optional<NitroxId>
+  fullName: NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>
+  nameWithType.vb: Optional(Of NitroxId)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)
+  name.vb: Optional(Of NitroxId)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+- uid: NitroxModel.DataStructures.Util.Optional`1
+  commentId: T:NitroxModel.DataStructures.Util.Optional`1
+  parent: NitroxModel.DataStructures.Util
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<T>
+  nameWithType: Optional<T>
+  fullName: NitroxModel.DataStructures.Util.Optional<T>
+  nameWithType.vb: Optional(Of T)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of T)
+  name.vb: Optional(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Util
+  commentId: N:NitroxModel.DataStructures.Util
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Util
+  nameWithType: NitroxModel.DataStructures.Util
+  fullName: NitroxModel.DataStructures.Util
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+- uid: NitroxModel.Packets.InitialPlayerSync.PlayerStatsData*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.PlayerStatsData
+  href: NitroxModel.Packets.InitialPlayerSync.PlayerStatsData.html#NitroxModel_Packets_InitialPlayerSync_PlayerStatsData
+  name: PlayerStatsData
+  nameWithType: InitialPlayerSync.PlayerStatsData
+  fullName: NitroxModel.Packets.InitialPlayerSync.PlayerStatsData
+- uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  commentId: T:NitroxModel.DataStructures.GameLogic.PlayerStatsData
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.PlayerStatsData.html
+  name: PlayerStatsData
+  nameWithType: PlayerStatsData
+  fullName: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+- uid: NitroxModel.Packets.InitialPlayerSync.OtherPlayers*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.OtherPlayers
+  href: NitroxModel.Packets.InitialPlayerSync.OtherPlayers.html#NitroxModel_Packets_InitialPlayerSync_OtherPlayers
+  name: OtherPlayers
+  nameWithType: InitialPlayerSync.OtherPlayers
+  fullName: NitroxModel.Packets.InitialPlayerSync.OtherPlayers
+- uid: System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext}
+  commentId: T:System.Collections.Generic.List{NitroxModel.MultiplayerSession.PlayerContext}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<PlayerContext>
+  nameWithType: List<PlayerContext>
+  fullName: System.Collections.Generic.List<NitroxModel.MultiplayerSession.PlayerContext>
+  nameWithType.vb: List(Of PlayerContext)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.MultiplayerSession.PlayerContext)
+  name.vb: List(Of PlayerContext)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.MultiplayerSession.PlayerContext
+    name: PlayerContext
+    href: NitroxModel.MultiplayerSession.PlayerContext.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.MultiplayerSession.PlayerContext
+    name: PlayerContext
+    href: NitroxModel.MultiplayerSession.PlayerContext.html
+  - name: )
+- uid: NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities
+  href: NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities.html#NitroxModel_Packets_InitialPlayerSync_GlobalRootEntities
+  name: GlobalRootEntities
+  nameWithType: InitialPlayerSync.GlobalRootEntities
+  fullName: NitroxModel.Packets.InitialPlayerSync.GlobalRootEntities
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Entity>
+  nameWithType: List<Entity>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>
+  nameWithType.vb: List(Of Entity)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity)
+  name.vb: List(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: )
+- uid: NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships
+  href: NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships.html#NitroxModel_Packets_InitialPlayerSync_InitialSimulationOwnerships
+  name: InitialSimulationOwnerships
+  nameWithType: InitialPlayerSync.InitialSimulationOwnerships
+  fullName: NitroxModel.Packets.InitialPlayerSync.InitialSimulationOwnerships
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.NitroxId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<NitroxId>
+  nameWithType: List<NitroxId>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.NitroxId>
+  nameWithType.vb: List(Of NitroxId)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.NitroxId)
+  name.vb: List(Of NitroxId)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+- uid: NitroxModel.Packets.InitialPlayerSync.GameMode*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.GameMode
+  href: NitroxModel.Packets.InitialPlayerSync.GameMode.html#NitroxModel_Packets_InitialPlayerSync_GameMode
+  name: GameMode
+  nameWithType: InitialPlayerSync.GameMode
+  fullName: NitroxModel.Packets.InitialPlayerSync.GameMode
+- uid: NitroxModel.Server.NitroxGameMode
+  commentId: T:NitroxModel.Server.NitroxGameMode
+  parent: NitroxModel.Server
+  href: NitroxModel.Server.NitroxGameMode.html
+  name: NitroxGameMode
+  nameWithType: NitroxGameMode
+  fullName: NitroxModel.Server.NitroxGameMode
+- uid: NitroxModel.Server
+  commentId: N:NitroxModel.Server
+  href: NitroxModel.html
+  name: NitroxModel.Server
+  nameWithType: NitroxModel.Server
+  fullName: NitroxModel.Server
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Server
+    name: Server
+    href: NitroxModel.Server.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Server
+    name: Server
+    href: NitroxModel.Server.html
+- uid: NitroxModel.Packets.InitialPlayerSync.Permissions*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.Permissions
+  href: NitroxModel.Packets.InitialPlayerSync.Permissions.html#NitroxModel_Packets_InitialPlayerSync_Permissions
+  name: Permissions
+  nameWithType: InitialPlayerSync.Permissions
+  fullName: NitroxModel.Packets.InitialPlayerSync.Permissions
+- uid: NitroxModel.DataStructures.GameLogic.Perms
+  commentId: T:NitroxModel.DataStructures.GameLogic.Perms
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.Perms.html
+  name: Perms
+  nameWithType: Perms
+  fullName: NitroxModel.DataStructures.GameLogic.Perms
+- uid: NitroxModel.Packets.InitialPlayerSync.Preferences*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.Preferences
+  href: NitroxModel.Packets.InitialPlayerSync.Preferences.html#NitroxModel_Packets_InitialPlayerSync_Preferences
+  name: Preferences
+  nameWithType: InitialPlayerSync.Preferences
+  fullName: NitroxModel.Packets.InitialPlayerSync.Preferences
+- uid: NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences
+  commentId: T:NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences.html
+  name: SubnauticaPlayerPreferences
+  nameWithType: SubnauticaPlayerPreferences
+  fullName: NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences
+- uid: NitroxModel.Packets.InitialPlayerSync.TimeData*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.TimeData
+  href: NitroxModel.Packets.InitialPlayerSync.TimeData.html#NitroxModel_Packets_InitialPlayerSync_TimeData
+  name: TimeData
+  nameWithType: InitialPlayerSync.TimeData
+  fullName: NitroxModel.Packets.InitialPlayerSync.TimeData
+- uid: NitroxModel.DataStructures.GameLogic.TimeData
+  commentId: T:NitroxModel.DataStructures.GameLogic.TimeData
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.TimeData.html
+  name: TimeData
+  nameWithType: TimeData
+  fullName: NitroxModel.DataStructures.GameLogic.TimeData
+- uid: NitroxModel.Packets.InitialPlayerSync.BuildOperationIds*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.BuildOperationIds
+  href: NitroxModel.Packets.InitialPlayerSync.BuildOperationIds.html#NitroxModel_Packets_InitialPlayerSync_BuildOperationIds
+  name: BuildOperationIds
+  nameWithType: InitialPlayerSync.BuildOperationIds
+  fullName: NitroxModel.Packets.InitialPlayerSync.BuildOperationIds
+- uid: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{NitroxModel.DataStructures.NitroxId,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<NitroxId, int>
+  nameWithType: Dictionary<NitroxId, int>
+  fullName: System.Collections.Generic.Dictionary<NitroxModel.DataStructures.NitroxId, int>
+  nameWithType.vb: Dictionary(Of NitroxId, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of NitroxModel.DataStructures.NitroxId, Integer)
+  name.vb: Dictionary(Of NitroxId, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: NitroxModel.Packets.InitialPlayerSync.#ctor*
+  commentId: Overload:NitroxModel.Packets.InitialPlayerSync.#ctor
+  href: NitroxModel.Packets.InitialPlayerSync.-ctor.html#NitroxModel_Packets_InitialPlayerSync__ctor_NitroxModel_DataStructures_NitroxId_System_Boolean_NitroxModel_DataStructures_NitroxId_System_Collections_Generic_IEnumerable_NitroxModel_DataStructures_GameLogic_EquippedItemData__System_Collections_Generic_IEnumerable_NitroxModel_DataStructures_GameLogic_NitroxTechType__NitroxModel_DataStructures_Util_Optional_NitroxModel_DataStructures_NitroxId____NitroxModel_DataStructures_GameLogic_InitialPDAData_NitroxModel_DataStructures_GameLogic_InitialStoryGoalData_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxQuaternion_NitroxModel_DataStructures_Util_Optional_NitroxModel_DataStructures_NitroxId__NitroxModel_DataStructures_GameLogic_PlayerStatsData_System_Collections_Generic_IEnumerable_NitroxModel_MultiplayerSession_PlayerContext__System_Collections_Generic_IEnumerable_NitroxModel_DataStructures_GameLogic_Entity__System_Collections_Generic_IEnumerable_NitroxModel_DataStructures_NitroxId__NitroxModel_Server_NitroxGameMode_NitroxModel_DataStructures_GameLogic_Perms_NitroxModel_DataStructures_GameLogic_SubnauticaPlayerPreferences_NitroxModel_DataStructures_GameLogic_TimeData_System_Collections_Generic_Dictionary_NitroxModel_DataStructures_NitroxId_System_Int32__
+  name: InitialPlayerSync
+  nameWithType: InitialPlayerSync.InitialPlayerSync
+  fullName: NitroxModel.Packets.InitialPlayerSync.InitialPlayerSync
+  nameWithType.vb: InitialPlayerSync.New
+  fullName.vb: NitroxModel.Packets.InitialPlayerSync.New
+  name.vb: New
+- uid: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.EquippedItemData}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.EquippedItemData}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<EquippedItemData>
+  nameWithType: IEnumerable<EquippedItemData>
+  fullName: System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.GameLogic.EquippedItemData>
+  nameWithType.vb: IEnumerable(Of EquippedItemData)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.GameLogic.EquippedItemData)
+  name.vb: IEnumerable(Of EquippedItemData)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.EquippedItemData
+    name: EquippedItemData
+    href: NitroxModel.DataStructures.GameLogic.EquippedItemData.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.EquippedItemData
+    name: EquippedItemData
+    href: NitroxModel.DataStructures.GameLogic.EquippedItemData.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<NitroxTechType>
+  nameWithType: IEnumerable<NitroxTechType>
+  fullName: System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.GameLogic.NitroxTechType>
+  nameWithType.vb: IEnumerable(Of NitroxTechType)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  name.vb: IEnumerable(Of NitroxTechType)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{NitroxModel.MultiplayerSession.PlayerContext}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxModel.MultiplayerSession.PlayerContext}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<PlayerContext>
+  nameWithType: IEnumerable<PlayerContext>
+  fullName: System.Collections.Generic.IEnumerable<NitroxModel.MultiplayerSession.PlayerContext>
+  nameWithType.vb: IEnumerable(Of PlayerContext)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxModel.MultiplayerSession.PlayerContext)
+  name.vb: IEnumerable(Of PlayerContext)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxModel.MultiplayerSession.PlayerContext
+    name: PlayerContext
+    href: NitroxModel.MultiplayerSession.PlayerContext.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.MultiplayerSession.PlayerContext
+    name: PlayerContext
+    href: NitroxModel.MultiplayerSession.PlayerContext.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.Entity}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.GameLogic.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<Entity>
+  nameWithType: IEnumerable<Entity>
+  fullName: System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.GameLogic.Entity>
+  nameWithType.vb: IEnumerable(Of Entity)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.GameLogic.Entity)
+  name.vb: IEnumerable(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<NitroxId>
+  nameWithType: IEnumerable<NitroxId>
+  fullName: System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.NitroxId>
+  nameWithType.vb: IEnumerable(Of NitroxId)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.NitroxId)
+  name.vb: IEnumerable(Of NitroxId)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

@@ -1,0 +1,47 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms
+  id: Platforms
+  parent: NitroxModel
+  children:
+  - NitroxModel.Platforms.OS
+  - NitroxModel.Platforms.Store
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Platforms
+  type: Namespace
+references:
+- uid: NitroxModel.Platforms.OS
+  isExternal: true
+- uid: NitroxModel.Platforms.Store
+  commentId: N:NitroxModel.Platforms.Store
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.Store
+  nameWithType: NitroxModel.Platforms.Store
+  fullName: NitroxModel.Platforms.Store
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store
+    name: Store
+    href: NitroxModel.Platforms.Store.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store
+    name: Store
+    href: NitroxModel.Platforms.Store.html
+memberLayout: SeparatePages

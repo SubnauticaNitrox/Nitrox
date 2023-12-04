@@ -1,0 +1,621 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  id: ModuleEntry32
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  children:
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.GlblcntUsage
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.ProccntUsage
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.dwSize
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.hModule
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseAddr
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseSize
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szExePath
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szModule
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ModuleID
+  - NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ProcessID
+  langs:
+  - csharp
+  - vb
+  name: ModuleEntry32
+  nameWithType: ModuleEntry32
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  type: Struct
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ModuleEntry32
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public struct ModuleEntry32
+    content.vb: Public Structure ModuleEntry32
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.dwSize
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.dwSize
+  id: dwSize
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: dwSize
+  nameWithType: ModuleEntry32.dwSize
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.dwSize
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: dwSize
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public int dwSize
+    return:
+      type: System.Int32
+    content.vb: Public dwSize As Integer
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ModuleID
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ModuleID
+  id: th32ModuleID
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: th32ModuleID
+  nameWithType: ModuleEntry32.th32ModuleID
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ModuleID
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: th32ModuleID
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public uint th32ModuleID
+    return:
+      type: System.UInt32
+    content.vb: Public th32ModuleID As UInteger
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ProcessID
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ProcessID
+  id: th32ProcessID
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: th32ProcessID
+  nameWithType: ModuleEntry32.th32ProcessID
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.th32ProcessID
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: th32ProcessID
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public uint th32ProcessID
+    return:
+      type: System.UInt32
+    content.vb: Public th32ProcessID As UInteger
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.GlblcntUsage
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.GlblcntUsage
+  id: GlblcntUsage
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: GlblcntUsage
+  nameWithType: ModuleEntry32.GlblcntUsage
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.GlblcntUsage
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GlblcntUsage
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public uint GlblcntUsage
+    return:
+      type: System.UInt32
+    content.vb: Public GlblcntUsage As UInteger
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.ProccntUsage
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.ProccntUsage
+  id: ProccntUsage
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: ProccntUsage
+  nameWithType: ModuleEntry32.ProccntUsage
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.ProccntUsage
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ProccntUsage
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public uint ProccntUsage
+    return:
+      type: System.UInt32
+    content.vb: Public ProccntUsage As UInteger
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseAddr
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseAddr
+  id: modBaseAddr
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: modBaseAddr
+  nameWithType: ModuleEntry32.modBaseAddr
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseAddr
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: modBaseAddr
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public IntPtr modBaseAddr
+    return:
+      type: System.IntPtr
+    content.vb: Public modBaseAddr As IntPtr
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseSize
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseSize
+  id: modBaseSize
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: modBaseSize
+  nameWithType: ModuleEntry32.modBaseSize
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.modBaseSize
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: modBaseSize
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 14
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public uint modBaseSize
+    return:
+      type: System.UInt32
+    content.vb: Public modBaseSize As UInteger
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.hModule
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.hModule
+  id: hModule
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: hModule
+  nameWithType: ModuleEntry32.hModule
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.hModule
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: hModule
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public IntPtr hModule
+    return:
+      type: System.IntPtr
+    content.vb: Public hModule As IntPtr
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szModule
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szModule
+  id: szModule
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: szModule
+  nameWithType: ModuleEntry32.szModule
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szModule
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: szModule
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public string szModule
+    return:
+      type: System.String
+    content.vb: Public szModule As String
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szExePath
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szExePath
+  id: szExePath
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+  langs:
+  - csharp
+  - vb
+  name: szExePath
+  nameWithType: ModuleEntry32.szExePath
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32.szExePath
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: szExePath
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ModuleEntry32.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public string szExePath
+    return:
+      type: System.String
+    content.vb: Public szExePath As String
+references:
+- uid: NitroxModel.Platforms.OS.Windows.Internal
+  commentId: N:NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Windows.Internal
+  nameWithType: NitroxModel.Platforms.OS.Windows.Internal
+  fullName: NitroxModel.Platforms.OS.Windows.Internal
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: IntPtr
+  nameWithType: IntPtr
+  fullName: System.IntPtr
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

@@ -1,0 +1,972 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation
+  commentId: T:NitroxServer.GameLogic.Entities.EntitySimulation
+  id: EntitySimulation
+  parent: NitroxServer.GameLogic.Entities
+  children:
+  - NitroxServer.GameLogic.Entities.EntitySimulation.#ctor(NitroxServer.GameLogic.Entities.EntityRegistry,NitroxServer.GameLogic.Entities.WorldEntityManager,NitroxServer.GameLogic.SimulationOwnershipData,NitroxServer.GameLogic.PlayerManager,System.Collections.Generic.HashSet{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  - NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities(NitroxServer.Player)
+  - NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer(NitroxModel.DataStructures.GameLogic.Entity,NitroxServer.Player)
+  - NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition(NitroxServer.Player,NitroxModel.DataStructures.NitroxInt3)
+  - NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates(NitroxServer.Player,NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[],NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[])
+  - NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect(NitroxServer.Player)
+  - NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed(NitroxModel.DataStructures.NitroxId)
+  langs:
+  - csharp
+  - vb
+  name: EntitySimulation
+  nameWithType: EntitySimulation
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntitySimulation
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 11
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public class EntitySimulation
+    content.vb: Public Class EntitySimulation
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.#ctor(NitroxServer.GameLogic.Entities.EntityRegistry,NitroxServer.GameLogic.Entities.WorldEntityManager,NitroxServer.GameLogic.SimulationOwnershipData,NitroxServer.GameLogic.PlayerManager,System.Collections.Generic.HashSet{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  commentId: M:NitroxServer.GameLogic.Entities.EntitySimulation.#ctor(NitroxServer.GameLogic.Entities.EntityRegistry,NitroxServer.GameLogic.Entities.WorldEntityManager,NitroxServer.GameLogic.SimulationOwnershipData,NitroxServer.GameLogic.PlayerManager,System.Collections.Generic.HashSet{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  id: '#ctor(NitroxServer.GameLogic.Entities.EntityRegistry,NitroxServer.GameLogic.Entities.WorldEntityManager,NitroxServer.GameLogic.SimulationOwnershipData,NitroxServer.GameLogic.PlayerManager,System.Collections.Generic.HashSet{NitroxModel.DataStructures.GameLogic.NitroxTechType})'
+  parent: NitroxServer.GameLogic.Entities.EntitySimulation
+  langs:
+  - csharp
+  - vb
+  name: EntitySimulation(EntityRegistry, WorldEntityManager, SimulationOwnershipData, PlayerManager, HashSet<NitroxTechType>)
+  nameWithType: EntitySimulation.EntitySimulation(EntityRegistry, WorldEntityManager, SimulationOwnershipData, PlayerManager, HashSet<NitroxTechType>)
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.EntitySimulation(NitroxServer.GameLogic.Entities.EntityRegistry, NitroxServer.GameLogic.Entities.WorldEntityManager, NitroxServer.GameLogic.SimulationOwnershipData, NitroxServer.GameLogic.PlayerManager, System.Collections.Generic.HashSet<NitroxModel.DataStructures.GameLogic.NitroxTechType>)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 21
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public EntitySimulation(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<NitroxTechType> serverSpawnedSimulationWhiteList)
+    parameters:
+    - id: entityRegistry
+      type: NitroxServer.GameLogic.Entities.EntityRegistry
+    - id: worldEntityManager
+      type: NitroxServer.GameLogic.Entities.WorldEntityManager
+    - id: simulationOwnershipData
+      type: NitroxServer.GameLogic.SimulationOwnershipData
+    - id: playerManager
+      type: NitroxServer.GameLogic.PlayerManager
+    - id: serverSpawnedSimulationWhiteList
+      type: System.Collections.Generic.HashSet{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public Sub New(entityRegistry As EntityRegistry, worldEntityManager As WorldEntityManager, simulationOwnershipData As SimulationOwnershipData, playerManager As PlayerManager, serverSpawnedSimulationWhiteList As HashSet(Of NitroxTechType))
+  overload: NitroxServer.GameLogic.Entities.EntitySimulation.#ctor*
+  nameWithType.vb: EntitySimulation.New(EntityRegistry, WorldEntityManager, SimulationOwnershipData, PlayerManager, HashSet(Of NitroxTechType))
+  fullName.vb: NitroxServer.GameLogic.Entities.EntitySimulation.New(NitroxServer.GameLogic.Entities.EntityRegistry, NitroxServer.GameLogic.Entities.WorldEntityManager, NitroxServer.GameLogic.SimulationOwnershipData, NitroxServer.GameLogic.PlayerManager, System.Collections.Generic.HashSet(Of NitroxModel.DataStructures.GameLogic.NitroxTechType))
+  name.vb: New(EntityRegistry, WorldEntityManager, SimulationOwnershipData, PlayerManager, HashSet(Of NitroxTechType))
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates(NitroxServer.Player,NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[],NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[])
+  commentId: M:NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates(NitroxServer.Player,NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[],NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[])
+  id: BroadcastSimulationChangesForCellUpdates(NitroxServer.Player,NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[],NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[])
+  parent: NitroxServer.GameLogic.Entities.EntitySimulation
+  langs:
+  - csharp
+  - vb
+  name: BroadcastSimulationChangesForCellUpdates(Player, AbsoluteEntityCell[], AbsoluteEntityCell[])
+  nameWithType: EntitySimulation.BroadcastSimulationChangesForCellUpdates(Player, AbsoluteEntityCell[], AbsoluteEntityCell[])
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates(NitroxServer.Player, NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[], NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[])
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastSimulationChangesForCellUpdates
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 30
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public void BroadcastSimulationChangesForCellUpdates(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+    parameters:
+    - id: player
+      type: NitroxServer.Player
+    - id: added
+      type: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[]
+    - id: removed
+      type: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[]
+    content.vb: Public Sub BroadcastSimulationChangesForCellUpdates(player As Player, added As AbsoluteEntityCell(), removed As AbsoluteEntityCell())
+  overload: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates*
+  nameWithType.vb: EntitySimulation.BroadcastSimulationChangesForCellUpdates(Player, AbsoluteEntityCell(), AbsoluteEntityCell())
+  fullName.vb: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates(NitroxServer.Player, NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell(), NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell())
+  name.vb: BroadcastSimulationChangesForCellUpdates(Player, AbsoluteEntityCell(), AbsoluteEntityCell())
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition(NitroxServer.Player,NitroxModel.DataStructures.NitroxInt3)
+  commentId: M:NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition(NitroxServer.Player,NitroxModel.DataStructures.NitroxInt3)
+  id: BroadcastSimulationChangesForBatchAddition(NitroxServer.Player,NitroxModel.DataStructures.NitroxInt3)
+  parent: NitroxServer.GameLogic.Entities.EntitySimulation
+  langs:
+  - csharp
+  - vb
+  name: BroadcastSimulationChangesForBatchAddition(Player, NitroxInt3)
+  nameWithType: EntitySimulation.BroadcastSimulationChangesForBatchAddition(Player, NitroxInt3)
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition(NitroxServer.Player, NitroxModel.DataStructures.NitroxInt3)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastSimulationChangesForBatchAddition
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 40
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public void BroadcastSimulationChangesForBatchAddition(Player player, NitroxInt3 batchId)
+    parameters:
+    - id: player
+      type: NitroxServer.Player
+    - id: batchId
+      type: NitroxModel.DataStructures.NitroxInt3
+    content.vb: Public Sub BroadcastSimulationChangesForBatchAddition(player As Player, batchId As NitroxInt3)
+  overload: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition*
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect(NitroxServer.Player)
+  commentId: M:NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect(NitroxServer.Player)
+  id: CalculateSimulationChangesFromPlayerDisconnect(NitroxServer.Player)
+  parent: NitroxServer.GameLogic.Entities.EntitySimulation
+  langs:
+  - csharp
+  - vb
+  name: CalculateSimulationChangesFromPlayerDisconnect(Player)
+  nameWithType: EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect(Player)
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect(NitroxServer.Player)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CalculateSimulationChangesFromPlayerDisconnect
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 89
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public List<SimulatedEntity> CalculateSimulationChangesFromPlayerDisconnect(Player player)
+    parameters:
+    - id: player
+      type: NitroxServer.Player
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.SimulatedEntity}
+    content.vb: Public Function CalculateSimulationChangesFromPlayerDisconnect(player As Player) As List(Of SimulatedEntity)
+  overload: NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect*
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer(NitroxModel.DataStructures.GameLogic.Entity,NitroxServer.Player)
+  commentId: M:NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer(NitroxModel.DataStructures.GameLogic.Entity,NitroxServer.Player)
+  id: AssignNewEntityToPlayer(NitroxModel.DataStructures.GameLogic.Entity,NitroxServer.Player)
+  parent: NitroxServer.GameLogic.Entities.EntitySimulation
+  langs:
+  - csharp
+  - vb
+  name: AssignNewEntityToPlayer(Entity, Player)
+  nameWithType: EntitySimulation.AssignNewEntityToPlayer(Entity, Player)
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer(NitroxModel.DataStructures.GameLogic.Entity, NitroxServer.Player)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AssignNewEntityToPlayer
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 99
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entity
+    - id: player
+      type: NitroxServer.Player
+    return:
+      type: NitroxModel.DataStructures.SimulatedEntity
+    content.vb: Public Function AssignNewEntityToPlayer(entity As Entity, player As Player) As SimulatedEntity
+  overload: NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer*
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities(NitroxServer.Player)
+  commentId: M:NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities(NitroxServer.Player)
+  id: AssignGlobalRootEntities(NitroxServer.Player)
+  parent: NitroxServer.GameLogic.Entities.EntitySimulation
+  langs:
+  - csharp
+  - vb
+  name: AssignGlobalRootEntities(Player)
+  nameWithType: EntitySimulation.AssignGlobalRootEntities(Player)
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities(NitroxServer.Player)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AssignGlobalRootEntities
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 109
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public IEnumerable<NitroxId> AssignGlobalRootEntities(Player player)
+    parameters:
+    - id: player
+      type: NitroxServer.Player
+    return:
+      type: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId}
+    content.vb: Public Function AssignGlobalRootEntities(player As Player) As IEnumerable(Of NitroxId)
+  overload: NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities*
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed(NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed(NitroxModel.DataStructures.NitroxId)
+  id: EntityDestroyed(NitroxModel.DataStructures.NitroxId)
+  parent: NitroxServer.GameLogic.Entities.EntitySimulation
+  langs:
+  - csharp
+  - vb
+  name: EntityDestroyed(NitroxId)
+  nameWithType: EntitySimulation.EntityDestroyed(NitroxId)
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed(NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/EntitySimulator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntityDestroyed
+    path: ../NitroxServer/GameLogic/Entities/EntitySimulator.cs
+    startLine: 171
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities
+  syntax:
+    content: public void EntityDestroyed(NitroxId id)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public Sub EntityDestroyed(id As NitroxId)
+  overload: NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed*
+references:
+- uid: NitroxServer.GameLogic.Entities
+  commentId: N:NitroxServer.GameLogic.Entities
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities
+  nameWithType: NitroxServer.GameLogic.Entities
+  fullName: NitroxServer.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.#ctor*
+  commentId: Overload:NitroxServer.GameLogic.Entities.EntitySimulation.#ctor
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.-ctor.html#NitroxServer_GameLogic_Entities_EntitySimulation__ctor_NitroxServer_GameLogic_Entities_EntityRegistry_NitroxServer_GameLogic_Entities_WorldEntityManager_NitroxServer_GameLogic_SimulationOwnershipData_NitroxServer_GameLogic_PlayerManager_System_Collections_Generic_HashSet_NitroxModel_DataStructures_GameLogic_NitroxTechType__
+  name: EntitySimulation
+  nameWithType: EntitySimulation.EntitySimulation
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.EntitySimulation
+  nameWithType.vb: EntitySimulation.New
+  fullName.vb: NitroxServer.GameLogic.Entities.EntitySimulation.New
+  name.vb: New
+- uid: NitroxServer.GameLogic.Entities.EntityRegistry
+  commentId: T:NitroxServer.GameLogic.Entities.EntityRegistry
+  parent: NitroxServer.GameLogic.Entities
+  href: NitroxServer.GameLogic.Entities.EntityRegistry.html
+  name: EntityRegistry
+  nameWithType: EntityRegistry
+  fullName: NitroxServer.GameLogic.Entities.EntityRegistry
+- uid: NitroxServer.GameLogic.Entities.WorldEntityManager
+  commentId: T:NitroxServer.GameLogic.Entities.WorldEntityManager
+  parent: NitroxServer.GameLogic.Entities
+  href: NitroxServer.GameLogic.Entities.WorldEntityManager.html
+  name: WorldEntityManager
+  nameWithType: WorldEntityManager
+  fullName: NitroxServer.GameLogic.Entities.WorldEntityManager
+- uid: NitroxServer.GameLogic.SimulationOwnershipData
+  commentId: T:NitroxServer.GameLogic.SimulationOwnershipData
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.SimulationOwnershipData.html
+  name: SimulationOwnershipData
+  nameWithType: SimulationOwnershipData
+  fullName: NitroxServer.GameLogic.SimulationOwnershipData
+- uid: NitroxServer.GameLogic.PlayerManager
+  commentId: T:NitroxServer.GameLogic.PlayerManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.PlayerManager.html
+  name: PlayerManager
+  nameWithType: PlayerManager
+  fullName: NitroxServer.GameLogic.PlayerManager
+- uid: System.Collections.Generic.HashSet{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  commentId: T:System.Collections.Generic.HashSet{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.HashSet`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<NitroxTechType>
+  nameWithType: HashSet<NitroxTechType>
+  fullName: System.Collections.Generic.HashSet<NitroxModel.DataStructures.GameLogic.NitroxTechType>
+  nameWithType.vb: HashSet(Of NitroxTechType)
+  fullName.vb: System.Collections.Generic.HashSet(Of NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  name.vb: HashSet(Of NitroxTechType)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+  - name: )
+- uid: NitroxServer.GameLogic
+  commentId: N:NitroxServer.GameLogic
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic
+  nameWithType: NitroxServer.GameLogic
+  fullName: NitroxServer.GameLogic
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+- uid: System.Collections.Generic.HashSet`1
+  commentId: T:System.Collections.Generic.HashSet`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  name: HashSet<T>
+  nameWithType: HashSet<T>
+  fullName: System.Collections.Generic.HashSet<T>
+  nameWithType.vb: HashSet(Of T)
+  fullName.vb: System.Collections.Generic.HashSet(Of T)
+  name.vb: HashSet(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.HashSet`1
+    name: HashSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates*
+  commentId: Overload:NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates.html#NitroxServer_GameLogic_Entities_EntitySimulation_BroadcastSimulationChangesForCellUpdates_NitroxServer_Player_NitroxModel_DataStructures_GameLogic_AbsoluteEntityCell___NitroxModel_DataStructures_GameLogic_AbsoluteEntityCell___
+  name: BroadcastSimulationChangesForCellUpdates
+  nameWithType: EntitySimulation.BroadcastSimulationChangesForCellUpdates
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForCellUpdates
+- uid: NitroxServer.Player
+  commentId: T:NitroxServer.Player
+  parent: NitroxServer
+  href: NitroxServer.Player.html
+  name: Player
+  nameWithType: Player
+  fullName: NitroxServer.Player
+- uid: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[]
+  isExternal: true
+  href: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell.html
+  name: AbsoluteEntityCell[]
+  nameWithType: AbsoluteEntityCell[]
+  fullName: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell[]
+  nameWithType.vb: AbsoluteEntityCell()
+  fullName.vb: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell()
+  name.vb: AbsoluteEntityCell()
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell
+    name: AbsoluteEntityCell
+    href: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell
+    name: AbsoluteEntityCell
+    href: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell.html
+  - name: (
+  - name: )
+- uid: NitroxServer
+  commentId: N:NitroxServer
+  href: NitroxServer.html
+  name: NitroxServer
+  nameWithType: NitroxServer
+  fullName: NitroxServer
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition*
+  commentId: Overload:NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition.html#NitroxServer_GameLogic_Entities_EntitySimulation_BroadcastSimulationChangesForBatchAddition_NitroxServer_Player_NitroxModel_DataStructures_NitroxInt3_
+  name: BroadcastSimulationChangesForBatchAddition
+  nameWithType: EntitySimulation.BroadcastSimulationChangesForBatchAddition
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.BroadcastSimulationChangesForBatchAddition
+- uid: NitroxModel.DataStructures.NitroxInt3
+  commentId: T:NitroxModel.DataStructures.NitroxInt3
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxInt3.html
+  name: NitroxInt3
+  nameWithType: NitroxInt3
+  fullName: NitroxModel.DataStructures.NitroxInt3
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect*
+  commentId: Overload:NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect.html#NitroxServer_GameLogic_Entities_EntitySimulation_CalculateSimulationChangesFromPlayerDisconnect_NitroxServer_Player_
+  name: CalculateSimulationChangesFromPlayerDisconnect
+  nameWithType: EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.CalculateSimulationChangesFromPlayerDisconnect
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.SimulatedEntity}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.SimulatedEntity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<SimulatedEntity>
+  nameWithType: List<SimulatedEntity>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.SimulatedEntity>
+  nameWithType.vb: List(Of SimulatedEntity)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.SimulatedEntity)
+  name.vb: List(Of SimulatedEntity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.SimulatedEntity
+    name: SimulatedEntity
+    href: NitroxModel.DataStructures.SimulatedEntity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.SimulatedEntity
+    name: SimulatedEntity
+    href: NitroxModel.DataStructures.SimulatedEntity.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer*
+  commentId: Overload:NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer.html#NitroxServer_GameLogic_Entities_EntitySimulation_AssignNewEntityToPlayer_NitroxModel_DataStructures_GameLogic_Entity_NitroxServer_Player_
+  name: AssignNewEntityToPlayer
+  nameWithType: EntitySimulation.AssignNewEntityToPlayer
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.AssignNewEntityToPlayer
+- uid: NitroxModel.DataStructures.GameLogic.Entity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entity
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.Entity.html
+  name: Entity
+  nameWithType: Entity
+  fullName: NitroxModel.DataStructures.GameLogic.Entity
+- uid: NitroxModel.DataStructures.SimulatedEntity
+  commentId: T:NitroxModel.DataStructures.SimulatedEntity
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.SimulatedEntity.html
+  name: SimulatedEntity
+  nameWithType: SimulatedEntity
+  fullName: NitroxModel.DataStructures.SimulatedEntity
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities*
+  commentId: Overload:NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities.html#NitroxServer_GameLogic_Entities_EntitySimulation_AssignGlobalRootEntities_NitroxServer_Player_
+  name: AssignGlobalRootEntities
+  nameWithType: EntitySimulation.AssignGlobalRootEntities
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.AssignGlobalRootEntities
+- uid: System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxModel.DataStructures.NitroxId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<NitroxId>
+  nameWithType: IEnumerable<NitroxId>
+  fullName: System.Collections.Generic.IEnumerable<NitroxModel.DataStructures.NitroxId>
+  nameWithType.vb: IEnumerable(Of NitroxId)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxModel.DataStructures.NitroxId)
+  name.vb: IEnumerable(Of NitroxId)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed*
+  commentId: Overload:NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed.html#NitroxServer_GameLogic_Entities_EntitySimulation_EntityDestroyed_NitroxModel_DataStructures_NitroxId_
+  name: EntityDestroyed
+  nameWithType: EntitySimulation.EntityDestroyed
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation.EntityDestroyed
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+memberLayout: SeparatePages

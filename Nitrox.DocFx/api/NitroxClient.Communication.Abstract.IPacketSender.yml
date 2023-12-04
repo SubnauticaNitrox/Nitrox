@@ -1,0 +1,135 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Abstract.IPacketSender
+  commentId: T:NitroxClient.Communication.Abstract.IPacketSender
+  id: IPacketSender
+  parent: NitroxClient.Communication.Abstract
+  children:
+  - NitroxClient.Communication.Abstract.IPacketSender.Send``1(``0)
+  langs:
+  - csharp
+  - vb
+  name: IPacketSender
+  nameWithType: IPacketSender
+  fullName: NitroxClient.Communication.Abstract.IPacketSender
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IPacketSender.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IPacketSender
+    path: ../NitroxClient/Communication/Abstract/IPacketSender.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: public interface IPacketSender
+    content.vb: Public Interface IPacketSender
+- uid: NitroxClient.Communication.Abstract.IPacketSender.Send``1(``0)
+  commentId: M:NitroxClient.Communication.Abstract.IPacketSender.Send``1(``0)
+  id: Send``1(``0)
+  parent: NitroxClient.Communication.Abstract.IPacketSender
+  langs:
+  - csharp
+  - vb
+  name: Send<T>(T)
+  nameWithType: IPacketSender.Send<T>(T)
+  fullName: NitroxClient.Communication.Abstract.IPacketSender.Send<T>(T)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IPacketSender.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Send
+    path: ../NitroxClient/Communication/Abstract/IPacketSender.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  summary: Sends the packet. Returns true if packet was not suppressed.
+  example: []
+  syntax:
+    content: 'bool Send<T>(T packet) where T : Packet'
+    parameters:
+    - id: packet
+      type: '{T}'
+      description: The packet to send.
+    typeParameters:
+    - id: T
+    return:
+      type: System.Boolean
+      description: True if not suppressed and actually sent.
+    content.vb: Function Send(Of T As Packet)(packet As T) As Boolean
+  overload: NitroxClient.Communication.Abstract.IPacketSender.Send*
+  nameWithType.vb: IPacketSender.Send(Of T)(T)
+  fullName.vb: NitroxClient.Communication.Abstract.IPacketSender.Send(Of T)(T)
+  name.vb: Send(Of T)(T)
+references:
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Communication.Abstract.IPacketSender.Send*
+  commentId: Overload:NitroxClient.Communication.Abstract.IPacketSender.Send
+  href: NitroxClient.Communication.Abstract.IPacketSender.Send.html#NitroxClient_Communication_Abstract_IPacketSender_Send__1___0_
+  name: Send
+  nameWithType: IPacketSender.Send
+  fullName: NitroxClient.Communication.Abstract.IPacketSender.Send
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+memberLayout: SeparatePages

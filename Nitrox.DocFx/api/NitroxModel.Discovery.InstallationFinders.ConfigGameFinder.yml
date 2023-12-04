@@ -1,0 +1,543 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder
+  commentId: T:NitroxModel.Discovery.InstallationFinders.ConfigGameFinder
+  id: ConfigGameFinder
+  parent: NitroxModel.Discovery.InstallationFinders
+  children:
+  - NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame(System.Collections.Generic.IList{System.String})
+  langs:
+  - csharp
+  - vb
+  name: ConfigGameFinder
+  nameWithType: ConfigGameFinder
+  fullName: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Discovery/InstallationFinders/ConfigGameFinder.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ConfigGameFinder
+    path: ../NitroxModel/Discovery/InstallationFinders/ConfigGameFinder.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery.InstallationFinders
+  summary: Tries to read a local config value that contains the installation directory of Subnautica.
+  example: []
+  syntax:
+    content: 'public class ConfigGameFinder : IFindGameInstallation'
+    content.vb: Public Class ConfigGameFinder Implements IFindGameInstallation
+  inheritance:
+  - System.Object
+  implements:
+  - NitroxModel.Discovery.IFindGameInstallation
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame(System.Collections.Generic.IList{System.String})
+  commentId: M:NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame(System.Collections.Generic.IList{System.String})
+  id: FindGame(System.Collections.Generic.IList{System.String})
+  parent: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder
+  langs:
+  - csharp
+  - vb
+  name: FindGame(IList<string>)
+  nameWithType: ConfigGameFinder.FindGame(IList<string>)
+  fullName: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame(System.Collections.Generic.IList<string>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Discovery/InstallationFinders/ConfigGameFinder.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FindGame
+    path: ../NitroxModel/Discovery/InstallationFinders/ConfigGameFinder.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery.InstallationFinders
+  summary: Searches for Subnautica installation directory.
+  example: []
+  syntax:
+    content: public string FindGame(IList<string> errors = null)
+    parameters:
+    - id: errors
+      type: System.Collections.Generic.IList{System.String}
+      description: Error messages that can be set if it failed to find the game.
+    return:
+      type: System.String
+      description: Nullable path to the Subnautica installation path.
+    content.vb: Public Function FindGame(errors As IList(Of String) = Nothing) As String
+  overload: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame*
+  implements:
+  - NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+  nameWithType.vb: ConfigGameFinder.FindGame(IList(Of String))
+  fullName.vb: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame(System.Collections.Generic.IList(Of String))
+  name.vb: FindGame(IList(Of String))
+references:
+- uid: NitroxModel.Discovery.InstallationFinders
+  commentId: N:NitroxModel.Discovery.InstallationFinders
+  href: NitroxModel.html
+  name: NitroxModel.Discovery.InstallationFinders
+  nameWithType: NitroxModel.Discovery.InstallationFinders
+  fullName: NitroxModel.Discovery.InstallationFinders
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  - name: .
+  - uid: NitroxModel.Discovery.InstallationFinders
+    name: InstallationFinders
+    href: NitroxModel.Discovery.InstallationFinders.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  - name: .
+  - uid: NitroxModel.Discovery.InstallationFinders
+    name: InstallationFinders
+    href: NitroxModel.Discovery.InstallationFinders.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Discovery.IFindGameInstallation
+  commentId: T:NitroxModel.Discovery.IFindGameInstallation
+  parent: NitroxModel.Discovery
+  href: NitroxModel.Discovery.IFindGameInstallation.html
+  name: IFindGameInstallation
+  nameWithType: IFindGameInstallation
+  fullName: NitroxModel.Discovery.IFindGameInstallation
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Discovery
+  commentId: N:NitroxModel.Discovery
+  href: NitroxModel.html
+  name: NitroxModel.Discovery
+  nameWithType: NitroxModel.Discovery
+  fullName: NitroxModel.Discovery
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+- uid: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame*
+  commentId: Overload:NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame
+  href: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame.html#NitroxModel_Discovery_InstallationFinders_ConfigGameFinder_FindGame_System_Collections_Generic_IList_System_String__
+  name: FindGame
+  nameWithType: ConfigGameFinder.FindGame
+  fullName: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder.FindGame
+- uid: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+  commentId: M:NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+  parent: NitroxModel.Discovery.IFindGameInstallation
+  isExternal: true
+  href: NitroxModel.Discovery.IFindGameInstallation.FindGame.html#NitroxModel_Discovery_IFindGameInstallation_FindGame_System_Collections_Generic_IList_System_String__
+  name: FindGame(IList<string>)
+  nameWithType: IFindGameInstallation.FindGame(IList<string>)
+  fullName: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList<string>)
+  nameWithType.vb: IFindGameInstallation.FindGame(IList(Of String))
+  fullName.vb: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList(Of String))
+  name.vb: FindGame(IList(Of String))
+  spec.csharp:
+  - uid: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+    name: FindGame
+    href: NitroxModel.Discovery.IFindGameInstallation.FindGame.html#NitroxModel_Discovery_IFindGameInstallation_FindGame_System_Collections_Generic_IList_System_String__
+  - name: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+    name: FindGame
+    href: NitroxModel.Discovery.IFindGameInstallation.FindGame.html#NitroxModel_Discovery_IFindGameInstallation_FindGame_System_Collections_Generic_IList_System_String__
+  - name: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.IList{System.String}
+  commentId: T:System.Collections.Generic.IList{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  name: IList<string>
+  nameWithType: IList<string>
+  fullName: System.Collections.Generic.IList<string>
+  nameWithType.vb: IList(Of String)
+  fullName.vb: System.Collections.Generic.IList(Of String)
+  name.vb: IList(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+memberLayout: SeparatePages

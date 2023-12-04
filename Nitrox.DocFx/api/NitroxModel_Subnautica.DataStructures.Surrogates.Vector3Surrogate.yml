@@ -1,0 +1,1286 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  commentId: T:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  id: Vector3Surrogate
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates
+  children:
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel.DataStructures.Unity.NitroxVector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~NitroxModel.DataStructures.Unity.NitroxVector3
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~UnityEngine.Vector3
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(UnityEngine.Vector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: Vector3Surrogate
+  nameWithType: Vector3Surrogate
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  type: Class
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Vector3Surrogate
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: >-
+      [DataContract]
+
+      public class Vector3Surrogate : SerializationSurrogate<Vector3>, ISerializationSurrogate
+    content.vb: >-
+      <DataContract>
+
+      Public Class Vector3Surrogate Inherits SerializationSurrogate(Of Vector3) Implements ISerializationSurrogate
+  inheritance:
+  - System.Object
+  - NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}
+  implements:
+  - System.Runtime.Serialization.ISerializationSurrogate
+  inheritedMembers:
+  - NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  - NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X
+  commentId: P:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X
+  id: X
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: X
+  nameWithType: Vector3Surrogate.X
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: X
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public float X { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public Property X As Single
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y
+  commentId: P:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y
+  id: Y
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: Y
+  nameWithType: Vector3Surrogate.Y
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Y
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public float Y { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public Property Y As Single
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z
+  commentId: P:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z
+  id: Z
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: Z
+  nameWithType: Vector3Surrogate.Z
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Z
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: >-
+      [DataMember(Order = 3)]
+
+      public float Z { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=3)>
+
+      Public Property Z As Single
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 3
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  commentId: M:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  id: GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: GetObjectData(Vector3, SerializationInfo)
+  nameWithType: Vector3Surrogate.GetObjectData(Vector3, SerializationInfo)
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData(UnityEngine.Vector3, System.Runtime.Serialization.SerializationInfo)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetObjectData
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  example: []
+  syntax:
+    content: protected override void GetObjectData(Vector3 vector3, SerializationInfo info)
+    parameters:
+    - id: vector3
+      type: UnityEngine.Vector3
+    - id: info
+      type: System.Runtime.Serialization.SerializationInfo
+    content.vb: Protected Overrides Sub GetObjectData(vector3 As Vector3, info As SerializationInfo)
+  overridden: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData*
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  commentId: M:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  id: SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: SetObjectData(Vector3, SerializationInfo)
+  nameWithType: Vector3Surrogate.SetObjectData(Vector3, SerializationInfo)
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData(UnityEngine.Vector3, System.Runtime.Serialization.SerializationInfo)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SetObjectData
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 26
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  example: []
+  syntax:
+    content: protected override Vector3 SetObjectData(Vector3 vector3, SerializationInfo info)
+    parameters:
+    - id: vector3
+      type: UnityEngine.Vector3
+    - id: info
+      type: System.Runtime.Serialization.SerializationInfo
+    return:
+      type: UnityEngine.Vector3
+    content.vb: Protected Overrides Function SetObjectData(vector3 As Vector3, info As SerializationInfo) As Vector3
+  overridden: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData*
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel.DataStructures.Unity.NitroxVector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  commentId: M:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel.DataStructures.Unity.NitroxVector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  id: op_Implicit(NitroxModel.DataStructures.Unity.NitroxVector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: implicit operator Vector3Surrogate(NitroxVector3)
+  nameWithType: Vector3Surrogate.implicit operator Vector3Surrogate(NitroxVector3)
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.implicit operator NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate(NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Implicit
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 34
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: public static implicit operator Vector3Surrogate(NitroxVector3 v)
+    parameters:
+    - id: v
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+    content.vb: Public Shared Widening Operator CType(v As NitroxVector3) As Vector3Surrogate
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit*
+  nameWithType.vb: Vector3Surrogate.CType(NitroxVector3)
+  fullName.vb: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.CType(NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: CType(NitroxVector3)
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: M:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~NitroxModel.DataStructures.Unity.NitroxVector3
+  id: op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: implicit operator NitroxVector3(Vector3Surrogate)
+  nameWithType: Vector3Surrogate.implicit operator NitroxVector3(Vector3Surrogate)
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.implicit operator NitroxModel.DataStructures.Unity.NitroxVector3(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Implicit
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 44
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: public static implicit operator NitroxVector3(Vector3Surrogate surrogate)
+    parameters:
+    - id: surrogate
+      type: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Widening Operator CType(surrogate As Vector3Surrogate) As NitroxVector3
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit*
+  nameWithType.vb: Vector3Surrogate.CType(Vector3Surrogate)
+  fullName.vb: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.CType(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)
+  name.vb: CType(Vector3Surrogate)
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(UnityEngine.Vector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  commentId: M:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(UnityEngine.Vector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  id: op_Implicit(UnityEngine.Vector3)~NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: implicit operator Vector3Surrogate(Vector3)
+  nameWithType: Vector3Surrogate.implicit operator Vector3Surrogate(Vector3)
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.implicit operator NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate(UnityEngine.Vector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Implicit
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 49
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: public static implicit operator Vector3Surrogate(Vector3 v)
+    parameters:
+    - id: v
+      type: UnityEngine.Vector3
+    return:
+      type: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+    content.vb: Public Shared Widening Operator CType(v As Vector3) As Vector3Surrogate
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit*
+  nameWithType.vb: Vector3Surrogate.CType(Vector3)
+  fullName.vb: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.CType(UnityEngine.Vector3)
+  name.vb: CType(Vector3)
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~UnityEngine.Vector3
+  commentId: M:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~UnityEngine.Vector3
+  id: op_Implicit(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)~UnityEngine.Vector3
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: implicit operator Vector3(Vector3Surrogate)
+  nameWithType: Vector3Surrogate.implicit operator Vector3(Vector3Surrogate)
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.implicit operator UnityEngine.Vector3(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Implicit
+    path: ../NitroxModel-Subnautica/DataStructures/Surrogates/Vector3Surrogate.cs
+    startLine: 59
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.Surrogates
+  syntax:
+    content: public static implicit operator Vector3(Vector3Surrogate surrogate)
+    parameters:
+    - id: surrogate
+      type: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+    return:
+      type: UnityEngine.Vector3
+    content.vb: Public Shared Widening Operator CType(surrogate As Vector3Surrogate) As Vector3
+  overload: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit*
+  nameWithType.vb: Vector3Surrogate.CType(Vector3Surrogate)
+  fullName.vb: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.CType(NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate)
+  name.vb: CType(Vector3Surrogate)
+references:
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates
+  commentId: N:NitroxModel_Subnautica.DataStructures.Surrogates
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.Surrogates
+  nameWithType: NitroxModel_Subnautica.DataStructures.Surrogates
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel_Subnautica.DataStructures.Surrogates.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel_Subnautica.DataStructures.Surrogates.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}
+  commentId: T:NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}
+  parent: NitroxModel.DataStructures.Surrogates
+  definition: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+  name: SerializationSurrogate<Vector3>
+  nameWithType: SerializationSurrogate<Vector3>
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<UnityEngine.Vector3>
+  nameWithType.vb: SerializationSurrogate(Of Vector3)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of UnityEngine.Vector3)
+  name.vb: SerializationSurrogate(Of Vector3)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+    name: SerializationSurrogate
+  - name: <
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+    name: SerializationSurrogate
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: )
+- uid: System.Runtime.Serialization.ISerializationSurrogate
+  commentId: T:System.Runtime.Serialization.ISerializationSurrogate
+  parent: System.Runtime.Serialization
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.iserializationsurrogate
+  name: ISerializationSurrogate
+  nameWithType: ISerializationSurrogate
+  fullName: System.Runtime.Serialization.ISerializationSurrogate
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  parent: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}
+  definition: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: GetObjectData(object, SerializationInfo, StreamingContext)
+  nameWithType: SerializationSurrogate<Vector3>.GetObjectData(object, SerializationInfo, StreamingContext)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<UnityEngine.Vector3>.GetObjectData(object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)
+  nameWithType.vb: SerializationSurrogate(Of Vector3).GetObjectData(Object, SerializationInfo, StreamingContext)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of UnityEngine.Vector3).GetObjectData(Object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)
+  name.vb: GetObjectData(Object, SerializationInfo, StreamingContext)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+    name: GetObjectData
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+    name: GetObjectData
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: )
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+  parent: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}
+  definition: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: SetObjectData(object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  nameWithType: SerializationSurrogate<Vector3>.SetObjectData(object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<UnityEngine.Vector3>.SetObjectData(object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext, System.Runtime.Serialization.ISurrogateSelector)
+  nameWithType.vb: SerializationSurrogate(Of Vector3).SetObjectData(Object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of UnityEngine.Vector3).SetObjectData(Object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext, System.Runtime.Serialization.ISurrogateSelector)
+  name.vb: SetObjectData(Object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+    name: SetObjectData
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.ISurrogateSelector
+    name: ISurrogateSelector
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.isurrogateselector
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+    name: SetObjectData
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.ISurrogateSelector
+    name: ISurrogateSelector
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.isurrogateselector
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+  commentId: T:NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+  href: NitroxModel.DataStructures.Surrogates.SerializationSurrogate-1.html
+  name: SerializationSurrogate<T>
+  nameWithType: SerializationSurrogate<T>
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<T>
+  nameWithType.vb: SerializationSurrogate(Of T)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of T)
+  name.vb: SerializationSurrogate(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+    name: SerializationSurrogate
+    href: NitroxModel.DataStructures.Surrogates.SerializationSurrogate-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+    name: SerializationSurrogate
+    href: NitroxModel.DataStructures.Surrogates.SerializationSurrogate-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Surrogates
+  commentId: N:NitroxModel.DataStructures.Surrogates
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Surrogates
+  nameWithType: NitroxModel.DataStructures.Surrogates
+  fullName: NitroxModel.DataStructures.Surrogates
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel.DataStructures.Surrogates.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel.DataStructures.Surrogates.html
+- uid: System.Runtime.Serialization
+  commentId: N:System.Runtime.Serialization
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Runtime.Serialization
+  nameWithType: System.Runtime.Serialization
+  fullName: System.Runtime.Serialization
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Runtime
+    name: Runtime
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime
+  - name: .
+  - uid: System.Runtime.Serialization
+    name: Serialization
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Runtime
+    name: Runtime
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime
+  - name: .
+  - uid: System.Runtime.Serialization
+    name: Serialization
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: GetObjectData(object, SerializationInfo, StreamingContext)
+  nameWithType: SerializationSurrogate<T>.GetObjectData(object, SerializationInfo, StreamingContext)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<T>.GetObjectData(object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)
+  nameWithType.vb: SerializationSurrogate(Of T).GetObjectData(Object, SerializationInfo, StreamingContext)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of T).GetObjectData(Object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)
+  name.vb: GetObjectData(Object, SerializationInfo, StreamingContext)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+    name: GetObjectData
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+    name: GetObjectData
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: )
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: SetObjectData(object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  nameWithType: SerializationSurrogate<T>.SetObjectData(object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<T>.SetObjectData(object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext, System.Runtime.Serialization.ISurrogateSelector)
+  nameWithType.vb: SerializationSurrogate(Of T).SetObjectData(Object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of T).SetObjectData(Object, System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext, System.Runtime.Serialization.ISurrogateSelector)
+  name.vb: SetObjectData(Object, SerializationInfo, StreamingContext, ISurrogateSelector)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+    name: SetObjectData
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.ISurrogateSelector
+    name: ISurrogateSelector
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.isurrogateselector
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(System.Object,System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,System.Runtime.Serialization.ISurrogateSelector)
+    name: SetObjectData
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.StreamingContext
+    name: StreamingContext
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.ISurrogateSelector
+    name: ISurrogateSelector
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.isurrogateselector
+  - name: )
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X.html#NitroxModel_Subnautica_DataStructures_Surrogates_Vector3Surrogate_X
+  name: X
+  nameWithType: Vector3Surrogate.X
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.X
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y.html#NitroxModel_Subnautica_DataStructures_Surrogates_Vector3Surrogate_Y
+  name: Y
+  nameWithType: Vector3Surrogate.Y
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Y
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z.html#NitroxModel_Subnautica_DataStructures_Surrogates_Vector3Surrogate_Z
+  name: Z
+  nameWithType: Vector3Surrogate.Z
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.Z
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  parent: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}
+  definition: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+  href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  name: GetObjectData(Vector3, SerializationInfo)
+  nameWithType: SerializationSurrogate<Vector3>.GetObjectData(Vector3, SerializationInfo)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<UnityEngine.Vector3>.GetObjectData(UnityEngine.Vector3, System.Runtime.Serialization.SerializationInfo)
+  nameWithType.vb: SerializationSurrogate(Of Vector3).GetObjectData(Vector3, SerializationInfo)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of UnityEngine.Vector3).GetObjectData(UnityEngine.Vector3, System.Runtime.Serialization.SerializationInfo)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+    name: GetObjectData
+  - name: (
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.GetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+    name: GetObjectData
+  - name: (
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData.html#NitroxModel_Subnautica_DataStructures_Surrogates_Vector3Surrogate_GetObjectData_UnityEngine_Vector3_System_Runtime_Serialization_SerializationInfo_
+  name: GetObjectData
+  nameWithType: Vector3Surrogate.GetObjectData
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.GetObjectData
+- uid: UnityEngine.Vector3
+  commentId: T:UnityEngine.Vector3
+  parent: UnityEngine
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: UnityEngine.Vector3
+- uid: System.Runtime.Serialization.SerializationInfo
+  commentId: T:System.Runtime.Serialization.SerializationInfo
+  parent: System.Runtime.Serialization
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  name: SerializationInfo
+  nameWithType: SerializationInfo
+  fullName: System.Runtime.Serialization.SerializationInfo
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  name: GetObjectData(T, SerializationInfo)
+  nameWithType: SerializationSurrogate<T>.GetObjectData(T, SerializationInfo)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<T>.GetObjectData(T, System.Runtime.Serialization.SerializationInfo)
+  nameWithType.vb: SerializationSurrogate(Of T).GetObjectData(T, SerializationInfo)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of T).GetObjectData(T, System.Runtime.Serialization.SerializationInfo)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+    name: GetObjectData
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.GetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+    name: GetObjectData
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+  parent: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}
+  definition: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+  href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  name: SetObjectData(Vector3, SerializationInfo)
+  nameWithType: SerializationSurrogate<Vector3>.SetObjectData(Vector3, SerializationInfo)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<UnityEngine.Vector3>.SetObjectData(UnityEngine.Vector3, System.Runtime.Serialization.SerializationInfo)
+  nameWithType.vb: SerializationSurrogate(Of Vector3).SetObjectData(Vector3, SerializationInfo)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of UnityEngine.Vector3).SetObjectData(UnityEngine.Vector3, System.Runtime.Serialization.SerializationInfo)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+    name: SetObjectData
+  - name: (
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate{UnityEngine.Vector3}.SetObjectData(UnityEngine.Vector3,System.Runtime.Serialization.SerializationInfo)
+    name: SetObjectData
+  - name: (
+  - uid: UnityEngine.Vector3
+    name: Vector3
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData.html#NitroxModel_Subnautica_DataStructures_Surrogates_Vector3Surrogate_SetObjectData_UnityEngine_Vector3_System_Runtime_Serialization_SerializationInfo_
+  name: SetObjectData
+  nameWithType: Vector3Surrogate.SetObjectData
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.SetObjectData
+- uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+  commentId: M:NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  name: SetObjectData(T, SerializationInfo)
+  nameWithType: SerializationSurrogate<T>.SetObjectData(T, SerializationInfo)
+  fullName: NitroxModel.DataStructures.Surrogates.SerializationSurrogate<T>.SetObjectData(T, System.Runtime.Serialization.SerializationInfo)
+  nameWithType.vb: SerializationSurrogate(Of T).SetObjectData(T, SerializationInfo)
+  fullName.vb: NitroxModel.DataStructures.Surrogates.SerializationSurrogate(Of T).SetObjectData(T, System.Runtime.Serialization.SerializationInfo)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+    name: SetObjectData
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1.SetObjectData(`0,System.Runtime.Serialization.SerializationInfo)
+    name: SetObjectData
+  - name: (
+  - name: T
+  - name: ','
+  - name: " "
+  - uid: System.Runtime.Serialization.SerializationInfo
+    name: SerializationInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo
+  - name: )
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.op_Implicit
+  name: implicit operator
+  nameWithType: Vector3Surrogate.implicit operator
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.implicit operator
+  nameWithType.vb: Vector3Surrogate.CType
+  fullName.vb: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.CType
+  name.vb: CType
+  spec.csharp:
+  - name: implicit
+  - name: " "
+  - name: operator
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  commentId: T:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.html
+  name: Vector3Surrogate
+  nameWithType: Vector3Surrogate
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+memberLayout: SeparatePages

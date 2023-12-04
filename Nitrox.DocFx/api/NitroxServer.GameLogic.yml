@@ -1,0 +1,244 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic
+  commentId: N:NitroxServer.GameLogic
+  id: GameLogic
+  parent: NitroxServer
+  children:
+  - NitroxServer.GameLogic.Bases
+  - NitroxServer.GameLogic.Entities
+  - NitroxServer.GameLogic.EscapePodManager
+  - NitroxServer.GameLogic.PlayerManager
+  - NitroxServer.GameLogic.Players
+  - NitroxServer.GameLogic.ScheduleKeeper
+  - NitroxServer.GameLogic.SimulationOwnershipData
+  - NitroxServer.GameLogic.StoryManager
+  - NitroxServer.GameLogic.StoryManager.TimeModification
+  - NitroxServer.GameLogic.StoryTimingData
+  - NitroxServer.GameLogic.TimeKeeper
+  - NitroxServer.GameLogic.Unlockables
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.GameLogic
+  nameWithType: NitroxServer.GameLogic
+  fullName: NitroxServer.GameLogic
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.GameLogic.Bases
+  commentId: N:NitroxServer.GameLogic.Bases
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Bases
+  nameWithType: NitroxServer.GameLogic.Bases
+  fullName: NitroxServer.GameLogic.Bases
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Bases
+    name: Bases
+    href: NitroxServer.GameLogic.Bases.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Bases
+    name: Bases
+    href: NitroxServer.GameLogic.Bases.html
+- uid: NitroxServer.GameLogic.Entities
+  commentId: N:NitroxServer.GameLogic.Entities
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities
+  nameWithType: NitroxServer.GameLogic.Entities
+  fullName: NitroxServer.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+- uid: NitroxServer.GameLogic.Players
+  commentId: N:NitroxServer.GameLogic.Players
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Players
+  nameWithType: NitroxServer.GameLogic.Players
+  fullName: NitroxServer.GameLogic.Players
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Players
+    name: Players
+    href: NitroxServer.GameLogic.Players.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Players
+    name: Players
+    href: NitroxServer.GameLogic.Players.html
+- uid: NitroxServer.GameLogic.Unlockables
+  commentId: N:NitroxServer.GameLogic.Unlockables
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Unlockables
+  nameWithType: NitroxServer.GameLogic.Unlockables
+  fullName: NitroxServer.GameLogic.Unlockables
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Unlockables
+    name: Unlockables
+    href: NitroxServer.GameLogic.Unlockables.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Unlockables
+    name: Unlockables
+    href: NitroxServer.GameLogic.Unlockables.html
+- uid: NitroxServer.GameLogic.EscapePodManager
+  commentId: T:NitroxServer.GameLogic.EscapePodManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.EscapePodManager.html
+  name: EscapePodManager
+  nameWithType: EscapePodManager
+  fullName: NitroxServer.GameLogic.EscapePodManager
+- uid: NitroxServer.GameLogic.PlayerManager
+  commentId: T:NitroxServer.GameLogic.PlayerManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.PlayerManager.html
+  name: PlayerManager
+  nameWithType: PlayerManager
+  fullName: NitroxServer.GameLogic.PlayerManager
+- uid: NitroxServer.GameLogic.ScheduleKeeper
+  commentId: T:NitroxServer.GameLogic.ScheduleKeeper
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.ScheduleKeeper.html
+  name: ScheduleKeeper
+  nameWithType: ScheduleKeeper
+  fullName: NitroxServer.GameLogic.ScheduleKeeper
+- uid: NitroxServer.GameLogic.SimulationOwnershipData
+  commentId: T:NitroxServer.GameLogic.SimulationOwnershipData
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.SimulationOwnershipData.html
+  name: SimulationOwnershipData
+  nameWithType: SimulationOwnershipData
+  fullName: NitroxServer.GameLogic.SimulationOwnershipData
+- uid: NitroxServer.GameLogic.StoryManager
+  commentId: T:NitroxServer.GameLogic.StoryManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.StoryManager.html
+  name: StoryManager
+  nameWithType: StoryManager
+  fullName: NitroxServer.GameLogic.StoryManager
+- uid: NitroxServer.GameLogic.StoryManager.TimeModification
+  commentId: T:NitroxServer.GameLogic.StoryManager.TimeModification
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.StoryManager.html
+  name: StoryManager.TimeModification
+  nameWithType: StoryManager.TimeModification
+  fullName: NitroxServer.GameLogic.StoryManager.TimeModification
+  spec.csharp:
+  - uid: NitroxServer.GameLogic.StoryManager
+    name: StoryManager
+    href: NitroxServer.GameLogic.StoryManager.html
+  - name: .
+  - uid: NitroxServer.GameLogic.StoryManager.TimeModification
+    name: TimeModification
+    href: NitroxServer.GameLogic.StoryManager.TimeModification.html
+  spec.vb:
+  - uid: NitroxServer.GameLogic.StoryManager
+    name: StoryManager
+    href: NitroxServer.GameLogic.StoryManager.html
+  - name: .
+  - uid: NitroxServer.GameLogic.StoryManager.TimeModification
+    name: TimeModification
+    href: NitroxServer.GameLogic.StoryManager.TimeModification.html
+- uid: NitroxServer.GameLogic.StoryTimingData
+  commentId: T:NitroxServer.GameLogic.StoryTimingData
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.StoryTimingData.html
+  name: StoryTimingData
+  nameWithType: StoryTimingData
+  fullName: NitroxServer.GameLogic.StoryTimingData
+- uid: NitroxServer.GameLogic.TimeKeeper
+  commentId: T:NitroxServer.GameLogic.TimeKeeper
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.TimeKeeper.html
+  name: TimeKeeper
+  nameWithType: TimeKeeper
+  fullName: NitroxServer.GameLogic.TimeKeeper
+- uid: NitroxServer.GameLogic
+  commentId: N:NitroxServer.GameLogic
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic
+  nameWithType: NitroxServer.GameLogic
+  fullName: NitroxServer.GameLogic
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+memberLayout: SeparatePages

@@ -1,0 +1,574 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined
+  commentId: T:NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined
+  id: SessionJoined
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  children:
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  langs:
+  - csharp
+  - vb
+  name: SessionJoined
+  nameWithType: SessionJoined
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/ConnectionState/SessionJoined.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SessionJoined
+    path: ../NitroxClient/Communication/MultiplayerSession/ConnectionState/SessionJoined.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: 'public class SessionJoined : ConnectionNegotiatedState, IMultiplayerSessionConnectionState'
+    content.vb: Public Class SessionJoined Inherits ConnectionNegotiatedState Implements IMultiplayerSessionConnectionState
+  inheritance:
+  - System.Object
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState
+  implements:
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  inheritedMembers:
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage
+  commentId: P:NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage
+  id: CurrentStage
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined
+  langs:
+  - csharp
+  - vb
+  name: CurrentStage
+  nameWithType: SessionJoined.CurrentStage
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/ConnectionState/SessionJoined.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CurrentStage
+    path: ../NitroxClient/Communication/MultiplayerSession/ConnectionState/SessionJoined.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  example: []
+  syntax:
+    content: public override MultiplayerSessionConnectionStage CurrentStage { get; }
+    parameters: []
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+    content.vb: Public Overrides ReadOnly Property CurrentStage As MultiplayerSessionConnectionStage
+  overridden: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.CurrentStage
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage*
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  id: JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined
+  langs:
+  - csharp
+  - vb
+  name: JoinSession(IMultiplayerSessionConnectionContext)
+  nameWithType: SessionJoined.JoinSession(IMultiplayerSessionConnectionContext)
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/ConnectionState/SessionJoined.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: JoinSession
+    path: ../NitroxClient/Communication/MultiplayerSession/ConnectionState/SessionJoined.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  example: []
+  syntax:
+    content: public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
+    parameters:
+    - id: sessionConnectionContext
+      type: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+    content.vb: Public Overrides Sub JoinSession(sessionConnectionContext As IMultiplayerSessionConnectionContext)
+  overridden: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession*
+references:
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  commentId: N:NitroxClient.Communication.MultiplayerSession.ConnectionState
+  href: NitroxClient.html
+  name: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  nameWithType: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState
+    name: ConnectionState
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState
+    name: ConnectionState
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+  commentId: T:NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.html
+  name: CommunicatingState
+  nameWithType: CommunicatingState
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState
+  commentId: T:NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.html
+  name: ConnectionNegotiatedState
+  nameWithType: ConnectionNegotiatedState
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState.html
+  name: IMultiplayerSessionConnectionState
+  nameWithType: IMultiplayerSessionConnectionState
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_ConnectionNegotiatedState_NegotiateReservationAsync_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  name: NegotiateReservationAsync(IMultiplayerSessionConnectionContext)
+  nameWithType: ConnectionNegotiatedState.NegotiateReservationAsync(IMultiplayerSessionConnectionContext)
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  spec.csharp:
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+    name: NegotiateReservationAsync
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_ConnectionNegotiatedState_NegotiateReservationAsync_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  - name: (
+  - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+    name: IMultiplayerSessionConnectionContext
+    href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+    name: NegotiateReservationAsync
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState.NegotiateReservationAsync.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_ConnectionNegotiatedState_NegotiateReservationAsync_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  - name: (
+  - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+    name: IMultiplayerSessionConnectionContext
+    href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  - name: )
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_CommunicatingState_Disconnect_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  name: Disconnect(IMultiplayerSessionConnectionContext)
+  nameWithType: CommunicatingState.Disconnect(IMultiplayerSessionConnectionContext)
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  spec.csharp:
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+    name: Disconnect
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_CommunicatingState_Disconnect_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  - name: (
+  - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+    name: IMultiplayerSessionConnectionContext
+    href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+    name: Disconnect
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.Disconnect.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_CommunicatingState_Disconnect_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  - name: (
+  - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+    name: IMultiplayerSessionConnectionContext
+    href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.CurrentStage
+  commentId: P:NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.CurrentStage
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.CurrentStage.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_CommunicatingState_CurrentStage
+  name: CurrentStage
+  nameWithType: CommunicatingState.CurrentStage
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.CurrentStage
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_SessionJoined_CurrentStage
+  name: CurrentStage
+  nameWithType: SessionJoined.CurrentStage
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.CurrentStage
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  commentId: T:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  parent: NitroxClient.Communication.MultiplayerSession
+  href: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.html
+  name: MultiplayerSessionConnectionStage
+  nameWithType: MultiplayerSessionConnectionStage
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+- uid: NitroxClient.Communication.MultiplayerSession
+  commentId: N:NitroxClient.Communication.MultiplayerSession
+  href: NitroxClient.html
+  name: NitroxClient.Communication.MultiplayerSession
+  nameWithType: NitroxClient.Communication.MultiplayerSession
+  fullName: NitroxClient.Communication.MultiplayerSession
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_CommunicatingState_JoinSession_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  name: JoinSession(IMultiplayerSessionConnectionContext)
+  nameWithType: CommunicatingState.JoinSession(IMultiplayerSessionConnectionContext)
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+  spec.csharp:
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+    name: JoinSession
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_CommunicatingState_JoinSession_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  - name: (
+  - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+    name: IMultiplayerSessionConnectionContext
+    href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession(NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext)
+    name: JoinSession
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState.JoinSession.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_CommunicatingState_JoinSession_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  - name: (
+  - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+    name: IMultiplayerSessionConnectionContext
+    href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  - name: )
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_SessionJoined_JoinSession_NitroxClient_Communication_Abstract_IMultiplayerSessionConnectionContext_
+  name: JoinSession
+  nameWithType: SessionJoined.JoinSession
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined.JoinSession
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  name: IMultiplayerSessionConnectionContext
+  nameWithType: IMultiplayerSessionConnectionContext
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+memberLayout: SeparatePages

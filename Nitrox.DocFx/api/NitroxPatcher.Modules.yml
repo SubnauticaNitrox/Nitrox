@@ -1,0 +1,25 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.Modules
+  commentId: N:NitroxPatcher.Modules
+  id: Modules
+  parent: NitroxPatcher
+  children:
+  - NitroxPatcher.Modules.NitroxPatchesModule
+  langs:
+  - csharp
+  - vb
+  name: NitroxPatcher.Modules
+  nameWithType: NitroxPatcher.Modules
+  fullName: NitroxPatcher.Modules
+  type: Namespace
+  assemblies:
+  - NitroxPatcher
+references:
+- uid: NitroxPatcher.Modules.NitroxPatchesModule
+  commentId: T:NitroxPatcher.Modules.NitroxPatchesModule
+  href: NitroxPatcher.Modules.NitroxPatchesModule.html
+  name: NitroxPatchesModule
+  nameWithType: NitroxPatchesModule
+  fullName: NitroxPatcher.Modules.NitroxPatchesModule
+memberLayout: SeparatePages

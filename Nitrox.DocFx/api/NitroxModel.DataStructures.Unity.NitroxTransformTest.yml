@@ -1,0 +1,547 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxTransformTest
+  id: NitroxTransformTest
+  parent: NitroxModel.DataStructures.Unity
+  children:
+  - NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest
+  - NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest
+  - NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest
+  - NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  langs:
+  - csharp
+  - vb
+  name: NitroxTransformTest
+  nameWithType: NitroxTransformTest
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest
+  type: Class
+  source:
+    remote:
+      path: Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxTransformTest
+    path: ../Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+    startLine: 5
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [TestClass]
+
+      public class NitroxTransformTest
+    content.vb: >-
+      <TestClass>
+
+      Public Class NitroxTransformTest
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  id: Setup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  parent: NitroxModel.DataStructures.Unity.NitroxTransformTest
+  langs:
+  - csharp
+  - vb
+  name: Setup(TestContext)
+  nameWithType: NitroxTransformTest.Setup(TestContext)
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Setup
+    path: ../Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+    startLine: 16
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [ClassInitialize]
+
+      public static void Setup(TestContext testContext)
+    parameters:
+    - id: testContext
+      type: Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+    content.vb: >-
+      <ClassInitialize>
+
+      Public Shared Sub Setup(testContext As TestContext)
+  overload: NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest
+  id: PositionTest
+  parent: NitroxModel.DataStructures.Unity.NitroxTransformTest
+  langs:
+  - csharp
+  - vb
+  name: PositionTest()
+  nameWithType: NitroxTransformTest.PositionTest()
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PositionTest
+    path: ../Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+    startLine: 25
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void PositionTest()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub PositionTest()
+  overload: NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest
+  id: RotationTest
+  parent: NitroxModel.DataStructures.Unity.NitroxTransformTest
+  langs:
+  - csharp
+  - vb
+  name: RotationTest()
+  nameWithType: NitroxTransformTest.RotationTest()
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RotationTest
+    path: ../Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+    startLine: 41
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void RotationTest()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub RotationTest()
+  overload: NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest
+  id: ChangingTransformTest
+  parent: NitroxModel.DataStructures.Unity.NitroxTransformTest
+  langs:
+  - csharp
+  - vb
+  name: ChangingTransformTest()
+  nameWithType: NitroxTransformTest.ChangingTransformTest()
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ChangingTransformTest
+    path: ../Nitrox.Test/Model/DataStructures/Unity/NitroxTransformTest.cs
+    startLine: 57
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void ChangingTransformTest()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub ChangingTransformTest()
+  overload: NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+references:
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup
+  href: NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup.html#NitroxModel_DataStructures_Unity_NitroxTransformTest_Setup_Microsoft_VisualStudio_TestTools_UnitTesting_TestContext_
+  name: Setup
+  nameWithType: NitroxTransformTest.Setup
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.Setup
+- uid: Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+  commentId: T:Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+  parent: Microsoft.VisualStudio.TestTools.UnitTesting
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools.unittesting.testcontext
+  name: TestContext
+  nameWithType: TestContext
+  fullName: Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+- uid: Microsoft.VisualStudio.TestTools.UnitTesting
+  commentId: N:Microsoft.VisualStudio.TestTools.UnitTesting
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.VisualStudio.TestTools.UnitTesting
+  nameWithType: Microsoft.VisualStudio.TestTools.UnitTesting
+  fullName: Microsoft.VisualStudio.TestTools.UnitTesting
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.VisualStudio
+    name: VisualStudio
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools
+    name: TestTools
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools.UnitTesting
+    name: UnitTesting
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools.unittesting
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.VisualStudio
+    name: VisualStudio
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools
+    name: TestTools
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools.UnitTesting
+    name: UnitTesting
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools.unittesting
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest
+  href: NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest.html#NitroxModel_DataStructures_Unity_NitroxTransformTest_PositionTest
+  name: PositionTest
+  nameWithType: NitroxTransformTest.PositionTest
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.PositionTest
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest
+  href: NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest.html#NitroxModel_DataStructures_Unity_NitroxTransformTest_RotationTest
+  name: RotationTest
+  nameWithType: NitroxTransformTest.RotationTest
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.RotationTest
+- uid: NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest
+  href: NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest.html#NitroxModel_DataStructures_Unity_NitroxTransformTest_ChangingTransformTest
+  name: ChangingTransformTest
+  nameWithType: NitroxTransformTest.ChangingTransformTest
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransformTest.ChangingTransformTest
+memberLayout: SeparatePages

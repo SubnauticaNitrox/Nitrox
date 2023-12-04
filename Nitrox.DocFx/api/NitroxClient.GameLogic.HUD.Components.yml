@@ -1,0 +1,78 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.HUD.Components
+  commentId: N:NitroxClient.GameLogic.HUD.Components
+  id: Components
+  parent: NitroxClient.GameLogic.HUD
+  children:
+  - NitroxClient.GameLogic.HUD.Components.ButtonTooltip
+  - NitroxClient.GameLogic.HUD.Components.DenyOwnershipHand
+  - NitroxClient.GameLogic.HUD.Components.uGUI_PlayerPingEntry
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.HUD.Components
+  nameWithType: NitroxClient.GameLogic.HUD.Components
+  fullName: NitroxClient.GameLogic.HUD.Components
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.HUD.Components.ButtonTooltip
+  commentId: T:NitroxClient.GameLogic.HUD.Components.ButtonTooltip
+  href: NitroxClient.GameLogic.HUD.Components.ButtonTooltip.html
+  name: ButtonTooltip
+  nameWithType: ButtonTooltip
+  fullName: NitroxClient.GameLogic.HUD.Components.ButtonTooltip
+- uid: NitroxClient.GameLogic.HUD.Components.DenyOwnershipHand
+  commentId: T:NitroxClient.GameLogic.HUD.Components.DenyOwnershipHand
+  href: NitroxClient.GameLogic.HUD.Components.DenyOwnershipHand.html
+  name: DenyOwnershipHand
+  nameWithType: DenyOwnershipHand
+  fullName: NitroxClient.GameLogic.HUD.Components.DenyOwnershipHand
+- uid: NitroxClient.GameLogic.HUD.Components.uGUI_PlayerPingEntry
+  commentId: T:NitroxClient.GameLogic.HUD.Components.uGUI_PlayerPingEntry
+  parent: NitroxClient.GameLogic.HUD.Components
+  href: NitroxClient.GameLogic.HUD.Components.uGUI_PlayerPingEntry.html
+  name: uGUI_PlayerPingEntry
+  nameWithType: uGUI_PlayerPingEntry
+  fullName: NitroxClient.GameLogic.HUD.Components.uGUI_PlayerPingEntry
+- uid: NitroxClient.GameLogic.HUD.Components
+  commentId: N:NitroxClient.GameLogic.HUD.Components
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.HUD.Components
+  nameWithType: NitroxClient.GameLogic.HUD.Components
+  fullName: NitroxClient.GameLogic.HUD.Components
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.Components
+    name: Components
+    href: NitroxClient.GameLogic.HUD.Components.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.Components
+    name: Components
+    href: NitroxClient.GameLogic.HUD.Components.html
+memberLayout: SeparatePages

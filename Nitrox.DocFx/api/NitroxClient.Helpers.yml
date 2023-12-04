@@ -1,0 +1,78 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Helpers
+  commentId: N:NitroxClient.Helpers
+  id: Helpers
+  parent: NitroxClient
+  children:
+  - NitroxClient.Helpers.NitroxEntityExtensions
+  - NitroxClient.Helpers.NitroxProtobufSerializer
+  - NitroxClient.Helpers.ThrottledPacketSender
+  - NitroxClient.Helpers.UnityObjectExtensions
+  - NitroxClient.Helpers.VFXConstructingHelper
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Helpers
+  nameWithType: NitroxClient.Helpers
+  fullName: NitroxClient.Helpers
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.Helpers.NitroxEntityExtensions
+  commentId: T:NitroxClient.Helpers.NitroxEntityExtensions
+  parent: NitroxClient.Helpers
+  href: NitroxClient.Helpers.NitroxEntityExtensions.html
+  name: NitroxEntityExtensions
+  nameWithType: NitroxEntityExtensions
+  fullName: NitroxClient.Helpers.NitroxEntityExtensions
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer
+  commentId: T:NitroxClient.Helpers.NitroxProtobufSerializer
+  href: NitroxClient.Helpers.NitroxProtobufSerializer.html
+  name: NitroxProtobufSerializer
+  nameWithType: NitroxProtobufSerializer
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer
+- uid: NitroxClient.Helpers.ThrottledPacketSender
+  commentId: T:NitroxClient.Helpers.ThrottledPacketSender
+  parent: NitroxClient.Helpers
+  href: NitroxClient.Helpers.ThrottledPacketSender.html
+  name: ThrottledPacketSender
+  nameWithType: ThrottledPacketSender
+  fullName: NitroxClient.Helpers.ThrottledPacketSender
+- uid: NitroxClient.Helpers.UnityObjectExtensions
+  commentId: T:NitroxClient.Helpers.UnityObjectExtensions
+  parent: NitroxClient.Helpers
+  href: NitroxClient.Helpers.UnityObjectExtensions.html
+  name: UnityObjectExtensions
+  nameWithType: UnityObjectExtensions
+  fullName: NitroxClient.Helpers.UnityObjectExtensions
+- uid: NitroxClient.Helpers.VFXConstructingHelper
+  commentId: T:NitroxClient.Helpers.VFXConstructingHelper
+  href: NitroxClient.Helpers.VFXConstructingHelper.html
+  name: VFXConstructingHelper
+  nameWithType: VFXConstructingHelper
+  fullName: NitroxClient.Helpers.VFXConstructingHelper
+- uid: NitroxClient.Helpers
+  commentId: N:NitroxClient.Helpers
+  href: NitroxClient.html
+  name: NitroxClient.Helpers
+  nameWithType: NitroxClient.Helpers
+  fullName: NitroxClient.Helpers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+memberLayout: SeparatePages

@@ -1,0 +1,58 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nitrox
+  id: Nitrox
+  children:
+  - Nitrox.BuildTool
+  - Nitrox.Test
+  langs:
+  - csharp
+  - vb
+  name: Nitrox
+  type: Namespace
+references:
+- uid: Nitrox.BuildTool
+  commentId: N:Nitrox.BuildTool
+  href: Nitrox.html
+  name: Nitrox.BuildTool
+  nameWithType: Nitrox.BuildTool
+  fullName: Nitrox.BuildTool
+  spec.csharp:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.BuildTool
+    name: BuildTool
+    href: Nitrox.BuildTool.html
+  spec.vb:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.BuildTool
+    name: BuildTool
+    href: Nitrox.BuildTool.html
+- uid: Nitrox.Test
+  commentId: N:Nitrox.Test
+  href: Nitrox.html
+  name: Nitrox.Test
+  nameWithType: Nitrox.Test
+  fullName: Nitrox.Test
+  spec.csharp:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.Test
+    name: Test
+    href: Nitrox.Test.html
+  spec.vb:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.Test
+    name: Test
+    href: Nitrox.Test.html
+memberLayout: SeparatePages

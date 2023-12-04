@@ -1,0 +1,313 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Discovery.Platform
+  commentId: T:NitroxModel.Discovery.Platform
+  id: Platform
+  parent: NitroxModel.Discovery
+  children:
+  - NitroxModel.Discovery.Platform.DISCORD
+  - NitroxModel.Discovery.Platform.EPIC
+  - NitroxModel.Discovery.Platform.MICROSOFT
+  - NitroxModel.Discovery.Platform.NONE
+  - NitroxModel.Discovery.Platform.PIRATED
+  - NitroxModel.Discovery.Platform.STEAM
+  langs:
+  - csharp
+  - vb
+  name: Platform
+  nameWithType: Platform
+  fullName: NitroxModel.Discovery.Platform
+  type: Enum
+  source:
+    remote:
+      path: NitroxModel/Discovery/Models/Platform.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Platform
+    path: ../NitroxModel/Discovery/Models/Platform.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: public enum Platform
+    content.vb: Public Enum Platform
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxModel.Discovery.Platform.NONE
+  commentId: F:NitroxModel.Discovery.Platform.NONE
+  id: NONE
+  parent: NitroxModel.Discovery.Platform
+  langs:
+  - csharp
+  - vb
+  name: NONE
+  nameWithType: Platform.NONE
+  fullName: NitroxModel.Discovery.Platform.NONE
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Discovery/Models/Platform.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NONE
+    path: ../NitroxModel/Discovery/Models/Platform.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: NONE = 0
+    return:
+      type: NitroxModel.Discovery.Platform
+- uid: NitroxModel.Discovery.Platform.PIRATED
+  commentId: F:NitroxModel.Discovery.Platform.PIRATED
+  id: PIRATED
+  parent: NitroxModel.Discovery.Platform
+  langs:
+  - csharp
+  - vb
+  name: PIRATED
+  nameWithType: Platform.PIRATED
+  fullName: NitroxModel.Discovery.Platform.PIRATED
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Discovery/Models/Platform.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PIRATED
+    path: ../NitroxModel/Discovery/Models/Platform.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: PIRATED = 1
+    return:
+      type: NitroxModel.Discovery.Platform
+- uid: NitroxModel.Discovery.Platform.EPIC
+  commentId: F:NitroxModel.Discovery.Platform.EPIC
+  id: EPIC
+  parent: NitroxModel.Discovery.Platform
+  langs:
+  - csharp
+  - vb
+  name: EPIC
+  nameWithType: Platform.EPIC
+  fullName: NitroxModel.Discovery.Platform.EPIC
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Discovery/Models/Platform.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EPIC
+    path: ../NitroxModel/Discovery/Models/Platform.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: EPIC = 2
+    return:
+      type: NitroxModel.Discovery.Platform
+- uid: NitroxModel.Discovery.Platform.STEAM
+  commentId: F:NitroxModel.Discovery.Platform.STEAM
+  id: STEAM
+  parent: NitroxModel.Discovery.Platform
+  langs:
+  - csharp
+  - vb
+  name: STEAM
+  nameWithType: Platform.STEAM
+  fullName: NitroxModel.Discovery.Platform.STEAM
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Discovery/Models/Platform.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: STEAM
+    path: ../NitroxModel/Discovery/Models/Platform.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: STEAM = 3
+    return:
+      type: NitroxModel.Discovery.Platform
+- uid: NitroxModel.Discovery.Platform.MICROSOFT
+  commentId: F:NitroxModel.Discovery.Platform.MICROSOFT
+  id: MICROSOFT
+  parent: NitroxModel.Discovery.Platform
+  langs:
+  - csharp
+  - vb
+  name: MICROSOFT
+  nameWithType: Platform.MICROSOFT
+  fullName: NitroxModel.Discovery.Platform.MICROSOFT
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Discovery/Models/Platform.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MICROSOFT
+    path: ../NitroxModel/Discovery/Models/Platform.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: MICROSOFT = 4
+    return:
+      type: NitroxModel.Discovery.Platform
+- uid: NitroxModel.Discovery.Platform.DISCORD
+  commentId: F:NitroxModel.Discovery.Platform.DISCORD
+  id: DISCORD
+  parent: NitroxModel.Discovery.Platform
+  langs:
+  - csharp
+  - vb
+  name: DISCORD
+  nameWithType: Platform.DISCORD
+  fullName: NitroxModel.Discovery.Platform.DISCORD
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Discovery/Models/Platform.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DISCORD
+    path: ../NitroxModel/Discovery/Models/Platform.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: DISCORD = 5
+    return:
+      type: NitroxModel.Discovery.Platform
+references:
+- uid: NitroxModel.Discovery
+  commentId: N:NitroxModel.Discovery
+  href: NitroxModel.html
+  name: NitroxModel.Discovery
+  nameWithType: NitroxModel.Discovery
+  fullName: NitroxModel.Discovery
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.Discovery.Platform
+  commentId: T:NitroxModel.Discovery.Platform
+  parent: NitroxModel.Discovery
+  href: NitroxModel.Discovery.Platform.html
+  name: Platform
+  nameWithType: Platform
+  fullName: NitroxModel.Discovery.Platform
+memberLayout: SeparatePages

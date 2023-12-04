@@ -1,0 +1,760 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.PDAScanFinished
+  commentId: T:NitroxModel.Packets.PDAScanFinished
+  id: PDAScanFinished
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.PDAScanFinished.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Int32,System.Boolean,System.Boolean,System.Boolean)
+  - NitroxModel.Packets.PDAScanFinished.Destroy
+  - NitroxModel.Packets.PDAScanFinished.FullyResearched
+  - NitroxModel.Packets.PDAScanFinished.Id
+  - NitroxModel.Packets.PDAScanFinished.TechType
+  - NitroxModel.Packets.PDAScanFinished.UnlockedAmount
+  - NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched
+  langs:
+  - csharp
+  - vb
+  name: PDAScanFinished
+  nameWithType: PDAScanFinished
+  fullName: NitroxModel.Packets.PDAScanFinished
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PDAScanFinished
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class PDAScanFinished : Packet
+    content.vb: >-
+      <Serializable>
+
+      Public Class PDAScanFinished Inherits Packet
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  inheritedMembers:
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - NitroxModel.Packets.Packet.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.PDAScanFinished.Id
+  commentId: P:NitroxModel.Packets.PDAScanFinished.Id
+  id: Id
+  parent: NitroxModel.Packets.PDAScanFinished
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: PDAScanFinished.Id
+  fullName: NitroxModel.Packets.PDAScanFinished.Id
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Id
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxId Id { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public ReadOnly Property Id As NitroxId
+  overload: NitroxModel.Packets.PDAScanFinished.Id*
+- uid: NitroxModel.Packets.PDAScanFinished.TechType
+  commentId: P:NitroxModel.Packets.PDAScanFinished.TechType
+  id: TechType
+  parent: NitroxModel.Packets.PDAScanFinished
+  langs:
+  - csharp
+  - vb
+  name: TechType
+  nameWithType: PDAScanFinished.TechType
+  fullName: NitroxModel.Packets.PDAScanFinished.TechType
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TechType
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxTechType TechType { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    content.vb: Public ReadOnly Property TechType As NitroxTechType
+  overload: NitroxModel.Packets.PDAScanFinished.TechType*
+- uid: NitroxModel.Packets.PDAScanFinished.UnlockedAmount
+  commentId: P:NitroxModel.Packets.PDAScanFinished.UnlockedAmount
+  id: UnlockedAmount
+  parent: NitroxModel.Packets.PDAScanFinished
+  langs:
+  - csharp
+  - vb
+  name: UnlockedAmount
+  nameWithType: PDAScanFinished.UnlockedAmount
+  fullName: NitroxModel.Packets.PDAScanFinished.UnlockedAmount
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UnlockedAmount
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public int UnlockedAmount { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property UnlockedAmount As Integer
+  overload: NitroxModel.Packets.PDAScanFinished.UnlockedAmount*
+- uid: NitroxModel.Packets.PDAScanFinished.FullyResearched
+  commentId: P:NitroxModel.Packets.PDAScanFinished.FullyResearched
+  id: FullyResearched
+  parent: NitroxModel.Packets.PDAScanFinished
+  langs:
+  - csharp
+  - vb
+  name: FullyResearched
+  nameWithType: PDAScanFinished.FullyResearched
+  fullName: NitroxModel.Packets.PDAScanFinished.FullyResearched
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FullyResearched
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public bool FullyResearched { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property FullyResearched As Boolean
+  overload: NitroxModel.Packets.PDAScanFinished.FullyResearched*
+- uid: NitroxModel.Packets.PDAScanFinished.Destroy
+  commentId: P:NitroxModel.Packets.PDAScanFinished.Destroy
+  id: Destroy
+  parent: NitroxModel.Packets.PDAScanFinished
+  langs:
+  - csharp
+  - vb
+  name: Destroy
+  nameWithType: PDAScanFinished.Destroy
+  fullName: NitroxModel.Packets.PDAScanFinished.Destroy
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Destroy
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public bool Destroy { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property Destroy As Boolean
+  overload: NitroxModel.Packets.PDAScanFinished.Destroy*
+- uid: NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched
+  commentId: P:NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched
+  id: WasAlreadyResearched
+  parent: NitroxModel.Packets.PDAScanFinished
+  langs:
+  - csharp
+  - vb
+  name: WasAlreadyResearched
+  nameWithType: PDAScanFinished.WasAlreadyResearched
+  fullName: NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WasAlreadyResearched
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 14
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public bool WasAlreadyResearched { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property WasAlreadyResearched As Boolean
+  overload: NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched*
+- uid: NitroxModel.Packets.PDAScanFinished.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Int32,System.Boolean,System.Boolean,System.Boolean)
+  commentId: M:NitroxModel.Packets.PDAScanFinished.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Int32,System.Boolean,System.Boolean,System.Boolean)
+  id: '#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Int32,System.Boolean,System.Boolean,System.Boolean)'
+  parent: NitroxModel.Packets.PDAScanFinished
+  langs:
+  - csharp
+  - vb
+  name: PDAScanFinished(NitroxId, NitroxTechType, int, bool, bool, bool)
+  nameWithType: PDAScanFinished.PDAScanFinished(NitroxId, NitroxTechType, int, bool, bool, bool)
+  fullName: NitroxModel.Packets.PDAScanFinished.PDAScanFinished(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.GameLogic.NitroxTechType, int, bool, bool, bool)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/PDAScanFinished.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/PDAScanFinished.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public PDAScanFinished(NitroxId id, NitroxTechType techType, int unlockedAmount, bool fullyResearched, bool destroy, bool wasAlreadyResearched = false)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: techType
+      type: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    - id: unlockedAmount
+      type: System.Int32
+    - id: fullyResearched
+      type: System.Boolean
+    - id: destroy
+      type: System.Boolean
+    - id: wasAlreadyResearched
+      type: System.Boolean
+    content.vb: Public Sub New(id As NitroxId, techType As NitroxTechType, unlockedAmount As Integer, fullyResearched As Boolean, destroy As Boolean, wasAlreadyResearched As Boolean = False)
+  overload: NitroxModel.Packets.PDAScanFinished.#ctor*
+  nameWithType.vb: PDAScanFinished.New(NitroxId, NitroxTechType, Integer, Boolean, Boolean, Boolean)
+  fullName.vb: NitroxModel.Packets.PDAScanFinished.New(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.GameLogic.NitroxTechType, Integer, Boolean, Boolean, Boolean)
+  name.vb: New(NitroxId, NitroxTechType, Integer, Boolean, Boolean, Boolean)
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.PDAScanFinished.Id*
+  commentId: Overload:NitroxModel.Packets.PDAScanFinished.Id
+  href: NitroxModel.Packets.PDAScanFinished.Id.html#NitroxModel_Packets_PDAScanFinished_Id
+  name: Id
+  nameWithType: PDAScanFinished.Id
+  fullName: NitroxModel.Packets.PDAScanFinished.Id
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxModel.Packets.PDAScanFinished.TechType*
+  commentId: Overload:NitroxModel.Packets.PDAScanFinished.TechType
+  href: NitroxModel.Packets.PDAScanFinished.TechType.html#NitroxModel_Packets_PDAScanFinished_TechType
+  name: TechType
+  nameWithType: PDAScanFinished.TechType
+  fullName: NitroxModel.Packets.PDAScanFinished.TechType
+- uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+  commentId: T:NitroxModel.DataStructures.GameLogic.NitroxTechType
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  name: NitroxTechType
+  nameWithType: NitroxTechType
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxTechType
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxModel.Packets.PDAScanFinished.UnlockedAmount*
+  commentId: Overload:NitroxModel.Packets.PDAScanFinished.UnlockedAmount
+  href: NitroxModel.Packets.PDAScanFinished.UnlockedAmount.html#NitroxModel_Packets_PDAScanFinished_UnlockedAmount
+  name: UnlockedAmount
+  nameWithType: PDAScanFinished.UnlockedAmount
+  fullName: NitroxModel.Packets.PDAScanFinished.UnlockedAmount
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.Packets.PDAScanFinished.FullyResearched*
+  commentId: Overload:NitroxModel.Packets.PDAScanFinished.FullyResearched
+  href: NitroxModel.Packets.PDAScanFinished.FullyResearched.html#NitroxModel_Packets_PDAScanFinished_FullyResearched
+  name: FullyResearched
+  nameWithType: PDAScanFinished.FullyResearched
+  fullName: NitroxModel.Packets.PDAScanFinished.FullyResearched
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.Packets.PDAScanFinished.Destroy*
+  commentId: Overload:NitroxModel.Packets.PDAScanFinished.Destroy
+  href: NitroxModel.Packets.PDAScanFinished.Destroy.html#NitroxModel_Packets_PDAScanFinished_Destroy
+  name: Destroy
+  nameWithType: PDAScanFinished.Destroy
+  fullName: NitroxModel.Packets.PDAScanFinished.Destroy
+- uid: NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched*
+  commentId: Overload:NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched
+  href: NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched.html#NitroxModel_Packets_PDAScanFinished_WasAlreadyResearched
+  name: WasAlreadyResearched
+  nameWithType: PDAScanFinished.WasAlreadyResearched
+  fullName: NitroxModel.Packets.PDAScanFinished.WasAlreadyResearched
+- uid: NitroxModel.Packets.PDAScanFinished.#ctor*
+  commentId: Overload:NitroxModel.Packets.PDAScanFinished.#ctor
+  href: NitroxModel.Packets.PDAScanFinished.-ctor.html#NitroxModel_Packets_PDAScanFinished__ctor_NitroxModel_DataStructures_NitroxId_NitroxModel_DataStructures_GameLogic_NitroxTechType_System_Int32_System_Boolean_System_Boolean_System_Boolean_
+  name: PDAScanFinished
+  nameWithType: PDAScanFinished.PDAScanFinished
+  fullName: NitroxModel.Packets.PDAScanFinished.PDAScanFinished
+  nameWithType.vb: PDAScanFinished.New
+  fullName.vb: NitroxModel.Packets.PDAScanFinished.New
+  name.vb: New
+memberLayout: SeparatePages

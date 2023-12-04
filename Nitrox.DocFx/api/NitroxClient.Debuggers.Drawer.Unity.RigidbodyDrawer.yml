@@ -1,0 +1,527 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  id: RigidbodyDrawer
+  parent: NitroxClient.Debuggers.Drawer.Unity
+  children:
+  - NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes
+  - NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw(System.Object)
+  langs:
+  - csharp
+  - vb
+  name: RigidbodyDrawer
+  nameWithType: RigidbodyDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Debuggers/Drawer/Unity/RigidbodyDrawer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RigidbodyDrawer
+    path: ../NitroxClient/Debuggers/Drawer/Unity/RigidbodyDrawer.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers.Drawer.Unity
+  summary: Draws a Rigidbody component on the gameobjects in the <xref href="NitroxClient.Debuggers.SceneDebugger" data-throw-if-not-resolved="false"></xref>
+  example: []
+  syntax:
+    content: 'public class RigidbodyDrawer : IDrawer'
+    content.vb: Public Class RigidbodyDrawer Implements IDrawer
+  inheritance:
+  - System.Object
+  implements:
+  - NitroxClient.Debuggers.Drawer.IDrawer
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes
+  commentId: P:NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes
+  id: ApplicableTypes
+  parent: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  langs:
+  - csharp
+  - vb
+  name: ApplicableTypes
+  nameWithType: RigidbodyDrawer.ApplicableTypes
+  fullName: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Debuggers/Drawer/Unity/RigidbodyDrawer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ApplicableTypes
+    path: ../NitroxClient/Debuggers/Drawer/Unity/RigidbodyDrawer.cs
+    startLine: 13
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers.Drawer.Unity
+  example: []
+  syntax:
+    content: public Type[] ApplicableTypes { get; }
+    parameters: []
+    return:
+      type: System.Type[]
+    content.vb: Public ReadOnly Property ApplicableTypes As Type()
+  overload: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes*
+  implements:
+  - NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+- uid: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw(System.Object)
+  commentId: M:NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw(System.Object)
+  id: Draw(System.Object)
+  parent: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  langs:
+  - csharp
+  - vb
+  name: Draw(object)
+  nameWithType: RigidbodyDrawer.Draw(object)
+  fullName: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw(object)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Debuggers/Drawer/Unity/RigidbodyDrawer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Draw
+    path: ../NitroxClient/Debuggers/Drawer/Unity/RigidbodyDrawer.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers.Drawer.Unity
+  example: []
+  syntax:
+    content: public void Draw(object target)
+    parameters:
+    - id: target
+      type: System.Object
+    content.vb: Public Sub Draw(target As Object)
+  overload: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw*
+  implements:
+  - NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+  nameWithType.vb: RigidbodyDrawer.Draw(Object)
+  fullName.vb: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw(Object)
+  name.vb: Draw(Object)
+references:
+- uid: NitroxClient.Debuggers.SceneDebugger
+  commentId: T:NitroxClient.Debuggers.SceneDebugger
+  parent: NitroxClient.Debuggers
+  href: NitroxClient.Debuggers.SceneDebugger.html
+  name: SceneDebugger
+  nameWithType: SceneDebugger
+  fullName: NitroxClient.Debuggers.SceneDebugger
+- uid: NitroxClient.Debuggers.Drawer.Unity
+  commentId: N:NitroxClient.Debuggers.Drawer.Unity
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers.Drawer.Unity
+  nameWithType: NitroxClient.Debuggers.Drawer.Unity
+  fullName: NitroxClient.Debuggers.Drawer.Unity
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.Unity
+    name: Unity
+    href: NitroxClient.Debuggers.Drawer.Unity.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.Unity
+    name: Unity
+    href: NitroxClient.Debuggers.Drawer.Unity.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.Debuggers.Drawer.IDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.IDrawer
+  parent: NitroxClient.Debuggers.Drawer
+  href: NitroxClient.Debuggers.Drawer.IDrawer.html
+  name: IDrawer
+  nameWithType: IDrawer
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: NitroxClient.Debuggers
+  commentId: N:NitroxClient.Debuggers
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers
+  nameWithType: NitroxClient.Debuggers
+  fullName: NitroxClient.Debuggers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Debuggers.Drawer
+  commentId: N:NitroxClient.Debuggers.Drawer
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers.Drawer
+  nameWithType: NitroxClient.Debuggers.Drawer
+  fullName: NitroxClient.Debuggers.Drawer
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+- uid: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes*
+  commentId: Overload:NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes
+  href: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes.html#NitroxClient_Debuggers_Drawer_Unity_RigidbodyDrawer_ApplicableTypes
+  name: ApplicableTypes
+  nameWithType: RigidbodyDrawer.ApplicableTypes
+  fullName: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.ApplicableTypes
+- uid: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+  commentId: P:NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+  parent: NitroxClient.Debuggers.Drawer.IDrawer
+  href: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes.html#NitroxClient_Debuggers_Drawer_IDrawer_ApplicableTypes
+  name: ApplicableTypes
+  nameWithType: IDrawer.ApplicableTypes
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+- uid: System.Type[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type[]
+  nameWithType: Type[]
+  fullName: System.Type[]
+  nameWithType.vb: Type()
+  fullName.vb: System.Type()
+  name.vb: Type()
+  spec.csharp:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: (
+  - name: )
+- uid: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw*
+  commentId: Overload:NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw
+  href: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw.html#NitroxClient_Debuggers_Drawer_Unity_RigidbodyDrawer_Draw_System_Object_
+  name: Draw
+  nameWithType: RigidbodyDrawer.Draw
+  fullName: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.Draw
+- uid: NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+  commentId: M:NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+  parent: NitroxClient.Debuggers.Drawer.IDrawer
+  isExternal: true
+  href: NitroxClient.Debuggers.Drawer.IDrawer.Draw.html#NitroxClient_Debuggers_Drawer_IDrawer_Draw_System_Object_
+  name: Draw(object)
+  nameWithType: IDrawer.Draw(object)
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer.Draw(object)
+  nameWithType.vb: IDrawer.Draw(Object)
+  fullName.vb: NitroxClient.Debuggers.Drawer.IDrawer.Draw(Object)
+  name.vb: Draw(Object)
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+    name: Draw
+    href: NitroxClient.Debuggers.Drawer.IDrawer.Draw.html#NitroxClient_Debuggers_Drawer_IDrawer_Draw_System_Object_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+    name: Draw
+    href: NitroxClient.Debuggers.Drawer.IDrawer.Draw.html#NitroxClient_Debuggers_Drawer_IDrawer_Draw_System_Object_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+memberLayout: SeparatePages

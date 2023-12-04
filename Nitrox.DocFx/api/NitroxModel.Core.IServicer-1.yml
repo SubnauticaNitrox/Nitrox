@@ -1,0 +1,107 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Core.IServicer`1
+  commentId: T:NitroxModel.Core.IServicer`1
+  id: IServicer`1
+  parent: NitroxModel.Core
+  children:
+  - NitroxModel.Core.IServicer`1.PerformService(`0)
+  langs:
+  - csharp
+  - vb
+  name: IServicer<T>
+  nameWithType: IServicer<T>
+  fullName: NitroxModel.Core.IServicer<T>
+  type: Interface
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IServicer
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 118
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  syntax:
+    content: 'public interface IServicer<T> where T : IServiced'
+    typeParameters:
+    - id: T
+    content.vb: Public Interface IServicer(Of T As IServiced)
+  nameWithType.vb: IServicer(Of T)
+  fullName.vb: NitroxModel.Core.IServicer(Of T)
+  name.vb: IServicer(Of T)
+- uid: NitroxModel.Core.IServicer`1.PerformService(`0)
+  commentId: M:NitroxModel.Core.IServicer`1.PerformService(`0)
+  id: PerformService(`0)
+  parent: NitroxModel.Core.IServicer`1
+  langs:
+  - csharp
+  - vb
+  name: PerformService(T)
+  nameWithType: IServicer<T>.PerformService(T)
+  fullName: NitroxModel.Core.IServicer<T>.PerformService(T)
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PerformService
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 121
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  syntax:
+    content: void PerformService(T serviced)
+    parameters:
+    - id: serviced
+      type: '{T}'
+    content.vb: Sub PerformService(serviced As T)
+  overload: NitroxModel.Core.IServicer`1.PerformService*
+  nameWithType.vb: IServicer(Of T).PerformService(T)
+  fullName.vb: NitroxModel.Core.IServicer(Of T).PerformService(T)
+references:
+- uid: NitroxModel.Core
+  commentId: N:NitroxModel.Core
+  href: NitroxModel.html
+  name: NitroxModel.Core
+  nameWithType: NitroxModel.Core
+  fullName: NitroxModel.Core
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+- uid: NitroxModel.Core.IServicer`1.PerformService*
+  commentId: Overload:NitroxModel.Core.IServicer`1.PerformService
+  href: NitroxModel.Core.IServicer-1.PerformService.html#NitroxModel_Core_IServicer_1_PerformService__0_
+  name: PerformService
+  nameWithType: IServicer<T>.PerformService
+  fullName: NitroxModel.Core.IServicer<T>.PerformService
+  nameWithType.vb: IServicer(Of T).PerformService
+  fullName.vb: NitroxModel.Core.IServicer(Of T).PerformService
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+memberLayout: SeparatePages

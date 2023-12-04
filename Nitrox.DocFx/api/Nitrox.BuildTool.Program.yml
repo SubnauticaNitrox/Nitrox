@@ -1,0 +1,498 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nitrox.BuildTool.Program
+  commentId: T:Nitrox.BuildTool.Program
+  id: Program
+  parent: Nitrox.BuildTool
+  children:
+  - Nitrox.BuildTool.Program.GeneratedOutputDir
+  - Nitrox.BuildTool.Program.Main(System.String[])
+  - Nitrox.BuildTool.Program.ProcessDir
+  langs:
+  - csharp
+  - vb
+  name: Program
+  nameWithType: Program
+  fullName: Nitrox.BuildTool.Program
+  type: Class
+  source:
+    remote:
+      path: Nitrox.BuildTool/Program.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Program
+    path: ../Nitrox.BuildTool/Program.cs
+    startLine: 15
+  assemblies:
+  - Nitrox.BuildTool
+  namespace: Nitrox.BuildTool
+  summary: >-
+    Entry point of the build automation project.
+
+    1. Search for Subnautica install.
+
+    2. Publicize the .NET dlls and persist for subsequent Nitrox builds.
+  example: []
+  syntax:
+    content: public static class Program
+    content.vb: Public Module Program
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: Nitrox.BuildTool.Program.ProcessDir
+  commentId: P:Nitrox.BuildTool.Program.ProcessDir
+  id: ProcessDir
+  parent: Nitrox.BuildTool.Program
+  langs:
+  - csharp
+  - vb
+  name: ProcessDir
+  nameWithType: Program.ProcessDir
+  fullName: Nitrox.BuildTool.Program.ProcessDir
+  type: Property
+  source:
+    remote:
+      path: Nitrox.BuildTool/Program.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ProcessDir
+    path: ../Nitrox.BuildTool/Program.cs
+    startLine: 20
+  assemblies:
+  - Nitrox.BuildTool
+  namespace: Nitrox.BuildTool
+  syntax:
+    content: public static string ProcessDir { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Shared ReadOnly Property ProcessDir As String
+  overload: Nitrox.BuildTool.Program.ProcessDir*
+- uid: Nitrox.BuildTool.Program.GeneratedOutputDir
+  commentId: P:Nitrox.BuildTool.Program.GeneratedOutputDir
+  id: GeneratedOutputDir
+  parent: Nitrox.BuildTool.Program
+  langs:
+  - csharp
+  - vb
+  name: GeneratedOutputDir
+  nameWithType: Program.GeneratedOutputDir
+  fullName: Nitrox.BuildTool.Program.GeneratedOutputDir
+  type: Property
+  source:
+    remote:
+      path: Nitrox.BuildTool/Program.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GeneratedOutputDir
+    path: ../Nitrox.BuildTool/Program.cs
+    startLine: 22
+  assemblies:
+  - Nitrox.BuildTool
+  namespace: Nitrox.BuildTool
+  syntax:
+    content: public static string GeneratedOutputDir { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Shared ReadOnly Property GeneratedOutputDir As String
+  overload: Nitrox.BuildTool.Program.GeneratedOutputDir*
+- uid: Nitrox.BuildTool.Program.Main(System.String[])
+  commentId: M:Nitrox.BuildTool.Program.Main(System.String[])
+  id: Main(System.String[])
+  parent: Nitrox.BuildTool.Program
+  langs:
+  - csharp
+  - vb
+  name: Main(string[])
+  nameWithType: Program.Main(string[])
+  fullName: Nitrox.BuildTool.Program.Main(string[])
+  type: Method
+  source:
+    remote:
+      path: Nitrox.BuildTool/Program.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Main
+    path: ../Nitrox.BuildTool/Program.cs
+    startLine: 26
+  assemblies:
+  - Nitrox.BuildTool
+  namespace: Nitrox.BuildTool
+  syntax:
+    content: public static Task Main(string[] args)
+    parameters:
+    - id: args
+      type: System.String[]
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Shared Function Main(args As String()) As Task
+  overload: Nitrox.BuildTool.Program.Main*
+  nameWithType.vb: Program.Main(String())
+  fullName.vb: Nitrox.BuildTool.Program.Main(String())
+  name.vb: Main(String())
+references:
+- uid: Nitrox.BuildTool
+  commentId: N:Nitrox.BuildTool
+  href: Nitrox.html
+  name: Nitrox.BuildTool
+  nameWithType: Nitrox.BuildTool
+  fullName: Nitrox.BuildTool
+  spec.csharp:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.BuildTool
+    name: BuildTool
+    href: Nitrox.BuildTool.html
+  spec.vb:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.BuildTool
+    name: BuildTool
+    href: Nitrox.BuildTool.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nitrox.BuildTool.Program.ProcessDir*
+  commentId: Overload:Nitrox.BuildTool.Program.ProcessDir
+  href: Nitrox.BuildTool.Program.ProcessDir.html#Nitrox_BuildTool_Program_ProcessDir
+  name: ProcessDir
+  nameWithType: Program.ProcessDir
+  fullName: Nitrox.BuildTool.Program.ProcessDir
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Nitrox.BuildTool.Program.GeneratedOutputDir*
+  commentId: Overload:Nitrox.BuildTool.Program.GeneratedOutputDir
+  href: Nitrox.BuildTool.Program.GeneratedOutputDir.html#Nitrox_BuildTool_Program_GeneratedOutputDir
+  name: GeneratedOutputDir
+  nameWithType: Program.GeneratedOutputDir
+  fullName: Nitrox.BuildTool.Program.GeneratedOutputDir
+- uid: Nitrox.BuildTool.Program.Main*
+  commentId: Overload:Nitrox.BuildTool.Program.Main
+  href: Nitrox.BuildTool.Program.Main.html#Nitrox_BuildTool_Program_Main_System_String___
+  name: Main
+  nameWithType: Program.Main
+  fullName: Nitrox.BuildTool.Program.Main
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+memberLayout: SeparatePages

@@ -1,0 +1,783 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Serialization.ServerList
+  commentId: T:NitroxModel.Serialization.ServerList
+  id: ServerList
+  parent: NitroxModel.Serialization
+  children:
+  - NitroxModel.Serialization.ServerList.Add(NitroxModel.Serialization.ServerList.Entry)
+  - NitroxModel.Serialization.ServerList.DEFAULT_PORT
+  - NitroxModel.Serialization.ServerList.DefaultFile
+  - NitroxModel.Serialization.ServerList.Entries
+  - NitroxModel.Serialization.ServerList.From(System.String)
+  - NitroxModel.Serialization.ServerList.Instance
+  - NitroxModel.Serialization.ServerList.Refresh
+  - NitroxModel.Serialization.ServerList.RemoveAt(System.Int32)
+  - NitroxModel.Serialization.ServerList.Save(System.String)
+  langs:
+  - csharp
+  - vb
+  name: ServerList
+  nameWithType: ServerList
+  fullName: NitroxModel.Serialization.ServerList
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ServerList
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public class ServerList
+    content.vb: Public Class ServerList
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Serialization.ServerList.DEFAULT_PORT
+  commentId: F:NitroxModel.Serialization.ServerList.DEFAULT_PORT
+  id: DEFAULT_PORT
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: DEFAULT_PORT
+  nameWithType: ServerList.DEFAULT_PORT
+  fullName: NitroxModel.Serialization.ServerList.DEFAULT_PORT
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DEFAULT_PORT
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public const int DEFAULT_PORT = 11000
+    return:
+      type: System.Int32
+    content.vb: Public Const DEFAULT_PORT As Integer = 11000
+- uid: NitroxModel.Serialization.ServerList.Instance
+  commentId: P:NitroxModel.Serialization.ServerList.Instance
+  id: Instance
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: Instance
+  nameWithType: ServerList.Instance
+  fullName: NitroxModel.Serialization.ServerList.Instance
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Instance
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public static ServerList Instance { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Serialization.ServerList
+    content.vb: Public Shared ReadOnly Property Instance As ServerList
+  overload: NitroxModel.Serialization.ServerList.Instance*
+- uid: NitroxModel.Serialization.ServerList.DefaultFile
+  commentId: P:NitroxModel.Serialization.ServerList.DefaultFile
+  id: DefaultFile
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: DefaultFile
+  nameWithType: ServerList.DefaultFile
+  fullName: NitroxModel.Serialization.ServerList.DefaultFile
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DefaultFile
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 28
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public static string DefaultFile { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Shared ReadOnly Property DefaultFile As String
+  overload: NitroxModel.Serialization.ServerList.DefaultFile*
+- uid: NitroxModel.Serialization.ServerList.Entries
+  commentId: P:NitroxModel.Serialization.ServerList.Entries
+  id: Entries
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: Entries
+  nameWithType: ServerList.Entries
+  fullName: NitroxModel.Serialization.ServerList.Entries
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Entries
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 30
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public IEnumerable<ServerList.Entry> Entries { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{NitroxModel.Serialization.ServerList.Entry}
+    content.vb: Public ReadOnly Property Entries As IEnumerable(Of ServerList.Entry)
+  overload: NitroxModel.Serialization.ServerList.Entries*
+- uid: NitroxModel.Serialization.ServerList.Refresh
+  commentId: M:NitroxModel.Serialization.ServerList.Refresh
+  id: Refresh
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: Refresh()
+  nameWithType: ServerList.Refresh()
+  fullName: NitroxModel.Serialization.ServerList.Refresh()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Refresh
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 32
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public static ServerList Refresh()
+    return:
+      type: NitroxModel.Serialization.ServerList
+    content.vb: Public Shared Function Refresh() As ServerList
+  overload: NitroxModel.Serialization.ServerList.Refresh*
+- uid: NitroxModel.Serialization.ServerList.From(System.String)
+  commentId: M:NitroxModel.Serialization.ServerList.From(System.String)
+  id: From(System.String)
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: From(string)
+  nameWithType: ServerList.From(string)
+  fullName: NitroxModel.Serialization.ServerList.From(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: From
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 37
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public static ServerList From(string file = null)
+    parameters:
+    - id: file
+      type: System.String
+    return:
+      type: NitroxModel.Serialization.ServerList
+    content.vb: Public Shared Function From(file As String = Nothing) As ServerList
+  overload: NitroxModel.Serialization.ServerList.From*
+  nameWithType.vb: ServerList.From(String)
+  fullName.vb: NitroxModel.Serialization.ServerList.From(String)
+  name.vb: From(String)
+- uid: NitroxModel.Serialization.ServerList.Add(NitroxModel.Serialization.ServerList.Entry)
+  commentId: M:NitroxModel.Serialization.ServerList.Add(NitroxModel.Serialization.ServerList.Entry)
+  id: Add(NitroxModel.Serialization.ServerList.Entry)
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: Add(Entry)
+  nameWithType: ServerList.Add(ServerList.Entry)
+  fullName: NitroxModel.Serialization.ServerList.Add(NitroxModel.Serialization.ServerList.Entry)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Add
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 65
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public void Add(ServerList.Entry entry)
+    parameters:
+    - id: entry
+      type: NitroxModel.Serialization.ServerList.Entry
+    content.vb: Public Sub Add(entry As ServerList.Entry)
+  overload: NitroxModel.Serialization.ServerList.Add*
+- uid: NitroxModel.Serialization.ServerList.Save(System.String)
+  commentId: M:NitroxModel.Serialization.ServerList.Save(System.String)
+  id: Save(System.String)
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: Save(string)
+  nameWithType: ServerList.Save(string)
+  fullName: NitroxModel.Serialization.ServerList.Save(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Save
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 70
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public void Save(string file = null)
+    parameters:
+    - id: file
+      type: System.String
+    content.vb: Public Sub Save(file As String = Nothing)
+  overload: NitroxModel.Serialization.ServerList.Save*
+  nameWithType.vb: ServerList.Save(String)
+  fullName.vb: NitroxModel.Serialization.ServerList.Save(String)
+  name.vb: Save(String)
+- uid: NitroxModel.Serialization.ServerList.RemoveAt(System.Int32)
+  commentId: M:NitroxModel.Serialization.ServerList.RemoveAt(System.Int32)
+  id: RemoveAt(System.Int32)
+  parent: NitroxModel.Serialization.ServerList
+  langs:
+  - csharp
+  - vb
+  name: RemoveAt(int)
+  nameWithType: ServerList.RemoveAt(int)
+  fullName: NitroxModel.Serialization.ServerList.RemoveAt(int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Serialization/ServerList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAt
+    path: ../NitroxModel/Serialization/ServerList.cs
+    startLine: 84
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public void RemoveAt(int index)
+    parameters:
+    - id: index
+      type: System.Int32
+    content.vb: Public Sub RemoveAt(index As Integer)
+  overload: NitroxModel.Serialization.ServerList.RemoveAt*
+  nameWithType.vb: ServerList.RemoveAt(Integer)
+  fullName.vb: NitroxModel.Serialization.ServerList.RemoveAt(Integer)
+  name.vb: RemoveAt(Integer)
+references:
+- uid: NitroxModel.Serialization
+  commentId: N:NitroxModel.Serialization
+  href: NitroxModel.html
+  name: NitroxModel.Serialization
+  nameWithType: NitroxModel.Serialization
+  fullName: NitroxModel.Serialization
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Serialization
+    name: Serialization
+    href: NitroxModel.Serialization.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Serialization
+    name: Serialization
+    href: NitroxModel.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.Serialization.ServerList.Instance*
+  commentId: Overload:NitroxModel.Serialization.ServerList.Instance
+  href: NitroxModel.Serialization.ServerList.Instance.html#NitroxModel_Serialization_ServerList_Instance
+  name: Instance
+  nameWithType: ServerList.Instance
+  fullName: NitroxModel.Serialization.ServerList.Instance
+- uid: NitroxModel.Serialization.ServerList
+  commentId: T:NitroxModel.Serialization.ServerList
+  parent: NitroxModel.Serialization
+  href: NitroxModel.Serialization.ServerList.html
+  name: ServerList
+  nameWithType: ServerList
+  fullName: NitroxModel.Serialization.ServerList
+- uid: NitroxModel.Serialization.ServerList.DefaultFile*
+  commentId: Overload:NitroxModel.Serialization.ServerList.DefaultFile
+  href: NitroxModel.Serialization.ServerList.DefaultFile.html#NitroxModel_Serialization_ServerList_DefaultFile
+  name: DefaultFile
+  nameWithType: ServerList.DefaultFile
+  fullName: NitroxModel.Serialization.ServerList.DefaultFile
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.Serialization.ServerList.Entries*
+  commentId: Overload:NitroxModel.Serialization.ServerList.Entries
+  href: NitroxModel.Serialization.ServerList.Entries.html#NitroxModel_Serialization_ServerList_Entries
+  name: Entries
+  nameWithType: ServerList.Entries
+  fullName: NitroxModel.Serialization.ServerList.Entries
+- uid: System.Collections.Generic.IEnumerable{NitroxModel.Serialization.ServerList.Entry}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxModel.Serialization.ServerList.Entry}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<ServerList.Entry>
+  nameWithType: IEnumerable<ServerList.Entry>
+  fullName: System.Collections.Generic.IEnumerable<NitroxModel.Serialization.ServerList.Entry>
+  nameWithType.vb: IEnumerable(Of ServerList.Entry)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxModel.Serialization.ServerList.Entry)
+  name.vb: IEnumerable(Of ServerList.Entry)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxModel.Serialization.ServerList
+    name: ServerList
+    href: NitroxModel.Serialization.ServerList.html
+  - name: .
+  - uid: NitroxModel.Serialization.ServerList.Entry
+    name: Entry
+    href: NitroxModel.Serialization.ServerList.Entry.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Serialization.ServerList
+    name: ServerList
+    href: NitroxModel.Serialization.ServerList.html
+  - name: .
+  - uid: NitroxModel.Serialization.ServerList.Entry
+    name: Entry
+    href: NitroxModel.Serialization.ServerList.Entry.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxModel.Serialization.ServerList.Refresh*
+  commentId: Overload:NitroxModel.Serialization.ServerList.Refresh
+  href: NitroxModel.Serialization.ServerList.Refresh.html#NitroxModel_Serialization_ServerList_Refresh
+  name: Refresh
+  nameWithType: ServerList.Refresh
+  fullName: NitroxModel.Serialization.ServerList.Refresh
+- uid: NitroxModel.Serialization.ServerList.From*
+  commentId: Overload:NitroxModel.Serialization.ServerList.From
+  href: NitroxModel.Serialization.ServerList.From.html#NitroxModel_Serialization_ServerList_From_System_String_
+  name: From
+  nameWithType: ServerList.From
+  fullName: NitroxModel.Serialization.ServerList.From
+- uid: NitroxModel.Serialization.ServerList.Add*
+  commentId: Overload:NitroxModel.Serialization.ServerList.Add
+  href: NitroxModel.Serialization.ServerList.Add.html#NitroxModel_Serialization_ServerList_Add_NitroxModel_Serialization_ServerList_Entry_
+  name: Add
+  nameWithType: ServerList.Add
+  fullName: NitroxModel.Serialization.ServerList.Add
+- uid: NitroxModel.Serialization.ServerList.Entry
+  commentId: T:NitroxModel.Serialization.ServerList.Entry
+  parent: NitroxModel.Serialization
+  href: NitroxModel.Serialization.ServerList.html
+  name: ServerList.Entry
+  nameWithType: ServerList.Entry
+  fullName: NitroxModel.Serialization.ServerList.Entry
+  spec.csharp:
+  - uid: NitroxModel.Serialization.ServerList
+    name: ServerList
+    href: NitroxModel.Serialization.ServerList.html
+  - name: .
+  - uid: NitroxModel.Serialization.ServerList.Entry
+    name: Entry
+    href: NitroxModel.Serialization.ServerList.Entry.html
+  spec.vb:
+  - uid: NitroxModel.Serialization.ServerList
+    name: ServerList
+    href: NitroxModel.Serialization.ServerList.html
+  - name: .
+  - uid: NitroxModel.Serialization.ServerList.Entry
+    name: Entry
+    href: NitroxModel.Serialization.ServerList.Entry.html
+- uid: NitroxModel.Serialization.ServerList.Save*
+  commentId: Overload:NitroxModel.Serialization.ServerList.Save
+  href: NitroxModel.Serialization.ServerList.Save.html#NitroxModel_Serialization_ServerList_Save_System_String_
+  name: Save
+  nameWithType: ServerList.Save
+  fullName: NitroxModel.Serialization.ServerList.Save
+- uid: NitroxModel.Serialization.ServerList.RemoveAt*
+  commentId: Overload:NitroxModel.Serialization.ServerList.RemoveAt
+  href: NitroxModel.Serialization.ServerList.RemoveAt.html#NitroxModel_Serialization_ServerList_RemoveAt_System_Int32_
+  name: RemoveAt
+  nameWithType: ServerList.RemoveAt
+  fullName: NitroxModel.Serialization.ServerList.RemoveAt
+memberLayout: SeparatePages

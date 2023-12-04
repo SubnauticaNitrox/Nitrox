@@ -1,0 +1,854 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch
+  commentId: T:NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch
+  id: GameInput_SetupDefaultKeyboardBindings_Patch
+  parent: NitroxPatcher.Patches.Persistent
+  children:
+  - NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch(HarmonyLib.Harmony)
+  - NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix
+  langs:
+  - csharp
+  - vb
+  name: GameInput_SetupDefaultKeyboardBindings_Patch
+  nameWithType: GameInput_SetupDefaultKeyboardBindings_Patch
+  fullName: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch
+  type: Class
+  source:
+    id: GameInput_SetupDefaultKeyboardBindings_Patch
+    path: Nitrox.Analyzers/Nitrox.Analyzers.Generators.HarmonyRegisterPatchGenerator/NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.g.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Persistent
+  syntax:
+    content: 'public class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch, IPersistentPatch, INitroxPatch'
+    content.vb: Public Class GameInput_SetupDefaultKeyboardBindings_Patch Inherits NitroxPatch Implements IPersistentPatch, INitroxPatch
+  inheritance:
+  - System.Object
+  - NitroxPatcher.Patches.NitroxPatch
+  implements:
+  - NitroxPatcher.Patches.IPersistentPatch
+  - NitroxPatcher.Patches.INitroxPatch
+  inheritedMembers:
+  - NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  - NitroxPatcher.Patches.NitroxPatch.PatchFinalizer(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  - NitroxPatcher.Patches.NitroxPatch.PatchTranspiler(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  - NitroxPatcher.Patches.NitroxPatch.PatchPrefix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  - NitroxPatcher.Patches.NitroxPatch.PatchPostfix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  - NitroxPatcher.Patches.NitroxPatch.PatchMultiple(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo)
+  - NitroxPatcher.Patches.NitroxPatch.Resolve``1(System.Boolean)
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix
+  commentId: M:NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix
+  id: Postfix
+  parent: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch
+  langs:
+  - csharp
+  - vb
+  name: Postfix()
+  nameWithType: GameInput_SetupDefaultKeyboardBindings_Patch.Postfix()
+  fullName: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix()
+  type: Method
+  source:
+    remote:
+      path: NitroxPatcher/Patches/Persistent/GameInput_SetupDefaultKeyboardBindings_Patch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Postfix
+    path: ../NitroxPatcher/Patches/Persistent/GameInput_SetupDefaultKeyboardBindings_Patch.cs
+    startLine: 11
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Persistent
+  syntax:
+    content: public static void Postfix()
+    content.vb: Public Shared Sub Postfix()
+  overload: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix*
+- uid: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch(HarmonyLib.Harmony)
+  id: Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch
+  langs:
+  - csharp
+  - vb
+  name: Patch(Harmony)
+  nameWithType: GameInput_SetupDefaultKeyboardBindings_Patch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch(HarmonyLib.Harmony)
+  type: Method
+  source:
+    id: Patch
+    path: Nitrox.Analyzers/Nitrox.Analyzers.Generators.HarmonyRegisterPatchGenerator/NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.g.cs
+    startLine: 8
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Persistent
+  example: []
+  syntax:
+    content: public override void Patch(Harmony harmony)
+    parameters:
+    - id: harmony
+      type: HarmonyLib.Harmony
+    content.vb: Public Overrides Sub Patch(harmony As Harmony)
+  overridden: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  overload: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch*
+  implements:
+  - NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+references:
+- uid: NitroxPatcher.Patches.Persistent
+  commentId: N:NitroxPatcher.Patches.Persistent
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches.Persistent
+  nameWithType: NitroxPatcher.Patches.Persistent
+  fullName: NitroxPatcher.Patches.Persistent
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Persistent
+    name: Persistent
+    href: NitroxPatcher.Patches.Persistent.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Persistent
+    name: Persistent
+    href: NitroxPatcher.Patches.Persistent.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxPatcher.Patches.NitroxPatch
+  commentId: T:NitroxPatcher.Patches.NitroxPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.NitroxPatch.html
+  name: NitroxPatch
+  nameWithType: NitroxPatch
+  fullName: NitroxPatcher.Patches.NitroxPatch
+- uid: NitroxPatcher.Patches.IPersistentPatch
+  commentId: T:NitroxPatcher.Patches.IPersistentPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.IPersistentPatch.html
+  name: IPersistentPatch
+  nameWithType: IPersistentPatch
+  fullName: NitroxPatcher.Patches.IPersistentPatch
+- uid: NitroxPatcher.Patches.INitroxPatch
+  commentId: T:NitroxPatcher.Patches.INitroxPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.INitroxPatch.html
+  name: INitroxPatch
+  nameWithType: INitroxPatch
+  fullName: NitroxPatcher.Patches.INitroxPatch
+- uid: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.Restore.html#NitroxPatcher_Patches_NitroxPatch_Restore_HarmonyLib_Harmony_
+  name: Restore(Harmony)
+  nameWithType: NitroxPatch.Restore(Harmony)
+  fullName: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+    name: Restore
+    href: NitroxPatcher.Patches.NitroxPatch.Restore.html#NitroxPatcher_Patches_NitroxPatch_Restore_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+    name: Restore
+    href: NitroxPatcher.Patches.NitroxPatch.Restore.html#NitroxPatcher_Patches_NitroxPatch_Restore_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: NitroxPatcher.Patches.NitroxPatch.PatchFinalizer(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.PatchFinalizer(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.PatchFinalizer.html#NitroxPatcher_Patches_NitroxPatch_PatchFinalizer_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  name: PatchFinalizer(Harmony, MethodBase, MethodInfo)
+  nameWithType: NitroxPatch.PatchFinalizer(Harmony, MethodBase, MethodInfo)
+  fullName: NitroxPatcher.Patches.NitroxPatch.PatchFinalizer(HarmonyLib.Harmony, System.Reflection.MethodBase, System.Reflection.MethodInfo)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchFinalizer(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchFinalizer
+    href: NitroxPatcher.Patches.NitroxPatch.PatchFinalizer.html#NitroxPatcher_Patches_NitroxPatch_PatchFinalizer_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchFinalizer(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchFinalizer
+    href: NitroxPatcher.Patches.NitroxPatch.PatchFinalizer.html#NitroxPatcher_Patches_NitroxPatch_PatchFinalizer_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+- uid: NitroxPatcher.Patches.NitroxPatch.PatchTranspiler(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.PatchTranspiler(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.PatchTranspiler.html#NitroxPatcher_Patches_NitroxPatch_PatchTranspiler_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  name: PatchTranspiler(Harmony, MethodBase, MethodInfo)
+  nameWithType: NitroxPatch.PatchTranspiler(Harmony, MethodBase, MethodInfo)
+  fullName: NitroxPatcher.Patches.NitroxPatch.PatchTranspiler(HarmonyLib.Harmony, System.Reflection.MethodBase, System.Reflection.MethodInfo)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchTranspiler(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchTranspiler
+    href: NitroxPatcher.Patches.NitroxPatch.PatchTranspiler.html#NitroxPatcher_Patches_NitroxPatch_PatchTranspiler_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchTranspiler(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchTranspiler
+    href: NitroxPatcher.Patches.NitroxPatch.PatchTranspiler.html#NitroxPatcher_Patches_NitroxPatch_PatchTranspiler_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+- uid: NitroxPatcher.Patches.NitroxPatch.PatchPrefix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.PatchPrefix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.PatchPrefix.html#NitroxPatcher_Patches_NitroxPatch_PatchPrefix_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  name: PatchPrefix(Harmony, MethodBase, MethodInfo)
+  nameWithType: NitroxPatch.PatchPrefix(Harmony, MethodBase, MethodInfo)
+  fullName: NitroxPatcher.Patches.NitroxPatch.PatchPrefix(HarmonyLib.Harmony, System.Reflection.MethodBase, System.Reflection.MethodInfo)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchPrefix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchPrefix
+    href: NitroxPatcher.Patches.NitroxPatch.PatchPrefix.html#NitroxPatcher_Patches_NitroxPatch_PatchPrefix_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchPrefix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchPrefix
+    href: NitroxPatcher.Patches.NitroxPatch.PatchPrefix.html#NitroxPatcher_Patches_NitroxPatch_PatchPrefix_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+- uid: NitroxPatcher.Patches.NitroxPatch.PatchPostfix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.PatchPostfix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.PatchPostfix.html#NitroxPatcher_Patches_NitroxPatch_PatchPostfix_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  name: PatchPostfix(Harmony, MethodBase, MethodInfo)
+  nameWithType: NitroxPatch.PatchPostfix(Harmony, MethodBase, MethodInfo)
+  fullName: NitroxPatcher.Patches.NitroxPatch.PatchPostfix(HarmonyLib.Harmony, System.Reflection.MethodBase, System.Reflection.MethodInfo)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchPostfix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchPostfix
+    href: NitroxPatcher.Patches.NitroxPatch.PatchPostfix.html#NitroxPatcher_Patches_NitroxPatch_PatchPostfix_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchPostfix(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo)
+    name: PatchPostfix
+    href: NitroxPatcher.Patches.NitroxPatch.PatchPostfix.html#NitroxPatcher_Patches_NitroxPatch_PatchPostfix_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+- uid: NitroxPatcher.Patches.NitroxPatch.PatchMultiple(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.PatchMultiple(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.PatchMultiple.html#NitroxPatcher_Patches_NitroxPatch_PatchMultiple_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_
+  name: PatchMultiple(Harmony, MethodBase, MethodInfo, MethodInfo, MethodInfo, MethodInfo, MethodInfo)
+  nameWithType: NitroxPatch.PatchMultiple(Harmony, MethodBase, MethodInfo, MethodInfo, MethodInfo, MethodInfo, MethodInfo)
+  fullName: NitroxPatcher.Patches.NitroxPatch.PatchMultiple(HarmonyLib.Harmony, System.Reflection.MethodBase, System.Reflection.MethodInfo, System.Reflection.MethodInfo, System.Reflection.MethodInfo, System.Reflection.MethodInfo, System.Reflection.MethodInfo)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchMultiple(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo)
+    name: PatchMultiple
+    href: NitroxPatcher.Patches.NitroxPatch.PatchMultiple.html#NitroxPatcher_Patches_NitroxPatch_PatchMultiple_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.PatchMultiple(HarmonyLib.Harmony,System.Reflection.MethodBase,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.MethodInfo)
+    name: PatchMultiple
+    href: NitroxPatcher.Patches.NitroxPatch.PatchMultiple.html#NitroxPatcher_Patches_NitroxPatch_PatchMultiple_HarmonyLib_Harmony_System_Reflection_MethodBase_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_System_Reflection_MethodInfo_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodBase
+    name: MethodBase
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: ','
+  - name: " "
+  - uid: System.Reflection.MethodInfo
+    name: MethodInfo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  - name: )
+- uid: NitroxPatcher.Patches.NitroxPatch.Resolve``1(System.Boolean)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.Resolve``1(System.Boolean)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.Resolve.html#NitroxPatcher_Patches_NitroxPatch_Resolve__1_System_Boolean_
+  name: Resolve<T>(bool)
+  nameWithType: NitroxPatch.Resolve<T>(bool)
+  fullName: NitroxPatcher.Patches.NitroxPatch.Resolve<T>(bool)
+  nameWithType.vb: NitroxPatch.Resolve(Of T)(Boolean)
+  fullName.vb: NitroxPatcher.Patches.NitroxPatch.Resolve(Of T)(Boolean)
+  name.vb: Resolve(Of T)(Boolean)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Resolve``1(System.Boolean)
+    name: Resolve
+    href: NitroxPatcher.Patches.NitroxPatch.Resolve.html#NitroxPatcher_Patches_NitroxPatch_Resolve__1_System_Boolean_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Resolve``1(System.Boolean)
+    name: Resolve
+    href: NitroxPatcher.Patches.NitroxPatch.Resolve.html#NitroxPatcher_Patches_NitroxPatch_Resolve__1_System_Boolean_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxPatcher.Patches
+  commentId: N:NitroxPatcher.Patches
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches
+  nameWithType: NitroxPatcher.Patches
+  fullName: NitroxPatcher.Patches
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+- uid: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix*
+  commentId: Overload:NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix
+  href: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix.html#NitroxPatcher_Patches_Persistent_GameInput_SetupDefaultKeyboardBindings_Patch_Postfix
+  name: Postfix
+  nameWithType: GameInput_SetupDefaultKeyboardBindings_Patch.Postfix
+  fullName: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Postfix
+- uid: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.Patch.html#NitroxPatcher_Patches_NitroxPatch_Patch_HarmonyLib_Harmony_
+  name: Patch(Harmony)
+  nameWithType: NitroxPatch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.NitroxPatch.Patch.html#NitroxPatcher_Patches_NitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.NitroxPatch.Patch.html#NitroxPatcher_Patches_NitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch*
+  commentId: Overload:NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch
+  href: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch.html#NitroxPatcher_Patches_Persistent_GameInput_SetupDefaultKeyboardBindings_Patch_Patch_HarmonyLib_Harmony_
+  name: Patch
+  nameWithType: GameInput_SetupDefaultKeyboardBindings_Patch.Patch
+  fullName: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch.Patch
+- uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.INitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  name: Patch(Harmony)
+  nameWithType: INitroxPatch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: HarmonyLib.Harmony
+  commentId: T:HarmonyLib.Harmony
+  parent: HarmonyLib
+  isExternal: true
+  name: Harmony
+  nameWithType: Harmony
+  fullName: HarmonyLib.Harmony
+- uid: HarmonyLib
+  commentId: N:HarmonyLib
+  isExternal: true
+  name: HarmonyLib
+  nameWithType: HarmonyLib
+  fullName: HarmonyLib
+memberLayout: SeparatePages

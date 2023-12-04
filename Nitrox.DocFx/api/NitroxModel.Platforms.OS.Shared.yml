@@ -1,0 +1,119 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Shared
+  commentId: N:NitroxModel.Platforms.OS.Shared
+  id: Shared
+  parent: NitroxModel.Platforms.OS
+  children:
+  - NitroxModel.Platforms.OS.Shared.FileSystem
+  - NitroxModel.Platforms.OS.Shared.ProcessEx
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Platforms.OS.Shared
+  nameWithType: NitroxModel.Platforms.OS.Shared
+  fullName: NitroxModel.Platforms.OS.Shared
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.Platforms.OS.Shared.FileSystem
+  commentId: T:NitroxModel.Platforms.OS.Shared.FileSystem
+  parent: NitroxModel.Platforms.OS.Shared
+  href: NitroxModel.Platforms.OS.Shared.FileSystem.html
+  name: FileSystem
+  nameWithType: FileSystem
+  fullName: NitroxModel.Platforms.OS.Shared.FileSystem
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+  commentId: T:NitroxModel.Platforms.OS.Shared.ProcessEx
+  parent: NitroxModel.Platforms.OS.Shared
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  name: ProcessEx
+  nameWithType: ProcessEx
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction
+  commentId: T:NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  name: ProcessEx.ExportedFunction
+  nameWithType: ProcessEx.ExportedFunction
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction
+  spec.csharp:
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction
+    name: ExportedFunction
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction.html
+  spec.vb:
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction
+    name: ExportedFunction
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction.html
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+  commentId: T:NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+  parent: NitroxModel.Platforms.OS.Shared
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  name: ProcessEx.Module
+  nameWithType: ProcessEx.Module
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+  spec.csharp:
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+    name: Module
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.Module.html
+  spec.vb:
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+    name: Module
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.Module.html
+- uid: NitroxModel.Platforms.OS.Shared
+  commentId: N:NitroxModel.Platforms.OS.Shared
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Shared
+  nameWithType: NitroxModel.Platforms.OS.Shared
+  fullName: NitroxModel.Platforms.OS.Shared
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared
+    name: Shared
+    href: NitroxModel.Platforms.OS.Shared.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared
+    name: Shared
+    href: NitroxModel.Platforms.OS.Shared.html
+memberLayout: SeparatePages

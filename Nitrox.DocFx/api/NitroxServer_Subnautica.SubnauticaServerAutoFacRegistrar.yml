@@ -1,0 +1,408 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar
+  commentId: T:NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar
+  id: SubnauticaServerAutoFacRegistrar
+  parent: NitroxServer_Subnautica
+  children:
+  - NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: SubnauticaServerAutoFacRegistrar
+  nameWithType: SubnauticaServerAutoFacRegistrar
+  fullName: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar
+  type: Class
+  source:
+    remote:
+      path: NitroxServer-Subnautica/SubnauticaServerAutoFacRegistrar.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SubnauticaServerAutoFacRegistrar
+    path: ../NitroxServer-Subnautica/SubnauticaServerAutoFacRegistrar.cs
+    startLine: 20
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica
+  syntax:
+    content: 'public class SubnauticaServerAutoFacRegistrar : ServerAutoFacRegistrar, IAutoFacRegistrar'
+    content.vb: Public Class SubnauticaServerAutoFacRegistrar Inherits ServerAutoFacRegistrar Implements IAutoFacRegistrar
+  inheritance:
+  - System.Object
+  - NitroxServer.ServerAutoFacRegistrar
+  implements:
+  - NitroxModel.Core.IAutoFacRegistrar
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  commentId: M:NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  id: RegisterDependencies(Autofac.ContainerBuilder)
+  parent: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar
+  langs:
+  - csharp
+  - vb
+  name: RegisterDependencies(ContainerBuilder)
+  nameWithType: SubnauticaServerAutoFacRegistrar.RegisterDependencies(ContainerBuilder)
+  fullName: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer-Subnautica/SubnauticaServerAutoFacRegistrar.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RegisterDependencies
+    path: ../NitroxServer-Subnautica/SubnauticaServerAutoFacRegistrar.cs
+    startLine: 22
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica
+  example: []
+  syntax:
+    content: public override void RegisterDependencies(ContainerBuilder containerBuilder)
+    parameters:
+    - id: containerBuilder
+      type: Autofac.ContainerBuilder
+    content.vb: Public Overrides Sub RegisterDependencies(containerBuilder As ContainerBuilder)
+  overridden: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  overload: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies*
+references:
+- uid: NitroxServer_Subnautica
+  commentId: N:NitroxServer_Subnautica
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica
+  nameWithType: NitroxServer_Subnautica
+  fullName: NitroxServer_Subnautica
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxServer.ServerAutoFacRegistrar
+  commentId: T:NitroxServer.ServerAutoFacRegistrar
+  parent: NitroxServer
+  href: NitroxServer.ServerAutoFacRegistrar.html
+  name: ServerAutoFacRegistrar
+  nameWithType: ServerAutoFacRegistrar
+  fullName: NitroxServer.ServerAutoFacRegistrar
+- uid: NitroxModel.Core.IAutoFacRegistrar
+  commentId: T:NitroxModel.Core.IAutoFacRegistrar
+  parent: NitroxModel.Core
+  href: NitroxModel.Core.IAutoFacRegistrar.html
+  name: IAutoFacRegistrar
+  nameWithType: IAutoFacRegistrar
+  fullName: NitroxModel.Core.IAutoFacRegistrar
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer
+  commentId: N:NitroxServer
+  href: NitroxServer.html
+  name: NitroxServer
+  nameWithType: NitroxServer
+  fullName: NitroxServer
+- uid: NitroxModel.Core
+  commentId: N:NitroxModel.Core
+  href: NitroxModel.html
+  name: NitroxModel.Core
+  nameWithType: NitroxModel.Core
+  fullName: NitroxModel.Core
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+- uid: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  commentId: M:NitroxServer.ServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  parent: NitroxServer.ServerAutoFacRegistrar
+  isExternal: true
+  href: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies.html#NitroxServer_ServerAutoFacRegistrar_RegisterDependencies_Autofac_ContainerBuilder_
+  name: RegisterDependencies(ContainerBuilder)
+  nameWithType: ServerAutoFacRegistrar.RegisterDependencies(ContainerBuilder)
+  fullName: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  spec.csharp:
+  - uid: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+    name: RegisterDependencies
+    href: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies.html#NitroxServer_ServerAutoFacRegistrar_RegisterDependencies_Autofac_ContainerBuilder_
+  - name: (
+  - uid: Autofac.ContainerBuilder
+    name: ContainerBuilder
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/ContainerBuilder.cs
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+    name: RegisterDependencies
+    href: NitroxServer.ServerAutoFacRegistrar.RegisterDependencies.html#NitroxServer_ServerAutoFacRegistrar_RegisterDependencies_Autofac_ContainerBuilder_
+  - name: (
+  - uid: Autofac.ContainerBuilder
+    name: ContainerBuilder
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/ContainerBuilder.cs
+  - name: )
+- uid: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies*
+  commentId: Overload:NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies
+  href: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies.html#NitroxServer_Subnautica_SubnauticaServerAutoFacRegistrar_RegisterDependencies_Autofac_ContainerBuilder_
+  name: RegisterDependencies
+  nameWithType: SubnauticaServerAutoFacRegistrar.RegisterDependencies
+  fullName: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar.RegisterDependencies
+- uid: Autofac.ContainerBuilder
+  commentId: T:Autofac.ContainerBuilder
+  parent: Autofac
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/ContainerBuilder.cs
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: Autofac.ContainerBuilder
+- uid: Autofac
+  commentId: N:Autofac
+  isExternal: true
+  name: Autofac
+  nameWithType: Autofac
+  fullName: Autofac
+memberLayout: SeparatePages

@@ -1,0 +1,518 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Unity.Helper.CoroutineHelper
+  commentId: T:NitroxClient.Unity.Helper.CoroutineHelper
+  id: CoroutineHelper
+  parent: NitroxClient.Unity.Helper
+  children:
+  - NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError(System.Collections.IEnumerator,System.Action{System.Exception})
+  - NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError``1(System.Collections.IEnumerator,System.Action{``0})
+  langs:
+  - csharp
+  - vb
+  name: CoroutineHelper
+  nameWithType: CoroutineHelper
+  fullName: NitroxClient.Unity.Helper.CoroutineHelper
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/CoroutineHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CoroutineHelper
+    path: ../NitroxClient/Unity/Helper/CoroutineHelper.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static class CoroutineHelper
+    content.vb: Public Module CoroutineHelper
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError(System.Collections.IEnumerator,System.Action{System.Exception})
+  commentId: M:NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError(System.Collections.IEnumerator,System.Action{System.Exception})
+  id: OnYieldError(System.Collections.IEnumerator,System.Action{System.Exception})
+  isExtensionMethod: true
+  parent: NitroxClient.Unity.Helper.CoroutineHelper
+  langs:
+  - csharp
+  - vb
+  name: OnYieldError(IEnumerator, Action<Exception>)
+  nameWithType: CoroutineHelper.OnYieldError(IEnumerator, Action<Exception>)
+  fullName: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError(System.Collections.IEnumerator, System.Action<System.Exception>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/CoroutineHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OnYieldError
+    path: ../NitroxClient/Unity/Helper/CoroutineHelper.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static IEnumerator OnYieldError(this IEnumerator enumerator, Action<Exception> exceptionCallback)
+    parameters:
+    - id: enumerator
+      type: System.Collections.IEnumerator
+    - id: exceptionCallback
+      type: System.Action{System.Exception}
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Shared Function OnYieldError(enumerator As IEnumerator, exceptionCallback As Action(Of Exception)) As IEnumerator
+  overload: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError*
+  nameWithType.vb: CoroutineHelper.OnYieldError(IEnumerator, Action(Of Exception))
+  fullName.vb: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError(System.Collections.IEnumerator, System.Action(Of System.Exception))
+  name.vb: OnYieldError(IEnumerator, Action(Of Exception))
+- uid: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError``1(System.Collections.IEnumerator,System.Action{``0})
+  commentId: M:NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError``1(System.Collections.IEnumerator,System.Action{``0})
+  id: OnYieldError``1(System.Collections.IEnumerator,System.Action{``0})
+  isExtensionMethod: true
+  parent: NitroxClient.Unity.Helper.CoroutineHelper
+  langs:
+  - csharp
+  - vb
+  name: OnYieldError<T>(IEnumerator, Action<T>)
+  nameWithType: CoroutineHelper.OnYieldError<T>(IEnumerator, Action<T>)
+  fullName: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError<T>(System.Collections.IEnumerator, System.Action<T>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/CoroutineHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OnYieldError
+    path: ../NitroxClient/Unity/Helper/CoroutineHelper.cs
+    startLine: 12
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: 'public static IEnumerator OnYieldError<T>(this IEnumerator enumerator, Action<T> exceptionCallback = null) where T : Exception'
+    parameters:
+    - id: enumerator
+      type: System.Collections.IEnumerator
+    - id: exceptionCallback
+      type: System.Action{{T}}
+    typeParameters:
+    - id: T
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Shared Function OnYieldError(Of T As Exception)(enumerator As IEnumerator, exceptionCallback As Action(Of T) = Nothing) As IEnumerator
+  overload: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError*
+  nameWithType.vb: CoroutineHelper.OnYieldError(Of T)(IEnumerator, Action(Of T))
+  fullName.vb: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError(Of T)(System.Collections.IEnumerator, System.Action(Of T))
+  name.vb: OnYieldError(Of T)(IEnumerator, Action(Of T))
+references:
+- uid: NitroxClient.Unity.Helper
+  commentId: N:NitroxClient.Unity.Helper
+  href: NitroxClient.html
+  name: NitroxClient.Unity.Helper
+  nameWithType: NitroxClient.Unity.Helper
+  fullName: NitroxClient.Unity.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError*
+  commentId: Overload:NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError
+  href: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError.html#NitroxClient_Unity_Helper_CoroutineHelper_OnYieldError_System_Collections_IEnumerator_System_Action_System_Exception__
+  name: OnYieldError
+  nameWithType: CoroutineHelper.OnYieldError
+  fullName: NitroxClient.Unity.Helper.CoroutineHelper.OnYieldError
+- uid: System.Collections.IEnumerator
+  commentId: T:System.Collections.IEnumerator
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerator
+  name: IEnumerator
+  nameWithType: IEnumerator
+  fullName: System.Collections.IEnumerator
+- uid: System.Action{System.Exception}
+  commentId: T:System.Action{System.Exception}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<Exception>
+  nameWithType: Action<Exception>
+  fullName: System.Action<System.Exception>
+  nameWithType.vb: Action(Of Exception)
+  fullName.vb: System.Action(Of System.Exception)
+  name.vb: Action(Of Exception)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: )
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Action{{T}}
+  commentId: T:System.Action{``0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

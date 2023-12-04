@@ -1,0 +1,499 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  commentId: T:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  id: ContainerAddItemPostProcessor
+  parent: NitroxClient.GameLogic.Containers
+  children:
+  - NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents
+  - NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From(UnityEngine.GameObject)
+  - NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process(UnityEngine.GameObject,NitroxModel.DataStructures.GameLogic.ItemData)
+  langs:
+  - csharp
+  - vb
+  name: ContainerAddItemPostProcessor
+  nameWithType: ContainerAddItemPostProcessor
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ContainerAddItemPostProcessor
+    path: ../NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Containers
+  syntax:
+    content: public abstract class ContainerAddItemPostProcessor
+    content.vb: Public MustInherit Class ContainerAddItemPostProcessor
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents
+  commentId: P:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents
+  id: ApplicableComponents
+  parent: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  langs:
+  - csharp
+  - vb
+  name: ApplicableComponents
+  nameWithType: ContainerAddItemPostProcessor.ApplicableComponents
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ApplicableComponents
+    path: ../NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+    startLine: 16
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Containers
+  syntax:
+    content: public abstract Type[] ApplicableComponents { get; }
+    parameters: []
+    return:
+      type: System.Type[]
+    content.vb: Public MustOverride ReadOnly Property ApplicableComponents As Type()
+  overload: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents*
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process(UnityEngine.GameObject,NitroxModel.DataStructures.GameLogic.ItemData)
+  commentId: M:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process(UnityEngine.GameObject,NitroxModel.DataStructures.GameLogic.ItemData)
+  id: process(UnityEngine.GameObject,NitroxModel.DataStructures.GameLogic.ItemData)
+  parent: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  langs:
+  - csharp
+  - vb
+  name: process(GameObject, ItemData)
+  nameWithType: ContainerAddItemPostProcessor.process(GameObject, ItemData)
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process(UnityEngine.GameObject, NitroxModel.DataStructures.GameLogic.ItemData)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: process
+    path: ../NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+    startLine: 29
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Containers
+  syntax:
+    content: public abstract void process(GameObject item, ItemData itemData)
+    parameters:
+    - id: item
+      type: UnityEngine.GameObject
+    - id: itemData
+      type: NitroxModel.DataStructures.GameLogic.ItemData
+    content.vb: Public MustOverride Sub process(item As GameObject, itemData As ItemData)
+  overload: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process*
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From(UnityEngine.GameObject)
+  commentId: M:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From(UnityEngine.GameObject)
+  id: From(UnityEngine.GameObject)
+  parent: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  langs:
+  - csharp
+  - vb
+  name: From(GameObject)
+  nameWithType: ContainerAddItemPostProcessor.From(GameObject)
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From(UnityEngine.GameObject)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: From
+    path: ../NitroxClient/GameLogic/Containers/ContainerAddItemPostProcessor.cs
+    startLine: 31
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Containers
+  syntax:
+    content: public static ContainerAddItemPostProcessor From(GameObject item)
+    parameters:
+    - id: item
+      type: UnityEngine.GameObject
+    return:
+      type: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+    content.vb: Public Shared Function From(item As GameObject) As ContainerAddItemPostProcessor
+  overload: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From*
+references:
+- uid: NitroxClient.GameLogic.Containers
+  commentId: N:NitroxClient.GameLogic.Containers
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Containers
+  nameWithType: NitroxClient.GameLogic.Containers
+  fullName: NitroxClient.GameLogic.Containers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Containers
+    name: Containers
+    href: NitroxClient.GameLogic.Containers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Containers
+    name: Containers
+    href: NitroxClient.GameLogic.Containers.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents*
+  commentId: Overload:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents
+  href: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents.html#NitroxClient_GameLogic_Containers_ContainerAddItemPostProcessor_ApplicableComponents
+  name: ApplicableComponents
+  nameWithType: ContainerAddItemPostProcessor.ApplicableComponents
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.ApplicableComponents
+- uid: System.Type[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type[]
+  nameWithType: Type[]
+  fullName: System.Type[]
+  nameWithType.vb: Type()
+  fullName.vb: System.Type()
+  name.vb: Type()
+  spec.csharp:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: (
+  - name: )
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process*
+  commentId: Overload:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process
+  href: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process.html#NitroxClient_GameLogic_Containers_ContainerAddItemPostProcessor_process_UnityEngine_GameObject_NitroxModel_DataStructures_GameLogic_ItemData_
+  name: process
+  nameWithType: ContainerAddItemPostProcessor.process
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.process
+- uid: UnityEngine.GameObject
+  commentId: T:UnityEngine.GameObject
+  parent: UnityEngine
+  isExternal: true
+  name: GameObject
+  nameWithType: GameObject
+  fullName: UnityEngine.GameObject
+- uid: NitroxModel.DataStructures.GameLogic.ItemData
+  commentId: T:NitroxModel.DataStructures.GameLogic.ItemData
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.ItemData.html
+  name: ItemData
+  nameWithType: ItemData
+  fullName: NitroxModel.DataStructures.GameLogic.ItemData
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From*
+  commentId: Overload:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From
+  href: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From.html#NitroxClient_GameLogic_Containers_ContainerAddItemPostProcessor_From_UnityEngine_GameObject_
+  name: From
+  nameWithType: ContainerAddItemPostProcessor.From
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.From
+- uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  commentId: T:NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+  parent: NitroxClient.GameLogic.Containers
+  href: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor.html
+  name: ContainerAddItemPostProcessor
+  nameWithType: ContainerAddItemPostProcessor
+  fullName: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+memberLayout: SeparatePages

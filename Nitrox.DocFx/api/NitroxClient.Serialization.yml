@@ -1,0 +1,48 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Serialization
+  commentId: N:NitroxClient.Serialization
+  id: Serialization
+  parent: NitroxClient
+  children:
+  - NitroxClient.Serialization.ClientConfig
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Serialization
+  nameWithType: NitroxClient.Serialization
+  fullName: NitroxClient.Serialization
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.Serialization.ClientConfig
+  commentId: T:NitroxClient.Serialization.ClientConfig
+  parent: NitroxClient.Serialization
+  href: NitroxClient.Serialization.ClientConfig.html
+  name: ClientConfig
+  nameWithType: ClientConfig
+  fullName: NitroxClient.Serialization.ClientConfig
+- uid: NitroxClient.Serialization
+  commentId: N:NitroxClient.Serialization
+  href: NitroxClient.html
+  name: NitroxClient.Serialization
+  nameWithType: NitroxClient.Serialization
+  fullName: NitroxClient.Serialization
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Serialization
+    name: Serialization
+    href: NitroxClient.Serialization.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Serialization
+    name: Serialization
+    href: NitroxClient.Serialization.html
+memberLayout: SeparatePages

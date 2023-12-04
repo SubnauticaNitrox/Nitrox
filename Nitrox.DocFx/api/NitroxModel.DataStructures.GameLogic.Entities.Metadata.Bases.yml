@@ -1,0 +1,104 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  id: Bases
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  children:
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredCellGhostMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseDeconstructableGhostMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredCellGhostMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredCellGhostMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredCellGhostMetadata.html
+  name: BaseAnchoredCellGhostMetadata
+  nameWithType: BaseAnchoredCellGhostMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredCellGhostMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata.html
+  name: BaseAnchoredFaceGhostMetadata
+  nameWithType: BaseAnchoredFaceGhostMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseDeconstructableGhostMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseDeconstructableGhostMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseDeconstructableGhostMetadata.html
+  name: BaseDeconstructableGhostMetadata
+  nameWithType: BaseDeconstructableGhostMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseDeconstructableGhostMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata.html
+  name: GhostMetadata
+  nameWithType: GhostMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.html
+memberLayout: SeparatePages

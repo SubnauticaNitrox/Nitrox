@@ -1,0 +1,102 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Packets.Processors.MutePlayerProcessor.PlayerMuted
+  commentId: T:NitroxClient.Communication.Packets.Processors.MutePlayerProcessor.PlayerMuted
+  id: MutePlayerProcessor.PlayerMuted
+  parent: NitroxClient.Communication.Packets.Processors
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: MutePlayerProcessor.PlayerMuted
+  nameWithType: MutePlayerProcessor.PlayerMuted
+  fullName: NitroxClient.Communication.Packets.Processors.MutePlayerProcessor.PlayerMuted
+  type: Delegate
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/MutePlayerProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerMuted
+    path: ../NitroxClient/Communication/Packets/Processors/MutePlayerProcessor.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  syntax:
+    content: public delegate void MutePlayerProcessor.PlayerMuted(ushort playerId, bool muted)
+    parameters:
+    - id: playerId
+      type: System.UInt16
+    - id: muted
+      type: System.Boolean
+    content.vb: Public Delegate Sub MutePlayerProcessor.PlayerMuted(playerId As UShort, muted As Boolean)
+references:
+- uid: NitroxClient.Communication.Packets.Processors
+  commentId: N:NitroxClient.Communication.Packets.Processors
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Packets.Processors
+  nameWithType: NitroxClient.Communication.Packets.Processors
+  fullName: NitroxClient.Communication.Packets.Processors
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+memberLayout: SeparatePages

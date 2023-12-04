@@ -1,0 +1,584 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory
+  commentId: T:NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory
+  id: SubnauticaUwePrefabFactory
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  children:
+  - NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.#ctor(System.String)
+  - NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs(System.String)
+  langs:
+  - csharp
+  - vb
+  name: SubnauticaUwePrefabFactory
+  nameWithType: SubnauticaUwePrefabFactory
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory
+  type: Class
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/Entities/SubnauticaUwePrefabFactory.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SubnauticaUwePrefabFactory
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/Entities/SubnauticaUwePrefabFactory.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  syntax:
+    content: 'public class SubnauticaUwePrefabFactory : UwePrefabFactory'
+    content.vb: Public Class SubnauticaUwePrefabFactory Inherits UwePrefabFactory
+  inheritance:
+  - System.Object
+  - NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.#ctor(System.String)
+  commentId: M:NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory
+  langs:
+  - csharp
+  - vb
+  name: SubnauticaUwePrefabFactory(string)
+  nameWithType: SubnauticaUwePrefabFactory.SubnauticaUwePrefabFactory(string)
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.SubnauticaUwePrefabFactory(string)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/Entities/SubnauticaUwePrefabFactory.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/Entities/SubnauticaUwePrefabFactory.cs
+    startLine: 14
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  syntax:
+    content: public SubnauticaUwePrefabFactory(string lootDistributionJson)
+    parameters:
+    - id: lootDistributionJson
+      type: System.String
+    content.vb: Public Sub New(lootDistributionJson As String)
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.#ctor*
+  nameWithType.vb: SubnauticaUwePrefabFactory.New(String)
+  fullName.vb: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.New(String)
+  name.vb: New(String)
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs(System.String)
+  commentId: M:NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs(System.String)
+  id: GetPossiblePrefabs(System.String)
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory
+  langs:
+  - csharp
+  - vb
+  name: GetPossiblePrefabs(string)
+  nameWithType: SubnauticaUwePrefabFactory.GetPossiblePrefabs(string)
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/Entities/SubnauticaUwePrefabFactory.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetPossiblePrefabs
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/Entities/SubnauticaUwePrefabFactory.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  example: []
+  syntax:
+    content: public override List<UwePrefab> GetPossiblePrefabs(string biome)
+    parameters:
+    - id: biome
+      type: System.String
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entities.UwePrefab}
+    content.vb: Public Overrides Function GetPossiblePrefabs(biome As String) As List(Of UwePrefab)
+  overridden: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.GetPossiblePrefabs(System.String)
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs*
+  nameWithType.vb: SubnauticaUwePrefabFactory.GetPossiblePrefabs(String)
+  fullName.vb: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs(String)
+  name.vb: GetPossiblePrefabs(String)
+references:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  commentId: N:NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  nameWithType: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory
+  parent: NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.html
+  name: UwePrefabFactory
+  nameWithType: UwePrefabFactory
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.GameLogic.Entities
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities
+  fullName: NitroxModel.DataStructures.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.#ctor*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.#ctor
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.-ctor.html#NitroxModel_Subnautica_DataStructures_GameLogic_Entities_SubnauticaUwePrefabFactory__ctor_System_String_
+  name: SubnauticaUwePrefabFactory
+  nameWithType: SubnauticaUwePrefabFactory.SubnauticaUwePrefabFactory
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.SubnauticaUwePrefabFactory
+  nameWithType.vb: SubnauticaUwePrefabFactory.New
+  fullName.vb: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.GetPossiblePrefabs(System.String)
+  commentId: M:NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.GetPossiblePrefabs(System.String)
+  parent: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: GetPossiblePrefabs(string)
+  nameWithType: UwePrefabFactory.GetPossiblePrefabs(string)
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.GetPossiblePrefabs(string)
+  nameWithType.vb: UwePrefabFactory.GetPossiblePrefabs(String)
+  fullName.vb: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.GetPossiblePrefabs(String)
+  name.vb: GetPossiblePrefabs(String)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.GetPossiblePrefabs(System.String)
+    name: GetPossiblePrefabs
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory.GetPossiblePrefabs(System.String)
+    name: GetPossiblePrefabs
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs.html#NitroxModel_Subnautica_DataStructures_GameLogic_Entities_SubnauticaUwePrefabFactory_GetPossiblePrefabs_System_String_
+  name: GetPossiblePrefabs
+  nameWithType: SubnauticaUwePrefabFactory.GetPossiblePrefabs
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory.GetPossiblePrefabs
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entities.UwePrefab}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entities.UwePrefab}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<UwePrefab>
+  nameWithType: List<UwePrefab>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entities.UwePrefab>
+  nameWithType.vb: List(Of UwePrefab)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entities.UwePrefab)
+  name.vb: List(Of UwePrefab)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefab
+    name: UwePrefab
+    href: NitroxModel.DataStructures.GameLogic.Entities.UwePrefab.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefab
+    name: UwePrefab
+    href: NitroxModel.DataStructures.GameLogic.Entities.UwePrefab.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+memberLayout: SeparatePages

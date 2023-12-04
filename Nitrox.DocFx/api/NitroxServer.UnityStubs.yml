@@ -1,0 +1,48 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.UnityStubs
+  commentId: N:NitroxServer.UnityStubs
+  id: UnityStubs
+  parent: NitroxServer
+  children:
+  - NitroxServer.UnityStubs.GameObject
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.UnityStubs
+  nameWithType: NitroxServer.UnityStubs
+  fullName: NitroxServer.UnityStubs
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.UnityStubs.GameObject
+  commentId: T:NitroxServer.UnityStubs.GameObject
+  parent: NitroxServer.UnityStubs
+  href: NitroxServer.UnityStubs.GameObject.html
+  name: GameObject
+  nameWithType: GameObject
+  fullName: NitroxServer.UnityStubs.GameObject
+- uid: NitroxServer.UnityStubs
+  commentId: N:NitroxServer.UnityStubs
+  href: NitroxServer.html
+  name: NitroxServer.UnityStubs
+  nameWithType: NitroxServer.UnityStubs
+  fullName: NitroxServer.UnityStubs
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.UnityStubs
+    name: UnityStubs
+    href: NitroxServer.UnityStubs.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.UnityStubs
+    name: UnityStubs
+    href: NitroxServer.UnityStubs.html
+memberLayout: SeparatePages

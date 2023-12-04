@@ -1,0 +1,348 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  commentId: T:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  id: MultiplayerSessionConnectionStage
+  parent: NitroxClient.Communication.MultiplayerSession
+  children:
+  - NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS
+  - NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION
+  - NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.DISCONNECTED
+  - NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY
+  - NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_JOINED
+  - NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED
+  - NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVED
+  langs:
+  - csharp
+  - vb
+  name: MultiplayerSessionConnectionStage
+  nameWithType: MultiplayerSessionConnectionStage
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  type: Enum
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MultiplayerSessionConnectionStage
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 2
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: public enum MultiplayerSessionConnectionStage
+    content.vb: Public Enum MultiplayerSessionConnectionStage
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.DISCONNECTED
+  commentId: F:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.DISCONNECTED
+  id: DISCONNECTED
+  parent: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  langs:
+  - csharp
+  - vb
+  name: DISCONNECTED
+  nameWithType: MultiplayerSessionConnectionStage.DISCONNECTED
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.DISCONNECTED
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DISCONNECTED
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: DISCONNECTED = 0
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY
+  commentId: F:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY
+  id: ESTABLISHING_SERVER_POLICY
+  parent: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  langs:
+  - csharp
+  - vb
+  name: ESTABLISHING_SERVER_POLICY
+  nameWithType: MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ESTABLISHING_SERVER_POLICY
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: ESTABLISHING_SERVER_POLICY = 1
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS
+  commentId: F:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS
+  id: AWAITING_RESERVATION_CREDENTIALS
+  parent: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  langs:
+  - csharp
+  - vb
+  name: AWAITING_RESERVATION_CREDENTIALS
+  nameWithType: MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AWAITING_RESERVATION_CREDENTIALS
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: AWAITING_RESERVATION_CREDENTIALS = 2
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION
+  commentId: F:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION
+  id: AWAITING_SESSION_RESERVATION
+  parent: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  langs:
+  - csharp
+  - vb
+  name: AWAITING_SESSION_RESERVATION
+  nameWithType: MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AWAITING_SESSION_RESERVATION
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: AWAITING_SESSION_RESERVATION = 3
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVED
+  commentId: F:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVED
+  id: SESSION_RESERVED
+  parent: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  langs:
+  - csharp
+  - vb
+  name: SESSION_RESERVED
+  nameWithType: MultiplayerSessionConnectionStage.SESSION_RESERVED
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVED
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SESSION_RESERVED
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: SESSION_RESERVED = 4
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED
+  commentId: F:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED
+  id: SESSION_RESERVATION_REJECTED
+  parent: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  langs:
+  - csharp
+  - vb
+  name: SESSION_RESERVATION_REJECTED
+  nameWithType: MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SESSION_RESERVATION_REJECTED
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: SESSION_RESERVATION_REJECTED = 5
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_JOINED
+  commentId: F:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_JOINED
+  id: SESSION_JOINED
+  parent: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  langs:
+  - csharp
+  - vb
+  name: SESSION_JOINED
+  nameWithType: MultiplayerSessionConnectionStage.SESSION_JOINED
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.SESSION_JOINED
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SESSION_JOINED
+    path: ../NitroxClient/Communication/MultiplayerSession/MultiplayerSessionConnectionStage.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.MultiplayerSession
+  syntax:
+    content: SESSION_JOINED = 6
+    return:
+      type: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+references:
+- uid: NitroxClient.Communication.MultiplayerSession
+  commentId: N:NitroxClient.Communication.MultiplayerSession
+  href: NitroxClient.html
+  name: NitroxClient.Communication.MultiplayerSession
+  nameWithType: NitroxClient.Communication.MultiplayerSession
+  fullName: NitroxClient.Communication.MultiplayerSession
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  commentId: T:NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+  parent: NitroxClient.Communication.MultiplayerSession
+  href: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage.html
+  name: MultiplayerSessionConnectionStage
+  nameWithType: MultiplayerSessionConnectionStage
+  fullName: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+memberLayout: SeparatePages

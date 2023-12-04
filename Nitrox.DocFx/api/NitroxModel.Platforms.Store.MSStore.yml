@@ -1,0 +1,850 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.Store.MSStore
+  commentId: T:NitroxModel.Platforms.Store.MSStore
+  id: MSStore
+  parent: NitroxModel.Platforms.Store
+  children:
+  - NitroxModel.Platforms.Store.MSStore.GetExeFile
+  - NitroxModel.Platforms.Store.MSStore.Instance
+  - NitroxModel.Platforms.Store.MSStore.Name
+  - NitroxModel.Platforms.Store.MSStore.OwnsGame(System.String)
+  - NitroxModel.Platforms.Store.MSStore.Platform
+  - NitroxModel.Platforms.Store.MSStore.StartGameAsync(System.String)
+  - NitroxModel.Platforms.Store.MSStore.StartPlatformAsync
+  langs:
+  - csharp
+  - vb
+  name: MSStore
+  nameWithType: MSStore
+  fullName: NitroxModel.Platforms.Store.MSStore
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MSStore
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  syntax:
+    content: 'public sealed class MSStore : IGamePlatform'
+    content.vb: Public NotInheritable Class MSStore Implements IGamePlatform
+  inheritance:
+  - System.Object
+  implements:
+  - NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+- uid: NitroxModel.Platforms.Store.MSStore.Instance
+  commentId: P:NitroxModel.Platforms.Store.MSStore.Instance
+  id: Instance
+  parent: NitroxModel.Platforms.Store.MSStore
+  langs:
+  - csharp
+  - vb
+  name: Instance
+  nameWithType: MSStore.Instance
+  fullName: NitroxModel.Platforms.Store.MSStore.Instance
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Instance
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  syntax:
+    content: public static MSStore Instance { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Platforms.Store.MSStore
+    content.vb: Public Shared ReadOnly Property Instance As MSStore
+  overload: NitroxModel.Platforms.Store.MSStore.Instance*
+- uid: NitroxModel.Platforms.Store.MSStore.Name
+  commentId: P:NitroxModel.Platforms.Store.MSStore.Name
+  id: Name
+  parent: NitroxModel.Platforms.Store.MSStore
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: MSStore.Name
+  fullName: NitroxModel.Platforms.Store.MSStore.Name
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Name
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 14
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  example: []
+  syntax:
+    content: public string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Name As String
+  overload: NitroxModel.Platforms.Store.MSStore.Name*
+  implements:
+  - NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Name
+- uid: NitroxModel.Platforms.Store.MSStore.Platform
+  commentId: P:NitroxModel.Platforms.Store.MSStore.Platform
+  id: Platform
+  parent: NitroxModel.Platforms.Store.MSStore
+  langs:
+  - csharp
+  - vb
+  name: Platform
+  nameWithType: MSStore.Platform
+  fullName: NitroxModel.Platforms.Store.MSStore.Platform
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Platform
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  example: []
+  syntax:
+    content: public Platform Platform { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Discovery.Platform
+    content.vb: Public ReadOnly Property Platform As Platform
+  overload: NitroxModel.Platforms.Store.MSStore.Platform*
+  implements:
+  - NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Platform
+- uid: NitroxModel.Platforms.Store.MSStore.OwnsGame(System.String)
+  commentId: M:NitroxModel.Platforms.Store.MSStore.OwnsGame(System.String)
+  id: OwnsGame(System.String)
+  parent: NitroxModel.Platforms.Store.MSStore
+  langs:
+  - csharp
+  - vb
+  name: OwnsGame(string)
+  nameWithType: MSStore.OwnsGame(string)
+  fullName: NitroxModel.Platforms.Store.MSStore.OwnsGame(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OwnsGame
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 17
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  summary: True if game directory originates from the game platform.
+  example: []
+  syntax:
+    content: public bool OwnsGame(string gameDirectory)
+    parameters:
+    - id: gameDirectory
+      type: System.String
+      description: Directory to a game, usually where the exe file is.
+    return:
+      type: System.Boolean
+      description: Returns true if the game platform owns this game.
+    content.vb: Public Function OwnsGame(gameDirectory As String) As Boolean
+  overload: NitroxModel.Platforms.Store.MSStore.OwnsGame*
+  implements:
+  - NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame(System.String)
+  nameWithType.vb: MSStore.OwnsGame(String)
+  fullName.vb: NitroxModel.Platforms.Store.MSStore.OwnsGame(String)
+  name.vb: OwnsGame(String)
+- uid: NitroxModel.Platforms.Store.MSStore.StartPlatformAsync
+  commentId: M:NitroxModel.Platforms.Store.MSStore.StartPlatformAsync
+  id: StartPlatformAsync
+  parent: NitroxModel.Platforms.Store.MSStore
+  langs:
+  - csharp
+  - vb
+  name: StartPlatformAsync()
+  nameWithType: MSStore.StartPlatformAsync()
+  fullName: NitroxModel.Platforms.Store.MSStore.StartPlatformAsync()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: StartPlatformAsync
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 23
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  summary: Tries to start the platform and waits for it to be ready to launch games. If it has already been started it will return true.
+  example: []
+  syntax:
+    content: public Task<ProcessEx> StartPlatformAsync()
+    return:
+      type: System.Threading.Tasks.Task{NitroxModel.Platforms.OS.Shared.ProcessEx}
+      description: Returns true if platform is running or has started successfully.
+    content.vb: Public Function StartPlatformAsync() As Task(Of ProcessEx)
+  overload: NitroxModel.Platforms.Store.MSStore.StartPlatformAsync*
+  implements:
+  - NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync
+- uid: NitroxModel.Platforms.Store.MSStore.GetExeFile
+  commentId: M:NitroxModel.Platforms.Store.MSStore.GetExeFile
+  id: GetExeFile
+  parent: NitroxModel.Platforms.Store.MSStore
+  langs:
+  - csharp
+  - vb
+  name: GetExeFile()
+  nameWithType: MSStore.GetExeFile()
+  fullName: NitroxModel.Platforms.Store.MSStore.GetExeFile()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetExeFile
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  summary: Tries to find the executable of the platform
+  example: []
+  syntax:
+    content: public string GetExeFile()
+    return:
+      type: System.String
+      description: Returns path to the executable or null if not found
+    content.vb: Public Function GetExeFile() As String
+  overload: NitroxModel.Platforms.Store.MSStore.GetExeFile*
+  implements:
+  - NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile
+- uid: NitroxModel.Platforms.Store.MSStore.StartGameAsync(System.String)
+  commentId: M:NitroxModel.Platforms.Store.MSStore.StartGameAsync(System.String)
+  id: StartGameAsync(System.String)
+  parent: NitroxModel.Platforms.Store.MSStore
+  langs:
+  - csharp
+  - vb
+  name: StartGameAsync(string)
+  nameWithType: MSStore.StartGameAsync(string)
+  fullName: NitroxModel.Platforms.Store.MSStore.StartGameAsync(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/Store/MSStore.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: StartGameAsync
+    path: ../NitroxModel/Platforms/Store/MSStore.cs
+    startLine: 34
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.Store
+  syntax:
+    content: public Task<ProcessEx> StartGameAsync(string pathToGameExe)
+    parameters:
+    - id: pathToGameExe
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task{NitroxModel.Platforms.OS.Shared.ProcessEx}
+    content.vb: Public Function StartGameAsync(pathToGameExe As String) As Task(Of ProcessEx)
+  overload: NitroxModel.Platforms.Store.MSStore.StartGameAsync*
+  nameWithType.vb: MSStore.StartGameAsync(String)
+  fullName.vb: NitroxModel.Platforms.Store.MSStore.StartGameAsync(String)
+  name.vb: StartGameAsync(String)
+references:
+- uid: NitroxModel.Platforms.Store
+  commentId: N:NitroxModel.Platforms.Store
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.Store
+  nameWithType: NitroxModel.Platforms.Store
+  fullName: NitroxModel.Platforms.Store
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store
+    name: Store
+    href: NitroxModel.Platforms.Store.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store
+    name: Store
+    href: NitroxModel.Platforms.Store.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  commentId: T:NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  parent: NitroxModel.Platforms.Store.Interfaces
+  href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.html
+  name: IGamePlatform
+  nameWithType: IGamePlatform
+  fullName: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Platforms.Store.Interfaces
+  commentId: N:NitroxModel.Platforms.Store.Interfaces
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.Store.Interfaces
+  nameWithType: NitroxModel.Platforms.Store.Interfaces
+  fullName: NitroxModel.Platforms.Store.Interfaces
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store
+    name: Store
+    href: NitroxModel.Platforms.Store.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store.Interfaces
+    name: Interfaces
+    href: NitroxModel.Platforms.Store.Interfaces.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store
+    name: Store
+    href: NitroxModel.Platforms.Store.html
+  - name: .
+  - uid: NitroxModel.Platforms.Store.Interfaces
+    name: Interfaces
+    href: NitroxModel.Platforms.Store.Interfaces.html
+- uid: NitroxModel.Platforms.Store.MSStore.Instance*
+  commentId: Overload:NitroxModel.Platforms.Store.MSStore.Instance
+  href: NitroxModel.Platforms.Store.MSStore.Instance.html#NitroxModel_Platforms_Store_MSStore_Instance
+  name: Instance
+  nameWithType: MSStore.Instance
+  fullName: NitroxModel.Platforms.Store.MSStore.Instance
+- uid: NitroxModel.Platforms.Store.MSStore
+  commentId: T:NitroxModel.Platforms.Store.MSStore
+  parent: NitroxModel.Platforms.Store
+  href: NitroxModel.Platforms.Store.MSStore.html
+  name: MSStore
+  nameWithType: MSStore
+  fullName: NitroxModel.Platforms.Store.MSStore
+- uid: NitroxModel.Platforms.Store.MSStore.Name*
+  commentId: Overload:NitroxModel.Platforms.Store.MSStore.Name
+  href: NitroxModel.Platforms.Store.MSStore.Name.html#NitroxModel_Platforms_Store_MSStore_Name
+  name: Name
+  nameWithType: MSStore.Name
+  fullName: NitroxModel.Platforms.Store.MSStore.Name
+- uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Name
+  commentId: P:NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Name
+  parent: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Name.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_Name
+  name: Name
+  nameWithType: IGamePlatform.Name
+  fullName: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.Platforms.Store.MSStore.Platform*
+  commentId: Overload:NitroxModel.Platforms.Store.MSStore.Platform
+  href: NitroxModel.Platforms.Store.MSStore.Platform.html#NitroxModel_Platforms_Store_MSStore_Platform
+  name: Platform
+  nameWithType: MSStore.Platform
+  fullName: NitroxModel.Platforms.Store.MSStore.Platform
+- uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Platform
+  commentId: P:NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Platform
+  parent: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Platform.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_Platform
+  name: Platform
+  nameWithType: IGamePlatform.Platform
+  fullName: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.Platform
+- uid: NitroxModel.Discovery.Platform
+  commentId: T:NitroxModel.Discovery.Platform
+  parent: NitroxModel.Discovery
+  href: NitroxModel.Discovery.Platform.html
+  name: Platform
+  nameWithType: Platform
+  fullName: NitroxModel.Discovery.Platform
+- uid: NitroxModel.Discovery
+  commentId: N:NitroxModel.Discovery
+  href: NitroxModel.html
+  name: NitroxModel.Discovery
+  nameWithType: NitroxModel.Discovery
+  fullName: NitroxModel.Discovery
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+- uid: NitroxModel.Platforms.Store.MSStore.OwnsGame*
+  commentId: Overload:NitroxModel.Platforms.Store.MSStore.OwnsGame
+  href: NitroxModel.Platforms.Store.MSStore.OwnsGame.html#NitroxModel_Platforms_Store_MSStore_OwnsGame_System_String_
+  name: OwnsGame
+  nameWithType: MSStore.OwnsGame
+  fullName: NitroxModel.Platforms.Store.MSStore.OwnsGame
+- uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame(System.String)
+  commentId: M:NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame(System.String)
+  parent: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  isExternal: true
+  href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_OwnsGame_System_String_
+  name: OwnsGame(string)
+  nameWithType: IGamePlatform.OwnsGame(string)
+  fullName: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame(string)
+  nameWithType.vb: IGamePlatform.OwnsGame(String)
+  fullName.vb: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame(String)
+  name.vb: OwnsGame(String)
+  spec.csharp:
+  - uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame(System.String)
+    name: OwnsGame
+    href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_OwnsGame_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame(System.String)
+    name: OwnsGame
+    href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.OwnsGame.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_OwnsGame_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.Platforms.Store.MSStore.StartPlatformAsync*
+  commentId: Overload:NitroxModel.Platforms.Store.MSStore.StartPlatformAsync
+  href: NitroxModel.Platforms.Store.MSStore.StartPlatformAsync.html#NitroxModel_Platforms_Store_MSStore_StartPlatformAsync
+  name: StartPlatformAsync
+  nameWithType: MSStore.StartPlatformAsync
+  fullName: NitroxModel.Platforms.Store.MSStore.StartPlatformAsync
+- uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync
+  commentId: M:NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync
+  parent: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_StartPlatformAsync
+  name: StartPlatformAsync()
+  nameWithType: IGamePlatform.StartPlatformAsync()
+  fullName: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync()
+  spec.csharp:
+  - uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync
+    name: StartPlatformAsync
+    href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_StartPlatformAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync
+    name: StartPlatformAsync
+    href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.StartPlatformAsync.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_StartPlatformAsync
+  - name: (
+  - name: )
+- uid: System.Threading.Tasks.Task{NitroxModel.Platforms.OS.Shared.ProcessEx}
+  commentId: T:System.Threading.Tasks.Task{NitroxModel.Platforms.OS.Shared.ProcessEx}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<ProcessEx>
+  nameWithType: Task<ProcessEx>
+  fullName: System.Threading.Tasks.Task<NitroxModel.Platforms.OS.Shared.ProcessEx>
+  nameWithType.vb: Task(Of ProcessEx)
+  fullName.vb: System.Threading.Tasks.Task(Of NitroxModel.Platforms.OS.Shared.ProcessEx)
+  name.vb: Task(Of ProcessEx)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: NitroxModel.Platforms.Store.MSStore.GetExeFile*
+  commentId: Overload:NitroxModel.Platforms.Store.MSStore.GetExeFile
+  href: NitroxModel.Platforms.Store.MSStore.GetExeFile.html#NitroxModel_Platforms_Store_MSStore_GetExeFile
+  name: GetExeFile
+  nameWithType: MSStore.GetExeFile
+  fullName: NitroxModel.Platforms.Store.MSStore.GetExeFile
+- uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile
+  commentId: M:NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile
+  parent: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+  href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_GetExeFile
+  name: GetExeFile()
+  nameWithType: IGamePlatform.GetExeFile()
+  fullName: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile()
+  spec.csharp:
+  - uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile
+    name: GetExeFile
+    href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_GetExeFile
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile
+    name: GetExeFile
+    href: NitroxModel.Platforms.Store.Interfaces.IGamePlatform.GetExeFile.html#NitroxModel_Platforms_Store_Interfaces_IGamePlatform_GetExeFile
+  - name: (
+  - name: )
+- uid: NitroxModel.Platforms.Store.MSStore.StartGameAsync*
+  commentId: Overload:NitroxModel.Platforms.Store.MSStore.StartGameAsync
+  href: NitroxModel.Platforms.Store.MSStore.StartGameAsync.html#NitroxModel_Platforms_Store_MSStore_StartGameAsync_System_String_
+  name: StartGameAsync
+  nameWithType: MSStore.StartGameAsync
+  fullName: NitroxModel.Platforms.Store.MSStore.StartGameAsync
+memberLayout: SeparatePages

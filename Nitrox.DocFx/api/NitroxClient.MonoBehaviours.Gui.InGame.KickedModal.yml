@@ -1,0 +1,665 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal
+  commentId: T:NitroxClient.MonoBehaviours.Gui.InGame.KickedModal
+  id: KickedModal
+  parent: NitroxClient.MonoBehaviours.Gui.InGame
+  children:
+  - NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.#ctor
+  - NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes
+  - NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show(System.String)
+  langs:
+  - csharp
+  - vb
+  name: KickedModal
+  nameWithType: KickedModal
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: KickedModal
+    path: ../NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+    startLine: 2
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.InGame
+  syntax:
+    content: 'public class KickedModal : Modal'
+    content.vb: Public Class KickedModal Inherits Modal
+  inheritance:
+  - System.Object
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  inheritedMembers:
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.Modals
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.CurrentModal
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.SubWindowName
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.ModalText
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidable
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.HideNoButton
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.YesButtonText
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.NoButtonText
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.FreezeGame
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.Transparency
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidableBypass
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo
+  - NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get``1
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.#ctor
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.#ctor
+  id: '#ctor'
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal
+  langs:
+  - csharp
+  - vb
+  name: KickedModal()
+  nameWithType: KickedModal.KickedModal()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.KickedModal()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.InGame
+  syntax:
+    content: public KickedModal()
+    content.vb: Public Sub New()
+  overload: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.#ctor*
+  nameWithType.vb: KickedModal.New()
+  fullName.vb: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.New()
+  name.vb: New()
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show(System.String)
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show(System.String)
+  id: Show(System.String)
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal
+  langs:
+  - csharp
+  - vb
+  name: Show(string)
+  nameWithType: KickedModal.Show(string)
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Show
+    path: ../NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.InGame
+  syntax:
+    content: public void Show(string reason)
+    parameters:
+    - id: reason
+      type: System.String
+    content.vb: Public Sub Show(reason As String)
+  overload: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show*
+  nameWithType.vb: KickedModal.Show(String)
+  fullName.vb: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show(String)
+  name.vb: Show(String)
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes
+  id: ClickYes
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal
+  langs:
+  - csharp
+  - vb
+  name: ClickYes()
+  nameWithType: KickedModal.ClickYes()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ClickYes
+    path: ../NitroxClient/MonoBehaviours/Gui/InGame/KickedModal.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.InGame
+  example: []
+  syntax:
+    content: public override void ClickYes()
+    content.vb: Public Overrides Sub ClickYes()
+  overridden: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes
+  overload: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes*
+references:
+- uid: NitroxClient.MonoBehaviours.Gui.InGame
+  commentId: N:NitroxClient.MonoBehaviours.Gui.InGame
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.InGame
+  nameWithType: NitroxClient.MonoBehaviours.Gui.InGame
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame
+    name: InGame
+    href: NitroxClient.MonoBehaviours.Gui.InGame.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame
+    name: InGame
+    href: NitroxClient.MonoBehaviours.Gui.InGame.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  commentId: T:NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  parent: NitroxClient.MonoBehaviours.Gui.InGame
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.html
+  name: Modal
+  nameWithType: Modal
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Modals
+  commentId: F:NitroxClient.MonoBehaviours.Gui.InGame.Modal.Modals
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Modals.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Modals
+  name: Modals
+  nameWithType: Modal.Modals
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Modals
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.CurrentModal
+  commentId: F:NitroxClient.MonoBehaviours.Gui.InGame.Modal.CurrentModal
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.CurrentModal.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_CurrentModal
+  name: CurrentModal
+  nameWithType: Modal.CurrentModal
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.CurrentModal
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.SubWindowName
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.SubWindowName
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.SubWindowName.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_SubWindowName
+  name: SubWindowName
+  nameWithType: Modal.SubWindowName
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.SubWindowName
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ModalText
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.ModalText
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ModalText.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_ModalText
+  name: ModalText
+  nameWithType: Modal.ModalText
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ModalText
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidable
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidable
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidable.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_IsAvoidable
+  name: IsAvoidable
+  nameWithType: Modal.IsAvoidable
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidable
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.HideNoButton
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.HideNoButton
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.HideNoButton.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_HideNoButton
+  name: HideNoButton
+  nameWithType: Modal.HideNoButton
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.HideNoButton
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.YesButtonText
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.YesButtonText
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.YesButtonText.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_YesButtonText
+  name: YesButtonText
+  nameWithType: Modal.YesButtonText
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.YesButtonText
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.NoButtonText
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.NoButtonText
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.NoButtonText.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_NoButtonText
+  name: NoButtonText
+  nameWithType: Modal.NoButtonText
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.NoButtonText
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.FreezeGame
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.FreezeGame
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.FreezeGame.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_FreezeGame
+  name: FreezeGame
+  nameWithType: Modal.FreezeGame
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.FreezeGame
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Transparency
+  commentId: P:NitroxClient.MonoBehaviours.Gui.InGame.Modal.Transparency
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Transparency.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Transparency
+  name: Transparency
+  nameWithType: Modal.Transparency
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Transparency
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidableBypass
+  commentId: F:NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidableBypass
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidableBypass.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_IsAvoidableBypass
+  name: IsAvoidableBypass
+  nameWithType: Modal.IsAvoidableBypass
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.IsAvoidableBypass
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Show
+  name: Show()
+  nameWithType: Modal.Show()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show()
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show
+    name: Show
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Show
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show
+    name: Show
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Show.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Show
+  - name: (
+  - name: )
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Hide
+  name: Hide()
+  nameWithType: Modal.Hide()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide()
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide
+    name: Hide
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Hide
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide
+    name: Hide
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Hide.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Hide
+  - name: (
+  - name: )
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_OnDeselect
+  name: OnDeselect()
+  nameWithType: Modal.OnDeselect()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect()
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect
+    name: OnDeselect
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_OnDeselect
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect
+    name: OnDeselect
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.OnDeselect.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_OnDeselect
+  - name: (
+  - name: )
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_ClickNo
+  name: ClickNo()
+  nameWithType: Modal.ClickNo()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo()
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo
+    name: ClickNo
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_ClickNo
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo
+    name: ClickNo
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickNo.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_ClickNo
+  - name: (
+  - name: )
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get``1
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get``1
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Get__1
+  name: Get<T>()
+  nameWithType: Modal.Get<T>()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get<T>()
+  nameWithType.vb: Modal.Get(Of T)()
+  fullName.vb: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get(Of T)()
+  name.vb: Get(Of T)()
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get``1
+    name: Get
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Get__1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get``1
+    name: Get
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.Get.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_Get__1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.#ctor*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.#ctor
+  href: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.-ctor.html#NitroxClient_MonoBehaviours_Gui_InGame_KickedModal__ctor
+  name: KickedModal
+  nameWithType: KickedModal.KickedModal
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.KickedModal
+  nameWithType.vb: KickedModal.New
+  fullName.vb: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.New
+  name.vb: New
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show
+  href: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show.html#NitroxClient_MonoBehaviours_Gui_InGame_KickedModal_Show_System_String_
+  name: Show
+  nameWithType: KickedModal.Show
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.Show
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes
+  commentId: M:NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes
+  parent: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+  href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_ClickYes
+  name: ClickYes()
+  nameWithType: Modal.ClickYes()
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes()
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes
+    name: ClickYes
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_ClickYes
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes
+    name: ClickYes
+    href: NitroxClient.MonoBehaviours.Gui.InGame.Modal.ClickYes.html#NitroxClient_MonoBehaviours_Gui_InGame_Modal_ClickYes
+  - name: (
+  - name: )
+- uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes
+  href: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes.html#NitroxClient_MonoBehaviours_Gui_InGame_KickedModal_ClickYes
+  name: ClickYes
+  nameWithType: KickedModal.ClickYes
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal.ClickYes
+memberLayout: SeparatePages

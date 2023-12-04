@@ -1,0 +1,25 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Constants
+  commentId: N:NitroxModel.Constants
+  id: Constants
+  parent: NitroxModel
+  children:
+  - NitroxModel.Constants.LANDiscoveryConstants
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Constants
+  nameWithType: NitroxModel.Constants
+  fullName: NitroxModel.Constants
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.Constants.LANDiscoveryConstants
+  commentId: T:NitroxModel.Constants.LANDiscoveryConstants
+  href: NitroxModel.Constants.LANDiscoveryConstants.html
+  name: LANDiscoveryConstants
+  nameWithType: LANDiscoveryConstants
+  fullName: NitroxModel.Constants.LANDiscoveryConstants
+memberLayout: SeparatePages

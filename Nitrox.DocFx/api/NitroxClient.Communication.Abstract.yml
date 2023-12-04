@@ -1,0 +1,104 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  id: Abstract
+  parent: NitroxClient.Communication
+  children:
+  - NitroxClient.Communication.Abstract.IClient
+  - NitroxClient.Communication.Abstract.IMultiplayerSession
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  - NitroxClient.Communication.Abstract.IPacketSender
+  - NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.Communication.Abstract.IClient
+  commentId: T:NitroxClient.Communication.Abstract.IClient
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IClient.html
+  name: IClient
+  nameWithType: IClient
+  fullName: NitroxClient.Communication.Abstract.IClient
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSession
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSession
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSession.html
+  name: IMultiplayerSession
+  nameWithType: IMultiplayerSession
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSession
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext.html
+  name: IMultiplayerSessionConnectionContext
+  nameWithType: IMultiplayerSessionConnectionContext
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState.html
+  name: IMultiplayerSessionConnectionState
+  nameWithType: IMultiplayerSessionConnectionState
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.html
+  name: IMultiplayerSessionState
+  nameWithType: IMultiplayerSessionState
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+- uid: NitroxClient.Communication.Abstract.IPacketSender
+  commentId: T:NitroxClient.Communication.Abstract.IPacketSender
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IPacketSender.html
+  name: IPacketSender
+  nameWithType: IPacketSender
+  fullName: NitroxClient.Communication.Abstract.IPacketSender
+- uid: NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+  commentId: T:NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler.html
+  name: MultiplayerSessionConnectionStateChangedEventHandler
+  nameWithType: MultiplayerSessionConnectionStateChangedEventHandler
+  fullName: NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+memberLayout: SeparatePages

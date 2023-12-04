@@ -1,0 +1,223 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning
+  commentId: N:NitroxClient.GameLogic.Spawning
+  id: Spawning
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.Spawning.Abstract
+  - NitroxClient.GameLogic.Spawning.Bases
+  - NitroxClient.GameLogic.Spawning.InstalledBatteryEntitySpawner
+  - NitroxClient.GameLogic.Spawning.InstalledModuleEntitySpawner
+  - NitroxClient.GameLogic.Spawning.InventoryEntitySpawner
+  - NitroxClient.GameLogic.Spawning.InventoryItemEntitySpawner
+  - NitroxClient.GameLogic.Spawning.Metadata
+  - NitroxClient.GameLogic.Spawning.PathBasedChildEntitySpawner
+  - NitroxClient.GameLogic.Spawning.PrefabChildEntitySpawner
+  - NitroxClient.GameLogic.Spawning.WorldEntities
+  - NitroxClient.GameLogic.Spawning.WorldEntitySpawner
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.Spawning
+  nameWithType: NitroxClient.GameLogic.Spawning
+  fullName: NitroxClient.GameLogic.Spawning
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.Spawning.Abstract
+  commentId: N:NitroxClient.GameLogic.Spawning.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Abstract
+  nameWithType: NitroxClient.GameLogic.Spawning.Abstract
+  fullName: NitroxClient.GameLogic.Spawning.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.Spawning.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.Spawning.Abstract.html
+- uid: NitroxClient.GameLogic.Spawning.Bases
+  commentId: N:NitroxClient.GameLogic.Spawning.Bases
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Bases
+  nameWithType: NitroxClient.GameLogic.Spawning.Bases
+  fullName: NitroxClient.GameLogic.Spawning.Bases
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Bases
+    name: Bases
+    href: NitroxClient.GameLogic.Spawning.Bases.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Bases
+    name: Bases
+    href: NitroxClient.GameLogic.Spawning.Bases.html
+- uid: NitroxClient.GameLogic.Spawning.Metadata
+  commentId: N:NitroxClient.GameLogic.Spawning.Metadata
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Metadata
+  nameWithType: NitroxClient.GameLogic.Spawning.Metadata
+  fullName: NitroxClient.GameLogic.Spawning.Metadata
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities
+  commentId: N:NitroxClient.GameLogic.Spawning.WorldEntities
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.WorldEntities
+  nameWithType: NitroxClient.GameLogic.Spawning.WorldEntities
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.WorldEntities
+    name: WorldEntities
+    href: NitroxClient.GameLogic.Spawning.WorldEntities.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.WorldEntities
+    name: WorldEntities
+    href: NitroxClient.GameLogic.Spawning.WorldEntities.html
+- uid: NitroxClient.GameLogic.Spawning.InstalledBatteryEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.InstalledBatteryEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.InstalledBatteryEntitySpawner.html
+  name: InstalledBatteryEntitySpawner
+  nameWithType: InstalledBatteryEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.InstalledBatteryEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.InstalledModuleEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.InstalledModuleEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.InstalledModuleEntitySpawner.html
+  name: InstalledModuleEntitySpawner
+  nameWithType: InstalledModuleEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.InstalledModuleEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.InventoryEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.InventoryEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.InventoryEntitySpawner.html
+  name: InventoryEntitySpawner
+  nameWithType: InventoryEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.InventoryEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.InventoryItemEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.InventoryItemEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.InventoryItemEntitySpawner.html
+  name: InventoryItemEntitySpawner
+  nameWithType: InventoryItemEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.InventoryItemEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.PathBasedChildEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.PathBasedChildEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.PathBasedChildEntitySpawner.html
+  name: PathBasedChildEntitySpawner
+  nameWithType: PathBasedChildEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.PathBasedChildEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.PrefabChildEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.PrefabChildEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.PrefabChildEntitySpawner.html
+  name: PrefabChildEntitySpawner
+  nameWithType: PrefabChildEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.PrefabChildEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.WorldEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.WorldEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.WorldEntitySpawner.html
+  name: WorldEntitySpawner
+  nameWithType: WorldEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntitySpawner
+memberLayout: SeparatePages

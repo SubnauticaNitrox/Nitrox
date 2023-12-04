@@ -1,0 +1,256 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  id: MultiplayerBench.Side
+  parent: NitroxClient.MonoBehaviours.Overrides
+  children:
+  - NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.CENTER
+  - NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.LEFT
+  - NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.RIGHT
+  langs:
+  - csharp
+  - vb
+  name: MultiplayerBench.Side
+  nameWithType: MultiplayerBench.Side
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  type: Enum
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Side
+    path: ../NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+    startLine: 63
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Overrides
+  syntax:
+    content: public enum MultiplayerBench.Side
+    content.vb: Public Enum MultiplayerBench.Side
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.LEFT
+  commentId: F:NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.LEFT
+  id: LEFT
+  parent: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  langs:
+  - csharp
+  - vb
+  name: LEFT
+  nameWithType: MultiplayerBench.Side.LEFT
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.LEFT
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LEFT
+    path: ../NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+    startLine: 65
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Overrides
+  syntax:
+    content: LEFT = 0
+    return:
+      type: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.CENTER
+  commentId: F:NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.CENTER
+  id: CENTER
+  parent: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  langs:
+  - csharp
+  - vb
+  name: CENTER
+  nameWithType: MultiplayerBench.Side.CENTER
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.CENTER
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CENTER
+    path: ../NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+    startLine: 66
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Overrides
+  syntax:
+    content: CENTER = 1
+    return:
+      type: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.RIGHT
+  commentId: F:NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.RIGHT
+  id: RIGHT
+  parent: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  langs:
+  - csharp
+  - vb
+  name: RIGHT
+  nameWithType: MultiplayerBench.Side.RIGHT
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.RIGHT
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RIGHT
+    path: ../NitroxClient/MonoBehaviours/Overrides/MultiplayerBench.cs
+    startLine: 67
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Overrides
+  syntax:
+    content: RIGHT = 2
+    return:
+      type: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+references:
+- uid: NitroxClient.MonoBehaviours.Overrides
+  commentId: N:NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Overrides
+  nameWithType: NitroxClient.MonoBehaviours.Overrides
+  fullName: NitroxClient.MonoBehaviours.Overrides
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides
+    name: Overrides
+    href: NitroxClient.MonoBehaviours.Overrides.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides
+    name: Overrides
+    href: NitroxClient.MonoBehaviours.Overrides.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  parent: NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.html
+  name: MultiplayerBench.Side
+  nameWithType: MultiplayerBench.Side
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+    name: MultiplayerBench
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+    name: Side
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.html
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+    name: MultiplayerBench
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+    name: Side
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.html
+memberLayout: SeparatePages

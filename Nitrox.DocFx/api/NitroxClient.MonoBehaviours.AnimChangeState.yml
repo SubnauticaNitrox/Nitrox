@@ -1,0 +1,232 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours.AnimChangeState
+  commentId: T:NitroxClient.MonoBehaviours.AnimChangeState
+  id: AnimChangeState
+  parent: NitroxClient.MonoBehaviours
+  children:
+  - NitroxClient.MonoBehaviours.AnimChangeState.OFF
+  - NitroxClient.MonoBehaviours.AnimChangeState.ON
+  - NitroxClient.MonoBehaviours.AnimChangeState.UNSET
+  langs:
+  - csharp
+  - vb
+  name: AnimChangeState
+  nameWithType: AnimChangeState
+  fullName: NitroxClient.MonoBehaviours.AnimChangeState
+  type: Enum
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/AnimationSender.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AnimChangeState
+    path: ../NitroxClient/MonoBehaviours/AnimationSender.cs
+    startLine: 28
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours
+  syntax:
+    content: public enum AnimChangeState
+    content.vb: Public Enum AnimChangeState
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxClient.MonoBehaviours.AnimChangeState.OFF
+  commentId: F:NitroxClient.MonoBehaviours.AnimChangeState.OFF
+  id: OFF
+  parent: NitroxClient.MonoBehaviours.AnimChangeState
+  langs:
+  - csharp
+  - vb
+  name: OFF
+  nameWithType: AnimChangeState.OFF
+  fullName: NitroxClient.MonoBehaviours.AnimChangeState.OFF
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/AnimationSender.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OFF
+    path: ../NitroxClient/MonoBehaviours/AnimationSender.cs
+    startLine: 30
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours
+  syntax:
+    content: OFF = 0
+    return:
+      type: NitroxClient.MonoBehaviours.AnimChangeState
+- uid: NitroxClient.MonoBehaviours.AnimChangeState.ON
+  commentId: F:NitroxClient.MonoBehaviours.AnimChangeState.ON
+  id: ON
+  parent: NitroxClient.MonoBehaviours.AnimChangeState
+  langs:
+  - csharp
+  - vb
+  name: ON
+  nameWithType: AnimChangeState.ON
+  fullName: NitroxClient.MonoBehaviours.AnimChangeState.ON
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/AnimationSender.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ON
+    path: ../NitroxClient/MonoBehaviours/AnimationSender.cs
+    startLine: 31
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours
+  syntax:
+    content: ON = 1
+    return:
+      type: NitroxClient.MonoBehaviours.AnimChangeState
+- uid: NitroxClient.MonoBehaviours.AnimChangeState.UNSET
+  commentId: F:NitroxClient.MonoBehaviours.AnimChangeState.UNSET
+  id: UNSET
+  parent: NitroxClient.MonoBehaviours.AnimChangeState
+  langs:
+  - csharp
+  - vb
+  name: UNSET
+  nameWithType: AnimChangeState.UNSET
+  fullName: NitroxClient.MonoBehaviours.AnimChangeState.UNSET
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/AnimationSender.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UNSET
+    path: ../NitroxClient/MonoBehaviours/AnimationSender.cs
+    startLine: 32
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours
+  syntax:
+    content: UNSET = 2
+    return:
+      type: NitroxClient.MonoBehaviours.AnimChangeState
+references:
+- uid: NitroxClient.MonoBehaviours
+  commentId: N:NitroxClient.MonoBehaviours
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours
+  nameWithType: NitroxClient.MonoBehaviours
+  fullName: NitroxClient.MonoBehaviours
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxClient.MonoBehaviours.AnimChangeState
+  commentId: T:NitroxClient.MonoBehaviours.AnimChangeState
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.AnimChangeState.html
+  name: AnimChangeState
+  nameWithType: AnimChangeState
+  fullName: NitroxClient.MonoBehaviours.AnimChangeState
+memberLayout: SeparatePages

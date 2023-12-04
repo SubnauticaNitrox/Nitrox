@@ -1,0 +1,72 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.PatternMatching
+  commentId: N:NitroxPatcher.PatternMatching
+  id: PatternMatching
+  parent: NitroxPatcher
+  children:
+  - NitroxPatcher.PatternMatching.InstructionPattern
+  - NitroxPatcher.PatternMatching.InstructionsPattern
+  - NitroxPatcher.PatternMatching.OpCodePattern
+  - NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: NitroxPatcher.PatternMatching
+  nameWithType: NitroxPatcher.PatternMatching
+  fullName: NitroxPatcher.PatternMatching
+  type: Namespace
+  assemblies:
+  - NitroxPatcher
+references:
+- uid: NitroxPatcher.PatternMatching.InstructionPattern
+  commentId: T:NitroxPatcher.PatternMatching.InstructionPattern
+  parent: NitroxPatcher.PatternMatching
+  href: NitroxPatcher.PatternMatching.InstructionPattern.html
+  name: InstructionPattern
+  nameWithType: InstructionPattern
+  fullName: NitroxPatcher.PatternMatching.InstructionPattern
+- uid: NitroxPatcher.PatternMatching.InstructionsPattern
+  commentId: T:NitroxPatcher.PatternMatching.InstructionsPattern
+  parent: NitroxPatcher.PatternMatching
+  href: NitroxPatcher.PatternMatching.InstructionsPattern.html
+  name: InstructionsPattern
+  nameWithType: InstructionsPattern
+  fullName: NitroxPatcher.PatternMatching.InstructionsPattern
+- uid: NitroxPatcher.PatternMatching.OpCodePattern
+  commentId: T:NitroxPatcher.PatternMatching.OpCodePattern
+  parent: NitroxPatcher.PatternMatching
+  href: NitroxPatcher.PatternMatching.OpCodePattern.html
+  name: OpCodePattern
+  nameWithType: OpCodePattern
+  fullName: NitroxPatcher.PatternMatching.OpCodePattern
+- uid: NitroxPatcher.PatternMatching.OperandPattern
+  commentId: T:NitroxPatcher.PatternMatching.OperandPattern
+  parent: NitroxPatcher.PatternMatching
+  href: NitroxPatcher.PatternMatching.OperandPattern.html
+  name: OperandPattern
+  nameWithType: OperandPattern
+  fullName: NitroxPatcher.PatternMatching.OperandPattern
+- uid: NitroxPatcher.PatternMatching
+  commentId: N:NitroxPatcher.PatternMatching
+  href: NitroxPatcher.html
+  name: NitroxPatcher.PatternMatching
+  nameWithType: NitroxPatcher.PatternMatching
+  fullName: NitroxPatcher.PatternMatching
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.PatternMatching
+    name: PatternMatching
+    href: NitroxPatcher.PatternMatching.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.PatternMatching
+    name: PatternMatching
+    href: NitroxPatcher.PatternMatching.html
+memberLayout: SeparatePages

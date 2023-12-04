@@ -1,0 +1,157 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nitrox.Test.Helper.Faker
+  commentId: N:Nitrox.Test.Helper.Faker
+  id: Faker
+  parent: Nitrox.Test.Helper
+  children:
+  - Nitrox.Test.Helper.Faker.INitroxFaker
+  - Nitrox.Test.Helper.Faker.NitroxAbstractFaker
+  - Nitrox.Test.Helper.Faker.NitroxActionFaker
+  - Nitrox.Test.Helper.Faker.NitroxAutoFaker`1
+  - Nitrox.Test.Helper.Faker.NitroxCollectionFaker
+  - Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType
+  - Nitrox.Test.Helper.Faker.NitroxFaker
+  - Nitrox.Test.Helper.Faker.NitroxNullableFaker
+  - Nitrox.Test.Helper.Faker.NitroxOptionalFaker
+  langs:
+  - csharp
+  - vb
+  name: Nitrox.Test.Helper.Faker
+  nameWithType: Nitrox.Test.Helper.Faker
+  fullName: Nitrox.Test.Helper.Faker
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: Nitrox.Test.Helper.Faker.INitroxFaker
+  commentId: T:Nitrox.Test.Helper.Faker.INitroxFaker
+  parent: Nitrox.Test.Helper.Faker
+  href: Nitrox.Test.Helper.Faker.INitroxFaker.html
+  name: INitroxFaker
+  nameWithType: INitroxFaker
+  fullName: Nitrox.Test.Helper.Faker.INitroxFaker
+- uid: Nitrox.Test.Helper.Faker.NitroxAbstractFaker
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxAbstractFaker
+  href: Nitrox.Test.Helper.Faker.NitroxAbstractFaker.html
+  name: NitroxAbstractFaker
+  nameWithType: NitroxAbstractFaker
+  fullName: Nitrox.Test.Helper.Faker.NitroxAbstractFaker
+- uid: Nitrox.Test.Helper.Faker.NitroxActionFaker
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxActionFaker
+  href: Nitrox.Test.Helper.Faker.NitroxActionFaker.html
+  name: NitroxActionFaker
+  nameWithType: NitroxActionFaker
+  fullName: Nitrox.Test.Helper.Faker.NitroxActionFaker
+- uid: Nitrox.Test.Helper.Faker.NitroxAutoFaker`1
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxAutoFaker`1
+  href: Nitrox.Test.Helper.Faker.NitroxAutoFaker-1.html
+  name: NitroxAutoFaker<T>
+  nameWithType: NitroxAutoFaker<T>
+  fullName: Nitrox.Test.Helper.Faker.NitroxAutoFaker<T>
+  nameWithType.vb: NitroxAutoFaker(Of T)
+  fullName.vb: Nitrox.Test.Helper.Faker.NitroxAutoFaker(Of T)
+  name.vb: NitroxAutoFaker(Of T)
+  spec.csharp:
+  - uid: Nitrox.Test.Helper.Faker.NitroxAutoFaker`1
+    name: NitroxAutoFaker
+    href: Nitrox.Test.Helper.Faker.NitroxAutoFaker-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Nitrox.Test.Helper.Faker.NitroxAutoFaker`1
+    name: NitroxAutoFaker
+    href: Nitrox.Test.Helper.Faker.NitroxAutoFaker-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxCollectionFaker
+  href: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.html
+  name: NitroxCollectionFaker
+  nameWithType: NitroxCollectionFaker
+  fullName: Nitrox.Test.Helper.Faker.NitroxCollectionFaker
+- uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType
+  parent: Nitrox.Test.Helper.Faker
+  href: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.html
+  name: NitroxCollectionFaker.CollectionType
+  nameWithType: NitroxCollectionFaker.CollectionType
+  fullName: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType
+  spec.csharp:
+  - uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker
+    name: NitroxCollectionFaker
+    href: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.html
+  - name: .
+  - uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType
+    name: CollectionType
+    href: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType.html
+  spec.vb:
+  - uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker
+    name: NitroxCollectionFaker
+    href: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.html
+  - name: .
+  - uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType
+    name: CollectionType
+    href: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType.html
+- uid: Nitrox.Test.Helper.Faker.NitroxFaker
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxFaker
+  parent: Nitrox.Test.Helper.Faker
+  href: Nitrox.Test.Helper.Faker.NitroxFaker.html
+  name: NitroxFaker
+  nameWithType: NitroxFaker
+  fullName: Nitrox.Test.Helper.Faker.NitroxFaker
+- uid: Nitrox.Test.Helper.Faker.NitroxNullableFaker
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxNullableFaker
+  href: Nitrox.Test.Helper.Faker.NitroxNullableFaker.html
+  name: NitroxNullableFaker
+  nameWithType: NitroxNullableFaker
+  fullName: Nitrox.Test.Helper.Faker.NitroxNullableFaker
+- uid: Nitrox.Test.Helper.Faker.NitroxOptionalFaker
+  commentId: T:Nitrox.Test.Helper.Faker.NitroxOptionalFaker
+  href: Nitrox.Test.Helper.Faker.NitroxOptionalFaker.html
+  name: NitroxOptionalFaker
+  nameWithType: NitroxOptionalFaker
+  fullName: Nitrox.Test.Helper.Faker.NitroxOptionalFaker
+- uid: Nitrox.Test.Helper.Faker
+  commentId: N:Nitrox.Test.Helper.Faker
+  href: Nitrox.html
+  name: Nitrox.Test.Helper.Faker
+  nameWithType: Nitrox.Test.Helper.Faker
+  fullName: Nitrox.Test.Helper.Faker
+  spec.csharp:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.Test
+    name: Test
+    href: Nitrox.Test.html
+  - name: .
+  - uid: Nitrox.Test.Helper
+    name: Helper
+    href: Nitrox.Test.Helper.html
+  - name: .
+  - uid: Nitrox.Test.Helper.Faker
+    name: Faker
+    href: Nitrox.Test.Helper.Faker.html
+  spec.vb:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.Test
+    name: Test
+    href: Nitrox.Test.html
+  - name: .
+  - uid: Nitrox.Test.Helper
+    name: Helper
+    href: Nitrox.Test.Helper.html
+  - name: .
+  - uid: Nitrox.Test.Helper.Faker
+    name: Faker
+    href: Nitrox.Test.Helper.Faker.html
+memberLayout: SeparatePages

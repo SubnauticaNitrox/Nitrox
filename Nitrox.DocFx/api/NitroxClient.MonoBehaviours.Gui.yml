@@ -1,0 +1,208 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours.Gui
+  id: Gui
+  parent: NitroxClient.MonoBehaviours
+  children:
+  - NitroxClient.MonoBehaviours.Gui.Chat
+  - NitroxClient.MonoBehaviours.Gui.HUD
+  - NitroxClient.MonoBehaviours.Gui.InGame
+  - NitroxClient.MonoBehaviours.Gui.Input
+  - NitroxClient.MonoBehaviours.Gui.MainMenu
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.MonoBehaviours.Gui
+  type: Namespace
+references:
+- uid: NitroxClient.MonoBehaviours.Gui.Chat
+  commentId: N:NitroxClient.MonoBehaviours.Gui.Chat
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.Chat
+  nameWithType: NitroxClient.MonoBehaviours.Gui.Chat
+  fullName: NitroxClient.MonoBehaviours.Gui.Chat
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Chat
+    name: Chat
+    href: NitroxClient.MonoBehaviours.Gui.Chat.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Chat
+    name: Chat
+    href: NitroxClient.MonoBehaviours.Gui.Chat.html
+- uid: NitroxClient.MonoBehaviours.Gui.HUD
+  commentId: N:NitroxClient.MonoBehaviours.Gui.HUD
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.HUD
+  nameWithType: NitroxClient.MonoBehaviours.Gui.HUD
+  fullName: NitroxClient.MonoBehaviours.Gui.HUD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.HUD
+    name: HUD
+    href: NitroxClient.MonoBehaviours.Gui.HUD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.HUD
+    name: HUD
+    href: NitroxClient.MonoBehaviours.Gui.HUD.html
+- uid: NitroxClient.MonoBehaviours.Gui.InGame
+  commentId: N:NitroxClient.MonoBehaviours.Gui.InGame
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.InGame
+  nameWithType: NitroxClient.MonoBehaviours.Gui.InGame
+  fullName: NitroxClient.MonoBehaviours.Gui.InGame
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame
+    name: InGame
+    href: NitroxClient.MonoBehaviours.Gui.InGame.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.InGame
+    name: InGame
+    href: NitroxClient.MonoBehaviours.Gui.InGame.html
+- uid: NitroxClient.MonoBehaviours.Gui.Input
+  commentId: N:NitroxClient.MonoBehaviours.Gui.Input
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.Input
+  nameWithType: NitroxClient.MonoBehaviours.Gui.Input
+  fullName: NitroxClient.MonoBehaviours.Gui.Input
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input
+    name: Input
+    href: NitroxClient.MonoBehaviours.Gui.Input.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input
+    name: Input
+    href: NitroxClient.MonoBehaviours.Gui.Input.html
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu
+  commentId: N:NitroxClient.MonoBehaviours.Gui.MainMenu
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.MainMenu
+  nameWithType: NitroxClient.MonoBehaviours.Gui.MainMenu
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.MainMenu
+    name: MainMenu
+    href: NitroxClient.MonoBehaviours.Gui.MainMenu.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.MainMenu
+    name: MainMenu
+    href: NitroxClient.MonoBehaviours.Gui.MainMenu.html
+memberLayout: SeparatePages

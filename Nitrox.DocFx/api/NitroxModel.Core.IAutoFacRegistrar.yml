@@ -1,0 +1,104 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Core.IAutoFacRegistrar
+  commentId: T:NitroxModel.Core.IAutoFacRegistrar
+  id: IAutoFacRegistrar
+  parent: NitroxModel.Core
+  children:
+  - NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: IAutoFacRegistrar
+  nameWithType: IAutoFacRegistrar
+  fullName: NitroxModel.Core.IAutoFacRegistrar
+  type: Interface
+  source:
+    remote:
+      path: NitroxModel/Core/IAutoFacRegistrar.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IAutoFacRegistrar
+    path: ../NitroxModel/Core/IAutoFacRegistrar.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Core
+  summary: Nitrox projects should inherit from this interface and register their services into the DI container using the builder method.
+  example: []
+  syntax:
+    content: public interface IAutoFacRegistrar
+    content.vb: Public Interface IAutoFacRegistrar
+- uid: NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  commentId: M:NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  id: RegisterDependencies(Autofac.ContainerBuilder)
+  parent: NitroxModel.Core.IAutoFacRegistrar
+  langs:
+  - csharp
+  - vb
+  name: RegisterDependencies(ContainerBuilder)
+  nameWithType: IAutoFacRegistrar.RegisterDependencies(ContainerBuilder)
+  fullName: NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies(Autofac.ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Core/IAutoFacRegistrar.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RegisterDependencies
+    path: ../NitroxModel/Core/IAutoFacRegistrar.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Core
+  syntax:
+    content: void RegisterDependencies(ContainerBuilder containerBuilder)
+    parameters:
+    - id: containerBuilder
+      type: Autofac.ContainerBuilder
+    content.vb: Sub RegisterDependencies(containerBuilder As ContainerBuilder)
+  overload: NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies*
+references:
+- uid: NitroxModel.Core
+  commentId: N:NitroxModel.Core
+  href: NitroxModel.html
+  name: NitroxModel.Core
+  nameWithType: NitroxModel.Core
+  fullName: NitroxModel.Core
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+- uid: NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies*
+  commentId: Overload:NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies
+  href: NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies.html#NitroxModel_Core_IAutoFacRegistrar_RegisterDependencies_Autofac_ContainerBuilder_
+  name: RegisterDependencies
+  nameWithType: IAutoFacRegistrar.RegisterDependencies
+  fullName: NitroxModel.Core.IAutoFacRegistrar.RegisterDependencies
+- uid: Autofac.ContainerBuilder
+  commentId: T:Autofac.ContainerBuilder
+  parent: Autofac
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/ContainerBuilder.cs
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: Autofac.ContainerBuilder
+- uid: Autofac
+  commentId: N:Autofac
+  isExternal: true
+  name: Autofac
+  nameWithType: Autofac
+  fullName: Autofac
+memberLayout: SeparatePages

@@ -1,0 +1,3027 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  commentId: T:NitroxModel.DataStructures.ThreadSafeDictionary`2
+  id: ThreadSafeDictionary`2
+  parent: NitroxModel.DataStructures
+  children:
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1},System.Boolean)
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Add(System.Collections.Generic.KeyValuePair{`0,`1})
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Add(`0,`1)
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Clear
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Contains(System.Collections.Generic.KeyValuePair{`0,`1})
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.ContainsKey(`0)
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Count
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Entries
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.GetEnumerator
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.IsReadOnly
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Item(`0)
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Keys
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove(System.Collections.Generic.KeyValuePair{`0,`1})
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove(`0)
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.TryGetValue(`0,`1@)
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2.Values
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeDictionary<TKey, TValue>
+  nameWithType: ThreadSafeDictionary<TKey, TValue>
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ThreadSafeDictionary
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: >-
+      [DataContract]
+
+      public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable
+    typeParameters:
+    - id: TKey
+    - id: TValue
+    content.vb: >-
+      <DataContract>
+
+      Public Class ThreadSafeDictionary(Of TKey, TValue) Implements IDictionary(Of TKey, TValue), ICollection(Of KeyValuePair(Of TKey, TValue)), IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEnumerable
+  inheritance:
+  - System.Object
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  - System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  extensionMethods:
+  - System.Collections.Generic.IDictionary{`0,`1}.NitroxModel.Extensions.RemoveWhere``3({TParameter},System.Func{{TValue},{TParameter},System.Boolean})
+  - System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}.NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}})
+  attributes:
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue)
+  name.vb: ThreadSafeDictionary(Of TKey, TValue)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Keys
+  commentId: P:NitroxModel.DataStructures.ThreadSafeDictionary`2.Keys
+  id: Keys
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Keys
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Keys
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Keys
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Keys
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets an <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> containing the keys of the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: >-
+      [IgnoreDataMember]
+
+      public ICollection<TKey> Keys { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.ICollection{{TKey}}
+      description: An <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> containing the keys of the object that implements <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+    content.vb: >-
+      <IgnoreDataMember>
+
+      Public ReadOnly Property Keys As ICollection(Of TKey)
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Keys*
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}.Keys
+  attributes:
+  - type: System.Runtime.Serialization.IgnoreDataMemberAttribute
+    ctor: System.Runtime.Serialization.IgnoreDataMemberAttribute.#ctor
+    arguments: []
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Keys
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Keys
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Values
+  commentId: P:NitroxModel.DataStructures.ThreadSafeDictionary`2.Values
+  id: Values
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Values
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Values
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Values
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Values
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 32
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets an <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> containing the values in the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: >-
+      [IgnoreDataMember]
+
+      public ICollection<TValue> Values { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.ICollection{{TValue}}
+      description: An <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> containing the values in the object that implements <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+    content.vb: >-
+      <IgnoreDataMember>
+
+      Public ReadOnly Property Values As ICollection(Of TValue)
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Values*
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}.Values
+  attributes:
+  - type: System.Runtime.Serialization.IgnoreDataMemberAttribute
+    ctor: System.Runtime.Serialization.IgnoreDataMemberAttribute.#ctor
+    arguments: []
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Values
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Values
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Entries
+  commentId: P:NitroxModel.DataStructures.ThreadSafeDictionary`2.Entries
+  id: Entries
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Entries
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Entries
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Entries
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Entries
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 44
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: >-
+      [IgnoreDataMember]
+
+      public ICollection<KeyValuePair<TKey, TValue>> Entries { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+    content.vb: >-
+      <IgnoreDataMember>
+
+      Public ReadOnly Property Entries As ICollection(Of KeyValuePair(Of TKey, TValue))
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Entries*
+  attributes:
+  - type: System.Runtime.Serialization.IgnoreDataMemberAttribute
+    ctor: System.Runtime.Serialization.IgnoreDataMemberAttribute.#ctor
+    arguments: []
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Entries
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Entries
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Item(`0)
+  commentId: P:NitroxModel.DataStructures.ThreadSafeDictionary`2.Item(`0)
+  id: Item(`0)
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: this[TKey]
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.this[TKey]
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.this[TKey]
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: this[]
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 57
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets or sets the element with the specified key.
+  example: []
+  syntax:
+    content: public TValue this[TKey key] { get; set; }
+    parameters:
+    - id: key
+      type: '{TKey}'
+      description: The key of the element to get or set.
+    return:
+      type: '{TValue}'
+      description: The element with the specified key.
+    content.vb: Public Default Property this[](key As TKey) As TValue
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Item*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: <code class="paramref">key</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+  - type: System.Collections.Generic.KeyNotFoundException
+    commentId: T:System.Collections.Generic.KeyNotFoundException
+    description: The property is retrieved and <code class="paramref">key</code> is not found.
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The property is set and the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}.Item({TKey})
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).this[](TKey)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).this[](TKey)
+  name.vb: this[](TKey)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Count
+  commentId: P:NitroxModel.DataStructures.ThreadSafeDictionary`2.Count
+  id: Count
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Count
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Count
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Count
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 75
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets the number of elements contained in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: The number of elements contained in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Count*
+  implements:
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Count
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Count
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Count
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.IsReadOnly
+  commentId: P:NitroxModel.DataStructures.ThreadSafeDictionary`2.IsReadOnly
+  id: IsReadOnly
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: IsReadOnly
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.IsReadOnly
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.IsReadOnly
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsReadOnly
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 86
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets a value indicating whether the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  example: []
+  syntax:
+    content: public bool IsReadOnly { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public ReadOnly Property IsReadOnly As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.IsReadOnly*
+  implements:
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.IsReadOnly
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).IsReadOnly
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).IsReadOnly
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor
+  id: '#ctor'
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeDictionary()
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.ThreadSafeDictionary()
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.ThreadSafeDictionary()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 88
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ThreadSafeDictionary()
+    content.vb: Public Sub New()
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor*
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).New()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).New()
+  name.vb: New()
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1},System.Boolean)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1},System.Boolean)
+  id: '#ctor(System.Collections.Generic.IDictionary{`0,`1},System.Boolean)'
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeDictionary(IDictionary<TKey, TValue>, bool)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.ThreadSafeDictionary(IDictionary<TKey, TValue>, bool)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.ThreadSafeDictionary(System.Collections.Generic.IDictionary<TKey, TValue>, bool)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 93
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ThreadSafeDictionary(IDictionary<TKey, TValue> dictionary, bool createCopy = true)
+    parameters:
+    - id: dictionary
+      type: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+    - id: createCopy
+      type: System.Boolean
+    content.vb: Public Sub New(dictionary As IDictionary(Of TKey, TValue), createCopy As Boolean = True)
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor*
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).New(IDictionary(Of TKey, TValue), Boolean)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).New(System.Collections.Generic.IDictionary(Of TKey, TValue), Boolean)
+  name.vb: New(IDictionary(Of TKey, TValue), Boolean)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Add(System.Collections.Generic.KeyValuePair{`0,`1})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.Add(System.Collections.Generic.KeyValuePair{`0,`1})
+  id: Add(System.Collections.Generic.KeyValuePair{`0,`1})
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Add(KeyValuePair<TKey, TValue>)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Add(KeyValuePair<TKey, TValue>)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Add(System.Collections.Generic.KeyValuePair<TKey, TValue>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Add
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 98
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Adds an item to the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void Add(KeyValuePair<TKey, TValue> item)
+    parameters:
+    - id: item
+      type: System.Collections.Generic.KeyValuePair{{TKey},{TValue}}
+      description: The object to add to the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Sub Add(item As KeyValuePair(Of TKey, TValue))
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Add*
+  exceptions:
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Add(System.Collections.Generic.KeyValuePair{{TKey},{TValue}})
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Add(KeyValuePair(Of TKey, TValue))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Add(System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: Add(KeyValuePair(Of TKey, TValue))
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Clear
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.Clear
+  id: Clear
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Clear()
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Clear()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Clear
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 106
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Removes all items from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Clear*
+  exceptions:
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Clear
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Clear()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Clear()
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Contains(System.Collections.Generic.KeyValuePair{`0,`1})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.Contains(System.Collections.Generic.KeyValuePair{`0,`1})
+  id: Contains(System.Collections.Generic.KeyValuePair{`0,`1})
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Contains(KeyValuePair<TKey, TValue>)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Contains(KeyValuePair<TKey, TValue>)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Contains(System.Collections.Generic.KeyValuePair<TKey, TValue>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Contains
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 114
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Determines whether the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> contains a specific value.
+  example: []
+  syntax:
+    content: public bool Contains(KeyValuePair<TKey, TValue> item)
+    parameters:
+    - id: item
+      type: System.Collections.Generic.KeyValuePair{{TKey},{TValue}}
+      description: The object to locate in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">item</code> is found in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function Contains(item As KeyValuePair(Of TKey, TValue)) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Contains*
+  implements:
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Contains(System.Collections.Generic.KeyValuePair{{TKey},{TValue}})
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Contains(KeyValuePair(Of TKey, TValue))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Contains(System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: Contains(KeyValuePair(Of TKey, TValue))
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)
+  id: CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: CopyTo(KeyValuePair<TKey, TValue>[], int)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.CopyTo(KeyValuePair<TKey, TValue>[], int)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.CopyTo(System.Collections.Generic.KeyValuePair<TKey, TValue>[], int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CopyTo
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 122
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Copies the elements of the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> to an <xref href="System.Array" data-throw-if-not-resolved="false"></xref>, starting at a particular <xref href="System.Array" data-throw-if-not-resolved="false"></xref> index.
+  example: []
+  syntax:
+    content: public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    parameters:
+    - id: array
+      type: System.Collections.Generic.KeyValuePair{{TKey},{TValue}}[]
+      description: The one-dimensional <xref href="System.Array" data-throw-if-not-resolved="false"></xref> that is the destination of the elements copied from <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>. The <xref href="System.Array" data-throw-if-not-resolved="false"></xref> must have zero-based indexing.
+    - id: arrayIndex
+      type: System.Int32
+      description: The zero-based index in <code class="paramref">array</code> at which copying begins.
+    content.vb: Public Sub CopyTo(array As KeyValuePair(Of TKey, TValue)(), arrayIndex As Integer)
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.CopyTo*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: <code class="paramref">array</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+  - type: System.ArgumentOutOfRangeException
+    commentId: T:System.ArgumentOutOfRangeException
+    description: <code class="paramref">arrayIndex</code> is less than 0.
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: The number of elements in the source <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is greater than the available space from <code class="paramref">arrayIndex</code> to the end of the destination <code class="paramref">array</code>.
+  implements:
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.CopyTo(System.Collections.Generic.KeyValuePair{{TKey},{TValue}}[],System.Int32)
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).CopyTo(KeyValuePair(Of TKey, TValue)(), Integer)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).CopyTo(System.Collections.Generic.KeyValuePair(Of TKey, TValue)(), Integer)
+  name.vb: CopyTo(KeyValuePair(Of TKey, TValue)(), Integer)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove(System.Collections.Generic.KeyValuePair{`0,`1})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove(System.Collections.Generic.KeyValuePair{`0,`1})
+  id: Remove(System.Collections.Generic.KeyValuePair{`0,`1})
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Remove(KeyValuePair<TKey, TValue>)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Remove(KeyValuePair<TKey, TValue>)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Remove(System.Collections.Generic.KeyValuePair<TKey, TValue>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Remove
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 130
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Removes the first occurrence of a specific object from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public bool Remove(KeyValuePair<TKey, TValue> item)
+    parameters:
+    - id: item
+      type: System.Collections.Generic.KeyValuePair{{TKey},{TValue}}
+      description: The object to remove from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">item</code> was successfully removed from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>. This method also returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> if <code class="paramref">item</code> is not found in the original <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Function Remove(item As KeyValuePair(Of TKey, TValue)) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove*
+  exceptions:
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Remove(System.Collections.Generic.KeyValuePair{{TKey},{TValue}})
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Remove(KeyValuePair(Of TKey, TValue))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Remove(System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: Remove(KeyValuePair(Of TKey, TValue))
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.ContainsKey(`0)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.ContainsKey(`0)
+  id: ContainsKey(`0)
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: ContainsKey(TKey)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.ContainsKey(TKey)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.ContainsKey(TKey)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ContainsKey
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 138
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Determines whether the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref> contains an element with the specified key.
+  example: []
+  syntax:
+    content: public bool ContainsKey(TKey key)
+    parameters:
+    - id: key
+      type: '{TKey}'
+      description: The key to locate in the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref> contains an element with the key; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function ContainsKey(key As TKey) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.ContainsKey*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: <code class="paramref">key</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}.ContainsKey({TKey})
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).ContainsKey(TKey)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).ContainsKey(TKey)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Add(`0,`1)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.Add(`0,`1)
+  id: Add(`0,`1)
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Add(TKey, TValue)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Add(TKey, TValue)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Add(TKey, TValue)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Add
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 146
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Adds an element with the provided key and value to the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void Add(TKey key, TValue value)
+    parameters:
+    - id: key
+      type: '{TKey}'
+      description: The object to use as the key of the element to add.
+    - id: value
+      type: '{TValue}'
+      description: The object to use as the value of the element to add.
+    content.vb: Public Sub Add(key As TKey, value As TValue)
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Add*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: <code class="paramref">key</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: An element with the same key already exists in the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}.Add({TKey},{TValue})
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Add(TKey, TValue)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Add(TKey, TValue)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove(`0)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove(`0)
+  id: Remove(`0)
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: Remove(TKey)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Remove(TKey)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Remove(TKey)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Remove
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 154
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Removes the element with the specified key from the <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public bool Remove(TKey key)
+    parameters:
+    - id: key
+      type: '{TKey}'
+      description: The key of the element to remove.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the element is successfully removed; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.  This method also returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> if <code class="paramref">key</code> was not found in the original <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Function Remove(key As TKey) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: <code class="paramref">key</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}.Remove({TKey})
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Remove(TKey)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Remove(TKey)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.TryGetValue(`0,`1@)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.TryGetValue(`0,`1@)
+  id: TryGetValue(`0,`1@)
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: TryGetValue(TKey, out TValue)
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.TryGetValue(TKey, out TValue)
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.TryGetValue(TKey, out TValue)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TryGetValue
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 162
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets the value associated with the specified key.
+  example: []
+  syntax:
+    content: public bool TryGetValue(TKey key, out TValue value)
+    parameters:
+    - id: key
+      type: '{TKey}'
+      description: The key whose value to get.
+    - id: value
+      type: '{TValue}'
+      description: When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <code class="paramref">value</code> parameter. This parameter is passed uninitialized.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the object that implements <xref href="System.Collections.Generic.IDictionary%602" data-throw-if-not-resolved="false"></xref> contains an element with the specified key; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function TryGetValue(key As TKey, value As TValue) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.TryGetValue*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: <code class="paramref">key</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+  implements:
+  - System.Collections.Generic.IDictionary{{TKey},{TValue}}.TryGetValue({TKey},{TValue}@)
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).TryGetValue(TKey, TValue)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).TryGetValue(TKey, TValue)
+  name.vb: TryGetValue(TKey, TValue)
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.GetEnumerator
+  commentId: M:NitroxModel.DataStructures.ThreadSafeDictionary`2.GetEnumerator
+  id: GetEnumerator
+  parent: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.GetEnumerator()
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.GetEnumerator()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeDictionary.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetEnumerator
+    path: ../NitroxModel/DataStructures/ThreadSafeDictionary.cs
+    startLine: 170
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Returns an enumerator that iterates through the collection.
+  example: []
+  syntax:
+    content: public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    return:
+      type: System.Collections.Generic.IEnumerator{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+      description: An enumerator that can be used to iterate through the collection.
+    content.vb: Public Function GetEnumerator() As IEnumerator(Of KeyValuePair(Of TKey, TValue))
+  overload: NitroxModel.DataStructures.ThreadSafeDictionary`2.GetEnumerator*
+  implements:
+  - System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.GetEnumerator
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).GetEnumerator()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).GetEnumerator()
+references:
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  commentId: T:System.Collections.Generic.IDictionary{``0,``1}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  name: IDictionary<TKey, TValue>
+  nameWithType: IDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>
+  nameWithType.vb: IDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue)
+  name.vb: IDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  commentId: T:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.ICollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<KeyValuePair<TKey, TValue>>
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue))
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: ICollection(Of KeyValuePair(Of TKey, TValue))
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<KeyValuePair<TKey, TValue>>
+  nameWithType: IEnumerable<KeyValuePair<TKey, TValue>>
+  fullName: System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>
+  nameWithType.vb: IEnumerable(Of KeyValuePair(Of TKey, TValue))
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: IEnumerable(Of KeyValuePair(Of TKey, TValue))
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IDictionary{`0,`1}.NitroxModel.Extensions.RemoveWhere``3({TParameter},System.Func{{TValue},{TParameter},System.Boolean})
+  commentId: M:NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{``0,``1},``2,System.Func{``1,``2,System.Boolean})
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{``0,``1},``2,System.Func{``1,``2,System.Boolean})
+  href: NitroxModel.Extensions.RemoveWhere.html#NitroxModel_Extensions_RemoveWhere__3_System_Collections_Generic_IDictionary___0___1____2_System_Func___1___2_System_Boolean__
+  name: RemoveWhere<TKey, TValue, TParameter>(IDictionary<TKey, TValue>, TParameter, Func<TValue, TParameter, bool>)
+  nameWithType: Extensions.RemoveWhere<TKey, TValue, TParameter>(IDictionary<TKey, TValue>, TParameter, Func<TValue, TParameter, bool>)
+  fullName: NitroxModel.Extensions.RemoveWhere<TKey, TValue, TParameter>(System.Collections.Generic.IDictionary<TKey, TValue>, TParameter, System.Func<TValue, TParameter, bool>)
+  nameWithType.vb: Extensions.RemoveWhere(Of TKey, TValue, TParameter)(IDictionary(Of TKey, TValue), TParameter, Func(Of TValue, TParameter, Boolean))
+  fullName.vb: NitroxModel.Extensions.RemoveWhere(Of TKey, TValue, TParameter)(System.Collections.Generic.IDictionary(Of TKey, TValue), TParameter, System.Func(Of TValue, TParameter, Boolean))
+  name.vb: RemoveWhere(Of TKey, TValue, TParameter)(IDictionary(Of TKey, TValue), TParameter, Func(Of TValue, TParameter, Boolean))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{`0,`1},``2,System.Func{`1,``2,System.Boolean})
+    name: RemoveWhere
+    href: NitroxModel.Extensions.RemoveWhere.html#NitroxModel_Extensions_RemoveWhere__3_System_Collections_Generic_IDictionary___0___1____2_System_Func___1___2_System_Boolean__
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{`0,`1},``2,System.Func{`1,``2,System.Boolean})
+    name: RemoveWhere
+    href: NitroxModel.Extensions.RemoveWhere.html#NitroxModel_Extensions_RemoveWhere__3_System_Collections_Generic_IDictionary___0___1____2_System_Func___1___2_System_Boolean__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}.NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}})
+  commentId: M:NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  name: SequenceEqualOrBothNull<KeyValuePair<TKey, TValue>>(IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>)
+  nameWithType: Extensions.SequenceEqualOrBothNull<KeyValuePair<TKey, TValue>>(IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>)
+  fullName: NitroxModel.Extensions.SequenceEqualOrBothNull<System.Collections.Generic.KeyValuePair<TKey, TValue>>(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>)
+  nameWithType.vb: Extensions.SequenceEqualOrBothNull(Of KeyValuePair(Of TKey, TValue))(IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEnumerable(Of KeyValuePair(Of TKey, TValue)))
+  fullName.vb: NitroxModel.Extensions.SequenceEqualOrBothNull(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue))(System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)), System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)))
+  name.vb: SequenceEqualOrBothNull(Of KeyValuePair(Of TKey, TValue))(IEnumerable(Of KeyValuePair(Of TKey, TValue)), IEnumerable(Of KeyValuePair(Of TKey, TValue)))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: <
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.IDictionary`2
+  commentId: T:System.Collections.Generic.IDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  name: IDictionary<TKey, TValue>
+  nameWithType: IDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>
+  nameWithType.vb: IDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue)
+  name.vb: IDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections.Generic.ICollection`1
+  commentId: T:System.Collections.Generic.ICollection`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<T>
+  nameWithType: ICollection<T>
+  fullName: System.Collections.Generic.ICollection<T>
+  nameWithType.vb: ICollection(Of T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T)
+  name.vb: ICollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{``0,``1},``2,System.Func{``1,``2,System.Boolean})
+  commentId: M:NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{``0,``1},``2,System.Func{``1,``2,System.Boolean})
+  isExternal: true
+  href: NitroxModel.Extensions.RemoveWhere.html#NitroxModel_Extensions_RemoveWhere__3_System_Collections_Generic_IDictionary___0___1____2_System_Func___1___2_System_Boolean__
+  name: RemoveWhere<TKey, TValue, TParameter>(IDictionary<TKey, TValue>, TParameter, Func<TValue, TParameter, bool>)
+  nameWithType: Extensions.RemoveWhere<TKey, TValue, TParameter>(IDictionary<TKey, TValue>, TParameter, Func<TValue, TParameter, bool>)
+  fullName: NitroxModel.Extensions.RemoveWhere<TKey, TValue, TParameter>(System.Collections.Generic.IDictionary<TKey, TValue>, TParameter, System.Func<TValue, TParameter, bool>)
+  nameWithType.vb: Extensions.RemoveWhere(Of TKey, TValue, TParameter)(IDictionary(Of TKey, TValue), TParameter, Func(Of TValue, TParameter, Boolean))
+  fullName.vb: NitroxModel.Extensions.RemoveWhere(Of TKey, TValue, TParameter)(System.Collections.Generic.IDictionary(Of TKey, TValue), TParameter, System.Func(Of TValue, TParameter, Boolean))
+  name.vb: RemoveWhere(Of TKey, TValue, TParameter)(IDictionary(Of TKey, TValue), TParameter, Func(Of TValue, TParameter, Boolean))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{``0,``1},``2,System.Func{``1,``2,System.Boolean})
+    name: RemoveWhere
+    href: NitroxModel.Extensions.RemoveWhere.html#NitroxModel_Extensions_RemoveWhere__3_System_Collections_Generic_IDictionary___0___1____2_System_Func___1___2_System_Boolean__
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.RemoveWhere``3(System.Collections.Generic.IDictionary{``0,``1},``2,System.Func{``1,``2,System.Boolean})
+    name: RemoveWhere
+    href: NitroxModel.Extensions.RemoveWhere.html#NitroxModel_Extensions_RemoveWhere__3_System_Collections_Generic_IDictionary___0___1____2_System_Func___1___2_System_Boolean__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TValue
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  commentId: M:NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  isExternal: true
+  href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  name: SequenceEqualOrBothNull<TSource>(IEnumerable<TSource>, IEnumerable<TSource>)
+  nameWithType: Extensions.SequenceEqualOrBothNull<TSource>(IEnumerable<TSource>, IEnumerable<TSource>)
+  fullName: NitroxModel.Extensions.SequenceEqualOrBothNull<TSource>(System.Collections.Generic.IEnumerable<TSource>, System.Collections.Generic.IEnumerable<TSource>)
+  nameWithType.vb: Extensions.SequenceEqualOrBothNull(Of TSource)(IEnumerable(Of TSource), IEnumerable(Of TSource))
+  fullName.vb: NitroxModel.Extensions.SequenceEqualOrBothNull(Of TSource)(System.Collections.Generic.IEnumerable(Of TSource), System.Collections.Generic.IEnumerable(Of TSource))
+  name.vb: SequenceEqualOrBothNull(Of TSource)(IEnumerable(Of TSource), IEnumerable(Of TSource))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: <
+  - name: TSource
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: TSource
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: TSource
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSource
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSource
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSource
+  - name: )
+  - name: )
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Keys*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Keys
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Keys.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Keys
+  name: Keys
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Keys
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Keys
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Keys
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Keys
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}.Keys
+  commentId: P:System.Collections.Generic.IDictionary{`0,`1}.Keys
+  parent: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  definition: System.Collections.Generic.IDictionary`2.Keys
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.keys
+  name: Keys
+  nameWithType: IDictionary<TKey, TValue>.Keys
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Keys
+  nameWithType.vb: IDictionary(Of TKey, TValue).Keys
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Keys
+- uid: System.Collections.Generic.ICollection{{TKey}}
+  commentId: T:System.Collections.Generic.ICollection{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.ICollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<TKey>
+  nameWithType: ICollection<TKey>
+  fullName: System.Collections.Generic.ICollection<TKey>
+  nameWithType.vb: ICollection(Of TKey)
+  fullName.vb: System.Collections.Generic.ICollection(Of TKey)
+  name.vb: ICollection(Of TKey)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - name: TKey
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2.Keys
+  commentId: P:System.Collections.Generic.IDictionary`2.Keys
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.keys
+  name: Keys
+  nameWithType: IDictionary<TKey, TValue>.Keys
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Keys
+  nameWithType.vb: IDictionary(Of TKey, TValue).Keys
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Keys
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Values*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Values
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Values.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Values
+  name: Values
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Values
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Values
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Values
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Values
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}.Values
+  commentId: P:System.Collections.Generic.IDictionary{`0,`1}.Values
+  parent: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  definition: System.Collections.Generic.IDictionary`2.Values
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.values
+  name: Values
+  nameWithType: IDictionary<TKey, TValue>.Values
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Values
+  nameWithType.vb: IDictionary(Of TKey, TValue).Values
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Values
+- uid: System.Collections.Generic.ICollection{{TValue}}
+  commentId: T:System.Collections.Generic.ICollection{`1}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.ICollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<TValue>
+  nameWithType: ICollection<TValue>
+  fullName: System.Collections.Generic.ICollection<TValue>
+  nameWithType.vb: ICollection(Of TValue)
+  fullName.vb: System.Collections.Generic.ICollection(Of TValue)
+  name.vb: ICollection(Of TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2.Values
+  commentId: P:System.Collections.Generic.IDictionary`2.Values
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.values
+  name: Values
+  nameWithType: IDictionary<TKey, TValue>.Values
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Values
+  nameWithType.vb: IDictionary(Of TKey, TValue).Values
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Values
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Entries*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Entries
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Entries.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Entries
+  name: Entries
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Entries
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Entries
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Entries
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Entries
+- uid: System.ArgumentNullException
+  commentId: T:System.ArgumentNullException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentnullexception
+  name: ArgumentNullException
+  nameWithType: ArgumentNullException
+  fullName: System.ArgumentNullException
+- uid: System.Collections.Generic.KeyNotFoundException
+  commentId: T:System.Collections.Generic.KeyNotFoundException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception
+  name: KeyNotFoundException
+  nameWithType: KeyNotFoundException
+  fullName: System.Collections.Generic.KeyNotFoundException
+- uid: System.NotSupportedException
+  commentId: T:System.NotSupportedException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.notsupportedexception
+  name: NotSupportedException
+  nameWithType: NotSupportedException
+  fullName: System.NotSupportedException
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Item*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Item
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Item.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Item__0_
+  name: this
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.this
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.this
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).this[]
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).this[]
+  name.vb: this[]
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}.Item({TKey})
+  commentId: P:System.Collections.Generic.IDictionary{`0,`1}.Item(`0)
+  parent: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  definition: System.Collections.Generic.IDictionary`2.Item(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.item
+  name: this[TKey]
+  nameWithType: IDictionary<TKey, TValue>.this[TKey]
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.this[TKey]
+  nameWithType.vb: IDictionary(Of TKey, TValue).this[](TKey)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).this[](TKey)
+  name.vb: this[](TKey)
+  spec.csharp:
+  - name: this
+  - name: '['
+  - name: TKey
+  - name: ']'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.Item(`0)
+    name: this[]
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.item
+  - name: (
+  - name: TKey
+  - name: )
+- uid: '{TKey}'
+  commentId: '!:TKey'
+  definition: TKey
+  name: TKey
+  nameWithType: TKey
+  fullName: TKey
+- uid: '{TValue}'
+  commentId: '!:TValue'
+  definition: TValue
+  name: TValue
+  nameWithType: TValue
+  fullName: TValue
+- uid: System.Collections.Generic.IDictionary`2.Item(`0)
+  commentId: P:System.Collections.Generic.IDictionary`2.Item(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.item
+  name: this[TKey]
+  nameWithType: IDictionary<TKey, TValue>.this[TKey]
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.this[TKey]
+  nameWithType.vb: IDictionary(Of TKey, TValue).this[](TKey)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).this[](TKey)
+  name.vb: this[](TKey)
+  spec.csharp:
+  - name: this
+  - name: '['
+  - name: TKey
+  - name: ']'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2.Item(`0)
+    name: this[]
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.item
+  - name: (
+  - name: TKey
+  - name: )
+- uid: TKey
+  name: TKey
+  nameWithType: TKey
+  fullName: TKey
+- uid: TValue
+  name: TValue
+  nameWithType: TValue
+  fullName: TValue
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Count*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Count
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Count.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Count
+  name: Count
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Count
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Count
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Count
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Count
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Count
+  commentId: P:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Count
+  parent: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.ICollection`1.Count
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.count
+  name: Count
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>.Count
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>.Count
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue)).Count
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Collections.Generic.ICollection`1.Count
+  commentId: P:System.Collections.Generic.ICollection`1.Count
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.count
+  name: Count
+  nameWithType: ICollection<T>.Count
+  fullName: System.Collections.Generic.ICollection<T>.Count
+  nameWithType.vb: ICollection(Of T).Count
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Count
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.IsReadOnly*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.IsReadOnly
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.IsReadOnly.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_IsReadOnly
+  name: IsReadOnly
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.IsReadOnly
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.IsReadOnly
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).IsReadOnly
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).IsReadOnly
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.IsReadOnly
+  commentId: P:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.IsReadOnly
+  parent: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.ICollection`1.IsReadOnly
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.isreadonly
+  name: IsReadOnly
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>.IsReadOnly
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue)).IsReadOnly
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).IsReadOnly
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Collections.Generic.ICollection`1.IsReadOnly
+  commentId: P:System.Collections.Generic.ICollection`1.IsReadOnly
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.isreadonly
+  name: IsReadOnly
+  nameWithType: ICollection<T>.IsReadOnly
+  fullName: System.Collections.Generic.ICollection<T>.IsReadOnly
+  nameWithType.vb: ICollection(Of T).IsReadOnly
+  fullName.vb: System.Collections.Generic.ICollection(Of T).IsReadOnly
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.#ctor
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.-ctor.html#NitroxModel_DataStructures_ThreadSafeDictionary_2__ctor
+  name: ThreadSafeDictionary
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.ThreadSafeDictionary
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.ThreadSafeDictionary
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).New
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).New
+  name.vb: New
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Add*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Add
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Add.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Add_System_Collections_Generic_KeyValuePair__0__1__
+  name: Add
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Add
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Add
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Add
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Add
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Add(System.Collections.Generic.KeyValuePair{{TKey},{TValue}})
+  commentId: M:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Add(System.Collections.Generic.KeyValuePair{`0,`1})
+  parent: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.ICollection`1.Add(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  name: Add(KeyValuePair<TKey, TValue>)
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue>)
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>.Add(System.Collections.Generic.KeyValuePair<TKey, TValue>)
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue)).Add(KeyValuePair(Of TKey, TValue))
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).Add(System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: Add(KeyValuePair(Of TKey, TValue))
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Add(System.Collections.Generic.KeyValuePair{`0,`1})
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Add(System.Collections.Generic.KeyValuePair{`0,`1})
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.KeyValuePair{{TKey},{TValue}}
+  commentId: T:System.Collections.Generic.KeyValuePair{`0,`1}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.KeyValuePair`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  name: KeyValuePair<TKey, TValue>
+  nameWithType: KeyValuePair<TKey, TValue>
+  fullName: System.Collections.Generic.KeyValuePair<TKey, TValue>
+  nameWithType.vb: KeyValuePair(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.KeyValuePair(Of TKey, TValue)
+  name.vb: KeyValuePair(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Add(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Add(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  name: Add(T)
+  nameWithType: ICollection<T>.Add(T)
+  fullName: System.Collections.Generic.ICollection<T>.Add(T)
+  nameWithType.vb: ICollection(Of T).Add(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Add(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Add(`0)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Add(`0)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.KeyValuePair`2
+  commentId: T:System.Collections.Generic.KeyValuePair`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  name: KeyValuePair<TKey, TValue>
+  nameWithType: KeyValuePair<TKey, TValue>
+  fullName: System.Collections.Generic.KeyValuePair<TKey, TValue>
+  nameWithType.vb: KeyValuePair(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.KeyValuePair(Of TKey, TValue)
+  name.vb: KeyValuePair(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Clear*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Clear
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Clear.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Clear
+  name: Clear
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Clear
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Clear
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Clear
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Clear
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Clear
+  commentId: M:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Clear
+  parent: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.ICollection`1.Clear
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  name: Clear()
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>.Clear()
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>.Clear()
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue)).Clear()
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).Clear()
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Clear
+  commentId: M:System.Collections.Generic.ICollection`1.Clear
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  name: Clear()
+  nameWithType: ICollection<T>.Clear()
+  fullName: System.Collections.Generic.ICollection<T>.Clear()
+  nameWithType.vb: ICollection(Of T).Clear()
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Clear()
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Contains*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Contains
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Contains.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Contains_System_Collections_Generic_KeyValuePair__0__1__
+  name: Contains
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Contains
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Contains
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Contains
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Contains
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Contains(System.Collections.Generic.KeyValuePair{{TKey},{TValue}})
+  commentId: M:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Contains(System.Collections.Generic.KeyValuePair{`0,`1})
+  parent: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.ICollection`1.Contains(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  name: Contains(KeyValuePair<TKey, TValue>)
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue>)
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>.Contains(System.Collections.Generic.KeyValuePair<TKey, TValue>)
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue)).Contains(KeyValuePair(Of TKey, TValue))
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).Contains(System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: Contains(KeyValuePair(Of TKey, TValue))
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Contains(System.Collections.Generic.KeyValuePair{`0,`1})
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Contains(System.Collections.Generic.KeyValuePair{`0,`1})
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Contains(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Contains(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  name: Contains(T)
+  nameWithType: ICollection<T>.Contains(T)
+  fullName: System.Collections.Generic.ICollection<T>.Contains(T)
+  nameWithType.vb: ICollection(Of T).Contains(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Contains(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Array
+  commentId: T:System.Array
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.array
+  name: Array
+  nameWithType: Array
+  fullName: System.Array
+- uid: System.ArgumentOutOfRangeException
+  commentId: T:System.ArgumentOutOfRangeException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception
+  name: ArgumentOutOfRangeException
+  nameWithType: ArgumentOutOfRangeException
+  fullName: System.ArgumentOutOfRangeException
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.CopyTo*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.CopyTo
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.CopyTo.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_CopyTo_System_Collections_Generic_KeyValuePair__0__1____System_Int32_
+  name: CopyTo
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.CopyTo
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.CopyTo
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).CopyTo
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).CopyTo
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.CopyTo(System.Collections.Generic.KeyValuePair{{TKey},{TValue}}[],System.Int32)
+  commentId: M:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)
+  parent: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  name: CopyTo(KeyValuePair<TKey, TValue>[], int)
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[], int)
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>.CopyTo(System.Collections.Generic.KeyValuePair<TKey, TValue>[], int)
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue)).CopyTo(KeyValuePair(Of TKey, TValue)(), Integer)
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).CopyTo(System.Collections.Generic.KeyValuePair(Of TKey, TValue)(), Integer)
+  name.vb: CopyTo(KeyValuePair(Of TKey, TValue)(), Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic.KeyValuePair{{TKey},{TValue}}[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  name: KeyValuePair<TKey, TValue>[]
+  nameWithType: KeyValuePair<TKey, TValue>[]
+  fullName: System.Collections.Generic.KeyValuePair<TKey, TValue>[]
+  nameWithType.vb: KeyValuePair(Of TKey, TValue)()
+  fullName.vb: System.Collections.Generic.KeyValuePair(Of TKey, TValue)()
+  name.vb: KeyValuePair(Of TKey, TValue)()
+  spec.csharp:
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  commentId: M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  name: CopyTo(T[], int)
+  nameWithType: ICollection<T>.CopyTo(T[], int)
+  fullName: System.Collections.Generic.ICollection<T>.CopyTo(T[], int)
+  nameWithType.vb: ICollection(Of T).CopyTo(T(), Integer)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.Remove
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.Remove.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_Remove_System_Collections_Generic_KeyValuePair__0__1__
+  name: Remove
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.Remove
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.Remove
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).Remove
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).Remove
+- uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.Remove(System.Collections.Generic.KeyValuePair{{TKey},{TValue}})
+  commentId: M:System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Remove(System.Collections.Generic.KeyValuePair{`0,`1})
+  parent: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.ICollection`1.Remove(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  name: Remove(KeyValuePair<TKey, TValue>)
+  nameWithType: ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue>)
+  fullName: System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>.Remove(System.Collections.Generic.KeyValuePair<TKey, TValue>)
+  nameWithType.vb: ICollection(Of KeyValuePair(Of TKey, TValue)).Remove(KeyValuePair(Of TKey, TValue))
+  fullName.vb: System.Collections.Generic.ICollection(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).Remove(System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: Remove(KeyValuePair(Of TKey, TValue))
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Remove(System.Collections.Generic.KeyValuePair{`0,`1})
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{System.Collections.Generic.KeyValuePair{`0,`1}}.Remove(System.Collections.Generic.KeyValuePair{`0,`1})
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Remove(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Remove(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  name: Remove(T)
+  nameWithType: ICollection<T>.Remove(T)
+  fullName: System.Collections.Generic.ICollection<T>.Remove(T)
+  nameWithType.vb: ICollection(Of T).Remove(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Remove(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.ContainsKey*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.ContainsKey
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.ContainsKey.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_ContainsKey__0_
+  name: ContainsKey
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.ContainsKey
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.ContainsKey
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).ContainsKey
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).ContainsKey
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}.ContainsKey({TKey})
+  commentId: M:System.Collections.Generic.IDictionary{`0,`1}.ContainsKey(`0)
+  parent: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  definition: System.Collections.Generic.IDictionary`2.ContainsKey(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.containskey
+  name: ContainsKey(TKey)
+  nameWithType: IDictionary<TKey, TValue>.ContainsKey(TKey)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.ContainsKey(TKey)
+  nameWithType.vb: IDictionary(Of TKey, TValue).ContainsKey(TKey)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).ContainsKey(TKey)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.ContainsKey(`0)
+    name: ContainsKey
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.containskey
+  - name: (
+  - name: TKey
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.ContainsKey(`0)
+    name: ContainsKey
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.containskey
+  - name: (
+  - name: TKey
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2.ContainsKey(`0)
+  commentId: M:System.Collections.Generic.IDictionary`2.ContainsKey(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.containskey
+  name: ContainsKey(TKey)
+  nameWithType: IDictionary<TKey, TValue>.ContainsKey(TKey)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.ContainsKey(TKey)
+  nameWithType.vb: IDictionary(Of TKey, TValue).ContainsKey(TKey)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).ContainsKey(TKey)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2.ContainsKey(`0)
+    name: ContainsKey
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.containskey
+  - name: (
+  - name: TKey
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2.ContainsKey(`0)
+    name: ContainsKey
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.containskey
+  - name: (
+  - name: TKey
+  - name: )
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}.Add({TKey},{TValue})
+  commentId: M:System.Collections.Generic.IDictionary{`0,`1}.Add(`0,`1)
+  parent: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  definition: System.Collections.Generic.IDictionary`2.Add(`0,`1)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.add
+  name: Add(TKey, TValue)
+  nameWithType: IDictionary<TKey, TValue>.Add(TKey, TValue)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Add(TKey, TValue)
+  nameWithType.vb: IDictionary(Of TKey, TValue).Add(TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Add(TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.Add(`0,`1)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.add
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.Add(`0,`1)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.add
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2.Add(`0,`1)
+  commentId: M:System.Collections.Generic.IDictionary`2.Add(`0,`1)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.add
+  name: Add(TKey, TValue)
+  nameWithType: IDictionary<TKey, TValue>.Add(TKey, TValue)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Add(TKey, TValue)
+  nameWithType.vb: IDictionary(Of TKey, TValue).Add(TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Add(TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2.Add(`0,`1)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.add
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2.Add(`0,`1)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.add
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}.Remove({TKey})
+  commentId: M:System.Collections.Generic.IDictionary{`0,`1}.Remove(`0)
+  parent: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  definition: System.Collections.Generic.IDictionary`2.Remove(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.remove
+  name: Remove(TKey)
+  nameWithType: IDictionary<TKey, TValue>.Remove(TKey)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Remove(TKey)
+  nameWithType.vb: IDictionary(Of TKey, TValue).Remove(TKey)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Remove(TKey)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.remove
+  - name: (
+  - name: TKey
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.remove
+  - name: (
+  - name: TKey
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2.Remove(`0)
+  commentId: M:System.Collections.Generic.IDictionary`2.Remove(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.remove
+  name: Remove(TKey)
+  nameWithType: IDictionary<TKey, TValue>.Remove(TKey)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.Remove(TKey)
+  nameWithType.vb: IDictionary(Of TKey, TValue).Remove(TKey)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).Remove(TKey)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.remove
+  - name: (
+  - name: TKey
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.remove
+  - name: (
+  - name: TKey
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.TryGetValue*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.TryGetValue
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.TryGetValue.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_TryGetValue__0__1__
+  name: TryGetValue
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.TryGetValue
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.TryGetValue
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).TryGetValue
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).TryGetValue
+- uid: System.Collections.Generic.IDictionary{{TKey},{TValue}}.TryGetValue({TKey},{TValue}@)
+  commentId: M:System.Collections.Generic.IDictionary{`0,`1}.TryGetValue(`0,`1@)
+  parent: System.Collections.Generic.IDictionary{{TKey},{TValue}}
+  definition: System.Collections.Generic.IDictionary`2.TryGetValue(`0,`1@)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.trygetvalue
+  name: TryGetValue(TKey, out TValue)
+  nameWithType: IDictionary<TKey, TValue>.TryGetValue(TKey, out TValue)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.TryGetValue(TKey, out TValue)
+  nameWithType.vb: IDictionary(Of TKey, TValue).TryGetValue(TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).TryGetValue(TKey, TValue)
+  name.vb: TryGetValue(TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.TryGetValue(`0,`1@)
+    name: TryGetValue
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.trygetvalue
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: out
+  - name: " "
+  - name: TValue
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary{`0,`1}.TryGetValue(`0,`1@)
+    name: TryGetValue
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.trygetvalue
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2.TryGetValue(`0,`1@)
+  commentId: M:System.Collections.Generic.IDictionary`2.TryGetValue(`0,`1@)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.trygetvalue
+  name: TryGetValue(TKey, out TValue)
+  nameWithType: IDictionary<TKey, TValue>.TryGetValue(TKey, out TValue)
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>.TryGetValue(TKey, out TValue)
+  nameWithType.vb: IDictionary(Of TKey, TValue).TryGetValue(TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue).TryGetValue(TKey, TValue)
+  name.vb: TryGetValue(TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2.TryGetValue(`0,`1@)
+    name: TryGetValue
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.trygetvalue
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: out
+  - name: " "
+  - name: TValue
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2.TryGetValue(`0,`1@)
+    name: TryGetValue
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2.trygetvalue
+  - name: (
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2.GetEnumerator*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeDictionary`2.GetEnumerator
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.GetEnumerator.html#NitroxModel_DataStructures_ThreadSafeDictionary_2_GetEnumerator
+  name: GetEnumerator
+  nameWithType: ThreadSafeDictionary<TKey, TValue>.GetEnumerator
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>.GetEnumerator
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue).GetEnumerator
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue).GetEnumerator
+- uid: System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}.GetEnumerator
+  parent: System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  definition: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of KeyValuePair(Of TKey, TValue)).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue)).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator{System.Collections.Generic.KeyValuePair{{TKey},{TValue}}}
+  commentId: T:System.Collections.Generic.IEnumerator{System.Collections.Generic.KeyValuePair{`0,`1}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerator`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<KeyValuePair<TKey, TValue>>
+  nameWithType: IEnumerator<KeyValuePair<TKey, TValue>>
+  fullName: System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<TKey, TValue>>
+  nameWithType.vb: IEnumerator(Of KeyValuePair(Of TKey, TValue))
+  fullName.vb: System.Collections.Generic.IEnumerator(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+  name.vb: IEnumerator(Of KeyValuePair(Of TKey, TValue))
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.KeyValuePair`2
+    name: KeyValuePair
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable`1.GetEnumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator`1
+  commentId: T:System.Collections.Generic.IEnumerator`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

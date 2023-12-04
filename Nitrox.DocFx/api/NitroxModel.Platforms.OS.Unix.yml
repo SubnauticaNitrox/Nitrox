@@ -1,0 +1,25 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Unix
+  commentId: N:NitroxModel.Platforms.OS.Unix
+  id: Unix
+  parent: NitroxModel.Platforms.OS
+  children:
+  - NitroxModel.Platforms.OS.Unix.UnixFileSystem
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Platforms.OS.Unix
+  nameWithType: NitroxModel.Platforms.OS.Unix
+  fullName: NitroxModel.Platforms.OS.Unix
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.Platforms.OS.Unix.UnixFileSystem
+  commentId: T:NitroxModel.Platforms.OS.Unix.UnixFileSystem
+  href: NitroxModel.Platforms.OS.Unix.UnixFileSystem.html
+  name: UnixFileSystem
+  nameWithType: UnixFileSystem
+  fullName: NitroxModel.Platforms.OS.Unix.UnixFileSystem
+memberLayout: SeparatePages

@@ -1,0 +1,462 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Logger.LiteNetLibLogger
+  commentId: T:NitroxModel.Logger.LiteNetLibLogger
+  id: LiteNetLibLogger
+  parent: NitroxModel.Logger
+  children:
+  - NitroxModel.Logger.LiteNetLibLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+  langs:
+  - csharp
+  - vb
+  name: LiteNetLibLogger
+  nameWithType: LiteNetLibLogger
+  fullName: NitroxModel.Logger.LiteNetLibLogger
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Logger/LiteNetLibLogger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LiteNetLibLogger
+    path: ../NitroxModel/Logger/LiteNetLibLogger.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Logger
+  syntax:
+    content: 'public class LiteNetLibLogger : INetLogger'
+    content.vb: Public Class LiteNetLibLogger Implements INetLogger
+  inheritance:
+  - System.Object
+  implements:
+  - LiteNetLib.INetLogger
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Logger.LiteNetLibLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+  commentId: M:NitroxModel.Logger.LiteNetLibLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+  id: WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+  parent: NitroxModel.Logger.LiteNetLibLogger
+  langs:
+  - csharp
+  - vb
+  name: WriteNet(NetLogLevel, string, params object[])
+  nameWithType: LiteNetLibLogger.WriteNet(NetLogLevel, string, params object[])
+  fullName: NitroxModel.Logger.LiteNetLibLogger.WriteNet(LiteNetLib.NetLogLevel, string, params object[])
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Logger/LiteNetLibLogger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WriteNet
+    path: ../NitroxModel/Logger/LiteNetLibLogger.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Logger
+  example: []
+  syntax:
+    content: public void WriteNet(NetLogLevel level, string str, params object[] args)
+    parameters:
+    - id: level
+      type: LiteNetLib.NetLogLevel
+    - id: str
+      type: System.String
+    - id: args
+      type: System.Object[]
+    content.vb: Public Sub WriteNet(level As NetLogLevel, str As String, ParamArray args As Object())
+  overload: NitroxModel.Logger.LiteNetLibLogger.WriteNet*
+  implements:
+  - LiteNetLib.INetLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+  nameWithType.vb: LiteNetLibLogger.WriteNet(NetLogLevel, String, ParamArray Object())
+  fullName.vb: NitroxModel.Logger.LiteNetLibLogger.WriteNet(LiteNetLib.NetLogLevel, String, ParamArray Object())
+  name.vb: WriteNet(NetLogLevel, String, ParamArray Object())
+references:
+- uid: NitroxModel.Logger
+  commentId: N:NitroxModel.Logger
+  href: NitroxModel.html
+  name: NitroxModel.Logger
+  nameWithType: NitroxModel.Logger
+  fullName: NitroxModel.Logger
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LiteNetLib.INetLogger
+  commentId: T:LiteNetLib.INetLogger
+  parent: LiteNetLib
+  isExternal: true
+  name: INetLogger
+  nameWithType: INetLogger
+  fullName: LiteNetLib.INetLogger
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LiteNetLib
+  commentId: N:LiteNetLib
+  isExternal: true
+  name: LiteNetLib
+  nameWithType: LiteNetLib
+  fullName: LiteNetLib
+- uid: NitroxModel.Logger.LiteNetLibLogger.WriteNet*
+  commentId: Overload:NitroxModel.Logger.LiteNetLibLogger.WriteNet
+  href: NitroxModel.Logger.LiteNetLibLogger.WriteNet.html#NitroxModel_Logger_LiteNetLibLogger_WriteNet_LiteNetLib_NetLogLevel_System_String_System_Object___
+  name: WriteNet
+  nameWithType: LiteNetLibLogger.WriteNet
+  fullName: NitroxModel.Logger.LiteNetLibLogger.WriteNet
+- uid: LiteNetLib.INetLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+  commentId: M:LiteNetLib.INetLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+  parent: LiteNetLib.INetLogger
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: WriteNet(NetLogLevel, string, params object[])
+  nameWithType: INetLogger.WriteNet(NetLogLevel, string, params object[])
+  fullName: LiteNetLib.INetLogger.WriteNet(LiteNetLib.NetLogLevel, string, params object[])
+  nameWithType.vb: INetLogger.WriteNet(NetLogLevel, String, ParamArray Object())
+  fullName.vb: LiteNetLib.INetLogger.WriteNet(LiteNetLib.NetLogLevel, String, ParamArray Object())
+  name.vb: WriteNet(NetLogLevel, String, ParamArray Object())
+  spec.csharp:
+  - uid: LiteNetLib.INetLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+    name: WriteNet
+    isExternal: true
+  - name: (
+  - uid: LiteNetLib.NetLogLevel
+    name: NetLogLevel
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: params
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: LiteNetLib.INetLogger.WriteNet(LiteNetLib.NetLogLevel,System.String,System.Object[])
+    name: WriteNet
+    isExternal: true
+  - name: (
+  - uid: LiteNetLib.NetLogLevel
+    name: NetLogLevel
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: ParamArray
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: (
+  - name: )
+  - name: )
+- uid: LiteNetLib.NetLogLevel
+  commentId: T:LiteNetLib.NetLogLevel
+  parent: LiteNetLib
+  isExternal: true
+  name: NetLogLevel
+  nameWithType: NetLogLevel
+  fullName: LiteNetLib.NetLogLevel
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Object[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object[]
+  nameWithType: object[]
+  fullName: object[]
+  nameWithType.vb: Object()
+  fullName.vb: Object()
+  name.vb: Object()
+  spec.csharp:
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: (
+  - name: )
+memberLayout: SeparatePages

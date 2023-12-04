@@ -1,0 +1,373 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Networking.NitroxDeliveryMethod
+  commentId: T:NitroxModel.Networking.NitroxDeliveryMethod
+  id: NitroxDeliveryMethod
+  parent: NitroxModel.Networking
+  children:
+  - NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib(NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod)
+  langs:
+  - csharp
+  - vb
+  name: NitroxDeliveryMethod
+  nameWithType: NitroxDeliveryMethod
+  fullName: NitroxModel.Networking.NitroxDeliveryMethod
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Networking/NitroxDeliveryMethod.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxDeliveryMethod
+    path: ../NitroxModel/Networking/NitroxDeliveryMethod.cs
+    startLine: 3
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Networking
+  syntax:
+    content: public class NitroxDeliveryMethod
+    content.vb: Public Class NitroxDeliveryMethod
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib(NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod)
+  commentId: M:NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib(NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod)
+  id: ToLiteNetLib(NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod)
+  parent: NitroxModel.Networking.NitroxDeliveryMethod
+  langs:
+  - csharp
+  - vb
+  name: ToLiteNetLib(DeliveryMethod)
+  nameWithType: NitroxDeliveryMethod.ToLiteNetLib(NitroxDeliveryMethod.DeliveryMethod)
+  fullName: NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib(NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Networking/NitroxDeliveryMethod.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToLiteNetLib
+    path: ../NitroxModel/Networking/NitroxDeliveryMethod.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Networking
+  syntax:
+    content: public static DeliveryMethod ToLiteNetLib(NitroxDeliveryMethod.DeliveryMethod deliveryMethod)
+    parameters:
+    - id: deliveryMethod
+      type: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+    return:
+      type: LiteNetLib.DeliveryMethod
+    content.vb: Public Shared Function ToLiteNetLib(deliveryMethod As NitroxDeliveryMethod.DeliveryMethod) As DeliveryMethod
+  overload: NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib*
+references:
+- uid: NitroxModel.Networking
+  commentId: N:NitroxModel.Networking
+  href: NitroxModel.html
+  name: NitroxModel.Networking
+  nameWithType: NitroxModel.Networking
+  fullName: NitroxModel.Networking
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Networking
+    name: Networking
+    href: NitroxModel.Networking.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Networking
+    name: Networking
+    href: NitroxModel.Networking.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib*
+  commentId: Overload:NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib
+  href: NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib.html#NitroxModel_Networking_NitroxDeliveryMethod_ToLiteNetLib_NitroxModel_Networking_NitroxDeliveryMethod_DeliveryMethod_
+  name: ToLiteNetLib
+  nameWithType: NitroxDeliveryMethod.ToLiteNetLib
+  fullName: NitroxModel.Networking.NitroxDeliveryMethod.ToLiteNetLib
+- uid: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+  commentId: T:NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+  parent: NitroxModel.Networking
+  href: NitroxModel.Networking.NitroxDeliveryMethod.html
+  name: NitroxDeliveryMethod.DeliveryMethod
+  nameWithType: NitroxDeliveryMethod.DeliveryMethod
+  fullName: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+  spec.csharp:
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod
+    name: NitroxDeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.html
+  - name: .
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+    name: DeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod.html
+  spec.vb:
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod
+    name: NitroxDeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.html
+  - name: .
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+    name: DeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod.html
+- uid: LiteNetLib.DeliveryMethod
+  commentId: T:LiteNetLib.DeliveryMethod
+  parent: LiteNetLib
+  isExternal: true
+  name: DeliveryMethod
+  nameWithType: DeliveryMethod
+  fullName: LiteNetLib.DeliveryMethod
+- uid: LiteNetLib
+  commentId: N:LiteNetLib
+  isExternal: true
+  name: LiteNetLib
+  nameWithType: LiteNetLib
+  fullName: LiteNetLib
+memberLayout: SeparatePages

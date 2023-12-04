@@ -1,0 +1,106 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Serialization.IProperties
+  commentId: T:NitroxModel.Serialization.IProperties
+  id: IProperties
+  parent: NitroxModel.Serialization
+  children:
+  - NitroxModel.Serialization.IProperties.FileName
+  langs:
+  - csharp
+  - vb
+  name: IProperties
+  nameWithType: IProperties
+  fullName: NitroxModel.Serialization.IProperties
+  type: Interface
+  source:
+    remote:
+      path: NitroxModel/Serialization/IProperties.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IProperties
+    path: ../NitroxModel/Serialization/IProperties.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: public interface IProperties
+    content.vb: Public Interface IProperties
+- uid: NitroxModel.Serialization.IProperties.FileName
+  commentId: P:NitroxModel.Serialization.IProperties.FileName
+  id: FileName
+  parent: NitroxModel.Serialization.IProperties
+  langs:
+  - csharp
+  - vb
+  name: FileName
+  nameWithType: IProperties.FileName
+  fullName: NitroxModel.Serialization.IProperties.FileName
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Serialization/IProperties.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FileName
+    path: ../NitroxModel/Serialization/IProperties.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Serialization
+  syntax:
+    content: string FileName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property FileName As String
+  overload: NitroxModel.Serialization.IProperties.FileName*
+references:
+- uid: NitroxModel.Serialization
+  commentId: N:NitroxModel.Serialization
+  href: NitroxModel.html
+  name: NitroxModel.Serialization
+  nameWithType: NitroxModel.Serialization
+  fullName: NitroxModel.Serialization
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Serialization
+    name: Serialization
+    href: NitroxModel.Serialization.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Serialization
+    name: Serialization
+    href: NitroxModel.Serialization.html
+- uid: NitroxModel.Serialization.IProperties.FileName*
+  commentId: Overload:NitroxModel.Serialization.IProperties.FileName
+  href: NitroxModel.Serialization.IProperties.FileName.html#NitroxModel_Serialization_IProperties_FileName
+  name: FileName
+  nameWithType: IProperties.FileName
+  fullName: NitroxModel.Serialization.IProperties.FileName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+memberLayout: SeparatePages

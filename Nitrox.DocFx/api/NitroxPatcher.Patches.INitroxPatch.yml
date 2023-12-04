@@ -1,0 +1,137 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.Patches.INitroxPatch
+  commentId: T:NitroxPatcher.Patches.INitroxPatch
+  id: INitroxPatch
+  parent: NitroxPatcher.Patches
+  children:
+  - NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  - NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+  langs:
+  - csharp
+  - vb
+  name: INitroxPatch
+  nameWithType: INitroxPatch
+  fullName: NitroxPatcher.Patches.INitroxPatch
+  type: Interface
+  source:
+    remote:
+      path: NitroxPatcher/Patches/INitroxPatch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: INitroxPatch
+    path: ../NitroxPatcher/Patches/INitroxPatch.cs
+    startLine: 4
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches
+  syntax:
+    content: public interface INitroxPatch
+    content.vb: Public Interface INitroxPatch
+- uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  id: Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.INitroxPatch
+  langs:
+  - csharp
+  - vb
+  name: Patch(Harmony)
+  nameWithType: INitroxPatch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  type: Method
+  source:
+    remote:
+      path: NitroxPatcher/Patches/INitroxPatch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Patch
+    path: ../NitroxPatcher/Patches/INitroxPatch.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches
+  syntax:
+    content: void Patch(Harmony instance)
+    parameters:
+    - id: instance
+      type: HarmonyLib.Harmony
+    content.vb: Sub Patch(instance As Harmony)
+  overload: NitroxPatcher.Patches.INitroxPatch.Patch*
+- uid: NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+  id: Restore(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.INitroxPatch
+  langs:
+  - csharp
+  - vb
+  name: Restore(Harmony)
+  nameWithType: INitroxPatch.Restore(Harmony)
+  fullName: NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+  type: Method
+  source:
+    remote:
+      path: NitroxPatcher/Patches/INitroxPatch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Restore
+    path: ../NitroxPatcher/Patches/INitroxPatch.cs
+    startLine: 7
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches
+  syntax:
+    content: void Restore(Harmony instance)
+    parameters:
+    - id: instance
+      type: HarmonyLib.Harmony
+    content.vb: Sub Restore(instance As Harmony)
+  overload: NitroxPatcher.Patches.INitroxPatch.Restore*
+references:
+- uid: NitroxPatcher.Patches
+  commentId: N:NitroxPatcher.Patches
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches
+  nameWithType: NitroxPatcher.Patches
+  fullName: NitroxPatcher.Patches
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+- uid: NitroxPatcher.Patches.INitroxPatch.Patch*
+  commentId: Overload:NitroxPatcher.Patches.INitroxPatch.Patch
+  href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  name: Patch
+  nameWithType: INitroxPatch.Patch
+  fullName: NitroxPatcher.Patches.INitroxPatch.Patch
+- uid: HarmonyLib.Harmony
+  commentId: T:HarmonyLib.Harmony
+  parent: HarmonyLib
+  isExternal: true
+  name: Harmony
+  nameWithType: Harmony
+  fullName: HarmonyLib.Harmony
+- uid: HarmonyLib
+  commentId: N:HarmonyLib
+  isExternal: true
+  name: HarmonyLib
+  nameWithType: HarmonyLib
+  fullName: HarmonyLib
+- uid: NitroxPatcher.Patches.INitroxPatch.Restore*
+  commentId: Overload:NitroxPatcher.Patches.INitroxPatch.Restore
+  href: NitroxPatcher.Patches.INitroxPatch.Restore.html#NitroxPatcher_Patches_INitroxPatch_Restore_HarmonyLib_Harmony_
+  name: Restore
+  nameWithType: INitroxPatch.Restore
+  fullName: NitroxPatcher.Patches.INitroxPatch.Restore
+memberLayout: SeparatePages

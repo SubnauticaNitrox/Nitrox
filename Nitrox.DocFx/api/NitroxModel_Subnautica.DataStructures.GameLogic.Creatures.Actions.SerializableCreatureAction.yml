@@ -1,0 +1,133 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction
+  commentId: T:NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction
+  id: SerializableCreatureAction
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  children:
+  - NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction(UnityEngine.GameObject)
+  langs:
+  - csharp
+  - vb
+  name: SerializableCreatureAction
+  nameWithType: SerializableCreatureAction
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction
+  type: Interface
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/Creatures/Actions/SerializableCreatureAction.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SerializableCreatureAction
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/Creatures/Actions/SerializableCreatureAction.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  syntax:
+    content: public interface SerializableCreatureAction
+    content.vb: Public Interface SerializableCreatureAction
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction(UnityEngine.GameObject)
+  commentId: M:NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction(UnityEngine.GameObject)
+  id: GetCreatureAction(UnityEngine.GameObject)
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction
+  langs:
+  - csharp
+  - vb
+  name: GetCreatureAction(GameObject)
+  nameWithType: SerializableCreatureAction.GetCreatureAction(GameObject)
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction(UnityEngine.GameObject)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/Creatures/Actions/SerializableCreatureAction.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetCreatureAction
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/Creatures/Actions/SerializableCreatureAction.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  syntax:
+    content: CreatureAction GetCreatureAction(GameObject gameObject)
+    parameters:
+    - id: gameObject
+      type: UnityEngine.GameObject
+    return:
+      type: CreatureAction
+    content.vb: Function GetCreatureAction(gameObject As GameObject) As CreatureAction
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction*
+references:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  commentId: N:NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  nameWithType: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures
+    name: Creatures
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+    name: Actions
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures
+    name: Creatures
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+    name: Actions
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.html
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction.html#NitroxModel_Subnautica_DataStructures_GameLogic_Creatures_Actions_SerializableCreatureAction_GetCreatureAction_UnityEngine_GameObject_
+  name: GetCreatureAction
+  nameWithType: SerializableCreatureAction.GetCreatureAction
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction.GetCreatureAction
+- uid: UnityEngine.GameObject
+  commentId: T:UnityEngine.GameObject
+  parent: UnityEngine
+  isExternal: true
+  name: GameObject
+  nameWithType: GameObject
+  fullName: UnityEngine.GameObject
+- uid: CreatureAction
+  commentId: T:CreatureAction
+  isExternal: true
+  name: CreatureAction
+  nameWithType: CreatureAction
+  fullName: CreatureAction
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+memberLayout: SeparatePages

@@ -1,0 +1,1530 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  id: PlayerEquipmentConstants
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  children:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_ARMS_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_ROOT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HANDS_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HEAD_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_GLOVES_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HEAD_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_ARMS_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_BELT_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_FEET_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_LEG_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_TANK_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_ARMS_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_ROOT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_ARMS_INDEX_KEY
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_GAME_OBJECT_NAME
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_INDEX_KEY
+  langs:
+  - csharp
+  - vb
+  name: PlayerEquipmentConstants
+  nameWithType: PlayerEquipmentConstants
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerEquipmentConstants
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 2
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public static class PlayerEquipmentConstants
+    content.vb: Public Module PlayerEquipmentConstants
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HEAD_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HEAD_GAME_OBJECT_NAME
+  id: NORMAL_HEAD_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: NORMAL_HEAD_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.NORMAL_HEAD_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HEAD_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NORMAL_HEAD_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string NORMAL_HEAD_GAME_OBJECT_NAME = "male_geo/diveSuit/diveSuit_head_geo"
+    return:
+      type: System.String
+    content.vb: Public Const NORMAL_HEAD_GAME_OBJECT_NAME As String = "male_geo/diveSuit/diveSuit_head_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HANDS_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HANDS_GAME_OBJECT_NAME
+  id: NORMAL_HANDS_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: NORMAL_HANDS_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.NORMAL_HANDS_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.NORMAL_HANDS_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NORMAL_HANDS_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string NORMAL_HANDS_GAME_OBJECT_NAME = "male_geo/diveSuit/diveSuit_hands_geo"
+    return:
+      type: System.String
+    content.vb: Public Const NORMAL_HANDS_GAME_OBJECT_NAME As String = "male_geo/diveSuit/diveSuit_hands_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_GAME_OBJECT_NAME
+  id: DIVE_SUIT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: DIVE_SUIT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.DIVE_SUIT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DIVE_SUIT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string DIVE_SUIT_GAME_OBJECT_NAME = "male_geo/diveSuit/diveSuit_body_geo"
+    return:
+      type: System.String
+    content.vb: Public Const DIVE_SUIT_GAME_OBJECT_NAME As String = "male_geo/diveSuit/diveSuit_body_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_ROOT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_ROOT_GAME_OBJECT_NAME
+  id: FINS_ROOT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: FINS_ROOT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.FINS_ROOT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_ROOT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FINS_ROOT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string FINS_ROOT_GAME_OBJECT_NAME = "male_geo/generalSuit"
+    return:
+      type: System.String
+    content.vb: Public Const FINS_ROOT_GAME_OBJECT_NAME As String = "male_geo/generalSuit"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_GAME_OBJECT_NAME
+  id: FINS_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: FINS_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.FINS_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FINS_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string FINS_GAME_OBJECT_NAME = "male_geo/generalSuit/flippers_basic_geo"
+    return:
+      type: System.String
+    content.vb: Public Const FINS_GAME_OBJECT_NAME As String = "male_geo/generalSuit/flippers_basic_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+  id: CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CHARGED_FINS_ROOT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string CHARGED_FINS_ROOT_GAME_OBJECT_NAME = "male_geo/SwimChargeFins"
+    return:
+      type: System.String
+    content.vb: Public Const CHARGED_FINS_ROOT_GAME_OBJECT_NAME As String = "male_geo/SwimChargeFins"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_GAME_OBJECT_NAME
+  id: CHARGED_FINS_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: CHARGED_FINS_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.CHARGED_FINS_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.CHARGED_FINS_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CHARGED_FINS_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string CHARGED_FINS_GAME_OBJECT_NAME = "male_geo/SwimChargeFins/flippers_basic_geo"
+    return:
+      type: System.String
+    content.vb: Public Const CHARGED_FINS_GAME_OBJECT_NAME As String = "male_geo/SwimChargeFins/flippers_basic_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+  id: GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GLIDE_FINS_ROOT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string GLIDE_FINS_ROOT_GAME_OBJECT_NAME = "male_geo/UltraGlideFins"
+    return:
+      type: System.String
+    content.vb: Public Const GLIDE_FINS_ROOT_GAME_OBJECT_NAME As String = "male_geo/UltraGlideFins"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_GAME_OBJECT_NAME
+  id: GLIDE_FINS_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: GLIDE_FINS_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.GLIDE_FINS_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.GLIDE_FINS_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GLIDE_FINS_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 12
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string GLIDE_FINS_GAME_OBJECT_NAME = "male_geo/UltraGlideFins/flippers_basic_geo"
+    return:
+      type: System.String
+    content.vb: Public Const GLIDE_FINS_GAME_OBJECT_NAME As String = "male_geo/UltraGlideFins/flippers_basic_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_GAME_OBJECT_NAME
+  id: STILL_SUIT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: STILL_SUIT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.STILL_SUIT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: STILL_SUIT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 13
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string STILL_SUIT_GAME_OBJECT_NAME = "male_geo/stillSuit/still_suit_01_body_geo"
+    return:
+      type: System.String
+    content.vb: Public Const STILL_SUIT_GAME_OBJECT_NAME As String = "male_geo/stillSuit/still_suit_01_body_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_ROOT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_ROOT_GAME_OBJECT_NAME
+  id: SCUBA_ROOT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: SCUBA_ROOT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.SCUBA_ROOT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_ROOT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SCUBA_ROOT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 14
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string SCUBA_ROOT_GAME_OBJECT_NAME = "male_geo/scubaSuit"
+    return:
+      type: System.String
+    content.vb: Public Const SCUBA_ROOT_GAME_OBJECT_NAME As String = "male_geo/scubaSuit"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME
+  id: REBREATHER_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: REBREATHER_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REBREATHER_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string REBREATHER_GAME_OBJECT_NAME = "male_geo/scubaSuit/scuba_head"
+    return:
+      type: System.String
+    content.vb: Public Const REBREATHER_GAME_OBJECT_NAME As String = "male_geo/scubaSuit/scuba_head"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME
+  id: SCUBA_TANK_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: SCUBA_TANK_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SCUBA_TANK_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 16
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string SCUBA_TANK_GAME_OBJECT_NAME = "male_geo/scubaSuit/scuba_vest"
+    return:
+      type: System.String
+    content.vb: Public Const SCUBA_TANK_GAME_OBJECT_NAME As String = "male_geo/scubaSuit/scuba_vest"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+  id: SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SCUBA_TANK_TUBES_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 17
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string SCUBA_TANK_TUBES_GAME_OBJECT_NAME = "male_geo/scubaSuit/scuba_vest/scuba_breatherTubes"
+    return:
+      type: System.String
+    content.vb: Public Const SCUBA_TANK_TUBES_GAME_OBJECT_NAME As String = "male_geo/scubaSuit/scuba_vest/scuba_breatherTubes"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME
+  id: REINFORCED_SUIT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: REINFORCED_SUIT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REINFORCED_SUIT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 18
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string REINFORCED_SUIT_GAME_OBJECT_NAME = "male_geo/reinforcedSuit/reinforced_suit_01_body_geo"
+    return:
+      type: System.String
+    content.vb: Public Const REINFORCED_SUIT_GAME_OBJECT_NAME As String = "male_geo/reinforcedSuit/reinforced_suit_01_body_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME
+  id: REINFORCED_GLOVES_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: REINFORCED_GLOVES_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REINFORCED_GLOVES_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 19
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string REINFORCED_GLOVES_GAME_OBJECT_NAME = "male_geo/reinforcedSuit/reinforced_suit_01_glove_geo"
+    return:
+      type: System.String
+    content.vb: Public Const REINFORCED_GLOVES_GAME_OBJECT_NAME As String = "male_geo/reinforcedSuit/reinforced_suit_01_glove_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_GAME_OBJECT_NAME
+  id: RADIATION_SUIT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 20
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_body_geo"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_body_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_GLOVES_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_GLOVES_GAME_OBJECT_NAME
+  id: RADIATION_GLOVES_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_GLOVES_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_GLOVES_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_GLOVES_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_GLOVES_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 21
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_GLOVES_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_gloves_geo"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_GLOVES_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_gloves_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+  id: RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_VEST_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 22
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_VEST_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_VEST_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HEAD_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HEAD_GAME_OBJECT_NAME
+  id: RADIATION_HEAD_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_HEAD_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_HEAD_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HEAD_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_HEAD_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 23
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_HEAD_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_head_geo"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_HEAD_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_head_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_GAME_OBJECT_NAME
+  id: RADIATION_HELMET_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_HELMET_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_HELMET_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_HELMET_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 24
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_HELMET_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo/radiationSuit_helmet_geo 1"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_HELMET_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo/radiationSuit_helmet_geo 1"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+  id: RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 25
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_GAME_OBJECT_NAME
+  id: RADIATION_TANK_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_TANK_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_TANK_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_TANK_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 26
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_TANK_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_TANK_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+  id: RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_TANK_TUBES_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 27
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_TANK_TUBES_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1/radiationSuit_tubes_geo 1"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_TANK_TUBES_GAME_OBJECT_NAME As String = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1/radiationSuit_tubes_geo 1"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+  id: ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+  nameWithType: PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ITEM_ATTACH_POINT_GAME_OBJECT_NAME
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 28
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string ITEM_ATTACH_POINT_GAME_OBJECT_NAME = "export_skeleton/head_rig/neck/chest/clav_R/clav_R_aim/shoulder_R/elbow_R/hand_R/attach1"
+    return:
+      type: System.String
+    content.vb: Public Const ITEM_ATTACH_POINT_GAME_OBJECT_NAME As String = "export_skeleton/head_rig/neck/chest/clav_R/clav_R_aim/shoulder_R/elbow_R/hand_R/attach1"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_INDEX_KEY
+  id: DIVE_SUIT_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: DIVE_SUIT_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.DIVE_SUIT_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DIVE_SUIT_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 31
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string DIVE_SUIT_INDEX_KEY = "dive-suit"
+    return:
+      type: System.String
+    content.vb: Public Const DIVE_SUIT_INDEX_KEY As String = "dive-suit"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_ARMS_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_ARMS_INDEX_KEY
+  id: DIVE_SUIT_ARMS_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: DIVE_SUIT_ARMS_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.DIVE_SUIT_ARMS_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.DIVE_SUIT_ARMS_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DIVE_SUIT_ARMS_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 32
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string DIVE_SUIT_ARMS_INDEX_KEY = "dive-suit-arms"
+    return:
+      type: System.String
+    content.vb: Public Const DIVE_SUIT_ARMS_INDEX_KEY As String = "dive-suit-arms"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_INDEX_KEY
+  id: STILL_SUIT_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: STILL_SUIT_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.STILL_SUIT_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: STILL_SUIT_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 33
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string STILL_SUIT_INDEX_KEY = "still-suit"
+    return:
+      type: System.String
+    content.vb: Public Const STILL_SUIT_INDEX_KEY As String = "still-suit"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_ARMS_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_ARMS_INDEX_KEY
+  id: STILL_SUIT_ARMS_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: STILL_SUIT_ARMS_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.STILL_SUIT_ARMS_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.STILL_SUIT_ARMS_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: STILL_SUIT_ARMS_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 34
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string STILL_SUIT_ARMS_INDEX_KEY = "still-suit-arms"
+    return:
+      type: System.String
+    content.vb: Public Const STILL_SUIT_ARMS_INDEX_KEY As String = "still-suit-arms"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_INDEX_KEY
+  id: REBREATHER_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: REBREATHER_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.REBREATHER_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REBREATHER_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REBREATHER_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 35
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string REBREATHER_INDEX_KEY = "rebreather"
+    return:
+      type: System.String
+    content.vb: Public Const REBREATHER_INDEX_KEY As String = "rebreather"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_INDEX_KEY
+  id: SCUBA_TANK_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: SCUBA_TANK_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.SCUBA_TANK_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.SCUBA_TANK_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SCUBA_TANK_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 36
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string SCUBA_TANK_INDEX_KEY = "scuba-tank"
+    return:
+      type: System.String
+    content.vb: Public Const SCUBA_TANK_INDEX_KEY As String = "scuba-tank"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_INDEX_KEY
+  id: REINFORCED_SUIT_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: REINFORCED_SUIT_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.REINFORCED_SUIT_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REINFORCED_SUIT_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 37
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string REINFORCED_SUIT_INDEX_KEY = "reinforced-suit"
+    return:
+      type: System.String
+    content.vb: Public Const REINFORCED_SUIT_INDEX_KEY As String = "reinforced-suit"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_ARMS_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_ARMS_INDEX_KEY
+  id: REINFORCED_SUIT_ARMS_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: REINFORCED_SUIT_ARMS_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.REINFORCED_SUIT_ARMS_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_SUIT_ARMS_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REINFORCED_SUIT_ARMS_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 38
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string REINFORCED_SUIT_ARMS_INDEX_KEY = "reinforced-suit-arms"
+    return:
+      type: System.String
+    content.vb: Public Const REINFORCED_SUIT_ARMS_INDEX_KEY As String = "reinforced-suit-arms"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_INDEX_KEY
+  id: REINFORCED_GLOVES_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: REINFORCED_GLOVES_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.REINFORCED_GLOVES_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.REINFORCED_GLOVES_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REINFORCED_GLOVES_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 39
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string REINFORCED_GLOVES_INDEX_KEY = "reinforced-gloves"
+    return:
+      type: System.String
+    content.vb: Public Const REINFORCED_GLOVES_INDEX_KEY As String = "reinforced-gloves"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_ARMS_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_ARMS_INDEX_KEY
+  id: RADIATION_SUIT_ARMS_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_ARMS_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_ARMS_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_ARMS_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_ARMS_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 40
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_ARMS_INDEX_KEY = "radiation-suit-arms"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_ARMS_INDEX_KEY As String = "radiation-suit-arms"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_LEG_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_LEG_INDEX_KEY
+  id: RADIATION_SUIT_LEG_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_LEG_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_LEG_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_LEG_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_LEG_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 41
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_LEG_INDEX_KEY = "radiation-suit-leg"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_LEG_INDEX_KEY As String = "radiation-suit-leg"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_FEET_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_FEET_INDEX_KEY
+  id: RADIATION_SUIT_FEET_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_FEET_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_FEET_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_FEET_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_FEET_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 42
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_FEET_INDEX_KEY = "radiation-suit-feet"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_FEET_INDEX_KEY As String = "radiation-suit-feet"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_BELT_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_BELT_INDEX_KEY
+  id: RADIATION_SUIT_BELT_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_BELT_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_BELT_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_BELT_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_BELT_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 43
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_BELT_INDEX_KEY = "radiation-suit-belt"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_BELT_INDEX_KEY As String = "radiation-suit-belt"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_INDEX_KEY
+  id: RADIATION_SUIT_VEST_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_VEST_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_VEST_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_VEST_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_VEST_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 44
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_VEST_INDEX_KEY = "radiation-suit-vest"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_VEST_INDEX_KEY As String = "radiation-suit-vest"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_INDEX_KEY
+  id: RADIATION_HELMET_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_HELMET_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_HELMET_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_HELMET_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_HELMET_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 45
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_HELMET_INDEX_KEY = "radiation-helmet"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_HELMET_INDEX_KEY As String = "radiation-helmet"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+  id: RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_NECK_CLASP_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 46
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_NECK_CLASP_INDEX_KEY = "radiation-suit-neck-clasp"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_NECK_CLASP_INDEX_KEY As String = "radiation-suit-neck-clasp"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_TANK_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_TANK_INDEX_KEY
+  id: RADIATION_SUIT_TANK_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: RADIATION_SUIT_TANK_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.RADIATION_SUIT_TANK_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.RADIATION_SUIT_TANK_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIATION_SUIT_TANK_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 47
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string RADIATION_SUIT_TANK_INDEX_KEY = "radiation-suit-tank"
+    return:
+      type: System.String
+    content.vb: Public Const RADIATION_SUIT_TANK_INDEX_KEY As String = "radiation-suit-tank"
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_INDEX_KEY
+  commentId: F:NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_INDEX_KEY
+  id: FINS_INDEX_KEY
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+  langs:
+  - csharp
+  - vb
+  name: FINS_INDEX_KEY
+  nameWithType: PlayerEquipmentConstants.FINS_INDEX_KEY
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants.FINS_INDEX_KEY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FINS_INDEX_KEY
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/PlayerEquipmentConstants.cs
+    startLine: 48
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  syntax:
+    content: public const string FINS_INDEX_KEY = "fins"
+    return:
+      type: System.String
+    content.vb: Public Const FINS_INDEX_KEY As String = "fins"
+references:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

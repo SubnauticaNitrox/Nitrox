@@ -1,0 +1,544 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.Modules.NitroxPatchesModule
+  commentId: T:NitroxPatcher.Modules.NitroxPatchesModule
+  id: NitroxPatchesModule
+  parent: NitroxPatcher.Modules
+  children:
+  - NitroxPatcher.Modules.NitroxPatchesModule.Load(Autofac.ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: NitroxPatchesModule
+  nameWithType: NitroxPatchesModule
+  fullName: NitroxPatcher.Modules.NitroxPatchesModule
+  type: Class
+  source:
+    remote:
+      path: NitroxPatcher/Modules/NitroxPatchesModule.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxPatchesModule
+    path: ../NitroxPatcher/Modules/NitroxPatchesModule.cs
+    startLine: 9
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Modules
+  summary: Simple Dependency Injection (DI) container for registering the patch classes with AutoFac.
+  example: []
+  syntax:
+    content: 'public class NitroxPatchesModule : Module, IModule'
+    content.vb: Public Class NitroxPatchesModule Inherits Module Implements IModule
+  inheritance:
+  - System.Object
+  - Autofac.Module
+  implements:
+  - Autofac.Core.IModule
+  inheritedMembers:
+  - Autofac.Module.Configure(Autofac.Core.IComponentRegistry)
+  - Autofac.Module.AttachToComponentRegistration(Autofac.Core.IComponentRegistry,Autofac.Core.IComponentRegistration)
+  - Autofac.Module.AttachToRegistrationSource(Autofac.Core.IComponentRegistry,Autofac.Core.IRegistrationSource)
+  - Autofac.Module.ThisAssembly
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxPatcher.Modules.NitroxPatchesModule.Load(Autofac.ContainerBuilder)
+  commentId: M:NitroxPatcher.Modules.NitroxPatchesModule.Load(Autofac.ContainerBuilder)
+  id: Load(Autofac.ContainerBuilder)
+  parent: NitroxPatcher.Modules.NitroxPatchesModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: NitroxPatchesModule.Load(ContainerBuilder)
+  fullName: NitroxPatcher.Modules.NitroxPatchesModule.Load(Autofac.ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: NitroxPatcher/Modules/NitroxPatchesModule.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Load
+    path: ../NitroxPatcher/Modules/NitroxPatchesModule.cs
+    startLine: 11
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Modules
+  summary: Override to add registrations to the container.
+  remarks: Note that the ContainerBuilder parameter is unique to this module.
+  example: []
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: Autofac.ContainerBuilder
+      description: >-
+        The builder through which components can be
+                    registered.
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overridden: Autofac.Module.Load(Autofac.ContainerBuilder)
+  overload: NitroxPatcher.Modules.NitroxPatchesModule.Load*
+references:
+- uid: NitroxPatcher.Modules
+  commentId: N:NitroxPatcher.Modules
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Modules
+  nameWithType: NitroxPatcher.Modules
+  fullName: NitroxPatcher.Modules
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Modules
+    name: Modules
+    href: NitroxPatcher.Modules.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Modules
+    name: Modules
+    href: NitroxPatcher.Modules.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Autofac.Module
+  commentId: T:Autofac.Module
+  parent: Autofac
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  name: Module
+  nameWithType: Module
+  fullName: Autofac.Module
+- uid: Autofac.Core.IModule
+  commentId: T:Autofac.Core.IModule
+  parent: Autofac.Core
+  isExternal: true
+  name: IModule
+  nameWithType: IModule
+  fullName: Autofac.Core.IModule
+- uid: Autofac.Module.Configure(Autofac.Core.IComponentRegistry)
+  commentId: M:Autofac.Module.Configure(Autofac.Core.IComponentRegistry)
+  parent: Autofac.Module
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  name: Configure(IComponentRegistry)
+  nameWithType: Module.Configure(IComponentRegistry)
+  fullName: Autofac.Module.Configure(Autofac.Core.IComponentRegistry)
+  spec.csharp:
+  - uid: Autofac.Module.Configure(Autofac.Core.IComponentRegistry)
+    name: Configure
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.Core.IComponentRegistry
+    name: IComponentRegistry
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Autofac.Module.Configure(Autofac.Core.IComponentRegistry)
+    name: Configure
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.Core.IComponentRegistry
+    name: IComponentRegistry
+    isExternal: true
+  - name: )
+- uid: Autofac.Module.AttachToComponentRegistration(Autofac.Core.IComponentRegistry,Autofac.Core.IComponentRegistration)
+  commentId: M:Autofac.Module.AttachToComponentRegistration(Autofac.Core.IComponentRegistry,Autofac.Core.IComponentRegistration)
+  parent: Autofac.Module
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  name: AttachToComponentRegistration(IComponentRegistry, IComponentRegistration)
+  nameWithType: Module.AttachToComponentRegistration(IComponentRegistry, IComponentRegistration)
+  fullName: Autofac.Module.AttachToComponentRegistration(Autofac.Core.IComponentRegistry, Autofac.Core.IComponentRegistration)
+  spec.csharp:
+  - uid: Autofac.Module.AttachToComponentRegistration(Autofac.Core.IComponentRegistry,Autofac.Core.IComponentRegistration)
+    name: AttachToComponentRegistration
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.Core.IComponentRegistry
+    name: IComponentRegistry
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Autofac.Core.IComponentRegistration
+    name: IComponentRegistration
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Autofac.Module.AttachToComponentRegistration(Autofac.Core.IComponentRegistry,Autofac.Core.IComponentRegistration)
+    name: AttachToComponentRegistration
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.Core.IComponentRegistry
+    name: IComponentRegistry
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Autofac.Core.IComponentRegistration
+    name: IComponentRegistration
+    isExternal: true
+  - name: )
+- uid: Autofac.Module.AttachToRegistrationSource(Autofac.Core.IComponentRegistry,Autofac.Core.IRegistrationSource)
+  commentId: M:Autofac.Module.AttachToRegistrationSource(Autofac.Core.IComponentRegistry,Autofac.Core.IRegistrationSource)
+  parent: Autofac.Module
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  name: AttachToRegistrationSource(IComponentRegistry, IRegistrationSource)
+  nameWithType: Module.AttachToRegistrationSource(IComponentRegistry, IRegistrationSource)
+  fullName: Autofac.Module.AttachToRegistrationSource(Autofac.Core.IComponentRegistry, Autofac.Core.IRegistrationSource)
+  spec.csharp:
+  - uid: Autofac.Module.AttachToRegistrationSource(Autofac.Core.IComponentRegistry,Autofac.Core.IRegistrationSource)
+    name: AttachToRegistrationSource
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.Core.IComponentRegistry
+    name: IComponentRegistry
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Autofac.Core.IRegistrationSource
+    name: IRegistrationSource
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: Autofac.Module.AttachToRegistrationSource(Autofac.Core.IComponentRegistry,Autofac.Core.IRegistrationSource)
+    name: AttachToRegistrationSource
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.Core.IComponentRegistry
+    name: IComponentRegistry
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: Autofac.Core.IRegistrationSource
+    name: IRegistrationSource
+    isExternal: true
+  - name: )
+- uid: Autofac.Module.ThisAssembly
+  commentId: P:Autofac.Module.ThisAssembly
+  parent: Autofac.Module
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  name: ThisAssembly
+  nameWithType: Module.ThisAssembly
+  fullName: Autofac.Module.ThisAssembly
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Autofac
+  commentId: N:Autofac
+  isExternal: true
+  name: Autofac
+  nameWithType: Autofac
+  fullName: Autofac
+- uid: Autofac.Core
+  commentId: N:Autofac.Core
+  isExternal: true
+  name: Autofac.Core
+  nameWithType: Autofac.Core
+  fullName: Autofac.Core
+  spec.csharp:
+  - uid: Autofac
+    name: Autofac
+    isExternal: true
+  - name: .
+  - uid: Autofac.Core
+    name: Core
+    isExternal: true
+  spec.vb:
+  - uid: Autofac
+    name: Autofac
+    isExternal: true
+  - name: .
+  - uid: Autofac.Core
+    name: Core
+    isExternal: true
+- uid: Autofac.Module.Load(Autofac.ContainerBuilder)
+  commentId: M:Autofac.Module.Load(Autofac.ContainerBuilder)
+  parent: Autofac.Module
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  name: Load(ContainerBuilder)
+  nameWithType: Module.Load(ContainerBuilder)
+  fullName: Autofac.Module.Load(Autofac.ContainerBuilder)
+  spec.csharp:
+  - uid: Autofac.Module.Load(Autofac.ContainerBuilder)
+    name: Load
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.ContainerBuilder
+    name: ContainerBuilder
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/ContainerBuilder.cs
+  - name: )
+  spec.vb:
+  - uid: Autofac.Module.Load(Autofac.ContainerBuilder)
+    name: Load
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/Module.cs
+  - name: (
+  - uid: Autofac.ContainerBuilder
+    name: ContainerBuilder
+    isExternal: true
+    href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/ContainerBuilder.cs
+  - name: )
+- uid: NitroxPatcher.Modules.NitroxPatchesModule.Load*
+  commentId: Overload:NitroxPatcher.Modules.NitroxPatchesModule.Load
+  href: NitroxPatcher.Modules.NitroxPatchesModule.Load.html#NitroxPatcher_Modules_NitroxPatchesModule_Load_Autofac_ContainerBuilder_
+  name: Load
+  nameWithType: NitroxPatchesModule.Load
+  fullName: NitroxPatcher.Modules.NitroxPatchesModule.Load
+- uid: Autofac.ContainerBuilder
+  commentId: T:Autofac.ContainerBuilder
+  parent: Autofac
+  isExternal: true
+  href: https://github.com/autofac/Autofac/blob/7eab8edf0cff0457f0a942ef65274b330352e731/src/Autofac/ContainerBuilder.cs
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: Autofac.ContainerBuilder
+memberLayout: SeparatePages

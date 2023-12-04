@@ -1,0 +1,675 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+  commentId: T:NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+  id: AuthenticatedPacketProcessor`1
+  parent: NitroxServer.Communication.Packets.Processors.Abstract
+  children:
+  - NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.Process(`0,NitroxServer.Player)
+  - NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  langs:
+  - csharp
+  - vb
+  name: AuthenticatedPacketProcessor<T>
+  nameWithType: AuthenticatedPacketProcessor<T>
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor<T>
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/Communication/Packets/Processors/Abstract/AuthenticatedPacketProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AuthenticatedPacketProcessor
+    path: ../NitroxServer/Communication/Packets/Processors/Abstract/AuthenticatedPacketProcessor.cs
+    startLine: 5
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.Packets.Processors.Abstract
+  syntax:
+    content: 'public abstract class AuthenticatedPacketProcessor<T> : PacketProcessor where T : Packet'
+    typeParameters:
+    - id: T
+    content.vb: Public MustInherit Class AuthenticatedPacketProcessor(Of T As Packet) Inherits PacketProcessor
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  derivedClasses:
+  - NitroxServer.Communication.Packets.Processors.BatchVisibilityChangedProcessor
+  - NitroxServer.Communication.Packets.Processors.BedEnterProcessor
+  - NitroxServer.Communication.Packets.Processors.BuildingProcessor`1
+  - NitroxServer.Communication.Packets.Processors.BuildingResyncRequestProcessor
+  - NitroxServer.Communication.Packets.Processors.ChatMessageProcessor
+  - NitroxServer.Communication.Packets.Processors.DefaultServerPacketProcessor
+  - NitroxServer.Communication.Packets.Processors.DiscordRequestIPProcessor
+  - NitroxServer.Communication.Packets.Processors.EntityDestroyedPacketProcessor
+  - NitroxServer.Communication.Packets.Processors.EntityMetadataUpdateProcessor
+  - NitroxServer.Communication.Packets.Processors.EntityReparentedProcessor
+  - NitroxServer.Communication.Packets.Processors.EscapePodChangedPacketProcessor
+  - NitroxServer.Communication.Packets.Processors.GoalCompletedProcessor
+  - NitroxServer.Communication.Packets.Processors.KnownTechEntryAddProcessor
+  - NitroxServer.Communication.Packets.Processors.PDAEncyclopediaEntryAddProcessor
+  - NitroxServer.Communication.Packets.Processors.PDALogEntryAddProcessor
+  - NitroxServer.Communication.Packets.Processors.PDAScanFinishedPacketProcessor
+  - NitroxServer.Communication.Packets.Processors.PickupItemPacketProcessor
+  - NitroxServer.Communication.Packets.Processors.PingRenamedPacketProcessor
+  - NitroxServer.Communication.Packets.Processors.PinnedRecipeMovedProcessor
+  - NitroxServer.Communication.Packets.Processors.PinnedRecipeProcessor
+  - NitroxServer.Communication.Packets.Processors.PlayFMODAssetProcessor
+  - NitroxServer.Communication.Packets.Processors.PlayerHeldItemChangedProcessor
+  - NitroxServer.Communication.Packets.Processors.PlayerQuickSlotsBindingChangedProcessor
+  - NitroxServer.Communication.Packets.Processors.PlayerStatsProcessor
+  - NitroxServer.Communication.Packets.Processors.PlayerSyncFinishedProcessor
+  - NitroxServer.Communication.Packets.Processors.RadioPlayPendingMessageProcessor
+  - NitroxServer.Communication.Packets.Processors.ScheduleProcessor
+  - NitroxServer.Communication.Packets.Processors.ServerCommandProcessor
+  - NitroxServer.Communication.Packets.Processors.SignalPingPreferenceChangedProcessor
+  - NitroxServer.Communication.Packets.Processors.StoryGoalExecutedProcessor
+  - NitroxServer.Communication.Packets.Processors.VehicleDockingProcessor
+  - NitroxServer.Communication.Packets.Processors.VehicleUndockingProcessor
+  - NitroxServer_Subnautica.Communication.Packets.Processors.CyclopsDamageProcessor
+  inheritedMembers:
+  - NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  nameWithType.vb: AuthenticatedPacketProcessor(Of T)
+  fullName.vb: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor(Of T)
+  name.vb: AuthenticatedPacketProcessor(Of T)
+- uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  commentId: M:NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  id: ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  parent: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+  langs:
+  - csharp
+  - vb
+  name: ProcessPacket(Packet, IProcessorContext)
+  nameWithType: AuthenticatedPacketProcessor<T>.ProcessPacket(Packet, IProcessorContext)
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor<T>.ProcessPacket(NitroxModel.Packets.Packet, NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Communication/Packets/Processors/Abstract/AuthenticatedPacketProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ProcessPacket
+    path: ../NitroxServer/Communication/Packets/Processors/Abstract/AuthenticatedPacketProcessor.cs
+    startLine: 7
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.Packets.Processors.Abstract
+  example: []
+  syntax:
+    content: public override void ProcessPacket(Packet packet, IProcessorContext player)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    - id: player
+      type: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+    content.vb: Public Overrides Sub ProcessPacket(packet As Packet, player As IProcessorContext)
+  overridden: NitroxModel.Packets.Processors.Abstract.PacketProcessor.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  overload: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.ProcessPacket*
+  nameWithType.vb: AuthenticatedPacketProcessor(Of T).ProcessPacket(Packet, IProcessorContext)
+  fullName.vb: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor(Of T).ProcessPacket(NitroxModel.Packets.Packet, NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+- uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.Process(`0,NitroxServer.Player)
+  commentId: M:NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.Process(`0,NitroxServer.Player)
+  id: Process(`0,NitroxServer.Player)
+  parent: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+  langs:
+  - csharp
+  - vb
+  name: Process(T, Player)
+  nameWithType: AuthenticatedPacketProcessor<T>.Process(T, Player)
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor<T>.Process(T, NitroxServer.Player)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Communication/Packets/Processors/Abstract/AuthenticatedPacketProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Process
+    path: ../NitroxServer/Communication/Packets/Processors/Abstract/AuthenticatedPacketProcessor.cs
+    startLine: 12
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.Packets.Processors.Abstract
+  syntax:
+    content: public abstract void Process(T packet, Player player)
+    parameters:
+    - id: packet
+      type: '{T}'
+    - id: player
+      type: NitroxServer.Player
+    content.vb: Public MustOverride Sub Process(packet As T, player As Player)
+  overload: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.Process*
+  nameWithType.vb: AuthenticatedPacketProcessor(Of T).Process(T, Player)
+  fullName.vb: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor(Of T).Process(T, NitroxServer.Player)
+references:
+- uid: NitroxServer.Communication.Packets.Processors.Abstract
+  commentId: N:NitroxServer.Communication.Packets.Processors.Abstract
+  href: NitroxServer.html
+  name: NitroxServer.Communication.Packets.Processors.Abstract
+  nameWithType: NitroxServer.Communication.Packets.Processors.Abstract
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets.Processors
+    name: Processors
+    href: NitroxServer.Communication.Packets.Processors.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxServer.Communication.Packets.Processors.Abstract.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets.Processors
+    name: Processors
+    href: NitroxServer.Communication.Packets.Processors.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxServer.Communication.Packets.Processors.Abstract.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  commentId: T:NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  parent: NitroxModel.Packets.Processors.Abstract
+  href: NitroxModel.Packets.Processors.Abstract.PacketProcessor.html
+  name: PacketProcessor
+  nameWithType: PacketProcessor
+  fullName: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+- uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+  commentId: M:NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+  parent: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: GetProcessors(Dictionary<Type, object>, Func<Type, bool>)
+  nameWithType: PacketProcessor.GetProcessors(Dictionary<Type, object>, Func<Type, bool>)
+  fullName: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary<System.Type, object>, System.Func<System.Type, bool>)
+  nameWithType.vb: PacketProcessor.GetProcessors(Dictionary(Of Type, Object), Func(Of Type, Boolean))
+  fullName.vb: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary(Of System.Type, Object), System.Func(Of System.Type, Boolean))
+  name.vb: GetProcessors(Dictionary(Of Type, Object), Func(Of Type, Boolean))
+  spec.csharp:
+  - uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+    name: GetProcessors
+  - name: (
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+    name: GetProcessors
+  - name: (
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.Processors.Abstract
+  commentId: N:NitroxModel.Packets.Processors.Abstract
+  href: NitroxModel.html
+  name: NitroxModel.Packets.Processors.Abstract
+  nameWithType: NitroxModel.Packets.Processors.Abstract
+  fullName: NitroxModel.Packets.Processors.Abstract
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxModel.Packets.Processors.Abstract.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxModel.Packets.Processors.Abstract.html
+- uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  commentId: M:NitroxModel.Packets.Processors.Abstract.PacketProcessor.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  parent: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  name: ProcessPacket(Packet, IProcessorContext)
+  nameWithType: PacketProcessor.ProcessPacket(Packet, IProcessorContext)
+  fullName: NitroxModel.Packets.Processors.Abstract.PacketProcessor.ProcessPacket(NitroxModel.Packets.Packet, NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  spec.csharp:
+  - uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+    name: ProcessPacket
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+    name: IProcessorContext
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+    name: ProcessPacket
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+    name: IProcessorContext
+  - name: )
+- uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.ProcessPacket*
+  commentId: Overload:NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.ProcessPacket
+  href: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor-1.ProcessPacket.html#NitroxServer_Communication_Packets_Processors_Abstract_AuthenticatedPacketProcessor_1_ProcessPacket_NitroxModel_Packets_Packet_NitroxModel_Packets_Processors_Abstract_IProcessorContext_
+  name: ProcessPacket
+  nameWithType: AuthenticatedPacketProcessor<T>.ProcessPacket
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor<T>.ProcessPacket
+  nameWithType.vb: AuthenticatedPacketProcessor(Of T).ProcessPacket
+  fullName.vb: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor(Of T).ProcessPacket
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+  commentId: T:NitroxModel.Packets.Processors.Abstract.IProcessorContext
+  parent: NitroxModel.Packets.Processors.Abstract
+  href: NitroxModel.Packets.Processors.Abstract.IProcessorContext.html
+  name: IProcessorContext
+  nameWithType: IProcessorContext
+  fullName: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.Process*
+  commentId: Overload:NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1.Process
+  href: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor-1.Process.html#NitroxServer_Communication_Packets_Processors_Abstract_AuthenticatedPacketProcessor_1_Process__0_NitroxServer_Player_
+  name: Process
+  nameWithType: AuthenticatedPacketProcessor<T>.Process
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor<T>.Process
+  nameWithType.vb: AuthenticatedPacketProcessor(Of T).Process
+  fullName.vb: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor(Of T).Process
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: NitroxServer.Player
+  commentId: T:NitroxServer.Player
+  parent: NitroxServer
+  href: NitroxServer.Player.html
+  name: Player
+  nameWithType: Player
+  fullName: NitroxServer.Player
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: NitroxServer
+  commentId: N:NitroxServer
+  href: NitroxServer.html
+  name: NitroxServer
+  nameWithType: NitroxServer
+  fullName: NitroxServer
+memberLayout: SeparatePages

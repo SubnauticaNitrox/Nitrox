@@ -1,0 +1,609 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.Unity.NitroxColor
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxColor
+  id: NitroxColor
+  parent: NitroxModel.DataStructures.Unity
+  children:
+  - NitroxModel.DataStructures.Unity.NitroxColor.#ctor(System.Single,System.Single,System.Single,System.Single)
+  - NitroxModel.DataStructures.Unity.NitroxColor.A
+  - NitroxModel.DataStructures.Unity.NitroxColor.B
+  - NitroxModel.DataStructures.Unity.NitroxColor.G
+  - NitroxModel.DataStructures.Unity.NitroxColor.R
+  - NitroxModel.DataStructures.Unity.NitroxColor.ToString
+  langs:
+  - csharp
+  - vb
+  name: NitroxColor
+  nameWithType: NitroxColor
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor
+  type: Struct
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxColor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxColor
+    path: ../NitroxModel/DataStructures/Unity/NitroxColor.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataContract]
+
+      [Serializable]
+
+      public struct NitroxColor
+    content.vb: >-
+      <DataContract>
+
+      <Serializable>
+
+      Public Structure NitroxColor
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+  attributes:
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.R
+  commentId: P:NitroxModel.DataStructures.Unity.NitroxColor.R
+  id: R
+  parent: NitroxModel.DataStructures.Unity.NitroxColor
+  langs:
+  - csharp
+  - vb
+  name: R
+  nameWithType: NitroxColor.R
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.R
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxColor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: R
+    path: ../NitroxModel/DataStructures/Unity/NitroxColor.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public readonly float R { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public Property R As Single
+  overload: NitroxModel.DataStructures.Unity.NitroxColor.R*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.G
+  commentId: P:NitroxModel.DataStructures.Unity.NitroxColor.G
+  id: G
+  parent: NitroxModel.DataStructures.Unity.NitroxColor
+  langs:
+  - csharp
+  - vb
+  name: G
+  nameWithType: NitroxColor.G
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.G
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxColor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: G
+    path: ../NitroxModel/DataStructures/Unity/NitroxColor.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public readonly float G { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public Property G As Single
+  overload: NitroxModel.DataStructures.Unity.NitroxColor.G*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.B
+  commentId: P:NitroxModel.DataStructures.Unity.NitroxColor.B
+  id: B
+  parent: NitroxModel.DataStructures.Unity.NitroxColor
+  langs:
+  - csharp
+  - vb
+  name: B
+  nameWithType: NitroxColor.B
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.B
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxColor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: B
+    path: ../NitroxModel/DataStructures/Unity/NitroxColor.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataMember(Order = 3)]
+
+      public readonly float B { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=3)>
+
+      Public Property B As Single
+  overload: NitroxModel.DataStructures.Unity.NitroxColor.B*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 3
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.A
+  commentId: P:NitroxModel.DataStructures.Unity.NitroxColor.A
+  id: A
+  parent: NitroxModel.DataStructures.Unity.NitroxColor
+  langs:
+  - csharp
+  - vb
+  name: A
+  nameWithType: NitroxColor.A
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.A
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxColor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: A
+    path: ../NitroxModel/DataStructures/Unity/NitroxColor.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataMember(Order = 4)]
+
+      public readonly float A { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=4)>
+
+      Public Property A As Single
+  overload: NitroxModel.DataStructures.Unity.NitroxColor.A*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 4
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.#ctor(System.Single,System.Single,System.Single,System.Single)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxColor.#ctor(System.Single,System.Single,System.Single,System.Single)
+  id: '#ctor(System.Single,System.Single,System.Single,System.Single)'
+  parent: NitroxModel.DataStructures.Unity.NitroxColor
+  langs:
+  - csharp
+  - vb
+  name: NitroxColor(float, float, float, float)
+  nameWithType: NitroxColor.NitroxColor(float, float, float, float)
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.NitroxColor(float, float, float, float)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxColor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/Unity/NitroxColor.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public NitroxColor(float r, float g, float b, float a = 1)
+    parameters:
+    - id: r
+      type: System.Single
+    - id: g
+      type: System.Single
+    - id: b
+      type: System.Single
+    - id: a
+      type: System.Single
+    content.vb: Public Sub New(r As Single, g As Single, b As Single, a As Single = 1)
+  overload: NitroxModel.DataStructures.Unity.NitroxColor.#ctor*
+  nameWithType.vb: NitroxColor.New(Single, Single, Single, Single)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxColor.New(Single, Single, Single, Single)
+  name.vb: New(Single, Single, Single, Single)
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.ToString
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxColor.ToString
+  id: ToString
+  parent: NitroxModel.DataStructures.Unity.NitroxColor
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: NitroxColor.ToString()
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxColor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel/DataStructures/Unity/NitroxColor.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  summary: Returns the fully qualified type name of this instance.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: The fully qualified type name.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: NitroxModel.DataStructures.Unity.NitroxColor.ToString*
+references:
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.R*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxColor.R
+  href: NitroxModel.DataStructures.Unity.NitroxColor.R.html#NitroxModel_DataStructures_Unity_NitroxColor_R
+  name: R
+  nameWithType: NitroxColor.R
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.R
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.G*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxColor.G
+  href: NitroxModel.DataStructures.Unity.NitroxColor.G.html#NitroxModel_DataStructures_Unity_NitroxColor_G
+  name: G
+  nameWithType: NitroxColor.G
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.G
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.B*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxColor.B
+  href: NitroxModel.DataStructures.Unity.NitroxColor.B.html#NitroxModel_DataStructures_Unity_NitroxColor_B
+  name: B
+  nameWithType: NitroxColor.B
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.B
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.A*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxColor.A
+  href: NitroxModel.DataStructures.Unity.NitroxColor.A.html#NitroxModel_DataStructures_Unity_NitroxColor_A
+  name: A
+  nameWithType: NitroxColor.A
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.A
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxColor.#ctor
+  href: NitroxModel.DataStructures.Unity.NitroxColor.-ctor.html#NitroxModel_DataStructures_Unity_NitroxColor__ctor_System_Single_System_Single_System_Single_System_Single_
+  name: NitroxColor
+  nameWithType: NitroxColor.NitroxColor
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.NitroxColor
+  nameWithType.vb: NitroxColor.New
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxColor.New
+  name.vb: New
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.Unity.NitroxColor.ToString*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxColor.ToString
+  href: NitroxModel.DataStructures.Unity.NitroxColor.ToString.html#NitroxModel_DataStructures_Unity_NitroxColor_ToString
+  name: ToString
+  nameWithType: NitroxColor.ToString
+  fullName: NitroxModel.DataStructures.Unity.NitroxColor.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

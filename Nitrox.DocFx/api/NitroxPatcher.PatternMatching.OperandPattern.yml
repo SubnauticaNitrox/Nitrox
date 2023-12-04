@@ -1,0 +1,763 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.PatternMatching.OperandPattern
+  commentId: T:NitroxPatcher.PatternMatching.OperandPattern
+  id: OperandPattern
+  parent: NitroxPatcher.PatternMatching
+  children:
+  - NitroxPatcher.PatternMatching.OperandPattern.#ctor(System.String,System.String,System.Type[])
+  - NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes
+  - NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName
+  - NitroxPatcher.PatternMatching.OperandPattern.IsAny
+  - NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments
+  - NitroxPatcher.PatternMatching.OperandPattern.MemberName
+  - NitroxPatcher.PatternMatching.OperandPattern.ToString
+  - NitroxPatcher.PatternMatching.OperandPattern.op_Equality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  - NitroxPatcher.PatternMatching.OperandPattern.op_Inequality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  langs:
+  - csharp
+  - vb
+  name: OperandPattern
+  nameWithType: OperandPattern
+  fullName: NitroxPatcher.PatternMatching.OperandPattern
+  type: Struct
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OperandPattern
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: 'public readonly record struct OperandPattern : IEquatable<OperandPattern>'
+    content.vb: Public Structure OperandPattern Implements IEquatable(Of OperandPattern)
+  implements:
+  - System.IEquatable{NitroxPatcher.PatternMatching.OperandPattern}
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+- uid: NitroxPatcher.PatternMatching.OperandPattern.#ctor(System.String,System.String,System.Type[])
+  commentId: M:NitroxPatcher.PatternMatching.OperandPattern.#ctor(System.String,System.String,System.Type[])
+  id: '#ctor(System.String,System.String,System.Type[])'
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: OperandPattern(string, string, Type[])
+  nameWithType: OperandPattern.OperandPattern(string, string, Type[])
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.OperandPattern(string, string, System.Type[])
+  type: Constructor
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public OperandPattern(string DeclaringClassName, string MemberName, Type[] ArgumentTypes = null)
+    parameters:
+    - id: DeclaringClassName
+      type: System.String
+    - id: MemberName
+      type: System.String
+    - id: ArgumentTypes
+      type: System.Type[]
+    content.vb: Public Sub New(DeclaringClassName As String, MemberName As String, ArgumentTypes As Type() = Nothing)
+  overload: NitroxPatcher.PatternMatching.OperandPattern.#ctor*
+  nameWithType.vb: OperandPattern.New(String, String, Type())
+  fullName.vb: NitroxPatcher.PatternMatching.OperandPattern.New(String, String, System.Type())
+  name.vb: New(String, String, Type())
+- uid: NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName
+  commentId: P:NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName
+  id: DeclaringClassName
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: DeclaringClassName
+  nameWithType: OperandPattern.DeclaringClassName
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName
+  type: Property
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DeclaringClassName
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public string DeclaringClassName { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property DeclaringClassName As String
+  overload: NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName*
+- uid: NitroxPatcher.PatternMatching.OperandPattern.MemberName
+  commentId: P:NitroxPatcher.PatternMatching.OperandPattern.MemberName
+  id: MemberName
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: MemberName
+  nameWithType: OperandPattern.MemberName
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.MemberName
+  type: Property
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MemberName
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public string MemberName { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property MemberName As String
+  overload: NitroxPatcher.PatternMatching.OperandPattern.MemberName*
+- uid: NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes
+  commentId: P:NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes
+  id: ArgumentTypes
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: ArgumentTypes
+  nameWithType: OperandPattern.ArgumentTypes
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes
+  type: Property
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ArgumentTypes
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public Type[] ArgumentTypes { get; init; }
+    parameters: []
+    return:
+      type: System.Type[]
+    content.vb: Public Property ArgumentTypes As Type()
+  overload: NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes*
+- uid: NitroxPatcher.PatternMatching.OperandPattern.IsAny
+  commentId: P:NitroxPatcher.PatternMatching.OperandPattern.IsAny
+  id: IsAny
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: IsAny
+  nameWithType: OperandPattern.IsAny
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.IsAny
+  type: Property
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsAny
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 8
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public bool IsAny { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsAny As Boolean
+  overload: NitroxPatcher.PatternMatching.OperandPattern.IsAny*
+- uid: NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments
+  commentId: P:NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments
+  id: IsAnyArguments
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: IsAnyArguments
+  nameWithType: OperandPattern.IsAnyArguments
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments
+  type: Property
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsAnyArguments
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 9
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public bool IsAnyArguments { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsAnyArguments As Boolean
+  overload: NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments*
+- uid: NitroxPatcher.PatternMatching.OperandPattern.op_Equality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  commentId: M:NitroxPatcher.PatternMatching.OperandPattern.op_Equality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  id: op_Equality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: operator ==(OperandPattern, object)
+  nameWithType: OperandPattern.operator ==(OperandPattern, object)
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.operator ==(NitroxPatcher.PatternMatching.OperandPattern, object)
+  type: Operator
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Equality
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 11
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public static bool operator ==(OperandPattern pattern, object operand)
+    parameters:
+    - id: pattern
+      type: NitroxPatcher.PatternMatching.OperandPattern
+    - id: operand
+      type: System.Object
+      attributes:
+      - type: JetBrains.Annotations.CanBeNullAttribute
+        ctor: JetBrains.Annotations.CanBeNullAttribute.#ctor
+        arguments: []
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator =(pattern As OperandPattern, operand As Object) As Boolean
+  overload: NitroxPatcher.PatternMatching.OperandPattern.op_Equality*
+  nameWithType.vb: OperandPattern.=(OperandPattern, Object)
+  fullName.vb: NitroxPatcher.PatternMatching.OperandPattern.=(NitroxPatcher.PatternMatching.OperandPattern, Object)
+  name.vb: =(OperandPattern, Object)
+- uid: NitroxPatcher.PatternMatching.OperandPattern.op_Inequality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  commentId: M:NitroxPatcher.PatternMatching.OperandPattern.op_Inequality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  id: op_Inequality(NitroxPatcher.PatternMatching.OperandPattern,System.Object)
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: operator !=(OperandPattern, object)
+  nameWithType: OperandPattern.operator !=(OperandPattern, object)
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.operator !=(NitroxPatcher.PatternMatching.OperandPattern, object)
+  type: Operator
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Inequality
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 52
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  syntax:
+    content: public static bool operator !=(OperandPattern pattern, object operand)
+    parameters:
+    - id: pattern
+      type: NitroxPatcher.PatternMatching.OperandPattern
+    - id: operand
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator <>(pattern As OperandPattern, operand As Object) As Boolean
+  overload: NitroxPatcher.PatternMatching.OperandPattern.op_Inequality*
+  nameWithType.vb: OperandPattern.<>(OperandPattern, Object)
+  fullName.vb: NitroxPatcher.PatternMatching.OperandPattern.<>(NitroxPatcher.PatternMatching.OperandPattern, Object)
+  name.vb: <>(OperandPattern, Object)
+- uid: NitroxPatcher.PatternMatching.OperandPattern.ToString
+  commentId: M:NitroxPatcher.PatternMatching.OperandPattern.ToString
+  id: ToString
+  parent: NitroxPatcher.PatternMatching.OperandPattern
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: OperandPattern.ToString()
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxPatcher/PatternMatching/OperandPattern.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxPatcher/PatternMatching/OperandPattern.cs
+    startLine: 57
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.PatternMatching
+  summary: Returns the fully qualified type name of this instance.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: The fully qualified type name.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: NitroxPatcher.PatternMatching.OperandPattern.ToString*
+references:
+- uid: NitroxPatcher.PatternMatching
+  commentId: N:NitroxPatcher.PatternMatching
+  href: NitroxPatcher.html
+  name: NitroxPatcher.PatternMatching
+  nameWithType: NitroxPatcher.PatternMatching
+  fullName: NitroxPatcher.PatternMatching
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.PatternMatching
+    name: PatternMatching
+    href: NitroxPatcher.PatternMatching.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.PatternMatching
+    name: PatternMatching
+    href: NitroxPatcher.PatternMatching.html
+- uid: System.IEquatable{NitroxPatcher.PatternMatching.OperandPattern}
+  commentId: T:System.IEquatable{NitroxPatcher.PatternMatching.OperandPattern}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<OperandPattern>
+  nameWithType: IEquatable<OperandPattern>
+  fullName: System.IEquatable<NitroxPatcher.PatternMatching.OperandPattern>
+  nameWithType.vb: IEquatable(Of OperandPattern)
+  fullName.vb: System.IEquatable(Of NitroxPatcher.PatternMatching.OperandPattern)
+  name.vb: IEquatable(Of OperandPattern)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: NitroxPatcher.PatternMatching.OperandPattern
+    name: OperandPattern
+    href: NitroxPatcher.PatternMatching.OperandPattern.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxPatcher.PatternMatching.OperandPattern
+    name: OperandPattern
+    href: NitroxPatcher.PatternMatching.OperandPattern.html
+  - name: )
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxPatcher.PatternMatching.OperandPattern.#ctor*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.#ctor
+  href: NitroxPatcher.PatternMatching.OperandPattern.-ctor.html#NitroxPatcher_PatternMatching_OperandPattern__ctor_System_String_System_String_System_Type___
+  name: OperandPattern
+  nameWithType: OperandPattern.OperandPattern
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.OperandPattern
+  nameWithType.vb: OperandPattern.New
+  fullName.vb: NitroxPatcher.PatternMatching.OperandPattern.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Type[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type[]
+  nameWithType: Type[]
+  fullName: System.Type[]
+  nameWithType.vb: Type()
+  fullName.vb: System.Type()
+  name.vb: Type()
+  spec.csharp:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: (
+  - name: )
+- uid: NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName
+  href: NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName.html#NitroxPatcher_PatternMatching_OperandPattern_DeclaringClassName
+  name: DeclaringClassName
+  nameWithType: OperandPattern.DeclaringClassName
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.DeclaringClassName
+- uid: NitroxPatcher.PatternMatching.OperandPattern.MemberName*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.MemberName
+  href: NitroxPatcher.PatternMatching.OperandPattern.MemberName.html#NitroxPatcher_PatternMatching_OperandPattern_MemberName
+  name: MemberName
+  nameWithType: OperandPattern.MemberName
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.MemberName
+- uid: NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes
+  href: NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes.html#NitroxPatcher_PatternMatching_OperandPattern_ArgumentTypes
+  name: ArgumentTypes
+  nameWithType: OperandPattern.ArgumentTypes
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.ArgumentTypes
+- uid: NitroxPatcher.PatternMatching.OperandPattern.IsAny*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.IsAny
+  href: NitroxPatcher.PatternMatching.OperandPattern.IsAny.html#NitroxPatcher_PatternMatching_OperandPattern_IsAny
+  name: IsAny
+  nameWithType: OperandPattern.IsAny
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.IsAny
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments
+  href: NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments.html#NitroxPatcher_PatternMatching_OperandPattern_IsAnyArguments
+  name: IsAnyArguments
+  nameWithType: OperandPattern.IsAnyArguments
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.IsAnyArguments
+- uid: NitroxPatcher.PatternMatching.OperandPattern.op_Equality*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.op_Equality
+  href: NitroxPatcher.PatternMatching.OperandPattern.op_Equality.html#NitroxPatcher_PatternMatching_OperandPattern_op_Equality_NitroxPatcher_PatternMatching_OperandPattern_System_Object_
+  name: operator ==
+  nameWithType: OperandPattern.operator ==
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.operator ==
+  nameWithType.vb: OperandPattern.=
+  fullName.vb: NitroxPatcher.PatternMatching.OperandPattern.=
+  name.vb: =
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxPatcher.PatternMatching.OperandPattern.op_Equality*
+    name: ==
+    href: NitroxPatcher.PatternMatching.OperandPattern.op_Equality.html#NitroxPatcher_PatternMatching_OperandPattern_op_Equality_NitroxPatcher_PatternMatching_OperandPattern_System_Object_
+- uid: NitroxPatcher.PatternMatching.OperandPattern
+  commentId: T:NitroxPatcher.PatternMatching.OperandPattern
+  parent: NitroxPatcher.PatternMatching
+  href: NitroxPatcher.PatternMatching.OperandPattern.html
+  name: OperandPattern
+  nameWithType: OperandPattern
+  fullName: NitroxPatcher.PatternMatching.OperandPattern
+- uid: NitroxPatcher.PatternMatching.OperandPattern.op_Inequality*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.op_Inequality
+  href: NitroxPatcher.PatternMatching.OperandPattern.op_Inequality.html#NitroxPatcher_PatternMatching_OperandPattern_op_Inequality_NitroxPatcher_PatternMatching_OperandPattern_System_Object_
+  name: operator !=
+  nameWithType: OperandPattern.operator !=
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.operator !=
+  nameWithType.vb: OperandPattern.<>
+  fullName.vb: NitroxPatcher.PatternMatching.OperandPattern.<>
+  name.vb: <>
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxPatcher.PatternMatching.OperandPattern.op_Inequality*
+    name: '!='
+    href: NitroxPatcher.PatternMatching.OperandPattern.op_Inequality.html#NitroxPatcher_PatternMatching_OperandPattern_op_Inequality_NitroxPatcher_PatternMatching_OperandPattern_System_Object_
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: NitroxPatcher.PatternMatching.OperandPattern.ToString*
+  commentId: Overload:NitroxPatcher.PatternMatching.OperandPattern.ToString
+  href: NitroxPatcher.PatternMatching.OperandPattern.ToString.html#NitroxPatcher_PatternMatching_OperandPattern_ToString
+  name: ToString
+  nameWithType: OperandPattern.ToString
+  fullName: NitroxPatcher.PatternMatching.OperandPattern.ToString
+memberLayout: SeparatePages

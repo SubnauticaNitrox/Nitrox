@@ -1,0 +1,2797 @@
+### YamlMime:TableOfContent
+items:
+- uid: AddressablesTools
+  name: AddressablesTools
+  items:
+  - uid: AddressablesTools.Catalog
+    name: Catalog
+    items:
+    - uid: AddressablesTools.Catalog.ContentCatalogData
+      name: ContentCatalogData
+    - uid: AddressablesTools.Catalog.ObjectInitializationData
+      name: ObjectInitializationData
+    - uid: AddressablesTools.Catalog.ResourceLocation
+      name: ResourceLocation
+    - uid: AddressablesTools.Catalog.SerializedType
+      name: SerializedType
+  - uid: AddressablesTools.AddressablesJsonParser
+    name: AddressablesJsonParser
+- uid: Nitrox
+  name: Nitrox
+  items:
+  - uid: Nitrox.BuildTool
+    name: BuildTool
+    items:
+    - uid: Nitrox.BuildTool.Program
+      name: Program
+    - uid: Nitrox.BuildTool.Publicizer
+      name: Publicizer
+  - uid: Nitrox.Test
+    name: Test
+    items:
+    - uid: Nitrox.Test.Client.Communication
+      name: Client.Communication
+      items:
+      - uid: Nitrox.Test.Client.Communication.TestNonActionPacket
+        name: TestNonActionPacket
+    - uid: Nitrox.Test.Helper
+      name: Helper
+      items:
+      - uid: Nitrox.Test.Helper.Faker
+        name: Faker
+        items:
+        - uid: Nitrox.Test.Helper.Faker.INitroxFaker
+          name: INitroxFaker
+        - uid: Nitrox.Test.Helper.Faker.NitroxAbstractFaker
+          name: NitroxAbstractFaker
+        - uid: Nitrox.Test.Helper.Faker.NitroxActionFaker
+          name: NitroxActionFaker
+        - uid: Nitrox.Test.Helper.Faker.NitroxAutoFaker`1
+          name: NitroxAutoFaker<T>
+        - uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker
+          name: NitroxCollectionFaker
+        - uid: Nitrox.Test.Helper.Faker.NitroxCollectionFaker.CollectionType
+          name: NitroxCollectionFaker.CollectionType
+        - uid: Nitrox.Test.Helper.Faker.NitroxFaker
+          name: NitroxFaker
+        - uid: Nitrox.Test.Helper.Faker.NitroxNullableFaker
+          name: NitroxNullableFaker
+        - uid: Nitrox.Test.Helper.Faker.NitroxOptionalFaker
+          name: NitroxOptionalFaker
+      - uid: Nitrox.Test.Helper.AssertHelper
+        name: AssertHelper
+      - uid: Nitrox.Test.Helper.TypeExtension
+        name: TypeExtension
+    - uid: Nitrox.Test.SetupAssemblyInitializer
+      name: SetupAssemblyInitializer
+    - uid: Nitrox.Test.TestAutoFacRegistrar
+      name: TestAutoFacRegistrar
+- uid: NitroxClient
+  name: NitroxClient
+  items:
+  - uid: NitroxClient.Communication
+    name: Communication
+    items:
+    - uid: NitroxClient.Communication.Abstract
+      name: Abstract
+      items:
+      - uid: NitroxClient.Communication.Abstract.IClient
+        name: IClient
+      - uid: NitroxClient.Communication.Abstract.IMultiplayerSession
+        name: IMultiplayerSession
+      - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionContext
+        name: IMultiplayerSessionConnectionContext
+      - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+        name: IMultiplayerSessionConnectionState
+      - uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+        name: IMultiplayerSessionState
+      - uid: NitroxClient.Communication.Abstract.IPacketSender
+        name: IPacketSender
+      - uid: NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+        name: MultiplayerSessionConnectionStateChangedEventHandler
+    - uid: NitroxClient.Communication.Exceptions
+      name: Exceptions
+      items:
+      - uid: NitroxClient.Communication.Exceptions.ClientConnectionFailedException
+        name: ClientConnectionFailedException
+    - uid: NitroxClient.Communication.MultiplayerSession
+      name: MultiplayerSession
+      items:
+      - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState
+        name: ConnectionState
+        items:
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingReservationCredentials
+          name: AwaitingReservationCredentials
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingReservationCredentialsStateTests
+          name: AwaitingReservationCredentialsStateTests
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservation
+          name: AwaitingSessionReservation
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+          name: AwaitingSessionReservationStateTests
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.CommunicatingState
+          name: CommunicatingState
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatedState
+          name: ConnectionNegotiatedState
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.ConnectionNegotiatingState
+          name: ConnectionNegotiatingState
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.Disconnected
+          name: Disconnected
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.DisconnectedStateTests
+          name: DisconnectedStateTests
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.EstablishingSessionPolicy
+          name: EstablishingSessionPolicy
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.EstablishingSessionPolicyStateTests
+          name: EstablishingSessionPolicyStateTests
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoined
+          name: SessionJoined
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionJoinedStateTests
+          name: SessionJoinedStateTests
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionReservationRejected
+          name: SessionReservationRejected
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionReservationRejectedStateTests
+          name: SessionReservationRejectedStateTests
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionReserved
+          name: SessionReserved
+        - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.SessionReservedStateTests
+          name: SessionReservedStateTests
+      - uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionConnectionStage
+        name: MultiplayerSessionConnectionStage
+      - uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionManager
+        name: MultiplayerSessionManager
+      - uid: NitroxClient.Communication.MultiplayerSession.MultiplayerSessionMangerTests
+        name: MultiplayerSessionMangerTests
+    - uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+      name: NetworkingLayer.LiteNetLib
+      items:
+      - uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+        name: LiteNetLibClient
+    - uid: NitroxClient.Communication.Packets.Processors
+      name: Packets.Processors
+      items:
+      - uid: NitroxClient.Communication.Packets.Processors.Abstract
+        name: Abstract
+        items:
+        - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+          name: ClientPacketProcessor<T>
+      - uid: NitroxClient.Communication.Packets.Processors.AnimationProcessor
+        name: AnimationProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.AuroraAndTimeUpdateProcessor
+        name: AuroraAndTimeUpdateProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.BaseDeconstructedProcessor
+        name: BaseDeconstructedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.BuildProcessor`1
+        name: BuildProcessor<T>
+      - uid: NitroxClient.Communication.Packets.Processors.BuildingDesyncWarningProcessor
+        name: BuildingDesyncWarningProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+        name: BuildingResyncProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.CreatureActionChangedProcessor
+        name: CreatureActionChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.CyclopsDamagePointHealthChangedProcessor
+        name: CyclopsDamagePointHealthChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.CyclopsDamageProcessor
+        name: CyclopsDamageProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.CyclopsFireCreatedProcessor
+        name: CyclopsFireCreatedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.CyclopsFireSuppressionProcessor
+        name: CyclopsFireSuppressionProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.DeconstructionBeginProcessor
+        name: DeconstructionBeginProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.DiscordRequestIPProcessor
+        name: DiscordRequestIPProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.EntityDestroyedProcessor
+        name: EntityDestroyedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.EntityMetadataUpdateProcessor
+        name: EntityMetadataUpdateProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.EntityReparentedProcessor
+        name: EntityReparentedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.EntityTransformUpdatesProcessor
+        name: EntityTransformUpdatesProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.EscapePodChangedProcessor
+        name: EscapePodChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.ExosuitArmActionProcessor
+        name: ExosuitArmActionProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.FireDousedProcessor
+        name: FireDousedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.GameModeChangedProcessor
+        name: GameModeChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.InitialPlayerSyncProcessor
+        name: InitialPlayerSyncProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.KnownTechEntryProcessorAdd
+        name: KnownTechEntryProcessorAdd
+      - uid: NitroxClient.Communication.Packets.Processors.MedicalCabinetClickedProcessor
+        name: MedicalCabinetClickedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.ModifyConstructedAmountProcessor
+        name: ModifyConstructedAmountProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.MultiplayerSessionPolicyProcessor
+        name: MultiplayerSessionPolicyProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.MultiplayerSessionReservationProcessor
+        name: MultiplayerSessionReservationProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.MutePlayerProcessor
+        name: MutePlayerProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.MutePlayerProcessor.PlayerMuted
+        name: MutePlayerProcessor.PlayerMuted
+      - uid: NitroxClient.Communication.Packets.Processors.OpenableStateChangedProcessor
+        name: OpenableStateChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PDAEncyclopediaEntryAddProcessor
+        name: PDAEncyclopediaEntryAddProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PDALogEntryAddProcessor
+        name: PDALogEntryAddProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PDAScanFinishedProcessor
+        name: PDAScanFinishedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PermsChangedProcessor
+        name: PermsChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PermsChangedProcessor.PermissionsChanged
+        name: PermsChangedProcessor.PermissionsChanged
+      - uid: NitroxClient.Communication.Packets.Processors.PieceDeconstructedProcessor
+        name: PieceDeconstructedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PingRenamedProcessor
+        name: PingRenamedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlaceBaseProcessor
+        name: PlaceBaseProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlaceGhostProcessor
+        name: PlaceGhostProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlaceModuleProcessor
+        name: PlaceModuleProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayFMODAssetProcessor
+        name: PlayFMODAssetProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayFMODCustomEmitterProcessor
+        name: PlayFMODCustomEmitterProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayFMODCustomLoopingEmitterProcessor
+        name: PlayFMODCustomLoopingEmitterProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayFMODStudioEventEmitterProcessor
+        name: PlayFMODStudioEventEmitterProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlaySunbeamEventProcessor
+        name: PlaySunbeamEventProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayerCinematicControllerCallProcessor
+        name: PlayerCinematicControllerCallProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayerDeathProcessor
+        name: PlayerDeathProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayerHeldItemChangedProcessor
+        name: PlayerHeldItemChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayerJoinedMultiplayerSessionProcessor
+        name: PlayerJoinedMultiplayerSessionProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayerMovementProcessor
+        name: PlayerMovementProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayerStatsProcessor
+        name: PlayerStatsProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.PlayerTeleportedProcessor
+        name: PlayerTeleportedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.RadioPlayPendingMessageProcessor
+        name: RadioPlayPendingMessageProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.RocketLaunchProcessor
+        name: RocketLaunchProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.ScheduleProcessor
+        name: ScheduleProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.SeamothModuleActionProcessor
+        name: SeamothModuleActionProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.ServerStoppedProcessor
+        name: ServerStoppedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.SimulationOwnershipChangeProcessor
+        name: SimulationOwnershipChangeProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.SimulationOwnershipResponseProcessor
+        name: SimulationOwnershipResponseProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.SpawnEntitiesProcessor
+        name: SpawnEntitiesProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.StoryGoalExecutedClientProcessor
+        name: StoryGoalExecutedClientProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.SubRootChangedProcessor
+        name: SubRootChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.TimeChangeProcessor
+        name: TimeChangeProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.UpdateBaseProcessor
+        name: UpdateBaseProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.UserKickedProcessor
+        name: UserKickedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.VehicleDockingProcessor
+        name: VehicleDockingProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.VehicleMovementProcessor
+        name: VehicleMovementProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.VehicleOnPilotModeChangedProcessor
+        name: VehicleOnPilotModeChangedProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.VehicleUndockingProcessor
+        name: VehicleUndockingProcessor
+      - uid: NitroxClient.Communication.Packets.Processors.WaterParkDeconstructedProcessor
+        name: WaterParkDeconstructedProcessor
+    - uid: NitroxClient.Communication.DeferredPacketReceiverTest
+      name: DeferredPacketReceiverTest
+    - uid: NitroxClient.Communication.LANBroadcastClient
+      name: LANBroadcastClient
+    - uid: NitroxClient.Communication.PacketReceiver
+      name: PacketReceiver
+    - uid: NitroxClient.Communication.PacketSuppressor`1
+      name: PacketSuppressor<T>
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    items:
+    - uid: NitroxClient.Debuggers.Drawer
+      name: Drawer
+      items:
+      - uid: NitroxClient.Debuggers.Drawer.Nitrox
+        name: Nitrox
+        items:
+        - uid: NitroxClient.Debuggers.Drawer.Nitrox.NitroxEntityDrawer
+          name: NitroxEntityDrawer
+      - uid: NitroxClient.Debuggers.Drawer.Unity
+        name: Unity
+        items:
+        - uid: NitroxClient.Debuggers.Drawer.Unity.ColorDrawer
+          name: ColorDrawer
+        - uid: NitroxClient.Debuggers.Drawer.Unity.MaterialDrawer
+          name: MaterialDrawer
+        - uid: NitroxClient.Debuggers.Drawer.Unity.RectDrawer
+          name: RectDrawer
+        - uid: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+          name: RigidbodyDrawer
+        - uid: NitroxClient.Debuggers.Drawer.Unity.TransformDrawer
+          name: TransformDrawer
+        - uid: NitroxClient.Debuggers.Drawer.Unity.UnityEventDrawer
+          name: UnityEventDrawer
+        - uid: NitroxClient.Debuggers.Drawer.Unity.VectorDrawer
+          name: VectorDrawer
+      - uid: NitroxClient.Debuggers.Drawer.UnityUI
+        name: UnityUI
+        items:
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.AspectRatioFitterDrawer
+          name: AspectRatioFitterDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.ButtonDrawer
+          name: ButtonDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.CanvasDrawer
+          name: CanvasDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.CanvasGroupDrawer
+          name: CanvasGroupDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.CanvasRendererDrawer
+          name: CanvasRendererDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.CanvasScalerDrawer
+          name: CanvasScalerDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.ContentSizeFitterDrawer
+          name: ContentSizeFitterDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.DropdownDrawer
+          name: DropdownDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.GraphicRaycasterDrawer
+          name: GraphicRaycasterDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.GridLayoutGroupDrawer
+          name: GridLayoutGroupDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.HorizontalOrVerticalLayoutGroupDrawer
+          name: HorizontalOrVerticalLayoutGroupDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.ImageDrawer
+          name: ImageDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.InputFieldDrawer
+          name: InputFieldDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.LayoutElementDrawer
+          name: LayoutElementDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.MaskDrawer
+          name: MaskDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.RectTransformDrawer
+          name: RectTransformDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.ScrollRectDrawer
+          name: ScrollRectDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.ScrollbarDrawer
+          name: ScrollbarDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.SelectableDrawer
+          name: SelectableDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.SliderDrawer
+          name: SliderDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.TextDrawer
+          name: TextDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.ToggleDrawer
+          name: ToggleDrawer
+        - uid: NitroxClient.Debuggers.Drawer.UnityUI.ToggleGroupDrawer
+          name: ToggleGroupDrawer
+      - uid: NitroxClient.Debuggers.Drawer.IDrawer
+        name: IDrawer
+      - uid: NitroxClient.Debuggers.Drawer.IStructDrawer
+        name: IStructDrawer
+      - uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout
+        name: NitroxGUILayout
+      - uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope
+        name: NitroxGUILayout.BackgroundColorScope
+    - uid: NitroxClient.Debuggers.BaseDebugger
+      name: BaseDebugger
+    - uid: NitroxClient.Debuggers.BaseDebugger.DebuggerTab
+      name: BaseDebugger.DebuggerTab
+    - uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+      name: BaseDebugger.GUISkinCreationOptions
+    - uid: NitroxClient.Debuggers.EntityDebugger
+      name: EntityDebugger
+    - uid: NitroxClient.Debuggers.INetworkDebugger
+      name: INetworkDebugger
+    - uid: NitroxClient.Debuggers.NetworkDebugger
+      name: NetworkDebugger
+    - uid: NitroxClient.Debuggers.SceneDebugger
+      name: SceneDebugger
+    - uid: NitroxClient.Debuggers.SceneExtraDebugger
+      name: SceneExtraDebugger
+    - uid: NitroxClient.Debuggers.SoundDebugger
+      name: SoundDebugger
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    items:
+    - uid: NitroxClient.GameLogic.Bases
+      name: Bases
+      items:
+      - uid: NitroxClient.GameLogic.Bases.BuildUtils
+        name: BuildUtils
+      - uid: NitroxClient.GameLogic.Bases.BuildingHandler
+        name: BuildingHandler
+      - uid: NitroxClient.GameLogic.Bases.BuildingHandler.TemporaryBuildData
+        name: BuildingHandler.TemporaryBuildData
+      - uid: NitroxClient.GameLogic.Bases.GhostMetadataApplier
+        name: GhostMetadataApplier
+      - uid: NitroxClient.GameLogic.Bases.GhostMetadataRetriever
+        name: GhostMetadataRetriever
+      - uid: NitroxClient.GameLogic.Bases.OperationTracker
+        name: OperationTracker
+    - uid: NitroxClient.GameLogic.ChatUI
+      name: ChatUI
+      items:
+      - uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+        name: ChatLogEntry
+      - uid: NitroxClient.GameLogic.ChatUI.PlayerChatManager
+        name: PlayerChatManager
+    - uid: NitroxClient.GameLogic.Containers
+      name: Containers
+      items:
+      - uid: NitroxClient.GameLogic.Containers.ContainerAddItemPostProcessor
+        name: ContainerAddItemPostProcessor
+    - uid: NitroxClient.GameLogic.FMOD
+      name: FMOD
+      items:
+      - uid: NitroxClient.GameLogic.FMOD.FMODSuppressor
+        name: FMODSuppressor
+      - uid: NitroxClient.GameLogic.FMOD.FMODSystem
+        name: FMODSystem
+      - uid: NitroxClient.GameLogic.FMOD.SoundData
+        name: SoundData
+    - uid: NitroxClient.GameLogic.HUD
+      name: HUD
+      items:
+      - uid: NitroxClient.GameLogic.HUD.Components
+        name: Components
+        items:
+        - uid: NitroxClient.GameLogic.HUD.Components.ButtonTooltip
+          name: ButtonTooltip
+        - uid: NitroxClient.GameLogic.HUD.Components.DenyOwnershipHand
+          name: DenyOwnershipHand
+        - uid: NitroxClient.GameLogic.HUD.Components.uGUI_PlayerPingEntry
+          name: uGUI_PlayerPingEntry
+      - uid: NitroxClient.GameLogic.HUD.PdaTabs
+        name: PdaTabs
+        items:
+        - uid: NitroxClient.GameLogic.HUD.PdaTabs.uGUI_PlayerListTab
+          name: uGUI_PlayerListTab
+      - uid: NitroxClient.GameLogic.HUD.NitroxPDATab
+        name: NitroxPDATab
+      - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+        name: NitroxPDATabManager
+      - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+        name: NitroxPDATabManager.TabSpriteLoadedEvent
+      - uid: NitroxClient.GameLogic.HUD.PlayerListTab
+        name: PlayerListTab
+      - uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+        name: PlayerVitalsManager
+    - uid: NitroxClient.GameLogic.Helper
+      name: Helper
+      items:
+      - uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+        name: BaseSerializationHelper
+      - uid: NitroxClient.GameLogic.Helper.BaseSerializationHelperTest
+        name: BaseSerializationHelperTest
+      - uid: NitroxClient.GameLogic.Helper.BatteryChildEntityHelper
+        name: BatteryChildEntityHelper
+      - uid: NitroxClient.GameLogic.Helper.EquipmentHelper
+        name: EquipmentHelper
+      - uid: NitroxClient.GameLogic.Helper.InventoryContainerHelper
+        name: InventoryContainerHelper
+      - uid: NitroxClient.GameLogic.Helper.SerializationHelper
+        name: SerializationHelper
+      - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+        name: TransientLocalObjectManager
+      - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+        name: TransientLocalObjectManager.TransientObjectType
+      - uid: NitroxClient.GameLogic.Helper.VehicleChildEntityHelper
+        name: VehicleChildEntityHelper
+    - uid: NitroxClient.GameLogic.InitialSync
+      name: InitialSync
+      items:
+      - uid: NitroxClient.GameLogic.InitialSync.Abstract
+        name: Abstract
+        items:
+        - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+          name: IInitialSyncProcessor
+        - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+          name: IInitialSyncProcessor<TPacket>
+        - uid: NitroxClient.GameLogic.InitialSync.Abstract.InitialSyncProcessor
+          name: InitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.EquippedItemInitialSyncProcessor
+        name: EquippedItemInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.GlobalRootInitialSyncProcessor
+        name: GlobalRootInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.PdaInitialSyncProcessor
+        name: PdaInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.PlayerInitialSyncProcessor
+        name: PlayerInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.PlayerPositionInitialSyncProcessor
+        name: PlayerPositionInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.PlayerPreferencesInitialSyncProcessor
+        name: PlayerPreferencesInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.QuickSlotInitialSyncProcessor
+        name: QuickSlotInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.RemotePlayerInitialSyncProcessor
+        name: RemotePlayerInitialSyncProcessor
+      - uid: NitroxClient.GameLogic.InitialSync.StoryGoalInitialSyncProcessor
+        name: StoryGoalInitialSyncProcessor
+    - uid: NitroxClient.GameLogic.PlayerLogic
+      name: PlayerLogic
+      items:
+      - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+        name: PlayerModel
+        items:
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+          name: Abstract
+          items:
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapManager
+            name: IColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy
+            name: IColorSwapStrategy
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+            name: ILocalNitroxPlayer
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+            name: INitroxPlayer
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IPlayerModelBuilder
+            name: IPlayerModelBuilder
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+          name: ColorSwap
+          items:
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+            name: Strategy
+            items:
+            - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.AlphaChannelSwapper
+              name: AlphaChannelSwapper
+            - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+              name: HueSaturationVibrancySwapper
+            - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSwapper
+              name: HueSwapper
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorSwapAsyncOperation
+            name: ColorSwapAsyncOperation
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorValueRange
+            name: ColorValueRange
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.DiveSuitColorSwapManager
+            name: DiveSuitColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.FinColorSwapManager
+            name: FinColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.HsvSwapper
+            name: HsvSwapper
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationHelmetColorSwapManager
+            name: RadiationHelmetColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitColorSwapManager
+            name: RadiationSuitColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitVestColorSwapManager
+            name: RadiationSuitVestColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationTankColorSwapManager
+            name: RadiationTankColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RebreatherColorSwapManager
+            name: RebreatherColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ReinforcedSuitColorSwapManager
+            name: ReinforcedSuitColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ScubaTankColorSwapManager
+            name: ScubaTankColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.StillSuitColorSwapManager
+            name: StillSuitColorSwapManager
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.TextureBlock
+            name: TextureBlock
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
+          name: Equipment
+          items:
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+            name: Abstract
+            items:
+            - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler
+              name: IEquipmentVisibilityHandler
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.DiveSuitVisibilityHandler
+            name: DiveSuitVisibilityHandler
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.FinsVisibilityHandler
+            name: FinsVisibilityHandler
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.RadiationSuitVisibilityHandler
+            name: RadiationSuitVisibilityHandler
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.ReinforcedSuitVisibilityHandler
+            name: ReinforcedSuitVisibilityHandler
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.ScubaSuitVisibilityHandler
+            name: ScubaSuitVisibilityHandler
+          - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.StillSuitVisibilityHandler
+            name: StillSuitVisibilityHandler
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerEquipmentConstants
+          name: PlayerEquipmentConstants
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.PlayerModelManager
+          name: PlayerModelManager
+      - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+        name: PlayerPreferences
+        items:
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.IPreferenceStateProvider
+          name: IPreferenceStateProvider
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.PlayerPreference
+          name: PlayerPreference
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.PlayerPreferenceExtensions
+          name: PlayerPreferenceExtensions
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.PlayerPreferenceManager
+          name: PlayerPreferenceManager
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.PlayerPreferenceManagerTests
+          name: PlayerPreferenceManagerTests
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.PlayerPreferenceState
+          name: PlayerPreferenceState
+        - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.UnityPreferenceStateProvider
+          name: UnityPreferenceStateProvider
+      - uid: NitroxClient.GameLogic.PlayerLogic.PlayerCinematics
+        name: PlayerCinematics
+      - uid: NitroxClient.GameLogic.PlayerLogic.RemotePlayerIdentifier
+        name: RemotePlayerIdentifier
+    - uid: NitroxClient.GameLogic.Settings
+      name: Settings
+      items:
+      - uid: NitroxClient.GameLogic.Settings.NitroxPref
+        name: NitroxPref
+      - uid: NitroxClient.GameLogic.Settings.NitroxPref`1
+        name: NitroxPref<T>
+      - uid: NitroxClient.GameLogic.Settings.NitroxPrefs
+        name: NitroxPrefs
+      - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+        name: NitroxSettingsManager
+      - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+        name: NitroxSettingsManager.Setting
+      - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+        name: NitroxSettingsManager.SettingType
+    - uid: NitroxClient.GameLogic.Simulation
+      name: Simulation
+      items:
+      - uid: NitroxClient.GameLogic.Simulation.HandInteraction`1
+        name: HandInteraction<T>
+      - uid: NitroxClient.GameLogic.Simulation.LockRequestBase
+        name: LockRequestBase
+      - uid: NitroxClient.GameLogic.Simulation.LockRequestContext
+        name: LockRequestContext
+      - uid: NitroxClient.GameLogic.Simulation.LockRequest`1
+        name: LockRequest<T>
+      - uid: NitroxClient.GameLogic.Simulation.LockRequest`1.LockRequestCompleted
+        name: LockRequest<T>.LockRequestCompleted
+      - uid: NitroxClient.GameLogic.Simulation.PropulsionGrab
+        name: PropulsionGrab
+    - uid: NitroxClient.GameLogic.Spawning
+      name: Spawning
+      items:
+      - uid: NitroxClient.GameLogic.Spawning.Abstract
+        name: Abstract
+        items:
+        - uid: NitroxClient.GameLogic.Spawning.Abstract.EntitySpawner`1
+          name: EntitySpawner<T>
+        - uid: NitroxClient.GameLogic.Spawning.Abstract.IEntitySpawner
+          name: IEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+          name: ISyncEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.Abstract.SyncEntitySpawner`1
+          name: SyncEntitySpawner<T>
+      - uid: NitroxClient.GameLogic.Spawning.Bases
+        name: Bases
+        items:
+        - uid: NitroxClient.GameLogic.Spawning.Bases.BuildEntitySpawner
+          name: BuildEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.Bases.BuildingPostSpawner
+          name: BuildingPostSpawner
+        - uid: NitroxClient.GameLogic.Spawning.Bases.GhostEntitySpawner
+          name: GhostEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.Bases.InteriorPieceEntitySpawner
+          name: InteriorPieceEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.Bases.ModuleEntitySpawner
+          name: ModuleEntitySpawner
+      - uid: NitroxClient.GameLogic.Spawning.Metadata
+        name: Metadata
+        items:
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+          name: Extractor
+          items:
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.BatteryMetadataExtractor
+            name: BatteryMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+            name: ConstructorMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsLightningMetadataExtractor
+            name: CyclopsLightningMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor
+            name: CyclopsMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject
+            name: CyclopsMetadataExtractor.CyclopsGameObject
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+            name: EntityMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FireExtinguisherHolderMetadataExtractor
+            name: FireExtinguisherHolderMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FlashlightMetadataExtractor
+            name: FlashlightMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+            name: GenericEntityMetadataExtractor<I, O>
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlantableMetadataExtractor
+            name: PlantableMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlayerMetadataExtractor
+            name: PlayerMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.RocketMetadataExtractor
+            name: RocketMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SealedDoorMetadataExtractor
+            name: SealedDoorMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SeamothMetadataExtractor
+            name: SeamothMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SubNameInputMetadataExtractor
+            name: SubNameInputMetadataExtractor
+          - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.WaterParkCreatureMetadataExtractor
+            name: WaterParkCreatureMetadataExtractor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.BatteryMetadataProcessor
+          name: BatteryMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.ConstructorMetadataProcessor
+          name: ConstructorMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.CrafterMetadataProcessor
+          name: CrafterMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.CyclopsLightingMetadataProcessor
+          name: CyclopsLightingMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.CyclopsMetadataProcessor
+          name: CyclopsMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.EntityMetadataProcessor
+          name: EntityMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.EntitySignMetadataProcessor
+          name: EntitySignMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.FireExtinguisherHolderMetadataProcessor
+          name: FireExtinguisherHolderMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.FlashlightMetadataProcessor
+          name: FlashlightMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor`1
+          name: GenericEntityMetadataProcessor<T>
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.KeypadMetadataProcessor
+          name: KeypadMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.PlantableMetadataProcessor
+          name: PlantableMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.PlayerMetadataProcessor
+          name: PlayerMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorDoorwayMetadataProcessor
+          name: PrecursorDoorwayMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorKeyTerminalMetadataProcessor
+          name: PrecursorKeyTerminalMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterActivationTerminalMetadataProcessor
+          name: PrecursorTeleporterActivationTerminalMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterMetadataProcessor
+          name: PrecursorTeleporterMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.RepairedComponentMetadataProcessor
+          name: RepairedComponentMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.RocketMetadataProcessor
+          name: RocketMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.SealedDoorMetadataProcessor
+          name: SealedDoorMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.SeamothMetadataProcessor
+          name: SeamothMetadataProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.SubNameInputProcessor
+          name: SubNameInputProcessor
+        - uid: NitroxClient.GameLogic.Spawning.Metadata.WaterParkCreatureMetadataProcessor
+          name: WaterParkCreatureMetadataProcessor
+      - uid: NitroxClient.GameLogic.Spawning.WorldEntities
+        name: WorldEntities
+        items:
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.CrashEntitySpawner
+          name: CrashEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.DefaultWorldEntitySpawner
+          name: DefaultWorldEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.EscapePodWorldEntitySpawner
+          name: EscapePodWorldEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySpawner
+          name: IWorldEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner
+          name: IWorldEntitySyncSpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.PlaceholderGroupWorldEntitySpawner
+          name: PlaceholderGroupWorldEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.PlayerWorldEntitySpawner
+          name: PlayerWorldEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.ReefbackWorldEntitySpawner
+          name: ReefbackWorldEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.VehicleWorldEntitySpawner
+          name: VehicleWorldEntitySpawner
+        - uid: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver
+          name: WorldEntitySpawnerResolver
+      - uid: NitroxClient.GameLogic.Spawning.InstalledBatteryEntitySpawner
+        name: InstalledBatteryEntitySpawner
+      - uid: NitroxClient.GameLogic.Spawning.InstalledModuleEntitySpawner
+        name: InstalledModuleEntitySpawner
+      - uid: NitroxClient.GameLogic.Spawning.InventoryEntitySpawner
+        name: InventoryEntitySpawner
+      - uid: NitroxClient.GameLogic.Spawning.InventoryItemEntitySpawner
+        name: InventoryItemEntitySpawner
+      - uid: NitroxClient.GameLogic.Spawning.PathBasedChildEntitySpawner
+        name: PathBasedChildEntitySpawner
+      - uid: NitroxClient.GameLogic.Spawning.PrefabChildEntitySpawner
+        name: PrefabChildEntitySpawner
+      - uid: NitroxClient.GameLogic.Spawning.WorldEntitySpawner
+        name: WorldEntitySpawner
+    - uid: NitroxClient.GameLogic.AI
+      name: AI
+    - uid: NitroxClient.GameLogic.Cyclops
+      name: Cyclops
+    - uid: NitroxClient.GameLogic.Entities
+      name: Entities
+    - uid: NitroxClient.GameLogic.EquipmentSlots
+      name: EquipmentSlots
+    - uid: NitroxClient.GameLogic.ExosuitModuleEvent
+      name: ExosuitModuleEvent
+    - uid: NitroxClient.GameLogic.Fires
+      name: Fires
+    - uid: NitroxClient.GameLogic.Interior
+      name: Interior
+    - uid: NitroxClient.GameLogic.ItemContainers
+      name: ItemContainers
+    - uid: NitroxClient.GameLogic.Items
+      name: Items
+    - uid: NitroxClient.GameLogic.LiveMixinManager
+      name: LiveMixinManager
+    - uid: NitroxClient.GameLogic.LocalPlayer
+      name: LocalPlayer
+    - uid: NitroxClient.GameLogic.MedkitFabricator
+      name: MedkitFabricator
+    - uid: NitroxClient.GameLogic.MobileVehicleBay
+      name: MobileVehicleBay
+    - uid: NitroxClient.GameLogic.MovementHelper
+      name: MovementHelper
+    - uid: NitroxClient.GameLogic.NitroxConsole
+      name: NitroxConsole
+    - uid: NitroxClient.GameLogic.PlayerManager
+      name: PlayerManager
+    - uid: NitroxClient.GameLogic.PlayerManager.OnCreate
+      name: PlayerManager.OnCreate
+    - uid: NitroxClient.GameLogic.PlayerManager.OnRemove
+      name: PlayerManager.OnRemove
+    - uid: NitroxClient.GameLogic.RemotePlayer
+      name: RemotePlayer
+    - uid: NitroxClient.GameLogic.RemotePlayerManagerExtensions
+      name: RemotePlayerManagerExtensions
+    - uid: NitroxClient.GameLogic.Rockets
+      name: Rockets
+    - uid: NitroxClient.GameLogic.SeamothModulesEvent
+      name: SeamothModulesEvent
+    - uid: NitroxClient.GameLogic.SimulationOwnership
+      name: SimulationOwnership
+    - uid: NitroxClient.GameLogic.StoryManager
+      name: StoryManager
+    - uid: NitroxClient.GameLogic.Terrain
+      name: Terrain
+    - uid: NitroxClient.GameLogic.TimeManager
+      name: TimeManager
+    - uid: NitroxClient.GameLogic.Vehicles
+      name: Vehicles
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    items:
+    - uid: NitroxClient.Helpers.NitroxEntityExtensions
+      name: NitroxEntityExtensions
+    - uid: NitroxClient.Helpers.NitroxProtobufSerializer
+      name: NitroxProtobufSerializer
+    - uid: NitroxClient.Helpers.ThrottledPacketSender
+      name: ThrottledPacketSender
+    - uid: NitroxClient.Helpers.UnityObjectExtensions
+      name: UnityObjectExtensions
+    - uid: NitroxClient.Helpers.VFXConstructingHelper
+      name: VFXConstructingHelper
+  - uid: NitroxClient.Map
+    name: Map
+    items:
+    - uid: NitroxClient.Map.VisibleBatches
+      name: VisibleBatches
+    - uid: NitroxClient.Map.VisibleCells
+      name: VisibleCells
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    items:
+    - uid: NitroxClient.MonoBehaviours.Discord
+      name: Discord
+      items:
+      - uid: NitroxClient.MonoBehaviours.Discord.DiscordClient
+        name: DiscordClient
+      - uid: NitroxClient.MonoBehaviours.Discord.DiscordJoinRequestGui
+        name: DiscordJoinRequestGui
+    - uid: NitroxClient.MonoBehaviours.Gui
+      name: Gui
+      items:
+      - uid: NitroxClient.MonoBehaviours.Gui.Chat
+        name: Chat
+        items:
+        - uid: NitroxClient.MonoBehaviours.Gui.Chat.PlayerChat
+          name: PlayerChat
+        - uid: NitroxClient.MonoBehaviours.Gui.Chat.PlayerChatInputField
+          name: PlayerChatInputField
+        - uid: NitroxClient.MonoBehaviours.Gui.Chat.PlayerChatLogItem
+          name: PlayerChatLogItem
+        - uid: NitroxClient.MonoBehaviours.Gui.Chat.PlayerChatPinButton
+          name: PlayerChatPinButton
+      - uid: NitroxClient.MonoBehaviours.Gui.HUD
+        name: HUD
+        items:
+        - uid: NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals
+          name: RemotePlayerVitals
+      - uid: NitroxClient.MonoBehaviours.Gui.InGame
+        name: InGame
+        items:
+        - uid: NitroxClient.MonoBehaviours.Gui.InGame.ConfirmModal
+          name: ConfirmModal
+        - uid: NitroxClient.MonoBehaviours.Gui.InGame.KickedModal
+          name: KickedModal
+        - uid: NitroxClient.MonoBehaviours.Gui.InGame.LostConnectionModal
+          name: LostConnectionModal
+        - uid: NitroxClient.MonoBehaviours.Gui.InGame.Modal
+          name: Modal
+        - uid: NitroxClient.MonoBehaviours.Gui.InGame.ServerStoppedModal
+          name: ServerStoppedModal
+      - uid: NitroxClient.MonoBehaviours.Gui.Input
+        name: Input
+        items:
+        - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+          name: KeyBindings
+          items:
+          - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
+            name: Actions
+            items:
+            - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions.ChatKeyBindingAction
+              name: ChatKeyBindingAction
+            - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions.DiscordFocusBindingAction
+              name: DiscordFocusBindingAction
+            - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions.KeyBindingAction
+              name: KeyBindingAction
+          - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.DefaultKeyBinding
+            name: DefaultKeyBinding
+          - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.KeyBinding
+            name: KeyBinding
+        - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingManager
+          name: KeyBindingManager
+        - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingValues
+          name: KeyBindingValues
+      - uid: NitroxClient.MonoBehaviours.Gui.MainMenu
+        name: MainMenu
+        items:
+        - uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServer
+          name: JoinServer
+        - uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+          name: JoinServerJoinWindow
+        - uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerServerList
+          name: JoinServerServerList
+        - uid: NitroxClient.MonoBehaviours.Gui.MainMenu.LoadingScreenVersionText
+          name: LoadingScreenVersionText
+        - uid: NitroxClient.MonoBehaviours.Gui.MainMenu.MainMenuMods
+          name: MainMenuMods
+        - uid: NitroxClient.MonoBehaviours.Gui.MainMenu.MainMenuMultiplayerPanel
+          name: MainMenuMultiplayerPanel
+        - uid: NitroxClient.MonoBehaviours.Gui.MainMenu.MainMenuNotification
+          name: MainMenuNotification
+    - uid: NitroxClient.MonoBehaviours.Overrides
+      name: Overrides
+      items:
+      - uid: NitroxClient.MonoBehaviours.Overrides.CinematicControllerPrefab
+        name: CinematicControllerPrefab
+      - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+        name: MultiplayerBench
+      - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+        name: MultiplayerBench.Side
+      - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicController
+        name: MultiplayerCinematicController
+      - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicReference
+        name: MultiplayerCinematicReference
+      - uid: NitroxClient.MonoBehaviours.Overrides.RemotePlayerCinematicController
+        name: RemotePlayerCinematicController
+    - uid: NitroxClient.MonoBehaviours.AnimChangeState
+      name: AnimChangeState
+    - uid: NitroxClient.MonoBehaviours.AnimChangeType
+      name: AnimChangeType
+    - uid: NitroxClient.MonoBehaviours.AnimationController
+      name: AnimationController
+    - uid: NitroxClient.MonoBehaviours.AnimationSender
+      name: AnimationSender
+    - uid: NitroxClient.MonoBehaviours.EntityPositionBroadcaster
+      name: EntityPositionBroadcaster
+    - uid: NitroxClient.MonoBehaviours.FMODEmitterController
+      name: FMODEmitterController
+    - uid: NitroxClient.MonoBehaviours.MoonpoolManager
+      name: MoonpoolManager
+    - uid: NitroxClient.MonoBehaviours.Multiplayer
+      name: Multiplayer
+    - uid: NitroxClient.MonoBehaviours.MultiplayerCyclops
+      name: MultiplayerCyclops
+    - uid: NitroxClient.MonoBehaviours.MultiplayerSeaMoth
+      name: MultiplayerSeaMoth
+    - uid: NitroxClient.MonoBehaviours.MultiplayerVehicleControl
+      name: MultiplayerVehicleControl
+    - uid: NitroxClient.MonoBehaviours.NitroxBootstrapper
+      name: NitroxBootstrapper
+    - uid: NitroxClient.MonoBehaviours.NitroxDebugManager
+      name: NitroxDebugManager
+    - uid: NitroxClient.MonoBehaviours.NitroxEntity
+      name: NitroxEntity
+    - uid: NitroxClient.MonoBehaviours.PlayerDeathBroadcaster
+      name: PlayerDeathBroadcaster
+    - uid: NitroxClient.MonoBehaviours.PlayerMovementBroadcaster
+      name: PlayerMovementBroadcaster
+    - uid: NitroxClient.MonoBehaviours.PlayerStatsBroadcaster
+      name: PlayerStatsBroadcaster
+    - uid: NitroxClient.MonoBehaviours.RemotelyControlled
+      name: RemotelyControlled
+  - uid: NitroxClient.Serialization
+    name: Serialization
+    items:
+    - uid: NitroxClient.Serialization.ClientConfig
+      name: ClientConfig
+  - uid: NitroxClient.Unity
+    name: Unity
+    items:
+    - uid: NitroxClient.Unity.Helper
+      name: Helper
+      items:
+      - uid: NitroxClient.Unity.Helper.AssetBundleLoader
+        name: AssetBundleLoader
+      - uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+        name: AssetBundleLoader.NitroxAssetBundle
+      - uid: NitroxClient.Unity.Helper.CoroutineHelper
+        name: CoroutineHelper
+      - uid: NitroxClient.Unity.Helper.DebugUtils
+        name: DebugUtils
+      - uid: NitroxClient.Unity.Helper.GUISkinUtils
+        name: GUISkinUtils
+      - uid: NitroxClient.Unity.Helper.GameObjectHelper
+        name: GameObjectHelper
+      - uid: NitroxClient.Unity.Helper.MathUtil
+        name: MathUtil
+      - uid: NitroxClient.Unity.Helper.RendererHelpers
+        name: RendererHelpers
+      - uid: NitroxClient.Unity.Helper.StringUtils
+        name: StringUtils
+      - uid: NitroxClient.Unity.Helper.Yielders
+        name: Yielders
+    - uid: NitroxClient.Unity.Smoothing
+      name: Smoothing
+      items:
+      - uid: NitroxClient.Unity.Smoothing.SmoothParameter
+        name: SmoothParameter
+      - uid: NitroxClient.Unity.Smoothing.SmoothRotation
+        name: SmoothRotation
+      - uid: NitroxClient.Unity.Smoothing.SmoothVector
+        name: SmoothVector
+  - uid: NitroxClient.ClientAutoFacRegistrar
+    name: ClientAutoFacRegistrar
+- uid: NitroxModel
+  name: NitroxModel
+  items:
+  - uid: NitroxModel.Constants
+    name: Constants
+    items:
+    - uid: NitroxModel.Constants.LANDiscoveryConstants
+      name: LANDiscoveryConstants
+  - uid: NitroxModel.Core
+    name: Core
+    items:
+    - uid: NitroxModel.Core.BaseServiceProvider`1
+      name: BaseServiceProvider<TServiced>
+    - uid: NitroxModel.Core.DependencyInjectionTests
+      name: DependencyInjectionTests
+    - uid: NitroxModel.Core.DependencyWithRootDependency
+      name: DependencyWithRootDependency
+    - uid: NitroxModel.Core.IAutoFacRegistrar
+      name: IAutoFacRegistrar
+    - uid: NitroxModel.Core.IRootDependency
+      name: IRootDependency
+    - uid: NitroxModel.Core.IServiced
+      name: IServiced
+    - uid: NitroxModel.Core.IServicer`1
+      name: IServicer<T>
+    - uid: NitroxModel.Core.NitroxServiceLocator
+      name: NitroxServiceLocator
+    - uid: NitroxModel.Core.NitroxServiceLocator.Cache`1
+      name: NitroxServiceLocator.Cache<T>
+    - uid: NitroxModel.Core.RootDependency
+      name: RootDependency
+    - uid: NitroxModel.Core.ServiceAProvider
+      name: ServiceAProvider
+    - uid: NitroxModel.Core.ServiceBProvider
+      name: ServiceBProvider
+    - uid: NitroxModel.Core.ServiceRecipientA
+      name: ServiceRecipientA
+    - uid: NitroxModel.Core.ServiceRecipientB
+      name: ServiceRecipientB
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    items:
+    - uid: NitroxModel.DataStructures.GameLogic
+      name: GameLogic
+      items:
+      - uid: NitroxModel.DataStructures.GameLogic.Bases
+        name: Bases
+        items:
+        - uid: NitroxModel.DataStructures.GameLogic.Bases.BaseData
+          name: BaseData
+        - uid: NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier
+          name: BuildPieceIdentifier
+        - uid: NitroxModel.DataStructures.GameLogic.Bases.NitroxBaseFace
+          name: NitroxBaseFace
+      - uid: NitroxModel.DataStructures.GameLogic.Entities
+        name: Entities
+        items:
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+          name: Bases
+          items:
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+            name: BuildEntity
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.GhostEntity
+            name: GhostEntity
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.InteriorPieceEntity
+            name: InteriorPieceEntity
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+            name: MapRoomEntity
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+            name: ModuleEntity
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.MoonpoolEntity
+            name: MoonpoolEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+          name: Metadata
+          items:
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+            name: Bases
+            items:
+            - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredCellGhostMetadata
+              name: BaseAnchoredCellGhostMetadata
+            - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseAnchoredFaceGhostMetadata
+              name: BaseAnchoredFaceGhostMetadata
+            - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.BaseDeconstructableGhostMetadata
+              name: BaseDeconstructableGhostMetadata
+            - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.GhostMetadata
+              name: GhostMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.BatteryMetadata
+            name: BatteryMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+            name: ConstructorMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CrafterMetadata
+            name: CrafterMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsLightingMetadata
+            name: CyclopsLightingMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsMetadata
+            name: CyclopsMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+            name: EntityMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntitySignMetadata
+            name: EntitySignMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FireExtinguisherHolderMetadata
+            name: FireExtinguisherHolderMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FlashlightMetadata
+            name: FlashlightMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.IncubatorMetadata
+            name: IncubatorMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.KeypadMetadata
+            name: KeypadMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlantableMetadata
+            name: PlantableMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata
+            name: PlayerMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem
+            name: PlayerMetadata.EquippedItem
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorDoorwayMetadata
+            name: PrecursorDoorwayMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorKeyTerminalMetadata
+            name: PrecursorKeyTerminalMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterActivationTerminalMetadata
+            name: PrecursorTeleporterActivationTerminalMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterMetadata
+            name: PrecursorTeleporterMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RepairedComponentMetadata
+            name: RepairedComponentMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RocketMetadata
+            name: RocketMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SealedDoorMetadata
+            name: SealedDoorMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SeamothMetadata
+            name: SeamothMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.StarshipDoorMetadata
+            name: StarshipDoorMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SubNameInputMetadata
+            name: SubNameInputMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WaterParkCreatureMetadata
+            name: WaterParkCreatureMetadata
+          - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WeldableWallPanelGenericMetadata
+            name: WeldableWallPanelGenericMetadata
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.CellRootEntity
+          name: CellRootEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.EscapePodWorldEntity
+          name: EscapePodWorldEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity
+          name: GlobalRootEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.InstalledBatteryEntity
+          name: InstalledBatteryEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.InstalledModuleEntity
+          name: InstalledModuleEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.InventoryEntity
+          name: InventoryEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.InventoryItemEntity
+          name: InventoryItemEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.PathBasedChildEntity
+          name: PathBasedChildEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.PlaceholderGroupWorldEntity
+          name: PlaceholderGroupWorldEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.PlanterEntity
+          name: PlanterEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.PlayerWorldEntity
+          name: PlayerWorldEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.PrefabChildEntity
+          name: PrefabChildEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.PrefabPlaceholderEntity
+          name: PrefabPlaceholderEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefab
+          name: UwePrefab
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.UwePrefabFactory
+          name: UwePrefabFactory
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.UweWorldEntity
+          name: UweWorldEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.UweWorldEntityFactory
+          name: UweWorldEntityFactory
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.VehicleWorldEntity
+          name: VehicleWorldEntity
+        - uid: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+          name: WorldEntity
+      - uid: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell
+        name: AbsoluteEntityCell
+      - uid: NitroxModel.DataStructures.GameLogic.AuroraEventData
+        name: AuroraEventData
+      - uid: NitroxModel.DataStructures.GameLogic.BasicItemData
+        name: BasicItemData
+      - uid: NitroxModel.DataStructures.GameLogic.BasicVehicleMovementData
+        name: BasicVehicleMovementData
+      - uid: NitroxModel.DataStructures.GameLogic.DamageTakenData
+        name: DamageTakenData
+      - uid: NitroxModel.DataStructures.GameLogic.Entity
+        name: Entity
+      - uid: NitroxModel.DataStructures.GameLogic.EquippedItemData
+        name: EquippedItemData
+      - uid: NitroxModel.DataStructures.GameLogic.InitialPDAData
+        name: InitialPDAData
+      - uid: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+        name: InitialStoryGoalData
+      - uid: NitroxModel.DataStructures.GameLogic.ItemData
+        name: ItemData
+      - uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+        name: NitroxScheduledGoal
+      - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+        name: NitroxTechType
+      - uid: NitroxModel.DataStructures.GameLogic.PDAEntry
+        name: PDAEntry
+      - uid: NitroxModel.DataStructures.GameLogic.PDALogEntry
+        name: PDALogEntry
+      - uid: NitroxModel.DataStructures.GameLogic.Perms
+        name: Perms
+      - uid: NitroxModel.DataStructures.GameLogic.PermsFlag
+        name: PermsFlag
+      - uid: NitroxModel.DataStructures.GameLogic.PingInstancePreference
+        name: PingInstancePreference
+      - uid: NitroxModel.DataStructures.GameLogic.PlantableItemData
+        name: PlantableItemData
+      - uid: NitroxModel.DataStructures.GameLogic.PlayerStatsData
+        name: PlayerStatsData
+      - uid: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+        name: RandomStartGenerator
+      - uid: NitroxModel.DataStructures.GameLogic.SubnauticaPlayerPreferences
+        name: SubnauticaPlayerPreferences
+      - uid: NitroxModel.DataStructures.GameLogic.TimeData
+        name: TimeData
+      - uid: NitroxModel.DataStructures.GameLogic.VehicleMovementData
+        name: VehicleMovementData
+    - uid: NitroxModel.DataStructures.Surrogates
+      name: Surrogates
+      items:
+      - uid: NitroxModel.DataStructures.Surrogates.SerializationSurrogate`1
+        name: SerializationSurrogate<T>
+    - uid: NitroxModel.DataStructures.Unity
+      name: Unity
+      items:
+      - uid: NitroxModel.DataStructures.Unity.NitroxColor
+        name: NitroxColor
+      - uid: NitroxModel.DataStructures.Unity.NitroxQuaternion
+        name: NitroxQuaternion
+      - uid: NitroxModel.DataStructures.Unity.NitroxQuaternionTest
+        name: NitroxQuaternionTest
+      - uid: NitroxModel.DataStructures.Unity.NitroxTransform
+        name: NitroxTransform
+      - uid: NitroxModel.DataStructures.Unity.NitroxTransformTest
+        name: NitroxTransformTest
+      - uid: NitroxModel.DataStructures.Unity.NitroxVector3
+        name: NitroxVector3
+      - uid: NitroxModel.DataStructures.Unity.NitroxVector4
+        name: NitroxVector4
+    - uid: NitroxModel.DataStructures.Util
+      name: Util
+      items:
+      - uid: NitroxModel.DataStructures.Util.Optional
+        name: Optional
+      - uid: NitroxModel.DataStructures.Util.OptionalEmpty
+        name: OptionalEmpty
+      - uid: NitroxModel.DataStructures.Util.OptionalEmptyException`1
+        name: OptionalEmptyException<T>
+      - uid: NitroxModel.DataStructures.Util.OptionalNullException`1
+        name: OptionalNullException<T>
+      - uid: NitroxModel.DataStructures.Util.OptionalTest
+        name: OptionalTest
+      - uid: NitroxModel.DataStructures.Util.Optional`1
+        name: Optional<T>
+    - uid: NitroxModel.DataStructures.NitroxId
+      name: NitroxId
+    - uid: NitroxModel.DataStructures.NitroxIdTest
+      name: NitroxIdTest
+    - uid: NitroxModel.DataStructures.NitroxInt3
+      name: NitroxInt3
+    - uid: NitroxModel.DataStructures.NitroxInt3Test
+      name: NitroxInt3Test
+    - uid: NitroxModel.DataStructures.NitroxVersion
+      name: NitroxVersion
+    - uid: NitroxModel.DataStructures.NitroxVersionTest
+      name: NitroxVersionTest
+    - uid: NitroxModel.DataStructures.PriorityChain`1
+      name: PriorityChain<T>
+    - uid: NitroxModel.DataStructures.PriorityItem`1
+      name: PriorityItem<T>
+    - uid: NitroxModel.DataStructures.PriorityQueueTest
+      name: PriorityQueueTest
+    - uid: NitroxModel.DataStructures.PriorityQueue`1
+      name: PriorityQueue<T>
+    - uid: NitroxModel.DataStructures.SimulatedEntity
+      name: SimulatedEntity
+    - uid: NitroxModel.DataStructures.SimulationLockType
+      name: SimulationLockType
+    - uid: NitroxModel.DataStructures.ThreadSafeDictionary`2
+      name: ThreadSafeDictionary<TKey, TValue>
+    - uid: NitroxModel.DataStructures.ThreadSafeListTest
+      name: ThreadSafeListTest
+    - uid: NitroxModel.DataStructures.ThreadSafeList`1
+      name: ThreadSafeList<T>
+    - uid: NitroxModel.DataStructures.ThreadSafeQueueTest
+      name: ThreadSafeQueueTest
+    - uid: NitroxModel.DataStructures.ThreadSafeQueue`1
+      name: ThreadSafeQueue<T>
+    - uid: NitroxModel.DataStructures.ThreadSafeSetTest
+      name: ThreadSafeSetTest
+    - uid: NitroxModel.DataStructures.ThreadSafeSet`1
+      name: ThreadSafeSet<T>
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    items:
+    - uid: NitroxModel.Discovery.InstallationFinders
+      name: InstallationFinders
+      items:
+      - uid: NitroxModel.Discovery.InstallationFinders.ConfigGameFinder
+        name: ConfigGameFinder
+      - uid: NitroxModel.Discovery.InstallationFinders.DiscordGameFinder
+        name: DiscordGameFinder
+      - uid: NitroxModel.Discovery.InstallationFinders.EnvironmentGameFinder
+        name: EnvironmentGameFinder
+      - uid: NitroxModel.Discovery.InstallationFinders.EpicGamesInstallationFinder
+        name: EpicGamesInstallationFinder
+      - uid: NitroxModel.Discovery.InstallationFinders.GameInCurrentDirectoryFinder
+        name: GameInCurrentDirectoryFinder
+      - uid: NitroxModel.Discovery.InstallationFinders.SteamGameRegistryFinder
+        name: SteamGameRegistryFinder
+    - uid: NitroxModel.Discovery.GameInstallData
+      name: GameInstallData
+    - uid: NitroxModel.Discovery.GameInstallationFinder
+      name: GameInstallationFinder
+    - uid: NitroxModel.Discovery.IFindGameInstallation
+      name: IFindGameInstallation
+    - uid: NitroxModel.Discovery.Platform
+      name: Platform
+  - uid: NitroxModel.Helper
+    name: Helper
+    items:
+    - uid: NitroxModel.Helper.IMap
+      name: IMap
+    - uid: NitroxModel.Helper.Mathf
+      name: Mathf
+    - uid: NitroxModel.Helper.Matrix4x4Extension
+      name: Matrix4x4Extension
+    - uid: NitroxModel.Helper.NatHelper
+      name: NatHelper
+    - uid: NitroxModel.Helper.NatHelper.ResultCodes
+      name: NatHelper.ResultCodes
+    - uid: NitroxModel.Helper.NetHelper
+      name: NetHelper
+    - uid: NitroxModel.Helper.NetHelperTest
+      name: NetHelperTest
+    - uid: NitroxModel.Helper.NitroxEnvironment
+      name: NitroxEnvironment
+    - uid: NitroxModel.Helper.NitroxEnvironment.Types
+      name: NitroxEnvironment.Types
+    - uid: NitroxModel.Helper.NitroxUser
+      name: NitroxUser
+    - uid: NitroxModel.Helper.PirateDetection
+      name: PirateDetection
+    - uid: NitroxModel.Helper.Reflect
+      name: Reflect
+    - uid: NitroxModel.Helper.Reflect.Ref`1
+      name: Reflect.Ref<T>
+    - uid: NitroxModel.Helper.ReflectTest
+      name: ReflectTest
+    - uid: NitroxModel.Helper.StringHelper
+      name: StringHelper
+    - uid: NitroxModel.Helper.Validate
+      name: Validate
+  - uid: NitroxModel.Logger
+    name: Logger
+    items:
+    - uid: NitroxModel.Logger.ColoredConsoleSink
+      name: ColoredConsoleSink
+    - uid: NitroxModel.Logger.ColoredConsoleSinkExtensions
+      name: ColoredConsoleSinkExtensions
+    - uid: NitroxModel.Logger.InGameLogger
+      name: InGameLogger
+    - uid: NitroxModel.Logger.LiteNetLibLogger
+      name: LiteNetLibLogger
+    - uid: NitroxModel.Logger.Log
+      name: Log
+    - uid: NitroxModel.Logger.LogLevel
+      name: LogLevel
+    - uid: NitroxModel.Logger.MessageSink
+      name: MessageSink
+    - uid: NitroxModel.Logger.MessageSinkExtensions
+      name: MessageSinkExtensions
+  - uid: NitroxModel.MultiplayerSession
+    name: MultiplayerSession
+    items:
+    - uid: NitroxModel.MultiplayerSession.AuthenticationContext
+      name: AuthenticationContext
+    - uid: NitroxModel.MultiplayerSession.MultiplayerSessionAuthenticationAuthority
+      name: MultiplayerSessionAuthenticationAuthority
+    - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+      name: MultiplayerSessionReservationState
+    - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions
+      name: MultiplayerSessionReservationStateExtensions
+    - uid: NitroxModel.MultiplayerSession.PlayerContext
+      name: PlayerContext
+    - uid: NitroxModel.MultiplayerSession.PlayerSettings
+      name: PlayerSettings
+    - uid: NitroxModel.MultiplayerSession.RandomColorGenerator
+      name: RandomColorGenerator
+  - uid: NitroxModel.Networking
+    name: Networking
+    items:
+    - uid: NitroxModel.Networking.NitroxDeliveryMethod
+      name: NitroxDeliveryMethod
+    - uid: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+      name: NitroxDeliveryMethod.DeliveryMethod
+  - uid: NitroxModel.Packets
+    name: Packets
+    items:
+    - uid: NitroxModel.Packets.Exceptions
+      name: Exceptions
+      items:
+      - uid: NitroxModel.Packets.Exceptions.UncorrelatedPacketException
+        name: UncorrelatedPacketException
+    - uid: NitroxModel.Packets.Processors
+      name: Processors
+      items:
+      - uid: NitroxModel.Packets.Processors.Abstract
+        name: Abstract
+        items:
+        - uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+          name: IProcessorContext
+        - uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+          name: PacketProcessor
+      - uid: NitroxModel.Packets.Processors.PacketProcessorTest
+        name: PacketProcessorTest
+    - uid: NitroxModel.Packets.AnimationChangeEvent
+      name: AnimationChangeEvent
+    - uid: NitroxModel.Packets.AuroraAndTimeUpdate
+      name: AuroraAndTimeUpdate
+    - uid: NitroxModel.Packets.BaseDeconstructed
+      name: BaseDeconstructed
+    - uid: NitroxModel.Packets.BatchVisibilityChanged
+      name: BatchVisibilityChanged
+    - uid: NitroxModel.Packets.BedEnter
+      name: BedEnter
+    - uid: NitroxModel.Packets.BuildingDesyncWarning
+      name: BuildingDesyncWarning
+    - uid: NitroxModel.Packets.BuildingResync
+      name: BuildingResync
+    - uid: NitroxModel.Packets.BuildingResyncRequest
+      name: BuildingResyncRequest
+    - uid: NitroxModel.Packets.CellVisibilityChanged
+      name: CellVisibilityChanged
+    - uid: NitroxModel.Packets.ChatMessage
+      name: ChatMessage
+    - uid: NitroxModel.Packets.CorrelatedPacket
+      name: CorrelatedPacket
+    - uid: NitroxModel.Packets.DebugStartMapPacket
+      name: DebugStartMapPacket
+    - uid: NitroxModel.Packets.DeconstructionBegin
+      name: DeconstructionBegin
+    - uid: NitroxModel.Packets.Disconnect
+      name: Disconnect
+    - uid: NitroxModel.Packets.DiscordRequestIP
+      name: DiscordRequestIP
+    - uid: NitroxModel.Packets.EntityDestroyed
+      name: EntityDestroyed
+    - uid: NitroxModel.Packets.EntityMetadataUpdate
+      name: EntityMetadataUpdate
+    - uid: NitroxModel.Packets.EntityReparented
+      name: EntityReparented
+    - uid: NitroxModel.Packets.EntitySpawnedByClient
+      name: EntitySpawnedByClient
+    - uid: NitroxModel.Packets.EntityTransformUpdates
+      name: EntityTransformUpdates
+    - uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+      name: EntityTransformUpdates.EntityTransformUpdate
+    - uid: NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+      name: EntityTransformUpdates.RawTransformUpdate
+    - uid: NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+      name: EntityTransformUpdates.SplineTransformUpdate
+    - uid: NitroxModel.Packets.EscapePodChanged
+      name: EscapePodChanged
+    - uid: NitroxModel.Packets.FireDoused
+      name: FireDoused
+    - uid: NitroxModel.Packets.GameModeChanged
+      name: GameModeChanged
+    - uid: NitroxModel.Packets.GoalCompleted
+      name: GoalCompleted
+    - uid: NitroxModel.Packets.InitialPlayerSync
+      name: InitialPlayerSync
+    - uid: NitroxModel.Packets.ItemPosition
+      name: ItemPosition
+    - uid: NitroxModel.Packets.KnownTechEntryAdd
+      name: KnownTechEntryAdd
+    - uid: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+      name: KnownTechEntryAdd.EntryCategory
+    - uid: NitroxModel.Packets.MedicalCabinetClicked
+      name: MedicalCabinetClicked
+    - uid: NitroxModel.Packets.ModifyConstructedAmount
+      name: ModifyConstructedAmount
+    - uid: NitroxModel.Packets.ModuleAdded
+      name: ModuleAdded
+    - uid: NitroxModel.Packets.ModuleRemoved
+      name: ModuleRemoved
+    - uid: NitroxModel.Packets.Movement
+      name: Movement
+    - uid: NitroxModel.Packets.MultiplayerSessionPolicy
+      name: MultiplayerSessionPolicy
+    - uid: NitroxModel.Packets.MultiplayerSessionPolicyRequest
+      name: MultiplayerSessionPolicyRequest
+    - uid: NitroxModel.Packets.MultiplayerSessionReservation
+      name: MultiplayerSessionReservation
+    - uid: NitroxModel.Packets.MultiplayerSessionReservationRequest
+      name: MultiplayerSessionReservationRequest
+    - uid: NitroxModel.Packets.MutePlayer
+      name: MutePlayer
+    - uid: NitroxModel.Packets.OpenableStateChanged
+      name: OpenableStateChanged
+    - uid: NitroxModel.Packets.OrderedBuildPacket
+      name: OrderedBuildPacket
+    - uid: NitroxModel.Packets.PDAEncyclopediaEntryAdd
+      name: PDAEncyclopediaEntryAdd
+    - uid: NitroxModel.Packets.PDALogEntryAdd
+      name: PDALogEntryAdd
+    - uid: NitroxModel.Packets.PDAScanFinished
+      name: PDAScanFinished
+    - uid: NitroxModel.Packets.Packet
+      name: Packet
+    - uid: NitroxModel.Packets.Packet.UdpChannelId
+      name: Packet.UdpChannelId
+    - uid: NitroxModel.Packets.Packet.Wrapper
+      name: Packet.Wrapper
+    - uid: NitroxModel.Packets.PacketsSerializableTest
+      name: PacketsSerializableTest
+    - uid: NitroxModel.Packets.PermsChanged
+      name: PermsChanged
+    - uid: NitroxModel.Packets.PickupItem
+      name: PickupItem
+    - uid: NitroxModel.Packets.PieceDeconstructed
+      name: PieceDeconstructed
+    - uid: NitroxModel.Packets.PingRenamed
+      name: PingRenamed
+    - uid: NitroxModel.Packets.PinnedRecipeMoved
+      name: PinnedRecipeMoved
+    - uid: NitroxModel.Packets.PlaceBase
+      name: PlaceBase
+    - uid: NitroxModel.Packets.PlaceGhost
+      name: PlaceGhost
+    - uid: NitroxModel.Packets.PlaceModule
+      name: PlaceModule
+    - uid: NitroxModel.Packets.PlayFMODAsset
+      name: PlayFMODAsset
+    - uid: NitroxModel.Packets.PlayFMODCustomEmitter
+      name: PlayFMODCustomEmitter
+    - uid: NitroxModel.Packets.PlayFMODCustomLoopingEmitter
+      name: PlayFMODCustomLoopingEmitter
+    - uid: NitroxModel.Packets.PlayFMODStudioEmitter
+      name: PlayFMODStudioEmitter
+    - uid: NitroxModel.Packets.PlaySunbeamEvent
+      name: PlaySunbeamEvent
+    - uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+      name: PlaySunbeamEvent.SunbeamEvent
+    - uid: NitroxModel.Packets.PlayerCinematicControllerCall
+      name: PlayerCinematicControllerCall
+    - uid: NitroxModel.Packets.PlayerDeathEvent
+      name: PlayerDeathEvent
+    - uid: NitroxModel.Packets.PlayerHeldItemChanged
+      name: PlayerHeldItemChanged
+    - uid: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+      name: PlayerHeldItemChanged.ChangeType
+    - uid: NitroxModel.Packets.PlayerJoinedMultiplayerSession
+      name: PlayerJoinedMultiplayerSession
+    - uid: NitroxModel.Packets.PlayerJoiningMultiplayerSession
+      name: PlayerJoiningMultiplayerSession
+    - uid: NitroxModel.Packets.PlayerKicked
+      name: PlayerKicked
+    - uid: NitroxModel.Packets.PlayerMovement
+      name: PlayerMovement
+    - uid: NitroxModel.Packets.PlayerQuickSlotsBindingChanged
+      name: PlayerQuickSlotsBindingChanged
+    - uid: NitroxModel.Packets.PlayerStats
+      name: PlayerStats
+    - uid: NitroxModel.Packets.PlayerSyncFinished
+      name: PlayerSyncFinished
+    - uid: NitroxModel.Packets.PlayerTeleported
+      name: PlayerTeleported
+    - uid: NitroxModel.Packets.RadioPlayPendingMessage
+      name: RadioPlayPendingMessage
+    - uid: NitroxModel.Packets.RecipePinned
+      name: RecipePinned
+    - uid: NitroxModel.Packets.Schedule
+      name: Schedule
+    - uid: NitroxModel.Packets.SeamothModulesAction
+      name: SeamothModulesAction
+    - uid: NitroxModel.Packets.ServerCommand
+      name: ServerCommand
+    - uid: NitroxModel.Packets.ServerStopped
+      name: ServerStopped
+    - uid: NitroxModel.Packets.SignalPingPreferenceChanged
+      name: SignalPingPreferenceChanged
+    - uid: NitroxModel.Packets.SimulationOwnershipChange
+      name: SimulationOwnershipChange
+    - uid: NitroxModel.Packets.SimulationOwnershipRequest
+      name: SimulationOwnershipRequest
+    - uid: NitroxModel.Packets.SimulationOwnershipResponse
+      name: SimulationOwnershipResponse
+    - uid: NitroxModel.Packets.SpawnEntities
+      name: SpawnEntities
+    - uid: NitroxModel.Packets.StoryGoalExecuted
+      name: StoryGoalExecuted
+    - uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+      name: StoryGoalExecuted.EventType
+    - uid: NitroxModel.Packets.SubRootChanged
+      name: SubRootChanged
+    - uid: NitroxModel.Packets.TimeChange
+      name: TimeChange
+    - uid: NitroxModel.Packets.ToggleLights
+      name: ToggleLights
+    - uid: NitroxModel.Packets.UpdateBase
+      name: UpdateBase
+    - uid: NitroxModel.Packets.VehicleDocking
+      name: VehicleDocking
+    - uid: NitroxModel.Packets.VehicleMovement
+      name: VehicleMovement
+    - uid: NitroxModel.Packets.VehicleOnPilotModeChanged
+      name: VehicleOnPilotModeChanged
+    - uid: NitroxModel.Packets.VehicleUndocking
+      name: VehicleUndocking
+    - uid: NitroxModel.Packets.WaterParkDeconstructed
+      name: WaterParkDeconstructed
+    - uid: NitroxModel.Packets.WeldAction
+      name: WeldAction
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    items:
+    - uid: NitroxModel.Platforms.OS
+      name: OS
+      items:
+      - uid: NitroxModel.Platforms.OS.MacOS
+        name: MacOS
+        items:
+        - uid: NitroxModel.Platforms.OS.MacOS.MacFileSystem
+          name: MacFileSystem
+      - uid: NitroxModel.Platforms.OS.Shared
+        name: Shared
+        items:
+        - uid: NitroxModel.Platforms.OS.Shared.FileSystem
+          name: FileSystem
+        - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+          name: ProcessEx
+        - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ExportedFunction
+          name: ProcessEx.ExportedFunction
+        - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+          name: ProcessEx.Module
+      - uid: NitroxModel.Platforms.OS.Unix
+        name: Unix
+        items:
+        - uid: NitroxModel.Platforms.OS.Unix.UnixFileSystem
+          name: UnixFileSystem
+      - uid: NitroxModel.Platforms.OS.Windows
+        name: Windows
+        items:
+        - uid: NitroxModel.Platforms.OS.Windows.Internal
+          name: Internal
+          items:
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.CoffFileHeader
+            name: CoffFileHeader
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory
+            name: ImageDataDirectory
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+            name: ImageDosHeader
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ImageExportDirectory
+            name: ImageExportDirectory
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ImageNtHeader64
+            name: ImageNtHeader64
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.LdrData
+            name: LdrData
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.MachineType
+            name: MachineType
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ModuleEntry32
+            name: ModuleEntry32
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.NtStatus
+            name: NtStatus
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.OptionalHeader64
+            name: OptionalHeader64
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessAccessFlags
+            name: ProcessAccessFlags
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessBasicInformation
+            name: ProcessBasicInformation
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+            name: ProcessCreationFlags
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessEnvironmentBlock64
+            name: ProcessEnvironmentBlock64
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessInfo
+            name: ProcessInfo
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.RegistryEx
+            name: RegistryEx
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.SecurityAttributes
+            name: SecurityAttributes
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.SnapshotFlags
+            name: SnapshotFlags
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.StartupInfo
+            name: StartupInfo
+          - uid: NitroxModel.Platforms.OS.Windows.Internal.ThreadAccess
+            name: ThreadAccess
+        - uid: NitroxModel.Platforms.OS.Windows.RegistryTest
+          name: RegistryTest
+        - uid: NitroxModel.Platforms.OS.Windows.WindowsApi
+          name: WindowsApi
+    - uid: NitroxModel.Platforms.Store
+      name: Store
+      items:
+      - uid: NitroxModel.Platforms.Store.Exceptions
+        name: Exceptions
+        items:
+        - uid: NitroxModel.Platforms.Store.Exceptions.PlatformException
+          name: PlatformException
+      - uid: NitroxModel.Platforms.Store.Interfaces
+        name: Interfaces
+        items:
+        - uid: NitroxModel.Platforms.Store.Interfaces.IGamePlatform
+          name: IGamePlatform
+      - uid: NitroxModel.Platforms.Store.Discord
+        name: Discord
+      - uid: NitroxModel.Platforms.Store.EpicGames
+        name: EpicGames
+      - uid: NitroxModel.Platforms.Store.GamePlatforms
+        name: GamePlatforms
+      - uid: NitroxModel.Platforms.Store.MSStore
+        name: MSStore
+      - uid: NitroxModel.Platforms.Store.Steam
+        name: Steam
+  - uid: NitroxModel.Serialization
+    name: Serialization
+    items:
+    - uid: NitroxModel.Serialization.IProperties
+      name: IProperties
+    - uid: NitroxModel.Serialization.NitroxConfig`1
+      name: NitroxConfig<T>
+    - uid: NitroxModel.Serialization.NitroxConfig`1.UpdateDiposable
+      name: NitroxConfig<T>.UpdateDiposable
+    - uid: NitroxModel.Serialization.PropertyDescriptionAttribute
+      name: PropertyDescriptionAttribute
+    - uid: NitroxModel.Serialization.ServerList
+      name: ServerList
+    - uid: NitroxModel.Serialization.ServerList.Entry
+      name: ServerList.Entry
+  - uid: NitroxModel.Server
+    name: Server
+    items:
+    - uid: NitroxModel.Server.NitroxGameMode
+      name: NitroxGameMode
+    - uid: NitroxModel.Server.ServerSerializerMode
+      name: ServerSerializerMode
+  - uid: NitroxModel.Extensions
+    name: Extensions
+  - uid: NitroxModel.ExtensionsTest
+    name: ExtensionsTest
+  - uid: NitroxModel.GameInfo
+    name: GameInfo
+- uid: NitroxModel_Subnautica
+  name: NitroxModel_Subnautica
+  items:
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    items:
+    - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+      name: GameLogic
+      items:
+      - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+        name: Creatures.Actions
+        items:
+        - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.EmptyCreatureAction
+          name: EmptyCreatureAction
+        - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.SerializableCreatureAction
+          name: SerializableCreatureAction
+      - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+        name: Entities
+        items:
+        - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUwePrefabFactory
+          name: SubnauticaUwePrefabFactory
+        - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.SubnauticaUweWorldEntityFactory
+          name: SubnauticaUweWorldEntityFactory
+      - uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+        name: CyclopsDamageInfoData
+      - uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsFireData
+        name: CyclopsFireData
+      - uid: NitroxModel_Subnautica.DataStructures.GameLogic.ExosuitMovementData
+        name: ExosuitMovementData
+    - uid: NitroxModel_Subnautica.DataStructures.Surrogates
+      name: Surrogates
+      items:
+      - uid: NitroxModel_Subnautica.DataStructures.Surrogates.ColorSurrogate
+        name: ColorSurrogate
+      - uid: NitroxModel_Subnautica.DataStructures.Surrogates.QuaternionSurrogate
+        name: QuaternionSurrogate
+      - uid: NitroxModel_Subnautica.DataStructures.Surrogates.TechTypeSurrogate
+        name: TechTypeSurrogate
+      - uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+        name: Vector3Surrogate
+    - uid: NitroxModel_Subnautica.DataStructures.DataExtensions
+      name: DataExtensions
+  - uid: NitroxModel_Subnautica.Helper
+    name: Helper
+    items:
+    - uid: NitroxModel_Subnautica.Helper.SubnauticaMap
+      name: SubnauticaMap
+    - uid: NitroxModel_Subnautica.Helper.TextureScaler
+      name: TextureScaler
+    - uid: NitroxModel_Subnautica.Helper.VehicleHelper
+      name: VehicleHelper
+    - uid: NitroxModel_Subnautica.Helper.VehicleMovementFactory
+      name: VehicleMovementFactory
+  - uid: NitroxModel_Subnautica.Logger
+    name: Logger
+    items:
+    - uid: NitroxModel_Subnautica.Logger.SubnauticaInGameLogger
+      name: SubnauticaInGameLogger
+  - uid: NitroxModel_Subnautica.Packets
+    name: Packets
+    items:
+    - uid: NitroxModel_Subnautica.Packets.CreatureActionChanged
+      name: CreatureActionChanged
+    - uid: NitroxModel_Subnautica.Packets.CyclopsDamage
+      name: CyclopsDamage
+    - uid: NitroxModel_Subnautica.Packets.CyclopsDamagePointRepaired
+      name: CyclopsDamagePointRepaired
+    - uid: NitroxModel_Subnautica.Packets.CyclopsDecoyLaunch
+      name: CyclopsDecoyLaunch
+    - uid: NitroxModel_Subnautica.Packets.CyclopsFireCreated
+      name: CyclopsFireCreated
+    - uid: NitroxModel_Subnautica.Packets.CyclopsFireSuppression
+      name: CyclopsFireSuppression
+    - uid: NitroxModel_Subnautica.Packets.ExosuitArmAction
+      name: ExosuitArmAction
+    - uid: NitroxModel_Subnautica.Packets.ExosuitArmActionPacket
+      name: ExosuitArmActionPacket
+    - uid: NitroxModel_Subnautica.Packets.RocketLaunch
+      name: RocketLaunch
+    - uid: NitroxModel_Subnautica.Packets.RocketResync
+      name: RocketResync
+- uid: NitroxPatcher
+  name: NitroxPatcher
+  items:
+  - uid: NitroxPatcher.Modules
+    name: Modules
+    items:
+    - uid: NitroxPatcher.Modules.NitroxPatchesModule
+      name: NitroxPatchesModule
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    items:
+    - uid: NitroxPatcher.Patches.Dynamic
+      name: Dynamic
+      items:
+      - uid: NitroxPatcher.Patches.Dynamic.ArmsController_Start_Patch
+        name: ArmsController_Start_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ArmsController_Update_Patch
+        name: ArmsController_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.BaseDeconstructable_Deconstruct_Patch
+        name: BaseDeconstructable_Deconstruct_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.BaseDeconstructable_Deconstruct_PatchTest
+        name: BaseDeconstructable_Deconstruct_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.BaseDeconstructable_DeconstructionAllowed_Patch
+        name: BaseDeconstructable_DeconstructionAllowed_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Base_OnPreDestroy_Patch
+        name: Base_OnPreDestroy_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Bed_EnterInUseMode_Patch
+        name: Bed_EnterInUseMode_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Bench_ExitSittingMode_Patch
+        name: Bench_ExitSittingMode_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Bench_OnHandClick_Patch
+        name: Bench_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Bench_OnPlayerDeath_Patch
+        name: Bench_OnPlayerDeath_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.BreakableResource_BreakIntoResources_Patch
+        name: BreakableResource_BreakIntoResources_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.BreakableResource_SpawnResourceFromPrefab_Patch
+        name: BreakableResource_SpawnResourceFromPrefab_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.BreakableResource_SpawnResourceFromPrefab_PatchTest
+        name: BreakableResource_SpawnResourceFromPrefab_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.BuilderTool_Construct_Patch
+        name: BuilderTool_Construct_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Builder_TryPlace_Patch
+        name: Builder_TryPlace_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Builder_TryPlace_PatchTest
+        name: Builder_TryPlace_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.Builder_Update_Patch
+        name: Builder_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ConstructableBase_SetState_Patch
+        name: ConstructableBase_SetState_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ConstructableBase_SetState_PatchTest
+        name: ConstructableBase_SetState_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.Constructable_Construct_Patch
+        name: Constructable_Construct_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Constructable_Construct_PatchTest
+        name: Constructable_Construct_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.Constructable_DeconstructAsync_Patch
+        name: Constructable_DeconstructAsync_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Constructable_DeconstructAsync_PatchTest
+        name: Constructable_DeconstructAsync_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.Constructable_DeconstructionAllowed_Patch
+        name: Constructable_DeconstructionAllowed_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+        name: ConstructorInput_OnCraftingBegin_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_PatchTest
+        name: ConstructorInput_OnCraftingBegin_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.Constructor_Deploy_Patch
+        name: Constructor_Deploy_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CrafterLogic_TryPickupSingleAsync_Patch
+        name: CrafterLogic_TryPickupSingleAsync_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CrashHome_Spawn_Patch
+        name: CrashHome_Spawn_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CrashedShipExploder_OnConsoleCommand_Patch
+        name: CrashedShipExploder_OnConsoleCommand_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Creature_ChooseBestAction_Patch
+        name: Creature_ChooseBestAction_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsDamagePoint_OnRepair_Patch
+        name: CyclopsDamagePoint_OnRepair_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsDecoyLaunchButton_OnClick_Patch
+        name: CyclopsDecoyLaunchButton_OnClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsDestructionEvent_DestroyCyclops_Patch
+        name: CyclopsDestructionEvent_DestroyCyclops_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsDestructionEvent_OnConsoleCommand_Patch
+        name: CyclopsDestructionEvent_OnConsoleCommand_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsEngineChangeState_OnClick_Patch
+        name: CyclopsEngineChangeState_OnClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsExternalDamageManager_CreatePoint_Patch
+        name: CyclopsExternalDamageManager_CreatePoint_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsFireSuppressionButton_StartCooldown_Patch
+        name: CyclopsFireSuppressionButton_StartCooldown_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsHelmHUDManager_StopPiloting_Patch
+        name: CyclopsHelmHUDManager_StopPiloting_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsHelmHUDManager_Update_Patch
+        name: CyclopsHelmHUDManager_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsLightingPanel_ToggleFloodlights_Patch
+        name: CyclopsLightingPanel_ToggleFloodlights_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsLightingPanel_ToggleInternalLighting_Patch
+        name: CyclopsLightingPanel_ToggleInternalLighting_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsMotorModeButton_OnClick_Patch
+        name: CyclopsMotorModeButton_OnClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsMotorMode_RestoreEngineState_Patch
+        name: CyclopsMotorMode_RestoreEngineState_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch
+        name: CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsShieldButton_OnClick_Patch
+        name: CyclopsShieldButton_OnClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsShieldButton_StartShield_Patch
+        name: CyclopsShieldButton_StartShield_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsShieldButton_StopShield_Patch
+        name: CyclopsShieldButton_StopShield_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsSilentRunningAbilityButton_TurnOffSilentRunning_Patch
+        name: CyclopsSilentRunningAbilityButton_TurnOffSilentRunning_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch
+        name: CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsSonarButton_OnClick_Patch
+        name: CyclopsSonarButton_OnClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsSonarButton_SonarPing_Patch
+        name: CyclopsSonarButton_SonarPing_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsSonarButton_Update_Patch
+        name: CyclopsSonarButton_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.CyclopsSonarButton_Update_PatchTest
+        name: CyclopsSonarButton_Update_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.DayNightCycle_OnConsoleCommand_day_Patch
+        name: DayNightCycle_OnConsoleCommand_day_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.DayNightCycle_OnConsoleCommand_daynightspeed_Patch
+        name: DayNightCycle_OnConsoleCommand_daynightspeed_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.DayNightCycle_OnConsoleCommand_night_Patch
+        name: DayNightCycle_OnConsoleCommand_night_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.DayNightCycle_Update_Patch
+        name: DayNightCycle_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.DevConsole_Update_Patch
+        name: DevConsole_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.DevConsole_Update_PatchTest
+        name: DevConsole_Update_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.DockedVehicleHandTarget_OnHandClick_Patch
+        name: DockedVehicleHandTarget_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.EnergyMixin_ModifyCharge_Patch
+        name: EnergyMixin_ModifyCharge_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.EnergyMixin_OnAddItem_Patch
+        name: EnergyMixin_OnAddItem_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.EnergyMixin_SpawnDefaultAsync_Patch
+        name: EnergyMixin_SpawnDefaultAsync_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.EntityCell_QueueForAwake_Patch
+        name: EntityCell_QueueForAwake_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.EntityCell_SleepAsync_Patch
+        name: EntityCell_SleepAsync_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Equipment_AddItem_Patch
+        name: Equipment_AddItem_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Equipment_RemoveItem_Patch
+        name: Equipment_RemoveItem_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Equipment_RemoveItem_PatchTest
+        name: Equipment_RemoveItem_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.EscapePod_Awake_Patch
+        name: EscapePod_Awake_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.EscapePod_OnRepair_Patch
+        name: EscapePod_OnRepair_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitClawArm_OnPickup_Patch
+        name: ExosuitClawArm_OnPickup_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitClawArm_TryUse_Patch
+        name: ExosuitClawArm_TryUse_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitDrillArm_OnUseDown_Patch
+        name: ExosuitDrillArm_OnUseDown_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitDrillArm_OnUseUp_Patch
+        name: ExosuitDrillArm_OnUseUp_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitGrapplingArm_OnHit_Patch
+        name: ExosuitGrapplingArm_OnHit_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitGrapplingArm_OnUseUp_Patch
+        name: ExosuitGrapplingArm_OnUseUp_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitTorpedoArm_OnUseUp_Patch
+        name: ExosuitTorpedoArm_OnUseUp_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ExosuitTorpedoArm_Shoot_Patch
+        name: ExosuitTorpedoArm_Shoot_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Exosuit_Update_Patch
+        name: Exosuit_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMODUWE_PlayOneShotImpl_Patch
+        name: FMODUWE_PlayOneShotImpl_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_CustomEmitter_OnPlay_Patch
+        name: FMOD_CustomEmitter_OnPlay_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_CustomEmitter_OnStop_Patch
+        name: FMOD_CustomEmitter_OnStop_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_CustomEmitter_Start_Patch
+        name: FMOD_CustomEmitter_Start_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_CustomLoopingEmitter_OnPlay_Patch
+        name: FMOD_CustomLoopingEmitter_OnPlay_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_CustomLoopingEmitter_PlayStopSound_Patch
+        name: FMOD_CustomLoopingEmitter_PlayStopSound_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_StudioEventEmitter_PlayUI_Patch
+        name: FMOD_StudioEventEmitter_PlayUI_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_StudioEventEmitter_Start_Patch
+        name: FMOD_StudioEventEmitter_Start_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FMOD_StudioEventEmitter_Stop_Patch
+        name: FMOD_StudioEventEmitter_Stop_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FireExtinguisherHolder_TakeTankAsync_Patch
+        name: FireExtinguisherHolder_TakeTankAsync_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FireExtinguisherHolder_TryStoreTank_Patch
+        name: FireExtinguisherHolder_TryStoreTank_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Fire_Douse_Patch
+        name: Fire_Douse_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.FreezeTime_Begin_Patch
+        name: FreezeTime_Begin_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.GameModeConsoleCommands_OnConsoleCommand_Patch
+        name: GameModeConsoleCommands_OnConsoleCommand_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.GhostCrafter_OnCraftingBegin_Patch
+        name: GhostCrafter_OnCraftingBegin_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.GhostCrafter_OnCraftingEnd_Patch
+        name: GhostCrafter_OnCraftingEnd_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.GoalManager_OnCompletedGoal_Patch
+        name: GoalManager_OnCompletedGoal_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IncubatorActivationTerminal_OnHandClick_Patch
+        name: IncubatorActivationTerminal_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IncubatorActivationTerminal_OnPlayerCinematicModeEnd_Patch
+        name: IncubatorActivationTerminal_OnPlayerCinematicModeEnd_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IncubatorEgg_HatchNow_Patch
+        name: IncubatorEgg_HatchNow_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Incubator_OnHandClick_Patch
+        name: Incubator_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Incubator_OnHatched_Patch
+        name: Incubator_OnHatched_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IngameMenu_OnDeselect_Patch
+        name: IngameMenu_OnDeselect_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IngameMenu_OnSelect_Patch
+        name: IngameMenu_OnSelect_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IngameMenu_QuitGameAsync_Patch
+        name: IngameMenu_QuitGameAsync_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IngameMenu_QuitGameAsync_PatchTest
+        name: IngameMenu_QuitGameAsync_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.IngameMenu_QuitGame_Patch
+        name: IngameMenu_QuitGame_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.IngameMenu_QuitSubscreen_Patch
+        name: IngameMenu_QuitSubscreen_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Inventory_LoseItems_Patch
+        name: Inventory_LoseItems_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Inventory_LoseItems_PatchTest
+        name: Inventory_LoseItems_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.ItemsContainer_DestroyItem_Patch
+        name: ItemsContainer_DestroyItem_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ItemsContainer_DestroyItem_PatchTest
+        name: ItemsContainer_DestroyItem_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.ItemsContainer_NotifyAddItem_Patch
+        name: ItemsContainer_NotifyAddItem_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.KeypadDoorConsole_AcceptNumberField_Patch
+        name: KeypadDoorConsole_AcceptNumberField_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.KnownTech_NotifyAdd_Patch
+        name: KnownTech_NotifyAdd_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.KnownTech_NotifyAnalyze_Patch
+        name: KnownTech_NotifyAnalyze_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.LargeWorldEntity_Awake_Patch
+        name: LargeWorldEntity_Awake_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.LargeWorldStreamer_LoadBatchTask_Execute_Patch
+        name: LargeWorldStreamer_LoadBatchTask_Execute_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.LargeWorldStreamer_UnloadBatch_Patch
+        name: LargeWorldStreamer_UnloadBatch_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.LaunchRocket_OnHandClick_Patch
+        name: LaunchRocket_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.LaunchRocket_OnHandClick_PatchTest
+        name: LaunchRocket_OnHandClick_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.LiveMixin_AddHealth_Patch
+        name: LiveMixin_AddHealth_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.LiveMixin_TakeDamage_Patch
+        name: LiveMixin_TakeDamage_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.MedicalCabinet_OnHandClick_Patch
+        name: MedicalCabinet_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Openable_PlayOpenAnimation_Patch
+        name: Openable_PlayOpenAnimation_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PDAEncyclopedia_Add_Patch
+        name: PDAEncyclopedia_Add_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PDALog_Add_Patch
+        name: PDALog_Add_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PDAScanner_ScanTarget_Initialize_Patch
+        name: PDAScanner_ScanTarget_Initialize_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PDAScanner_Scan_Patch
+        name: PDAScanner_Scan_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PDAScanner_Scan_PatchTest
+        name: PDAScanner_Scan_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.Pickupable_Drop_Patch
+        name: Pickupable_Drop_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Pickupable_Pickup_Patch
+        name: Pickupable_Pickup_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PilotingChair_OnHandClick_Patch
+        name: PilotingChair_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PilotingChair_OnPlayerDeath_Patch
+        name: PilotingChair_OnPlayerDeath_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PilotingChair_ReleaseBy_Patch
+        name: PilotingChair_ReleaseBy_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PinManager_NotifyAdd_Patch
+        name: PinManager_NotifyAdd_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PinManager_NotifyMove_Patch
+        name: PinManager_NotifyMove_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PinManager_NotifyRemove_Patch
+        name: PinManager_NotifyRemove_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PingInstance_Set_Patches
+        name: PingInstance_Set_Patches
+      - uid: NitroxPatcher.Patches.Dynamic.PingManager_NotifyRename_Patch
+        name: PingManager_NotifyRename_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Planter_AddItem_Patch
+        name: Planter_AddItem_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PlatformUtils_GetDevToolsEnabled_Patch
+        name: PlatformUtils_GetDevToolsEnabled_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PlayerCinematicController_OnPlayerCinematicModeEnd_Patch
+        name: PlayerCinematicController_OnPlayerCinematicModeEnd_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PlayerCinematicController_StartCinematicMode_Patch
+        name: PlayerCinematicController_StartCinematicMode_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PlayerCinematicController_Start_Patch
+        name: PlayerCinematicController_Start_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Player_OnKill_Patch
+        name: Player_OnKill_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Player_RequiresHighPrecisionPhysics_Patch
+        name: Player_RequiresHighPrecisionPhysics_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Player_SetCurrentEscapePod_Patch
+        name: Player_SetCurrentEscapePod_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Player_SetCurrentSub_Patch
+        name: Player_SetCurrentSub_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Player_Update_Patch
+        name: Player_Update_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PrecursorDoorway_ToggleDoor_Patch
+        name: PrecursorDoorway_ToggleDoor_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PrecursorKeyTerminal_DestroyKey_Patch
+        name: PrecursorKeyTerminal_DestroyKey_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PrecursorKeyTerminal_OnHandClick_Patch
+        name: PrecursorKeyTerminal_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PrecursorTeleporterActivationTerminal_OnPlayerCinematicModeEnd_Patch
+        name: PrecursorTeleporterActivationTerminal_OnPlayerCinematicModeEnd_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch
+        name: PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PrecursorTeleporter_OnActivateTeleporter_Patch
+        name: PrecursorTeleporter_OnActivateTeleporter_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PrefabPlaceholdersGroup_Spawn_Patch
+        name: PrefabPlaceholdersGroup_Spawn_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PropulsionCannon_GrabObject_Patch
+        name: PropulsionCannon_GrabObject_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.PropulsionCannon_ReleaseGrabbedObject_Patch
+        name: PropulsionCannon_ReleaseGrabbedObject_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.QuickSlots_Bind_Patch
+        name: QuickSlots_Bind_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.QuickSlots_DeselectInternal_Patch
+        name: QuickSlots_DeselectInternal_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.QuickSlots_SelectInternal_Patch
+        name: QuickSlots_SelectInternal_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Radio_OnRepair_Patch
+        name: Radio_OnRepair_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Radio_PlayRadioMessage_Patch
+        name: Radio_PlayRadioMessage_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.RocketConstructor_StartRocketConstruction_Patch
+        name: RocketConstructor_StartRocketConstruction_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.RocketPreflightCheckManager_CompletePreflightCheck_Patch
+        name: RocketPreflightCheckManager_CompletePreflightCheck_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Rocket_CallElevator_Patch
+        name: Rocket_CallElevator_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Rocket_ElevatorControlButtonActivate_Patch
+        name: Rocket_ElevatorControlButtonActivate_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SeaMoth_OnUpgradeModuleUse_Patch
+        name: SeaMoth_OnUpgradeModuleUse_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Sealed_Weld_Patch
+        name: Sealed_Weld_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SpawnConsoleCommand_OnConsoleCommand_Patch
+        name: SpawnConsoleCommand_OnConsoleCommand_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SpawnEscapePodSupplies_OnNewBorn_Patch
+        name: SpawnEscapePodSupplies_OnNewBorn_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SpawnOnKill_OnKill_Patch
+        name: SpawnOnKill_OnKill_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SpawnOnKill_OnKill_PatchTest
+        name: SpawnOnKill_OnKill_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.SpeedConsoleCommand_OnConsoleCommand_speed_Patch
+        name: SpeedConsoleCommand_OnConsoleCommand_speed_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SplineFollowing_GoTo_Patch
+        name: SplineFollowing_GoTo_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Stalker_CheckLoseTooth_Patch
+        name: Stalker_CheckLoseTooth_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.StarshipDoor_LockDoor_Patch
+        name: StarshipDoor_LockDoor_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.StarshipDoor_OnDoorToggle_Patch
+        name: StarshipDoor_OnDoorToggle_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.StarshipDoor_UnlockDoor_Patch
+        name: StarshipDoor_UnlockDoor_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.StoryGoalCustomEventHandler_OnConsoleCommand_Patch
+        name: StoryGoalCustomEventHandler_OnConsoleCommand_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.StoryGoalScheduler_Schedule_Patch
+        name: StoryGoalScheduler_Schedule_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.StoryGoal_Execute_Patch
+        name: StoryGoal_Execute_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SubConsoleCommand_OnConsoleCommand_sub_Patch
+        name: SubConsoleCommand_OnConsoleCommand_sub_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SubFire_CreateFire_Patch
+        name: SubFire_CreateFire_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SubNameInput_OnColorChange_Patch
+        name: SubNameInput_OnColorChange_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SubNameInput_OnNameChange_Patch
+        name: SubNameInput_OnNameChange_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SubRoot_OnPlayerEntered_Patch
+        name: SubRoot_OnPlayerEntered_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.SubRoot_OnTakeDamage_Patch
+        name: SubRoot_OnTakeDamage_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Survival_Eat_Patch
+        name: Survival_Eat_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Survival_Use_Patch
+        name: Survival_Use_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.ToggleLights_SetLightsActive_Patch
+        name: ToggleLights_SetLightsActive_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.UniqueIdentifier_Id_Getter_Patch
+        name: UniqueIdentifier_Id_Getter_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Utils_GetEntityRoot_Patch
+        name: Utils_GetEntityRoot_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Utils_PlayFMODAsset_Patch
+        name: Utils_PlayFMODAsset_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.VFXConstructing_WakeUpSubmarine_Patch
+        name: VFXConstructing_WakeUpSubmarine_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.VehicleDockingBay_OnTriggerEnter
+        name: VehicleDockingBay_OnTriggerEnter
+      - uid: NitroxPatcher.Patches.Dynamic.VehicleDockingBay_OnUndockingComplete_Patch
+        name: VehicleDockingBay_OnUndockingComplete_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Vehicle_OnHandClick_Patch
+        name: Vehicle_OnHandClick_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Vehicle_OnKill_Patch
+        name: Vehicle_OnKill_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Vehicle_OnPilotModeBegin_Patch
+        name: Vehicle_OnPilotModeBegin_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Vehicle_OnPilotModeEnd_Patch
+        name: Vehicle_OnPilotModeEnd_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.WaterPark_Split_Patch
+        name: WaterPark_Split_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.WaterPark_TransferValue_Patch
+        name: WaterPark_TransferValue_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.WeldableWallPanelGeneric_UnlockDoor_Patch
+        name: WeldableWallPanelGeneric_UnlockDoor_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.Welder_Weld_Patch
+        name: Welder_Weld_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_OnApplicationQuit_Patch
+        name: uGUI_OnApplicationQuit_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_PDA_CacheToolbarTooltips_Patch
+        name: uGUI_PDA_CacheToolbarTooltips_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_PDA_Initialize_Patch
+        name: uGUI_PDA_Initialize_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_PDA_Initialize_PatchTest
+        name: uGUI_PDA_Initialize_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_PDA_SetTabs_Patch
+        name: uGUI_PDA_SetTabs_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_PDA_SetTabs_PatchTest
+        name: uGUI_PDA_SetTabs_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_Pings_IsVisibleNow_Patch
+        name: uGUI_Pings_IsVisibleNow_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_Pings_IsVisibleNow_PatchTest
+        name: uGUI_Pings_IsVisibleNow_PatchTest
+      - uid: NitroxPatcher.Patches.Dynamic.uGUI_SignInput_OnDeselect_Patch
+        name: uGUI_SignInput_OnDeselect_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uSkyManager_SetVaryingMaterialProperties_Patch
+        name: uSkyManager_SetVaryingMaterialProperties_Patch
+      - uid: NitroxPatcher.Patches.Dynamic.uSkyManager_SetVaryingMaterialProperties_PatchTest
+        name: uSkyManager_SetVaryingMaterialProperties_PatchTest
+    - uid: NitroxPatcher.Patches.Persistent
+      name: Persistent
+      items:
+      - uid: NitroxPatcher.Patches.Persistent.Application_runInBackground_Patch
+        name: Application_runInBackground_Patch
+      - uid: NitroxPatcher.Patches.Persistent.CellManager_TryLoadCacheBatchCells_Patch
+        name: CellManager_TryLoadCacheBatchCells_Patch
+      - uid: NitroxPatcher.Patches.Persistent.GameInput_Initialize_Patch
+        name: GameInput_Initialize_Patch
+      - uid: NitroxPatcher.Patches.Persistent.GameInput_SetupDefaultKeyboardBindings_Patch
+        name: GameInput_SetupDefaultKeyboardBindings_Patch
+      - uid: NitroxPatcher.Patches.Persistent.GameSettings_SerializeInputSettings_Patch
+        name: GameSettings_SerializeInputSettings_Patch
+      - uid: NitroxPatcher.Patches.Persistent.Language_LoadLanguageFile_Patch
+        name: Language_LoadLanguageFile_Patch
+      - uid: NitroxPatcher.Patches.Persistent.Language_LoadLanguageFile_PatchTest
+        name: Language_LoadLanguageFile_PatchTest
+      - uid: NitroxPatcher.Patches.Persistent.MainGameController_ShouldPlayIntro_Patch
+        name: MainGameController_ShouldPlayIntro_Patch
+      - uid: NitroxPatcher.Patches.Persistent.MainGameController_StartGame_Patch
+        name: MainGameController_StartGame_Patch
+      - uid: NitroxPatcher.Patches.Persistent.MainMenuRightSide_OpenGroup_Patch
+        name: MainMenuRightSide_OpenGroup_Patch
+      - uid: NitroxPatcher.Patches.Persistent.ProtobufSerializer_Deserialize_Patch
+        name: ProtobufSerializer_Deserialize_Patch
+      - uid: NitroxPatcher.Patches.Persistent.ProtobufSerializer_Serialize_Patch
+        name: ProtobufSerializer_Serialize_Patch
+      - uid: NitroxPatcher.Patches.Persistent.ScreenshotManager_Initialise
+        name: ScreenshotManager_Initialise
+      - uid: NitroxPatcher.Patches.Persistent.UnityEngine_SetupCoroutine_Patch
+        name: UnityEngine_SetupCoroutine_Patch
+      - uid: NitroxPatcher.Patches.Persistent.uGUI_FeedbackCollector_IsEnabled_Patch
+        name: uGUI_FeedbackCollector_IsEnabled_Patch
+      - uid: NitroxPatcher.Patches.Persistent.uGUI_OptionsPanel_AddBindings_Patch
+        name: uGUI_OptionsPanel_AddBindings_Patch
+      - uid: NitroxPatcher.Patches.Persistent.uGUI_OptionsPanel_AddTabs_Patch
+        name: uGUI_OptionsPanel_AddTabs_Patch
+    - uid: NitroxPatcher.Patches.IDynamicPatch
+      name: IDynamicPatch
+    - uid: NitroxPatcher.Patches.INitroxPatch
+      name: INitroxPatch
+    - uid: NitroxPatcher.Patches.IPersistentPatch
+      name: IPersistentPatch
+    - uid: NitroxPatcher.Patches.NitroxPatch
+      name: NitroxPatch
+  - uid: NitroxPatcher.PatternMatching
+    name: PatternMatching
+    items:
+    - uid: NitroxPatcher.PatternMatching.InstructionPattern
+      name: InstructionPattern
+    - uid: NitroxPatcher.PatternMatching.InstructionsPattern
+      name: InstructionsPattern
+    - uid: NitroxPatcher.PatternMatching.OpCodePattern
+      name: OpCodePattern
+    - uid: NitroxPatcher.PatternMatching.OperandPattern
+      name: OperandPattern
+  - uid: NitroxPatcher.Main
+    name: Main
+- uid: NitroxServer
+  name: NitroxServer
+  items:
+  - uid: NitroxServer.Communication
+    name: Communication
+    items:
+    - uid: NitroxServer.Communication.LiteNetLib
+      name: LiteNetLib
+      items:
+      - uid: NitroxServer.Communication.LiteNetLib.LiteNetLibConnection
+        name: LiteNetLibConnection
+      - uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+        name: LiteNetLibServer
+    - uid: NitroxServer.Communication.Packets
+      name: Packets
+      items:
+      - uid: NitroxServer.Communication.Packets.Processors
+        name: Processors
+        items:
+        - uid: NitroxServer.Communication.Packets.Processors.Abstract
+          name: Abstract
+          items:
+          - uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+            name: AuthenticatedPacketProcessor<T>
+          - uid: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor`1
+            name: UnauthenticatedPacketProcessor<T>
+        - uid: NitroxServer.Communication.Packets.Processors.BaseDeconstructedProcessor
+          name: BaseDeconstructedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.BatchVisibilityChangedProcessor
+          name: BatchVisibilityChangedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.BedEnterProcessor
+          name: BedEnterProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.BuildingProcessor`1
+          name: BuildingProcessor<T>
+        - uid: NitroxServer.Communication.Packets.Processors.BuildingResyncRequestProcessor
+          name: BuildingResyncRequestProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.ChatMessageProcessor
+          name: ChatMessageProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.DefaultServerPacketProcessor
+          name: DefaultServerPacketProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.DiscordRequestIPProcessor
+          name: DiscordRequestIPProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.EntityDestroyedPacketProcessor
+          name: EntityDestroyedPacketProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.EntityMetadataUpdateProcessor
+          name: EntityMetadataUpdateProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.EntityReparentedProcessor
+          name: EntityReparentedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.EscapePodChangedPacketProcessor
+          name: EscapePodChangedPacketProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.GoalCompletedProcessor
+          name: GoalCompletedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.KnownTechEntryAddProcessor
+          name: KnownTechEntryAddProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.ModifyConstructedAmountProcessor
+          name: ModifyConstructedAmountProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.MultiplayerSessionPolicyRequestProcessor
+          name: MultiplayerSessionPolicyRequestProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.MultiplayerSessionReservationRequestProcessor
+          name: MultiplayerSessionReservationRequestProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PDAEncyclopediaEntryAddProcessor
+          name: PDAEncyclopediaEntryAddProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PDALogEntryAddProcessor
+          name: PDALogEntryAddProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PDAScanFinishedPacketProcessor
+          name: PDAScanFinishedPacketProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PickupItemPacketProcessor
+          name: PickupItemPacketProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PieceDeconstructedProcessor
+          name: PieceDeconstructedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PingRenamedPacketProcessor
+          name: PingRenamedPacketProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PinnedRecipeMovedProcessor
+          name: PinnedRecipeMovedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PinnedRecipeProcessor
+          name: PinnedRecipeProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlaceBaseProcessor
+          name: PlaceBaseProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlaceGhostProcessor
+          name: PlaceGhostProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlaceModuleProcessor
+          name: PlaceModuleProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlayFMODAssetProcessor
+          name: PlayFMODAssetProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlayerHeldItemChangedProcessor
+          name: PlayerHeldItemChangedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlayerJoiningMultiplayerSessionProcessor
+          name: PlayerJoiningMultiplayerSessionProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlayerQuickSlotsBindingChangedProcessor
+          name: PlayerQuickSlotsBindingChangedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlayerStatsProcessor
+          name: PlayerStatsProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.PlayerSyncFinishedProcessor
+          name: PlayerSyncFinishedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.RadioPlayPendingMessageProcessor
+          name: RadioPlayPendingMessageProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.ScheduleProcessor
+          name: ScheduleProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.ServerCommandProcessor
+          name: ServerCommandProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.SignalPingPreferenceChangedProcessor
+          name: SignalPingPreferenceChangedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.StoryGoalExecutedProcessor
+          name: StoryGoalExecutedProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.UpdateBaseProcessor
+          name: UpdateBaseProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.VehicleDockingProcessor
+          name: VehicleDockingProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.VehicleUndockingProcessor
+          name: VehicleUndockingProcessor
+        - uid: NitroxServer.Communication.Packets.Processors.WaterParkDeconstructedProcessor
+          name: WaterParkDeconstructedProcessor
+      - uid: NitroxServer.Communication.Packets.PacketHandler
+        name: PacketHandler
+    - uid: NitroxServer.Communication.LANBroadcastServer
+      name: LANBroadcastServer
+    - uid: NitroxServer.Communication.NitroxConnection
+      name: NitroxConnection
+    - uid: NitroxServer.Communication.NitroxConnectionState
+      name: NitroxConnectionState
+    - uid: NitroxServer.Communication.NitroxConnectionStateExtensions
+      name: NitroxConnectionStateExtensions
+    - uid: NitroxServer.Communication.NitroxServer
+      name: NitroxServer
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    items:
+    - uid: NitroxServer.ConsoleCommands.Abstract
+      name: Abstract
+      items:
+      - uid: NitroxServer.ConsoleCommands.Abstract.Type
+        name: Type
+        items:
+        - uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean
+          name: TypeBoolean
+        - uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeEnum`1
+          name: TypeEnum<T>
+        - uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeFloat
+          name: TypeFloat
+        - uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeInt
+          name: TypeInt
+        - uid: NitroxServer.ConsoleCommands.Abstract.Type.TypePlayer
+          name: TypePlayer
+        - uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeString
+          name: TypeString
+      - uid: NitroxServer.ConsoleCommands.Abstract.Command
+        name: Command
+      - uid: NitroxServer.ConsoleCommands.Abstract.Command.CallArgs
+        name: Command.CallArgs
+      - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+        name: IParameter<T>
+      - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1
+        name: Parameter<T>
+    - uid: NitroxServer.ConsoleCommands.Processor
+      name: Processor
+      items:
+      - uid: NitroxServer.ConsoleCommands.Processor.ConsoleCommandProcessor
+        name: ConsoleCommandProcessor
+    - uid: NitroxServer.ConsoleCommands.AuroraCommand
+      name: AuroraCommand
+    - uid: NitroxServer.ConsoleCommands.SunbeamCommand
+      name: SunbeamCommand
+    - uid: NitroxServer.ConsoleCommands.TimeCommand
+      name: TimeCommand
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    items:
+    - uid: NitroxServer.GameLogic.Bases
+      name: Bases
+      items:
+      - uid: NitroxServer.GameLogic.Bases.BuildingManager
+        name: BuildingManager
+      - uid: NitroxServer.GameLogic.Bases.GameData
+        name: GameData
+    - uid: NitroxServer.GameLogic.Entities
+      name: Entities
+      items:
+      - uid: NitroxServer.GameLogic.Entities.Spawning
+        name: Spawning
+        items:
+        - uid: NitroxServer.GameLogic.Entities.Spawning.BatchEntitySpawner
+          name: BatchEntitySpawner
+        - uid: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint
+          name: EntitySpawnPoint
+        - uid: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory
+          name: EntitySpawnPointFactory
+        - uid: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper
+          name: IEntityBootstrapper
+        - uid: NitroxServer.GameLogic.Entities.Spawning.IEntitySpawner
+          name: IEntitySpawner
+      - uid: NitroxServer.GameLogic.Entities.EntityData
+        name: EntityData
+      - uid: NitroxServer.GameLogic.Entities.EntityRegistry
+        name: EntityRegistry
+      - uid: NitroxServer.GameLogic.Entities.EntitySimulation
+        name: EntitySimulation
+      - uid: NitroxServer.GameLogic.Entities.GlobalRootData
+        name: GlobalRootData
+      - uid: NitroxServer.GameLogic.Entities.NitroxEntitySlot
+        name: NitroxEntitySlot
+      - uid: NitroxServer.GameLogic.Entities.WorldEntityManager
+        name: WorldEntityManager
+    - uid: NitroxServer.GameLogic.Players
+      name: Players
+      items:
+      - uid: NitroxServer.GameLogic.Players.PersistedPlayerData
+        name: PersistedPlayerData
+      - uid: NitroxServer.GameLogic.Players.PlayerData
+        name: PlayerData
+    - uid: NitroxServer.GameLogic.Unlockables
+      name: Unlockables
+      items:
+      - uid: NitroxServer.GameLogic.Unlockables.PDAStateData
+        name: PDAStateData
+      - uid: NitroxServer.GameLogic.Unlockables.StoryGoalData
+        name: StoryGoalData
+    - uid: NitroxServer.GameLogic.EscapePodManager
+      name: EscapePodManager
+    - uid: NitroxServer.GameLogic.PlayerManager
+      name: PlayerManager
+    - uid: NitroxServer.GameLogic.ScheduleKeeper
+      name: ScheduleKeeper
+    - uid: NitroxServer.GameLogic.SimulationOwnershipData
+      name: SimulationOwnershipData
+    - uid: NitroxServer.GameLogic.StoryManager
+      name: StoryManager
+    - uid: NitroxServer.GameLogic.StoryManager.TimeModification
+      name: StoryManager.TimeModification
+    - uid: NitroxServer.GameLogic.StoryTimingData
+      name: StoryTimingData
+    - uid: NitroxServer.GameLogic.TimeKeeper
+      name: TimeKeeper
+  - uid: NitroxServer.Helper
+    name: Helper
+    items:
+    - uid: NitroxServer.Helper.DeterministicGenerator
+      name: DeterministicGenerator
+  - uid: NitroxServer.Resources
+    name: Resources
+    items:
+    - uid: NitroxServer.Resources.PrefabPlaceholderAsset
+      name: PrefabPlaceholderAsset
+    - uid: NitroxServer.Resources.PrefabPlaceholdersGroupAsset
+      name: PrefabPlaceholdersGroupAsset
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    items:
+    - uid: NitroxServer.Serialization.Json
+      name: Json
+      items:
+      - uid: NitroxServer.Serialization.Json.AttributeContractResolver
+        name: AttributeContractResolver
+      - uid: NitroxServer.Serialization.Json.NitroxIdConverter
+        name: NitroxIdConverter
+      - uid: NitroxServer.Serialization.Json.TechTypeConverter
+        name: TechTypeConverter
+    - uid: NitroxServer.Serialization.SaveDataUpgrades
+      name: SaveDataUpgrades
+      items:
+      - uid: NitroxServer.Serialization.SaveDataUpgrades.NewtonsoftExtensions
+        name: NewtonsoftExtensions
+      - uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1500
+        name: Upgrade_V1500
+      - uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+        name: Upgrade_V1600
+      - uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1601
+        name: Upgrade_V1601
+    - uid: NitroxServer.Serialization.Upgrade
+      name: Upgrade
+      items:
+      - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+        name: SaveDataUpgrade
+    - uid: NitroxServer.Serialization.World
+      name: World
+      items:
+      - uid: NitroxServer.Serialization.World.PersistedWorldData
+        name: PersistedWorldData
+      - uid: NitroxServer.Serialization.World.SaveFileVersion
+        name: SaveFileVersion
+      - uid: NitroxServer.Serialization.World.VersionMismatchException
+        name: VersionMismatchException
+      - uid: NitroxServer.Serialization.World.World
+        name: World
+      - uid: NitroxServer.Serialization.World.WorldData
+        name: WorldData
+      - uid: NitroxServer.Serialization.World.WorldManager
+        name: WorldManager
+      - uid: NitroxServer.Serialization.World.WorldManager.Listing
+        name: WorldManager.Listing
+      - uid: NitroxServer.Serialization.World.WorldPersistence
+        name: WorldPersistence
+    - uid: NitroxServer.Serialization.BatchCellsParser
+      name: BatchCellsParser
+    - uid: NitroxServer.Serialization.CellHeader
+      name: CellHeader
+    - uid: NitroxServer.Serialization.CellHeaderEx
+      name: CellHeaderEx
+    - uid: NitroxServer.Serialization.CellsFileHeader
+      name: CellsFileHeader
+    - uid: NitroxServer.Serialization.ComponentHeader
+      name: ComponentHeader
+    - uid: NitroxServer.Serialization.DynamicWorldDataAfterAttribute
+      name: DynamicWorldDataAfterAttribute
+    - uid: NitroxServer.Serialization.GameObjectData
+      name: GameObjectData
+    - uid: NitroxServer.Serialization.IServerSerializer
+      name: IServerSerializer
+    - uid: NitroxServer.Serialization.LoopHeader
+      name: LoopHeader
+    - uid: NitroxServer.Serialization.ServerConfig
+      name: ServerConfig
+    - uid: NitroxServer.Serialization.ServerJsonSerializer
+      name: ServerJsonSerializer
+    - uid: NitroxServer.Serialization.ServerProtoBufSerializer
+      name: ServerProtoBufSerializer
+    - uid: NitroxServer.Serialization.StreamHeader
+      name: StreamHeader
+    - uid: NitroxServer.Serialization.WorldPersistenceTest
+      name: WorldPersistenceTest
+  - uid: NitroxServer.UnityStubs
+    name: UnityStubs
+    items:
+    - uid: NitroxServer.UnityStubs.GameObject
+      name: GameObject
+  - uid: NitroxServer.Player
+    name: Player
+  - uid: NitroxServer.Server
+    name: Server
+  - uid: NitroxServer.ServerAutoFacRegistrar
+    name: ServerAutoFacRegistrar
+- uid: NitroxServer_Subnautica
+  name: NitroxServer_Subnautica
+  items:
+  - uid: NitroxServer_Subnautica.Communication.Packets.Processors
+    name: Communication.Packets.Processors
+    items:
+    - uid: NitroxServer_Subnautica.Communication.Packets.Processors.CyclopsDamageProcessor
+      name: CyclopsDamageProcessor
+  - uid: NitroxServer_Subnautica.GameLogic.Entities
+    name: GameLogic.Entities
+    items:
+    - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning
+      name: Spawning
+      items:
+      - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+        name: EntityBootstrappers
+        items:
+        - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.CrashFishBootstrapper
+          name: CrashFishBootstrapper
+        - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+          name: ReefbackSpawnData
+        - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity
+          name: ReefbackSpawnData.ReefbackEntity
+      - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.SlotsHelper
+        name: SlotsHelper
+      - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.SubnauticaEntitySpawnPointFactory
+        name: SubnauticaEntitySpawnPointFactory
+    - uid: NitroxServer_Subnautica.GameLogic.Entities.SimulationWhitelist
+      name: SimulationWhitelist
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    items:
+    - uid: NitroxServer_Subnautica.Resources.Parsers
+      name: Parsers
+      items:
+      - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract
+        name: Abstract
+        items:
+        - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+          name: BundleFileParser<T>
+        - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser`1
+          name: ResourceFileParser<T>
+      - uid: NitroxServer_Subnautica.Resources.Parsers.Helper
+        name: Helper
+        items:
+        - uid: NitroxServer_Subnautica.Resources.Parsers.Helper.AssetTypeValueFieldExtension
+          name: AssetTypeValueFieldExtension
+        - uid: NitroxServer_Subnautica.Resources.Parsers.Helper.AssetsBundleManager
+          name: AssetsBundleManager
+        - uid: NitroxServer_Subnautica.Resources.Parsers.Helper.AssetsFileMetadataExtension
+          name: AssetsFileMetadataExtension
+        - uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator
+          name: ThreadSafeMonoCecilTempGenerator
+      - uid: NitroxServer_Subnautica.Resources.Parsers.AssetParser
+        name: AssetParser
+      - uid: NitroxServer_Subnautica.Resources.Parsers.EntityDistributionsParser
+        name: EntityDistributionsParser
+      - uid: NitroxServer_Subnautica.Resources.Parsers.PrefabPlaceholderGroupsParser
+        name: PrefabPlaceholderGroupsParser
+      - uid: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser
+        name: RandomStartParser
+      - uid: NitroxServer_Subnautica.Resources.Parsers.WorldEntityInfoParser
+        name: WorldEntityInfoParser
+    - uid: NitroxServer_Subnautica.Resources.ResourceAssets
+      name: ResourceAssets
+    - uid: NitroxServer_Subnautica.Resources.ResourceAssetsParser
+      name: ResourceAssetsParser
+  - uid: NitroxServer_Subnautica.AppMutex
+    name: AppMutex
+  - uid: NitroxServer_Subnautica.Program
+    name: Program
+  - uid: NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar
+    name: SubnauticaServerAutoFacRegistrar
+- uid: NitroxTest.Patcher
+  name: NitroxTest.Patcher
+  items:
+  - uid: NitroxTest.Patcher.PatchTestHelper
+    name: PatchTestHelper
+memberLayout: SeparatePages

@@ -1,0 +1,134 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.Patches
+  commentId: N:NitroxPatcher.Patches
+  id: Patches
+  parent: NitroxPatcher
+  children:
+  - NitroxPatcher.Patches.Dynamic
+  - NitroxPatcher.Patches.IDynamicPatch
+  - NitroxPatcher.Patches.INitroxPatch
+  - NitroxPatcher.Patches.IPersistentPatch
+  - NitroxPatcher.Patches.NitroxPatch
+  - NitroxPatcher.Patches.Persistent
+  langs:
+  - csharp
+  - vb
+  name: NitroxPatcher.Patches
+  nameWithType: NitroxPatcher.Patches
+  fullName: NitroxPatcher.Patches
+  type: Namespace
+  assemblies:
+  - NitroxPatcher
+references:
+- uid: NitroxPatcher.Patches.Dynamic
+  commentId: N:NitroxPatcher.Patches.Dynamic
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches.Dynamic
+  nameWithType: NitroxPatcher.Patches.Dynamic
+  fullName: NitroxPatcher.Patches.Dynamic
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Dynamic
+    name: Dynamic
+    href: NitroxPatcher.Patches.Dynamic.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Dynamic
+    name: Dynamic
+    href: NitroxPatcher.Patches.Dynamic.html
+- uid: NitroxPatcher.Patches.Persistent
+  commentId: N:NitroxPatcher.Patches.Persistent
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches.Persistent
+  nameWithType: NitroxPatcher.Patches.Persistent
+  fullName: NitroxPatcher.Patches.Persistent
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Persistent
+    name: Persistent
+    href: NitroxPatcher.Patches.Persistent.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Persistent
+    name: Persistent
+    href: NitroxPatcher.Patches.Persistent.html
+- uid: NitroxPatcher.Patches.IDynamicPatch
+  commentId: T:NitroxPatcher.Patches.IDynamicPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.IDynamicPatch.html
+  name: IDynamicPatch
+  nameWithType: IDynamicPatch
+  fullName: NitroxPatcher.Patches.IDynamicPatch
+- uid: NitroxPatcher.Patches.INitroxPatch
+  commentId: T:NitroxPatcher.Patches.INitroxPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.INitroxPatch.html
+  name: INitroxPatch
+  nameWithType: INitroxPatch
+  fullName: NitroxPatcher.Patches.INitroxPatch
+- uid: NitroxPatcher.Patches.IPersistentPatch
+  commentId: T:NitroxPatcher.Patches.IPersistentPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.IPersistentPatch.html
+  name: IPersistentPatch
+  nameWithType: IPersistentPatch
+  fullName: NitroxPatcher.Patches.IPersistentPatch
+- uid: NitroxPatcher.Patches.NitroxPatch
+  commentId: T:NitroxPatcher.Patches.NitroxPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.NitroxPatch.html
+  name: NitroxPatch
+  nameWithType: NitroxPatch
+  fullName: NitroxPatcher.Patches.NitroxPatch
+- uid: NitroxPatcher.Patches
+  commentId: N:NitroxPatcher.Patches
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches
+  nameWithType: NitroxPatcher.Patches
+  fullName: NitroxPatcher.Patches
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+memberLayout: SeparatePages

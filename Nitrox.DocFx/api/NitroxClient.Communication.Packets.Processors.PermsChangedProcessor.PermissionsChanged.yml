@@ -1,0 +1,108 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Packets.Processors.PermsChangedProcessor.PermissionsChanged
+  commentId: T:NitroxClient.Communication.Packets.Processors.PermsChangedProcessor.PermissionsChanged
+  id: PermsChangedProcessor.PermissionsChanged
+  parent: NitroxClient.Communication.Packets.Processors
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: PermsChangedProcessor.PermissionsChanged
+  nameWithType: PermsChangedProcessor.PermissionsChanged
+  fullName: NitroxClient.Communication.Packets.Processors.PermsChangedProcessor.PermissionsChanged
+  type: Delegate
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/PermsChangedProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PermissionsChanged
+    path: ../NitroxClient/Communication/Packets/Processors/PermsChangedProcessor.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  syntax:
+    content: public delegate void PermsChangedProcessor.PermissionsChanged(Perms perms)
+    parameters:
+    - id: perms
+      type: NitroxModel.DataStructures.GameLogic.Perms
+    content.vb: Public Delegate Sub PermsChangedProcessor.PermissionsChanged(perms As Perms)
+references:
+- uid: NitroxClient.Communication.Packets.Processors
+  commentId: N:NitroxClient.Communication.Packets.Processors
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Packets.Processors
+  nameWithType: NitroxClient.Communication.Packets.Processors
+  fullName: NitroxClient.Communication.Packets.Processors
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+- uid: NitroxModel.DataStructures.GameLogic.Perms
+  commentId: T:NitroxModel.DataStructures.GameLogic.Perms
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.Perms.html
+  name: Perms
+  nameWithType: Perms
+  fullName: NitroxModel.DataStructures.GameLogic.Perms
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+memberLayout: SeparatePages

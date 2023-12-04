@@ -1,0 +1,337 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  commentId: T:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  id: TransientLocalObjectManager.TransientObjectType
+  parent: NitroxClient.GameLogic.Helper
+  children:
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_CONSTRUCTED_BASE
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_BASE
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_CELL
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+  langs:
+  - csharp
+  - vb
+  name: TransientLocalObjectManager.TransientObjectType
+  nameWithType: TransientLocalObjectManager.TransientObjectType
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  type: Enum
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TransientObjectType
+    path: ../NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public enum TransientLocalObjectManager.TransientObjectType
+    content.vb: Public Enum TransientLocalObjectManager.TransientObjectType
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+  commentId: F:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+  id: BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+  parent: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  langs:
+  - csharp
+  - vb
+  name: BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+  nameWithType: TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT
+    path: ../NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+    startLine: 17
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT = 0
+    return:
+      type: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+  commentId: F:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+  id: LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+  parent: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  langs:
+  - csharp
+  - vb
+  name: LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+  nameWithType: TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LATEST_DECONSTRUCTED_BASE_PIECE_GHOST
+    path: ../NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+    startLine: 19
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: LATEST_DECONSTRUCTED_BASE_PIECE_GHOST = 1
+    return:
+      type: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+  commentId: F:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+  id: LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+  parent: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  langs:
+  - csharp
+  - vb
+  name: LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+  nameWithType: TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+    path: ../NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+    startLine: 20
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: LATEST_DECONSTRUCTED_BASE_PIECE_GUID = 2
+    return:
+      type: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_CONSTRUCTED_BASE
+  commentId: F:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_CONSTRUCTED_BASE
+  id: LATER_CONSTRUCTED_BASE
+  parent: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  langs:
+  - csharp
+  - vb
+  name: LATER_CONSTRUCTED_BASE
+  nameWithType: TransientLocalObjectManager.TransientObjectType.LATER_CONSTRUCTED_BASE
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_CONSTRUCTED_BASE
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LATER_CONSTRUCTED_BASE
+    path: ../NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+    startLine: 22
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: LATER_CONSTRUCTED_BASE = 3
+    return:
+      type: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_BASE
+  commentId: F:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_BASE
+  id: LATER_OBJECT_LATEST_BASE
+  parent: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  langs:
+  - csharp
+  - vb
+  name: LATER_OBJECT_LATEST_BASE
+  nameWithType: TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_BASE
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_BASE
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LATER_OBJECT_LATEST_BASE
+    path: ../NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+    startLine: 23
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: LATER_OBJECT_LATEST_BASE = 4
+    return:
+      type: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_CELL
+  commentId: F:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_CELL
+  id: LATER_OBJECT_LATEST_CELL
+  parent: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  langs:
+  - csharp
+  - vb
+  name: LATER_OBJECT_LATEST_CELL
+  nameWithType: TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_CELL
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.LATER_OBJECT_LATEST_CELL
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LATER_OBJECT_LATEST_CELL
+    path: ../NitroxClient/GameLogic/Helper/TransientLocalObjectManager.cs
+    startLine: 24
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: LATER_OBJECT_LATEST_CELL = 5
+    return:
+      type: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+references:
+- uid: NitroxClient.GameLogic.Helper
+  commentId: N:NitroxClient.GameLogic.Helper
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Helper
+  nameWithType: NitroxClient.GameLogic.Helper
+  fullName: NitroxClient.GameLogic.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  commentId: T:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  parent: NitroxClient.GameLogic.Helper
+  href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.html
+  name: TransientLocalObjectManager.TransientObjectType
+  nameWithType: TransientLocalObjectManager.TransientObjectType
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+    name: TransientLocalObjectManager
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+    name: TransientObjectType
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+    name: TransientLocalObjectManager
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+    name: TransientObjectType
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.html
+memberLayout: SeparatePages

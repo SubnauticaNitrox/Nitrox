@@ -1,0 +1,275 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+  commentId: T:NitroxModel.Packets.StoryGoalExecuted.EventType
+  id: StoryGoalExecuted.EventType
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.StoryGoalExecuted.EventType.ENCYCLOPEDIA
+  - NitroxModel.Packets.StoryGoalExecuted.EventType.PDA
+  - NitroxModel.Packets.StoryGoalExecuted.EventType.RADIO
+  - NitroxModel.Packets.StoryGoalExecuted.EventType.STORY
+  langs:
+  - csharp
+  - vb
+  name: StoryGoalExecuted.EventType
+  nameWithType: StoryGoalExecuted.EventType
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType
+  type: Enum
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EventType
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 23
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public enum StoryGoalExecuted.EventType
+    content.vb: Public Enum StoryGoalExecuted.EventType
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType.PDA
+  commentId: F:NitroxModel.Packets.StoryGoalExecuted.EventType.PDA
+  id: PDA
+  parent: NitroxModel.Packets.StoryGoalExecuted.EventType
+  langs:
+  - csharp
+  - vb
+  name: PDA
+  nameWithType: StoryGoalExecuted.EventType.PDA
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType.PDA
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PDA
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: PDA = 0
+    return:
+      type: NitroxModel.Packets.StoryGoalExecuted.EventType
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType.RADIO
+  commentId: F:NitroxModel.Packets.StoryGoalExecuted.EventType.RADIO
+  id: RADIO
+  parent: NitroxModel.Packets.StoryGoalExecuted.EventType
+  langs:
+  - csharp
+  - vb
+  name: RADIO
+  nameWithType: StoryGoalExecuted.EventType.RADIO
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType.RADIO
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RADIO
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 26
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: RADIO = 1
+    return:
+      type: NitroxModel.Packets.StoryGoalExecuted.EventType
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType.ENCYCLOPEDIA
+  commentId: F:NitroxModel.Packets.StoryGoalExecuted.EventType.ENCYCLOPEDIA
+  id: ENCYCLOPEDIA
+  parent: NitroxModel.Packets.StoryGoalExecuted.EventType
+  langs:
+  - csharp
+  - vb
+  name: ENCYCLOPEDIA
+  nameWithType: StoryGoalExecuted.EventType.ENCYCLOPEDIA
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType.ENCYCLOPEDIA
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ENCYCLOPEDIA
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: ENCYCLOPEDIA = 2
+    return:
+      type: NitroxModel.Packets.StoryGoalExecuted.EventType
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType.STORY
+  commentId: F:NitroxModel.Packets.StoryGoalExecuted.EventType.STORY
+  id: STORY
+  parent: NitroxModel.Packets.StoryGoalExecuted.EventType
+  langs:
+  - csharp
+  - vb
+  name: STORY
+  nameWithType: StoryGoalExecuted.EventType.STORY
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType.STORY
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: STORY
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 28
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: STORY = 3
+    return:
+      type: NitroxModel.Packets.StoryGoalExecuted.EventType
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+  commentId: T:NitroxModel.Packets.StoryGoalExecuted.EventType
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.StoryGoalExecuted.html
+  name: StoryGoalExecuted.EventType
+  nameWithType: StoryGoalExecuted.EventType
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType
+  spec.csharp:
+  - uid: NitroxModel.Packets.StoryGoalExecuted
+    name: StoryGoalExecuted
+    href: NitroxModel.Packets.StoryGoalExecuted.html
+  - name: .
+  - uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+    name: EventType
+    href: NitroxModel.Packets.StoryGoalExecuted.EventType.html
+  spec.vb:
+  - uid: NitroxModel.Packets.StoryGoalExecuted
+    name: StoryGoalExecuted
+    href: NitroxModel.Packets.StoryGoalExecuted.html
+  - name: .
+  - uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+    name: EventType
+    href: NitroxModel.Packets.StoryGoalExecuted.EventType.html
+memberLayout: SeparatePages

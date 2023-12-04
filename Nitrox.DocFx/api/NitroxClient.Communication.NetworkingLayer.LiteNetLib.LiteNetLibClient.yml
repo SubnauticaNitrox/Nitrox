@@ -1,0 +1,871 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  commentId: T:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  id: LiteNetLibClient
+  parent: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  children:
+  - NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.#ctor(NitroxClient.Communication.PacketReceiver,NitroxClient.Debuggers.INetworkDebugger)
+  - NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected
+  - NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents
+  - NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send(NitroxModel.Packets.Packet)
+  - NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync(System.String,System.Int32)
+  - NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop
+  langs:
+  - csharp
+  - vb
+  name: LiteNetLibClient
+  nameWithType: LiteNetLibClient
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LiteNetLibClient
+    path: ../NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+    startLine: 14
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  syntax:
+    content: 'public class LiteNetLibClient : IClient'
+    content.vb: Public Class LiteNetLibClient Implements IClient
+  inheritance:
+  - System.Object
+  implements:
+  - NitroxClient.Communication.Abstract.IClient
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected
+  commentId: P:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected
+  id: IsConnected
+  parent: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  langs:
+  - csharp
+  - vb
+  name: IsConnected
+  nameWithType: LiteNetLibClient.IsConnected
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsConnected
+    path: ../NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+    startLine: 16
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  example: []
+  syntax:
+    content: public bool IsConnected { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsConnected As Boolean
+  overload: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected*
+  implements:
+  - NitroxClient.Communication.Abstract.IClient.IsConnected
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.#ctor(NitroxClient.Communication.PacketReceiver,NitroxClient.Debuggers.INetworkDebugger)
+  commentId: M:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.#ctor(NitroxClient.Communication.PacketReceiver,NitroxClient.Debuggers.INetworkDebugger)
+  id: '#ctor(NitroxClient.Communication.PacketReceiver,NitroxClient.Debuggers.INetworkDebugger)'
+  parent: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  langs:
+  - csharp
+  - vb
+  name: LiteNetLibClient(PacketReceiver, INetworkDebugger)
+  nameWithType: LiteNetLibClient.LiteNetLibClient(PacketReceiver, INetworkDebugger)
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.LiteNetLibClient(NitroxClient.Communication.PacketReceiver, NitroxClient.Debuggers.INetworkDebugger)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+    startLine: 25
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  syntax:
+    content: public LiteNetLibClient(PacketReceiver packetReceiver, INetworkDebugger networkDebugger = null)
+    parameters:
+    - id: packetReceiver
+      type: NitroxClient.Communication.PacketReceiver
+    - id: networkDebugger
+      type: NitroxClient.Debuggers.INetworkDebugger
+    content.vb: Public Sub New(packetReceiver As PacketReceiver, networkDebugger As INetworkDebugger = Nothing)
+  overload: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.#ctor*
+  nameWithType.vb: LiteNetLibClient.New(PacketReceiver, INetworkDebugger)
+  fullName.vb: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.New(NitroxClient.Communication.PacketReceiver, NitroxClient.Debuggers.INetworkDebugger)
+  name.vb: New(PacketReceiver, INetworkDebugger)
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync(System.String,System.Int32)
+  commentId: M:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync(System.String,System.Int32)
+  id: StartAsync(System.String,System.Int32)
+  parent: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  langs:
+  - csharp
+  - vb
+  name: StartAsync(string, int)
+  nameWithType: LiteNetLibClient.StartAsync(string, int)
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync(string, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: StartAsync
+    path: ../NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+    startLine: 31
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  example: []
+  syntax:
+    content: public Task StartAsync(string ipAddress, int serverPort)
+    parameters:
+    - id: ipAddress
+      type: System.String
+    - id: serverPort
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function StartAsync(ipAddress As String, serverPort As Integer) As Task
+  overload: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync*
+  implements:
+  - NitroxClient.Communication.Abstract.IClient.StartAsync(System.String,System.Int32)
+  nameWithType.vb: LiteNetLibClient.StartAsync(String, Integer)
+  fullName.vb: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync(String, Integer)
+  name.vb: StartAsync(String, Integer)
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send(NitroxModel.Packets.Packet)
+  commentId: M:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send(NitroxModel.Packets.Packet)
+  id: Send(NitroxModel.Packets.Packet)
+  parent: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  langs:
+  - csharp
+  - vb
+  name: Send(Packet)
+  nameWithType: LiteNetLibClient.Send(Packet)
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send(NitroxModel.Packets.Packet)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Send
+    path: ../NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+    startLine: 60
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  example: []
+  syntax:
+    content: public void Send(Packet packet)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    content.vb: Public Sub Send(packet As Packet)
+  overload: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send*
+  implements:
+  - NitroxClient.Communication.Abstract.IClient.Send(NitroxModel.Packets.Packet)
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop
+  commentId: M:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop
+  id: Stop
+  parent: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  langs:
+  - csharp
+  - vb
+  name: Stop()
+  nameWithType: LiteNetLibClient.Stop()
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Stop
+    path: ../NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+    startLine: 71
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  example: []
+  syntax:
+    content: public void Stop()
+    content.vb: Public Sub [Stop]()
+  overload: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop*
+  implements:
+  - NitroxClient.Communication.Abstract.IClient.Stop
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents
+  commentId: M:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents
+  id: PollEvents
+  parent: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient
+  langs:
+  - csharp
+  - vb
+  name: PollEvents()
+  nameWithType: LiteNetLibClient.PollEvents()
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PollEvents
+    path: ../NitroxClient/Communication/NetworkingLayer/LiteNetLib/LiteNetLibClient.cs
+    startLine: 80
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  summary: This should be called <b>once</b> each game tick
+  example: []
+  syntax:
+    content: public void PollEvents()
+    content.vb: Public Sub PollEvents()
+  overload: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents*
+  implements:
+  - NitroxClient.Communication.Abstract.IClient.PollEvents
+references:
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  commentId: N:NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  href: NitroxClient.html
+  name: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  nameWithType: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer
+    name: NetworkingLayer
+    href: NitroxClient.Communication.NetworkingLayer.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+    name: LiteNetLib
+    href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer
+    name: NetworkingLayer
+    href: NitroxClient.Communication.NetworkingLayer.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+    name: LiteNetLib
+    href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.Communication.Abstract.IClient
+  commentId: T:NitroxClient.Communication.Abstract.IClient
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IClient.html
+  name: IClient
+  nameWithType: IClient
+  fullName: NitroxClient.Communication.Abstract.IClient
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected*
+  commentId: Overload:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected
+  href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected.html#NitroxClient_Communication_NetworkingLayer_LiteNetLib_LiteNetLibClient_IsConnected
+  name: IsConnected
+  nameWithType: LiteNetLibClient.IsConnected
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.IsConnected
+- uid: NitroxClient.Communication.Abstract.IClient.IsConnected
+  commentId: P:NitroxClient.Communication.Abstract.IClient.IsConnected
+  parent: NitroxClient.Communication.Abstract.IClient
+  href: NitroxClient.Communication.Abstract.IClient.IsConnected.html#NitroxClient_Communication_Abstract_IClient_IsConnected
+  name: IsConnected
+  nameWithType: IClient.IsConnected
+  fullName: NitroxClient.Communication.Abstract.IClient.IsConnected
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.#ctor*
+  commentId: Overload:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.#ctor
+  href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.-ctor.html#NitroxClient_Communication_NetworkingLayer_LiteNetLib_LiteNetLibClient__ctor_NitroxClient_Communication_PacketReceiver_NitroxClient_Debuggers_INetworkDebugger_
+  name: LiteNetLibClient
+  nameWithType: LiteNetLibClient.LiteNetLibClient
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.LiteNetLibClient
+  nameWithType.vb: LiteNetLibClient.New
+  fullName.vb: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.New
+  name.vb: New
+- uid: NitroxClient.Communication.PacketReceiver
+  commentId: T:NitroxClient.Communication.PacketReceiver
+  parent: NitroxClient.Communication
+  href: NitroxClient.Communication.PacketReceiver.html
+  name: PacketReceiver
+  nameWithType: PacketReceiver
+  fullName: NitroxClient.Communication.PacketReceiver
+- uid: NitroxClient.Debuggers.INetworkDebugger
+  commentId: T:NitroxClient.Debuggers.INetworkDebugger
+  parent: NitroxClient.Debuggers
+  href: NitroxClient.Debuggers.INetworkDebugger.html
+  name: INetworkDebugger
+  nameWithType: INetworkDebugger
+  fullName: NitroxClient.Debuggers.INetworkDebugger
+- uid: NitroxClient.Communication
+  commentId: N:NitroxClient.Communication
+  href: NitroxClient.html
+  name: NitroxClient.Communication
+  nameWithType: NitroxClient.Communication
+  fullName: NitroxClient.Communication
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+- uid: NitroxClient.Debuggers
+  commentId: N:NitroxClient.Debuggers
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers
+  nameWithType: NitroxClient.Debuggers
+  fullName: NitroxClient.Debuggers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync*
+  commentId: Overload:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync
+  href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync.html#NitroxClient_Communication_NetworkingLayer_LiteNetLib_LiteNetLibClient_StartAsync_System_String_System_Int32_
+  name: StartAsync
+  nameWithType: LiteNetLibClient.StartAsync
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.StartAsync
+- uid: NitroxClient.Communication.Abstract.IClient.StartAsync(System.String,System.Int32)
+  commentId: M:NitroxClient.Communication.Abstract.IClient.StartAsync(System.String,System.Int32)
+  parent: NitroxClient.Communication.Abstract.IClient
+  isExternal: true
+  href: NitroxClient.Communication.Abstract.IClient.StartAsync.html#NitroxClient_Communication_Abstract_IClient_StartAsync_System_String_System_Int32_
+  name: StartAsync(string, int)
+  nameWithType: IClient.StartAsync(string, int)
+  fullName: NitroxClient.Communication.Abstract.IClient.StartAsync(string, int)
+  nameWithType.vb: IClient.StartAsync(String, Integer)
+  fullName.vb: NitroxClient.Communication.Abstract.IClient.StartAsync(String, Integer)
+  name.vb: StartAsync(String, Integer)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Abstract.IClient.StartAsync(System.String,System.Int32)
+    name: StartAsync
+    href: NitroxClient.Communication.Abstract.IClient.StartAsync.html#NitroxClient_Communication_Abstract_IClient_StartAsync_System_String_System_Int32_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Abstract.IClient.StartAsync(System.String,System.Int32)
+    name: StartAsync
+    href: NitroxClient.Communication.Abstract.IClient.StartAsync.html#NitroxClient_Communication_Abstract_IClient_StartAsync_System_String_System_Int32_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send*
+  commentId: Overload:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send
+  href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send.html#NitroxClient_Communication_NetworkingLayer_LiteNetLib_LiteNetLibClient_Send_NitroxModel_Packets_Packet_
+  name: Send
+  nameWithType: LiteNetLibClient.Send
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Send
+- uid: NitroxClient.Communication.Abstract.IClient.Send(NitroxModel.Packets.Packet)
+  commentId: M:NitroxClient.Communication.Abstract.IClient.Send(NitroxModel.Packets.Packet)
+  parent: NitroxClient.Communication.Abstract.IClient
+  href: NitroxClient.Communication.Abstract.IClient.Send.html#NitroxClient_Communication_Abstract_IClient_Send_NitroxModel_Packets_Packet_
+  name: Send(Packet)
+  nameWithType: IClient.Send(Packet)
+  fullName: NitroxClient.Communication.Abstract.IClient.Send(NitroxModel.Packets.Packet)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Abstract.IClient.Send(NitroxModel.Packets.Packet)
+    name: Send
+    href: NitroxClient.Communication.Abstract.IClient.Send.html#NitroxClient_Communication_Abstract_IClient_Send_NitroxModel_Packets_Packet_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Abstract.IClient.Send(NitroxModel.Packets.Packet)
+    name: Send
+    href: NitroxClient.Communication.Abstract.IClient.Send.html#NitroxClient_Communication_Abstract_IClient_Send_NitroxModel_Packets_Packet_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: )
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop*
+  commentId: Overload:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop
+  href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop.html#NitroxClient_Communication_NetworkingLayer_LiteNetLib_LiteNetLibClient_Stop
+  name: Stop
+  nameWithType: LiteNetLibClient.Stop
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.Stop
+- uid: NitroxClient.Communication.Abstract.IClient.Stop
+  commentId: M:NitroxClient.Communication.Abstract.IClient.Stop
+  parent: NitroxClient.Communication.Abstract.IClient
+  href: NitroxClient.Communication.Abstract.IClient.Stop.html#NitroxClient_Communication_Abstract_IClient_Stop
+  name: Stop()
+  nameWithType: IClient.Stop()
+  fullName: NitroxClient.Communication.Abstract.IClient.Stop()
+  spec.csharp:
+  - uid: NitroxClient.Communication.Abstract.IClient.Stop
+    name: Stop
+    href: NitroxClient.Communication.Abstract.IClient.Stop.html#NitroxClient_Communication_Abstract_IClient_Stop
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Abstract.IClient.Stop
+    name: Stop
+    href: NitroxClient.Communication.Abstract.IClient.Stop.html#NitroxClient_Communication_Abstract_IClient_Stop
+  - name: (
+  - name: )
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents*
+  commentId: Overload:NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents
+  href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents.html#NitroxClient_Communication_NetworkingLayer_LiteNetLib_LiteNetLibClient_PollEvents
+  name: PollEvents
+  nameWithType: LiteNetLibClient.PollEvents
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib.LiteNetLibClient.PollEvents
+- uid: NitroxClient.Communication.Abstract.IClient.PollEvents
+  commentId: M:NitroxClient.Communication.Abstract.IClient.PollEvents
+  parent: NitroxClient.Communication.Abstract.IClient
+  href: NitroxClient.Communication.Abstract.IClient.PollEvents.html#NitroxClient_Communication_Abstract_IClient_PollEvents
+  name: PollEvents()
+  nameWithType: IClient.PollEvents()
+  fullName: NitroxClient.Communication.Abstract.IClient.PollEvents()
+  spec.csharp:
+  - uid: NitroxClient.Communication.Abstract.IClient.PollEvents
+    name: PollEvents
+    href: NitroxClient.Communication.Abstract.IClient.PollEvents.html#NitroxClient_Communication_Abstract_IClient_PollEvents
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Abstract.IClient.PollEvents
+    name: PollEvents
+    href: NitroxClient.Communication.Abstract.IClient.PollEvents.html#NitroxClient_Communication_Abstract_IClient_PollEvents
+  - name: (
+  - name: )
+memberLayout: SeparatePages

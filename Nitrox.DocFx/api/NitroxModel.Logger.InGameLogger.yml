@@ -1,0 +1,153 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Logger.InGameLogger
+  commentId: T:NitroxModel.Logger.InGameLogger
+  id: InGameLogger
+  parent: NitroxModel.Logger
+  children:
+  - NitroxModel.Logger.InGameLogger.Log(System.Object)
+  - NitroxModel.Logger.InGameLogger.Log(System.String)
+  langs:
+  - csharp
+  - vb
+  name: InGameLogger
+  nameWithType: InGameLogger
+  fullName: NitroxModel.Logger.InGameLogger
+  type: Interface
+  source:
+    remote:
+      path: NitroxModel/Logger/InGameLogger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: InGameLogger
+    path: ../NitroxModel/Logger/InGameLogger.cs
+    startLine: 2
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Logger
+  syntax:
+    content: public interface InGameLogger
+    content.vb: Public Interface InGameLogger
+- uid: NitroxModel.Logger.InGameLogger.Log(System.Object)
+  commentId: M:NitroxModel.Logger.InGameLogger.Log(System.Object)
+  id: Log(System.Object)
+  parent: NitroxModel.Logger.InGameLogger
+  langs:
+  - csharp
+  - vb
+  name: Log(object)
+  nameWithType: InGameLogger.Log(object)
+  fullName: NitroxModel.Logger.InGameLogger.Log(object)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Logger/InGameLogger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Log
+    path: ../NitroxModel/Logger/InGameLogger.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Logger
+  syntax:
+    content: void Log(object message)
+    parameters:
+    - id: message
+      type: System.Object
+    content.vb: Sub Log(message As Object)
+  overload: NitroxModel.Logger.InGameLogger.Log*
+  nameWithType.vb: InGameLogger.Log(Object)
+  fullName.vb: NitroxModel.Logger.InGameLogger.Log(Object)
+  name.vb: Log(Object)
+- uid: NitroxModel.Logger.InGameLogger.Log(System.String)
+  commentId: M:NitroxModel.Logger.InGameLogger.Log(System.String)
+  id: Log(System.String)
+  parent: NitroxModel.Logger.InGameLogger
+  langs:
+  - csharp
+  - vb
+  name: Log(string)
+  nameWithType: InGameLogger.Log(string)
+  fullName: NitroxModel.Logger.InGameLogger.Log(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Logger/InGameLogger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Log
+    path: ../NitroxModel/Logger/InGameLogger.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Logger
+  syntax:
+    content: void Log(string message)
+    parameters:
+    - id: message
+      type: System.String
+    content.vb: Sub Log(message As String)
+  overload: NitroxModel.Logger.InGameLogger.Log*
+  nameWithType.vb: InGameLogger.Log(String)
+  fullName.vb: NitroxModel.Logger.InGameLogger.Log(String)
+  name.vb: Log(String)
+references:
+- uid: NitroxModel.Logger
+  commentId: N:NitroxModel.Logger
+  href: NitroxModel.html
+  name: NitroxModel.Logger
+  nameWithType: NitroxModel.Logger
+  fullName: NitroxModel.Logger
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+- uid: NitroxModel.Logger.InGameLogger.Log*
+  commentId: Overload:NitroxModel.Logger.InGameLogger.Log
+  href: NitroxModel.Logger.InGameLogger.Log.html#NitroxModel_Logger_InGameLogger_Log_System_Object_
+  name: Log
+  nameWithType: InGameLogger.Log
+  fullName: NitroxModel.Logger.InGameLogger.Log
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

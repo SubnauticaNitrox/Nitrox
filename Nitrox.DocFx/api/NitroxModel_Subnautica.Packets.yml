@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.Packets
+  commentId: N:NitroxModel_Subnautica.Packets
+  id: Packets
+  parent: NitroxModel_Subnautica
+  children:
+  - NitroxModel_Subnautica.Packets.CreatureActionChanged
+  - NitroxModel_Subnautica.Packets.CyclopsDamage
+  - NitroxModel_Subnautica.Packets.CyclopsDamagePointRepaired
+  - NitroxModel_Subnautica.Packets.CyclopsDecoyLaunch
+  - NitroxModel_Subnautica.Packets.CyclopsFireCreated
+  - NitroxModel_Subnautica.Packets.CyclopsFireSuppression
+  - NitroxModel_Subnautica.Packets.ExosuitArmAction
+  - NitroxModel_Subnautica.Packets.ExosuitArmActionPacket
+  - NitroxModel_Subnautica.Packets.RocketLaunch
+  - NitroxModel_Subnautica.Packets.RocketResync
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel_Subnautica.Packets
+  nameWithType: NitroxModel_Subnautica.Packets
+  fullName: NitroxModel_Subnautica.Packets
+  type: Namespace
+  assemblies:
+  - NitroxModel-Subnautica
+references:
+- uid: NitroxModel_Subnautica.Packets.CreatureActionChanged
+  commentId: T:NitroxModel_Subnautica.Packets.CreatureActionChanged
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.CreatureActionChanged.html
+  name: CreatureActionChanged
+  nameWithType: CreatureActionChanged
+  fullName: NitroxModel_Subnautica.Packets.CreatureActionChanged
+- uid: NitroxModel_Subnautica.Packets.CyclopsDamage
+  commentId: T:NitroxModel_Subnautica.Packets.CyclopsDamage
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.CyclopsDamage.html
+  name: CyclopsDamage
+  nameWithType: CyclopsDamage
+  fullName: NitroxModel_Subnautica.Packets.CyclopsDamage
+- uid: NitroxModel_Subnautica.Packets.CyclopsDamagePointRepaired
+  commentId: T:NitroxModel_Subnautica.Packets.CyclopsDamagePointRepaired
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.CyclopsDamagePointRepaired.html
+  name: CyclopsDamagePointRepaired
+  nameWithType: CyclopsDamagePointRepaired
+  fullName: NitroxModel_Subnautica.Packets.CyclopsDamagePointRepaired
+- uid: NitroxModel_Subnautica.Packets.CyclopsDecoyLaunch
+  commentId: T:NitroxModel_Subnautica.Packets.CyclopsDecoyLaunch
+  href: NitroxModel_Subnautica.Packets.CyclopsDecoyLaunch.html
+  name: CyclopsDecoyLaunch
+  nameWithType: CyclopsDecoyLaunch
+  fullName: NitroxModel_Subnautica.Packets.CyclopsDecoyLaunch
+- uid: NitroxModel_Subnautica.Packets.CyclopsFireCreated
+  commentId: T:NitroxModel_Subnautica.Packets.CyclopsFireCreated
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.CyclopsFireCreated.html
+  name: CyclopsFireCreated
+  nameWithType: CyclopsFireCreated
+  fullName: NitroxModel_Subnautica.Packets.CyclopsFireCreated
+- uid: NitroxModel_Subnautica.Packets.CyclopsFireSuppression
+  commentId: T:NitroxModel_Subnautica.Packets.CyclopsFireSuppression
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.CyclopsFireSuppression.html
+  name: CyclopsFireSuppression
+  nameWithType: CyclopsFireSuppression
+  fullName: NitroxModel_Subnautica.Packets.CyclopsFireSuppression
+- uid: NitroxModel_Subnautica.Packets.ExosuitArmAction
+  commentId: T:NitroxModel_Subnautica.Packets.ExosuitArmAction
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.ExosuitArmAction.html
+  name: ExosuitArmAction
+  nameWithType: ExosuitArmAction
+  fullName: NitroxModel_Subnautica.Packets.ExosuitArmAction
+- uid: NitroxModel_Subnautica.Packets.ExosuitArmActionPacket
+  commentId: T:NitroxModel_Subnautica.Packets.ExosuitArmActionPacket
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.ExosuitArmActionPacket.html
+  name: ExosuitArmActionPacket
+  nameWithType: ExosuitArmActionPacket
+  fullName: NitroxModel_Subnautica.Packets.ExosuitArmActionPacket
+- uid: NitroxModel_Subnautica.Packets.RocketLaunch
+  commentId: T:NitroxModel_Subnautica.Packets.RocketLaunch
+  parent: NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.Packets.RocketLaunch.html
+  name: RocketLaunch
+  nameWithType: RocketLaunch
+  fullName: NitroxModel_Subnautica.Packets.RocketLaunch
+- uid: NitroxModel_Subnautica.Packets.RocketResync
+  commentId: T:NitroxModel_Subnautica.Packets.RocketResync
+  href: NitroxModel_Subnautica.Packets.RocketResync.html
+  name: RocketResync
+  nameWithType: RocketResync
+  fullName: NitroxModel_Subnautica.Packets.RocketResync
+- uid: NitroxModel_Subnautica.Packets
+  commentId: N:NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.Packets
+  nameWithType: NitroxModel_Subnautica.Packets
+  fullName: NitroxModel_Subnautica.Packets
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Packets
+    name: Packets
+    href: NitroxModel_Subnautica.Packets.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Packets
+    name: Packets
+    href: NitroxModel_Subnautica.Packets.html
+memberLayout: SeparatePages

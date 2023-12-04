@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Packet
+ | Nitrox </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Packet
+ | Nitrox ">
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/killzoms/Nitrox//new/docfx/apiSpec/new?filename=NitroxModel_Packets_Packet.md&amp;value=---%0Auid%3A%20NitroxModel.Packets.Packet%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+  </head>
+
+  <script type="module" src="./../../public/docfx.min.js"></script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="Nitrox">
+            Nitrox
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled="" placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="NitroxModel.Packets.Packet">
+
+
+
+  <h1 id="NitroxModel_Packets_Packet" data-uid="NitroxModel.Packets.Packet" class="text-break">
+    Class Packet
+  <a class="header-action link-secondary" title="View source" href="https://github.com/killzoms/Nitrox//blob/docfx/NitroxModel/Packets/Packet.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="NitroxModel.html">NitroxModel</a>.<a class="xref" href="NitroxModel.Packets.html">Packets</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>NitroxModel.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public abstract class Packet</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Packet</span></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Nitrox.Test.Client.Communication.TestNonActionPacket.html">TestNonActionPacket</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.AnimationChangeEvent.html">AnimationChangeEvent</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.AuroraAndTimeUpdate.html">AuroraAndTimeUpdate</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.BaseDeconstructed.html">BaseDeconstructed</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.BatchVisibilityChanged.html">BatchVisibilityChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.BedEnter.html">BedEnter</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.BuildingDesyncWarning.html">BuildingDesyncWarning</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.BuildingResync.html">BuildingResync</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.BuildingResyncRequest.html">BuildingResyncRequest</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.CellVisibilityChanged.html">CellVisibilityChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ChatMessage.html">ChatMessage</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.CorrelatedPacket.html">CorrelatedPacket</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.DebugStartMapPacket.html">DebugStartMapPacket</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.DeconstructionBegin.html">DeconstructionBegin</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.Disconnect.html">Disconnect</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.DiscordRequestIP.html">DiscordRequestIP</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.EntityDestroyed.html">EntityDestroyed</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.EntityMetadataUpdate.html">EntityMetadataUpdate</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.EntityReparented.html">EntityReparented</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.EntitySpawnedByClient.html">EntitySpawnedByClient</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.EntityTransformUpdates.html">EntityTransformUpdates</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.EscapePodChanged.html">EscapePodChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.FireDoused.html">FireDoused</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.GameModeChanged.html">GameModeChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.GoalCompleted.html">GoalCompleted</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.InitialPlayerSync.html">InitialPlayerSync</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ItemPosition.html">ItemPosition</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.KnownTechEntryAdd.html">KnownTechEntryAdd</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.MedicalCabinetClicked.html">MedicalCabinetClicked</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ModifyConstructedAmount.html">ModifyConstructedAmount</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ModuleAdded.html">ModuleAdded</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ModuleRemoved.html">ModuleRemoved</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.Movement.html">Movement</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.MutePlayer.html">MutePlayer</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.OpenableStateChanged.html">OpenableStateChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.OrderedBuildPacket.html">OrderedBuildPacket</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PDAEncyclopediaEntryAdd.html">PDAEncyclopediaEntryAdd</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PDALogEntryAdd.html">PDALogEntryAdd</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PDAScanFinished.html">PDAScanFinished</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PermsChanged.html">PermsChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PickupItem.html">PickupItem</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PingRenamed.html">PingRenamed</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PinnedRecipeMoved.html">PinnedRecipeMoved</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlaceBase.html">PlaceBase</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlaceGhost.html">PlaceGhost</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlaceModule.html">PlaceModule</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayFMODAsset.html">PlayFMODAsset</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayFMODCustomEmitter.html">PlayFMODCustomEmitter</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayFMODCustomLoopingEmitter.html">PlayFMODCustomLoopingEmitter</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayFMODStudioEmitter.html">PlayFMODStudioEmitter</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlaySunbeamEvent.html">PlaySunbeamEvent</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerCinematicControllerCall.html">PlayerCinematicControllerCall</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerDeathEvent.html">PlayerDeathEvent</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerHeldItemChanged.html">PlayerHeldItemChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerJoinedMultiplayerSession.html">PlayerJoinedMultiplayerSession</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerKicked.html">PlayerKicked</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerQuickSlotsBindingChanged.html">PlayerQuickSlotsBindingChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerStats.html">PlayerStats</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerSyncFinished.html">PlayerSyncFinished</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.PlayerTeleported.html">PlayerTeleported</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.RadioPlayPendingMessage.html">RadioPlayPendingMessage</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.RecipePinned.html">RecipePinned</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.Schedule.html">Schedule</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.SeamothModulesAction.html">SeamothModulesAction</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ServerCommand.html">ServerCommand</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ServerStopped.html">ServerStopped</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.SignalPingPreferenceChanged.html">SignalPingPreferenceChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.SimulationOwnershipChange.html">SimulationOwnershipChange</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.SimulationOwnershipRequest.html">SimulationOwnershipRequest</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.SimulationOwnershipResponse.html">SimulationOwnershipResponse</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.SpawnEntities.html">SpawnEntities</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.StoryGoalExecuted.html">StoryGoalExecuted</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.SubRootChanged.html">SubRootChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.TimeChange.html">TimeChange</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.ToggleLights.html">ToggleLights</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.VehicleDocking.html">VehicleDocking</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.VehicleOnPilotModeChanged.html">VehicleOnPilotModeChanged</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.VehicleUndocking.html">VehicleUndocking</a></div>
+      <div><a class="xref" href="NitroxModel.Packets.WeldAction.html">WeldAction</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.CreatureActionChanged.html">CreatureActionChanged</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.CyclopsDamage.html">CyclopsDamage</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.CyclopsDamagePointRepaired.html">CyclopsDamagePointRepaired</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.CyclopsDecoyLaunch.html">CyclopsDecoyLaunch</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.CyclopsFireCreated.html">CyclopsFireCreated</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.CyclopsFireSuppression.html">CyclopsFireSuppression</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.ExosuitArmActionPacket.html">ExosuitArmActionPacket</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.RocketLaunch.html">RocketLaunch</a></div>
+      <div><a class="xref" href="NitroxModel_Subnautica.Packets.RocketResync.html">RocketResync</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+  <dl class="jumplist">
+    <dt><a class="xref" href="NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod">DeliveryMethod</a></dt>
+    <dd></dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel">UdpChannel</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+  <dl class="jumplist">
+    <dt><a class="xref" href="NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___">Deserialize(byte[])</a></dt>
+    <dd></dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer">InitSerializer()</a></dt>
+    <dd></dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize">Serialize()</a></dt>
+    <dd></dd>
+  </dl>
+  <dl class="jumplist">
+    <dt><a class="xref" href="NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString">ToString()</a></dt>
+    <dd><p>Returns a string that represents the current object.</p>
+</dd>
+  </dl>
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/killzoms/Nitrox//blob/docfx/NitroxModel/Packets/Packet.cs/#L13" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

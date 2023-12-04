@@ -1,0 +1,402 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  commentId: T:NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  id: PlaySunbeamEvent.SunbeamEvent
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.COUNTDOWN
+  - NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.GUNAIM
+  - NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.STORYSTART
+  langs:
+  - csharp
+  - vb
+  name: PlaySunbeamEvent.SunbeamEvent
+  nameWithType: PlaySunbeamEvent.SunbeamEvent
+  fullName: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaySunbeamEvent.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SunbeamEvent
+    path: ../NitroxModel/Packets/PlaySunbeamEvent.cs
+    startLine: 17
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  summary: Associates an understandable event name and the associated goal from <xref href="NitroxModel.Packets.PlaySunbeamEvent.SunbeamGoals" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static class PlaySunbeamEvent.SunbeamEvent
+    content.vb: Public Module PlaySunbeamEvent.SunbeamEvent
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.STORYSTART
+  commentId: F:NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.STORYSTART
+  id: STORYSTART
+  parent: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  langs:
+  - csharp
+  - vb
+  name: STORYSTART
+  nameWithType: PlaySunbeamEvent.SunbeamEvent.STORYSTART
+  fullName: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.STORYSTART
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaySunbeamEvent.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: STORYSTART
+    path: ../NitroxModel/Packets/PlaySunbeamEvent.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public const string STORYSTART = "RadioSunbeamStart"
+    return:
+      type: System.String
+    content.vb: Public Const STORYSTART As String = "RadioSunbeamStart"
+- uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.COUNTDOWN
+  commentId: F:NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.COUNTDOWN
+  id: COUNTDOWN
+  parent: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  langs:
+  - csharp
+  - vb
+  name: COUNTDOWN
+  nameWithType: PlaySunbeamEvent.SunbeamEvent.COUNTDOWN
+  fullName: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.COUNTDOWN
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaySunbeamEvent.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: COUNTDOWN
+    path: ../NitroxModel/Packets/PlaySunbeamEvent.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public const string COUNTDOWN = "OnPlayRadioSunbeam4"
+    return:
+      type: System.String
+    content.vb: Public Const COUNTDOWN As String = "OnPlayRadioSunbeam4"
+- uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.GUNAIM
+  commentId: F:NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.GUNAIM
+  id: GUNAIM
+  parent: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  langs:
+  - csharp
+  - vb
+  name: GUNAIM
+  nameWithType: PlaySunbeamEvent.SunbeamEvent.GUNAIM
+  fullName: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.GUNAIM
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Packets/PlaySunbeamEvent.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GUNAIM
+    path: ../NitroxModel/Packets/PlaySunbeamEvent.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public const string GUNAIM = "PrecursorGunAimCheck"
+    return:
+      type: System.String
+    content.vb: Public Const GUNAIM As String = "PrecursorGunAimCheck"
+references:
+- uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamGoals
+  commentId: F:NitroxModel.Packets.PlaySunbeamEvent.SunbeamGoals
+  href: NitroxModel.Packets.PlaySunbeamEvent.SunbeamGoals.html#NitroxModel_Packets_PlaySunbeamEvent_SunbeamGoals
+  name: SunbeamGoals
+  nameWithType: PlaySunbeamEvent.SunbeamGoals
+  fullName: NitroxModel.Packets.PlaySunbeamEvent.SunbeamGoals
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

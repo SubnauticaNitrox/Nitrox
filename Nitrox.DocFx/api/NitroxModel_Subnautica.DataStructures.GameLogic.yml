@@ -1,0 +1,157 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic
+  commentId: N:NitroxModel_Subnautica.DataStructures.GameLogic
+  id: GameLogic
+  parent: NitroxModel_Subnautica.DataStructures
+  children:
+  - NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsFireData
+  - NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  - NitroxModel_Subnautica.DataStructures.GameLogic.ExosuitMovementData
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel_Subnautica.DataStructures.GameLogic
+  nameWithType: NitroxModel_Subnautica.DataStructures.GameLogic
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic
+  type: Namespace
+  assemblies:
+  - NitroxModel-Subnautica
+references:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  commentId: N:NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  nameWithType: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Entities.html
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  commentId: T:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.html
+  name: CyclopsDamageInfoData
+  nameWithType: CyclopsDamageInfoData
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsFireData
+  commentId: T:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsFireData
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsFireData.html
+  name: CyclopsFireData
+  nameWithType: CyclopsFireData
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsFireData
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.ExosuitMovementData
+  commentId: T:NitroxModel_Subnautica.DataStructures.GameLogic.ExosuitMovementData
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.ExosuitMovementData.html
+  name: ExosuitMovementData
+  nameWithType: ExosuitMovementData
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.ExosuitMovementData
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  commentId: N:NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  nameWithType: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures
+    name: Creatures
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+    name: Actions
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures
+    name: Creatures
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
+    name: Actions
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions.html
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic
+  commentId: N:NitroxModel_Subnautica.DataStructures.GameLogic
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.GameLogic
+  nameWithType: NitroxModel_Subnautica.DataStructures.GameLogic
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+memberLayout: SeparatePages

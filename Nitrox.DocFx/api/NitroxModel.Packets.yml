@@ -1,0 +1,1023 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  id: Packets
+  parent: NitroxModel
+  children:
+  - NitroxModel.Packets.AnimationChangeEvent
+  - NitroxModel.Packets.AuroraAndTimeUpdate
+  - NitroxModel.Packets.BaseDeconstructed
+  - NitroxModel.Packets.BatchVisibilityChanged
+  - NitroxModel.Packets.BedEnter
+  - NitroxModel.Packets.BuildingDesyncWarning
+  - NitroxModel.Packets.BuildingResync
+  - NitroxModel.Packets.BuildingResyncRequest
+  - NitroxModel.Packets.CellVisibilityChanged
+  - NitroxModel.Packets.ChatMessage
+  - NitroxModel.Packets.CorrelatedPacket
+  - NitroxModel.Packets.DebugStartMapPacket
+  - NitroxModel.Packets.DeconstructionBegin
+  - NitroxModel.Packets.Disconnect
+  - NitroxModel.Packets.DiscordRequestIP
+  - NitroxModel.Packets.EntityDestroyed
+  - NitroxModel.Packets.EntityMetadataUpdate
+  - NitroxModel.Packets.EntityReparented
+  - NitroxModel.Packets.EntitySpawnedByClient
+  - NitroxModel.Packets.EntityTransformUpdates
+  - NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  - NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+  - NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+  - NitroxModel.Packets.EscapePodChanged
+  - NitroxModel.Packets.Exceptions
+  - NitroxModel.Packets.FireDoused
+  - NitroxModel.Packets.GameModeChanged
+  - NitroxModel.Packets.GoalCompleted
+  - NitroxModel.Packets.InitialPlayerSync
+  - NitroxModel.Packets.ItemPosition
+  - NitroxModel.Packets.KnownTechEntryAdd
+  - NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+  - NitroxModel.Packets.MedicalCabinetClicked
+  - NitroxModel.Packets.ModifyConstructedAmount
+  - NitroxModel.Packets.ModuleAdded
+  - NitroxModel.Packets.ModuleRemoved
+  - NitroxModel.Packets.Movement
+  - NitroxModel.Packets.MultiplayerSessionPolicy
+  - NitroxModel.Packets.MultiplayerSessionPolicyRequest
+  - NitroxModel.Packets.MultiplayerSessionReservation
+  - NitroxModel.Packets.MultiplayerSessionReservationRequest
+  - NitroxModel.Packets.MutePlayer
+  - NitroxModel.Packets.OpenableStateChanged
+  - NitroxModel.Packets.OrderedBuildPacket
+  - NitroxModel.Packets.PDAEncyclopediaEntryAdd
+  - NitroxModel.Packets.PDALogEntryAdd
+  - NitroxModel.Packets.PDAScanFinished
+  - NitroxModel.Packets.Packet
+  - NitroxModel.Packets.Packet.UdpChannelId
+  - NitroxModel.Packets.Packet.Wrapper
+  - NitroxModel.Packets.PacketsSerializableTest
+  - NitroxModel.Packets.PermsChanged
+  - NitroxModel.Packets.PickupItem
+  - NitroxModel.Packets.PieceDeconstructed
+  - NitroxModel.Packets.PingRenamed
+  - NitroxModel.Packets.PinnedRecipeMoved
+  - NitroxModel.Packets.PlaceBase
+  - NitroxModel.Packets.PlaceGhost
+  - NitroxModel.Packets.PlaceModule
+  - NitroxModel.Packets.PlayFMODAsset
+  - NitroxModel.Packets.PlayFMODCustomEmitter
+  - NitroxModel.Packets.PlayFMODCustomLoopingEmitter
+  - NitroxModel.Packets.PlayFMODStudioEmitter
+  - NitroxModel.Packets.PlaySunbeamEvent
+  - NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  - NitroxModel.Packets.PlayerCinematicControllerCall
+  - NitroxModel.Packets.PlayerDeathEvent
+  - NitroxModel.Packets.PlayerHeldItemChanged
+  - NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+  - NitroxModel.Packets.PlayerJoinedMultiplayerSession
+  - NitroxModel.Packets.PlayerJoiningMultiplayerSession
+  - NitroxModel.Packets.PlayerKicked
+  - NitroxModel.Packets.PlayerMovement
+  - NitroxModel.Packets.PlayerQuickSlotsBindingChanged
+  - NitroxModel.Packets.PlayerStats
+  - NitroxModel.Packets.PlayerSyncFinished
+  - NitroxModel.Packets.PlayerTeleported
+  - NitroxModel.Packets.Processors
+  - NitroxModel.Packets.RadioPlayPendingMessage
+  - NitroxModel.Packets.RecipePinned
+  - NitroxModel.Packets.Schedule
+  - NitroxModel.Packets.SeamothModulesAction
+  - NitroxModel.Packets.ServerCommand
+  - NitroxModel.Packets.ServerStopped
+  - NitroxModel.Packets.SignalPingPreferenceChanged
+  - NitroxModel.Packets.SimulationOwnershipChange
+  - NitroxModel.Packets.SimulationOwnershipRequest
+  - NitroxModel.Packets.SimulationOwnershipResponse
+  - NitroxModel.Packets.SpawnEntities
+  - NitroxModel.Packets.StoryGoalExecuted
+  - NitroxModel.Packets.StoryGoalExecuted.EventType
+  - NitroxModel.Packets.SubRootChanged
+  - NitroxModel.Packets.TimeChange
+  - NitroxModel.Packets.ToggleLights
+  - NitroxModel.Packets.UpdateBase
+  - NitroxModel.Packets.VehicleDocking
+  - NitroxModel.Packets.VehicleMovement
+  - NitroxModel.Packets.VehicleOnPilotModeChanged
+  - NitroxModel.Packets.VehicleUndocking
+  - NitroxModel.Packets.WaterParkDeconstructed
+  - NitroxModel.Packets.WeldAction
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: NitroxModel.Packets.Exceptions
+  commentId: N:NitroxModel.Packets.Exceptions
+  href: NitroxModel.html
+  name: NitroxModel.Packets.Exceptions
+  nameWithType: NitroxModel.Packets.Exceptions
+  fullName: NitroxModel.Packets.Exceptions
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Exceptions
+    name: Exceptions
+    href: NitroxModel.Packets.Exceptions.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Exceptions
+    name: Exceptions
+    href: NitroxModel.Packets.Exceptions.html
+- uid: NitroxModel.Packets.Processors
+  commentId: N:NitroxModel.Packets.Processors
+  href: NitroxModel.html
+  name: NitroxModel.Packets.Processors
+  nameWithType: NitroxModel.Packets.Processors
+  fullName: NitroxModel.Packets.Processors
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+- uid: NitroxModel.Packets.AnimationChangeEvent
+  commentId: T:NitroxModel.Packets.AnimationChangeEvent
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.AnimationChangeEvent.html
+  name: AnimationChangeEvent
+  nameWithType: AnimationChangeEvent
+  fullName: NitroxModel.Packets.AnimationChangeEvent
+- uid: NitroxModel.Packets.AuroraAndTimeUpdate
+  commentId: T:NitroxModel.Packets.AuroraAndTimeUpdate
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.AuroraAndTimeUpdate.html
+  name: AuroraAndTimeUpdate
+  nameWithType: AuroraAndTimeUpdate
+  fullName: NitroxModel.Packets.AuroraAndTimeUpdate
+- uid: NitroxModel.Packets.BaseDeconstructed
+  commentId: T:NitroxModel.Packets.BaseDeconstructed
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.BaseDeconstructed.html
+  name: BaseDeconstructed
+  nameWithType: BaseDeconstructed
+  fullName: NitroxModel.Packets.BaseDeconstructed
+- uid: NitroxModel.Packets.BatchVisibilityChanged
+  commentId: T:NitroxModel.Packets.BatchVisibilityChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.BatchVisibilityChanged.html
+  name: BatchVisibilityChanged
+  nameWithType: BatchVisibilityChanged
+  fullName: NitroxModel.Packets.BatchVisibilityChanged
+- uid: NitroxModel.Packets.BedEnter
+  commentId: T:NitroxModel.Packets.BedEnter
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.BedEnter.html
+  name: BedEnter
+  nameWithType: BedEnter
+  fullName: NitroxModel.Packets.BedEnter
+- uid: NitroxModel.Packets.BuildingDesyncWarning
+  commentId: T:NitroxModel.Packets.BuildingDesyncWarning
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.BuildingDesyncWarning.html
+  name: BuildingDesyncWarning
+  nameWithType: BuildingDesyncWarning
+  fullName: NitroxModel.Packets.BuildingDesyncWarning
+- uid: NitroxModel.Packets.BuildingResync
+  commentId: T:NitroxModel.Packets.BuildingResync
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.BuildingResync.html
+  name: BuildingResync
+  nameWithType: BuildingResync
+  fullName: NitroxModel.Packets.BuildingResync
+- uid: NitroxModel.Packets.BuildingResyncRequest
+  commentId: T:NitroxModel.Packets.BuildingResyncRequest
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.BuildingResyncRequest.html
+  name: BuildingResyncRequest
+  nameWithType: BuildingResyncRequest
+  fullName: NitroxModel.Packets.BuildingResyncRequest
+- uid: NitroxModel.Packets.CellVisibilityChanged
+  commentId: T:NitroxModel.Packets.CellVisibilityChanged
+  href: NitroxModel.Packets.CellVisibilityChanged.html
+  name: CellVisibilityChanged
+  nameWithType: CellVisibilityChanged
+  fullName: NitroxModel.Packets.CellVisibilityChanged
+- uid: NitroxModel.Packets.ChatMessage
+  commentId: T:NitroxModel.Packets.ChatMessage
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.ChatMessage.html
+  name: ChatMessage
+  nameWithType: ChatMessage
+  fullName: NitroxModel.Packets.ChatMessage
+- uid: NitroxModel.Packets.CorrelatedPacket
+  commentId: T:NitroxModel.Packets.CorrelatedPacket
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.CorrelatedPacket.html
+  name: CorrelatedPacket
+  nameWithType: CorrelatedPacket
+  fullName: NitroxModel.Packets.CorrelatedPacket
+- uid: NitroxModel.Packets.DebugStartMapPacket
+  commentId: T:NitroxModel.Packets.DebugStartMapPacket
+  href: NitroxModel.Packets.DebugStartMapPacket.html
+  name: DebugStartMapPacket
+  nameWithType: DebugStartMapPacket
+  fullName: NitroxModel.Packets.DebugStartMapPacket
+- uid: NitroxModel.Packets.DeconstructionBegin
+  commentId: T:NitroxModel.Packets.DeconstructionBegin
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.DeconstructionBegin.html
+  name: DeconstructionBegin
+  nameWithType: DeconstructionBegin
+  fullName: NitroxModel.Packets.DeconstructionBegin
+- uid: NitroxModel.Packets.Disconnect
+  commentId: T:NitroxModel.Packets.Disconnect
+  href: NitroxModel.Packets.Disconnect.html
+  name: Disconnect
+  nameWithType: Disconnect
+  fullName: NitroxModel.Packets.Disconnect
+- uid: NitroxModel.Packets.DiscordRequestIP
+  commentId: T:NitroxModel.Packets.DiscordRequestIP
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.DiscordRequestIP.html
+  name: DiscordRequestIP
+  nameWithType: DiscordRequestIP
+  fullName: NitroxModel.Packets.DiscordRequestIP
+- uid: NitroxModel.Packets.EntityDestroyed
+  commentId: T:NitroxModel.Packets.EntityDestroyed
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.EntityDestroyed.html
+  name: EntityDestroyed
+  nameWithType: EntityDestroyed
+  fullName: NitroxModel.Packets.EntityDestroyed
+- uid: NitroxModel.Packets.EntityMetadataUpdate
+  commentId: T:NitroxModel.Packets.EntityMetadataUpdate
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.EntityMetadataUpdate.html
+  name: EntityMetadataUpdate
+  nameWithType: EntityMetadataUpdate
+  fullName: NitroxModel.Packets.EntityMetadataUpdate
+- uid: NitroxModel.Packets.EntityReparented
+  commentId: T:NitroxModel.Packets.EntityReparented
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.EntityReparented.html
+  name: EntityReparented
+  nameWithType: EntityReparented
+  fullName: NitroxModel.Packets.EntityReparented
+- uid: NitroxModel.Packets.EntitySpawnedByClient
+  commentId: T:NitroxModel.Packets.EntitySpawnedByClient
+  href: NitroxModel.Packets.EntitySpawnedByClient.html
+  name: EntitySpawnedByClient
+  nameWithType: EntitySpawnedByClient
+  fullName: NitroxModel.Packets.EntitySpawnedByClient
+- uid: NitroxModel.Packets.EntityTransformUpdates
+  commentId: T:NitroxModel.Packets.EntityTransformUpdates
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.EntityTransformUpdates.html
+  name: EntityTransformUpdates
+  nameWithType: EntityTransformUpdates
+  fullName: NitroxModel.Packets.EntityTransformUpdates
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  commentId: T:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.EntityTransformUpdates.html
+  name: EntityTransformUpdates.EntityTransformUpdate
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  spec.csharp:
+  - uid: NitroxModel.Packets.EntityTransformUpdates
+    name: EntityTransformUpdates
+    href: NitroxModel.Packets.EntityTransformUpdates.html
+  - name: .
+  - uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+    name: EntityTransformUpdate
+    href: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.html
+  spec.vb:
+  - uid: NitroxModel.Packets.EntityTransformUpdates
+    name: EntityTransformUpdates
+    href: NitroxModel.Packets.EntityTransformUpdates.html
+  - name: .
+  - uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+    name: EntityTransformUpdate
+    href: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.html
+- uid: NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+  commentId: T:NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+  href: NitroxModel.Packets.EntityTransformUpdates.html
+  name: EntityTransformUpdates.RawTransformUpdate
+  nameWithType: EntityTransformUpdates.RawTransformUpdate
+  fullName: NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+  spec.csharp:
+  - uid: NitroxModel.Packets.EntityTransformUpdates
+    name: EntityTransformUpdates
+    href: NitroxModel.Packets.EntityTransformUpdates.html
+  - name: .
+  - uid: NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+    name: RawTransformUpdate
+    href: NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate.html
+  spec.vb:
+  - uid: NitroxModel.Packets.EntityTransformUpdates
+    name: EntityTransformUpdates
+    href: NitroxModel.Packets.EntityTransformUpdates.html
+  - name: .
+  - uid: NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+    name: RawTransformUpdate
+    href: NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate.html
+- uid: NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+  commentId: T:NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+  href: NitroxModel.Packets.EntityTransformUpdates.html
+  name: EntityTransformUpdates.SplineTransformUpdate
+  nameWithType: EntityTransformUpdates.SplineTransformUpdate
+  fullName: NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+  spec.csharp:
+  - uid: NitroxModel.Packets.EntityTransformUpdates
+    name: EntityTransformUpdates
+    href: NitroxModel.Packets.EntityTransformUpdates.html
+  - name: .
+  - uid: NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+    name: SplineTransformUpdate
+    href: NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate.html
+  spec.vb:
+  - uid: NitroxModel.Packets.EntityTransformUpdates
+    name: EntityTransformUpdates
+    href: NitroxModel.Packets.EntityTransformUpdates.html
+  - name: .
+  - uid: NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+    name: SplineTransformUpdate
+    href: NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate.html
+- uid: NitroxModel.Packets.EscapePodChanged
+  commentId: T:NitroxModel.Packets.EscapePodChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.EscapePodChanged.html
+  name: EscapePodChanged
+  nameWithType: EscapePodChanged
+  fullName: NitroxModel.Packets.EscapePodChanged
+- uid: NitroxModel.Packets.FireDoused
+  commentId: T:NitroxModel.Packets.FireDoused
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.FireDoused.html
+  name: FireDoused
+  nameWithType: FireDoused
+  fullName: NitroxModel.Packets.FireDoused
+- uid: NitroxModel.Packets.GameModeChanged
+  commentId: T:NitroxModel.Packets.GameModeChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.GameModeChanged.html
+  name: GameModeChanged
+  nameWithType: GameModeChanged
+  fullName: NitroxModel.Packets.GameModeChanged
+- uid: NitroxModel.Packets.GoalCompleted
+  commentId: T:NitroxModel.Packets.GoalCompleted
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.GoalCompleted.html
+  name: GoalCompleted
+  nameWithType: GoalCompleted
+  fullName: NitroxModel.Packets.GoalCompleted
+- uid: NitroxModel.Packets.InitialPlayerSync
+  commentId: T:NitroxModel.Packets.InitialPlayerSync
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.InitialPlayerSync.html
+  name: InitialPlayerSync
+  nameWithType: InitialPlayerSync
+  fullName: NitroxModel.Packets.InitialPlayerSync
+- uid: NitroxModel.Packets.ItemPosition
+  commentId: T:NitroxModel.Packets.ItemPosition
+  href: NitroxModel.Packets.ItemPosition.html
+  name: ItemPosition
+  nameWithType: ItemPosition
+  fullName: NitroxModel.Packets.ItemPosition
+- uid: NitroxModel.Packets.KnownTechEntryAdd
+  commentId: T:NitroxModel.Packets.KnownTechEntryAdd
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.KnownTechEntryAdd.html
+  name: KnownTechEntryAdd
+  nameWithType: KnownTechEntryAdd
+  fullName: NitroxModel.Packets.KnownTechEntryAdd
+- uid: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+  commentId: T:NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.KnownTechEntryAdd.html
+  name: KnownTechEntryAdd.EntryCategory
+  nameWithType: KnownTechEntryAdd.EntryCategory
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+  spec.csharp:
+  - uid: NitroxModel.Packets.KnownTechEntryAdd
+    name: KnownTechEntryAdd
+    href: NitroxModel.Packets.KnownTechEntryAdd.html
+  - name: .
+  - uid: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+    name: EntryCategory
+    href: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.html
+  spec.vb:
+  - uid: NitroxModel.Packets.KnownTechEntryAdd
+    name: KnownTechEntryAdd
+    href: NitroxModel.Packets.KnownTechEntryAdd.html
+  - name: .
+  - uid: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+    name: EntryCategory
+    href: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.html
+- uid: NitroxModel.Packets.MedicalCabinetClicked
+  commentId: T:NitroxModel.Packets.MedicalCabinetClicked
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MedicalCabinetClicked.html
+  name: MedicalCabinetClicked
+  nameWithType: MedicalCabinetClicked
+  fullName: NitroxModel.Packets.MedicalCabinetClicked
+- uid: NitroxModel.Packets.ModifyConstructedAmount
+  commentId: T:NitroxModel.Packets.ModifyConstructedAmount
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.ModifyConstructedAmount.html
+  name: ModifyConstructedAmount
+  nameWithType: ModifyConstructedAmount
+  fullName: NitroxModel.Packets.ModifyConstructedAmount
+- uid: NitroxModel.Packets.ModuleAdded
+  commentId: T:NitroxModel.Packets.ModuleAdded
+  href: NitroxModel.Packets.ModuleAdded.html
+  name: ModuleAdded
+  nameWithType: ModuleAdded
+  fullName: NitroxModel.Packets.ModuleAdded
+- uid: NitroxModel.Packets.ModuleRemoved
+  commentId: T:NitroxModel.Packets.ModuleRemoved
+  href: NitroxModel.Packets.ModuleRemoved.html
+  name: ModuleRemoved
+  nameWithType: ModuleRemoved
+  fullName: NitroxModel.Packets.ModuleRemoved
+- uid: NitroxModel.Packets.Movement
+  commentId: T:NitroxModel.Packets.Movement
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Movement.html
+  name: Movement
+  nameWithType: Movement
+  fullName: NitroxModel.Packets.Movement
+- uid: NitroxModel.Packets.MultiplayerSessionPolicy
+  commentId: T:NitroxModel.Packets.MultiplayerSessionPolicy
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MultiplayerSessionPolicy.html
+  name: MultiplayerSessionPolicy
+  nameWithType: MultiplayerSessionPolicy
+  fullName: NitroxModel.Packets.MultiplayerSessionPolicy
+- uid: NitroxModel.Packets.MultiplayerSessionPolicyRequest
+  commentId: T:NitroxModel.Packets.MultiplayerSessionPolicyRequest
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MultiplayerSessionPolicyRequest.html
+  name: MultiplayerSessionPolicyRequest
+  nameWithType: MultiplayerSessionPolicyRequest
+  fullName: NitroxModel.Packets.MultiplayerSessionPolicyRequest
+- uid: NitroxModel.Packets.MultiplayerSessionReservation
+  commentId: T:NitroxModel.Packets.MultiplayerSessionReservation
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MultiplayerSessionReservation.html
+  name: MultiplayerSessionReservation
+  nameWithType: MultiplayerSessionReservation
+  fullName: NitroxModel.Packets.MultiplayerSessionReservation
+- uid: NitroxModel.Packets.MultiplayerSessionReservationRequest
+  commentId: T:NitroxModel.Packets.MultiplayerSessionReservationRequest
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MultiplayerSessionReservationRequest.html
+  name: MultiplayerSessionReservationRequest
+  nameWithType: MultiplayerSessionReservationRequest
+  fullName: NitroxModel.Packets.MultiplayerSessionReservationRequest
+- uid: NitroxModel.Packets.MutePlayer
+  commentId: T:NitroxModel.Packets.MutePlayer
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MutePlayer.html
+  name: MutePlayer
+  nameWithType: MutePlayer
+  fullName: NitroxModel.Packets.MutePlayer
+- uid: NitroxModel.Packets.OpenableStateChanged
+  commentId: T:NitroxModel.Packets.OpenableStateChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.OpenableStateChanged.html
+  name: OpenableStateChanged
+  nameWithType: OpenableStateChanged
+  fullName: NitroxModel.Packets.OpenableStateChanged
+- uid: NitroxModel.Packets.OrderedBuildPacket
+  commentId: T:NitroxModel.Packets.OrderedBuildPacket
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.OrderedBuildPacket.html
+  name: OrderedBuildPacket
+  nameWithType: OrderedBuildPacket
+  fullName: NitroxModel.Packets.OrderedBuildPacket
+- uid: NitroxModel.Packets.PDAEncyclopediaEntryAdd
+  commentId: T:NitroxModel.Packets.PDAEncyclopediaEntryAdd
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PDAEncyclopediaEntryAdd.html
+  name: PDAEncyclopediaEntryAdd
+  nameWithType: PDAEncyclopediaEntryAdd
+  fullName: NitroxModel.Packets.PDAEncyclopediaEntryAdd
+- uid: NitroxModel.Packets.PDALogEntryAdd
+  commentId: T:NitroxModel.Packets.PDALogEntryAdd
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PDALogEntryAdd.html
+  name: PDALogEntryAdd
+  nameWithType: PDALogEntryAdd
+  fullName: NitroxModel.Packets.PDALogEntryAdd
+- uid: NitroxModel.Packets.PDAScanFinished
+  commentId: T:NitroxModel.Packets.PDAScanFinished
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PDAScanFinished.html
+  name: PDAScanFinished
+  nameWithType: PDAScanFinished
+  fullName: NitroxModel.Packets.PDAScanFinished
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.UdpChannelId
+  commentId: T:NitroxModel.Packets.Packet.UdpChannelId
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet.UdpChannelId
+  nameWithType: Packet.UdpChannelId
+  fullName: NitroxModel.Packets.Packet.UdpChannelId
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+    href: NitroxModel.Packets.Packet.html
+  - name: .
+  - uid: NitroxModel.Packets.Packet.UdpChannelId
+    name: UdpChannelId
+    href: NitroxModel.Packets.Packet.UdpChannelId.html
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+    href: NitroxModel.Packets.Packet.html
+  - name: .
+  - uid: NitroxModel.Packets.Packet.UdpChannelId
+    name: UdpChannelId
+    href: NitroxModel.Packets.Packet.UdpChannelId.html
+- uid: NitroxModel.Packets.Packet.Wrapper
+  commentId: T:NitroxModel.Packets.Packet.Wrapper
+  href: NitroxModel.Packets.Packet.html
+  name: Packet.Wrapper
+  nameWithType: Packet.Wrapper
+  fullName: NitroxModel.Packets.Packet.Wrapper
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+    href: NitroxModel.Packets.Packet.html
+  - name: .
+  - uid: NitroxModel.Packets.Packet.Wrapper
+    name: Wrapper
+    href: NitroxModel.Packets.Packet.Wrapper.html
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+    href: NitroxModel.Packets.Packet.html
+  - name: .
+  - uid: NitroxModel.Packets.Packet.Wrapper
+    name: Wrapper
+    href: NitroxModel.Packets.Packet.Wrapper.html
+- uid: NitroxModel.Packets.PacketsSerializableTest
+  commentId: T:NitroxModel.Packets.PacketsSerializableTest
+  href: NitroxModel.Packets.PacketsSerializableTest.html
+  name: PacketsSerializableTest
+  nameWithType: PacketsSerializableTest
+  fullName: NitroxModel.Packets.PacketsSerializableTest
+- uid: NitroxModel.Packets.PermsChanged
+  commentId: T:NitroxModel.Packets.PermsChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PermsChanged.html
+  name: PermsChanged
+  nameWithType: PermsChanged
+  fullName: NitroxModel.Packets.PermsChanged
+- uid: NitroxModel.Packets.PickupItem
+  commentId: T:NitroxModel.Packets.PickupItem
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PickupItem.html
+  name: PickupItem
+  nameWithType: PickupItem
+  fullName: NitroxModel.Packets.PickupItem
+- uid: NitroxModel.Packets.PieceDeconstructed
+  commentId: T:NitroxModel.Packets.PieceDeconstructed
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PieceDeconstructed.html
+  name: PieceDeconstructed
+  nameWithType: PieceDeconstructed
+  fullName: NitroxModel.Packets.PieceDeconstructed
+- uid: NitroxModel.Packets.PingRenamed
+  commentId: T:NitroxModel.Packets.PingRenamed
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PingRenamed.html
+  name: PingRenamed
+  nameWithType: PingRenamed
+  fullName: NitroxModel.Packets.PingRenamed
+- uid: NitroxModel.Packets.PinnedRecipeMoved
+  commentId: T:NitroxModel.Packets.PinnedRecipeMoved
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PinnedRecipeMoved.html
+  name: PinnedRecipeMoved
+  nameWithType: PinnedRecipeMoved
+  fullName: NitroxModel.Packets.PinnedRecipeMoved
+- uid: NitroxModel.Packets.PlaceBase
+  commentId: T:NitroxModel.Packets.PlaceBase
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlaceBase.html
+  name: PlaceBase
+  nameWithType: PlaceBase
+  fullName: NitroxModel.Packets.PlaceBase
+- uid: NitroxModel.Packets.PlaceGhost
+  commentId: T:NitroxModel.Packets.PlaceGhost
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlaceGhost.html
+  name: PlaceGhost
+  nameWithType: PlaceGhost
+  fullName: NitroxModel.Packets.PlaceGhost
+- uid: NitroxModel.Packets.PlaceModule
+  commentId: T:NitroxModel.Packets.PlaceModule
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlaceModule.html
+  name: PlaceModule
+  nameWithType: PlaceModule
+  fullName: NitroxModel.Packets.PlaceModule
+- uid: NitroxModel.Packets.PlayFMODAsset
+  commentId: T:NitroxModel.Packets.PlayFMODAsset
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayFMODAsset.html
+  name: PlayFMODAsset
+  nameWithType: PlayFMODAsset
+  fullName: NitroxModel.Packets.PlayFMODAsset
+- uid: NitroxModel.Packets.PlayFMODCustomEmitter
+  commentId: T:NitroxModel.Packets.PlayFMODCustomEmitter
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayFMODCustomEmitter.html
+  name: PlayFMODCustomEmitter
+  nameWithType: PlayFMODCustomEmitter
+  fullName: NitroxModel.Packets.PlayFMODCustomEmitter
+- uid: NitroxModel.Packets.PlayFMODCustomLoopingEmitter
+  commentId: T:NitroxModel.Packets.PlayFMODCustomLoopingEmitter
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayFMODCustomLoopingEmitter.html
+  name: PlayFMODCustomLoopingEmitter
+  nameWithType: PlayFMODCustomLoopingEmitter
+  fullName: NitroxModel.Packets.PlayFMODCustomLoopingEmitter
+- uid: NitroxModel.Packets.PlayFMODStudioEmitter
+  commentId: T:NitroxModel.Packets.PlayFMODStudioEmitter
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayFMODStudioEmitter.html
+  name: PlayFMODStudioEmitter
+  nameWithType: PlayFMODStudioEmitter
+  fullName: NitroxModel.Packets.PlayFMODStudioEmitter
+- uid: NitroxModel.Packets.PlaySunbeamEvent
+  commentId: T:NitroxModel.Packets.PlaySunbeamEvent
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlaySunbeamEvent.html
+  name: PlaySunbeamEvent
+  nameWithType: PlaySunbeamEvent
+  fullName: NitroxModel.Packets.PlaySunbeamEvent
+- uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  commentId: T:NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  href: NitroxModel.Packets.PlaySunbeamEvent.html
+  name: PlaySunbeamEvent.SunbeamEvent
+  nameWithType: PlaySunbeamEvent.SunbeamEvent
+  fullName: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+  spec.csharp:
+  - uid: NitroxModel.Packets.PlaySunbeamEvent
+    name: PlaySunbeamEvent
+    href: NitroxModel.Packets.PlaySunbeamEvent.html
+  - name: .
+  - uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+    name: SunbeamEvent
+    href: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.html
+  spec.vb:
+  - uid: NitroxModel.Packets.PlaySunbeamEvent
+    name: PlaySunbeamEvent
+    href: NitroxModel.Packets.PlaySunbeamEvent.html
+  - name: .
+  - uid: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent
+    name: SunbeamEvent
+    href: NitroxModel.Packets.PlaySunbeamEvent.SunbeamEvent.html
+- uid: NitroxModel.Packets.PlayerCinematicControllerCall
+  commentId: T:NitroxModel.Packets.PlayerCinematicControllerCall
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerCinematicControllerCall.html
+  name: PlayerCinematicControllerCall
+  nameWithType: PlayerCinematicControllerCall
+  fullName: NitroxModel.Packets.PlayerCinematicControllerCall
+- uid: NitroxModel.Packets.PlayerDeathEvent
+  commentId: T:NitroxModel.Packets.PlayerDeathEvent
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerDeathEvent.html
+  name: PlayerDeathEvent
+  nameWithType: PlayerDeathEvent
+  fullName: NitroxModel.Packets.PlayerDeathEvent
+- uid: NitroxModel.Packets.PlayerHeldItemChanged
+  commentId: T:NitroxModel.Packets.PlayerHeldItemChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerHeldItemChanged.html
+  name: PlayerHeldItemChanged
+  nameWithType: PlayerHeldItemChanged
+  fullName: NitroxModel.Packets.PlayerHeldItemChanged
+- uid: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+  commentId: T:NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerHeldItemChanged.html
+  name: PlayerHeldItemChanged.ChangeType
+  nameWithType: PlayerHeldItemChanged.ChangeType
+  fullName: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+  spec.csharp:
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged
+    name: PlayerHeldItemChanged
+    href: NitroxModel.Packets.PlayerHeldItemChanged.html
+  - name: .
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+    name: ChangeType
+    href: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType.html
+  spec.vb:
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged
+    name: PlayerHeldItemChanged
+    href: NitroxModel.Packets.PlayerHeldItemChanged.html
+  - name: .
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+    name: ChangeType
+    href: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType.html
+- uid: NitroxModel.Packets.PlayerJoinedMultiplayerSession
+  commentId: T:NitroxModel.Packets.PlayerJoinedMultiplayerSession
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerJoinedMultiplayerSession.html
+  name: PlayerJoinedMultiplayerSession
+  nameWithType: PlayerJoinedMultiplayerSession
+  fullName: NitroxModel.Packets.PlayerJoinedMultiplayerSession
+- uid: NitroxModel.Packets.PlayerJoiningMultiplayerSession
+  commentId: T:NitroxModel.Packets.PlayerJoiningMultiplayerSession
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerJoiningMultiplayerSession.html
+  name: PlayerJoiningMultiplayerSession
+  nameWithType: PlayerJoiningMultiplayerSession
+  fullName: NitroxModel.Packets.PlayerJoiningMultiplayerSession
+- uid: NitroxModel.Packets.PlayerKicked
+  commentId: T:NitroxModel.Packets.PlayerKicked
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerKicked.html
+  name: PlayerKicked
+  nameWithType: PlayerKicked
+  fullName: NitroxModel.Packets.PlayerKicked
+- uid: NitroxModel.Packets.PlayerMovement
+  commentId: T:NitroxModel.Packets.PlayerMovement
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerMovement.html
+  name: PlayerMovement
+  nameWithType: PlayerMovement
+  fullName: NitroxModel.Packets.PlayerMovement
+- uid: NitroxModel.Packets.PlayerQuickSlotsBindingChanged
+  commentId: T:NitroxModel.Packets.PlayerQuickSlotsBindingChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerQuickSlotsBindingChanged.html
+  name: PlayerQuickSlotsBindingChanged
+  nameWithType: PlayerQuickSlotsBindingChanged
+  fullName: NitroxModel.Packets.PlayerQuickSlotsBindingChanged
+- uid: NitroxModel.Packets.PlayerStats
+  commentId: T:NitroxModel.Packets.PlayerStats
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerStats.html
+  name: PlayerStats
+  nameWithType: PlayerStats
+  fullName: NitroxModel.Packets.PlayerStats
+- uid: NitroxModel.Packets.PlayerSyncFinished
+  commentId: T:NitroxModel.Packets.PlayerSyncFinished
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerSyncFinished.html
+  name: PlayerSyncFinished
+  nameWithType: PlayerSyncFinished
+  fullName: NitroxModel.Packets.PlayerSyncFinished
+- uid: NitroxModel.Packets.PlayerTeleported
+  commentId: T:NitroxModel.Packets.PlayerTeleported
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerTeleported.html
+  name: PlayerTeleported
+  nameWithType: PlayerTeleported
+  fullName: NitroxModel.Packets.PlayerTeleported
+- uid: NitroxModel.Packets.RadioPlayPendingMessage
+  commentId: T:NitroxModel.Packets.RadioPlayPendingMessage
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.RadioPlayPendingMessage.html
+  name: RadioPlayPendingMessage
+  nameWithType: RadioPlayPendingMessage
+  fullName: NitroxModel.Packets.RadioPlayPendingMessage
+- uid: NitroxModel.Packets.RecipePinned
+  commentId: T:NitroxModel.Packets.RecipePinned
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.RecipePinned.html
+  name: RecipePinned
+  nameWithType: RecipePinned
+  fullName: NitroxModel.Packets.RecipePinned
+- uid: NitroxModel.Packets.Schedule
+  commentId: T:NitroxModel.Packets.Schedule
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Schedule.html
+  name: Schedule
+  nameWithType: Schedule
+  fullName: NitroxModel.Packets.Schedule
+- uid: NitroxModel.Packets.SeamothModulesAction
+  commentId: T:NitroxModel.Packets.SeamothModulesAction
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.SeamothModulesAction.html
+  name: SeamothModulesAction
+  nameWithType: SeamothModulesAction
+  fullName: NitroxModel.Packets.SeamothModulesAction
+- uid: NitroxModel.Packets.ServerCommand
+  commentId: T:NitroxModel.Packets.ServerCommand
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.ServerCommand.html
+  name: ServerCommand
+  nameWithType: ServerCommand
+  fullName: NitroxModel.Packets.ServerCommand
+- uid: NitroxModel.Packets.ServerStopped
+  commentId: T:NitroxModel.Packets.ServerStopped
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.ServerStopped.html
+  name: ServerStopped
+  nameWithType: ServerStopped
+  fullName: NitroxModel.Packets.ServerStopped
+- uid: NitroxModel.Packets.SignalPingPreferenceChanged
+  commentId: T:NitroxModel.Packets.SignalPingPreferenceChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.SignalPingPreferenceChanged.html
+  name: SignalPingPreferenceChanged
+  nameWithType: SignalPingPreferenceChanged
+  fullName: NitroxModel.Packets.SignalPingPreferenceChanged
+- uid: NitroxModel.Packets.SimulationOwnershipChange
+  commentId: T:NitroxModel.Packets.SimulationOwnershipChange
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.SimulationOwnershipChange.html
+  name: SimulationOwnershipChange
+  nameWithType: SimulationOwnershipChange
+  fullName: NitroxModel.Packets.SimulationOwnershipChange
+- uid: NitroxModel.Packets.SimulationOwnershipRequest
+  commentId: T:NitroxModel.Packets.SimulationOwnershipRequest
+  href: NitroxModel.Packets.SimulationOwnershipRequest.html
+  name: SimulationOwnershipRequest
+  nameWithType: SimulationOwnershipRequest
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest
+- uid: NitroxModel.Packets.SimulationOwnershipResponse
+  commentId: T:NitroxModel.Packets.SimulationOwnershipResponse
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.SimulationOwnershipResponse.html
+  name: SimulationOwnershipResponse
+  nameWithType: SimulationOwnershipResponse
+  fullName: NitroxModel.Packets.SimulationOwnershipResponse
+- uid: NitroxModel.Packets.SpawnEntities
+  commentId: T:NitroxModel.Packets.SpawnEntities
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.SpawnEntities.html
+  name: SpawnEntities
+  nameWithType: SpawnEntities
+  fullName: NitroxModel.Packets.SpawnEntities
+- uid: NitroxModel.Packets.StoryGoalExecuted
+  commentId: T:NitroxModel.Packets.StoryGoalExecuted
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.StoryGoalExecuted.html
+  name: StoryGoalExecuted
+  nameWithType: StoryGoalExecuted
+  fullName: NitroxModel.Packets.StoryGoalExecuted
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+  commentId: T:NitroxModel.Packets.StoryGoalExecuted.EventType
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.StoryGoalExecuted.html
+  name: StoryGoalExecuted.EventType
+  nameWithType: StoryGoalExecuted.EventType
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType
+  spec.csharp:
+  - uid: NitroxModel.Packets.StoryGoalExecuted
+    name: StoryGoalExecuted
+    href: NitroxModel.Packets.StoryGoalExecuted.html
+  - name: .
+  - uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+    name: EventType
+    href: NitroxModel.Packets.StoryGoalExecuted.EventType.html
+  spec.vb:
+  - uid: NitroxModel.Packets.StoryGoalExecuted
+    name: StoryGoalExecuted
+    href: NitroxModel.Packets.StoryGoalExecuted.html
+  - name: .
+  - uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+    name: EventType
+    href: NitroxModel.Packets.StoryGoalExecuted.EventType.html
+- uid: NitroxModel.Packets.SubRootChanged
+  commentId: T:NitroxModel.Packets.SubRootChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.SubRootChanged.html
+  name: SubRootChanged
+  nameWithType: SubRootChanged
+  fullName: NitroxModel.Packets.SubRootChanged
+- uid: NitroxModel.Packets.TimeChange
+  commentId: T:NitroxModel.Packets.TimeChange
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.TimeChange.html
+  name: TimeChange
+  nameWithType: TimeChange
+  fullName: NitroxModel.Packets.TimeChange
+- uid: NitroxModel.Packets.ToggleLights
+  commentId: T:NitroxModel.Packets.ToggleLights
+  href: NitroxModel.Packets.ToggleLights.html
+  name: ToggleLights
+  nameWithType: ToggleLights
+  fullName: NitroxModel.Packets.ToggleLights
+- uid: NitroxModel.Packets.UpdateBase
+  commentId: T:NitroxModel.Packets.UpdateBase
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.UpdateBase.html
+  name: UpdateBase
+  nameWithType: UpdateBase
+  fullName: NitroxModel.Packets.UpdateBase
+- uid: NitroxModel.Packets.VehicleDocking
+  commentId: T:NitroxModel.Packets.VehicleDocking
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.VehicleDocking.html
+  name: VehicleDocking
+  nameWithType: VehicleDocking
+  fullName: NitroxModel.Packets.VehicleDocking
+- uid: NitroxModel.Packets.VehicleMovement
+  commentId: T:NitroxModel.Packets.VehicleMovement
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.VehicleMovement.html
+  name: VehicleMovement
+  nameWithType: VehicleMovement
+  fullName: NitroxModel.Packets.VehicleMovement
+- uid: NitroxModel.Packets.VehicleOnPilotModeChanged
+  commentId: T:NitroxModel.Packets.VehicleOnPilotModeChanged
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.VehicleOnPilotModeChanged.html
+  name: VehicleOnPilotModeChanged
+  nameWithType: VehicleOnPilotModeChanged
+  fullName: NitroxModel.Packets.VehicleOnPilotModeChanged
+- uid: NitroxModel.Packets.VehicleUndocking
+  commentId: T:NitroxModel.Packets.VehicleUndocking
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.VehicleUndocking.html
+  name: VehicleUndocking
+  nameWithType: VehicleUndocking
+  fullName: NitroxModel.Packets.VehicleUndocking
+- uid: NitroxModel.Packets.WaterParkDeconstructed
+  commentId: T:NitroxModel.Packets.WaterParkDeconstructed
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.WaterParkDeconstructed.html
+  name: WaterParkDeconstructed
+  nameWithType: WaterParkDeconstructed
+  fullName: NitroxModel.Packets.WaterParkDeconstructed
+- uid: NitroxModel.Packets.WeldAction
+  commentId: T:NitroxModel.Packets.WeldAction
+  href: NitroxModel.Packets.WeldAction.html
+  name: WeldAction
+  nameWithType: WeldAction
+  fullName: NitroxModel.Packets.WeldAction
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+memberLayout: SeparatePages

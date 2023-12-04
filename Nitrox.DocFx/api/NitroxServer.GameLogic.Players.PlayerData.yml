@@ -1,0 +1,634 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Players.PlayerData
+  commentId: T:NitroxServer.GameLogic.Players.PlayerData
+  id: PlayerData
+  parent: NitroxServer.GameLogic.Players
+  children:
+  - NitroxServer.GameLogic.Players.PlayerData.From(System.Collections.Generic.IEnumerable{NitroxServer.Player})
+  - NitroxServer.GameLogic.Players.PlayerData.GetPlayers
+  - NitroxServer.GameLogic.Players.PlayerData.Players
+  langs:
+  - csharp
+  - vb
+  name: PlayerData
+  nameWithType: PlayerData
+  fullName: NitroxServer.GameLogic.Players.PlayerData
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Players/PlayerData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerData
+    path: ../NitroxServer/GameLogic/Players/PlayerData.cs
+    startLine: 6
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Players
+  syntax:
+    content: >-
+      [DataContract]
+
+      public class PlayerData
+    content.vb: >-
+      <DataContract>
+
+      Public Class PlayerData
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxServer.GameLogic.Players.PlayerData.Players
+  commentId: F:NitroxServer.GameLogic.Players.PlayerData.Players
+  id: Players
+  parent: NitroxServer.GameLogic.Players.PlayerData
+  langs:
+  - csharp
+  - vb
+  name: Players
+  nameWithType: PlayerData.Players
+  fullName: NitroxServer.GameLogic.Players.PlayerData.Players
+  type: Field
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Players/PlayerData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Players
+    path: ../NitroxServer/GameLogic/Players/PlayerData.cs
+    startLine: 10
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Players
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public List<PersistedPlayerData> Players
+    return:
+      type: System.Collections.Generic.List{NitroxServer.GameLogic.Players.PersistedPlayerData}
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public Players As List(Of PersistedPlayerData)
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxServer.GameLogic.Players.PlayerData.GetPlayers
+  commentId: M:NitroxServer.GameLogic.Players.PlayerData.GetPlayers
+  id: GetPlayers
+  parent: NitroxServer.GameLogic.Players.PlayerData
+  langs:
+  - csharp
+  - vb
+  name: GetPlayers()
+  nameWithType: PlayerData.GetPlayers()
+  fullName: NitroxServer.GameLogic.Players.PlayerData.GetPlayers()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Players/PlayerData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetPlayers
+    path: ../NitroxServer/GameLogic/Players/PlayerData.cs
+    startLine: 12
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Players
+  syntax:
+    content: public List<Player> GetPlayers()
+    return:
+      type: System.Collections.Generic.List{NitroxServer.Player}
+    content.vb: Public Function GetPlayers() As List(Of Player)
+  overload: NitroxServer.GameLogic.Players.PlayerData.GetPlayers*
+- uid: NitroxServer.GameLogic.Players.PlayerData.From(System.Collections.Generic.IEnumerable{NitroxServer.Player})
+  commentId: M:NitroxServer.GameLogic.Players.PlayerData.From(System.Collections.Generic.IEnumerable{NitroxServer.Player})
+  id: From(System.Collections.Generic.IEnumerable{NitroxServer.Player})
+  parent: NitroxServer.GameLogic.Players.PlayerData
+  langs:
+  - csharp
+  - vb
+  name: From(IEnumerable<Player>)
+  nameWithType: PlayerData.From(IEnumerable<Player>)
+  fullName: NitroxServer.GameLogic.Players.PlayerData.From(System.Collections.Generic.IEnumerable<NitroxServer.Player>)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Players/PlayerData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: From
+    path: ../NitroxServer/GameLogic/Players/PlayerData.cs
+    startLine: 17
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Players
+  syntax:
+    content: public static PlayerData From(IEnumerable<Player> players)
+    parameters:
+    - id: players
+      type: System.Collections.Generic.IEnumerable{NitroxServer.Player}
+    return:
+      type: NitroxServer.GameLogic.Players.PlayerData
+    content.vb: Public Shared Function From(players As IEnumerable(Of Player)) As PlayerData
+  overload: NitroxServer.GameLogic.Players.PlayerData.From*
+  nameWithType.vb: PlayerData.From(IEnumerable(Of Player))
+  fullName.vb: NitroxServer.GameLogic.Players.PlayerData.From(System.Collections.Generic.IEnumerable(Of NitroxServer.Player))
+  name.vb: From(IEnumerable(Of Player))
+references:
+- uid: NitroxServer.GameLogic.Players
+  commentId: N:NitroxServer.GameLogic.Players
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Players
+  nameWithType: NitroxServer.GameLogic.Players
+  fullName: NitroxServer.GameLogic.Players
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Players
+    name: Players
+    href: NitroxServer.GameLogic.Players.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Players
+    name: Players
+    href: NitroxServer.GameLogic.Players.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.List{NitroxServer.GameLogic.Players.PersistedPlayerData}
+  commentId: T:System.Collections.Generic.List{NitroxServer.GameLogic.Players.PersistedPlayerData}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<PersistedPlayerData>
+  nameWithType: List<PersistedPlayerData>
+  fullName: System.Collections.Generic.List<NitroxServer.GameLogic.Players.PersistedPlayerData>
+  nameWithType.vb: List(Of PersistedPlayerData)
+  fullName.vb: System.Collections.Generic.List(Of NitroxServer.GameLogic.Players.PersistedPlayerData)
+  name.vb: List(Of PersistedPlayerData)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxServer.GameLogic.Players.PersistedPlayerData
+    name: PersistedPlayerData
+    href: NitroxServer.GameLogic.Players.PersistedPlayerData.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxServer.GameLogic.Players.PersistedPlayerData
+    name: PersistedPlayerData
+    href: NitroxServer.GameLogic.Players.PersistedPlayerData.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxServer.GameLogic.Players.PlayerData.GetPlayers*
+  commentId: Overload:NitroxServer.GameLogic.Players.PlayerData.GetPlayers
+  href: NitroxServer.GameLogic.Players.PlayerData.GetPlayers.html#NitroxServer_GameLogic_Players_PlayerData_GetPlayers
+  name: GetPlayers
+  nameWithType: PlayerData.GetPlayers
+  fullName: NitroxServer.GameLogic.Players.PlayerData.GetPlayers
+- uid: System.Collections.Generic.List{NitroxServer.Player}
+  commentId: T:System.Collections.Generic.List{NitroxServer.Player}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Player>
+  nameWithType: List<Player>
+  fullName: System.Collections.Generic.List<NitroxServer.Player>
+  nameWithType.vb: List(Of Player)
+  fullName.vb: System.Collections.Generic.List(Of NitroxServer.Player)
+  name.vb: List(Of Player)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxServer.Player
+    name: Player
+    href: NitroxServer.Player.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxServer.Player
+    name: Player
+    href: NitroxServer.Player.html
+  - name: )
+- uid: NitroxServer.GameLogic.Players.PlayerData.From*
+  commentId: Overload:NitroxServer.GameLogic.Players.PlayerData.From
+  href: NitroxServer.GameLogic.Players.PlayerData.From.html#NitroxServer_GameLogic_Players_PlayerData_From_System_Collections_Generic_IEnumerable_NitroxServer_Player__
+  name: From
+  nameWithType: PlayerData.From
+  fullName: NitroxServer.GameLogic.Players.PlayerData.From
+- uid: System.Collections.Generic.IEnumerable{NitroxServer.Player}
+  commentId: T:System.Collections.Generic.IEnumerable{NitroxServer.Player}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<Player>
+  nameWithType: IEnumerable<Player>
+  fullName: System.Collections.Generic.IEnumerable<NitroxServer.Player>
+  nameWithType.vb: IEnumerable(Of Player)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of NitroxServer.Player)
+  name.vb: IEnumerable(Of Player)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: NitroxServer.Player
+    name: Player
+    href: NitroxServer.Player.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxServer.Player
+    name: Player
+    href: NitroxServer.Player.html
+  - name: )
+- uid: NitroxServer.GameLogic.Players.PlayerData
+  commentId: T:NitroxServer.GameLogic.Players.PlayerData
+  parent: NitroxServer.GameLogic.Players
+  href: NitroxServer.GameLogic.Players.PlayerData.html
+  name: PlayerData
+  nameWithType: PlayerData
+  fullName: NitroxServer.GameLogic.Players.PlayerData
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

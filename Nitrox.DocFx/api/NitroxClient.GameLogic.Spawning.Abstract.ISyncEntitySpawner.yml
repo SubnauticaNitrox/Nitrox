@@ -1,0 +1,307 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  id: ISyncEntitySpawner
+  parent: NitroxClient.GameLogic.Spawning.Abstract
+  children:
+  - NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  - NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}},TaskResult{System.Exception})
+  langs:
+  - csharp
+  - vb
+  name: ISyncEntitySpawner
+  nameWithType: ISyncEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/Abstract/ISyncEntitySpawner.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ISyncEntitySpawner
+    path: ../NitroxClient/GameLogic/Spawning/Abstract/ISyncEntitySpawner.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.Abstract
+  syntax:
+    content: public interface ISyncEntitySpawner
+    content.vb: Public Interface ISyncEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  commentId: M:NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  id: SpawnSync(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  parent: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  langs:
+  - csharp
+  - vb
+  name: SpawnSync(Entity, TaskResult<Optional<GameObject>>)
+  nameWithType: ISyncEntitySpawner.SpawnSync(Entity, TaskResult<Optional<GameObject>>)
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entity, TaskResult<NitroxModel.DataStructures.Util.Optional<UnityEngine.GameObject>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/Abstract/ISyncEntitySpawner.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SpawnSync
+    path: ../NitroxClient/GameLogic/Spawning/Abstract/ISyncEntitySpawner.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.Abstract
+  syntax:
+    content: bool SpawnSync(Entity entity, TaskResult<Optional<GameObject>> result)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entity
+    - id: result
+      type: TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}}
+    return:
+      type: System.Boolean
+    content.vb: Function SpawnSync(entity As Entity, result As TaskResult(Of [Optional](Of GameObject))) As Boolean
+  overload: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync*
+  nameWithType.vb: ISyncEntitySpawner.SpawnSync(Entity, TaskResult(Of Optional(Of GameObject)))
+  fullName.vb: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entity, TaskResult(Of NitroxModel.DataStructures.Util.Optional(Of UnityEngine.GameObject)))
+  name.vb: SpawnSync(Entity, TaskResult(Of Optional(Of GameObject)))
+- uid: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}},TaskResult{System.Exception})
+  commentId: M:NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}},TaskResult{System.Exception})
+  id: SpawnSyncSafe(NitroxModel.DataStructures.GameLogic.Entity,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}},TaskResult{System.Exception})
+  parent: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner
+  langs:
+  - csharp
+  - vb
+  name: SpawnSyncSafe(Entity, TaskResult<Optional<GameObject>>, TaskResult<Exception>)
+  nameWithType: ISyncEntitySpawner.SpawnSyncSafe(Entity, TaskResult<Optional<GameObject>>, TaskResult<Exception>)
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe(NitroxModel.DataStructures.GameLogic.Entity, TaskResult<NitroxModel.DataStructures.Util.Optional<UnityEngine.GameObject>>, TaskResult<System.Exception>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/Abstract/ISyncEntitySpawner.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SpawnSyncSafe
+    path: ../NitroxClient/GameLogic/Spawning/Abstract/ISyncEntitySpawner.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.Abstract
+  syntax:
+    content: bool SpawnSyncSafe(Entity entity, TaskResult<Optional<GameObject>> result, TaskResult<Exception> exception)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entity
+    - id: result
+      type: TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}}
+    - id: exception
+      type: TaskResult{System.Exception}
+    return:
+      type: System.Boolean
+    content.vb: Function SpawnSyncSafe(entity As Entity, result As TaskResult(Of [Optional](Of GameObject)), exception As TaskResult(Of Exception)) As Boolean
+  overload: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe*
+  nameWithType.vb: ISyncEntitySpawner.SpawnSyncSafe(Entity, TaskResult(Of Optional(Of GameObject)), TaskResult(Of Exception))
+  fullName.vb: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe(NitroxModel.DataStructures.GameLogic.Entity, TaskResult(Of NitroxModel.DataStructures.Util.Optional(Of UnityEngine.GameObject)), TaskResult(Of System.Exception))
+  name.vb: SpawnSyncSafe(Entity, TaskResult(Of Optional(Of GameObject)), TaskResult(Of Exception))
+references:
+- uid: NitroxClient.GameLogic.Spawning.Abstract
+  commentId: N:NitroxClient.GameLogic.Spawning.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Abstract
+  nameWithType: NitroxClient.GameLogic.Spawning.Abstract
+  fullName: NitroxClient.GameLogic.Spawning.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.Spawning.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.Spawning.Abstract.html
+- uid: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync*
+  commentId: Overload:NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync
+  href: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync.html#NitroxClient_GameLogic_Spawning_Abstract_ISyncEntitySpawner_SpawnSync_NitroxModel_DataStructures_GameLogic_Entity_TaskResult_NitroxModel_DataStructures_Util_Optional_UnityEngine_GameObject___
+  name: SpawnSync
+  nameWithType: ISyncEntitySpawner.SpawnSync
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSync
+- uid: NitroxModel.DataStructures.GameLogic.Entity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entity
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.Entity.html
+  name: Entity
+  nameWithType: Entity
+  fullName: NitroxModel.DataStructures.GameLogic.Entity
+- uid: TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}}
+  commentId: T:TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}}
+  definition: TaskResult`1
+  name: TaskResult<Optional<GameObject>>
+  nameWithType: TaskResult<Optional<GameObject>>
+  fullName: TaskResult<NitroxModel.DataStructures.Util.Optional<UnityEngine.GameObject>>
+  nameWithType.vb: TaskResult(Of Optional(Of GameObject))
+  fullName.vb: TaskResult(Of NitroxModel.DataStructures.Util.Optional(Of UnityEngine.GameObject))
+  name.vb: TaskResult(Of Optional(Of GameObject))
+  spec.csharp:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: <
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: <
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: )
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: TaskResult`1
+  commentId: T:TaskResult`1
+  isExternal: true
+  name: TaskResult<T>
+  nameWithType: TaskResult<T>
+  fullName: TaskResult<T>
+  nameWithType.vb: TaskResult(Of T)
+  fullName.vb: TaskResult(Of T)
+  name.vb: TaskResult(Of T)
+  spec.csharp:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe*
+  commentId: Overload:NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe
+  href: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe.html#NitroxClient_GameLogic_Spawning_Abstract_ISyncEntitySpawner_SpawnSyncSafe_NitroxModel_DataStructures_GameLogic_Entity_TaskResult_NitroxModel_DataStructures_Util_Optional_UnityEngine_GameObject___TaskResult_System_Exception__
+  name: SpawnSyncSafe
+  nameWithType: ISyncEntitySpawner.SpawnSyncSafe
+  fullName: NitroxClient.GameLogic.Spawning.Abstract.ISyncEntitySpawner.SpawnSyncSafe
+- uid: TaskResult{System.Exception}
+  commentId: T:TaskResult{System.Exception}
+  definition: TaskResult`1
+  href: https://learn.microsoft.com/dotnet/api/system.exception
+  name: TaskResult<Exception>
+  nameWithType: TaskResult<Exception>
+  fullName: TaskResult<System.Exception>
+  nameWithType.vb: TaskResult(Of Exception)
+  fullName.vb: TaskResult(Of System.Exception)
+  name.vb: TaskResult(Of Exception)
+  spec.csharp:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: <
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: '>'
+  spec.vb:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: )
+memberLayout: SeparatePages

@@ -1,0 +1,25 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.Logger
+  commentId: N:NitroxModel_Subnautica.Logger
+  id: Logger
+  parent: NitroxModel_Subnautica
+  children:
+  - NitroxModel_Subnautica.Logger.SubnauticaInGameLogger
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel_Subnautica.Logger
+  nameWithType: NitroxModel_Subnautica.Logger
+  fullName: NitroxModel_Subnautica.Logger
+  type: Namespace
+  assemblies:
+  - NitroxModel-Subnautica
+references:
+- uid: NitroxModel_Subnautica.Logger.SubnauticaInGameLogger
+  commentId: T:NitroxModel_Subnautica.Logger.SubnauticaInGameLogger
+  href: NitroxModel_Subnautica.Logger.SubnauticaInGameLogger.html
+  name: SubnauticaInGameLogger
+  nameWithType: SubnauticaInGameLogger
+  fullName: NitroxModel_Subnautica.Logger.SubnauticaInGameLogger
+memberLayout: SeparatePages

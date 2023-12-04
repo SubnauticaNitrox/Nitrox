@@ -1,0 +1,260 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication
+  commentId: N:NitroxClient.Communication
+  id: Communication
+  parent: NitroxClient
+  children:
+  - NitroxClient.Communication.Abstract
+  - NitroxClient.Communication.DeferredPacketReceiverTest
+  - NitroxClient.Communication.Exceptions
+  - NitroxClient.Communication.LANBroadcastClient
+  - NitroxClient.Communication.MultiplayerSession
+  - NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  - NitroxClient.Communication.PacketReceiver
+  - NitroxClient.Communication.PacketSuppressor`1
+  - NitroxClient.Communication.Packets.Processors
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Communication
+  nameWithType: NitroxClient.Communication
+  fullName: NitroxClient.Communication
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Communication.Exceptions
+  commentId: N:NitroxClient.Communication.Exceptions
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Exceptions
+  nameWithType: NitroxClient.Communication.Exceptions
+  fullName: NitroxClient.Communication.Exceptions
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Exceptions
+    name: Exceptions
+    href: NitroxClient.Communication.Exceptions.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Exceptions
+    name: Exceptions
+    href: NitroxClient.Communication.Exceptions.html
+- uid: NitroxClient.Communication.MultiplayerSession
+  commentId: N:NitroxClient.Communication.MultiplayerSession
+  href: NitroxClient.html
+  name: NitroxClient.Communication.MultiplayerSession
+  nameWithType: NitroxClient.Communication.MultiplayerSession
+  fullName: NitroxClient.Communication.MultiplayerSession
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+- uid: NitroxClient.Communication.DeferredPacketReceiverTest
+  commentId: T:NitroxClient.Communication.DeferredPacketReceiverTest
+  href: NitroxClient.Communication.DeferredPacketReceiverTest.html
+  name: DeferredPacketReceiverTest
+  nameWithType: DeferredPacketReceiverTest
+  fullName: NitroxClient.Communication.DeferredPacketReceiverTest
+- uid: NitroxClient.Communication.LANBroadcastClient
+  commentId: T:NitroxClient.Communication.LANBroadcastClient
+  href: NitroxClient.Communication.LANBroadcastClient.html
+  name: LANBroadcastClient
+  nameWithType: LANBroadcastClient
+  fullName: NitroxClient.Communication.LANBroadcastClient
+- uid: NitroxClient.Communication.PacketReceiver
+  commentId: T:NitroxClient.Communication.PacketReceiver
+  parent: NitroxClient.Communication
+  href: NitroxClient.Communication.PacketReceiver.html
+  name: PacketReceiver
+  nameWithType: PacketReceiver
+  fullName: NitroxClient.Communication.PacketReceiver
+- uid: NitroxClient.Communication.PacketSuppressor`1
+  commentId: T:NitroxClient.Communication.PacketSuppressor`1
+  parent: NitroxClient.Communication
+  href: NitroxClient.Communication.PacketSuppressor-1.html
+  name: PacketSuppressor<T>
+  nameWithType: PacketSuppressor<T>
+  fullName: NitroxClient.Communication.PacketSuppressor<T>
+  nameWithType.vb: PacketSuppressor(Of T)
+  fullName.vb: NitroxClient.Communication.PacketSuppressor(Of T)
+  name.vb: PacketSuppressor(Of T)
+  spec.csharp:
+  - uid: NitroxClient.Communication.PacketSuppressor`1
+    name: PacketSuppressor
+    href: NitroxClient.Communication.PacketSuppressor-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.Communication.PacketSuppressor`1
+    name: PacketSuppressor
+    href: NitroxClient.Communication.PacketSuppressor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  commentId: N:NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  href: NitroxClient.html
+  name: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  nameWithType: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  fullName: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer
+    name: NetworkingLayer
+    href: NitroxClient.Communication.NetworkingLayer.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+    name: LiteNetLib
+    href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer
+    name: NetworkingLayer
+    href: NitroxClient.Communication.NetworkingLayer.html
+  - name: .
+  - uid: NitroxClient.Communication.NetworkingLayer.LiteNetLib
+    name: LiteNetLib
+    href: NitroxClient.Communication.NetworkingLayer.LiteNetLib.html
+- uid: NitroxClient.Communication.Packets.Processors
+  commentId: N:NitroxClient.Communication.Packets.Processors
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Packets.Processors
+  nameWithType: NitroxClient.Communication.Packets.Processors
+  fullName: NitroxClient.Communication.Packets.Processors
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+- uid: NitroxClient.Communication
+  commentId: N:NitroxClient.Communication
+  href: NitroxClient.html
+  name: NitroxClient.Communication
+  nameWithType: NitroxClient.Communication
+  fullName: NitroxClient.Communication
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+memberLayout: SeparatePages

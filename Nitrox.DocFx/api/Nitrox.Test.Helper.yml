@@ -1,0 +1,71 @@
+### YamlMime:ManagedReference
+items:
+- uid: Nitrox.Test.Helper
+  commentId: N:Nitrox.Test.Helper
+  id: Helper
+  parent: Nitrox.Test
+  children:
+  - Nitrox.Test.Helper.AssertHelper
+  - Nitrox.Test.Helper.Faker
+  - Nitrox.Test.Helper.TypeExtension
+  langs:
+  - csharp
+  - vb
+  name: Nitrox.Test.Helper
+  nameWithType: Nitrox.Test.Helper
+  fullName: Nitrox.Test.Helper
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: Nitrox.Test.Helper.Faker
+  commentId: N:Nitrox.Test.Helper.Faker
+  href: Nitrox.html
+  name: Nitrox.Test.Helper.Faker
+  nameWithType: Nitrox.Test.Helper.Faker
+  fullName: Nitrox.Test.Helper.Faker
+  spec.csharp:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.Test
+    name: Test
+    href: Nitrox.Test.html
+  - name: .
+  - uid: Nitrox.Test.Helper
+    name: Helper
+    href: Nitrox.Test.Helper.html
+  - name: .
+  - uid: Nitrox.Test.Helper.Faker
+    name: Faker
+    href: Nitrox.Test.Helper.Faker.html
+  spec.vb:
+  - uid: Nitrox
+    name: Nitrox
+    href: Nitrox.html
+  - name: .
+  - uid: Nitrox.Test
+    name: Test
+    href: Nitrox.Test.html
+  - name: .
+  - uid: Nitrox.Test.Helper
+    name: Helper
+    href: Nitrox.Test.Helper.html
+  - name: .
+  - uid: Nitrox.Test.Helper.Faker
+    name: Faker
+    href: Nitrox.Test.Helper.Faker.html
+- uid: Nitrox.Test.Helper.AssertHelper
+  commentId: T:Nitrox.Test.Helper.AssertHelper
+  href: Nitrox.Test.Helper.AssertHelper.html
+  name: AssertHelper
+  nameWithType: AssertHelper
+  fullName: Nitrox.Test.Helper.AssertHelper
+- uid: Nitrox.Test.Helper.TypeExtension
+  commentId: T:Nitrox.Test.Helper.TypeExtension
+  href: Nitrox.Test.Helper.TypeExtension.html
+  name: TypeExtension
+  nameWithType: TypeExtension
+  fullName: Nitrox.Test.Helper.TypeExtension
+memberLayout: SeparatePages

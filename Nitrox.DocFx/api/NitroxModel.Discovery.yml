@@ -1,0 +1,103 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Discovery
+  commentId: N:NitroxModel.Discovery
+  id: Discovery
+  parent: NitroxModel
+  children:
+  - NitroxModel.Discovery.GameInstallData
+  - NitroxModel.Discovery.GameInstallationFinder
+  - NitroxModel.Discovery.IFindGameInstallation
+  - NitroxModel.Discovery.InstallationFinders
+  - NitroxModel.Discovery.Platform
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Discovery
+  nameWithType: NitroxModel.Discovery
+  fullName: NitroxModel.Discovery
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.Discovery.InstallationFinders
+  commentId: N:NitroxModel.Discovery.InstallationFinders
+  href: NitroxModel.html
+  name: NitroxModel.Discovery.InstallationFinders
+  nameWithType: NitroxModel.Discovery.InstallationFinders
+  fullName: NitroxModel.Discovery.InstallationFinders
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  - name: .
+  - uid: NitroxModel.Discovery.InstallationFinders
+    name: InstallationFinders
+    href: NitroxModel.Discovery.InstallationFinders.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  - name: .
+  - uid: NitroxModel.Discovery.InstallationFinders
+    name: InstallationFinders
+    href: NitroxModel.Discovery.InstallationFinders.html
+- uid: NitroxModel.Discovery.GameInstallData
+  commentId: T:NitroxModel.Discovery.GameInstallData
+  parent: NitroxModel.Discovery
+  href: NitroxModel.Discovery.GameInstallData.html
+  name: GameInstallData
+  nameWithType: GameInstallData
+  fullName: NitroxModel.Discovery.GameInstallData
+- uid: NitroxModel.Discovery.GameInstallationFinder
+  commentId: T:NitroxModel.Discovery.GameInstallationFinder
+  parent: NitroxModel.Discovery
+  href: NitroxModel.Discovery.GameInstallationFinder.html
+  name: GameInstallationFinder
+  nameWithType: GameInstallationFinder
+  fullName: NitroxModel.Discovery.GameInstallationFinder
+- uid: NitroxModel.Discovery.IFindGameInstallation
+  commentId: T:NitroxModel.Discovery.IFindGameInstallation
+  parent: NitroxModel.Discovery
+  href: NitroxModel.Discovery.IFindGameInstallation.html
+  name: IFindGameInstallation
+  nameWithType: IFindGameInstallation
+  fullName: NitroxModel.Discovery.IFindGameInstallation
+- uid: NitroxModel.Discovery.Platform
+  commentId: T:NitroxModel.Discovery.Platform
+  parent: NitroxModel.Discovery
+  href: NitroxModel.Discovery.Platform.html
+  name: Platform
+  nameWithType: Platform
+  fullName: NitroxModel.Discovery.Platform
+- uid: NitroxModel.Discovery
+  commentId: N:NitroxModel.Discovery
+  href: NitroxModel.html
+  name: NitroxModel.Discovery
+  nameWithType: NitroxModel.Discovery
+  fullName: NitroxModel.Discovery
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+memberLayout: SeparatePages

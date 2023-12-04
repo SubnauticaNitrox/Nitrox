@@ -1,0 +1,32 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Resources
+  commentId: N:NitroxServer.Resources
+  id: Resources
+  parent: NitroxServer
+  children:
+  - NitroxServer.Resources.PrefabPlaceholderAsset
+  - NitroxServer.Resources.PrefabPlaceholdersGroupAsset
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.Resources
+  nameWithType: NitroxServer.Resources
+  fullName: NitroxServer.Resources
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Resources.PrefabPlaceholderAsset
+  commentId: T:NitroxServer.Resources.PrefabPlaceholderAsset
+  href: NitroxServer.Resources.PrefabPlaceholderAsset.html
+  name: PrefabPlaceholderAsset
+  nameWithType: PrefabPlaceholderAsset
+  fullName: NitroxServer.Resources.PrefabPlaceholderAsset
+- uid: NitroxServer.Resources.PrefabPlaceholdersGroupAsset
+  commentId: T:NitroxServer.Resources.PrefabPlaceholdersGroupAsset
+  href: NitroxServer.Resources.PrefabPlaceholdersGroupAsset.html
+  name: PrefabPlaceholdersGroupAsset
+  nameWithType: PrefabPlaceholdersGroupAsset
+  fullName: NitroxServer.Resources.PrefabPlaceholdersGroupAsset
+memberLayout: SeparatePages

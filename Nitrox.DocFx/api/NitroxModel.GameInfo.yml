@@ -1,0 +1,523 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.GameInfo
+  commentId: T:NitroxModel.GameInfo
+  id: GameInfo
+  parent: NitroxModel
+  children:
+  - NitroxModel.GameInfo.ExeName
+  - NitroxModel.GameInfo.FullName
+  - NitroxModel.GameInfo.MsStoreStartUrl
+  - NitroxModel.GameInfo.Name
+  - NitroxModel.GameInfo.SteamAppId
+  - NitroxModel.GameInfo.Subnautica
+  - NitroxModel.GameInfo.SubnauticaBelowZero
+  langs:
+  - csharp
+  - vb
+  name: GameInfo
+  nameWithType: GameInfo
+  fullName: NitroxModel.GameInfo
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GameInfo
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 2
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public sealed class GameInfo
+    content.vb: Public NotInheritable Class GameInfo
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+- uid: NitroxModel.GameInfo.Subnautica
+  commentId: F:NitroxModel.GameInfo.Subnautica
+  id: Subnautica
+  parent: NitroxModel.GameInfo
+  langs:
+  - csharp
+  - vb
+  name: Subnautica
+  nameWithType: GameInfo.Subnautica
+  fullName: NitroxModel.GameInfo.Subnautica
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Subnautica
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public static readonly GameInfo Subnautica
+    return:
+      type: NitroxModel.GameInfo
+    content.vb: Public Shared ReadOnly Subnautica As GameInfo
+- uid: NitroxModel.GameInfo.SubnauticaBelowZero
+  commentId: F:NitroxModel.GameInfo.SubnauticaBelowZero
+  id: SubnauticaBelowZero
+  parent: NitroxModel.GameInfo
+  langs:
+  - csharp
+  - vb
+  name: SubnauticaBelowZero
+  nameWithType: GameInfo.SubnauticaBelowZero
+  fullName: NitroxModel.GameInfo.SubnauticaBelowZero
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SubnauticaBelowZero
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public static readonly GameInfo SubnauticaBelowZero
+    return:
+      type: NitroxModel.GameInfo
+    content.vb: Public Shared ReadOnly SubnauticaBelowZero As GameInfo
+- uid: NitroxModel.GameInfo.Name
+  commentId: P:NitroxModel.GameInfo.Name
+  id: Name
+  parent: NitroxModel.GameInfo
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: GameInfo.Name
+  fullName: NitroxModel.GameInfo.Name
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Name
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Name As String
+  overload: NitroxModel.GameInfo.Name*
+- uid: NitroxModel.GameInfo.FullName
+  commentId: P:NitroxModel.GameInfo.FullName
+  id: FullName
+  parent: NitroxModel.GameInfo
+  langs:
+  - csharp
+  - vb
+  name: FullName
+  nameWithType: GameInfo.FullName
+  fullName: NitroxModel.GameInfo.FullName
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FullName
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 23
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public string FullName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property FullName As String
+  overload: NitroxModel.GameInfo.FullName*
+- uid: NitroxModel.GameInfo.ExeName
+  commentId: P:NitroxModel.GameInfo.ExeName
+  id: ExeName
+  parent: NitroxModel.GameInfo
+  langs:
+  - csharp
+  - vb
+  name: ExeName
+  nameWithType: GameInfo.ExeName
+  fullName: NitroxModel.GameInfo.ExeName
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ExeName
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 24
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public string ExeName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property ExeName As String
+  overload: NitroxModel.GameInfo.ExeName*
+- uid: NitroxModel.GameInfo.SteamAppId
+  commentId: P:NitroxModel.GameInfo.SteamAppId
+  id: SteamAppId
+  parent: NitroxModel.GameInfo
+  langs:
+  - csharp
+  - vb
+  name: SteamAppId
+  nameWithType: GameInfo.SteamAppId
+  fullName: NitroxModel.GameInfo.SteamAppId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SteamAppId
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public int SteamAppId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property SteamAppId As Integer
+  overload: NitroxModel.GameInfo.SteamAppId*
+- uid: NitroxModel.GameInfo.MsStoreStartUrl
+  commentId: P:NitroxModel.GameInfo.MsStoreStartUrl
+  id: MsStoreStartUrl
+  parent: NitroxModel.GameInfo
+  langs:
+  - csharp
+  - vb
+  name: MsStoreStartUrl
+  nameWithType: GameInfo.MsStoreStartUrl
+  fullName: NitroxModel.GameInfo.MsStoreStartUrl
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/GameInfo.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MsStoreStartUrl
+    path: ../NitroxModel/GameInfo.cs
+    startLine: 26
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel
+  syntax:
+    content: public string MsStoreStartUrl { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property MsStoreStartUrl As String
+  overload: NitroxModel.GameInfo.MsStoreStartUrl*
+references:
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.GameInfo
+  commentId: T:NitroxModel.GameInfo
+  parent: NitroxModel
+  href: NitroxModel.GameInfo.html
+  name: GameInfo
+  nameWithType: GameInfo
+  fullName: NitroxModel.GameInfo
+- uid: NitroxModel.GameInfo.Name*
+  commentId: Overload:NitroxModel.GameInfo.Name
+  href: NitroxModel.GameInfo.Name.html#NitroxModel_GameInfo_Name
+  name: Name
+  nameWithType: GameInfo.Name
+  fullName: NitroxModel.GameInfo.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.GameInfo.FullName*
+  commentId: Overload:NitroxModel.GameInfo.FullName
+  href: NitroxModel.GameInfo.FullName.html#NitroxModel_GameInfo_FullName
+  name: FullName
+  nameWithType: GameInfo.FullName
+  fullName: NitroxModel.GameInfo.FullName
+- uid: NitroxModel.GameInfo.ExeName*
+  commentId: Overload:NitroxModel.GameInfo.ExeName
+  href: NitroxModel.GameInfo.ExeName.html#NitroxModel_GameInfo_ExeName
+  name: ExeName
+  nameWithType: GameInfo.ExeName
+  fullName: NitroxModel.GameInfo.ExeName
+- uid: NitroxModel.GameInfo.SteamAppId*
+  commentId: Overload:NitroxModel.GameInfo.SteamAppId
+  href: NitroxModel.GameInfo.SteamAppId.html#NitroxModel_GameInfo_SteamAppId
+  name: SteamAppId
+  nameWithType: GameInfo.SteamAppId
+  fullName: NitroxModel.GameInfo.SteamAppId
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.GameInfo.MsStoreStartUrl*
+  commentId: Overload:NitroxModel.GameInfo.MsStoreStartUrl
+  href: NitroxModel.GameInfo.MsStoreStartUrl.html#NitroxModel_GameInfo_MsStoreStartUrl
+  name: MsStoreStartUrl
+  nameWithType: GameInfo.MsStoreStartUrl
+  fullName: NitroxModel.GameInfo.MsStoreStartUrl
+memberLayout: SeparatePages

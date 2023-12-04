@@ -1,0 +1,497 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation
+  commentId: T:NitroxClient.Unity.Smoothing.SmoothRotation
+  id: SmoothRotation
+  parent: NitroxClient.Unity.Smoothing
+  children:
+  - NitroxClient.Unity.Smoothing.SmoothRotation.#ctor
+  - NitroxClient.Unity.Smoothing.SmoothRotation.#ctor(UnityEngine.Quaternion)
+  - NitroxClient.Unity.Smoothing.SmoothRotation.Current
+  - NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate
+  - NitroxClient.Unity.Smoothing.SmoothRotation.Target
+  langs:
+  - csharp
+  - vb
+  name: SmoothRotation
+  nameWithType: SmoothRotation
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Unity/Smoothing/SmoothRotation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SmoothRotation
+    path: ../NitroxClient/Unity/Smoothing/SmoothRotation.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Smoothing
+  syntax:
+    content: public class SmoothRotation
+    content.vb: Public Class SmoothRotation
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.Target
+  commentId: P:NitroxClient.Unity.Smoothing.SmoothRotation.Target
+  id: Target
+  parent: NitroxClient.Unity.Smoothing.SmoothRotation
+  langs:
+  - csharp
+  - vb
+  name: Target
+  nameWithType: SmoothRotation.Target
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.Target
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Unity/Smoothing/SmoothRotation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Target
+    path: ../NitroxClient/Unity/Smoothing/SmoothRotation.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Smoothing
+  syntax:
+    content: public Quaternion Target { get; set; }
+    parameters: []
+    return:
+      type: UnityEngine.Quaternion
+    content.vb: Public Property Target As Quaternion
+  overload: NitroxClient.Unity.Smoothing.SmoothRotation.Target*
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.Current
+  commentId: P:NitroxClient.Unity.Smoothing.SmoothRotation.Current
+  id: Current
+  parent: NitroxClient.Unity.Smoothing.SmoothRotation
+  langs:
+  - csharp
+  - vb
+  name: Current
+  nameWithType: SmoothRotation.Current
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.Current
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Unity/Smoothing/SmoothRotation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Current
+    path: ../NitroxClient/Unity/Smoothing/SmoothRotation.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Smoothing
+  syntax:
+    content: public Quaternion Current { get; set; }
+    parameters: []
+    return:
+      type: UnityEngine.Quaternion
+    content.vb: Public Property Current As Quaternion
+  overload: NitroxClient.Unity.Smoothing.SmoothRotation.Current*
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.#ctor(UnityEngine.Quaternion)
+  commentId: M:NitroxClient.Unity.Smoothing.SmoothRotation.#ctor(UnityEngine.Quaternion)
+  id: '#ctor(UnityEngine.Quaternion)'
+  parent: NitroxClient.Unity.Smoothing.SmoothRotation
+  langs:
+  - csharp
+  - vb
+  name: SmoothRotation(Quaternion)
+  nameWithType: SmoothRotation.SmoothRotation(Quaternion)
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.SmoothRotation(UnityEngine.Quaternion)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/Unity/Smoothing/SmoothRotation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/Unity/Smoothing/SmoothRotation.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Smoothing
+  syntax:
+    content: public SmoothRotation(Quaternion initial)
+    parameters:
+    - id: initial
+      type: UnityEngine.Quaternion
+    content.vb: Public Sub New(initial As Quaternion)
+  overload: NitroxClient.Unity.Smoothing.SmoothRotation.#ctor*
+  nameWithType.vb: SmoothRotation.New(Quaternion)
+  fullName.vb: NitroxClient.Unity.Smoothing.SmoothRotation.New(UnityEngine.Quaternion)
+  name.vb: New(Quaternion)
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.#ctor
+  commentId: M:NitroxClient.Unity.Smoothing.SmoothRotation.#ctor
+  id: '#ctor'
+  parent: NitroxClient.Unity.Smoothing.SmoothRotation
+  langs:
+  - csharp
+  - vb
+  name: SmoothRotation()
+  nameWithType: SmoothRotation.SmoothRotation()
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.SmoothRotation()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/Unity/Smoothing/SmoothRotation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/Unity/Smoothing/SmoothRotation.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Smoothing
+  syntax:
+    content: public SmoothRotation()
+    content.vb: Public Sub New()
+  overload: NitroxClient.Unity.Smoothing.SmoothRotation.#ctor*
+  nameWithType.vb: SmoothRotation.New()
+  fullName.vb: NitroxClient.Unity.Smoothing.SmoothRotation.New()
+  name.vb: New()
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate
+  commentId: M:NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate
+  id: FixedUpdate
+  parent: NitroxClient.Unity.Smoothing.SmoothRotation
+  langs:
+  - csharp
+  - vb
+  name: FixedUpdate()
+  nameWithType: SmoothRotation.FixedUpdate()
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Smoothing/SmoothRotation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FixedUpdate
+    path: ../NitroxClient/Unity/Smoothing/SmoothRotation.cs
+    startLine: 19
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Smoothing
+  syntax:
+    content: public void FixedUpdate()
+    content.vb: Public Sub FixedUpdate()
+  overload: NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate*
+references:
+- uid: NitroxClient.Unity.Smoothing
+  commentId: N:NitroxClient.Unity.Smoothing
+  href: NitroxClient.html
+  name: NitroxClient.Unity.Smoothing
+  nameWithType: NitroxClient.Unity.Smoothing
+  fullName: NitroxClient.Unity.Smoothing
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Smoothing
+    name: Smoothing
+    href: NitroxClient.Unity.Smoothing.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Smoothing
+    name: Smoothing
+    href: NitroxClient.Unity.Smoothing.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.Target*
+  commentId: Overload:NitroxClient.Unity.Smoothing.SmoothRotation.Target
+  href: NitroxClient.Unity.Smoothing.SmoothRotation.Target.html#NitroxClient_Unity_Smoothing_SmoothRotation_Target
+  name: Target
+  nameWithType: SmoothRotation.Target
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.Target
+- uid: UnityEngine.Quaternion
+  commentId: T:UnityEngine.Quaternion
+  parent: UnityEngine
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: UnityEngine.Quaternion
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.Current*
+  commentId: Overload:NitroxClient.Unity.Smoothing.SmoothRotation.Current
+  href: NitroxClient.Unity.Smoothing.SmoothRotation.Current.html#NitroxClient_Unity_Smoothing_SmoothRotation_Current
+  name: Current
+  nameWithType: SmoothRotation.Current
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.Current
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.#ctor*
+  commentId: Overload:NitroxClient.Unity.Smoothing.SmoothRotation.#ctor
+  href: NitroxClient.Unity.Smoothing.SmoothRotation.-ctor.html#NitroxClient_Unity_Smoothing_SmoothRotation__ctor_UnityEngine_Quaternion_
+  name: SmoothRotation
+  nameWithType: SmoothRotation.SmoothRotation
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.SmoothRotation
+  nameWithType.vb: SmoothRotation.New
+  fullName.vb: NitroxClient.Unity.Smoothing.SmoothRotation.New
+  name.vb: New
+- uid: NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate*
+  commentId: Overload:NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate
+  href: NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate.html#NitroxClient_Unity_Smoothing_SmoothRotation_FixedUpdate
+  name: FixedUpdate
+  nameWithType: SmoothRotation.FixedUpdate
+  fullName: NitroxClient.Unity.Smoothing.SmoothRotation.FixedUpdate
+memberLayout: SeparatePages

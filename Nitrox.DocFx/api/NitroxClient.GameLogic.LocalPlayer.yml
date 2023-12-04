@@ -1,0 +1,1532 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.LocalPlayer
+  commentId: T:NitroxClient.GameLogic.LocalPlayer
+  id: LocalPlayer
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.LocalPlayer.#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender)
+  - NitroxClient.GameLogic.LocalPlayer.AnimationChange(NitroxClient.MonoBehaviours.AnimChangeType,NitroxClient.MonoBehaviours.AnimChangeState)
+  - NitroxClient.GameLogic.LocalPlayer.Body
+  - NitroxClient.GameLogic.LocalPlayer.BodyPrototype
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastDeath(UnityEngine.Vector3)
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged(NitroxModel.DataStructures.NitroxId,NitroxModel.Packets.PlayerHeldItemChanged.ChangeType,NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastLocation(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Quaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.GameLogic.VehicleMovementData})
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[])
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastStats(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  - NitroxClient.GameLogic.LocalPlayer.BroadcastWeld(NitroxModel.DataStructures.NitroxId,System.Single)
+  - NitroxClient.GameLogic.LocalPlayer.Permissions
+  - NitroxClient.GameLogic.LocalPlayer.PlayerId
+  - NitroxClient.GameLogic.LocalPlayer.PlayerModel
+  - NitroxClient.GameLogic.LocalPlayer.PlayerName
+  - NitroxClient.GameLogic.LocalPlayer.PlayerSettings
+  langs:
+  - csharp
+  - vb
+  name: LocalPlayer
+  nameWithType: LocalPlayer
+  fullName: NitroxClient.GameLogic.LocalPlayer
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LocalPlayer
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 18
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: 'public class LocalPlayer : ILocalNitroxPlayer, INitroxPlayer'
+    content.vb: Public Class LocalPlayer Implements ILocalNitroxPlayer, INitroxPlayer
+  inheritance:
+  - System.Object
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.LocalPlayer.Body
+  commentId: P:NitroxClient.GameLogic.LocalPlayer.Body
+  id: Body
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: Body
+  nameWithType: LocalPlayer.Body
+  fullName: NitroxClient.GameLogic.LocalPlayer.Body
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Body
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 27
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  example: []
+  syntax:
+    content: public GameObject Body { get; }
+    parameters: []
+    return:
+      type: UnityEngine.GameObject
+    content.vb: Public ReadOnly Property Body As GameObject
+  overload: NitroxClient.GameLogic.LocalPlayer.Body*
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.Body
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerModel
+  commentId: P:NitroxClient.GameLogic.LocalPlayer.PlayerModel
+  id: PlayerModel
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: PlayerModel
+  nameWithType: LocalPlayer.PlayerModel
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerModel
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerModel
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 29
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  example: []
+  syntax:
+    content: public GameObject PlayerModel { get; }
+    parameters: []
+    return:
+      type: UnityEngine.GameObject
+    content.vb: Public ReadOnly Property PlayerModel As GameObject
+  overload: NitroxClient.GameLogic.LocalPlayer.PlayerModel*
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerModel
+- uid: NitroxClient.GameLogic.LocalPlayer.BodyPrototype
+  commentId: P:NitroxClient.GameLogic.LocalPlayer.BodyPrototype
+  id: BodyPrototype
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BodyPrototype
+  nameWithType: LocalPlayer.BodyPrototype
+  fullName: NitroxClient.GameLogic.LocalPlayer.BodyPrototype
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BodyPrototype
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 31
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  example: []
+  syntax:
+    content: public GameObject BodyPrototype { get; }
+    parameters: []
+    return:
+      type: UnityEngine.GameObject
+    content.vb: Public ReadOnly Property BodyPrototype As GameObject
+  overload: NitroxClient.GameLogic.LocalPlayer.BodyPrototype*
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.BodyPrototype
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerName
+  commentId: P:NitroxClient.GameLogic.LocalPlayer.PlayerName
+  id: PlayerName
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: PlayerName
+  nameWithType: LocalPlayer.PlayerName
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerName
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerName
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 33
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  example: []
+  syntax:
+    content: public string PlayerName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property PlayerName As String
+  overload: NitroxClient.GameLogic.LocalPlayer.PlayerName*
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerName
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerId
+  commentId: P:NitroxClient.GameLogic.LocalPlayer.PlayerId
+  id: PlayerId
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: PlayerId
+  nameWithType: LocalPlayer.PlayerId
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerId
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerId
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 34
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public ushort PlayerId { get; }
+    parameters: []
+    return:
+      type: System.UInt16
+    content.vb: Public ReadOnly Property PlayerId As UShort
+  overload: NitroxClient.GameLogic.LocalPlayer.PlayerId*
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerSettings
+  commentId: P:NitroxClient.GameLogic.LocalPlayer.PlayerSettings
+  id: PlayerSettings
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: PlayerSettings
+  nameWithType: LocalPlayer.PlayerSettings
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerSettings
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerSettings
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 35
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  example: []
+  syntax:
+    content: public PlayerSettings PlayerSettings { get; }
+    parameters: []
+    return:
+      type: NitroxModel.MultiplayerSession.PlayerSettings
+    content.vb: Public ReadOnly Property PlayerSettings As PlayerSettings
+  overload: NitroxClient.GameLogic.LocalPlayer.PlayerSettings*
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerSettings
+- uid: NitroxClient.GameLogic.LocalPlayer.Permissions
+  commentId: F:NitroxClient.GameLogic.LocalPlayer.Permissions
+  id: Permissions
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: Permissions
+  nameWithType: LocalPlayer.Permissions
+  fullName: NitroxClient.GameLogic.LocalPlayer.Permissions
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Permissions
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 37
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public Perms Permissions
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Perms
+    content.vb: Public Permissions As Perms
+- uid: NitroxClient.GameLogic.LocalPlayer.#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender)
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender)
+  id: '#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender)'
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: LocalPlayer(IMultiplayerSession, IPacketSender, ThrottledPacketSender)
+  nameWithType: LocalPlayer.LocalPlayer(IMultiplayerSession, IPacketSender, ThrottledPacketSender)
+  fullName: NitroxClient.GameLogic.LocalPlayer.LocalPlayer(NitroxClient.Communication.Abstract.IMultiplayerSession, NitroxClient.Communication.Abstract.IPacketSender, NitroxClient.Helpers.ThrottledPacketSender)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 39
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
+    parameters:
+    - id: multiplayerSession
+      type: NitroxClient.Communication.Abstract.IMultiplayerSession
+    - id: packetSender
+      type: NitroxClient.Communication.Abstract.IPacketSender
+    - id: throttledPacketSender
+      type: NitroxClient.Helpers.ThrottledPacketSender
+    content.vb: Public Sub New(multiplayerSession As IMultiplayerSession, packetSender As IPacketSender, throttledPacketSender As ThrottledPacketSender)
+  overload: NitroxClient.GameLogic.LocalPlayer.#ctor*
+  nameWithType.vb: LocalPlayer.New(IMultiplayerSession, IPacketSender, ThrottledPacketSender)
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.New(NitroxClient.Communication.Abstract.IMultiplayerSession, NitroxClient.Communication.Abstract.IPacketSender, NitroxClient.Helpers.ThrottledPacketSender)
+  name.vb: New(IMultiplayerSession, IPacketSender, ThrottledPacketSender)
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastLocation(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Quaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.GameLogic.VehicleMovementData})
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastLocation(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Quaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.GameLogic.VehicleMovementData})
+  id: BroadcastLocation(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Quaternion,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.GameLogic.VehicleMovementData})
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastLocation(Vector3, Vector3, Quaternion, Quaternion, Optional<VehicleMovementData>)
+  nameWithType: LocalPlayer.BroadcastLocation(Vector3, Vector3, Quaternion, Quaternion, Optional<VehicleMovementData>)
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastLocation(UnityEngine.Vector3, UnityEngine.Vector3, UnityEngine.Quaternion, UnityEngine.Quaternion, NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.GameLogic.VehicleMovementData>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastLocation
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 50
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
+    parameters:
+    - id: location
+      type: UnityEngine.Vector3
+    - id: velocity
+      type: UnityEngine.Vector3
+    - id: bodyRotation
+      type: UnityEngine.Quaternion
+    - id: aimingRotation
+      type: UnityEngine.Quaternion
+    - id: vehicle
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.GameLogic.VehicleMovementData}
+    content.vb: Public Sub BroadcastLocation(location As Vector3, velocity As Vector3, bodyRotation As Quaternion, aimingRotation As Quaternion, vehicle As [Optional](Of VehicleMovementData))
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastLocation*
+  nameWithType.vb: LocalPlayer.BroadcastLocation(Vector3, Vector3, Quaternion, Quaternion, Optional(Of VehicleMovementData))
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.BroadcastLocation(UnityEngine.Vector3, UnityEngine.Vector3, UnityEngine.Quaternion, UnityEngine.Quaternion, NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.GameLogic.VehicleMovementData))
+  name.vb: BroadcastLocation(Vector3, Vector3, Quaternion, Quaternion, Optional(Of VehicleMovementData))
+- uid: NitroxClient.GameLogic.LocalPlayer.AnimationChange(NitroxClient.MonoBehaviours.AnimChangeType,NitroxClient.MonoBehaviours.AnimChangeState)
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.AnimationChange(NitroxClient.MonoBehaviours.AnimChangeType,NitroxClient.MonoBehaviours.AnimChangeState)
+  id: AnimationChange(NitroxClient.MonoBehaviours.AnimChangeType,NitroxClient.MonoBehaviours.AnimChangeState)
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: AnimationChange(AnimChangeType, AnimChangeState)
+  nameWithType: LocalPlayer.AnimationChange(AnimChangeType, AnimChangeState)
+  fullName: NitroxClient.GameLogic.LocalPlayer.AnimationChange(NitroxClient.MonoBehaviours.AnimChangeType, NitroxClient.MonoBehaviours.AnimChangeState)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AnimationChange
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 65
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void AnimationChange(AnimChangeType type, AnimChangeState state)
+    parameters:
+    - id: type
+      type: NitroxClient.MonoBehaviours.AnimChangeType
+    - id: state
+      type: NitroxClient.MonoBehaviours.AnimChangeState
+    content.vb: Public Sub AnimationChange(type As AnimChangeType, state As AnimChangeState)
+  overload: NitroxClient.GameLogic.LocalPlayer.AnimationChange*
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastStats(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastStats(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  id: BroadcastStats(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastStats(float, float, float, float, float, float)
+  nameWithType: LocalPlayer.BroadcastStats(float, float, float, float, float, float)
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastStats(float, float, float, float, float, float)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastStats
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 67
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
+    parameters:
+    - id: oxygen
+      type: System.Single
+    - id: maxOxygen
+      type: System.Single
+    - id: health
+      type: System.Single
+    - id: food
+      type: System.Single
+    - id: water
+      type: System.Single
+    - id: infectionAmount
+      type: System.Single
+    content.vb: Public Sub BroadcastStats(oxygen As Single, maxOxygen As Single, health As Single, food As Single, water As Single, infectionAmount As Single)
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastStats*
+  nameWithType.vb: LocalPlayer.BroadcastStats(Single, Single, Single, Single, Single, Single)
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.BroadcastStats(Single, Single, Single, Single, Single, Single)
+  name.vb: BroadcastStats(Single, Single, Single, Single, Single, Single)
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastDeath(UnityEngine.Vector3)
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastDeath(UnityEngine.Vector3)
+  id: BroadcastDeath(UnityEngine.Vector3)
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastDeath(Vector3)
+  nameWithType: LocalPlayer.BroadcastDeath(Vector3)
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastDeath(UnityEngine.Vector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastDeath
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 69
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastDeath(Vector3 deathPosition)
+    parameters:
+    - id: deathPosition
+      type: UnityEngine.Vector3
+    content.vb: Public Sub BroadcastDeath(deathPosition As Vector3)
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastDeath*
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  id: BroadcastSubrootChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastSubrootChange(Optional<NitroxId>)
+  nameWithType: LocalPlayer.BroadcastSubrootChange(Optional<NitroxId>)
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange(NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastSubrootChange
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 71
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastSubrootChange(Optional<NitroxId> subrootId)
+    parameters:
+    - id: subrootId
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+    content.vb: Public Sub BroadcastSubrootChange(subrootId As [Optional](Of NitroxId))
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange*
+  nameWithType.vb: LocalPlayer.BroadcastSubrootChange(Optional(Of NitroxId))
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange(NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId))
+  name.vb: BroadcastSubrootChange(Optional(Of NitroxId))
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  id: BroadcastEscapePodChange(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId})
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastEscapePodChange(Optional<NitroxId>)
+  nameWithType: LocalPlayer.BroadcastEscapePodChange(Optional<NitroxId>)
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange(NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastEscapePodChange
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 73
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId)
+    parameters:
+    - id: escapePodId
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+    content.vb: Public Sub BroadcastEscapePodChange(escapePodId As [Optional](Of NitroxId))
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange*
+  nameWithType.vb: LocalPlayer.BroadcastEscapePodChange(Optional(Of NitroxId))
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange(NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId))
+  name.vb: BroadcastEscapePodChange(Optional(Of NitroxId))
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastWeld(NitroxModel.DataStructures.NitroxId,System.Single)
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastWeld(NitroxModel.DataStructures.NitroxId,System.Single)
+  id: BroadcastWeld(NitroxModel.DataStructures.NitroxId,System.Single)
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastWeld(NitroxId, float)
+  nameWithType: LocalPlayer.BroadcastWeld(NitroxId, float)
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastWeld(NitroxModel.DataStructures.NitroxId, float)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastWeld
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 75
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastWeld(NitroxId id, float healthAdded)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: healthAdded
+      type: System.Single
+    content.vb: Public Sub BroadcastWeld(id As NitroxId, healthAdded As Single)
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastWeld*
+  nameWithType.vb: LocalPlayer.BroadcastWeld(NitroxId, Single)
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.BroadcastWeld(NitroxModel.DataStructures.NitroxId, Single)
+  name.vb: BroadcastWeld(NitroxId, Single)
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged(NitroxModel.DataStructures.NitroxId,NitroxModel.Packets.PlayerHeldItemChanged.ChangeType,NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged(NitroxModel.DataStructures.NitroxId,NitroxModel.Packets.PlayerHeldItemChanged.ChangeType,NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  id: BroadcastHeldItemChanged(NitroxModel.DataStructures.NitroxId,NitroxModel.Packets.PlayerHeldItemChanged.ChangeType,NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastHeldItemChanged(NitroxId, ChangeType, NitroxTechType)
+  nameWithType: LocalPlayer.BroadcastHeldItemChanged(NitroxId, PlayerHeldItemChanged.ChangeType, NitroxTechType)
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged(NitroxModel.DataStructures.NitroxId, NitroxModel.Packets.PlayerHeldItemChanged.ChangeType, NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastHeldItemChanged
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 77
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime)
+    parameters:
+    - id: itemId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: techType
+      type: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+    - id: isFirstTime
+      type: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    content.vb: Public Sub BroadcastHeldItemChanged(itemId As NitroxId, techType As PlayerHeldItemChanged.ChangeType, isFirstTime As NitroxTechType)
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged*
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[])
+  commentId: M:NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[])
+  id: BroadcastQuickSlotsBindingChanged(NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[])
+  parent: NitroxClient.GameLogic.LocalPlayer
+  langs:
+  - csharp
+  - vb
+  name: BroadcastQuickSlotsBindingChanged(Optional<NitroxId>[])
+  nameWithType: LocalPlayer.BroadcastQuickSlotsBindingChanged(Optional<NitroxId>[])
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged(NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>[])
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/LocalPlayer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastQuickSlotsBindingChanged
+    path: ../NitroxClient/GameLogic/LocalPlayer.cs
+    startLine: 79
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastQuickSlotsBindingChanged(Optional<NitroxId>[] slotItemIds)
+    parameters:
+    - id: slotItemIds
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[]
+    content.vb: Public Sub BroadcastQuickSlotsBindingChanged(slotItemIds As [Optional](Of NitroxId)())
+  overload: NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged*
+  nameWithType.vb: LocalPlayer.BroadcastQuickSlotsBindingChanged(Optional(Of NitroxId)())
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged(NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)())
+  name.vb: BroadcastQuickSlotsBindingChanged(Optional(Of NitroxId)())
+references:
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.html
+  name: ILocalNitroxPlayer
+  nameWithType: ILocalNitroxPlayer
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.html
+  name: INitroxPlayer
+  nameWithType: INitroxPlayer
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+- uid: NitroxClient.GameLogic.LocalPlayer.Body*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.Body
+  href: NitroxClient.GameLogic.LocalPlayer.Body.html#NitroxClient_GameLogic_LocalPlayer_Body
+  name: Body
+  nameWithType: LocalPlayer.Body
+  fullName: NitroxClient.GameLogic.LocalPlayer.Body
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.Body
+  commentId: P:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.Body
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.Body.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_INitroxPlayer_Body
+  name: Body
+  nameWithType: INitroxPlayer.Body
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.Body
+- uid: UnityEngine.GameObject
+  commentId: T:UnityEngine.GameObject
+  parent: UnityEngine
+  isExternal: true
+  name: GameObject
+  nameWithType: GameObject
+  fullName: UnityEngine.GameObject
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerModel*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.PlayerModel
+  href: NitroxClient.GameLogic.LocalPlayer.PlayerModel.html#NitroxClient_GameLogic_LocalPlayer_PlayerModel
+  name: PlayerModel
+  nameWithType: LocalPlayer.PlayerModel
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerModel
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerModel
+  commentId: P:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerModel
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerModel.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_INitroxPlayer_PlayerModel
+  name: PlayerModel
+  nameWithType: INitroxPlayer.PlayerModel
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerModel
+- uid: NitroxClient.GameLogic.LocalPlayer.BodyPrototype*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BodyPrototype
+  href: NitroxClient.GameLogic.LocalPlayer.BodyPrototype.html#NitroxClient_GameLogic_LocalPlayer_BodyPrototype
+  name: BodyPrototype
+  nameWithType: LocalPlayer.BodyPrototype
+  fullName: NitroxClient.GameLogic.LocalPlayer.BodyPrototype
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.BodyPrototype
+  commentId: P:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.BodyPrototype
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.BodyPrototype.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_ILocalNitroxPlayer_BodyPrototype
+  name: BodyPrototype
+  nameWithType: ILocalNitroxPlayer.BodyPrototype
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.BodyPrototype
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerName*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.PlayerName
+  href: NitroxClient.GameLogic.LocalPlayer.PlayerName.html#NitroxClient_GameLogic_LocalPlayer_PlayerName
+  name: PlayerName
+  nameWithType: LocalPlayer.PlayerName
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerName
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerName
+  commentId: P:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerName
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerName.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_INitroxPlayer_PlayerName
+  name: PlayerName
+  nameWithType: INitroxPlayer.PlayerName
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerId*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.PlayerId
+  href: NitroxClient.GameLogic.LocalPlayer.PlayerId.html#NitroxClient_GameLogic_LocalPlayer_PlayerId
+  name: PlayerId
+  nameWithType: LocalPlayer.PlayerId
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerId
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: NitroxClient.GameLogic.LocalPlayer.PlayerSettings*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.PlayerSettings
+  href: NitroxClient.GameLogic.LocalPlayer.PlayerSettings.html#NitroxClient_GameLogic_LocalPlayer_PlayerSettings
+  name: PlayerSettings
+  nameWithType: LocalPlayer.PlayerSettings
+  fullName: NitroxClient.GameLogic.LocalPlayer.PlayerSettings
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerSettings
+  commentId: P:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerSettings
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerSettings.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_INitroxPlayer_PlayerSettings
+  name: PlayerSettings
+  nameWithType: INitroxPlayer.PlayerSettings
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.INitroxPlayer.PlayerSettings
+- uid: NitroxModel.MultiplayerSession.PlayerSettings
+  commentId: T:NitroxModel.MultiplayerSession.PlayerSettings
+  parent: NitroxModel.MultiplayerSession
+  href: NitroxModel.MultiplayerSession.PlayerSettings.html
+  name: PlayerSettings
+  nameWithType: PlayerSettings
+  fullName: NitroxModel.MultiplayerSession.PlayerSettings
+- uid: NitroxModel.MultiplayerSession
+  commentId: N:NitroxModel.MultiplayerSession
+  href: NitroxModel.html
+  name: NitroxModel.MultiplayerSession
+  nameWithType: NitroxModel.MultiplayerSession
+  fullName: NitroxModel.MultiplayerSession
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxModel.MultiplayerSession.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxModel.MultiplayerSession.html
+- uid: NitroxModel.DataStructures.GameLogic.Perms
+  commentId: T:NitroxModel.DataStructures.GameLogic.Perms
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.Perms.html
+  name: Perms
+  nameWithType: Perms
+  fullName: NitroxModel.DataStructures.GameLogic.Perms
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxClient.GameLogic.LocalPlayer.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.#ctor
+  href: NitroxClient.GameLogic.LocalPlayer.-ctor.html#NitroxClient_GameLogic_LocalPlayer__ctor_NitroxClient_Communication_Abstract_IMultiplayerSession_NitroxClient_Communication_Abstract_IPacketSender_NitroxClient_Helpers_ThrottledPacketSender_
+  name: LocalPlayer
+  nameWithType: LocalPlayer.LocalPlayer
+  fullName: NitroxClient.GameLogic.LocalPlayer.LocalPlayer
+  nameWithType.vb: LocalPlayer.New
+  fullName.vb: NitroxClient.GameLogic.LocalPlayer.New
+  name.vb: New
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSession
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSession
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSession.html
+  name: IMultiplayerSession
+  nameWithType: IMultiplayerSession
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSession
+- uid: NitroxClient.Communication.Abstract.IPacketSender
+  commentId: T:NitroxClient.Communication.Abstract.IPacketSender
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IPacketSender.html
+  name: IPacketSender
+  nameWithType: IPacketSender
+  fullName: NitroxClient.Communication.Abstract.IPacketSender
+- uid: NitroxClient.Helpers.ThrottledPacketSender
+  commentId: T:NitroxClient.Helpers.ThrottledPacketSender
+  parent: NitroxClient.Helpers
+  href: NitroxClient.Helpers.ThrottledPacketSender.html
+  name: ThrottledPacketSender
+  nameWithType: ThrottledPacketSender
+  fullName: NitroxClient.Helpers.ThrottledPacketSender
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Helpers
+  commentId: N:NitroxClient.Helpers
+  href: NitroxClient.html
+  name: NitroxClient.Helpers
+  nameWithType: NitroxClient.Helpers
+  fullName: NitroxClient.Helpers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastLocation*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastLocation
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastLocation.html#NitroxClient_GameLogic_LocalPlayer_BroadcastLocation_UnityEngine_Vector3_UnityEngine_Vector3_UnityEngine_Quaternion_UnityEngine_Quaternion_NitroxModel_DataStructures_Util_Optional_NitroxModel_DataStructures_GameLogic_VehicleMovementData__
+  name: BroadcastLocation
+  nameWithType: LocalPlayer.BroadcastLocation
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastLocation
+- uid: UnityEngine.Vector3
+  commentId: T:UnityEngine.Vector3
+  parent: UnityEngine
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: UnityEngine.Vector3
+- uid: UnityEngine.Quaternion
+  commentId: T:UnityEngine.Quaternion
+  parent: UnityEngine
+  isExternal: true
+  name: Quaternion
+  nameWithType: Quaternion
+  fullName: UnityEngine.Quaternion
+- uid: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.GameLogic.VehicleMovementData}
+  commentId: T:NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.GameLogic.VehicleMovementData}
+  parent: NitroxModel.DataStructures.Util
+  definition: NitroxModel.DataStructures.Util.Optional`1
+  name: Optional<VehicleMovementData>
+  nameWithType: Optional<VehicleMovementData>
+  fullName: NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.GameLogic.VehicleMovementData>
+  nameWithType.vb: Optional(Of VehicleMovementData)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.GameLogic.VehicleMovementData)
+  name.vb: Optional(Of VehicleMovementData)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.VehicleMovementData
+    name: VehicleMovementData
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.VehicleMovementData
+    name: VehicleMovementData
+  - name: )
+- uid: NitroxModel.DataStructures.Util.Optional`1
+  commentId: T:NitroxModel.DataStructures.Util.Optional`1
+  parent: NitroxModel.DataStructures.Util
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<T>
+  nameWithType: Optional<T>
+  fullName: NitroxModel.DataStructures.Util.Optional<T>
+  nameWithType.vb: Optional(Of T)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of T)
+  name.vb: Optional(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Util
+  commentId: N:NitroxModel.DataStructures.Util
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Util
+  nameWithType: NitroxModel.DataStructures.Util
+  fullName: NitroxModel.DataStructures.Util
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+- uid: NitroxClient.GameLogic.LocalPlayer.AnimationChange*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.AnimationChange
+  href: NitroxClient.GameLogic.LocalPlayer.AnimationChange.html#NitroxClient_GameLogic_LocalPlayer_AnimationChange_NitroxClient_MonoBehaviours_AnimChangeType_NitroxClient_MonoBehaviours_AnimChangeState_
+  name: AnimationChange
+  nameWithType: LocalPlayer.AnimationChange
+  fullName: NitroxClient.GameLogic.LocalPlayer.AnimationChange
+- uid: NitroxClient.MonoBehaviours.AnimChangeType
+  commentId: T:NitroxClient.MonoBehaviours.AnimChangeType
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.AnimChangeType.html
+  name: AnimChangeType
+  nameWithType: AnimChangeType
+  fullName: NitroxClient.MonoBehaviours.AnimChangeType
+- uid: NitroxClient.MonoBehaviours.AnimChangeState
+  commentId: T:NitroxClient.MonoBehaviours.AnimChangeState
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.AnimChangeState.html
+  name: AnimChangeState
+  nameWithType: AnimChangeState
+  fullName: NitroxClient.MonoBehaviours.AnimChangeState
+- uid: NitroxClient.MonoBehaviours
+  commentId: N:NitroxClient.MonoBehaviours
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours
+  nameWithType: NitroxClient.MonoBehaviours
+  fullName: NitroxClient.MonoBehaviours
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastStats*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastStats
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastStats.html#NitroxClient_GameLogic_LocalPlayer_BroadcastStats_System_Single_System_Single_System_Single_System_Single_System_Single_System_Single_
+  name: BroadcastStats
+  nameWithType: LocalPlayer.BroadcastStats
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastStats
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastDeath*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastDeath
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastDeath.html#NitroxClient_GameLogic_LocalPlayer_BroadcastDeath_UnityEngine_Vector3_
+  name: BroadcastDeath
+  nameWithType: LocalPlayer.BroadcastDeath
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastDeath
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange.html#NitroxClient_GameLogic_LocalPlayer_BroadcastSubrootChange_NitroxModel_DataStructures_Util_Optional_NitroxModel_DataStructures_NitroxId__
+  name: BroadcastSubrootChange
+  nameWithType: LocalPlayer.BroadcastSubrootChange
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastSubrootChange
+- uid: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+  commentId: T:NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+  parent: NitroxModel.DataStructures.Util
+  definition: NitroxModel.DataStructures.Util.Optional`1
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<NitroxId>
+  nameWithType: Optional<NitroxId>
+  fullName: NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>
+  nameWithType.vb: Optional(Of NitroxId)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)
+  name.vb: Optional(Of NitroxId)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange.html#NitroxClient_GameLogic_LocalPlayer_BroadcastEscapePodChange_NitroxModel_DataStructures_Util_Optional_NitroxModel_DataStructures_NitroxId__
+  name: BroadcastEscapePodChange
+  nameWithType: LocalPlayer.BroadcastEscapePodChange
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastEscapePodChange
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastWeld*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastWeld
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastWeld.html#NitroxClient_GameLogic_LocalPlayer_BroadcastWeld_NitroxModel_DataStructures_NitroxId_System_Single_
+  name: BroadcastWeld
+  nameWithType: LocalPlayer.BroadcastWeld
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastWeld
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged.html#NitroxClient_GameLogic_LocalPlayer_BroadcastHeldItemChanged_NitroxModel_DataStructures_NitroxId_NitroxModel_Packets_PlayerHeldItemChanged_ChangeType_NitroxModel_DataStructures_GameLogic_NitroxTechType_
+  name: BroadcastHeldItemChanged
+  nameWithType: LocalPlayer.BroadcastHeldItemChanged
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastHeldItemChanged
+- uid: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+  commentId: T:NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.PlayerHeldItemChanged.html
+  name: PlayerHeldItemChanged.ChangeType
+  nameWithType: PlayerHeldItemChanged.ChangeType
+  fullName: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+  spec.csharp:
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged
+    name: PlayerHeldItemChanged
+    href: NitroxModel.Packets.PlayerHeldItemChanged.html
+  - name: .
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+    name: ChangeType
+    href: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType.html
+  spec.vb:
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged
+    name: PlayerHeldItemChanged
+    href: NitroxModel.Packets.PlayerHeldItemChanged.html
+  - name: .
+  - uid: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType
+    name: ChangeType
+    href: NitroxModel.Packets.PlayerHeldItemChanged.ChangeType.html
+- uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+  commentId: T:NitroxModel.DataStructures.GameLogic.NitroxTechType
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  name: NitroxTechType
+  nameWithType: NitroxTechType
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxTechType
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged*
+  commentId: Overload:NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged
+  href: NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged.html#NitroxClient_GameLogic_LocalPlayer_BroadcastQuickSlotsBindingChanged_NitroxModel_DataStructures_Util_Optional_NitroxModel_DataStructures_NitroxId____
+  name: BroadcastQuickSlotsBindingChanged
+  nameWithType: LocalPlayer.BroadcastQuickSlotsBindingChanged
+  fullName: NitroxClient.GameLogic.LocalPlayer.BroadcastQuickSlotsBindingChanged
+- uid: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}[]
+  isExternal: true
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<NitroxId>[]
+  nameWithType: Optional<NitroxId>[]
+  fullName: NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>[]
+  nameWithType.vb: Optional(Of NitroxId)()
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)()
+  name.vb: Optional(Of NitroxId)()
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+  - name: (
+  - name: )
+memberLayout: SeparatePages

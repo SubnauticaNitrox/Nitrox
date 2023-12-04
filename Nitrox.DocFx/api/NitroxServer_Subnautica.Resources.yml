@@ -1,0 +1,86 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.Resources
+  commentId: N:NitroxServer_Subnautica.Resources
+  id: Resources
+  parent: NitroxServer_Subnautica
+  children:
+  - NitroxServer_Subnautica.Resources.Parsers
+  - NitroxServer_Subnautica.Resources.ResourceAssets
+  - NitroxServer_Subnautica.Resources.ResourceAssetsParser
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer_Subnautica.Resources
+  nameWithType: NitroxServer_Subnautica.Resources
+  fullName: NitroxServer_Subnautica.Resources
+  type: Namespace
+  assemblies:
+  - NitroxServer-Subnautica
+references:
+- uid: NitroxServer_Subnautica.Resources.Parsers
+  commentId: N:NitroxServer_Subnautica.Resources.Parsers
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica.Resources.Parsers
+  nameWithType: NitroxServer_Subnautica.Resources.Parsers
+  fullName: NitroxServer_Subnautica.Resources.Parsers
+  spec.csharp:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+  spec.vb:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets
+  commentId: T:NitroxServer_Subnautica.Resources.ResourceAssets
+  parent: NitroxServer_Subnautica.Resources
+  href: NitroxServer_Subnautica.Resources.ResourceAssets.html
+  name: ResourceAssets
+  nameWithType: ResourceAssets
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets
+- uid: NitroxServer_Subnautica.Resources.ResourceAssetsParser
+  commentId: T:NitroxServer_Subnautica.Resources.ResourceAssetsParser
+  href: NitroxServer_Subnautica.Resources.ResourceAssetsParser.html
+  name: ResourceAssetsParser
+  nameWithType: ResourceAssetsParser
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssetsParser
+- uid: NitroxServer_Subnautica.Resources
+  commentId: N:NitroxServer_Subnautica.Resources
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica.Resources
+  nameWithType: NitroxServer_Subnautica.Resources
+  fullName: NitroxServer_Subnautica.Resources
+  spec.csharp:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  spec.vb:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+memberLayout: SeparatePages

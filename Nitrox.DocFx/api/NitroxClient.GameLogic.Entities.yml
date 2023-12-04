@@ -1,0 +1,1498 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Entities
+  commentId: T:NitroxClient.GameLogic.Entities
+  id: Entities
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.Entities.#ctor(NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender,NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer)
+  - NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  - NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  - NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  - NitroxClient.GameLogic.Entities.CleanupExistingEntities(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  - NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  - NitroxClient.GameLogic.Entities.EntitiesToSpawn
+  - NitroxClient.GameLogic.Entities.EntityMetadataChanged(System.Object,NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled(System.Object,NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Entities.IsKnownEntity(NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Entities.IsParentReady(NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Entities.MarkAsSpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  - NitroxClient.GameLogic.Entities.RemoveEntity(NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Entities.RemoveEntityHierarchy(NitroxModel.DataStructures.GameLogic.Entity)
+  - NitroxClient.GameLogic.Entities.RequireEntityType(NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Entities.SpawnBatchAsync(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Boolean,System.Boolean)
+  - NitroxClient.GameLogic.Entities.SpawnEntityAsync(NitroxModel.DataStructures.GameLogic.Entity,System.Boolean)
+  - NitroxClient.GameLogic.Entities.WasAlreadySpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  - NitroxClient.GameLogic.Entities.WasParentSpawned(NitroxModel.DataStructures.NitroxId)
+  langs:
+  - csharp
+  - vb
+  name: Entities
+  nameWithType: Entities
+  fullName: NitroxClient.GameLogic.Entities
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Entities
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 26
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public class Entities
+    content.vb: Public Class Entities
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Entities.EntitiesToSpawn
+  commentId: P:NitroxClient.GameLogic.Entities.EntitiesToSpawn
+  id: EntitiesToSpawn
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: EntitiesToSpawn
+  nameWithType: Entities.EntitiesToSpawn
+  fullName: NitroxClient.GameLogic.Entities.EntitiesToSpawn
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntitiesToSpawn
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 36
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public List<Entity> EntitiesToSpawn { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    content.vb: Public Property EntitiesToSpawn As List(Of Entity)
+  overload: NitroxClient.GameLogic.Entities.EntitiesToSpawn*
+- uid: NitroxClient.GameLogic.Entities.#ctor(NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender,NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer)
+  commentId: M:NitroxClient.GameLogic.Entities.#ctor(NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender,NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer)
+  id: '#ctor(NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Helpers.ThrottledPacketSender,NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer)'
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: Entities(IPacketSender, ThrottledPacketSender, PlayerManager, ILocalNitroxPlayer)
+  nameWithType: Entities.Entities(IPacketSender, ThrottledPacketSender, PlayerManager, ILocalNitroxPlayer)
+  fullName: NitroxClient.GameLogic.Entities.Entities(NitroxClient.Communication.Abstract.IPacketSender, NitroxClient.Helpers.ThrottledPacketSender, NitroxClient.GameLogic.PlayerManager, NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 39
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+    parameters:
+    - id: packetSender
+      type: NitroxClient.Communication.Abstract.IPacketSender
+    - id: throttledPacketSender
+      type: NitroxClient.Helpers.ThrottledPacketSender
+    - id: playerManager
+      type: NitroxClient.GameLogic.PlayerManager
+    - id: localPlayer
+      type: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+    content.vb: Public Sub New(packetSender As IPacketSender, throttledPacketSender As ThrottledPacketSender, playerManager As PlayerManager, localPlayer As ILocalNitroxPlayer)
+  overload: NitroxClient.GameLogic.Entities.#ctor*
+  nameWithType.vb: Entities.New(IPacketSender, ThrottledPacketSender, PlayerManager, ILocalNitroxPlayer)
+  fullName.vb: NitroxClient.GameLogic.Entities.New(NitroxClient.Communication.Abstract.IPacketSender, NitroxClient.Helpers.ThrottledPacketSender, NitroxClient.GameLogic.PlayerManager, NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer)
+  name.vb: New(IPacketSender, ThrottledPacketSender, PlayerManager, ILocalNitroxPlayer)
+- uid: NitroxClient.GameLogic.Entities.EntityMetadataChanged(System.Object,NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Entities.EntityMetadataChanged(System.Object,NitroxModel.DataStructures.NitroxId)
+  id: EntityMetadataChanged(System.Object,NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: EntityMetadataChanged(object, NitroxId)
+  nameWithType: Entities.EntityMetadataChanged(object, NitroxId)
+  fullName: NitroxClient.GameLogic.Entities.EntityMetadataChanged(object, NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntityMetadataChanged
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 63
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void EntityMetadataChanged(object o, NitroxId id)
+    parameters:
+    - id: o
+      type: System.Object
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public Sub EntityMetadataChanged(o As Object, id As NitroxId)
+  overload: NitroxClient.GameLogic.Entities.EntityMetadataChanged*
+  nameWithType.vb: Entities.EntityMetadataChanged(Object, NitroxId)
+  fullName.vb: NitroxClient.GameLogic.Entities.EntityMetadataChanged(Object, NitroxModel.DataStructures.NitroxId)
+  name.vb: EntityMetadataChanged(Object, NitroxId)
+- uid: NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled(System.Object,NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled(System.Object,NitroxModel.DataStructures.NitroxId)
+  id: EntityMetadataChangedThrottled(System.Object,NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: EntityMetadataChangedThrottled(object, NitroxId)
+  nameWithType: Entities.EntityMetadataChangedThrottled(object, NitroxId)
+  fullName: NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled(object, NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntityMetadataChangedThrottled
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 73
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void EntityMetadataChangedThrottled(object o, NitroxId id)
+    parameters:
+    - id: o
+      type: System.Object
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public Sub EntityMetadataChangedThrottled(o As Object, id As NitroxId)
+  overload: NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled*
+  nameWithType.vb: Entities.EntityMetadataChangedThrottled(Object, NitroxId)
+  fullName.vb: NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled(Object, NitroxModel.DataStructures.NitroxId)
+  name.vb: EntityMetadataChangedThrottled(Object, NitroxId)
+- uid: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  commentId: M:NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  id: BroadcastMetadataUpdate(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: BroadcastMetadataUpdate(NitroxId, EntityMetadata)
+  nameWithType: Entities.BroadcastMetadataUpdate(NitroxId, EntityMetadata)
+  fullName: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastMetadataUpdate
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 83
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: metadata
+      type: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+    content.vb: Public Sub BroadcastMetadataUpdate(id As NitroxId, metadata As EntityMetadata)
+  overload: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate*
+- uid: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  commentId: M:NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  id: BroadcastMetadataUpdateThrottled(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: BroadcastMetadataUpdateThrottled(NitroxId, EntityMetadata)
+  nameWithType: Entities.BroadcastMetadataUpdateThrottled(NitroxId, EntityMetadata)
+  fullName: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastMetadataUpdateThrottled
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 88
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastMetadataUpdateThrottled(NitroxId id, EntityMetadata metadata)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: metadata
+      type: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+    content.vb: Public Sub BroadcastMetadataUpdateThrottled(id As NitroxId, metadata As EntityMetadata)
+  overload: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled*
+- uid: NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  commentId: M:NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  id: BroadcastEntitySpawnedByClient(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: BroadcastEntitySpawnedByClient(WorldEntity)
+  nameWithType: Entities.BroadcastEntitySpawnedByClient(WorldEntity)
+  fullName: NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BroadcastEntitySpawnedByClient
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 93
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BroadcastEntitySpawnedByClient(WorldEntity entity)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+    content.vb: Public Sub BroadcastEntitySpawnedByClient(entity As WorldEntity)
+  overload: NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient*
+- uid: NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  commentId: M:NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  id: EnqueueEntitiesToSpawn(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: EnqueueEntitiesToSpawn(List<Entity>)
+  nameWithType: Entities.EnqueueEntitiesToSpawn(List<Entity>)
+  fullName: NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn(System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EnqueueEntitiesToSpawn
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 104
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
+    parameters:
+    - id: entitiesToEnqueue
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    content.vb: Public Sub EnqueueEntitiesToSpawn(entitiesToEnqueue As List(Of Entity))
+  overload: NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn*
+  nameWithType.vb: Entities.EnqueueEntitiesToSpawn(List(Of Entity))
+  fullName.vb: NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn(System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity))
+  name.vb: EnqueueEntitiesToSpawn(List(Of Entity))
+- uid: NitroxClient.GameLogic.Entities.SpawnBatchAsync(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Boolean,System.Boolean)
+  commentId: M:NitroxClient.GameLogic.Entities.SpawnBatchAsync(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Boolean,System.Boolean)
+  id: SpawnBatchAsync(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity},System.Boolean,System.Boolean)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: SpawnBatchAsync(List<Entity>, bool, bool)
+  nameWithType: Entities.SpawnBatchAsync(List<Entity>, bool, bool)
+  fullName: NitroxClient.GameLogic.Entities.SpawnBatchAsync(System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>, bool, bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SpawnBatchAsync
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 120
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  remarks: >-
+    Yield returning takes too much time (at least once per IEnumerator branch) and it quickly gets out of hand with long function call hierarchies so
+
+    we want to reduce the amount of yield operations and only skip to the next frame when required (to maintain the FPS).
+
+    Also saves resources by using the IOut instances
+  example: []
+  syntax:
+    content: public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false, bool skipFrames = true)
+    parameters:
+    - id: batch
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    - id: forceRespawn
+      type: System.Boolean
+      description: Should children be spawned even if already marked as spawned
+    - id: skipFrames
+      type: System.Boolean
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Function SpawnBatchAsync(batch As List(Of Entity), forceRespawn As Boolean = False, skipFrames As Boolean = True) As IEnumerator
+  overload: NitroxClient.GameLogic.Entities.SpawnBatchAsync*
+  nameWithType.vb: Entities.SpawnBatchAsync(List(Of Entity), Boolean, Boolean)
+  fullName.vb: NitroxClient.GameLogic.Entities.SpawnBatchAsync(System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity), Boolean, Boolean)
+  name.vb: SpawnBatchAsync(List(Of Entity), Boolean, Boolean)
+- uid: NitroxClient.GameLogic.Entities.SpawnEntityAsync(NitroxModel.DataStructures.GameLogic.Entity,System.Boolean)
+  commentId: M:NitroxClient.GameLogic.Entities.SpawnEntityAsync(NitroxModel.DataStructures.GameLogic.Entity,System.Boolean)
+  id: SpawnEntityAsync(NitroxModel.DataStructures.GameLogic.Entity,System.Boolean)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: SpawnEntityAsync(Entity, bool)
+  nameWithType: Entities.SpawnEntityAsync(Entity, bool)
+  fullName: NitroxClient.GameLogic.Entities.SpawnEntityAsync(NitroxModel.DataStructures.GameLogic.Entity, bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SpawnEntityAsync
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 203
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public IEnumerator SpawnEntityAsync(Entity entity, bool forceRespawn = false)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entity
+    - id: forceRespawn
+      type: System.Boolean
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Function SpawnEntityAsync(entity As Entity, forceRespawn As Boolean = False) As IEnumerator
+  overload: NitroxClient.GameLogic.Entities.SpawnEntityAsync*
+  nameWithType.vb: Entities.SpawnEntityAsync(Entity, Boolean)
+  fullName.vb: NitroxClient.GameLogic.Entities.SpawnEntityAsync(NitroxModel.DataStructures.GameLogic.Entity, Boolean)
+  name.vb: SpawnEntityAsync(Entity, Boolean)
+- uid: NitroxClient.GameLogic.Entities.CleanupExistingEntities(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  commentId: M:NitroxClient.GameLogic.Entities.CleanupExistingEntities(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  id: CleanupExistingEntities(System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity})
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: CleanupExistingEntities(List<Entity>)
+  nameWithType: Entities.CleanupExistingEntities(List<Entity>)
+  fullName: NitroxClient.GameLogic.Entities.CleanupExistingEntities(System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CleanupExistingEntities
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 208
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void CleanupExistingEntities(List<Entity> dirtyEntities)
+    parameters:
+    - id: dirtyEntities
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    content.vb: Public Sub CleanupExistingEntities(dirtyEntities As List(Of Entity))
+  overload: NitroxClient.GameLogic.Entities.CleanupExistingEntities*
+  nameWithType.vb: Entities.CleanupExistingEntities(List(Of Entity))
+  fullName.vb: NitroxClient.GameLogic.Entities.CleanupExistingEntities(System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity))
+  name.vb: CleanupExistingEntities(List(Of Entity))
+- uid: NitroxClient.GameLogic.Entities.WasAlreadySpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  commentId: M:NitroxClient.GameLogic.Entities.WasAlreadySpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  id: WasAlreadySpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: WasAlreadySpawned(Entity)
+  nameWithType: Entities.WasAlreadySpawned(Entity)
+  fullName: NitroxClient.GameLogic.Entities.WasAlreadySpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WasAlreadySpawned
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 254
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public bool WasAlreadySpawned(Entity entity)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entity
+    return:
+      type: System.Boolean
+    content.vb: Public Function WasAlreadySpawned(entity As Entity) As Boolean
+  overload: NitroxClient.GameLogic.Entities.WasAlreadySpawned*
+- uid: NitroxClient.GameLogic.Entities.IsKnownEntity(NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Entities.IsKnownEntity(NitroxModel.DataStructures.NitroxId)
+  id: IsKnownEntity(NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: IsKnownEntity(NitroxId)
+  nameWithType: Entities.IsKnownEntity(NitroxId)
+  fullName: NitroxClient.GameLogic.Entities.IsKnownEntity(NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsKnownEntity
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 264
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public bool IsKnownEntity(NitroxId id)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsKnownEntity(id As NitroxId) As Boolean
+  overload: NitroxClient.GameLogic.Entities.IsKnownEntity*
+- uid: NitroxClient.GameLogic.Entities.RequireEntityType(NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Entities.RequireEntityType(NitroxModel.DataStructures.NitroxId)
+  id: RequireEntityType(NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: RequireEntityType(NitroxId)
+  nameWithType: Entities.RequireEntityType(NitroxId)
+  fullName: NitroxClient.GameLogic.Entities.RequireEntityType(NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RequireEntityType
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 269
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public Type RequireEntityType(NitroxId id)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    return:
+      type: System.Type
+    content.vb: Public Function RequireEntityType(id As NitroxId) As Type
+  overload: NitroxClient.GameLogic.Entities.RequireEntityType*
+- uid: NitroxClient.GameLogic.Entities.IsParentReady(NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Entities.IsParentReady(NitroxModel.DataStructures.NitroxId)
+  id: IsParentReady(NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: IsParentReady(NitroxId)
+  nameWithType: Entities.IsParentReady(NitroxId)
+  fullName: NitroxClient.GameLogic.Entities.IsParentReady(NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsParentReady
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 279
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public bool IsParentReady(NitroxId id)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsParentReady(id As NitroxId) As Boolean
+  overload: NitroxClient.GameLogic.Entities.IsParentReady*
+- uid: NitroxClient.GameLogic.Entities.WasParentSpawned(NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Entities.WasParentSpawned(NitroxModel.DataStructures.NitroxId)
+  id: WasParentSpawned(NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: WasParentSpawned(NitroxId)
+  nameWithType: Entities.WasParentSpawned(NitroxId)
+  fullName: NitroxClient.GameLogic.Entities.WasParentSpawned(NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WasParentSpawned
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 284
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public bool WasParentSpawned(NitroxId id)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    return:
+      type: System.Boolean
+    content.vb: Public Function WasParentSpawned(id As NitroxId) As Boolean
+  overload: NitroxClient.GameLogic.Entities.WasParentSpawned*
+- uid: NitroxClient.GameLogic.Entities.MarkAsSpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  commentId: M:NitroxClient.GameLogic.Entities.MarkAsSpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  id: MarkAsSpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: MarkAsSpawned(Entity)
+  nameWithType: Entities.MarkAsSpawned(Entity)
+  fullName: NitroxClient.GameLogic.Entities.MarkAsSpawned(NitroxModel.DataStructures.GameLogic.Entity)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MarkAsSpawned
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 289
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void MarkAsSpawned(Entity entity)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entity
+    content.vb: Public Sub MarkAsSpawned(entity As Entity)
+  overload: NitroxClient.GameLogic.Entities.MarkAsSpawned*
+- uid: NitroxClient.GameLogic.Entities.RemoveEntity(NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Entities.RemoveEntity(NitroxModel.DataStructures.NitroxId)
+  id: RemoveEntity(NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: RemoveEntity(NitroxId)
+  nameWithType: Entities.RemoveEntity(NitroxId)
+  fullName: NitroxClient.GameLogic.Entities.RemoveEntity(NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveEntity
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 294
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public bool RemoveEntity(NitroxId id)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    return:
+      type: System.Boolean
+    content.vb: Public Function RemoveEntity(id As NitroxId) As Boolean
+  overload: NitroxClient.GameLogic.Entities.RemoveEntity*
+- uid: NitroxClient.GameLogic.Entities.RemoveEntityHierarchy(NitroxModel.DataStructures.GameLogic.Entity)
+  commentId: M:NitroxClient.GameLogic.Entities.RemoveEntityHierarchy(NitroxModel.DataStructures.GameLogic.Entity)
+  id: RemoveEntityHierarchy(NitroxModel.DataStructures.GameLogic.Entity)
+  parent: NitroxClient.GameLogic.Entities
+  langs:
+  - csharp
+  - vb
+  name: RemoveEntityHierarchy(Entity)
+  nameWithType: Entities.RemoveEntityHierarchy(Entity)
+  fullName: NitroxClient.GameLogic.Entities.RemoveEntityHierarchy(NitroxModel.DataStructures.GameLogic.Entity)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Entities.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveEntityHierarchy
+    path: ../NitroxClient/GameLogic/Entities.cs
+    startLine: 300
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  summary: >-
+    Allows the ability to respawn an entity and its entire hierarchy. Callers are responsible for ensuring the
+
+    entity is no longer in the world.
+  example: []
+  syntax:
+    content: public void RemoveEntityHierarchy(Entity entity)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entity
+    content.vb: Public Sub RemoveEntityHierarchy(entity As Entity)
+  overload: NitroxClient.GameLogic.Entities.RemoveEntityHierarchy*
+references:
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Entities.EntitiesToSpawn*
+  commentId: Overload:NitroxClient.GameLogic.Entities.EntitiesToSpawn
+  href: NitroxClient.GameLogic.Entities.EntitiesToSpawn.html#NitroxClient_GameLogic_Entities_EntitiesToSpawn
+  name: EntitiesToSpawn
+  nameWithType: Entities.EntitiesToSpawn
+  fullName: NitroxClient.GameLogic.Entities.EntitiesToSpawn
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Entity>
+  nameWithType: List<Entity>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>
+  nameWithType.vb: List(Of Entity)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity)
+  name.vb: List(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxClient.GameLogic.Entities.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.Entities.#ctor
+  href: NitroxClient.GameLogic.Entities.-ctor.html#NitroxClient_GameLogic_Entities__ctor_NitroxClient_Communication_Abstract_IPacketSender_NitroxClient_Helpers_ThrottledPacketSender_NitroxClient_GameLogic_PlayerManager_NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_ILocalNitroxPlayer_
+  name: Entities
+  nameWithType: Entities.Entities
+  fullName: NitroxClient.GameLogic.Entities.Entities
+  nameWithType.vb: Entities.New
+  fullName.vb: NitroxClient.GameLogic.Entities.New
+  name.vb: New
+- uid: NitroxClient.Communication.Abstract.IPacketSender
+  commentId: T:NitroxClient.Communication.Abstract.IPacketSender
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IPacketSender.html
+  name: IPacketSender
+  nameWithType: IPacketSender
+  fullName: NitroxClient.Communication.Abstract.IPacketSender
+- uid: NitroxClient.Helpers.ThrottledPacketSender
+  commentId: T:NitroxClient.Helpers.ThrottledPacketSender
+  parent: NitroxClient.Helpers
+  href: NitroxClient.Helpers.ThrottledPacketSender.html
+  name: ThrottledPacketSender
+  nameWithType: ThrottledPacketSender
+  fullName: NitroxClient.Helpers.ThrottledPacketSender
+- uid: NitroxClient.GameLogic.PlayerManager
+  commentId: T:NitroxClient.GameLogic.PlayerManager
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.PlayerManager.html
+  name: PlayerManager
+  nameWithType: PlayerManager
+  fullName: NitroxClient.GameLogic.PlayerManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.html
+  name: ILocalNitroxPlayer
+  nameWithType: ILocalNitroxPlayer
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Helpers
+  commentId: N:NitroxClient.Helpers
+  href: NitroxClient.html
+  name: NitroxClient.Helpers
+  nameWithType: NitroxClient.Helpers
+  fullName: NitroxClient.Helpers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+- uid: NitroxClient.GameLogic.Entities.EntityMetadataChanged*
+  commentId: Overload:NitroxClient.GameLogic.Entities.EntityMetadataChanged
+  href: NitroxClient.GameLogic.Entities.EntityMetadataChanged.html#NitroxClient_GameLogic_Entities_EntityMetadataChanged_System_Object_NitroxModel_DataStructures_NitroxId_
+  name: EntityMetadataChanged
+  nameWithType: Entities.EntityMetadataChanged
+  fullName: NitroxClient.GameLogic.Entities.EntityMetadataChanged
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled*
+  commentId: Overload:NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled
+  href: NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled.html#NitroxClient_GameLogic_Entities_EntityMetadataChangedThrottled_System_Object_NitroxModel_DataStructures_NitroxId_
+  name: EntityMetadataChangedThrottled
+  nameWithType: Entities.EntityMetadataChangedThrottled
+  fullName: NitroxClient.GameLogic.Entities.EntityMetadataChangedThrottled
+- uid: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate*
+  commentId: Overload:NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate
+  href: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate.html#NitroxClient_GameLogic_Entities_BroadcastMetadataUpdate_NitroxModel_DataStructures_NitroxId_NitroxModel_DataStructures_GameLogic_Entities_Metadata_EntityMetadata_
+  name: BroadcastMetadataUpdate
+  nameWithType: Entities.BroadcastMetadataUpdate
+  fullName: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdate
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata.html
+  name: EntityMetadata
+  nameWithType: EntityMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+- uid: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled*
+  commentId: Overload:NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled
+  href: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled.html#NitroxClient_GameLogic_Entities_BroadcastMetadataUpdateThrottled_NitroxModel_DataStructures_NitroxId_NitroxModel_DataStructures_GameLogic_Entities_Metadata_EntityMetadata_
+  name: BroadcastMetadataUpdateThrottled
+  nameWithType: Entities.BroadcastMetadataUpdateThrottled
+  fullName: NitroxClient.GameLogic.Entities.BroadcastMetadataUpdateThrottled
+- uid: NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient*
+  commentId: Overload:NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient
+  href: NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient.html#NitroxClient_GameLogic_Entities_BroadcastEntitySpawnedByClient_NitroxModel_DataStructures_GameLogic_Entities_WorldEntity_
+  name: BroadcastEntitySpawnedByClient
+  nameWithType: Entities.BroadcastEntitySpawnedByClient
+  fullName: NitroxClient.GameLogic.Entities.BroadcastEntitySpawnedByClient
+- uid: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity.html
+  name: WorldEntity
+  nameWithType: WorldEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities
+  fullName: NitroxModel.DataStructures.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+- uid: NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn*
+  commentId: Overload:NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn
+  href: NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn.html#NitroxClient_GameLogic_Entities_EnqueueEntitiesToSpawn_System_Collections_Generic_List_NitroxModel_DataStructures_GameLogic_Entity__
+  name: EnqueueEntitiesToSpawn
+  nameWithType: Entities.EnqueueEntitiesToSpawn
+  fullName: NitroxClient.GameLogic.Entities.EnqueueEntitiesToSpawn
+- uid: NitroxClient.GameLogic.Entities.SpawnBatchAsync*
+  commentId: Overload:NitroxClient.GameLogic.Entities.SpawnBatchAsync
+  href: NitroxClient.GameLogic.Entities.SpawnBatchAsync.html#NitroxClient_GameLogic_Entities_SpawnBatchAsync_System_Collections_Generic_List_NitroxModel_DataStructures_GameLogic_Entity__System_Boolean_System_Boolean_
+  name: SpawnBatchAsync
+  nameWithType: Entities.SpawnBatchAsync
+  fullName: NitroxClient.GameLogic.Entities.SpawnBatchAsync
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Collections.IEnumerator
+  commentId: T:System.Collections.IEnumerator
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerator
+  name: IEnumerator
+  nameWithType: IEnumerator
+  fullName: System.Collections.IEnumerator
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: NitroxClient.GameLogic.Entities.SpawnEntityAsync*
+  commentId: Overload:NitroxClient.GameLogic.Entities.SpawnEntityAsync
+  href: NitroxClient.GameLogic.Entities.SpawnEntityAsync.html#NitroxClient_GameLogic_Entities_SpawnEntityAsync_NitroxModel_DataStructures_GameLogic_Entity_System_Boolean_
+  name: SpawnEntityAsync
+  nameWithType: Entities.SpawnEntityAsync
+  fullName: NitroxClient.GameLogic.Entities.SpawnEntityAsync
+- uid: NitroxModel.DataStructures.GameLogic.Entity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entity
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.Entity.html
+  name: Entity
+  nameWithType: Entity
+  fullName: NitroxModel.DataStructures.GameLogic.Entity
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxClient.GameLogic.Entities.CleanupExistingEntities*
+  commentId: Overload:NitroxClient.GameLogic.Entities.CleanupExistingEntities
+  href: NitroxClient.GameLogic.Entities.CleanupExistingEntities.html#NitroxClient_GameLogic_Entities_CleanupExistingEntities_System_Collections_Generic_List_NitroxModel_DataStructures_GameLogic_Entity__
+  name: CleanupExistingEntities
+  nameWithType: Entities.CleanupExistingEntities
+  fullName: NitroxClient.GameLogic.Entities.CleanupExistingEntities
+- uid: NitroxClient.GameLogic.Entities.WasAlreadySpawned*
+  commentId: Overload:NitroxClient.GameLogic.Entities.WasAlreadySpawned
+  href: NitroxClient.GameLogic.Entities.WasAlreadySpawned.html#NitroxClient_GameLogic_Entities_WasAlreadySpawned_NitroxModel_DataStructures_GameLogic_Entity_
+  name: WasAlreadySpawned
+  nameWithType: Entities.WasAlreadySpawned
+  fullName: NitroxClient.GameLogic.Entities.WasAlreadySpawned
+- uid: NitroxClient.GameLogic.Entities.IsKnownEntity*
+  commentId: Overload:NitroxClient.GameLogic.Entities.IsKnownEntity
+  href: NitroxClient.GameLogic.Entities.IsKnownEntity.html#NitroxClient_GameLogic_Entities_IsKnownEntity_NitroxModel_DataStructures_NitroxId_
+  name: IsKnownEntity
+  nameWithType: Entities.IsKnownEntity
+  fullName: NitroxClient.GameLogic.Entities.IsKnownEntity
+- uid: NitroxClient.GameLogic.Entities.RequireEntityType*
+  commentId: Overload:NitroxClient.GameLogic.Entities.RequireEntityType
+  href: NitroxClient.GameLogic.Entities.RequireEntityType.html#NitroxClient_GameLogic_Entities_RequireEntityType_NitroxModel_DataStructures_NitroxId_
+  name: RequireEntityType
+  nameWithType: Entities.RequireEntityType
+  fullName: NitroxClient.GameLogic.Entities.RequireEntityType
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: NitroxClient.GameLogic.Entities.IsParentReady*
+  commentId: Overload:NitroxClient.GameLogic.Entities.IsParentReady
+  href: NitroxClient.GameLogic.Entities.IsParentReady.html#NitroxClient_GameLogic_Entities_IsParentReady_NitroxModel_DataStructures_NitroxId_
+  name: IsParentReady
+  nameWithType: Entities.IsParentReady
+  fullName: NitroxClient.GameLogic.Entities.IsParentReady
+- uid: NitroxClient.GameLogic.Entities.WasParentSpawned*
+  commentId: Overload:NitroxClient.GameLogic.Entities.WasParentSpawned
+  href: NitroxClient.GameLogic.Entities.WasParentSpawned.html#NitroxClient_GameLogic_Entities_WasParentSpawned_NitroxModel_DataStructures_NitroxId_
+  name: WasParentSpawned
+  nameWithType: Entities.WasParentSpawned
+  fullName: NitroxClient.GameLogic.Entities.WasParentSpawned
+- uid: NitroxClient.GameLogic.Entities.MarkAsSpawned*
+  commentId: Overload:NitroxClient.GameLogic.Entities.MarkAsSpawned
+  href: NitroxClient.GameLogic.Entities.MarkAsSpawned.html#NitroxClient_GameLogic_Entities_MarkAsSpawned_NitroxModel_DataStructures_GameLogic_Entity_
+  name: MarkAsSpawned
+  nameWithType: Entities.MarkAsSpawned
+  fullName: NitroxClient.GameLogic.Entities.MarkAsSpawned
+- uid: NitroxClient.GameLogic.Entities.RemoveEntity*
+  commentId: Overload:NitroxClient.GameLogic.Entities.RemoveEntity
+  href: NitroxClient.GameLogic.Entities.RemoveEntity.html#NitroxClient_GameLogic_Entities_RemoveEntity_NitroxModel_DataStructures_NitroxId_
+  name: RemoveEntity
+  nameWithType: Entities.RemoveEntity
+  fullName: NitroxClient.GameLogic.Entities.RemoveEntity
+- uid: NitroxClient.GameLogic.Entities.RemoveEntityHierarchy*
+  commentId: Overload:NitroxClient.GameLogic.Entities.RemoveEntityHierarchy
+  href: NitroxClient.GameLogic.Entities.RemoveEntityHierarchy.html#NitroxClient_GameLogic_Entities_RemoveEntityHierarchy_NitroxModel_DataStructures_GameLogic_Entity_
+  name: RemoveEntityHierarchy
+  nameWithType: Entities.RemoveEntityHierarchy
+  fullName: NitroxClient.GameLogic.Entities.RemoveEntityHierarchy
+memberLayout: SeparatePages

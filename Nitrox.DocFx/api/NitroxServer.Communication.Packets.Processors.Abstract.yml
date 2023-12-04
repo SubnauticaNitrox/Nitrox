@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Communication.Packets.Processors.Abstract
+  commentId: N:NitroxServer.Communication.Packets.Processors.Abstract
+  id: Abstract
+  parent: NitroxServer.Communication.Packets.Processors
+  children:
+  - NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+  - NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor`1
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.Communication.Packets.Processors.Abstract
+  nameWithType: NitroxServer.Communication.Packets.Processors.Abstract
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+  commentId: T:NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+  href: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor-1.html
+  name: AuthenticatedPacketProcessor<T>
+  nameWithType: AuthenticatedPacketProcessor<T>
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor<T>
+  nameWithType.vb: AuthenticatedPacketProcessor(Of T)
+  fullName.vb: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor(Of T)
+  name.vb: AuthenticatedPacketProcessor(Of T)
+  spec.csharp:
+  - uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+    name: AuthenticatedPacketProcessor
+    href: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor`1
+    name: AuthenticatedPacketProcessor
+    href: NitroxServer.Communication.Packets.Processors.Abstract.AuthenticatedPacketProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor`1
+  commentId: T:NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor`1
+  href: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor-1.html
+  name: UnauthenticatedPacketProcessor<T>
+  nameWithType: UnauthenticatedPacketProcessor<T>
+  fullName: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor<T>
+  nameWithType.vb: UnauthenticatedPacketProcessor(Of T)
+  fullName.vb: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor(Of T)
+  name.vb: UnauthenticatedPacketProcessor(Of T)
+  spec.csharp:
+  - uid: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor`1
+    name: UnauthenticatedPacketProcessor
+    href: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor`1
+    name: UnauthenticatedPacketProcessor
+    href: NitroxServer.Communication.Packets.Processors.Abstract.UnauthenticatedPacketProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

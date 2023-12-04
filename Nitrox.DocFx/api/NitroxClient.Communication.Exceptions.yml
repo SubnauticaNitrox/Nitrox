@@ -1,0 +1,25 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Exceptions
+  commentId: N:NitroxClient.Communication.Exceptions
+  id: Exceptions
+  parent: NitroxClient.Communication
+  children:
+  - NitroxClient.Communication.Exceptions.ClientConnectionFailedException
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Communication.Exceptions
+  nameWithType: NitroxClient.Communication.Exceptions
+  fullName: NitroxClient.Communication.Exceptions
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.Communication.Exceptions.ClientConnectionFailedException
+  commentId: T:NitroxClient.Communication.Exceptions.ClientConnectionFailedException
+  href: NitroxClient.Communication.Exceptions.ClientConnectionFailedException.html
+  name: ClientConnectionFailedException
+  nameWithType: ClientConnectionFailedException
+  fullName: NitroxClient.Communication.Exceptions.ClientConnectionFailedException
+memberLayout: SeparatePages

@@ -1,0 +1,112 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Bases
+  id: Bases
+  parent: NitroxModel.DataStructures.GameLogic.Entities
+  children:
+  - NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+  - NitroxModel.DataStructures.GameLogic.Entities.Bases.GhostEntity
+  - NitroxModel.DataStructures.GameLogic.Entities.Bases.InteriorPieceEntity
+  - NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+  - NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+  - NitroxModel.DataStructures.GameLogic.Entities.Bases.MoonpoolEntity
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity.html
+  name: BuildEntity
+  nameWithType: BuildEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.GhostEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.GhostEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.GhostEntity.html
+  name: GhostEntity
+  nameWithType: GhostEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.GhostEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.InteriorPieceEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.InteriorPieceEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.InteriorPieceEntity.html
+  name: InteriorPieceEntity
+  nameWithType: InteriorPieceEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.InteriorPieceEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity.html
+  name: MapRoomEntity
+  nameWithType: MapRoomEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity.html
+  name: ModuleEntity
+  nameWithType: ModuleEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.MoonpoolEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.MoonpoolEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.MoonpoolEntity.html
+  name: MoonpoolEntity
+  nameWithType: MoonpoolEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.MoonpoolEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+memberLayout: SeparatePages

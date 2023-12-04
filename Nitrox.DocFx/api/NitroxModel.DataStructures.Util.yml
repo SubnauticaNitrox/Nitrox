@@ -1,0 +1,149 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.Util
+  commentId: N:NitroxModel.DataStructures.Util
+  id: Util
+  parent: NitroxModel.DataStructures
+  children:
+  - NitroxModel.DataStructures.Util.Optional
+  - NitroxModel.DataStructures.Util.OptionalEmpty
+  - NitroxModel.DataStructures.Util.OptionalEmptyException`1
+  - NitroxModel.DataStructures.Util.OptionalNullException`1
+  - NitroxModel.DataStructures.Util.OptionalTest
+  - NitroxModel.DataStructures.Util.Optional`1
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.DataStructures.Util
+  nameWithType: NitroxModel.DataStructures.Util
+  fullName: NitroxModel.DataStructures.Util
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: NitroxModel.DataStructures.Util.Optional
+  commentId: T:NitroxModel.DataStructures.Util.Optional
+  href: NitroxModel.DataStructures.Util.Optional.html
+  name: Optional
+  nameWithType: Optional
+  fullName: NitroxModel.DataStructures.Util.Optional
+- uid: NitroxModel.DataStructures.Util.OptionalEmpty
+  commentId: T:NitroxModel.DataStructures.Util.OptionalEmpty
+  parent: NitroxModel.DataStructures.Util
+  href: NitroxModel.DataStructures.Util.OptionalEmpty.html
+  name: OptionalEmpty
+  nameWithType: OptionalEmpty
+  fullName: NitroxModel.DataStructures.Util.OptionalEmpty
+- uid: NitroxModel.DataStructures.Util.OptionalEmptyException`1
+  commentId: T:NitroxModel.DataStructures.Util.OptionalEmptyException`1
+  href: NitroxModel.DataStructures.Util.OptionalEmptyException-1.html
+  name: OptionalEmptyException<T>
+  nameWithType: OptionalEmptyException<T>
+  fullName: NitroxModel.DataStructures.Util.OptionalEmptyException<T>
+  nameWithType.vb: OptionalEmptyException(Of T)
+  fullName.vb: NitroxModel.DataStructures.Util.OptionalEmptyException(Of T)
+  name.vb: OptionalEmptyException(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.OptionalEmptyException`1
+    name: OptionalEmptyException
+    href: NitroxModel.DataStructures.Util.OptionalEmptyException-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.OptionalEmptyException`1
+    name: OptionalEmptyException
+    href: NitroxModel.DataStructures.Util.OptionalEmptyException-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Util.OptionalNullException`1
+  commentId: T:NitroxModel.DataStructures.Util.OptionalNullException`1
+  href: NitroxModel.DataStructures.Util.OptionalNullException-1.html
+  name: OptionalNullException<T>
+  nameWithType: OptionalNullException<T>
+  fullName: NitroxModel.DataStructures.Util.OptionalNullException<T>
+  nameWithType.vb: OptionalNullException(Of T)
+  fullName.vb: NitroxModel.DataStructures.Util.OptionalNullException(Of T)
+  name.vb: OptionalNullException(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.OptionalNullException`1
+    name: OptionalNullException
+    href: NitroxModel.DataStructures.Util.OptionalNullException-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.OptionalNullException`1
+    name: OptionalNullException
+    href: NitroxModel.DataStructures.Util.OptionalNullException-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Util.OptionalTest
+  commentId: T:NitroxModel.DataStructures.Util.OptionalTest
+  href: NitroxModel.DataStructures.Util.OptionalTest.html
+  name: OptionalTest
+  nameWithType: OptionalTest
+  fullName: NitroxModel.DataStructures.Util.OptionalTest
+- uid: NitroxModel.DataStructures.Util.Optional`1
+  commentId: T:NitroxModel.DataStructures.Util.Optional`1
+  parent: NitroxModel.DataStructures.Util
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<T>
+  nameWithType: Optional<T>
+  fullName: NitroxModel.DataStructures.Util.Optional<T>
+  nameWithType.vb: Optional(Of T)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of T)
+  name.vb: Optional(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Util
+  commentId: N:NitroxModel.DataStructures.Util
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Util
+  nameWithType: NitroxModel.DataStructures.Util
+  fullName: NitroxModel.DataStructures.Util
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+memberLayout: SeparatePages

@@ -1,0 +1,532 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest
+  commentId: T:NitroxModel.Packets.Processors.PacketProcessorTest
+  id: PacketProcessorTest
+  parent: NitroxModel.Packets.Processors
+  children:
+  - NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled
+  - NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup
+  - NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity
+  - NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors
+  - NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity
+  langs:
+  - csharp
+  - vb
+  name: PacketProcessorTest
+  nameWithType: PacketProcessorTest
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest
+  type: Class
+  source:
+    remote:
+      path: Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PacketProcessorTest
+    path: ../Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+    startLine: 17
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Packets.Processors
+  syntax:
+    content: >-
+      [TestClass]
+
+      public class PacketProcessorTest
+    content.vb: >-
+      <TestClass>
+
+      Public Class PacketProcessorTest
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity
+  commentId: M:NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity
+  id: ClientPacketProcessorSanity
+  parent: NitroxModel.Packets.Processors.PacketProcessorTest
+  langs:
+  - csharp
+  - vb
+  name: ClientPacketProcessorSanity()
+  nameWithType: PacketProcessorTest.ClientPacketProcessorSanity()
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ClientPacketProcessorSanity
+    path: ../Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+    startLine: 20
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Packets.Processors
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void ClientPacketProcessorSanity()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub ClientPacketProcessorSanity()
+  overload: NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity
+  commentId: M:NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity
+  id: ServerPacketProcessorSanity
+  parent: NitroxModel.Packets.Processors.PacketProcessorTest
+  langs:
+  - csharp
+  - vb
+  name: ServerPacketProcessorSanity()
+  nameWithType: PacketProcessorTest.ServerPacketProcessorSanity()
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ServerPacketProcessorSanity
+    path: ../Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+    startLine: 40
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Packets.Processors
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void ServerPacketProcessorSanity()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub ServerPacketProcessorSanity()
+  overload: NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors
+  commentId: M:NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors
+  id: SameAmountOfServerPacketProcessors
+  parent: NitroxModel.Packets.Processors.PacketProcessorTest
+  langs:
+  - csharp
+  - vb
+  name: SameAmountOfServerPacketProcessors()
+  nameWithType: PacketProcessorTest.SameAmountOfServerPacketProcessors()
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SameAmountOfServerPacketProcessors
+    path: ../Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+    startLine: 63
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Packets.Processors
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void SameAmountOfServerPacketProcessors()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub SameAmountOfServerPacketProcessors()
+  overload: NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled
+  commentId: M:NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled
+  id: AllPacketsAreHandled
+  parent: NitroxModel.Packets.Processors.PacketProcessorTest
+  langs:
+  - csharp
+  - vb
+  name: AllPacketsAreHandled()
+  nameWithType: PacketProcessorTest.AllPacketsAreHandled()
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AllPacketsAreHandled
+    path: ../Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+    startLine: 81
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Packets.Processors
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void AllPacketsAreHandled()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub AllPacketsAreHandled()
+  overload: NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup
+  commentId: M:NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup
+  id: Cleanup
+  parent: NitroxModel.Packets.Processors.PacketProcessorTest
+  langs:
+  - csharp
+  - vb
+  name: Cleanup()
+  nameWithType: PacketProcessorTest.Cleanup()
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Cleanup
+    path: ../Nitrox.Test/Model/Packets/Processors/PacketProcessorTest.cs
+    startLine: 111
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Packets.Processors
+  syntax:
+    content: >-
+      [TestCleanup]
+
+      public void Cleanup()
+    content.vb: >-
+      <TestCleanup>
+
+      Public Sub Cleanup()
+  overload: NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestCleanupAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestCleanupAttribute.#ctor
+    arguments: []
+references:
+- uid: NitroxModel.Packets.Processors
+  commentId: N:NitroxModel.Packets.Processors
+  href: NitroxModel.html
+  name: NitroxModel.Packets.Processors
+  nameWithType: NitroxModel.Packets.Processors
+  fullName: NitroxModel.Packets.Processors
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity*
+  commentId: Overload:NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity
+  href: NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity.html#NitroxModel_Packets_Processors_PacketProcessorTest_ClientPacketProcessorSanity
+  name: ClientPacketProcessorSanity
+  nameWithType: PacketProcessorTest.ClientPacketProcessorSanity
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.ClientPacketProcessorSanity
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity*
+  commentId: Overload:NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity
+  href: NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity.html#NitroxModel_Packets_Processors_PacketProcessorTest_ServerPacketProcessorSanity
+  name: ServerPacketProcessorSanity
+  nameWithType: PacketProcessorTest.ServerPacketProcessorSanity
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.ServerPacketProcessorSanity
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors*
+  commentId: Overload:NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors
+  href: NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors.html#NitroxModel_Packets_Processors_PacketProcessorTest_SameAmountOfServerPacketProcessors
+  name: SameAmountOfServerPacketProcessors
+  nameWithType: PacketProcessorTest.SameAmountOfServerPacketProcessors
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.SameAmountOfServerPacketProcessors
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled*
+  commentId: Overload:NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled
+  href: NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled.html#NitroxModel_Packets_Processors_PacketProcessorTest_AllPacketsAreHandled
+  name: AllPacketsAreHandled
+  nameWithType: PacketProcessorTest.AllPacketsAreHandled
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.AllPacketsAreHandled
+- uid: NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup*
+  commentId: Overload:NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup
+  href: NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup.html#NitroxModel_Packets_Processors_PacketProcessorTest_Cleanup
+  name: Cleanup
+  nameWithType: PacketProcessorTest.Cleanup
+  fullName: NitroxModel.Packets.Processors.PacketProcessorTest.Cleanup
+memberLayout: SeparatePages

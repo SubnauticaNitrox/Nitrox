@@ -1,0 +1,619 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  id: GameLogic
+  parent: NitroxClient
+  children:
+  - NitroxClient.GameLogic.AI
+  - NitroxClient.GameLogic.Bases
+  - NitroxClient.GameLogic.ChatUI
+  - NitroxClient.GameLogic.Containers
+  - NitroxClient.GameLogic.Cyclops
+  - NitroxClient.GameLogic.Entities
+  - NitroxClient.GameLogic.EquipmentSlots
+  - NitroxClient.GameLogic.ExosuitModuleEvent
+  - NitroxClient.GameLogic.FMOD
+  - NitroxClient.GameLogic.Fires
+  - NitroxClient.GameLogic.HUD
+  - NitroxClient.GameLogic.Helper
+  - NitroxClient.GameLogic.InitialSync
+  - NitroxClient.GameLogic.Interior
+  - NitroxClient.GameLogic.ItemContainers
+  - NitroxClient.GameLogic.Items
+  - NitroxClient.GameLogic.LiveMixinManager
+  - NitroxClient.GameLogic.LocalPlayer
+  - NitroxClient.GameLogic.MedkitFabricator
+  - NitroxClient.GameLogic.MobileVehicleBay
+  - NitroxClient.GameLogic.MovementHelper
+  - NitroxClient.GameLogic.NitroxConsole
+  - NitroxClient.GameLogic.PlayerLogic
+  - NitroxClient.GameLogic.PlayerManager
+  - NitroxClient.GameLogic.PlayerManager.OnCreate
+  - NitroxClient.GameLogic.PlayerManager.OnRemove
+  - NitroxClient.GameLogic.RemotePlayer
+  - NitroxClient.GameLogic.RemotePlayerManagerExtensions
+  - NitroxClient.GameLogic.Rockets
+  - NitroxClient.GameLogic.SeamothModulesEvent
+  - NitroxClient.GameLogic.Settings
+  - NitroxClient.GameLogic.Simulation
+  - NitroxClient.GameLogic.SimulationOwnership
+  - NitroxClient.GameLogic.Spawning
+  - NitroxClient.GameLogic.StoryManager
+  - NitroxClient.GameLogic.Terrain
+  - NitroxClient.GameLogic.TimeManager
+  - NitroxClient.GameLogic.Vehicles
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.Bases
+  commentId: N:NitroxClient.GameLogic.Bases
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Bases
+  nameWithType: NitroxClient.GameLogic.Bases
+  fullName: NitroxClient.GameLogic.Bases
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Bases
+    name: Bases
+    href: NitroxClient.GameLogic.Bases.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Bases
+    name: Bases
+    href: NitroxClient.GameLogic.Bases.html
+- uid: NitroxClient.GameLogic.ChatUI
+  commentId: N:NitroxClient.GameLogic.ChatUI
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.ChatUI
+  nameWithType: NitroxClient.GameLogic.ChatUI
+  fullName: NitroxClient.GameLogic.ChatUI
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.ChatUI
+    name: ChatUI
+    href: NitroxClient.GameLogic.ChatUI.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.ChatUI
+    name: ChatUI
+    href: NitroxClient.GameLogic.ChatUI.html
+- uid: NitroxClient.GameLogic.Containers
+  commentId: N:NitroxClient.GameLogic.Containers
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Containers
+  nameWithType: NitroxClient.GameLogic.Containers
+  fullName: NitroxClient.GameLogic.Containers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Containers
+    name: Containers
+    href: NitroxClient.GameLogic.Containers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Containers
+    name: Containers
+    href: NitroxClient.GameLogic.Containers.html
+- uid: NitroxClient.GameLogic.FMOD
+  commentId: N:NitroxClient.GameLogic.FMOD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.FMOD
+  nameWithType: NitroxClient.GameLogic.FMOD
+  fullName: NitroxClient.GameLogic.FMOD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+- uid: NitroxClient.GameLogic.HUD
+  commentId: N:NitroxClient.GameLogic.HUD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.HUD
+  nameWithType: NitroxClient.GameLogic.HUD
+  fullName: NitroxClient.GameLogic.HUD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+- uid: NitroxClient.GameLogic.Helper
+  commentId: N:NitroxClient.GameLogic.Helper
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Helper
+  nameWithType: NitroxClient.GameLogic.Helper
+  fullName: NitroxClient.GameLogic.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+- uid: NitroxClient.GameLogic.InitialSync
+  commentId: N:NitroxClient.GameLogic.InitialSync
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.InitialSync
+  nameWithType: NitroxClient.GameLogic.InitialSync
+  fullName: NitroxClient.GameLogic.InitialSync
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync
+    name: InitialSync
+    href: NitroxClient.GameLogic.InitialSync.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync
+    name: InitialSync
+    href: NitroxClient.GameLogic.InitialSync.html
+- uid: NitroxClient.GameLogic.PlayerLogic
+  commentId: N:NitroxClient.GameLogic.PlayerLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic
+  nameWithType: NitroxClient.GameLogic.PlayerLogic
+  fullName: NitroxClient.GameLogic.PlayerLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+- uid: NitroxClient.GameLogic.Settings
+  commentId: N:NitroxClient.GameLogic.Settings
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Settings
+  nameWithType: NitroxClient.GameLogic.Settings
+  fullName: NitroxClient.GameLogic.Settings
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings
+    name: Settings
+    href: NitroxClient.GameLogic.Settings.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings
+    name: Settings
+    href: NitroxClient.GameLogic.Settings.html
+- uid: NitroxClient.GameLogic.Simulation
+  commentId: N:NitroxClient.GameLogic.Simulation
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Simulation
+  nameWithType: NitroxClient.GameLogic.Simulation
+  fullName: NitroxClient.GameLogic.Simulation
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Simulation
+    name: Simulation
+    href: NitroxClient.GameLogic.Simulation.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Simulation
+    name: Simulation
+    href: NitroxClient.GameLogic.Simulation.html
+- uid: NitroxClient.GameLogic.Spawning
+  commentId: N:NitroxClient.GameLogic.Spawning
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning
+  nameWithType: NitroxClient.GameLogic.Spawning
+  fullName: NitroxClient.GameLogic.Spawning
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+- uid: NitroxClient.GameLogic.AI
+  commentId: T:NitroxClient.GameLogic.AI
+  href: NitroxClient.GameLogic.AI.html
+  name: AI
+  nameWithType: AI
+  fullName: NitroxClient.GameLogic.AI
+- uid: NitroxClient.GameLogic.Cyclops
+  commentId: T:NitroxClient.GameLogic.Cyclops
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Cyclops.html
+  name: Cyclops
+  nameWithType: Cyclops
+  fullName: NitroxClient.GameLogic.Cyclops
+- uid: NitroxClient.GameLogic.Entities
+  commentId: T:NitroxClient.GameLogic.Entities
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Entities.html
+  name: Entities
+  nameWithType: Entities
+  fullName: NitroxClient.GameLogic.Entities
+- uid: NitroxClient.GameLogic.EquipmentSlots
+  commentId: T:NitroxClient.GameLogic.EquipmentSlots
+  href: NitroxClient.GameLogic.EquipmentSlots.html
+  name: EquipmentSlots
+  nameWithType: EquipmentSlots
+  fullName: NitroxClient.GameLogic.EquipmentSlots
+- uid: NitroxClient.GameLogic.ExosuitModuleEvent
+  commentId: T:NitroxClient.GameLogic.ExosuitModuleEvent
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.ExosuitModuleEvent.html
+  name: ExosuitModuleEvent
+  nameWithType: ExosuitModuleEvent
+  fullName: NitroxClient.GameLogic.ExosuitModuleEvent
+- uid: NitroxClient.GameLogic.Fires
+  commentId: T:NitroxClient.GameLogic.Fires
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Fires.html
+  name: Fires
+  nameWithType: Fires
+  fullName: NitroxClient.GameLogic.Fires
+- uid: NitroxClient.GameLogic.Interior
+  commentId: T:NitroxClient.GameLogic.Interior
+  href: NitroxClient.GameLogic.Interior.html
+  name: Interior
+  nameWithType: Interior
+  fullName: NitroxClient.GameLogic.Interior
+- uid: NitroxClient.GameLogic.ItemContainers
+  commentId: T:NitroxClient.GameLogic.ItemContainers
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.ItemContainers.html
+  name: ItemContainers
+  nameWithType: ItemContainers
+  fullName: NitroxClient.GameLogic.ItemContainers
+- uid: NitroxClient.GameLogic.Items
+  commentId: T:NitroxClient.GameLogic.Items
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Items.html
+  name: Items
+  nameWithType: Items
+  fullName: NitroxClient.GameLogic.Items
+- uid: NitroxClient.GameLogic.LiveMixinManager
+  commentId: T:NitroxClient.GameLogic.LiveMixinManager
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.LiveMixinManager.html
+  name: LiveMixinManager
+  nameWithType: LiveMixinManager
+  fullName: NitroxClient.GameLogic.LiveMixinManager
+- uid: NitroxClient.GameLogic.LocalPlayer
+  commentId: T:NitroxClient.GameLogic.LocalPlayer
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.LocalPlayer.html
+  name: LocalPlayer
+  nameWithType: LocalPlayer
+  fullName: NitroxClient.GameLogic.LocalPlayer
+- uid: NitroxClient.GameLogic.MedkitFabricator
+  commentId: T:NitroxClient.GameLogic.MedkitFabricator
+  href: NitroxClient.GameLogic.MedkitFabricator.html
+  name: MedkitFabricator
+  nameWithType: MedkitFabricator
+  fullName: NitroxClient.GameLogic.MedkitFabricator
+- uid: NitroxClient.GameLogic.MobileVehicleBay
+  commentId: T:NitroxClient.GameLogic.MobileVehicleBay
+  href: NitroxClient.GameLogic.MobileVehicleBay.html
+  name: MobileVehicleBay
+  nameWithType: MobileVehicleBay
+  fullName: NitroxClient.GameLogic.MobileVehicleBay
+- uid: NitroxClient.GameLogic.MovementHelper
+  commentId: T:NitroxClient.GameLogic.MovementHelper
+  href: NitroxClient.GameLogic.MovementHelper.html
+  name: MovementHelper
+  nameWithType: MovementHelper
+  fullName: NitroxClient.GameLogic.MovementHelper
+- uid: NitroxClient.GameLogic.NitroxConsole
+  commentId: T:NitroxClient.GameLogic.NitroxConsole
+  href: NitroxClient.GameLogic.NitroxConsole.html
+  name: NitroxConsole
+  nameWithType: NitroxConsole
+  fullName: NitroxClient.GameLogic.NitroxConsole
+- uid: NitroxClient.GameLogic.PlayerManager
+  commentId: T:NitroxClient.GameLogic.PlayerManager
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.PlayerManager.html
+  name: PlayerManager
+  nameWithType: PlayerManager
+  fullName: NitroxClient.GameLogic.PlayerManager
+- uid: NitroxClient.GameLogic.PlayerManager.OnCreate
+  commentId: T:NitroxClient.GameLogic.PlayerManager.OnCreate
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.PlayerManager.html
+  name: PlayerManager.OnCreate
+  nameWithType: PlayerManager.OnCreate
+  fullName: NitroxClient.GameLogic.PlayerManager.OnCreate
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.PlayerManager
+    name: PlayerManager
+    href: NitroxClient.GameLogic.PlayerManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerManager.OnCreate
+    name: OnCreate
+    href: NitroxClient.GameLogic.PlayerManager.OnCreate.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.PlayerManager
+    name: PlayerManager
+    href: NitroxClient.GameLogic.PlayerManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerManager.OnCreate
+    name: OnCreate
+    href: NitroxClient.GameLogic.PlayerManager.OnCreate.html
+- uid: NitroxClient.GameLogic.PlayerManager.OnRemove
+  commentId: T:NitroxClient.GameLogic.PlayerManager.OnRemove
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.PlayerManager.html
+  name: PlayerManager.OnRemove
+  nameWithType: PlayerManager.OnRemove
+  fullName: NitroxClient.GameLogic.PlayerManager.OnRemove
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.PlayerManager
+    name: PlayerManager
+    href: NitroxClient.GameLogic.PlayerManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerManager.OnRemove
+    name: OnRemove
+    href: NitroxClient.GameLogic.PlayerManager.OnRemove.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.PlayerManager
+    name: PlayerManager
+    href: NitroxClient.GameLogic.PlayerManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerManager.OnRemove
+    name: OnRemove
+    href: NitroxClient.GameLogic.PlayerManager.OnRemove.html
+- uid: NitroxClient.GameLogic.RemotePlayer
+  commentId: T:NitroxClient.GameLogic.RemotePlayer
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.RemotePlayer.html
+  name: RemotePlayer
+  nameWithType: RemotePlayer
+  fullName: NitroxClient.GameLogic.RemotePlayer
+- uid: NitroxClient.GameLogic.RemotePlayerManagerExtensions
+  commentId: T:NitroxClient.GameLogic.RemotePlayerManagerExtensions
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.RemotePlayerManagerExtensions.html
+  name: RemotePlayerManagerExtensions
+  nameWithType: RemotePlayerManagerExtensions
+  fullName: NitroxClient.GameLogic.RemotePlayerManagerExtensions
+- uid: NitroxClient.GameLogic.Rockets
+  commentId: T:NitroxClient.GameLogic.Rockets
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Rockets.html
+  name: Rockets
+  nameWithType: Rockets
+  fullName: NitroxClient.GameLogic.Rockets
+- uid: NitroxClient.GameLogic.SeamothModulesEvent
+  commentId: T:NitroxClient.GameLogic.SeamothModulesEvent
+  href: NitroxClient.GameLogic.SeamothModulesEvent.html
+  name: SeamothModulesEvent
+  nameWithType: SeamothModulesEvent
+  fullName: NitroxClient.GameLogic.SeamothModulesEvent
+- uid: NitroxClient.GameLogic.SimulationOwnership
+  commentId: T:NitroxClient.GameLogic.SimulationOwnership
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.SimulationOwnership.html
+  name: SimulationOwnership
+  nameWithType: SimulationOwnership
+  fullName: NitroxClient.GameLogic.SimulationOwnership
+- uid: NitroxClient.GameLogic.StoryManager
+  commentId: T:NitroxClient.GameLogic.StoryManager
+  href: NitroxClient.GameLogic.StoryManager.html
+  name: StoryManager
+  nameWithType: StoryManager
+  fullName: NitroxClient.GameLogic.StoryManager
+- uid: NitroxClient.GameLogic.Terrain
+  commentId: T:NitroxClient.GameLogic.Terrain
+  href: NitroxClient.GameLogic.Terrain.html
+  name: Terrain
+  nameWithType: Terrain
+  fullName: NitroxClient.GameLogic.Terrain
+- uid: NitroxClient.GameLogic.TimeManager
+  commentId: T:NitroxClient.GameLogic.TimeManager
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.TimeManager.html
+  name: TimeManager
+  nameWithType: TimeManager
+  fullName: NitroxClient.GameLogic.TimeManager
+- uid: NitroxClient.GameLogic.Vehicles
+  commentId: T:NitroxClient.GameLogic.Vehicles
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Vehicles.html
+  name: Vehicles
+  nameWithType: Vehicles
+  fullName: NitroxClient.GameLogic.Vehicles
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+memberLayout: SeparatePages

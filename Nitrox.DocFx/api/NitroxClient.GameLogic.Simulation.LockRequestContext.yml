@@ -1,0 +1,60 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Simulation.LockRequestContext
+  commentId: T:NitroxClient.GameLogic.Simulation.LockRequestContext
+  id: LockRequestContext
+  parent: NitroxClient.GameLogic.Simulation
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: LockRequestContext
+  nameWithType: LockRequestContext
+  fullName: NitroxClient.GameLogic.Simulation.LockRequestContext
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Simulation/LockRequestContext.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LockRequestContext
+    path: ../NitroxClient/GameLogic/Simulation/LockRequestContext.cs
+    startLine: 3
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Simulation
+  syntax:
+    content: public interface LockRequestContext
+    content.vb: Public Interface LockRequestContext
+references:
+- uid: NitroxClient.GameLogic.Simulation
+  commentId: N:NitroxClient.GameLogic.Simulation
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Simulation
+  nameWithType: NitroxClient.GameLogic.Simulation
+  fullName: NitroxClient.GameLogic.Simulation
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Simulation
+    name: Simulation
+    href: NitroxClient.GameLogic.Simulation.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Simulation
+    name: Simulation
+    href: NitroxClient.GameLogic.Simulation.html
+memberLayout: SeparatePages

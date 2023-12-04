@@ -1,0 +1,110 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.PlayerLogic
+  commentId: N:NitroxClient.GameLogic.PlayerLogic
+  id: PlayerLogic
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerCinematics
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  - NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+  - NitroxClient.GameLogic.PlayerLogic.RemotePlayerIdentifier
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.PlayerLogic
+  nameWithType: NitroxClient.GameLogic.PlayerLogic
+  fullName: NitroxClient.GameLogic.PlayerLogic
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+    name: PlayerPreferences
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences
+    name: PlayerPreferences
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerPreferences.html
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerCinematics
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerCinematics
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerCinematics.html
+  name: PlayerCinematics
+  nameWithType: PlayerCinematics
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerCinematics
+- uid: NitroxClient.GameLogic.PlayerLogic.RemotePlayerIdentifier
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.RemotePlayerIdentifier
+  href: NitroxClient.GameLogic.PlayerLogic.RemotePlayerIdentifier.html
+  name: RemotePlayerIdentifier
+  nameWithType: RemotePlayerIdentifier
+  fullName: NitroxClient.GameLogic.PlayerLogic.RemotePlayerIdentifier
+memberLayout: SeparatePages

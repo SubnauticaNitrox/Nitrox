@@ -1,0 +1,176 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Debuggers.Drawer.IDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.IDrawer
+  id: IDrawer
+  parent: NitroxClient.Debuggers.Drawer
+  children:
+  - NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+  - NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+  langs:
+  - csharp
+  - vb
+  name: IDrawer
+  nameWithType: IDrawer
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/Debuggers/Drawer/IDrawer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IDrawer
+    path: ../NitroxClient/Debuggers/Drawer/IDrawer.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers.Drawer
+  syntax:
+    content: public interface IDrawer
+    content.vb: Public Interface IDrawer
+- uid: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+  commentId: P:NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+  id: ApplicableTypes
+  parent: NitroxClient.Debuggers.Drawer.IDrawer
+  langs:
+  - csharp
+  - vb
+  name: ApplicableTypes
+  nameWithType: IDrawer.ApplicableTypes
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Debuggers/Drawer/IDrawer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ApplicableTypes
+    path: ../NitroxClient/Debuggers/Drawer/IDrawer.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers.Drawer
+  syntax:
+    content: Type[] ApplicableTypes { get; }
+    parameters: []
+    return:
+      type: System.Type[]
+    content.vb: ReadOnly Property ApplicableTypes As Type()
+  overload: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes*
+- uid: NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+  commentId: M:NitroxClient.Debuggers.Drawer.IDrawer.Draw(System.Object)
+  id: Draw(System.Object)
+  parent: NitroxClient.Debuggers.Drawer.IDrawer
+  langs:
+  - csharp
+  - vb
+  name: Draw(object)
+  nameWithType: IDrawer.Draw(object)
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer.Draw(object)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Debuggers/Drawer/IDrawer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Draw
+    path: ../NitroxClient/Debuggers/Drawer/IDrawer.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers.Drawer
+  syntax:
+    content: void Draw(object target)
+    parameters:
+    - id: target
+      type: System.Object
+    content.vb: Sub Draw(target As Object)
+  overload: NitroxClient.Debuggers.Drawer.IDrawer.Draw*
+  nameWithType.vb: IDrawer.Draw(Object)
+  fullName.vb: NitroxClient.Debuggers.Drawer.IDrawer.Draw(Object)
+  name.vb: Draw(Object)
+references:
+- uid: NitroxClient.Debuggers.Drawer
+  commentId: N:NitroxClient.Debuggers.Drawer
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers.Drawer
+  nameWithType: NitroxClient.Debuggers.Drawer
+  fullName: NitroxClient.Debuggers.Drawer
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+- uid: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes*
+  commentId: Overload:NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+  href: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes.html#NitroxClient_Debuggers_Drawer_IDrawer_ApplicableTypes
+  name: ApplicableTypes
+  nameWithType: IDrawer.ApplicableTypes
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer.ApplicableTypes
+- uid: System.Type[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type[]
+  nameWithType: Type[]
+  fullName: System.Type[]
+  nameWithType.vb: Type()
+  fullName.vb: System.Type()
+  name.vb: Type()
+  spec.csharp:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: (
+  - name: )
+- uid: NitroxClient.Debuggers.Drawer.IDrawer.Draw*
+  commentId: Overload:NitroxClient.Debuggers.Drawer.IDrawer.Draw
+  href: NitroxClient.Debuggers.Drawer.IDrawer.Draw.html#NitroxClient_Debuggers_Drawer_IDrawer_Draw_System_Object_
+  name: Draw
+  nameWithType: IDrawer.Draw
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer.Draw
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+memberLayout: SeparatePages

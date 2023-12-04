@@ -1,0 +1,936 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean
+  commentId: T:NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean
+  id: TypeBoolean
+  parent: NitroxServer.ConsoleCommands.Abstract.Type
+  children:
+  - NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.#ctor(System.String,System.Boolean,System.String)
+  - NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid(System.String)
+  - NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read(System.String)
+  langs:
+  - csharp
+  - vb
+  name: TypeBoolean
+  nameWithType: TypeBoolean
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TypeBoolean
+    path: ../NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+    startLine: 6
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.ConsoleCommands.Abstract.Type
+  syntax:
+    content: 'public class TypeBoolean : Parameter<bool>, IParameter<bool>, IParameter<object>'
+    content.vb: Public Class TypeBoolean Inherits Parameter(Of Boolean) Implements IParameter(Of Boolean), IParameter(Of Object)
+  inheritance:
+  - System.Object
+  - NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  implements:
+  - NitroxServer.ConsoleCommands.Abstract.IParameter{System.Boolean}
+  - NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}
+  inheritedMembers:
+  - NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsRequired
+  - NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Name
+  - NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.GetDescription
+  - NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.#ctor(System.String,System.Boolean,System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.#ctor(System.String,System.Boolean,System.String)
+  id: '#ctor(System.String,System.Boolean,System.String)'
+  parent: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean
+  langs:
+  - csharp
+  - vb
+  name: TypeBoolean(string, bool, string)
+  nameWithType: TypeBoolean.TypeBoolean(string, bool, string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.TypeBoolean(string, bool, string)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+    startLine: 22
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.ConsoleCommands.Abstract.Type
+  syntax:
+    content: public TypeBoolean(string name, bool isRequired, string description)
+    parameters:
+    - id: name
+      type: System.String
+    - id: isRequired
+      type: System.Boolean
+    - id: description
+      type: System.String
+    content.vb: Public Sub New(name As String, isRequired As Boolean, description As String)
+  overload: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.#ctor*
+  nameWithType.vb: TypeBoolean.New(String, Boolean, String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.New(String, Boolean, String)
+  name.vb: New(String, Boolean, String)
+- uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid(System.String)
+  id: IsValid(System.String)
+  parent: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean
+  langs:
+  - csharp
+  - vb
+  name: IsValid(string)
+  nameWithType: TypeBoolean.IsValid(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsValid
+    path: ../NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+    startLine: 24
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.ConsoleCommands.Abstract.Type
+  example: []
+  syntax:
+    content: public override bool IsValid(string arg)
+    parameters:
+    - id: arg
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function IsValid(arg As String) As Boolean
+  overridden: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsValid(System.String)
+  overload: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid*
+  implements:
+  - NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}.IsValid(System.String)
+  nameWithType.vb: TypeBoolean.IsValid(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid(String)
+  name.vb: IsValid(String)
+- uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read(System.String)
+  id: Read(System.String)
+  parent: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean
+  langs:
+  - csharp
+  - vb
+  name: Read(string)
+  nameWithType: TypeBoolean.Read(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Read
+    path: ../NitroxServer/ConsoleCommands/Abstract/Type/TypeBoolean.cs
+    startLine: 29
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.ConsoleCommands.Abstract.Type
+  example: []
+  syntax:
+    content: public override bool Read(string arg)
+    parameters:
+    - id: arg
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Read(arg As String) As Boolean
+  overridden: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Read(System.String)
+  overload: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read*
+  nameWithType.vb: TypeBoolean.Read(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read(String)
+  name.vb: Read(String)
+references:
+- uid: NitroxServer.ConsoleCommands.Abstract.Type
+  commentId: N:NitroxServer.ConsoleCommands.Abstract.Type
+  href: NitroxServer.html
+  name: NitroxServer.ConsoleCommands.Abstract.Type
+  nameWithType: NitroxServer.ConsoleCommands.Abstract.Type
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Abstract
+    name: Abstract
+    href: NitroxServer.ConsoleCommands.Abstract.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Abstract.Type
+    name: Type
+    href: NitroxServer.ConsoleCommands.Abstract.Type.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Abstract
+    name: Abstract
+    href: NitroxServer.ConsoleCommands.Abstract.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Abstract.Type
+    name: Type
+    href: NitroxServer.ConsoleCommands.Abstract.Type.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  commentId: T:NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  parent: NitroxServer.ConsoleCommands.Abstract
+  definition: NitroxServer.ConsoleCommands.Abstract.Parameter`1
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.html
+  name: Parameter<bool>
+  nameWithType: Parameter<bool>
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<bool>
+  nameWithType.vb: Parameter(Of Boolean)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of Boolean)
+  name.vb: Parameter(Of Boolean)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1
+    name: Parameter
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.html
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1
+    name: Parameter
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.IParameter{System.Boolean}
+  commentId: T:NitroxServer.ConsoleCommands.Abstract.IParameter{System.Boolean}
+  parent: NitroxServer.ConsoleCommands.Abstract
+  definition: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+  href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  name: IParameter<bool>
+  nameWithType: IParameter<bool>
+  fullName: NitroxServer.ConsoleCommands.Abstract.IParameter<bool>
+  nameWithType.vb: IParameter(Of Boolean)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.IParameter(Of Boolean)
+  name.vb: IParameter(Of Boolean)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+    name: IParameter
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+    name: IParameter
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}
+  commentId: T:NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}
+  parent: NitroxServer.ConsoleCommands.Abstract
+  definition: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+  href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  name: IParameter<object>
+  nameWithType: IParameter<object>
+  fullName: NitroxServer.ConsoleCommands.Abstract.IParameter<object>
+  nameWithType.vb: IParameter(Of Object)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.IParameter(Of Object)
+  name.vb: IParameter(Of Object)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+    name: IParameter
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  - name: <
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+    name: IParameter
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsRequired
+  commentId: P:NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsRequired
+  parent: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  definition: NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsRequired
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsRequired.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsRequired
+  name: IsRequired
+  nameWithType: Parameter<bool>.IsRequired
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<bool>.IsRequired
+  nameWithType.vb: Parameter(Of Boolean).IsRequired
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of Boolean).IsRequired
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Name
+  commentId: P:NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Name
+  parent: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  definition: NitroxServer.ConsoleCommands.Abstract.Parameter`1.Name
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Name.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Name
+  name: Name
+  nameWithType: Parameter<bool>.Name
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<bool>.Name
+  nameWithType.vb: Parameter(Of Boolean).Name
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of Boolean).Name
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.GetDescription
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.GetDescription
+  parent: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  definition: NitroxServer.ConsoleCommands.Abstract.Parameter`1.GetDescription
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.GetDescription.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_GetDescription
+  name: GetDescription()
+  nameWithType: Parameter<bool>.GetDescription()
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<bool>.GetDescription()
+  nameWithType.vb: Parameter(Of Boolean).GetDescription()
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of Boolean).GetDescription()
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.GetDescription
+    name: GetDescription
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.GetDescription.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_GetDescription
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.GetDescription
+    name: GetDescription
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.GetDescription.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_GetDescription
+  - name: (
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.ToString
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.ToString
+  parent: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  definition: NitroxServer.ConsoleCommands.Abstract.Parameter`1.ToString
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.ToString.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_ToString
+  name: ToString()
+  nameWithType: Parameter<bool>.ToString()
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<bool>.ToString()
+  nameWithType.vb: Parameter(Of Boolean).ToString()
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of Boolean).ToString()
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.ToString
+    name: ToString
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.ToString.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.ToString
+    name: ToString
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.ToString.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1
+  commentId: T:NitroxServer.ConsoleCommands.Abstract.Parameter`1
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.html
+  name: Parameter<T>
+  nameWithType: Parameter<T>
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<T>
+  nameWithType.vb: Parameter(Of T)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of T)
+  name.vb: Parameter(Of T)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1
+    name: Parameter
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1
+    name: Parameter
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract
+  commentId: N:NitroxServer.ConsoleCommands.Abstract
+  href: NitroxServer.html
+  name: NitroxServer.ConsoleCommands.Abstract
+  nameWithType: NitroxServer.ConsoleCommands.Abstract
+  fullName: NitroxServer.ConsoleCommands.Abstract
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Abstract
+    name: Abstract
+    href: NitroxServer.ConsoleCommands.Abstract.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Abstract
+    name: Abstract
+    href: NitroxServer.ConsoleCommands.Abstract.html
+- uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+  commentId: T:NitroxServer.ConsoleCommands.Abstract.IParameter`1
+  href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  name: IParameter<T>
+  nameWithType: IParameter<T>
+  fullName: NitroxServer.ConsoleCommands.Abstract.IParameter<T>
+  nameWithType.vb: IParameter(Of T)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.IParameter(Of T)
+  name.vb: IParameter(Of T)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+    name: IParameter
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1
+    name: IParameter
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsRequired
+  commentId: P:NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsRequired
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsRequired.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsRequired
+  name: IsRequired
+  nameWithType: Parameter<T>.IsRequired
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<T>.IsRequired
+  nameWithType.vb: Parameter(Of T).IsRequired
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of T).IsRequired
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.Name
+  commentId: P:NitroxServer.ConsoleCommands.Abstract.Parameter`1.Name
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Name.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Name
+  name: Name
+  nameWithType: Parameter<T>.Name
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<T>.Name
+  nameWithType.vb: Parameter(Of T).Name
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of T).Name
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.GetDescription
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter`1.GetDescription
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.GetDescription.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_GetDescription
+  name: GetDescription()
+  nameWithType: Parameter<T>.GetDescription()
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<T>.GetDescription()
+  nameWithType.vb: Parameter(Of T).GetDescription()
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of T).GetDescription()
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.GetDescription
+    name: GetDescription
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.GetDescription.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_GetDescription
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.GetDescription
+    name: GetDescription
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.GetDescription.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_GetDescription
+  - name: (
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.ToString
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter`1.ToString
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.ToString.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_ToString
+  name: ToString()
+  nameWithType: Parameter<T>.ToString()
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<T>.ToString()
+  nameWithType.vb: Parameter(Of T).ToString()
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of T).ToString()
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.ToString
+    name: ToString
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.ToString.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.ToString
+    name: ToString
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.ToString.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_ToString
+  - name: (
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.#ctor*
+  commentId: Overload:NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.#ctor
+  href: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.-ctor.html#NitroxServer_ConsoleCommands_Abstract_Type_TypeBoolean__ctor_System_String_System_Boolean_System_String_
+  name: TypeBoolean
+  nameWithType: TypeBoolean.TypeBoolean
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.TypeBoolean
+  nameWithType.vb: TypeBoolean.New
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsValid(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsValid(System.String)
+  parent: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  definition: NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsValid(System.String)
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsValid_System_String_
+  name: IsValid(string)
+  nameWithType: Parameter<bool>.IsValid(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<bool>.IsValid(string)
+  nameWithType.vb: Parameter(Of Boolean).IsValid(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of Boolean).IsValid(String)
+  name.vb: IsValid(String)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid*
+  commentId: Overload:NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid
+  href: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid.html#NitroxServer_ConsoleCommands_Abstract_Type_TypeBoolean_IsValid_System_String_
+  name: IsValid
+  nameWithType: TypeBoolean.IsValid
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.IsValid
+- uid: NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}.IsValid(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}.IsValid(System.String)
+  parent: NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}
+  definition: NitroxServer.ConsoleCommands.Abstract.IParameter`1.IsValid(System.String)
+  href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_IParameter_1_IsValid_System_String_
+  name: IsValid(string)
+  nameWithType: IParameter<object>.IsValid(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.IParameter<object>.IsValid(string)
+  nameWithType.vb: IParameter(Of Object).IsValid(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.IParameter(Of Object).IsValid(String)
+  name.vb: IsValid(String)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_IParameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter{System.Object}.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_IParameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsValid(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsValid(System.String)
+  isExternal: true
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsValid_System_String_
+  name: IsValid(string)
+  nameWithType: Parameter<T>.IsValid(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<T>.IsValid(string)
+  nameWithType.vb: Parameter(Of T).IsValid(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of T).IsValid(String)
+  name.vb: IsValid(String)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1.IsValid(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.IParameter`1.IsValid(System.String)
+  isExternal: true
+  href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_IParameter_1_IsValid_System_String_
+  name: IsValid(string)
+  nameWithType: IParameter<T>.IsValid(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.IParameter<T>.IsValid(string)
+  nameWithType.vb: IParameter(Of T).IsValid(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.IParameter(Of T).IsValid(String)
+  name.vb: IsValid(String)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_IParameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.IParameter`1.IsValid(System.String)
+    name: IsValid
+    href: NitroxServer.ConsoleCommands.Abstract.IParameter-1.IsValid.html#NitroxServer_ConsoleCommands_Abstract_IParameter_1_IsValid_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Read(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Read(System.String)
+  parent: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}
+  definition: NitroxServer.ConsoleCommands.Abstract.Parameter`1.Read(System.String)
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Read.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Read_System_String_
+  name: Read(string)
+  nameWithType: Parameter<bool>.Read(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<bool>.Read(string)
+  nameWithType.vb: Parameter(Of Boolean).Read(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of Boolean).Read(String)
+  name.vb: Read(String)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Read(System.String)
+    name: Read
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Read.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Read_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter{System.Boolean}.Read(System.String)
+    name: Read
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Read.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Read_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read*
+  commentId: Overload:NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read
+  href: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read.html#NitroxServer_ConsoleCommands_Abstract_Type_TypeBoolean_Read_System_String_
+  name: Read
+  nameWithType: TypeBoolean.Read
+  fullName: NitroxServer.ConsoleCommands.Abstract.Type.TypeBoolean.Read
+- uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.Read(System.String)
+  commentId: M:NitroxServer.ConsoleCommands.Abstract.Parameter`1.Read(System.String)
+  isExternal: true
+  href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Read.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Read_System_String_
+  name: Read(string)
+  nameWithType: Parameter<T>.Read(string)
+  fullName: NitroxServer.ConsoleCommands.Abstract.Parameter<T>.Read(string)
+  nameWithType.vb: Parameter(Of T).Read(String)
+  fullName.vb: NitroxServer.ConsoleCommands.Abstract.Parameter(Of T).Read(String)
+  name.vb: Read(String)
+  spec.csharp:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.Read(System.String)
+    name: Read
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Read.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Read_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.ConsoleCommands.Abstract.Parameter`1.Read(System.String)
+    name: Read
+    href: NitroxServer.ConsoleCommands.Abstract.Parameter-1.Read.html#NitroxServer_ConsoleCommands_Abstract_Parameter_1_Read_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+memberLayout: SeparatePages

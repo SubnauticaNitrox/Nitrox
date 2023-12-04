@@ -1,0 +1,441 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  id: DataStructures
+  parent: NitroxModel
+  children:
+  - NitroxModel.DataStructures.GameLogic
+  - NitroxModel.DataStructures.NitroxId
+  - NitroxModel.DataStructures.NitroxIdTest
+  - NitroxModel.DataStructures.NitroxInt3
+  - NitroxModel.DataStructures.NitroxInt3Test
+  - NitroxModel.DataStructures.NitroxVersion
+  - NitroxModel.DataStructures.NitroxVersionTest
+  - NitroxModel.DataStructures.PriorityChain`1
+  - NitroxModel.DataStructures.PriorityItem`1
+  - NitroxModel.DataStructures.PriorityQueueTest
+  - NitroxModel.DataStructures.PriorityQueue`1
+  - NitroxModel.DataStructures.SimulatedEntity
+  - NitroxModel.DataStructures.SimulationLockType
+  - NitroxModel.DataStructures.Surrogates
+  - NitroxModel.DataStructures.ThreadSafeDictionary`2
+  - NitroxModel.DataStructures.ThreadSafeListTest
+  - NitroxModel.DataStructures.ThreadSafeList`1
+  - NitroxModel.DataStructures.ThreadSafeQueueTest
+  - NitroxModel.DataStructures.ThreadSafeQueue`1
+  - NitroxModel.DataStructures.ThreadSafeSetTest
+  - NitroxModel.DataStructures.ThreadSafeSet`1
+  - NitroxModel.DataStructures.Unity
+  - NitroxModel.DataStructures.Util
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxModel.DataStructures.Surrogates
+  commentId: N:NitroxModel.DataStructures.Surrogates
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Surrogates
+  nameWithType: NitroxModel.DataStructures.Surrogates
+  fullName: NitroxModel.DataStructures.Surrogates
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel.DataStructures.Surrogates.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel.DataStructures.Surrogates.html
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: NitroxModel.DataStructures.Util
+  commentId: N:NitroxModel.DataStructures.Util
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Util
+  nameWithType: NitroxModel.DataStructures.Util
+  fullName: NitroxModel.DataStructures.Util
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures.NitroxIdTest
+  commentId: T:NitroxModel.DataStructures.NitroxIdTest
+  href: NitroxModel.DataStructures.NitroxIdTest.html
+  name: NitroxIdTest
+  nameWithType: NitroxIdTest
+  fullName: NitroxModel.DataStructures.NitroxIdTest
+- uid: NitroxModel.DataStructures.NitroxInt3
+  commentId: T:NitroxModel.DataStructures.NitroxInt3
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxInt3.html
+  name: NitroxInt3
+  nameWithType: NitroxInt3
+  fullName: NitroxModel.DataStructures.NitroxInt3
+- uid: NitroxModel.DataStructures.NitroxInt3Test
+  commentId: T:NitroxModel.DataStructures.NitroxInt3Test
+  href: NitroxModel.DataStructures.NitroxInt3Test.html
+  name: NitroxInt3Test
+  nameWithType: NitroxInt3Test
+  fullName: NitroxModel.DataStructures.NitroxInt3Test
+- uid: NitroxModel.DataStructures.NitroxVersion
+  commentId: T:NitroxModel.DataStructures.NitroxVersion
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxVersion.html
+  name: NitroxVersion
+  nameWithType: NitroxVersion
+  fullName: NitroxModel.DataStructures.NitroxVersion
+- uid: NitroxModel.DataStructures.NitroxVersionTest
+  commentId: T:NitroxModel.DataStructures.NitroxVersionTest
+  href: NitroxModel.DataStructures.NitroxVersionTest.html
+  name: NitroxVersionTest
+  nameWithType: NitroxVersionTest
+  fullName: NitroxModel.DataStructures.NitroxVersionTest
+- uid: NitroxModel.DataStructures.PriorityChain`1
+  commentId: T:NitroxModel.DataStructures.PriorityChain`1
+  href: NitroxModel.DataStructures.PriorityChain-1.html
+  name: PriorityChain<T>
+  nameWithType: PriorityChain<T>
+  fullName: NitroxModel.DataStructures.PriorityChain<T>
+  nameWithType.vb: PriorityChain(Of T)
+  fullName.vb: NitroxModel.DataStructures.PriorityChain(Of T)
+  name.vb: PriorityChain(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.PriorityChain`1
+    name: PriorityChain
+    href: NitroxModel.DataStructures.PriorityChain-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.PriorityChain`1
+    name: PriorityChain
+    href: NitroxModel.DataStructures.PriorityChain-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.PriorityItem`1
+  commentId: T:NitroxModel.DataStructures.PriorityItem`1
+  href: NitroxModel.DataStructures.PriorityItem-1.html
+  name: PriorityItem<T>
+  nameWithType: PriorityItem<T>
+  fullName: NitroxModel.DataStructures.PriorityItem<T>
+  nameWithType.vb: PriorityItem(Of T)
+  fullName.vb: NitroxModel.DataStructures.PriorityItem(Of T)
+  name.vb: PriorityItem(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.PriorityItem`1
+    name: PriorityItem
+    href: NitroxModel.DataStructures.PriorityItem-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.PriorityItem`1
+    name: PriorityItem
+    href: NitroxModel.DataStructures.PriorityItem-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.PriorityQueueTest
+  commentId: T:NitroxModel.DataStructures.PriorityQueueTest
+  href: NitroxModel.DataStructures.PriorityQueueTest.html
+  name: PriorityQueueTest
+  nameWithType: PriorityQueueTest
+  fullName: NitroxModel.DataStructures.PriorityQueueTest
+- uid: NitroxModel.DataStructures.PriorityQueue`1
+  commentId: T:NitroxModel.DataStructures.PriorityQueue`1
+  href: NitroxModel.DataStructures.PriorityQueue-1.html
+  name: PriorityQueue<T>
+  nameWithType: PriorityQueue<T>
+  fullName: NitroxModel.DataStructures.PriorityQueue<T>
+  nameWithType.vb: PriorityQueue(Of T)
+  fullName.vb: NitroxModel.DataStructures.PriorityQueue(Of T)
+  name.vb: PriorityQueue(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.PriorityQueue`1
+    name: PriorityQueue
+    href: NitroxModel.DataStructures.PriorityQueue-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.PriorityQueue`1
+    name: PriorityQueue
+    href: NitroxModel.DataStructures.PriorityQueue-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.SimulatedEntity
+  commentId: T:NitroxModel.DataStructures.SimulatedEntity
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.SimulatedEntity.html
+  name: SimulatedEntity
+  nameWithType: SimulatedEntity
+  fullName: NitroxModel.DataStructures.SimulatedEntity
+- uid: NitroxModel.DataStructures.SimulationLockType
+  commentId: T:NitroxModel.DataStructures.SimulationLockType
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.SimulationLockType.html
+  name: SimulationLockType
+  nameWithType: SimulationLockType
+  fullName: NitroxModel.DataStructures.SimulationLockType
+- uid: NitroxModel.DataStructures.ThreadSafeDictionary`2
+  commentId: T:NitroxModel.DataStructures.ThreadSafeDictionary`2
+  href: NitroxModel.DataStructures.ThreadSafeDictionary-2.html
+  name: ThreadSafeDictionary<TKey, TValue>
+  nameWithType: ThreadSafeDictionary<TKey, TValue>
+  fullName: NitroxModel.DataStructures.ThreadSafeDictionary<TKey, TValue>
+  nameWithType.vb: ThreadSafeDictionary(Of TKey, TValue)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeDictionary(Of TKey, TValue)
+  name.vb: ThreadSafeDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeDictionary`2
+    name: ThreadSafeDictionary
+    href: NitroxModel.DataStructures.ThreadSafeDictionary-2.html
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeDictionary`2
+    name: ThreadSafeDictionary
+    href: NitroxModel.DataStructures.ThreadSafeDictionary-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeListTest
+  commentId: T:NitroxModel.DataStructures.ThreadSafeListTest
+  href: NitroxModel.DataStructures.ThreadSafeListTest.html
+  name: ThreadSafeListTest
+  nameWithType: ThreadSafeListTest
+  fullName: NitroxModel.DataStructures.ThreadSafeListTest
+- uid: NitroxModel.DataStructures.ThreadSafeList`1
+  commentId: T:NitroxModel.DataStructures.ThreadSafeList`1
+  href: NitroxModel.DataStructures.ThreadSafeList-1.html
+  name: ThreadSafeList<T>
+  nameWithType: ThreadSafeList<T>
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>
+  nameWithType.vb: ThreadSafeList(Of T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T)
+  name.vb: ThreadSafeList(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+    href: NitroxModel.DataStructures.ThreadSafeList-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+    href: NitroxModel.DataStructures.ThreadSafeList-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeQueueTest
+  commentId: T:NitroxModel.DataStructures.ThreadSafeQueueTest
+  href: NitroxModel.DataStructures.ThreadSafeQueueTest.html
+  name: ThreadSafeQueueTest
+  nameWithType: ThreadSafeQueueTest
+  fullName: NitroxModel.DataStructures.ThreadSafeQueueTest
+- uid: NitroxModel.DataStructures.ThreadSafeQueue`1
+  commentId: T:NitroxModel.DataStructures.ThreadSafeQueue`1
+  href: NitroxModel.DataStructures.ThreadSafeQueue-1.html
+  name: ThreadSafeQueue<T>
+  nameWithType: ThreadSafeQueue<T>
+  fullName: NitroxModel.DataStructures.ThreadSafeQueue<T>
+  nameWithType.vb: ThreadSafeQueue(Of T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeQueue(Of T)
+  name.vb: ThreadSafeQueue(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeQueue`1
+    name: ThreadSafeQueue
+    href: NitroxModel.DataStructures.ThreadSafeQueue-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeQueue`1
+    name: ThreadSafeQueue
+    href: NitroxModel.DataStructures.ThreadSafeQueue-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeSetTest
+  commentId: T:NitroxModel.DataStructures.ThreadSafeSetTest
+  href: NitroxModel.DataStructures.ThreadSafeSetTest.html
+  name: ThreadSafeSetTest
+  nameWithType: ThreadSafeSetTest
+  fullName: NitroxModel.DataStructures.ThreadSafeSetTest
+- uid: NitroxModel.DataStructures.ThreadSafeSet`1
+  commentId: T:NitroxModel.DataStructures.ThreadSafeSet`1
+  href: NitroxModel.DataStructures.ThreadSafeSet-1.html
+  name: ThreadSafeSet<T>
+  nameWithType: ThreadSafeSet<T>
+  fullName: NitroxModel.DataStructures.ThreadSafeSet<T>
+  nameWithType.vb: ThreadSafeSet(Of T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeSet(Of T)
+  name.vb: ThreadSafeSet(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeSet`1
+    name: ThreadSafeSet
+    href: NitroxModel.DataStructures.ThreadSafeSet-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeSet`1
+    name: ThreadSafeSet
+    href: NitroxModel.DataStructures.ThreadSafeSet-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+memberLayout: SeparatePages

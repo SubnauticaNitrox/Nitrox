@@ -1,0 +1,1976 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+  commentId: T:NitroxModel.Platforms.OS.Shared.ProcessEx
+  id: ProcessEx
+  parent: NitroxModel.Platforms.OS.Shared
+  children:
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.#ctor(System.Diagnostics.Process)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread(System.IntPtr,System.IntPtr)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress(System.String,System.String)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess(System.String,System.Func{NitroxModel.Platforms.OS.Shared.ProcessEx,System.Boolean},System.StringComparer)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Handle
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Id
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Item(System.IntPtr)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Kill
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Modules
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Name
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr,System.Int32)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr,System.Int32,System.Int32[])
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr,System.Collections.Generic.IEnumerable{System.Int32})
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr,System.Int32[])
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.IntPtr,System.Text.Encoding,System.Int32)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.UIntPtr,System.Text.Encoding,System.Int32)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Resume
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Start(System.String,System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}},System.String,System.String)
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend
+  - NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory(System.IntPtr,System.Byte[],System.Boolean)
+  langs:
+  - csharp
+  - vb
+  name: ProcessEx
+  nameWithType: ProcessEx
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ProcessEx
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  summary: >-
+    Lower-level wrapper for an OS process than normal <xref href="System.Diagnostics.Process" data-throw-if-not-resolved="false"></xref> to support memory access, DLLs discovery and exported functions listing.
+
+
+    TODO: Turn this class into abstract that is used by OS specific implementations. Right now it's Windows only.
+  example: []
+  syntax:
+    content: 'public sealed class ProcessEx : IDisposable'
+    content.vb: Public NotInheritable Class ProcessEx Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Handle
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.Handle
+  id: Handle
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Handle
+  nameWithType: ProcessEx.Handle
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Handle
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Handle
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 38
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public SafeHandle Handle { get; init; }
+    parameters: []
+    return:
+      type: System.Runtime.InteropServices.SafeHandle
+    content.vb: Public Property Handle As SafeHandle
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Handle*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle
+  id: MainThreadHandle
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: MainThreadHandle
+  nameWithType: ProcessEx.MainThreadHandle
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MainThreadHandle
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 71
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public SafeHandle MainThreadHandle { get; }
+    parameters: []
+    return:
+      type: System.Runtime.InteropServices.SafeHandle
+    content.vb: Public ReadOnly Property MainThreadHandle As SafeHandle
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Modules
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.Modules
+  id: Modules
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Modules
+  nameWithType: ProcessEx.Modules
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Modules
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Modules
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 72
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public Dictionary<string, ProcessEx.Module> Modules { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,NitroxModel.Platforms.OS.Shared.ProcessEx.Module}
+    content.vb: Public ReadOnly Property Modules As Dictionary(Of String, ProcessEx.Module)
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Modules*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule
+  id: MainModule
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: MainModule
+  nameWithType: ProcessEx.MainModule
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MainModule
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 74
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public ProcessEx.Module MainModule { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+    content.vb: Public ReadOnly Property MainModule As ProcessEx.Module
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Id
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.Id
+  id: Id
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: ProcessEx.Id
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Id
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Id
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 88
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Id As Integer
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Id*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit
+  id: Is32Bit
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Is32Bit
+  nameWithType: ProcessEx.Is32Bit
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Is32Bit
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 97
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  summary: True if targeted process is 32 bit. If it fails it will default to the bitness of the OS.
+  example: []
+  syntax:
+    content: public bool Is32Bit { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property Is32Bit As Boolean
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress
+  id: PebAddress
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: PebAddress
+  nameWithType: ProcessEx.PebAddress
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PebAddress
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 99
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public IntPtr PebAddress { get; }
+    parameters: []
+    return:
+      type: System.IntPtr
+    content.vb: Public ReadOnly Property PebAddress As IntPtr
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Item(System.IntPtr)
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.Item(System.IntPtr)
+  id: Item(System.IntPtr)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: this[IntPtr]
+  nameWithType: ProcessEx.this[IntPtr]
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.this[System.IntPtr]
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: this[]
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 114
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public IntPtr this[IntPtr address] { get; }
+    parameters:
+    - id: address
+      type: System.IntPtr
+    return:
+      type: System.IntPtr
+    content.vb: Public ReadOnly Default Property this[](address As IntPtr) As IntPtr
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Item*
+  nameWithType.vb: ProcessEx.this[](IntPtr)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.this[](System.IntPtr)
+  name.vb: this[](IntPtr)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Name
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.Name
+  id: Name
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: ProcessEx.Name
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Name
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Name
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 116
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Name As String
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Name*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName
+  id: MainModuleFileName
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: MainModuleFileName
+  nameWithType: ProcessEx.MainModuleFileName
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MainModuleFileName
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 121
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  summary: Tries to get the path to main executable of the process. Returns null if insufficient access.
+  example: []
+  syntax:
+    content: public string MainModuleFileName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property MainModuleFileName As String
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory
+  commentId: P:NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory
+  id: MainModuleDirectory
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: MainModuleDirectory
+  nameWithType: ProcessEx.MainModuleDirectory
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MainModuleDirectory
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 138
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public string MainModuleDirectory { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property MainModuleDirectory As String
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.#ctor(System.Diagnostics.Process)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.#ctor(System.Diagnostics.Process)
+  id: '#ctor(System.Diagnostics.Process)'
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: ProcessEx(Process)
+  nameWithType: ProcessEx.ProcessEx(Process)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ProcessEx(System.Diagnostics.Process)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 151
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public ProcessEx(Process proc)
+    parameters:
+    - id: proc
+      type: System.Diagnostics.Process
+    content.vb: Public Sub New(proc As Process)
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.#ctor*
+  nameWithType.vb: ProcessEx.New(Process)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.New(System.Diagnostics.Process)
+  name.vb: New(Process)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Start(System.String,System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}},System.String,System.String)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.Start(System.String,System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}},System.String,System.String)
+  id: Start(System.String,System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}},System.String,System.String)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Start(string, IEnumerable<(string, string)>, string, string)
+  nameWithType: ProcessEx.Start(string, IEnumerable<(string, string)>, string, string)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Start(string, System.Collections.Generic.IEnumerable<(string, string)>, string, string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Start
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 172
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  summary: Starts a process.
+  example: []
+  syntax:
+    content: public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null)
+    parameters:
+    - id: fileName
+      type: System.String
+      description: Path to the executable file. Without any arguments.
+    - id: environmentVariables
+      type: System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}}
+      description: ''
+    - id: workingDirectory
+      type: System.String
+      description: ''
+    - id: commandLine
+      type: System.String
+      description: Arguments for the executable.
+    return:
+      type: NitroxModel.Platforms.OS.Shared.ProcessEx
+      description: ''
+    content.vb: Public Shared Function Start(fileName As String = Nothing, environmentVariables As IEnumerable(Of (String, String)) = Nothing, workingDirectory As String = Nothing, commandLine As String = Nothing) As ProcessEx
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Start*
+  nameWithType.vb: ProcessEx.Start(String, IEnumerable(Of (String, String)), String, String)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.Start(String, System.Collections.Generic.IEnumerable(Of (String, String)), String, String)
+  name.vb: Start(String, IEnumerable(Of (String, String)), String, String)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess(System.String,System.Func{NitroxModel.Platforms.OS.Shared.ProcessEx,System.Boolean},System.StringComparer)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess(System.String,System.Func{NitroxModel.Platforms.OS.Shared.ProcessEx,System.Boolean},System.StringComparer)
+  id: GetFirstProcess(System.String,System.Func{NitroxModel.Platforms.OS.Shared.ProcessEx,System.Boolean},System.StringComparer)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: GetFirstProcess(string, Func<ProcessEx, bool>, StringComparer)
+  nameWithType: ProcessEx.GetFirstProcess(string, Func<ProcessEx, bool>, StringComparer)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess(string, System.Func<NitroxModel.Platforms.OS.Shared.ProcessEx, bool>, System.StringComparer)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetFirstProcess
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 177
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer = null)
+    parameters:
+    - id: procName
+      type: System.String
+    - id: predicate
+      type: System.Func{NitroxModel.Platforms.OS.Shared.ProcessEx,System.Boolean}
+    - id: comparer
+      type: System.StringComparer
+    return:
+      type: NitroxModel.Platforms.OS.Shared.ProcessEx
+    content.vb: Public Shared Function GetFirstProcess(procName As String, predicate As Func(Of ProcessEx, Boolean), comparer As StringComparer = Nothing) As ProcessEx
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess*
+  nameWithType.vb: ProcessEx.GetFirstProcess(String, Func(Of ProcessEx, Boolean), StringComparer)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess(String, System.Func(Of NitroxModel.Platforms.OS.Shared.ProcessEx, Boolean), System.StringComparer)
+  name.vb: GetFirstProcess(String, Func(Of ProcessEx, Boolean), StringComparer)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread(System.IntPtr,System.IntPtr)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread(System.IntPtr,System.IntPtr)
+  id: CreateThread(System.IntPtr,System.IntPtr)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: CreateThread(IntPtr, IntPtr)
+  nameWithType: ProcessEx.CreateThread(IntPtr, IntPtr)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread(System.IntPtr, System.IntPtr)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CreateThread
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 208
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public IntPtr CreateThread(IntPtr start, IntPtr parameter)
+    parameters:
+    - id: start
+      type: System.IntPtr
+    - id: parameter
+      type: System.IntPtr
+    return:
+      type: System.IntPtr
+    content.vb: Public Function CreateThread(start As IntPtr, parameter As IntPtr) As IntPtr
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend
+  id: Suspend
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Suspend()
+  nameWithType: ProcessEx.Suspend()
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Suspend
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 213
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public bool Suspend()
+    return:
+      type: System.Boolean
+    content.vb: Public Function Suspend() As Boolean
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Resume
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.Resume
+  id: Resume
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Resume()
+  nameWithType: ProcessEx.Resume()
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Resume()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Resume
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 223
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public bool Resume()
+    return:
+      type: System.Boolean
+    content.vb: Public Function [Resume]() As Boolean
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Resume*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Kill
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.Kill
+  id: Kill
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Kill()
+  nameWithType: ProcessEx.Kill()
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Kill()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Kill
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 233
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public void Kill()
+    content.vb: Public Sub Kill()
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Kill*
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose
+  id: Dispose
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: ProcessEx.Dispose()
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Dispose
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 241
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress(System.String,System.String)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress(System.String,System.String)
+  id: GetAddress(System.String,System.String)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: GetAddress(string, string)
+  nameWithType: ProcessEx.GetAddress(string, string)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress(string, string)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetAddress
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 272
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  summary: >-
+    Gets the base address of a loaded module or an exported function if found.
+
+    Returns <xref href="System.IntPtr.Zero" data-throw-if-not-resolved="false"></xref> if module or exported function name was not found.
+  example: []
+  syntax:
+    content: public IntPtr GetAddress(string moduleName, string exportedFunctionName = null)
+    parameters:
+    - id: moduleName
+      type: System.String
+      description: Name of the loaded module to get the base address from.
+    - id: exportedFunctionName
+      type: System.String
+      description: Name of the exported function on the module to get the address from.
+    return:
+      type: System.IntPtr
+      description: ''
+    content.vb: Public Function GetAddress(moduleName As String, exportedFunctionName As String = Nothing) As IntPtr
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress*
+  nameWithType.vb: ProcessEx.GetAddress(String, String)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress(String, String)
+  name.vb: GetAddress(String, String)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr,System.Int32)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr,System.Int32)
+  id: ReadMemory(System.IntPtr,System.Int32)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: ReadMemory(IntPtr, int)
+  nameWithType: ProcessEx.ReadMemory(IntPtr, int)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReadMemory
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 299
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public byte[] ReadMemory(IntPtr address, int size)
+    parameters:
+    - id: address
+      type: System.IntPtr
+    - id: size
+      type: System.Int32
+    return:
+      type: System.Byte[]
+    content.vb: Public Function ReadMemory(address As IntPtr, size As Integer) As Byte()
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory*
+  nameWithType.vb: ProcessEx.ReadMemory(IntPtr, Integer)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr, Integer)
+  name.vb: ReadMemory(IntPtr, Integer)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr,System.Int32,System.Int32[])
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr,System.Int32,System.Int32[])
+  id: ReadMemory(System.IntPtr,System.Int32,System.Int32[])
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: ReadMemory(IntPtr, int, params int[])
+  nameWithType: ProcessEx.ReadMemory(IntPtr, int, params int[])
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr, int, params int[])
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReadMemory
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 306
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public byte[] ReadMemory(IntPtr address, int size, params int[] offsets)
+    parameters:
+    - id: address
+      type: System.IntPtr
+    - id: size
+      type: System.Int32
+    - id: offsets
+      type: System.Int32[]
+    return:
+      type: System.Byte[]
+    content.vb: Public Function ReadMemory(address As IntPtr, size As Integer, ParamArray offsets As Integer()) As Byte()
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory*
+  nameWithType.vb: ProcessEx.ReadMemory(IntPtr, Integer, ParamArray Integer())
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory(System.IntPtr, Integer, ParamArray Integer())
+  name.vb: ReadMemory(IntPtr, Integer, ParamArray Integer())
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory(System.IntPtr,System.Byte[],System.Boolean)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory(System.IntPtr,System.Byte[],System.Boolean)
+  id: WriteMemory(System.IntPtr,System.Byte[],System.Boolean)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: WriteMemory(IntPtr, byte[], bool)
+  nameWithType: ProcessEx.WriteMemory(IntPtr, byte[], bool)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory(System.IntPtr, byte[], bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WriteMemory
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 317
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public int WriteMemory(IntPtr address, byte[] data, bool flushInstructionCache = false)
+    parameters:
+    - id: address
+      type: System.IntPtr
+    - id: data
+      type: System.Byte[]
+    - id: flushInstructionCache
+      type: System.Boolean
+    return:
+      type: System.Int32
+    content.vb: Public Function WriteMemory(address As IntPtr, data As Byte(), flushInstructionCache As Boolean = False) As Integer
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory*
+  nameWithType.vb: ProcessEx.WriteMemory(IntPtr, Byte(), Boolean)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory(System.IntPtr, Byte(), Boolean)
+  name.vb: WriteMemory(IntPtr, Byte(), Boolean)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr,System.Int32[])
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr,System.Int32[])
+  id: ReadPointer(System.IntPtr,System.Int32[])
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: ReadPointer(IntPtr, params int[])
+  nameWithType: ProcessEx.ReadPointer(IntPtr, params int[])
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr, params int[])
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReadPointer
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 333
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  summary: Reads the pointer, then reads again after applying an offset each time.
+  example: []
+  syntax:
+    content: public IntPtr ReadPointer(IntPtr basePointerAddress, params int[] offsets)
+    parameters:
+    - id: basePointerAddress
+      type: System.IntPtr
+      description: ''
+    - id: offsets
+      type: System.Int32[]
+      description: ''
+    return:
+      type: System.IntPtr
+      description: ''
+    content.vb: Public Function ReadPointer(basePointerAddress As IntPtr, ParamArray offsets As Integer()) As IntPtr
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer*
+  nameWithType.vb: ProcessEx.ReadPointer(IntPtr, ParamArray Integer())
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr, ParamArray Integer())
+  name.vb: ReadPointer(IntPtr, ParamArray Integer())
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr,System.Collections.Generic.IEnumerable{System.Int32})
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr,System.Collections.Generic.IEnumerable{System.Int32})
+  id: ReadPointer(System.IntPtr,System.Collections.Generic.IEnumerable{System.Int32})
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: ReadPointer(IntPtr, IEnumerable<int>)
+  nameWithType: ProcessEx.ReadPointer(IntPtr, IEnumerable<int>)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr, System.Collections.Generic.IEnumerable<int>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReadPointer
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 344
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public IntPtr ReadPointer(IntPtr basePointerAddress, IEnumerable<int> offsets)
+    parameters:
+    - id: basePointerAddress
+      type: System.IntPtr
+    - id: offsets
+      type: System.Collections.Generic.IEnumerable{System.Int32}
+    return:
+      type: System.IntPtr
+    content.vb: Public Function ReadPointer(basePointerAddress As IntPtr, offsets As IEnumerable(Of Integer)) As IntPtr
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer*
+  nameWithType.vb: ProcessEx.ReadPointer(IntPtr, IEnumerable(Of Integer))
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer(System.IntPtr, System.Collections.Generic.IEnumerable(Of Integer))
+  name.vb: ReadPointer(IntPtr, IEnumerable(Of Integer))
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.UIntPtr,System.Text.Encoding,System.Int32)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.UIntPtr,System.Text.Encoding,System.Int32)
+  id: ReadString(System.UIntPtr,System.Text.Encoding,System.Int32)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: ReadString(UIntPtr, Encoding, int)
+  nameWithType: ProcessEx.ReadString(UIntPtr, Encoding, int)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.UIntPtr, System.Text.Encoding, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReadString
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 349
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public string ReadString(UIntPtr address, Encoding encoding = null, int maxBytesRead = 1024)
+    parameters:
+    - id: address
+      type: System.UIntPtr
+    - id: encoding
+      type: System.Text.Encoding
+    - id: maxBytesRead
+      type: System.Int32
+    return:
+      type: System.String
+    content.vb: Public Function ReadString(address As UIntPtr, encoding As Encoding = Nothing, maxBytesRead As Integer = 1024) As String
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString*
+  nameWithType.vb: ProcessEx.ReadString(UIntPtr, Encoding, Integer)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.UIntPtr, System.Text.Encoding, Integer)
+  name.vb: ReadString(UIntPtr, Encoding, Integer)
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.IntPtr,System.Text.Encoding,System.Int32)
+  commentId: M:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.IntPtr,System.Text.Encoding,System.Int32)
+  id: ReadString(System.IntPtr,System.Text.Encoding,System.Int32)
+  parent: NitroxModel.Platforms.OS.Shared.ProcessEx
+  langs:
+  - csharp
+  - vb
+  name: ReadString(IntPtr, Encoding, int)
+  nameWithType: ProcessEx.ReadString(IntPtr, Encoding, int)
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.IntPtr, System.Text.Encoding, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReadString
+    path: ../NitroxModel/Platforms/OS/Shared/ProcessEx.cs
+    startLine: 354
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Shared
+  syntax:
+    content: public string ReadString(IntPtr address, Encoding encoding = null, int maxBytesRead = 1024)
+    parameters:
+    - id: address
+      type: System.IntPtr
+    - id: encoding
+      type: System.Text.Encoding
+    - id: maxBytesRead
+      type: System.Int32
+    return:
+      type: System.String
+    content.vb: Public Function ReadString(address As IntPtr, encoding As Encoding = Nothing, maxBytesRead As Integer = 1024) As String
+  overload: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString*
+  nameWithType.vb: ProcessEx.ReadString(IntPtr, Encoding, Integer)
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString(System.IntPtr, System.Text.Encoding, Integer)
+  name.vb: ReadString(IntPtr, Encoding, Integer)
+references:
+- uid: System.Diagnostics.Process
+  commentId: T:System.Diagnostics.Process
+  parent: System.Diagnostics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.diagnostics.process
+  name: Process
+  nameWithType: Process
+  fullName: System.Diagnostics.Process
+- uid: NitroxModel.Platforms.OS.Shared
+  commentId: N:NitroxModel.Platforms.OS.Shared
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Shared
+  nameWithType: NitroxModel.Platforms.OS.Shared
+  fullName: NitroxModel.Platforms.OS.Shared
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared
+    name: Shared
+    href: NitroxModel.Platforms.OS.Shared.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared
+    name: Shared
+    href: NitroxModel.Platforms.OS.Shared.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Diagnostics
+  commentId: N:System.Diagnostics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Diagnostics
+  nameWithType: System.Diagnostics
+  fullName: System.Diagnostics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Diagnostics
+    name: Diagnostics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.diagnostics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Diagnostics
+    name: Diagnostics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.diagnostics
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Handle*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Handle
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Handle.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Handle
+  name: Handle
+  nameWithType: ProcessEx.Handle
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Handle
+- uid: System.Runtime.InteropServices.SafeHandle
+  commentId: T:System.Runtime.InteropServices.SafeHandle
+  parent: System.Runtime.InteropServices
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.runtime.interopservices.safehandle
+  name: SafeHandle
+  nameWithType: SafeHandle
+  fullName: System.Runtime.InteropServices.SafeHandle
+- uid: System.Runtime.InteropServices
+  commentId: N:System.Runtime.InteropServices
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Runtime.InteropServices
+  nameWithType: System.Runtime.InteropServices
+  fullName: System.Runtime.InteropServices
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Runtime
+    name: Runtime
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime
+  - name: .
+  - uid: System.Runtime.InteropServices
+    name: InteropServices
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.interopservices
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Runtime
+    name: Runtime
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime
+  - name: .
+  - uid: System.Runtime.InteropServices
+    name: InteropServices
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.runtime.interopservices
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle.html#NitroxModel_Platforms_OS_Shared_ProcessEx_MainThreadHandle
+  name: MainThreadHandle
+  nameWithType: ProcessEx.MainThreadHandle
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainThreadHandle
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Modules*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Modules
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Modules.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Modules
+  name: Modules
+  nameWithType: ProcessEx.Modules
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Modules
+- uid: System.Collections.Generic.Dictionary{System.String,NitroxModel.Platforms.OS.Shared.ProcessEx.Module}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,NitroxModel.Platforms.OS.Shared.ProcessEx.Module}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, ProcessEx.Module>
+  nameWithType: Dictionary<string, ProcessEx.Module>
+  fullName: System.Collections.Generic.Dictionary<string, NitroxModel.Platforms.OS.Shared.ProcessEx.Module>
+  nameWithType.vb: Dictionary(Of String, ProcessEx.Module)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, NitroxModel.Platforms.OS.Shared.ProcessEx.Module)
+  name.vb: Dictionary(Of String, ProcessEx.Module)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+    name: Module
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.Module.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+    name: Module
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.Module.html
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule.html#NitroxModel_Platforms_OS_Shared_ProcessEx_MainModule
+  name: MainModule
+  nameWithType: ProcessEx.MainModule
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModule
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+  commentId: T:NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+  parent: NitroxModel.Platforms.OS.Shared
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  name: ProcessEx.Module
+  nameWithType: ProcessEx.Module
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+  spec.csharp:
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+    name: Module
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.Module.html
+  spec.vb:
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Module
+    name: Module
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.Module.html
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Id*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Id
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Id.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Id
+  name: Id
+  nameWithType: ProcessEx.Id
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Id
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Is32Bit
+  name: Is32Bit
+  nameWithType: ProcessEx.Is32Bit
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Is32Bit
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress.html#NitroxModel_Platforms_OS_Shared_ProcessEx_PebAddress
+  name: PebAddress
+  nameWithType: ProcessEx.PebAddress
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.PebAddress
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: IntPtr
+  nameWithType: IntPtr
+  fullName: System.IntPtr
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Item*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Item
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Item.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Item_System_IntPtr_
+  name: this
+  nameWithType: ProcessEx.this
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.this
+  nameWithType.vb: ProcessEx.this[]
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.this[]
+  name.vb: this[]
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Name*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Name
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Name.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Name
+  name: Name
+  nameWithType: ProcessEx.Name
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName.html#NitroxModel_Platforms_OS_Shared_ProcessEx_MainModuleFileName
+  name: MainModuleFileName
+  nameWithType: ProcessEx.MainModuleFileName
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleFileName
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory.html#NitroxModel_Platforms_OS_Shared_ProcessEx_MainModuleDirectory
+  name: MainModuleDirectory
+  nameWithType: ProcessEx.MainModuleDirectory
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.MainModuleDirectory
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.#ctor*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.#ctor
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.-ctor.html#NitroxModel_Platforms_OS_Shared_ProcessEx__ctor_System_Diagnostics_Process_
+  name: ProcessEx
+  nameWithType: ProcessEx.ProcessEx
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ProcessEx
+  nameWithType.vb: ProcessEx.New
+  fullName.vb: NitroxModel.Platforms.OS.Shared.ProcessEx.New
+  name.vb: New
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Start*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Start
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Start.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Start_System_String_System_Collections_Generic_IEnumerable_System_ValueTuple_System_String_System_String___System_String_System_String_
+  name: Start
+  nameWithType: ProcessEx.Start
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Start
+- uid: System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}}
+  commentId: T:System.Collections.Generic.IEnumerable{System.ValueTuple{System.String,System.String}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<(string, string)>
+  nameWithType: IEnumerable<(string, string)>
+  fullName: System.Collections.Generic.IEnumerable<(string, string)>
+  nameWithType.vb: IEnumerable(Of (String, String))
+  fullName.vb: System.Collections.Generic.IEnumerable(Of (String, String))
+  name.vb: IEnumerable(Of (String, String))
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+  commentId: T:NitroxModel.Platforms.OS.Shared.ProcessEx
+  parent: NitroxModel.Platforms.OS.Shared
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  name: ProcessEx
+  nameWithType: ProcessEx
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess.html#NitroxModel_Platforms_OS_Shared_ProcessEx_GetFirstProcess_System_String_System_Func_NitroxModel_Platforms_OS_Shared_ProcessEx_System_Boolean__System_StringComparer_
+  name: GetFirstProcess
+  nameWithType: ProcessEx.GetFirstProcess
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.GetFirstProcess
+- uid: System.Func{NitroxModel.Platforms.OS.Shared.ProcessEx,System.Boolean}
+  commentId: T:System.Func{NitroxModel.Platforms.OS.Shared.ProcessEx,System.Boolean}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<ProcessEx, bool>
+  nameWithType: Func<ProcessEx, bool>
+  fullName: System.Func<NitroxModel.Platforms.OS.Shared.ProcessEx, bool>
+  nameWithType.vb: Func(Of ProcessEx, Boolean)
+  fullName.vb: System.Func(Of NitroxModel.Platforms.OS.Shared.ProcessEx, Boolean)
+  name.vb: Func(Of ProcessEx, Boolean)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Platforms.OS.Shared.ProcessEx
+    name: ProcessEx
+    href: NitroxModel.Platforms.OS.Shared.ProcessEx.html
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.StringComparer
+  commentId: T:System.StringComparer
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.stringcomparer
+  name: StringComparer
+  nameWithType: StringComparer
+  fullName: System.StringComparer
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread.html#NitroxModel_Platforms_OS_Shared_ProcessEx_CreateThread_System_IntPtr_System_IntPtr_
+  name: CreateThread
+  nameWithType: ProcessEx.CreateThread
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.CreateThread
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Suspend
+  name: Suspend
+  nameWithType: ProcessEx.Suspend
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Suspend
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Resume*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Resume
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Resume.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Resume
+  name: Resume
+  nameWithType: ProcessEx.Resume
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Resume
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Kill*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Kill
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Kill.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Kill
+  name: Kill
+  nameWithType: ProcessEx.Kill
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Kill
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose.html#NitroxModel_Platforms_OS_Shared_ProcessEx_Dispose
+  name: Dispose
+  nameWithType: ProcessEx.Dispose
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: System.IntPtr.Zero
+  commentId: F:System.IntPtr.Zero
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr.zero
+  name: Zero
+  nameWithType: IntPtr.Zero
+  fullName: System.IntPtr.Zero
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress.html#NitroxModel_Platforms_OS_Shared_ProcessEx_GetAddress_System_String_System_String_
+  name: GetAddress
+  nameWithType: ProcessEx.GetAddress
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.GetAddress
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory.html#NitroxModel_Platforms_OS_Shared_ProcessEx_ReadMemory_System_IntPtr_System_Int32_
+  name: ReadMemory
+  nameWithType: ProcessEx.ReadMemory
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadMemory
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: System.Int32[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int[]
+  nameWithType: int[]
+  fullName: int[]
+  nameWithType.vb: Integer()
+  fullName.vb: Integer()
+  name.vb: Integer()
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: (
+  - name: )
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory.html#NitroxModel_Platforms_OS_Shared_ProcessEx_WriteMemory_System_IntPtr_System_Byte___System_Boolean_
+  name: WriteMemory
+  nameWithType: ProcessEx.WriteMemory
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.WriteMemory
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer.html#NitroxModel_Platforms_OS_Shared_ProcessEx_ReadPointer_System_IntPtr_System_Int32___
+  name: ReadPointer
+  nameWithType: ProcessEx.ReadPointer
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadPointer
+- uid: System.Collections.Generic.IEnumerable{System.Int32}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<int>
+  nameWithType: IEnumerable<int>
+  fullName: System.Collections.Generic.IEnumerable<int>
+  nameWithType.vb: IEnumerable(Of Integer)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Integer)
+  name.vb: IEnumerable(Of Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString*
+  commentId: Overload:NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString
+  href: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString.html#NitroxModel_Platforms_OS_Shared_ProcessEx_ReadString_System_UIntPtr_System_Text_Encoding_System_Int32_
+  name: ReadString
+  nameWithType: ProcessEx.ReadString
+  fullName: NitroxModel.Platforms.OS.Shared.ProcessEx.ReadString
+- uid: System.UIntPtr
+  commentId: T:System.UIntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uintptr
+  name: UIntPtr
+  nameWithType: UIntPtr
+  fullName: System.UIntPtr
+- uid: System.Text.Encoding
+  commentId: T:System.Text.Encoding
+  parent: System.Text
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.text.encoding
+  name: Encoding
+  nameWithType: Encoding
+  fullName: System.Text.Encoding
+- uid: System.Text
+  commentId: N:System.Text
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Text
+  nameWithType: System.Text
+  fullName: System.Text
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Text
+    name: Text
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.text
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Text
+    name: Text
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.text
+memberLayout: SeparatePages

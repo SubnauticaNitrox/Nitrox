@@ -1,0 +1,500 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Helper.Matrix4x4Extension
+  commentId: T:NitroxModel.Helper.Matrix4x4Extension
+  id: Matrix4x4Extension
+  parent: NitroxModel.Helper
+  children:
+  - NitroxModel.Helper.Matrix4x4Extension.Compose(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.Helper.Matrix4x4Extension.Invert(System.Numerics.Matrix4x4)
+  - NitroxModel.Helper.Matrix4x4Extension.Transform(System.Numerics.Matrix4x4,NitroxModel.DataStructures.Unity.NitroxVector3)
+  langs:
+  - csharp
+  - vb
+  name: Matrix4x4Extension
+  nameWithType: Matrix4x4Extension
+  fullName: NitroxModel.Helper.Matrix4x4Extension
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Helper/Matrix4x4Extension.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Matrix4x4Extension
+    path: ../NitroxModel/Helper/Matrix4x4Extension.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static class Matrix4x4Extension
+    content.vb: Public Module Matrix4x4Extension
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Helper.Matrix4x4Extension.Compose(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.Helper.Matrix4x4Extension.Compose(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: Compose(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion,NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.Helper.Matrix4x4Extension
+  langs:
+  - csharp
+  - vb
+  name: Compose(NitroxVector3, NitroxQuaternion, NitroxVector3)
+  nameWithType: Matrix4x4Extension.Compose(NitroxVector3, NitroxQuaternion, NitroxVector3)
+  fullName: NitroxModel.Helper.Matrix4x4Extension.Compose(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxQuaternion, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Matrix4x4Extension.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Compose
+    path: ../NitroxModel/Helper/Matrix4x4Extension.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static Matrix4x4 Compose(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale)
+    parameters:
+    - id: localPosition
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: localRotation
+      type: NitroxModel.DataStructures.Unity.NitroxQuaternion
+    - id: localScale
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: System.Numerics.Matrix4x4
+    content.vb: Public Shared Function Compose(localPosition As NitroxVector3, localRotation As NitroxQuaternion, localScale As NitroxVector3) As Matrix4x4
+  overload: NitroxModel.Helper.Matrix4x4Extension.Compose*
+- uid: NitroxModel.Helper.Matrix4x4Extension.Invert(System.Numerics.Matrix4x4)
+  commentId: M:NitroxModel.Helper.Matrix4x4Extension.Invert(System.Numerics.Matrix4x4)
+  id: Invert(System.Numerics.Matrix4x4)
+  isExtensionMethod: true
+  parent: NitroxModel.Helper.Matrix4x4Extension
+  langs:
+  - csharp
+  - vb
+  name: Invert(Matrix4x4)
+  nameWithType: Matrix4x4Extension.Invert(Matrix4x4)
+  fullName: NitroxModel.Helper.Matrix4x4Extension.Invert(System.Numerics.Matrix4x4)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Matrix4x4Extension.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Invert
+    path: ../NitroxModel/Helper/Matrix4x4Extension.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static Matrix4x4 Invert(this Matrix4x4 m)
+    parameters:
+    - id: m
+      type: System.Numerics.Matrix4x4
+    return:
+      type: System.Numerics.Matrix4x4
+    content.vb: Public Shared Function Invert(m As Matrix4x4) As Matrix4x4
+  overload: NitroxModel.Helper.Matrix4x4Extension.Invert*
+- uid: NitroxModel.Helper.Matrix4x4Extension.Transform(System.Numerics.Matrix4x4,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.Helper.Matrix4x4Extension.Transform(System.Numerics.Matrix4x4,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: Transform(System.Numerics.Matrix4x4,NitroxModel.DataStructures.Unity.NitroxVector3)
+  isExtensionMethod: true
+  parent: NitroxModel.Helper.Matrix4x4Extension
+  langs:
+  - csharp
+  - vb
+  name: Transform(Matrix4x4, NitroxVector3)
+  nameWithType: Matrix4x4Extension.Transform(Matrix4x4, NitroxVector3)
+  fullName: NitroxModel.Helper.Matrix4x4Extension.Transform(System.Numerics.Matrix4x4, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Helper/Matrix4x4Extension.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Transform
+    path: ../NitroxModel/Helper/Matrix4x4Extension.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Helper
+  syntax:
+    content: public static NitroxVector3 Transform(this Matrix4x4 m, NitroxVector3 v)
+    parameters:
+    - id: m
+      type: System.Numerics.Matrix4x4
+    - id: v
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Function Transform(m As Matrix4x4, v As NitroxVector3) As NitroxVector3
+  overload: NitroxModel.Helper.Matrix4x4Extension.Transform*
+references:
+- uid: NitroxModel.Helper
+  commentId: N:NitroxModel.Helper
+  href: NitroxModel.html
+  name: NitroxModel.Helper
+  nameWithType: NitroxModel.Helper
+  fullName: NitroxModel.Helper
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Helper.Matrix4x4Extension.Compose*
+  commentId: Overload:NitroxModel.Helper.Matrix4x4Extension.Compose
+  href: NitroxModel.Helper.Matrix4x4Extension.Compose.html#NitroxModel_Helper_Matrix4x4Extension_Compose_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxQuaternion_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: Compose
+  nameWithType: Matrix4x4Extension.Compose
+  fullName: NitroxModel.Helper.Matrix4x4Extension.Compose
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+- uid: NitroxModel.DataStructures.Unity.NitroxQuaternion
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxQuaternion
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxQuaternion.html
+  name: NitroxQuaternion
+  nameWithType: NitroxQuaternion
+  fullName: NitroxModel.DataStructures.Unity.NitroxQuaternion
+- uid: System.Numerics.Matrix4x4
+  commentId: T:System.Numerics.Matrix4x4
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.matrix4x4
+  name: Matrix4x4
+  nameWithType: Matrix4x4
+  fullName: System.Numerics.Matrix4x4
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: NitroxModel.Helper.Matrix4x4Extension.Invert*
+  commentId: Overload:NitroxModel.Helper.Matrix4x4Extension.Invert
+  href: NitroxModel.Helper.Matrix4x4Extension.Invert.html#NitroxModel_Helper_Matrix4x4Extension_Invert_System_Numerics_Matrix4x4_
+  name: Invert
+  nameWithType: Matrix4x4Extension.Invert
+  fullName: NitroxModel.Helper.Matrix4x4Extension.Invert
+- uid: NitroxModel.Helper.Matrix4x4Extension.Transform*
+  commentId: Overload:NitroxModel.Helper.Matrix4x4Extension.Transform
+  href: NitroxModel.Helper.Matrix4x4Extension.Transform.html#NitroxModel_Helper_Matrix4x4Extension_Transform_System_Numerics_Matrix4x4_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: Transform
+  nameWithType: Matrix4x4Extension.Transform
+  fullName: NitroxModel.Helper.Matrix4x4Extension.Transform
+memberLayout: SeparatePages

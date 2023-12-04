@@ -1,0 +1,502 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Logger.MessageSinkExtensions
+  commentId: T:NitroxModel.Logger.MessageSinkExtensions
+  id: MessageSinkExtensions
+  parent: NitroxModel.Logger
+  children:
+  - NitroxModel.Logger.MessageSinkExtensions.Message(Serilog.Configuration.LoggerSinkConfiguration,System.Action{System.String},Serilog.Events.LogEventLevel,System.String,System.IFormatProvider)
+  langs:
+  - csharp
+  - vb
+  name: MessageSinkExtensions
+  nameWithType: MessageSinkExtensions
+  fullName: NitroxModel.Logger.MessageSinkExtensions
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Logger/MessageSink.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MessageSinkExtensions
+    path: ../NitroxModel/Logger/MessageSink.cs
+    startLine: 31
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Logger
+  syntax:
+    content: public static class MessageSinkExtensions
+    content.vb: Public Module MessageSinkExtensions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Logger.MessageSinkExtensions.Message(Serilog.Configuration.LoggerSinkConfiguration,System.Action{System.String},Serilog.Events.LogEventLevel,System.String,System.IFormatProvider)
+  commentId: M:NitroxModel.Logger.MessageSinkExtensions.Message(Serilog.Configuration.LoggerSinkConfiguration,System.Action{System.String},Serilog.Events.LogEventLevel,System.String,System.IFormatProvider)
+  id: Message(Serilog.Configuration.LoggerSinkConfiguration,System.Action{System.String},Serilog.Events.LogEventLevel,System.String,System.IFormatProvider)
+  isExtensionMethod: true
+  parent: NitroxModel.Logger.MessageSinkExtensions
+  langs:
+  - csharp
+  - vb
+  name: Message(LoggerSinkConfiguration, Action<string>, LogEventLevel, string, IFormatProvider)
+  nameWithType: MessageSinkExtensions.Message(LoggerSinkConfiguration, Action<string>, LogEventLevel, string, IFormatProvider)
+  fullName: NitroxModel.Logger.MessageSinkExtensions.Message(Serilog.Configuration.LoggerSinkConfiguration, System.Action<string>, Serilog.Events.LogEventLevel, string, System.IFormatProvider)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Logger/MessageSink.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Message
+    path: ../NitroxModel/Logger/MessageSink.cs
+    startLine: 33
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Logger
+  syntax:
+    content: public static LoggerConfiguration Message(this LoggerSinkConfiguration loggerConfiguration, Action<string> writer, LogEventLevel minimumLevel = LogEventLevel.Verbose, string outputTemplate = "{Message}", IFormatProvider formatProvider = null)
+    parameters:
+    - id: loggerConfiguration
+      type: Serilog.Configuration.LoggerSinkConfiguration
+    - id: writer
+      type: System.Action{System.String}
+    - id: minimumLevel
+      type: Serilog.Events.LogEventLevel
+    - id: outputTemplate
+      type: System.String
+    - id: formatProvider
+      type: System.IFormatProvider
+    return:
+      type: Serilog.LoggerConfiguration
+    content.vb: Public Shared Function Message(loggerConfiguration As LoggerSinkConfiguration, writer As Action(Of String), minimumLevel As LogEventLevel = LogEventLevel.Verbose, outputTemplate As String = "{Message}", formatProvider As IFormatProvider = Nothing) As LoggerConfiguration
+  overload: NitroxModel.Logger.MessageSinkExtensions.Message*
+  nameWithType.vb: MessageSinkExtensions.Message(LoggerSinkConfiguration, Action(Of String), LogEventLevel, String, IFormatProvider)
+  fullName.vb: NitroxModel.Logger.MessageSinkExtensions.Message(Serilog.Configuration.LoggerSinkConfiguration, System.Action(Of String), Serilog.Events.LogEventLevel, String, System.IFormatProvider)
+  name.vb: Message(LoggerSinkConfiguration, Action(Of String), LogEventLevel, String, IFormatProvider)
+references:
+- uid: NitroxModel.Logger
+  commentId: N:NitroxModel.Logger
+  href: NitroxModel.html
+  name: NitroxModel.Logger
+  nameWithType: NitroxModel.Logger
+  fullName: NitroxModel.Logger
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Logger.MessageSinkExtensions.Message*
+  commentId: Overload:NitroxModel.Logger.MessageSinkExtensions.Message
+  href: NitroxModel.Logger.MessageSinkExtensions.Message.html#NitroxModel_Logger_MessageSinkExtensions_Message_Serilog_Configuration_LoggerSinkConfiguration_System_Action_System_String__Serilog_Events_LogEventLevel_System_String_System_IFormatProvider_
+  name: Message
+  nameWithType: MessageSinkExtensions.Message
+  fullName: NitroxModel.Logger.MessageSinkExtensions.Message
+- uid: Serilog.Configuration.LoggerSinkConfiguration
+  commentId: T:Serilog.Configuration.LoggerSinkConfiguration
+  parent: Serilog.Configuration
+  isExternal: true
+  name: LoggerSinkConfiguration
+  nameWithType: LoggerSinkConfiguration
+  fullName: Serilog.Configuration.LoggerSinkConfiguration
+- uid: System.Action{System.String}
+  commentId: T:System.Action{System.String}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<string>
+  nameWithType: Action<string>
+  fullName: System.Action<string>
+  nameWithType.vb: Action(Of String)
+  fullName.vb: System.Action(Of String)
+  name.vb: Action(Of String)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Serilog.Events.LogEventLevel
+  commentId: T:Serilog.Events.LogEventLevel
+  parent: Serilog.Events
+  isExternal: true
+  name: LogEventLevel
+  nameWithType: LogEventLevel
+  fullName: Serilog.Events.LogEventLevel
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.IFormatProvider
+  commentId: T:System.IFormatProvider
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iformatprovider
+  name: IFormatProvider
+  nameWithType: IFormatProvider
+  fullName: System.IFormatProvider
+- uid: Serilog.LoggerConfiguration
+  commentId: T:Serilog.LoggerConfiguration
+  parent: Serilog
+  isExternal: true
+  name: LoggerConfiguration
+  nameWithType: LoggerConfiguration
+  fullName: Serilog.LoggerConfiguration
+- uid: Serilog.Configuration
+  commentId: N:Serilog.Configuration
+  isExternal: true
+  name: Serilog.Configuration
+  nameWithType: Serilog.Configuration
+  fullName: Serilog.Configuration
+  spec.csharp:
+  - uid: Serilog
+    name: Serilog
+    isExternal: true
+  - name: .
+  - uid: Serilog.Configuration
+    name: Configuration
+    isExternal: true
+  spec.vb:
+  - uid: Serilog
+    name: Serilog
+    isExternal: true
+  - name: .
+  - uid: Serilog.Configuration
+    name: Configuration
+    isExternal: true
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Serilog.Events
+  commentId: N:Serilog.Events
+  isExternal: true
+  name: Serilog.Events
+  nameWithType: Serilog.Events
+  fullName: Serilog.Events
+  spec.csharp:
+  - uid: Serilog
+    name: Serilog
+    isExternal: true
+  - name: .
+  - uid: Serilog.Events
+    name: Events
+    isExternal: true
+  spec.vb:
+  - uid: Serilog
+    name: Serilog
+    isExternal: true
+  - name: .
+  - uid: Serilog.Events
+    name: Events
+    isExternal: true
+- uid: Serilog
+  commentId: N:Serilog
+  isExternal: true
+  name: Serilog
+  nameWithType: Serilog
+  fullName: Serilog
+memberLayout: SeparatePages

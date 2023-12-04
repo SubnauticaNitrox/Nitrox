@@ -1,0 +1,509 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Core.ServiceBProvider
+  commentId: T:NitroxModel.Core.ServiceBProvider
+  id: ServiceBProvider
+  parent: NitroxModel.Core
+  children:
+  - NitroxModel.Core.ServiceBProvider.PerformService(NitroxModel.Core.ServiceRecipientB)
+  langs:
+  - csharp
+  - vb
+  name: ServiceBProvider
+  nameWithType: ServiceBProvider
+  fullName: NitroxModel.Core.ServiceBProvider
+  type: Class
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ServiceBProvider
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 146
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  syntax:
+    content: 'public class ServiceBProvider : BaseServiceProvider<ServiceRecipientB>, IServicer<ServiceRecipientB>'
+    content.vb: Public Class ServiceBProvider Inherits BaseServiceProvider(Of ServiceRecipientB) Implements IServicer(Of ServiceRecipientB)
+  inheritance:
+  - System.Object
+  - NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}
+  implements:
+  - NitroxModel.Core.IServicer{NitroxModel.Core.ServiceRecipientB}
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Core.ServiceBProvider.PerformService(NitroxModel.Core.ServiceRecipientB)
+  commentId: M:NitroxModel.Core.ServiceBProvider.PerformService(NitroxModel.Core.ServiceRecipientB)
+  id: PerformService(NitroxModel.Core.ServiceRecipientB)
+  parent: NitroxModel.Core.ServiceBProvider
+  langs:
+  - csharp
+  - vb
+  name: PerformService(ServiceRecipientB)
+  nameWithType: ServiceBProvider.PerformService(ServiceRecipientB)
+  fullName: NitroxModel.Core.ServiceBProvider.PerformService(NitroxModel.Core.ServiceRecipientB)
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PerformService
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 148
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  example: []
+  syntax:
+    content: public override void PerformService(ServiceRecipientB serviced)
+    parameters:
+    - id: serviced
+      type: NitroxModel.Core.ServiceRecipientB
+    content.vb: Public Overrides Sub PerformService(serviced As ServiceRecipientB)
+  overridden: NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}.PerformService(NitroxModel.Core.ServiceRecipientB)
+  overload: NitroxModel.Core.ServiceBProvider.PerformService*
+references:
+- uid: NitroxModel.Core
+  commentId: N:NitroxModel.Core
+  href: NitroxModel.html
+  name: NitroxModel.Core
+  nameWithType: NitroxModel.Core
+  fullName: NitroxModel.Core
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}
+  commentId: T:NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}
+  parent: NitroxModel.Core
+  definition: NitroxModel.Core.BaseServiceProvider`1
+  href: NitroxModel.Core.BaseServiceProvider-1.html
+  name: BaseServiceProvider<ServiceRecipientB>
+  nameWithType: BaseServiceProvider<ServiceRecipientB>
+  fullName: NitroxModel.Core.BaseServiceProvider<NitroxModel.Core.ServiceRecipientB>
+  nameWithType.vb: BaseServiceProvider(Of ServiceRecipientB)
+  fullName.vb: NitroxModel.Core.BaseServiceProvider(Of NitroxModel.Core.ServiceRecipientB)
+  name.vb: BaseServiceProvider(Of ServiceRecipientB)
+  spec.csharp:
+  - uid: NitroxModel.Core.BaseServiceProvider`1
+    name: BaseServiceProvider
+    href: NitroxModel.Core.BaseServiceProvider-1.html
+  - name: <
+  - uid: NitroxModel.Core.ServiceRecipientB
+    name: ServiceRecipientB
+    href: NitroxModel.Core.ServiceRecipientB.html
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.Core.BaseServiceProvider`1
+    name: BaseServiceProvider
+    href: NitroxModel.Core.BaseServiceProvider-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Core.ServiceRecipientB
+    name: ServiceRecipientB
+    href: NitroxModel.Core.ServiceRecipientB.html
+  - name: )
+- uid: NitroxModel.Core.IServicer{NitroxModel.Core.ServiceRecipientB}
+  commentId: T:NitroxModel.Core.IServicer{NitroxModel.Core.ServiceRecipientB}
+  parent: NitroxModel.Core
+  definition: NitroxModel.Core.IServicer`1
+  href: NitroxModel.Core.IServicer-1.html
+  name: IServicer<ServiceRecipientB>
+  nameWithType: IServicer<ServiceRecipientB>
+  fullName: NitroxModel.Core.IServicer<NitroxModel.Core.ServiceRecipientB>
+  nameWithType.vb: IServicer(Of ServiceRecipientB)
+  fullName.vb: NitroxModel.Core.IServicer(Of NitroxModel.Core.ServiceRecipientB)
+  name.vb: IServicer(Of ServiceRecipientB)
+  spec.csharp:
+  - uid: NitroxModel.Core.IServicer`1
+    name: IServicer
+    href: NitroxModel.Core.IServicer-1.html
+  - name: <
+  - uid: NitroxModel.Core.ServiceRecipientB
+    name: ServiceRecipientB
+    href: NitroxModel.Core.ServiceRecipientB.html
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.Core.IServicer`1
+    name: IServicer
+    href: NitroxModel.Core.IServicer-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Core.ServiceRecipientB
+    name: ServiceRecipientB
+    href: NitroxModel.Core.ServiceRecipientB.html
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Core.BaseServiceProvider`1
+  commentId: T:NitroxModel.Core.BaseServiceProvider`1
+  href: NitroxModel.Core.BaseServiceProvider-1.html
+  name: BaseServiceProvider<TServiced>
+  nameWithType: BaseServiceProvider<TServiced>
+  fullName: NitroxModel.Core.BaseServiceProvider<TServiced>
+  nameWithType.vb: BaseServiceProvider(Of TServiced)
+  fullName.vb: NitroxModel.Core.BaseServiceProvider(Of TServiced)
+  name.vb: BaseServiceProvider(Of TServiced)
+  spec.csharp:
+  - uid: NitroxModel.Core.BaseServiceProvider`1
+    name: BaseServiceProvider
+    href: NitroxModel.Core.BaseServiceProvider-1.html
+  - name: <
+  - name: TServiced
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.Core.BaseServiceProvider`1
+    name: BaseServiceProvider
+    href: NitroxModel.Core.BaseServiceProvider-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TServiced
+  - name: )
+- uid: NitroxModel.Core.IServicer`1
+  commentId: T:NitroxModel.Core.IServicer`1
+  href: NitroxModel.Core.IServicer-1.html
+  name: IServicer<T>
+  nameWithType: IServicer<T>
+  fullName: NitroxModel.Core.IServicer<T>
+  nameWithType.vb: IServicer(Of T)
+  fullName.vb: NitroxModel.Core.IServicer(Of T)
+  name.vb: IServicer(Of T)
+  spec.csharp:
+  - uid: NitroxModel.Core.IServicer`1
+    name: IServicer
+    href: NitroxModel.Core.IServicer-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.Core.IServicer`1
+    name: IServicer
+    href: NitroxModel.Core.IServicer-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}.PerformService(NitroxModel.Core.ServiceRecipientB)
+  commentId: M:NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}.PerformService(NitroxModel.Core.ServiceRecipientB)
+  parent: NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}
+  definition: NitroxModel.Core.BaseServiceProvider`1.PerformService(`0)
+  href: NitroxModel.Core.BaseServiceProvider-1.PerformService.html#NitroxModel_Core_BaseServiceProvider_1_PerformService__0_
+  name: PerformService(ServiceRecipientB)
+  nameWithType: BaseServiceProvider<ServiceRecipientB>.PerformService(ServiceRecipientB)
+  fullName: NitroxModel.Core.BaseServiceProvider<NitroxModel.Core.ServiceRecipientB>.PerformService(NitroxModel.Core.ServiceRecipientB)
+  nameWithType.vb: BaseServiceProvider(Of ServiceRecipientB).PerformService(ServiceRecipientB)
+  fullName.vb: NitroxModel.Core.BaseServiceProvider(Of NitroxModel.Core.ServiceRecipientB).PerformService(NitroxModel.Core.ServiceRecipientB)
+  spec.csharp:
+  - uid: NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}.PerformService(NitroxModel.Core.ServiceRecipientB)
+    name: PerformService
+    href: NitroxModel.Core.BaseServiceProvider-1.PerformService.html#NitroxModel_Core_BaseServiceProvider_1_PerformService__0_
+  - name: (
+  - uid: NitroxModel.Core.ServiceRecipientB
+    name: ServiceRecipientB
+    href: NitroxModel.Core.ServiceRecipientB.html
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Core.BaseServiceProvider{NitroxModel.Core.ServiceRecipientB}.PerformService(NitroxModel.Core.ServiceRecipientB)
+    name: PerformService
+    href: NitroxModel.Core.BaseServiceProvider-1.PerformService.html#NitroxModel_Core_BaseServiceProvider_1_PerformService__0_
+  - name: (
+  - uid: NitroxModel.Core.ServiceRecipientB
+    name: ServiceRecipientB
+    href: NitroxModel.Core.ServiceRecipientB.html
+  - name: )
+- uid: NitroxModel.Core.ServiceBProvider.PerformService*
+  commentId: Overload:NitroxModel.Core.ServiceBProvider.PerformService
+  href: NitroxModel.Core.ServiceBProvider.PerformService.html#NitroxModel_Core_ServiceBProvider_PerformService_NitroxModel_Core_ServiceRecipientB_
+  name: PerformService
+  nameWithType: ServiceBProvider.PerformService
+  fullName: NitroxModel.Core.ServiceBProvider.PerformService
+- uid: NitroxModel.Core.ServiceRecipientB
+  commentId: T:NitroxModel.Core.ServiceRecipientB
+  parent: NitroxModel.Core
+  href: NitroxModel.Core.ServiceRecipientB.html
+  name: ServiceRecipientB
+  nameWithType: ServiceRecipientB
+  fullName: NitroxModel.Core.ServiceRecipientB
+- uid: NitroxModel.Core.BaseServiceProvider`1.PerformService(`0)
+  commentId: M:NitroxModel.Core.BaseServiceProvider`1.PerformService(`0)
+  href: NitroxModel.Core.BaseServiceProvider-1.PerformService.html#NitroxModel_Core_BaseServiceProvider_1_PerformService__0_
+  name: PerformService(TServiced)
+  nameWithType: BaseServiceProvider<TServiced>.PerformService(TServiced)
+  fullName: NitroxModel.Core.BaseServiceProvider<TServiced>.PerformService(TServiced)
+  nameWithType.vb: BaseServiceProvider(Of TServiced).PerformService(TServiced)
+  fullName.vb: NitroxModel.Core.BaseServiceProvider(Of TServiced).PerformService(TServiced)
+  spec.csharp:
+  - uid: NitroxModel.Core.BaseServiceProvider`1.PerformService(`0)
+    name: PerformService
+    href: NitroxModel.Core.BaseServiceProvider-1.PerformService.html#NitroxModel_Core_BaseServiceProvider_1_PerformService__0_
+  - name: (
+  - name: TServiced
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Core.BaseServiceProvider`1.PerformService(`0)
+    name: PerformService
+    href: NitroxModel.Core.BaseServiceProvider-1.PerformService.html#NitroxModel_Core_BaseServiceProvider_1_PerformService__0_
+  - name: (
+  - name: TServiced
+  - name: )
+memberLayout: SeparatePages

@@ -1,0 +1,231 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Communication.NitroxConnection
+  commentId: T:NitroxServer.Communication.NitroxConnection
+  id: NitroxConnection
+  parent: NitroxServer.Communication
+  children:
+  - NitroxServer.Communication.NitroxConnection.Endpoint
+  - NitroxServer.Communication.NitroxConnection.SendPacket(NitroxModel.Packets.Packet)
+  - NitroxServer.Communication.NitroxConnection.State
+  langs:
+  - csharp
+  - vb
+  name: NitroxConnection
+  nameWithType: NitroxConnection
+  fullName: NitroxServer.Communication.NitroxConnection
+  type: Interface
+  source:
+    remote:
+      path: NitroxServer/Communication/NitroxConnection.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxConnection
+    path: ../NitroxServer/Communication/NitroxConnection.cs
+    startLine: 6
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication
+  syntax:
+    content: 'public interface NitroxConnection : IProcessorContext'
+    content.vb: Public Interface NitroxConnection Inherits IProcessorContext
+- uid: NitroxServer.Communication.NitroxConnection.Endpoint
+  commentId: P:NitroxServer.Communication.NitroxConnection.Endpoint
+  id: Endpoint
+  parent: NitroxServer.Communication.NitroxConnection
+  langs:
+  - csharp
+  - vb
+  name: Endpoint
+  nameWithType: NitroxConnection.Endpoint
+  fullName: NitroxServer.Communication.NitroxConnection.Endpoint
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Communication/NitroxConnection.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Endpoint
+    path: ../NitroxServer/Communication/NitroxConnection.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication
+  syntax:
+    content: IPEndPoint Endpoint { get; }
+    parameters: []
+    return:
+      type: System.Net.IPEndPoint
+    content.vb: ReadOnly Property Endpoint As IPEndPoint
+  overload: NitroxServer.Communication.NitroxConnection.Endpoint*
+- uid: NitroxServer.Communication.NitroxConnection.State
+  commentId: P:NitroxServer.Communication.NitroxConnection.State
+  id: State
+  parent: NitroxServer.Communication.NitroxConnection
+  langs:
+  - csharp
+  - vb
+  name: State
+  nameWithType: NitroxConnection.State
+  fullName: NitroxServer.Communication.NitroxConnection.State
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Communication/NitroxConnection.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: State
+    path: ../NitroxServer/Communication/NitroxConnection.cs
+    startLine: 9
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication
+  syntax:
+    content: NitroxConnectionState State { get; }
+    parameters: []
+    return:
+      type: NitroxServer.Communication.NitroxConnectionState
+    content.vb: ReadOnly Property State As NitroxConnectionState
+  overload: NitroxServer.Communication.NitroxConnection.State*
+- uid: NitroxServer.Communication.NitroxConnection.SendPacket(NitroxModel.Packets.Packet)
+  commentId: M:NitroxServer.Communication.NitroxConnection.SendPacket(NitroxModel.Packets.Packet)
+  id: SendPacket(NitroxModel.Packets.Packet)
+  parent: NitroxServer.Communication.NitroxConnection
+  langs:
+  - csharp
+  - vb
+  name: SendPacket(Packet)
+  nameWithType: NitroxConnection.SendPacket(Packet)
+  fullName: NitroxServer.Communication.NitroxConnection.SendPacket(NitroxModel.Packets.Packet)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Communication/NitroxConnection.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SendPacket
+    path: ../NitroxServer/Communication/NitroxConnection.cs
+    startLine: 10
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication
+  syntax:
+    content: void SendPacket(Packet packet)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    content.vb: Sub SendPacket(packet As Packet)
+  overload: NitroxServer.Communication.NitroxConnection.SendPacket*
+references:
+- uid: NitroxServer.Communication
+  commentId: N:NitroxServer.Communication
+  href: NitroxServer.html
+  name: NitroxServer.Communication
+  nameWithType: NitroxServer.Communication
+  fullName: NitroxServer.Communication
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+- uid: NitroxServer.Communication.NitroxConnection.Endpoint*
+  commentId: Overload:NitroxServer.Communication.NitroxConnection.Endpoint
+  href: NitroxServer.Communication.NitroxConnection.Endpoint.html#NitroxServer_Communication_NitroxConnection_Endpoint
+  name: Endpoint
+  nameWithType: NitroxConnection.Endpoint
+  fullName: NitroxServer.Communication.NitroxConnection.Endpoint
+- uid: System.Net.IPEndPoint
+  commentId: T:System.Net.IPEndPoint
+  parent: System.Net
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.net.ipendpoint
+  name: IPEndPoint
+  nameWithType: IPEndPoint
+  fullName: System.Net.IPEndPoint
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Net
+    name: Net
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Net
+    name: Net
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net
+- uid: NitroxServer.Communication.NitroxConnection.State*
+  commentId: Overload:NitroxServer.Communication.NitroxConnection.State
+  href: NitroxServer.Communication.NitroxConnection.State.html#NitroxServer_Communication_NitroxConnection_State
+  name: State
+  nameWithType: NitroxConnection.State
+  fullName: NitroxServer.Communication.NitroxConnection.State
+- uid: NitroxServer.Communication.NitroxConnectionState
+  commentId: T:NitroxServer.Communication.NitroxConnectionState
+  parent: NitroxServer.Communication
+  href: NitroxServer.Communication.NitroxConnectionState.html
+  name: NitroxConnectionState
+  nameWithType: NitroxConnectionState
+  fullName: NitroxServer.Communication.NitroxConnectionState
+- uid: NitroxServer.Communication.NitroxConnection.SendPacket*
+  commentId: Overload:NitroxServer.Communication.NitroxConnection.SendPacket
+  href: NitroxServer.Communication.NitroxConnection.SendPacket.html#NitroxServer_Communication_NitroxConnection_SendPacket_NitroxModel_Packets_Packet_
+  name: SendPacket
+  nameWithType: NitroxConnection.SendPacket
+  fullName: NitroxServer.Communication.NitroxConnection.SendPacket
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+memberLayout: SeparatePages

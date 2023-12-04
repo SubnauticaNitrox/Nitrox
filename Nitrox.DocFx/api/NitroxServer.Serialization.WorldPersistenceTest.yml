@@ -1,0 +1,762 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Serialization.WorldPersistenceTest
+  commentId: T:NitroxServer.Serialization.WorldPersistenceTest
+  id: WorldPersistenceTest
+  parent: NitroxServer.Serialization
+  children:
+  - NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup
+  - NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  - NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  - NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  - NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers
+  - NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  - NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter
+  langs:
+  - csharp
+  - vb
+  name: WorldPersistenceTest
+  nameWithType: WorldPersistenceTest
+  fullName: NitroxServer.Serialization.WorldPersistenceTest
+  type: Class
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WorldPersistenceTest
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 22
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: >-
+      [TestClass]
+
+      public class WorldPersistenceTest
+    content.vb: >-
+      <TestClass>
+
+      Public Class WorldPersistenceTest
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute.#ctor
+    arguments: []
+- uid: NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter
+  commentId: P:NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter
+  id: WorldsDataAfter
+  parent: NitroxServer.Serialization.WorldPersistenceTest
+  langs:
+  - csharp
+  - vb
+  name: WorldsDataAfter
+  nameWithType: WorldPersistenceTest.WorldsDataAfter
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter
+  type: Property
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WorldsDataAfter
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 27
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: public static PersistedWorldData[] WorldsDataAfter { get; }
+    parameters: []
+    return:
+      type: NitroxServer.Serialization.World.PersistedWorldData[]
+    content.vb: Public Shared Property WorldsDataAfter As PersistedWorldData()
+  overload: NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter*
+- uid: NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers
+  commentId: P:NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers
+  id: ServerSerializers
+  parent: NitroxServer.Serialization.WorldPersistenceTest
+  langs:
+  - csharp
+  - vb
+  name: ServerSerializers
+  nameWithType: WorldPersistenceTest.ServerSerializers
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers
+  type: Property
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ServerSerializers
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 28
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: public static IServerSerializer[] ServerSerializers { get; }
+    parameters: []
+    return:
+      type: NitroxServer.Serialization.IServerSerializer[]
+    content.vb: Public Shared Property ServerSerializers As IServerSerializer()
+  overload: NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers*
+- uid: NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  commentId: M:NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  id: ClassInitialize(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  parent: NitroxServer.Serialization.WorldPersistenceTest
+  langs:
+  - csharp
+  - vb
+  name: ClassInitialize(TestContext)
+  nameWithType: WorldPersistenceTest.ClassInitialize(TestContext)
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ClassInitialize
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 30
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: >-
+      [ClassInitialize]
+
+      public static void ClassInitialize(TestContext context)
+    parameters:
+    - id: context
+      type: Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+    content.vb: >-
+      <ClassInitialize>
+
+      Public Shared Sub ClassInitialize(context As TestContext)
+  overload: NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute.#ctor
+    arguments: []
+- uid: NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  commentId: M:NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  id: WorldDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  parent: NitroxServer.Serialization.WorldPersistenceTest
+  langs:
+  - csharp
+  - vb
+  name: WorldDataTest(PersistedWorldData, string)
+  nameWithType: WorldPersistenceTest.WorldDataTest(PersistedWorldData, string)
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest(NitroxServer.Serialization.World.PersistedWorldData, string)
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WorldDataTest
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 54
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: >-
+      [DataTestMethod]
+
+      public void WorldDataTest(PersistedWorldData worldDataAfter, string serializerName)
+    parameters:
+    - id: worldDataAfter
+      type: NitroxServer.Serialization.World.PersistedWorldData
+    - id: serializerName
+      type: System.String
+    content.vb: >-
+      <DataTestMethod>
+
+      Public Sub WorldDataTest(worldDataAfter As PersistedWorldData, serializerName As String)
+  overload: NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute.#ctor
+    arguments: []
+  nameWithType.vb: WorldPersistenceTest.WorldDataTest(PersistedWorldData, String)
+  fullName.vb: NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest(NitroxServer.Serialization.World.PersistedWorldData, String)
+  name.vb: WorldDataTest(PersistedWorldData, String)
+- uid: NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  commentId: M:NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  id: PlayerDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  parent: NitroxServer.Serialization.WorldPersistenceTest
+  langs:
+  - csharp
+  - vb
+  name: PlayerDataTest(PersistedWorldData, string)
+  nameWithType: WorldPersistenceTest.PlayerDataTest(PersistedWorldData, string)
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest(NitroxServer.Serialization.World.PersistedWorldData, string)
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerDataTest
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 128
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: >-
+      [DataTestMethod]
+
+      public void PlayerDataTest(PersistedWorldData worldDataAfter, string serializerName)
+    parameters:
+    - id: worldDataAfter
+      type: NitroxServer.Serialization.World.PersistedWorldData
+    - id: serializerName
+      type: System.String
+    content.vb: >-
+      <DataTestMethod>
+
+      Public Sub PlayerDataTest(worldDataAfter As PersistedWorldData, serializerName As String)
+  overload: NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute.#ctor
+    arguments: []
+  nameWithType.vb: WorldPersistenceTest.PlayerDataTest(PersistedWorldData, String)
+  fullName.vb: NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest(NitroxServer.Serialization.World.PersistedWorldData, String)
+  name.vb: PlayerDataTest(PersistedWorldData, String)
+- uid: NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  commentId: M:NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  id: EntityDataTest(NitroxServer.Serialization.World.PersistedWorldData,System.String)
+  parent: NitroxServer.Serialization.WorldPersistenceTest
+  langs:
+  - csharp
+  - vb
+  name: EntityDataTest(PersistedWorldData, string)
+  nameWithType: WorldPersistenceTest.EntityDataTest(PersistedWorldData, string)
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest(NitroxServer.Serialization.World.PersistedWorldData, string)
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntityDataTest
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 168
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: >-
+      [DataTestMethod]
+
+      public void EntityDataTest(PersistedWorldData worldDataAfter, string serializerName)
+    parameters:
+    - id: worldDataAfter
+      type: NitroxServer.Serialization.World.PersistedWorldData
+    - id: serializerName
+      type: System.String
+    content.vb: >-
+      <DataTestMethod>
+
+      Public Sub EntityDataTest(worldDataAfter As PersistedWorldData, serializerName As String)
+  overload: NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.DataTestMethodAttribute.#ctor
+    arguments: []
+  nameWithType.vb: WorldPersistenceTest.EntityDataTest(PersistedWorldData, String)
+  fullName.vb: NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest(NitroxServer.Serialization.World.PersistedWorldData, String)
+  name.vb: EntityDataTest(PersistedWorldData, String)
+- uid: NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup
+  commentId: M:NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup
+  id: ClassCleanup
+  parent: NitroxServer.Serialization.WorldPersistenceTest
+  langs:
+  - csharp
+  - vb
+  name: ClassCleanup()
+  nameWithType: WorldPersistenceTest.ClassCleanup()
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ClassCleanup
+    path: ../Nitrox.Test/Server/Serialization/WorldPersistenceTest.cs
+    startLine: 425
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: >-
+      [ClassCleanup]
+
+      public static void ClassCleanup()
+    content.vb: >-
+      <ClassCleanup>
+
+      Public Shared Sub ClassCleanup()
+  overload: NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute.#ctor
+    arguments: []
+references:
+- uid: NitroxServer.Serialization
+  commentId: N:NitroxServer.Serialization
+  href: NitroxServer.html
+  name: NitroxServer.Serialization
+  nameWithType: NitroxServer.Serialization
+  fullName: NitroxServer.Serialization
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter*
+  commentId: Overload:NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter
+  href: NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter.html#NitroxServer_Serialization_WorldPersistenceTest_WorldsDataAfter
+  name: WorldsDataAfter
+  nameWithType: WorldPersistenceTest.WorldsDataAfter
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.WorldsDataAfter
+- uid: NitroxServer.Serialization.World.PersistedWorldData[]
+  isExternal: true
+  name: PersistedWorldData[]
+  nameWithType: PersistedWorldData[]
+  fullName: NitroxServer.Serialization.World.PersistedWorldData[]
+  nameWithType.vb: PersistedWorldData()
+  fullName.vb: NitroxServer.Serialization.World.PersistedWorldData()
+  name.vb: PersistedWorldData()
+  spec.csharp:
+  - uid: NitroxServer.Serialization.World.PersistedWorldData
+    name: PersistedWorldData
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: NitroxServer.Serialization.World.PersistedWorldData
+    name: PersistedWorldData
+  - name: (
+  - name: )
+- uid: NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers*
+  commentId: Overload:NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers
+  href: NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers.html#NitroxServer_Serialization_WorldPersistenceTest_ServerSerializers
+  name: ServerSerializers
+  nameWithType: WorldPersistenceTest.ServerSerializers
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.ServerSerializers
+- uid: NitroxServer.Serialization.IServerSerializer[]
+  isExternal: true
+  name: IServerSerializer[]
+  nameWithType: IServerSerializer[]
+  fullName: NitroxServer.Serialization.IServerSerializer[]
+  nameWithType.vb: IServerSerializer()
+  fullName.vb: NitroxServer.Serialization.IServerSerializer()
+  name.vb: IServerSerializer()
+  spec.csharp:
+  - uid: NitroxServer.Serialization.IServerSerializer
+    name: IServerSerializer
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: NitroxServer.Serialization.IServerSerializer
+    name: IServerSerializer
+  - name: (
+  - name: )
+- uid: NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize*
+  commentId: Overload:NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize
+  href: NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize.html#NitroxServer_Serialization_WorldPersistenceTest_ClassInitialize_Microsoft_VisualStudio_TestTools_UnitTesting_TestContext_
+  name: ClassInitialize
+  nameWithType: WorldPersistenceTest.ClassInitialize
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.ClassInitialize
+- uid: Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+  commentId: T:Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+  parent: Microsoft.VisualStudio.TestTools.UnitTesting
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools.unittesting.testcontext
+  name: TestContext
+  nameWithType: TestContext
+  fullName: Microsoft.VisualStudio.TestTools.UnitTesting.TestContext
+- uid: Microsoft.VisualStudio.TestTools.UnitTesting
+  commentId: N:Microsoft.VisualStudio.TestTools.UnitTesting
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.VisualStudio.TestTools.UnitTesting
+  nameWithType: Microsoft.VisualStudio.TestTools.UnitTesting
+  fullName: Microsoft.VisualStudio.TestTools.UnitTesting
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.VisualStudio
+    name: VisualStudio
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools
+    name: TestTools
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools.UnitTesting
+    name: UnitTesting
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools.unittesting
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.VisualStudio
+    name: VisualStudio
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools
+    name: TestTools
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools
+  - name: .
+  - uid: Microsoft.VisualStudio.TestTools.UnitTesting
+    name: UnitTesting
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.testtools.unittesting
+- uid: NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest*
+  commentId: Overload:NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest
+  href: NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest.html#NitroxServer_Serialization_WorldPersistenceTest_WorldDataTest_NitroxServer_Serialization_World_PersistedWorldData_System_String_
+  name: WorldDataTest
+  nameWithType: WorldPersistenceTest.WorldDataTest
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.WorldDataTest
+- uid: NitroxServer.Serialization.World.PersistedWorldData
+  commentId: T:NitroxServer.Serialization.World.PersistedWorldData
+  parent: NitroxServer.Serialization.World
+  href: NitroxServer.Serialization.World.PersistedWorldData.html
+  name: PersistedWorldData
+  nameWithType: PersistedWorldData
+  fullName: NitroxServer.Serialization.World.PersistedWorldData
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxServer.Serialization.World
+  commentId: N:NitroxServer.Serialization.World
+  href: NitroxServer.html
+  name: NitroxServer.Serialization.World
+  nameWithType: NitroxServer.Serialization.World
+  fullName: NitroxServer.Serialization.World
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.World
+    name: World
+    href: NitroxServer.Serialization.World.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.World
+    name: World
+    href: NitroxServer.Serialization.World.html
+- uid: NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest*
+  commentId: Overload:NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest
+  href: NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest.html#NitroxServer_Serialization_WorldPersistenceTest_PlayerDataTest_NitroxServer_Serialization_World_PersistedWorldData_System_String_
+  name: PlayerDataTest
+  nameWithType: WorldPersistenceTest.PlayerDataTest
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.PlayerDataTest
+- uid: NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest*
+  commentId: Overload:NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest
+  href: NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest.html#NitroxServer_Serialization_WorldPersistenceTest_EntityDataTest_NitroxServer_Serialization_World_PersistedWorldData_System_String_
+  name: EntityDataTest
+  nameWithType: WorldPersistenceTest.EntityDataTest
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.EntityDataTest
+- uid: NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup*
+  commentId: Overload:NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup
+  href: NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup.html#NitroxServer_Serialization_WorldPersistenceTest_ClassCleanup
+  name: ClassCleanup
+  nameWithType: WorldPersistenceTest.ClassCleanup
+  fullName: NitroxServer.Serialization.WorldPersistenceTest.ClassCleanup
+memberLayout: SeparatePages

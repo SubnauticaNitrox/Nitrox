@@ -1,0 +1,622 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  commentId: T:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  id: AssetBundleLoader.NitroxAssetBundle
+  parent: NitroxClient.Unity.Helper
+  children:
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_KEY_HINT
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_LOG
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.DISCORD_JOIN_REQUEST
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.PLAYER_LIST_TAB
+  - NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.SHARED_ASSETS
+  langs:
+  - csharp
+  - vb
+  name: AssetBundleLoader.NitroxAssetBundle
+  nameWithType: AssetBundleLoader.NitroxAssetBundle
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxAssetBundle
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 87
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public class AssetBundleLoader.NitroxAssetBundle
+    content.vb: Public Class AssetBundleLoader.NitroxAssetBundle
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName
+  commentId: P:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName
+  id: BundleName
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: BundleName
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.BundleName
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BundleName
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 89
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public string BundleName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property BundleName As String
+  overload: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName*
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle
+  commentId: P:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle
+  id: AssetBundle
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: AssetBundle
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.AssetBundle
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AssetBundle
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 90
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public AssetBundle AssetBundle { get; set; }
+    parameters: []
+    return:
+      type: UnityEngine.AssetBundle
+    content.vb: Public Property AssetBundle As AssetBundle
+  overload: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle*
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+  commentId: P:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+  id: LoadedAssets
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: LoadedAssets
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LoadedAssets
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 91
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public Object[] LoadedAssets { get; set; }
+    parameters: []
+    return:
+      type: UnityEngine.Object[]
+    content.vb: Public Property LoadedAssets As [Object]()
+  overload: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets*
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.SHARED_ASSETS
+  commentId: F:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.SHARED_ASSETS
+  id: SHARED_ASSETS
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: SHARED_ASSETS
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.SHARED_ASSETS
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.SHARED_ASSETS
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SHARED_ASSETS
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 98
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly AssetBundleLoader.NitroxAssetBundle SHARED_ASSETS
+    return:
+      type: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+    content.vb: Public Shared ReadOnly SHARED_ASSETS As AssetBundleLoader.NitroxAssetBundle
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.PLAYER_LIST_TAB
+  commentId: F:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.PLAYER_LIST_TAB
+  id: PLAYER_LIST_TAB
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: PLAYER_LIST_TAB
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.PLAYER_LIST_TAB
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.PLAYER_LIST_TAB
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PLAYER_LIST_TAB
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 99
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly AssetBundleLoader.NitroxAssetBundle PLAYER_LIST_TAB
+    return:
+      type: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+    content.vb: Public Shared ReadOnly PLAYER_LIST_TAB As AssetBundleLoader.NitroxAssetBundle
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_LOG
+  commentId: F:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_LOG
+  id: CHAT_LOG
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: CHAT_LOG
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.CHAT_LOG
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_LOG
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CHAT_LOG
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 100
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly AssetBundleLoader.NitroxAssetBundle CHAT_LOG
+    return:
+      type: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+    content.vb: Public Shared ReadOnly CHAT_LOG As AssetBundleLoader.NitroxAssetBundle
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_KEY_HINT
+  commentId: F:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_KEY_HINT
+  id: CHAT_KEY_HINT
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: CHAT_KEY_HINT
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.CHAT_KEY_HINT
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.CHAT_KEY_HINT
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CHAT_KEY_HINT
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 101
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly AssetBundleLoader.NitroxAssetBundle CHAT_KEY_HINT
+    return:
+      type: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+    content.vb: Public Shared ReadOnly CHAT_KEY_HINT As AssetBundleLoader.NitroxAssetBundle
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.DISCORD_JOIN_REQUEST
+  commentId: F:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.DISCORD_JOIN_REQUEST
+  id: DISCORD_JOIN_REQUEST
+  parent: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  langs:
+  - csharp
+  - vb
+  name: DISCORD_JOIN_REQUEST
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.DISCORD_JOIN_REQUEST
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.DISCORD_JOIN_REQUEST
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/AssetBundleLoader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DISCORD_JOIN_REQUEST
+    path: ../NitroxClient/Unity/Helper/AssetBundleLoader.cs
+    startLine: 102
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly AssetBundleLoader.NitroxAssetBundle DISCORD_JOIN_REQUEST
+    return:
+      type: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+    content.vb: Public Shared ReadOnly DISCORD_JOIN_REQUEST As AssetBundleLoader.NitroxAssetBundle
+references:
+- uid: NitroxClient.Unity.Helper
+  commentId: N:NitroxClient.Unity.Helper
+  href: NitroxClient.html
+  name: NitroxClient.Unity.Helper
+  nameWithType: NitroxClient.Unity.Helper
+  fullName: NitroxClient.Unity.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName*
+  commentId: Overload:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName
+  href: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName.html#NitroxClient_Unity_Helper_AssetBundleLoader_NitroxAssetBundle_BundleName
+  name: BundleName
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.BundleName
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.BundleName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle*
+  commentId: Overload:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle
+  href: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle.html#NitroxClient_Unity_Helper_AssetBundleLoader_NitroxAssetBundle_AssetBundle
+  name: AssetBundle
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.AssetBundle
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.AssetBundle
+- uid: UnityEngine.AssetBundle
+  commentId: T:UnityEngine.AssetBundle
+  parent: UnityEngine
+  isExternal: true
+  name: AssetBundle
+  nameWithType: AssetBundle
+  fullName: UnityEngine.AssetBundle
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets*
+  commentId: Overload:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+  href: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets.html#NitroxClient_Unity_Helper_AssetBundleLoader_NitroxAssetBundle_LoadedAssets
+  name: LoadedAssets
+  nameWithType: AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.LoadedAssets
+- uid: UnityEngine.Object[]
+  isExternal: true
+  name: Object[]
+  nameWithType: Object[]
+  fullName: UnityEngine.Object[]
+  nameWithType.vb: Object()
+  fullName.vb: UnityEngine.Object()
+  name.vb: Object()
+  spec.csharp:
+  - uid: UnityEngine.Object
+    name: Object
+    isExternal: true
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: UnityEngine.Object
+    name: Object
+    isExternal: true
+  - name: (
+  - name: )
+- uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  commentId: T:NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  parent: NitroxClient.Unity.Helper
+  href: NitroxClient.Unity.Helper.AssetBundleLoader.html
+  name: AssetBundleLoader.NitroxAssetBundle
+  nameWithType: AssetBundleLoader.NitroxAssetBundle
+  fullName: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+  spec.csharp:
+  - uid: NitroxClient.Unity.Helper.AssetBundleLoader
+    name: AssetBundleLoader
+    href: NitroxClient.Unity.Helper.AssetBundleLoader.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+    name: NitroxAssetBundle
+    href: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.html
+  spec.vb:
+  - uid: NitroxClient.Unity.Helper.AssetBundleLoader
+    name: AssetBundleLoader
+    href: NitroxClient.Unity.Helper.AssetBundleLoader.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle
+    name: NitroxAssetBundle
+    href: NitroxClient.Unity.Helper.AssetBundleLoader.NitroxAssetBundle.html
+memberLayout: SeparatePages

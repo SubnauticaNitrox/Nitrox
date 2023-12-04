@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours.Gui.Input
+  commentId: N:NitroxClient.MonoBehaviours.Gui.Input
+  id: Input
+  parent: NitroxClient.MonoBehaviours.Gui
+  children:
+  - NitroxClient.MonoBehaviours.Gui.Input.KeyBindingManager
+  - NitroxClient.MonoBehaviours.Gui.Input.KeyBindingValues
+  - NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.MonoBehaviours.Gui.Input
+  nameWithType: NitroxClient.MonoBehaviours.Gui.Input
+  fullName: NitroxClient.MonoBehaviours.Gui.Input
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+  commentId: N:NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+  nameWithType: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+  fullName: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input
+    name: Input
+    href: NitroxClient.MonoBehaviours.Gui.Input.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+    name: KeyBindings
+    href: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input
+    name: Input
+    href: NitroxClient.MonoBehaviours.Gui.Input.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
+    name: KeyBindings
+    href: NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.html
+- uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingManager
+  commentId: T:NitroxClient.MonoBehaviours.Gui.Input.KeyBindingManager
+  href: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingManager.html
+  name: KeyBindingManager
+  nameWithType: KeyBindingManager
+  fullName: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingManager
+- uid: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingValues
+  commentId: T:NitroxClient.MonoBehaviours.Gui.Input.KeyBindingValues
+  parent: NitroxClient.MonoBehaviours.Gui.Input
+  href: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingValues.html
+  name: KeyBindingValues
+  nameWithType: KeyBindingValues
+  fullName: NitroxClient.MonoBehaviours.Gui.Input.KeyBindingValues
+- uid: NitroxClient.MonoBehaviours.Gui.Input
+  commentId: N:NitroxClient.MonoBehaviours.Gui.Input
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.Input
+  nameWithType: NitroxClient.MonoBehaviours.Gui.Input
+  fullName: NitroxClient.MonoBehaviours.Gui.Input
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input
+    name: Input
+    href: NitroxClient.MonoBehaviours.Gui.Input.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.Input
+    name: Input
+    href: NitroxClient.MonoBehaviours.Gui.Input.html
+memberLayout: SeparatePages

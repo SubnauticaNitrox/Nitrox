@@ -1,0 +1,705 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+  id: ConstructorMetadataExtractor
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  children:
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract(Constructor)
+  langs:
+  - csharp
+  - vb
+  name: ConstructorMetadataExtractor
+  nameWithType: ConstructorMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/Metadata/Extractor/ConstructorMetadataExtractor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ConstructorMetadataExtractor
+    path: ../NitroxClient/GameLogic/Spawning/Metadata/Extractor/ConstructorMetadataExtractor.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  syntax:
+    content: 'public class ConstructorMetadataExtractor : GenericEntityMetadataExtractor<Constructor, ConstructorMetadata>'
+    content.vb: Public Class ConstructorMetadataExtractor Inherits GenericEntityMetadataExtractor(Of Constructor, ConstructorMetadata)
+  inheritance:
+  - System.Object
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}
+  inheritedMembers:
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.Extract(Constructor)
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.From(System.Object)
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From(System.Object)
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(System.Object)
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(UnityEngine.GameObject)
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract(Constructor)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract(Constructor)
+  id: Extract(Constructor)
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+  langs:
+  - csharp
+  - vb
+  name: Extract(Constructor)
+  nameWithType: ConstructorMetadataExtractor.Extract(Constructor)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract(Constructor)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/Metadata/Extractor/ConstructorMetadataExtractor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Extract
+    path: ../NitroxClient/GameLogic/Spawning/Metadata/Extractor/ConstructorMetadataExtractor.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  example: []
+  syntax:
+    content: public override ConstructorMetadata Extract(Constructor entity)
+    parameters:
+    - id: entity
+      type: Constructor
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+    content.vb: Public Overrides Function Extract(entity As Constructor) As ConstructorMetadata
+  overridden: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.Extract(Constructor)
+  overload: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract*
+references:
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  commentId: N:NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  nameWithType: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+    name: Extractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+    name: Extractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.html
+  name: EntityMetadataExtractor
+  nameWithType: EntityMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  definition: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  name: GenericEntityMetadataExtractor<Constructor, ConstructorMetadata>
+  nameWithType: GenericEntityMetadataExtractor<Constructor, ConstructorMetadata>
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor<Constructor, NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata>
+  nameWithType.vb: GenericEntityMetadataExtractor(Of Constructor, ConstructorMetadata)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor(Of Constructor, NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata)
+  name.vb: GenericEntityMetadataExtractor(Of Constructor, ConstructorMetadata)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+    name: GenericEntityMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  - name: <
+  - uid: Constructor
+    name: Constructor
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+    name: ConstructorMetadata
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+    name: GenericEntityMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Constructor
+    name: Constructor
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+    name: ConstructorMetadata
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.Extract(Constructor)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.Extract(Constructor)
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}
+  definition: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.Extract(`0)
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_Extract__0_
+  name: Extract(Constructor)
+  nameWithType: GenericEntityMetadataExtractor<Constructor, ConstructorMetadata>.Extract(Constructor)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor<Constructor, NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata>.Extract(Constructor)
+  nameWithType.vb: GenericEntityMetadataExtractor(Of Constructor, ConstructorMetadata).Extract(Constructor)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor(Of Constructor, NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata).Extract(Constructor)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.Extract(Constructor)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_Extract__0_
+  - name: (
+  - uid: Constructor
+    name: Constructor
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.Extract(Constructor)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_Extract__0_
+  - name: (
+  - uid: Constructor
+    name: Constructor
+    isExternal: true
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.From(System.Object)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.From(System.Object)
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}
+  definition: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.From(System.Object)
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_From_System_Object_
+  name: From(object)
+  nameWithType: GenericEntityMetadataExtractor<Constructor, ConstructorMetadata>.From(object)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor<Constructor, NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata>.From(object)
+  nameWithType.vb: GenericEntityMetadataExtractor(Of Constructor, ConstructorMetadata).From(Object)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor(Of Constructor, NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata).From(Object)
+  name.vb: From(Object)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.From(System.Object)
+    name: From
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_From_System_Object_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor{Constructor,NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata}.From(System.Object)
+    name: From
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_From_System_Object_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From(System.Object)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From(System.Object)
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  isExternal: true
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_From_System_Object_
+  name: From(object)
+  nameWithType: EntityMetadataExtractor.From(object)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From(object)
+  nameWithType.vb: EntityMetadataExtractor.From(Object)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From(Object)
+  name.vb: From(Object)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From(System.Object)
+    name: From
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_From_System_Object_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From(System.Object)
+    name: From
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_From_System_Object_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(System.Object)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(System.Object)
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  isExternal: true
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_Extract_System_Object_
+  name: Extract(object)
+  nameWithType: EntityMetadataExtractor.Extract(object)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(object)
+  nameWithType.vb: EntityMetadataExtractor.Extract(Object)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(Object)
+  name.vb: Extract(Object)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(System.Object)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_Extract_System_Object_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(System.Object)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_Extract_System_Object_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(UnityEngine.GameObject)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(UnityEngine.GameObject)
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  isExternal: true
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_Extract_UnityEngine_GameObject_
+  name: Extract(GameObject)
+  nameWithType: EntityMetadataExtractor.Extract(GameObject)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(UnityEngine.GameObject)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(UnityEngine.GameObject)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_Extract_UnityEngine_GameObject_
+  - name: (
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract(UnityEngine.GameObject)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_EntityMetadataExtractor_Extract_UnityEngine_GameObject_
+  - name: (
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  name: GenericEntityMetadataExtractor<I, O>
+  nameWithType: GenericEntityMetadataExtractor<I, O>
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor<I, O>
+  nameWithType.vb: GenericEntityMetadataExtractor(Of I, O)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor(Of I, O)
+  name.vb: GenericEntityMetadataExtractor(Of I, O)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+    name: GenericEntityMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  - name: <
+  - name: I
+  - name: ','
+  - name: " "
+  - name: O
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+    name: GenericEntityMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: I
+  - name: ','
+  - name: " "
+  - name: O
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.Extract(`0)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.Extract(`0)
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_Extract__0_
+  name: Extract(I)
+  nameWithType: GenericEntityMetadataExtractor<I, O>.Extract(I)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor<I, O>.Extract(I)
+  nameWithType.vb: GenericEntityMetadataExtractor(Of I, O).Extract(I)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor(Of I, O).Extract(I)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.Extract(`0)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_Extract__0_
+  - name: (
+  - name: I
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.Extract(`0)
+    name: Extract
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_Extract__0_
+  - name: (
+  - name: I
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.From(System.Object)
+  commentId: M:NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.From(System.Object)
+  isExternal: true
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_From_System_Object_
+  name: From(object)
+  nameWithType: GenericEntityMetadataExtractor<I, O>.From(object)
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor<I, O>.From(object)
+  nameWithType.vb: GenericEntityMetadataExtractor(Of I, O).From(Object)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor(Of I, O).From(Object)
+  name.vb: From(Object)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.From(System.Object)
+    name: From
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_From_System_Object_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2.From(System.Object)
+    name: From
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.From.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_GenericEntityMetadataExtractor_2_From_System_Object_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract*
+  commentId: Overload:NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract.html#NitroxClient_GameLogic_Spawning_Metadata_Extractor_ConstructorMetadataExtractor_Extract_Constructor_
+  name: Extract
+  nameWithType: ConstructorMetadataExtractor.Extract
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.Extract
+- uid: Constructor
+  commentId: T:Constructor
+  isExternal: true
+  name: Constructor
+  nameWithType: Constructor
+  fullName: Constructor
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata.html
+  name: ConstructorMetadata
+  nameWithType: ConstructorMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+memberLayout: SeparatePages

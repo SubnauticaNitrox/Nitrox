@@ -1,0 +1,53 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.Bases
+  commentId: N:NitroxClient.GameLogic.Spawning.Bases
+  id: Bases
+  parent: NitroxClient.GameLogic.Spawning
+  children:
+  - NitroxClient.GameLogic.Spawning.Bases.BuildEntitySpawner
+  - NitroxClient.GameLogic.Spawning.Bases.BuildingPostSpawner
+  - NitroxClient.GameLogic.Spawning.Bases.GhostEntitySpawner
+  - NitroxClient.GameLogic.Spawning.Bases.InteriorPieceEntitySpawner
+  - NitroxClient.GameLogic.Spawning.Bases.ModuleEntitySpawner
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.Spawning.Bases
+  nameWithType: NitroxClient.GameLogic.Spawning.Bases
+  fullName: NitroxClient.GameLogic.Spawning.Bases
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.Spawning.Bases.BuildEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Bases.BuildEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.Bases.BuildEntitySpawner.html
+  name: BuildEntitySpawner
+  nameWithType: BuildEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.Bases.BuildEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.Bases.BuildingPostSpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Bases.BuildingPostSpawner
+  href: NitroxClient.GameLogic.Spawning.Bases.BuildingPostSpawner.html
+  name: BuildingPostSpawner
+  nameWithType: BuildingPostSpawner
+  fullName: NitroxClient.GameLogic.Spawning.Bases.BuildingPostSpawner
+- uid: NitroxClient.GameLogic.Spawning.Bases.GhostEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Bases.GhostEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.Bases.GhostEntitySpawner.html
+  name: GhostEntitySpawner
+  nameWithType: GhostEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.Bases.GhostEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.Bases.InteriorPieceEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Bases.InteriorPieceEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.Bases.InteriorPieceEntitySpawner.html
+  name: InteriorPieceEntitySpawner
+  nameWithType: InteriorPieceEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.Bases.InteriorPieceEntitySpawner
+- uid: NitroxClient.GameLogic.Spawning.Bases.ModuleEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.Bases.ModuleEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.Bases.ModuleEntitySpawner.html
+  name: ModuleEntitySpawner
+  nameWithType: ModuleEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.Bases.ModuleEntitySpawner
+memberLayout: SeparatePages

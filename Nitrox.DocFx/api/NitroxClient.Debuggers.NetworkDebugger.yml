@@ -1,0 +1,897 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Debuggers.NetworkDebugger
+  commentId: T:NitroxClient.Debuggers.NetworkDebugger
+  id: NetworkDebugger
+  parent: NitroxClient.Debuggers
+  children:
+  - NitroxClient.Debuggers.NetworkDebugger.#ctor
+  - NitroxClient.Debuggers.NetworkDebugger.OnSetSkin(UnityEngine.GUISkin)
+  - NitroxClient.Debuggers.NetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  - NitroxClient.Debuggers.NetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: NetworkDebugger
+  nameWithType: NetworkDebugger
+  fullName: NitroxClient.Debuggers.NetworkDebugger
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NetworkDebugger
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  syntax:
+    content: 'public class NetworkDebugger : BaseDebugger, INetworkDebugger'
+    content.vb: Public Class NetworkDebugger Inherits BaseDebugger Implements INetworkDebugger
+  inheritance:
+  - System.Object
+  - NitroxClient.Debuggers.BaseDebugger
+  implements:
+  - NitroxClient.Debuggers.INetworkDebugger
+  inheritedMembers:
+  - NitroxClient.Debuggers.BaseDebugger.DebuggerName
+  - NitroxClient.Debuggers.BaseDebugger.Hotkey
+  - NitroxClient.Debuggers.BaseDebugger.HotkeyAltRequired
+  - NitroxClient.Debuggers.BaseDebugger.HotkeyControlRequired
+  - NitroxClient.Debuggers.BaseDebugger.HotkeyShiftRequired
+  - NitroxClient.Debuggers.BaseDebugger.HotkeyString
+  - NitroxClient.Debuggers.BaseDebugger.SkinCreationOptions
+  - NitroxClient.Debuggers.BaseDebugger.ActiveTab
+  - NitroxClient.Debuggers.BaseDebugger.CanDragWindow
+  - NitroxClient.Debuggers.BaseDebugger.Enabled
+  - NitroxClient.Debuggers.BaseDebugger.WindowRect
+  - NitroxClient.Debuggers.BaseDebugger.AddTab(System.String,System.Action)
+  - NitroxClient.Debuggers.BaseDebugger.GetTab(System.String)
+  - NitroxClient.Debuggers.BaseDebugger.Update
+  - NitroxClient.Debuggers.BaseDebugger.OnGUI
+  - NitroxClient.Debuggers.BaseDebugger.Render
+  - NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Debuggers.NetworkDebugger.#ctor
+  commentId: M:NitroxClient.Debuggers.NetworkDebugger.#ctor
+  id: '#ctor'
+  parent: NitroxClient.Debuggers.NetworkDebugger
+  langs:
+  - csharp
+  - vb
+  name: NetworkDebugger()
+  nameWithType: NetworkDebugger.NetworkDebugger()
+  fullName: NitroxClient.Debuggers.NetworkDebugger.NetworkDebugger()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 34
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  syntax:
+    content: public NetworkDebugger()
+    content.vb: Public Sub New()
+  overload: NitroxClient.Debuggers.NetworkDebugger.#ctor*
+  nameWithType.vb: NetworkDebugger.New()
+  fullName.vb: NitroxClient.Debuggers.NetworkDebugger.New()
+  name.vb: New()
+- uid: NitroxClient.Debuggers.NetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  commentId: M:NitroxClient.Debuggers.NetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  id: PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  parent: NitroxClient.Debuggers.NetworkDebugger
+  langs:
+  - csharp
+  - vb
+  name: PacketSent(Packet, int)
+  nameWithType: NetworkDebugger.PacketSent(Packet, int)
+  fullName: NitroxClient.Debuggers.NetworkDebugger.PacketSent(NitroxModel.Packets.Packet, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PacketSent
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 43
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  example: []
+  syntax:
+    content: public void PacketSent(Packet packet, int byteSize)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    - id: byteSize
+      type: System.Int32
+    content.vb: Public Sub PacketSent(packet As Packet, byteSize As Integer)
+  overload: NitroxClient.Debuggers.NetworkDebugger.PacketSent*
+  implements:
+  - NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  nameWithType.vb: NetworkDebugger.PacketSent(Packet, Integer)
+  fullName.vb: NitroxClient.Debuggers.NetworkDebugger.PacketSent(NitroxModel.Packets.Packet, Integer)
+  name.vb: PacketSent(Packet, Integer)
+- uid: NitroxClient.Debuggers.NetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  commentId: M:NitroxClient.Debuggers.NetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  id: PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  parent: NitroxClient.Debuggers.NetworkDebugger
+  langs:
+  - csharp
+  - vb
+  name: PacketReceived(Packet, int)
+  nameWithType: NetworkDebugger.PacketReceived(Packet, int)
+  fullName: NitroxClient.Debuggers.NetworkDebugger.PacketReceived(NitroxModel.Packets.Packet, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PacketReceived
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 50
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  example: []
+  syntax:
+    content: public void PacketReceived(Packet packet, int byteSize)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    - id: byteSize
+      type: System.Int32
+    content.vb: Public Sub PacketReceived(packet As Packet, byteSize As Integer)
+  overload: NitroxClient.Debuggers.NetworkDebugger.PacketReceived*
+  implements:
+  - NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  nameWithType.vb: NetworkDebugger.PacketReceived(Packet, Integer)
+  fullName.vb: NitroxClient.Debuggers.NetworkDebugger.PacketReceived(NitroxModel.Packets.Packet, Integer)
+  name.vb: PacketReceived(Packet, Integer)
+- uid: NitroxClient.Debuggers.NetworkDebugger.OnSetSkin(UnityEngine.GUISkin)
+  commentId: M:NitroxClient.Debuggers.NetworkDebugger.OnSetSkin(UnityEngine.GUISkin)
+  id: OnSetSkin(UnityEngine.GUISkin)
+  parent: NitroxClient.Debuggers.NetworkDebugger
+  langs:
+  - csharp
+  - vb
+  name: OnSetSkin(GUISkin)
+  nameWithType: NetworkDebugger.OnSetSkin(GUISkin)
+  fullName: NitroxClient.Debuggers.NetworkDebugger.OnSetSkin(UnityEngine.GUISkin)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OnSetSkin
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 57
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  summary: Optionally adjust the skin that is used during render.
+  remarks: Set <xref href="NitroxClient.Debuggers.BaseDebugger.SkinCreationOptions" data-throw-if-not-resolved="false"></xref> on <xref href="NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY" data-throw-if-not-resolved="false"></xref> or <xref href="NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY" data-throw-if-not-resolved="false"></xref> in constructor before using this method.
+  example: []
+  syntax:
+    content: protected override void OnSetSkin(GUISkin skin)
+    parameters:
+    - id: skin
+      type: UnityEngine.GUISkin
+      description: Skin that is being used during Render(int).
+    content.vb: Protected Overrides Sub OnSetSkin(skin As GUISkin)
+  overridden: NitroxClient.Debuggers.BaseDebugger.OnSetSkin(UnityEngine.GUISkin)
+  overload: NitroxClient.Debuggers.NetworkDebugger.OnSetSkin*
+references:
+- uid: NitroxClient.Debuggers
+  commentId: N:NitroxClient.Debuggers
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers
+  nameWithType: NitroxClient.Debuggers
+  fullName: NitroxClient.Debuggers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.Debuggers.BaseDebugger
+  commentId: T:NitroxClient.Debuggers.BaseDebugger
+  parent: NitroxClient.Debuggers
+  href: NitroxClient.Debuggers.BaseDebugger.html
+  name: BaseDebugger
+  nameWithType: BaseDebugger
+  fullName: NitroxClient.Debuggers.BaseDebugger
+- uid: NitroxClient.Debuggers.INetworkDebugger
+  commentId: T:NitroxClient.Debuggers.INetworkDebugger
+  parent: NitroxClient.Debuggers
+  href: NitroxClient.Debuggers.INetworkDebugger.html
+  name: INetworkDebugger
+  nameWithType: INetworkDebugger
+  fullName: NitroxClient.Debuggers.INetworkDebugger
+- uid: NitroxClient.Debuggers.BaseDebugger.DebuggerName
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.DebuggerName
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.DebuggerName.html#NitroxClient_Debuggers_BaseDebugger_DebuggerName
+  name: DebuggerName
+  nameWithType: BaseDebugger.DebuggerName
+  fullName: NitroxClient.Debuggers.BaseDebugger.DebuggerName
+- uid: NitroxClient.Debuggers.BaseDebugger.Hotkey
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.Hotkey
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.Hotkey.html#NitroxClient_Debuggers_BaseDebugger_Hotkey
+  name: Hotkey
+  nameWithType: BaseDebugger.Hotkey
+  fullName: NitroxClient.Debuggers.BaseDebugger.Hotkey
+- uid: NitroxClient.Debuggers.BaseDebugger.HotkeyAltRequired
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.HotkeyAltRequired
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.HotkeyAltRequired.html#NitroxClient_Debuggers_BaseDebugger_HotkeyAltRequired
+  name: HotkeyAltRequired
+  nameWithType: BaseDebugger.HotkeyAltRequired
+  fullName: NitroxClient.Debuggers.BaseDebugger.HotkeyAltRequired
+- uid: NitroxClient.Debuggers.BaseDebugger.HotkeyControlRequired
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.HotkeyControlRequired
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.HotkeyControlRequired.html#NitroxClient_Debuggers_BaseDebugger_HotkeyControlRequired
+  name: HotkeyControlRequired
+  nameWithType: BaseDebugger.HotkeyControlRequired
+  fullName: NitroxClient.Debuggers.BaseDebugger.HotkeyControlRequired
+- uid: NitroxClient.Debuggers.BaseDebugger.HotkeyShiftRequired
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.HotkeyShiftRequired
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.HotkeyShiftRequired.html#NitroxClient_Debuggers_BaseDebugger_HotkeyShiftRequired
+  name: HotkeyShiftRequired
+  nameWithType: BaseDebugger.HotkeyShiftRequired
+  fullName: NitroxClient.Debuggers.BaseDebugger.HotkeyShiftRequired
+- uid: NitroxClient.Debuggers.BaseDebugger.HotkeyString
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.HotkeyString
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.HotkeyString.html#NitroxClient_Debuggers_BaseDebugger_HotkeyString
+  name: HotkeyString
+  nameWithType: BaseDebugger.HotkeyString
+  fullName: NitroxClient.Debuggers.BaseDebugger.HotkeyString
+- uid: NitroxClient.Debuggers.BaseDebugger.SkinCreationOptions
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.SkinCreationOptions
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.SkinCreationOptions.html#NitroxClient_Debuggers_BaseDebugger_SkinCreationOptions
+  name: SkinCreationOptions
+  nameWithType: BaseDebugger.SkinCreationOptions
+  fullName: NitroxClient.Debuggers.BaseDebugger.SkinCreationOptions
+- uid: NitroxClient.Debuggers.BaseDebugger.ActiveTab
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.ActiveTab
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.ActiveTab.html#NitroxClient_Debuggers_BaseDebugger_ActiveTab
+  name: ActiveTab
+  nameWithType: BaseDebugger.ActiveTab
+  fullName: NitroxClient.Debuggers.BaseDebugger.ActiveTab
+- uid: NitroxClient.Debuggers.BaseDebugger.CanDragWindow
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.CanDragWindow
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.CanDragWindow.html#NitroxClient_Debuggers_BaseDebugger_CanDragWindow
+  name: CanDragWindow
+  nameWithType: BaseDebugger.CanDragWindow
+  fullName: NitroxClient.Debuggers.BaseDebugger.CanDragWindow
+- uid: NitroxClient.Debuggers.BaseDebugger.Enabled
+  commentId: P:NitroxClient.Debuggers.BaseDebugger.Enabled
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.Enabled.html#NitroxClient_Debuggers_BaseDebugger_Enabled
+  name: Enabled
+  nameWithType: BaseDebugger.Enabled
+  fullName: NitroxClient.Debuggers.BaseDebugger.Enabled
+- uid: NitroxClient.Debuggers.BaseDebugger.WindowRect
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.WindowRect
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.WindowRect.html#NitroxClient_Debuggers_BaseDebugger_WindowRect
+  name: WindowRect
+  nameWithType: BaseDebugger.WindowRect
+  fullName: NitroxClient.Debuggers.BaseDebugger.WindowRect
+- uid: NitroxClient.Debuggers.BaseDebugger.AddTab(System.String,System.Action)
+  commentId: M:NitroxClient.Debuggers.BaseDebugger.AddTab(System.String,System.Action)
+  parent: NitroxClient.Debuggers.BaseDebugger
+  isExternal: true
+  href: NitroxClient.Debuggers.BaseDebugger.AddTab.html#NitroxClient_Debuggers_BaseDebugger_AddTab_System_String_System_Action_
+  name: AddTab(string, Action)
+  nameWithType: BaseDebugger.AddTab(string, Action)
+  fullName: NitroxClient.Debuggers.BaseDebugger.AddTab(string, System.Action)
+  nameWithType.vb: BaseDebugger.AddTab(String, Action)
+  fullName.vb: NitroxClient.Debuggers.BaseDebugger.AddTab(String, System.Action)
+  name.vb: AddTab(String, Action)
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger.AddTab(System.String,System.Action)
+    name: AddTab
+    href: NitroxClient.Debuggers.BaseDebugger.AddTab.html#NitroxClient_Debuggers_BaseDebugger_AddTab_System_String_System_Action_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger.AddTab(System.String,System.Action)
+    name: AddTab
+    href: NitroxClient.Debuggers.BaseDebugger.AddTab.html#NitroxClient_Debuggers_BaseDebugger_AddTab_System_String_System_Action_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: NitroxClient.Debuggers.BaseDebugger.GetTab(System.String)
+  commentId: M:NitroxClient.Debuggers.BaseDebugger.GetTab(System.String)
+  parent: NitroxClient.Debuggers.BaseDebugger
+  isExternal: true
+  href: NitroxClient.Debuggers.BaseDebugger.GetTab.html#NitroxClient_Debuggers_BaseDebugger_GetTab_System_String_
+  name: GetTab(string)
+  nameWithType: BaseDebugger.GetTab(string)
+  fullName: NitroxClient.Debuggers.BaseDebugger.GetTab(string)
+  nameWithType.vb: BaseDebugger.GetTab(String)
+  fullName.vb: NitroxClient.Debuggers.BaseDebugger.GetTab(String)
+  name.vb: GetTab(String)
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger.GetTab(System.String)
+    name: GetTab
+    href: NitroxClient.Debuggers.BaseDebugger.GetTab.html#NitroxClient_Debuggers_BaseDebugger_GetTab_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger.GetTab(System.String)
+    name: GetTab
+    href: NitroxClient.Debuggers.BaseDebugger.GetTab.html#NitroxClient_Debuggers_BaseDebugger_GetTab_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxClient.Debuggers.BaseDebugger.Update
+  commentId: M:NitroxClient.Debuggers.BaseDebugger.Update
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.Update.html#NitroxClient_Debuggers_BaseDebugger_Update
+  name: Update()
+  nameWithType: BaseDebugger.Update()
+  fullName: NitroxClient.Debuggers.BaseDebugger.Update()
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger.Update
+    name: Update
+    href: NitroxClient.Debuggers.BaseDebugger.Update.html#NitroxClient_Debuggers_BaseDebugger_Update
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger.Update
+    name: Update
+    href: NitroxClient.Debuggers.BaseDebugger.Update.html#NitroxClient_Debuggers_BaseDebugger_Update
+  - name: (
+  - name: )
+- uid: NitroxClient.Debuggers.BaseDebugger.OnGUI
+  commentId: M:NitroxClient.Debuggers.BaseDebugger.OnGUI
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.OnGUI.html#NitroxClient_Debuggers_BaseDebugger_OnGUI
+  name: OnGUI()
+  nameWithType: BaseDebugger.OnGUI()
+  fullName: NitroxClient.Debuggers.BaseDebugger.OnGUI()
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger.OnGUI
+    name: OnGUI
+    href: NitroxClient.Debuggers.BaseDebugger.OnGUI.html#NitroxClient_Debuggers_BaseDebugger_OnGUI
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger.OnGUI
+    name: OnGUI
+    href: NitroxClient.Debuggers.BaseDebugger.OnGUI.html#NitroxClient_Debuggers_BaseDebugger_OnGUI
+  - name: (
+  - name: )
+- uid: NitroxClient.Debuggers.BaseDebugger.Render
+  commentId: M:NitroxClient.Debuggers.BaseDebugger.Render
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.Render.html#NitroxClient_Debuggers_BaseDebugger_Render
+  name: Render()
+  nameWithType: BaseDebugger.Render()
+  fullName: NitroxClient.Debuggers.BaseDebugger.Render()
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger.Render
+    name: Render
+    href: NitroxClient.Debuggers.BaseDebugger.Render.html#NitroxClient_Debuggers_BaseDebugger_Render
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger.Render
+    name: Render
+    href: NitroxClient.Debuggers.BaseDebugger.Render.html#NitroxClient_Debuggers_BaseDebugger_Render
+  - name: (
+  - name: )
+- uid: NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition
+  commentId: M:NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition
+  parent: NitroxClient.Debuggers.BaseDebugger
+  href: NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition.html#NitroxClient_Debuggers_BaseDebugger_ResetWindowPosition
+  name: ResetWindowPosition()
+  nameWithType: BaseDebugger.ResetWindowPosition()
+  fullName: NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition()
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition
+    name: ResetWindowPosition
+    href: NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition.html#NitroxClient_Debuggers_BaseDebugger_ResetWindowPosition
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition
+    name: ResetWindowPosition
+    href: NitroxClient.Debuggers.BaseDebugger.ResetWindowPosition.html#NitroxClient_Debuggers_BaseDebugger_ResetWindowPosition
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Debuggers.NetworkDebugger.#ctor*
+  commentId: Overload:NitroxClient.Debuggers.NetworkDebugger.#ctor
+  href: NitroxClient.Debuggers.NetworkDebugger.-ctor.html#NitroxClient_Debuggers_NetworkDebugger__ctor
+  name: NetworkDebugger
+  nameWithType: NetworkDebugger.NetworkDebugger
+  fullName: NitroxClient.Debuggers.NetworkDebugger.NetworkDebugger
+  nameWithType.vb: NetworkDebugger.New
+  fullName.vb: NitroxClient.Debuggers.NetworkDebugger.New
+  name.vb: New
+- uid: NitroxClient.Debuggers.NetworkDebugger.PacketSent*
+  commentId: Overload:NitroxClient.Debuggers.NetworkDebugger.PacketSent
+  href: NitroxClient.Debuggers.NetworkDebugger.PacketSent.html#NitroxClient_Debuggers_NetworkDebugger_PacketSent_NitroxModel_Packets_Packet_System_Int32_
+  name: PacketSent
+  nameWithType: NetworkDebugger.PacketSent
+  fullName: NitroxClient.Debuggers.NetworkDebugger.PacketSent
+- uid: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  commentId: M:NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  parent: NitroxClient.Debuggers.INetworkDebugger
+  isExternal: true
+  href: NitroxClient.Debuggers.INetworkDebugger.PacketSent.html#NitroxClient_Debuggers_INetworkDebugger_PacketSent_NitroxModel_Packets_Packet_System_Int32_
+  name: PacketSent(Packet, int)
+  nameWithType: INetworkDebugger.PacketSent(Packet, int)
+  fullName: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet, int)
+  nameWithType.vb: INetworkDebugger.PacketSent(Packet, Integer)
+  fullName.vb: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet, Integer)
+  name.vb: PacketSent(Packet, Integer)
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+    name: PacketSent
+    href: NitroxClient.Debuggers.INetworkDebugger.PacketSent.html#NitroxClient_Debuggers_INetworkDebugger_PacketSent_NitroxModel_Packets_Packet_System_Int32_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+    name: PacketSent
+    href: NitroxClient.Debuggers.INetworkDebugger.PacketSent.html#NitroxClient_Debuggers_INetworkDebugger_PacketSent_NitroxModel_Packets_Packet_System_Int32_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: NitroxClient.Debuggers.NetworkDebugger.PacketReceived*
+  commentId: Overload:NitroxClient.Debuggers.NetworkDebugger.PacketReceived
+  href: NitroxClient.Debuggers.NetworkDebugger.PacketReceived.html#NitroxClient_Debuggers_NetworkDebugger_PacketReceived_NitroxModel_Packets_Packet_System_Int32_
+  name: PacketReceived
+  nameWithType: NetworkDebugger.PacketReceived
+  fullName: NitroxClient.Debuggers.NetworkDebugger.PacketReceived
+- uid: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  commentId: M:NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  parent: NitroxClient.Debuggers.INetworkDebugger
+  isExternal: true
+  href: NitroxClient.Debuggers.INetworkDebugger.PacketReceived.html#NitroxClient_Debuggers_INetworkDebugger_PacketReceived_NitroxModel_Packets_Packet_System_Int32_
+  name: PacketReceived(Packet, int)
+  nameWithType: INetworkDebugger.PacketReceived(Packet, int)
+  fullName: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet, int)
+  nameWithType.vb: INetworkDebugger.PacketReceived(Packet, Integer)
+  fullName.vb: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet, Integer)
+  name.vb: PacketReceived(Packet, Integer)
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+    name: PacketReceived
+    href: NitroxClient.Debuggers.INetworkDebugger.PacketReceived.html#NitroxClient_Debuggers_INetworkDebugger_PacketReceived_NitroxModel_Packets_Packet_System_Int32_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+    name: PacketReceived
+    href: NitroxClient.Debuggers.INetworkDebugger.PacketReceived.html#NitroxClient_Debuggers_INetworkDebugger_PacketReceived_NitroxModel_Packets_Packet_System_Int32_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  href: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.html#NitroxClient_Debuggers_BaseDebugger_GUISkinCreationOptions_UNITYCOPY
+  name: UNITYCOPY
+  nameWithType: BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  fullName: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+- uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  href: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.html#NitroxClient_Debuggers_BaseDebugger_GUISkinCreationOptions_DERIVEDCOPY
+  name: DERIVEDCOPY
+  nameWithType: BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  fullName: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+- uid: NitroxClient.Debuggers.BaseDebugger.OnSetSkin(UnityEngine.GUISkin)
+  commentId: M:NitroxClient.Debuggers.BaseDebugger.OnSetSkin(UnityEngine.GUISkin)
+  parent: NitroxClient.Debuggers.BaseDebugger
+  isExternal: true
+  href: NitroxClient.Debuggers.BaseDebugger.OnSetSkin.html#NitroxClient_Debuggers_BaseDebugger_OnSetSkin_UnityEngine_GUISkin_
+  name: OnSetSkin(GUISkin)
+  nameWithType: BaseDebugger.OnSetSkin(GUISkin)
+  fullName: NitroxClient.Debuggers.BaseDebugger.OnSetSkin(UnityEngine.GUISkin)
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger.OnSetSkin(UnityEngine.GUISkin)
+    name: OnSetSkin
+    href: NitroxClient.Debuggers.BaseDebugger.OnSetSkin.html#NitroxClient_Debuggers_BaseDebugger_OnSetSkin_UnityEngine_GUISkin_
+  - name: (
+  - uid: UnityEngine.GUISkin
+    name: GUISkin
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger.OnSetSkin(UnityEngine.GUISkin)
+    name: OnSetSkin
+    href: NitroxClient.Debuggers.BaseDebugger.OnSetSkin.html#NitroxClient_Debuggers_BaseDebugger_OnSetSkin_UnityEngine_GUISkin_
+  - name: (
+  - uid: UnityEngine.GUISkin
+    name: GUISkin
+    isExternal: true
+  - name: )
+- uid: NitroxClient.Debuggers.NetworkDebugger.OnSetSkin*
+  commentId: Overload:NitroxClient.Debuggers.NetworkDebugger.OnSetSkin
+  href: NitroxClient.Debuggers.NetworkDebugger.OnSetSkin.html#NitroxClient_Debuggers_NetworkDebugger_OnSetSkin_UnityEngine_GUISkin_
+  name: OnSetSkin
+  nameWithType: NetworkDebugger.OnSetSkin
+  fullName: NitroxClient.Debuggers.NetworkDebugger.OnSetSkin
+- uid: UnityEngine.GUISkin
+  commentId: T:UnityEngine.GUISkin
+  parent: UnityEngine
+  isExternal: true
+  name: GUISkin
+  nameWithType: GUISkin
+  fullName: UnityEngine.GUISkin
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+memberLayout: SeparatePages

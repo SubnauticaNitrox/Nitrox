@@ -1,0 +1,104 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica
+  id: NitroxModel_Subnautica
+  children:
+  - NitroxModel_Subnautica.DataStructures
+  - NitroxModel_Subnautica.Helper
+  - NitroxModel_Subnautica.Logger
+  - NitroxModel_Subnautica.Packets
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel_Subnautica
+  type: Namespace
+references:
+- uid: NitroxModel_Subnautica.DataStructures
+  commentId: N:NitroxModel_Subnautica.DataStructures
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures
+  nameWithType: NitroxModel_Subnautica.DataStructures
+  fullName: NitroxModel_Subnautica.DataStructures
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+- uid: NitroxModel_Subnautica.Helper
+  commentId: N:NitroxModel_Subnautica.Helper
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.Helper
+  nameWithType: NitroxModel_Subnautica.Helper
+  fullName: NitroxModel_Subnautica.Helper
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Helper
+    name: Helper
+    href: NitroxModel_Subnautica.Helper.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Helper
+    name: Helper
+    href: NitroxModel_Subnautica.Helper.html
+- uid: NitroxModel_Subnautica.Logger
+  commentId: N:NitroxModel_Subnautica.Logger
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.Logger
+  nameWithType: NitroxModel_Subnautica.Logger
+  fullName: NitroxModel_Subnautica.Logger
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Logger
+    name: Logger
+    href: NitroxModel_Subnautica.Logger.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Logger
+    name: Logger
+    href: NitroxModel_Subnautica.Logger.html
+- uid: NitroxModel_Subnautica.Packets
+  commentId: N:NitroxModel_Subnautica.Packets
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.Packets
+  nameWithType: NitroxModel_Subnautica.Packets
+  fullName: NitroxModel_Subnautica.Packets
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Packets
+    name: Packets
+    href: NitroxModel_Subnautica.Packets.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.Packets
+    name: Packets
+    href: NitroxModel_Subnautica.Packets.html
+memberLayout: SeparatePages

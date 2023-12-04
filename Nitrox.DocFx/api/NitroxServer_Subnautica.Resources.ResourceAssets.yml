@@ -1,0 +1,695 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets
+  commentId: T:NitroxServer_Subnautica.Resources.ResourceAssets
+  id: ResourceAssets
+  parent: NitroxServer_Subnautica.Resources
+  children:
+  - NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson
+  - NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom
+  - NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+  - NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers(NitroxServer_Subnautica.Resources.ResourceAssets)
+  - NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId
+  langs:
+  - csharp
+  - vb
+  name: ResourceAssets
+  nameWithType: ResourceAssets
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets
+  type: Class
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/ResourceAssets.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ResourceAssets
+    path: ../NitroxServer-Subnautica/Resources/ResourceAssets.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources
+  syntax:
+    content: public class ResourceAssets
+    content.vb: Public Class ResourceAssets
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId
+  commentId: P:NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId
+  id: WorldEntitiesByClassId
+  parent: NitroxServer_Subnautica.Resources.ResourceAssets
+  langs:
+  - csharp
+  - vb
+  name: WorldEntitiesByClassId
+  nameWithType: ResourceAssets.WorldEntitiesByClassId
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId
+  type: Property
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/ResourceAssets.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WorldEntitiesByClassId
+    path: ../NitroxServer-Subnautica/Resources/ResourceAssets.cs
+    startLine: 10
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources
+  syntax:
+    content: public Dictionary<string, WorldEntityInfo> WorldEntitiesByClassId { get; init; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,UWE.WorldEntityInfo}
+    content.vb: Public Property WorldEntitiesByClassId As Dictionary(Of String, WorldEntityInfo)
+  overload: NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId*
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson
+  commentId: P:NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson
+  id: LootDistributionsJson
+  parent: NitroxServer_Subnautica.Resources.ResourceAssets
+  langs:
+  - csharp
+  - vb
+  name: LootDistributionsJson
+  nameWithType: ResourceAssets.LootDistributionsJson
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson
+  type: Property
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/ResourceAssets.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LootDistributionsJson
+    path: ../NitroxServer-Subnautica/Resources/ResourceAssets.cs
+    startLine: 11
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources
+  syntax:
+    content: public string LootDistributionsJson { get; init; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property LootDistributionsJson As String
+  overload: NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson*
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+  commentId: P:NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+  id: PrefabPlaceholderGroupsByGroupClassId
+  parent: NitroxServer_Subnautica.Resources.ResourceAssets
+  langs:
+  - csharp
+  - vb
+  name: PrefabPlaceholderGroupsByGroupClassId
+  nameWithType: ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+  type: Property
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/ResourceAssets.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PrefabPlaceholderGroupsByGroupClassId
+    path: ../NitroxServer-Subnautica/Resources/ResourceAssets.cs
+    startLine: 12
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources
+  syntax:
+    content: public Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholderGroupsByGroupClassId { get; init; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,NitroxServer.Resources.PrefabPlaceholdersGroupAsset}
+    content.vb: Public Property PrefabPlaceholderGroupsByGroupClassId As Dictionary(Of String, PrefabPlaceholdersGroupAsset)
+  overload: NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId*
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom
+  commentId: P:NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom
+  id: NitroxRandom
+  parent: NitroxServer_Subnautica.Resources.ResourceAssets
+  langs:
+  - csharp
+  - vb
+  name: NitroxRandom
+  nameWithType: ResourceAssets.NitroxRandom
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom
+  type: Property
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/ResourceAssets.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxRandom
+    path: ../NitroxServer-Subnautica/Resources/ResourceAssets.cs
+    startLine: 13
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources
+  syntax:
+    content: public RandomStartGenerator NitroxRandom { get; init; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+    content.vb: Public Property NitroxRandom As RandomStartGenerator
+  overload: NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom*
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers(NitroxServer_Subnautica.Resources.ResourceAssets)
+  commentId: M:NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers(NitroxServer_Subnautica.Resources.ResourceAssets)
+  id: ValidateMembers(NitroxServer_Subnautica.Resources.ResourceAssets)
+  parent: NitroxServer_Subnautica.Resources.ResourceAssets
+  langs:
+  - csharp
+  - vb
+  name: ValidateMembers(ResourceAssets)
+  nameWithType: ResourceAssets.ValidateMembers(ResourceAssets)
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers(NitroxServer_Subnautica.Resources.ResourceAssets)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/ResourceAssets.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ValidateMembers
+    path: ../NitroxServer-Subnautica/Resources/ResourceAssets.cs
+    startLine: 15
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources
+  syntax:
+    content: public static void ValidateMembers(ResourceAssets resourceAssets)
+    parameters:
+    - id: resourceAssets
+      type: NitroxServer_Subnautica.Resources.ResourceAssets
+    content.vb: Public Shared Sub ValidateMembers(resourceAssets As ResourceAssets)
+  overload: NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers*
+references:
+- uid: NitroxServer_Subnautica.Resources
+  commentId: N:NitroxServer_Subnautica.Resources
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica.Resources
+  nameWithType: NitroxServer_Subnautica.Resources
+  fullName: NitroxServer_Subnautica.Resources
+  spec.csharp:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  spec.vb:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId*
+  commentId: Overload:NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId
+  href: NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId.html#NitroxServer_Subnautica_Resources_ResourceAssets_WorldEntitiesByClassId
+  name: WorldEntitiesByClassId
+  nameWithType: ResourceAssets.WorldEntitiesByClassId
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.WorldEntitiesByClassId
+- uid: System.Collections.Generic.Dictionary{System.String,UWE.WorldEntityInfo}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,UWE.WorldEntityInfo}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, WorldEntityInfo>
+  nameWithType: Dictionary<string, WorldEntityInfo>
+  fullName: System.Collections.Generic.Dictionary<string, UWE.WorldEntityInfo>
+  nameWithType.vb: Dictionary(Of String, WorldEntityInfo)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, UWE.WorldEntityInfo)
+  name.vb: Dictionary(Of String, WorldEntityInfo)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: UWE.WorldEntityInfo
+    name: WorldEntityInfo
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: UWE.WorldEntityInfo
+    name: WorldEntityInfo
+    isExternal: true
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson*
+  commentId: Overload:NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson
+  href: NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson.html#NitroxServer_Subnautica_Resources_ResourceAssets_LootDistributionsJson
+  name: LootDistributionsJson
+  nameWithType: ResourceAssets.LootDistributionsJson
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.LootDistributionsJson
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId*
+  commentId: Overload:NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+  href: NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId.html#NitroxServer_Subnautica_Resources_ResourceAssets_PrefabPlaceholderGroupsByGroupClassId
+  name: PrefabPlaceholderGroupsByGroupClassId
+  nameWithType: ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.PrefabPlaceholderGroupsByGroupClassId
+- uid: System.Collections.Generic.Dictionary{System.String,NitroxServer.Resources.PrefabPlaceholdersGroupAsset}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,NitroxServer.Resources.PrefabPlaceholdersGroupAsset}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, PrefabPlaceholdersGroupAsset>
+  nameWithType: Dictionary<string, PrefabPlaceholdersGroupAsset>
+  fullName: System.Collections.Generic.Dictionary<string, NitroxServer.Resources.PrefabPlaceholdersGroupAsset>
+  nameWithType.vb: Dictionary(Of String, PrefabPlaceholdersGroupAsset)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, NitroxServer.Resources.PrefabPlaceholdersGroupAsset)
+  name.vb: Dictionary(Of String, PrefabPlaceholdersGroupAsset)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: NitroxServer.Resources.PrefabPlaceholdersGroupAsset
+    name: PrefabPlaceholdersGroupAsset
+    href: NitroxServer.Resources.PrefabPlaceholdersGroupAsset.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: NitroxServer.Resources.PrefabPlaceholdersGroupAsset
+    name: PrefabPlaceholdersGroupAsset
+    href: NitroxServer.Resources.PrefabPlaceholdersGroupAsset.html
+  - name: )
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom*
+  commentId: Overload:NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom
+  href: NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom.html#NitroxServer_Subnautica_Resources_ResourceAssets_NitroxRandom
+  name: NitroxRandom
+  nameWithType: ResourceAssets.NitroxRandom
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.NitroxRandom
+- uid: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+  commentId: T:NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.RandomStartGenerator.html
+  name: RandomStartGenerator
+  nameWithType: RandomStartGenerator
+  fullName: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers*
+  commentId: Overload:NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers
+  href: NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers.html#NitroxServer_Subnautica_Resources_ResourceAssets_ValidateMembers_NitroxServer_Subnautica_Resources_ResourceAssets_
+  name: ValidateMembers
+  nameWithType: ResourceAssets.ValidateMembers
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets.ValidateMembers
+- uid: NitroxServer_Subnautica.Resources.ResourceAssets
+  commentId: T:NitroxServer_Subnautica.Resources.ResourceAssets
+  parent: NitroxServer_Subnautica.Resources
+  href: NitroxServer_Subnautica.Resources.ResourceAssets.html
+  name: ResourceAssets
+  nameWithType: ResourceAssets
+  fullName: NitroxServer_Subnautica.Resources.ResourceAssets
+memberLayout: SeparatePages

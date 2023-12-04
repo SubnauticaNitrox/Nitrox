@@ -1,0 +1,116 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.Patches.IDynamicPatch
+  commentId: T:NitroxPatcher.Patches.IDynamicPatch
+  id: IDynamicPatch
+  parent: NitroxPatcher.Patches
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IDynamicPatch
+  nameWithType: IDynamicPatch
+  fullName: NitroxPatcher.Patches.IDynamicPatch
+  type: Interface
+  source:
+    remote:
+      path: NitroxPatcher/Patches/IDynamicPatch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IDynamicPatch
+    path: ../NitroxPatcher/Patches/IDynamicPatch.cs
+    startLine: 5
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches
+  summary: A dynamic patch can possibly be unloaded. For Nitrox, this should happen when the player returns to the main menu.
+  example: []
+  syntax:
+    content: 'public interface IDynamicPatch : INitroxPatch'
+    content.vb: Public Interface IDynamicPatch Inherits INitroxPatch
+  inheritedMembers:
+  - NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  - NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+references:
+- uid: NitroxPatcher.Patches
+  commentId: N:NitroxPatcher.Patches
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches
+  nameWithType: NitroxPatcher.Patches
+  fullName: NitroxPatcher.Patches
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+- uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.INitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  name: Patch(Harmony)
+  nameWithType: INitroxPatch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.INitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.INitroxPatch.Restore.html#NitroxPatcher_Patches_INitroxPatch_Restore_HarmonyLib_Harmony_
+  name: Restore(Harmony)
+  nameWithType: INitroxPatch.Restore(Harmony)
+  fullName: NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+    name: Restore
+    href: NitroxPatcher.Patches.INitroxPatch.Restore.html#NitroxPatcher_Patches_INitroxPatch_Restore_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Restore(HarmonyLib.Harmony)
+    name: Restore
+    href: NitroxPatcher.Patches.INitroxPatch.Restore.html#NitroxPatcher_Patches_INitroxPatch_Restore_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: NitroxPatcher.Patches.INitroxPatch
+  commentId: T:NitroxPatcher.Patches.INitroxPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.INitroxPatch.html
+  name: INitroxPatch
+  nameWithType: INitroxPatch
+  fullName: NitroxPatcher.Patches.INitroxPatch
+memberLayout: SeparatePages

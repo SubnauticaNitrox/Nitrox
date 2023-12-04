@@ -1,0 +1,730 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Unity.Helper.GUISkinUtils
+  commentId: T:NitroxClient.Unity.Helper.GUISkinUtils
+  id: GUISkinUtils
+  parent: NitroxClient.Unity.Helper
+  children:
+  - NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived(UnityEngine.GUISkin,System.String)
+  - NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived(System.String,UnityEngine.GUISkin)
+  - NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce(System.String,System.Action{UnityEngine.GUISkin},UnityEngine.GUISkin)
+  - NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin(UnityEngine.GUISkin,System.Action)
+  - NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle(UnityEngine.GUISkin,System.String,UnityEngine.GUIStyle,System.Action{UnityEngine.GUIStyle})
+  langs:
+  - csharp
+  - vb
+  name: GUISkinUtils
+  nameWithType: GUISkinUtils
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/GUISkinUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GUISkinUtils
+    path: ../NitroxClient/Unity/Helper/GUISkinUtils.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static class GUISkinUtils
+    content.vb: Public Module GUISkinUtils
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived(UnityEngine.GUISkin,System.String)
+  commentId: M:NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived(UnityEngine.GUISkin,System.String)
+  id: CreateDerived(UnityEngine.GUISkin,System.String)
+  parent: NitroxClient.Unity.Helper.GUISkinUtils
+  langs:
+  - csharp
+  - vb
+  name: CreateDerived(GUISkin, string)
+  nameWithType: GUISkinUtils.CreateDerived(GUISkin, string)
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived(UnityEngine.GUISkin, string)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/GUISkinUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CreateDerived
+    path: ../NitroxClient/Unity/Helper/GUISkinUtils.cs
+    startLine: 12
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static GUISkin CreateDerived(GUISkin baseSkin = null, string name = null)
+    parameters:
+    - id: baseSkin
+      type: UnityEngine.GUISkin
+    - id: name
+      type: System.String
+    return:
+      type: UnityEngine.GUISkin
+    content.vb: Public Shared Function CreateDerived(baseSkin As GUISkin = Nothing, name As String = Nothing) As GUISkin
+  overload: NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived*
+  nameWithType.vb: GUISkinUtils.CreateDerived(GUISkin, String)
+  fullName.vb: NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived(UnityEngine.GUISkin, String)
+  name.vb: CreateDerived(GUISkin, String)
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived(System.String,UnityEngine.GUISkin)
+  commentId: M:NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived(System.String,UnityEngine.GUISkin)
+  id: RegisterDerived(System.String,UnityEngine.GUISkin)
+  parent: NitroxClient.Unity.Helper.GUISkinUtils
+  langs:
+  - csharp
+  - vb
+  name: RegisterDerived(string, GUISkin)
+  nameWithType: GUISkinUtils.RegisterDerived(string, GUISkin)
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived(string, UnityEngine.GUISkin)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/GUISkinUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RegisterDerived
+    path: ../NitroxClient/Unity/Helper/GUISkinUtils.cs
+    startLine: 60
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static GUISkin RegisterDerived(string name, GUISkin baseSkin = null)
+    parameters:
+    - id: name
+      type: System.String
+    - id: baseSkin
+      type: UnityEngine.GUISkin
+    return:
+      type: UnityEngine.GUISkin
+    content.vb: Public Shared Function RegisterDerived(name As String, baseSkin As GUISkin = Nothing) As GUISkin
+  overload: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived*
+  nameWithType.vb: GUISkinUtils.RegisterDerived(String, GUISkin)
+  fullName.vb: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived(String, UnityEngine.GUISkin)
+  name.vb: RegisterDerived(String, GUISkin)
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce(System.String,System.Action{UnityEngine.GUISkin},UnityEngine.GUISkin)
+  commentId: M:NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce(System.String,System.Action{UnityEngine.GUISkin},UnityEngine.GUISkin)
+  id: RegisterDerivedOnce(System.String,System.Action{UnityEngine.GUISkin},UnityEngine.GUISkin)
+  parent: NitroxClient.Unity.Helper.GUISkinUtils
+  langs:
+  - csharp
+  - vb
+  name: RegisterDerivedOnce(string, Action<GUISkin>, GUISkin)
+  nameWithType: GUISkinUtils.RegisterDerivedOnce(string, Action<GUISkin>, GUISkin)
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce(string, System.Action<UnityEngine.GUISkin>, UnityEngine.GUISkin)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/GUISkinUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RegisterDerivedOnce
+    path: ../NitroxClient/Unity/Helper/GUISkinUtils.cs
+    startLine: 77
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  summary: Creates a new default Unity skin if there are no existing skins with the given <code class="paramref">name</code>.
+  example: []
+  syntax:
+    content: public static GUISkin RegisterDerivedOnce(string name, Action<GUISkin> skinInitializer = null, GUISkin baseSkin = null)
+    parameters:
+    - id: name
+      type: System.String
+      description: Name for the new skin.
+    - id: skinInitializer
+      type: System.Action{UnityEngine.GUISkin}
+      description: Optional skin initializer.
+    - id: baseSkin
+      type: UnityEngine.GUISkin
+      description: Optional base skin to copy from.
+    return:
+      type: UnityEngine.GUISkin
+      description: New or cached skin.
+    content.vb: Public Shared Function RegisterDerivedOnce(name As String, skinInitializer As Action(Of GUISkin) = Nothing, baseSkin As GUISkin = Nothing) As GUISkin
+  overload: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce*
+  nameWithType.vb: GUISkinUtils.RegisterDerivedOnce(String, Action(Of GUISkin), GUISkin)
+  fullName.vb: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce(String, System.Action(Of UnityEngine.GUISkin), UnityEngine.GUISkin)
+  name.vb: RegisterDerivedOnce(String, Action(Of GUISkin), GUISkin)
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin(UnityEngine.GUISkin,System.Action)
+  commentId: M:NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin(UnityEngine.GUISkin,System.Action)
+  id: RenderWithSkin(UnityEngine.GUISkin,System.Action)
+  parent: NitroxClient.Unity.Helper.GUISkinUtils
+  langs:
+  - csharp
+  - vb
+  name: RenderWithSkin(GUISkin, Action)
+  nameWithType: GUISkinUtils.RenderWithSkin(GUISkin, Action)
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin(UnityEngine.GUISkin, System.Action)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/GUISkinUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RenderWithSkin
+    path: ../NitroxClient/Unity/Helper/GUISkinUtils.cs
+    startLine: 93
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  summary: Switches the active skin until after the <code class="paramref">render</code> action.
+  example: []
+  syntax:
+    content: public static void RenderWithSkin(GUISkin skin, Action render)
+    parameters:
+    - id: skin
+      type: UnityEngine.GUISkin
+      description: Skin to switch to.
+    - id: render
+      type: System.Action
+      description: Render function to run.
+    content.vb: Public Shared Sub RenderWithSkin(skin As GUISkin, render As Action)
+  overload: NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin*
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle(UnityEngine.GUISkin,System.String,UnityEngine.GUIStyle,System.Action{UnityEngine.GUIStyle})
+  commentId: M:NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle(UnityEngine.GUISkin,System.String,UnityEngine.GUIStyle,System.Action{UnityEngine.GUIStyle})
+  id: SetCustomStyle(UnityEngine.GUISkin,System.String,UnityEngine.GUIStyle,System.Action{UnityEngine.GUIStyle})
+  isExtensionMethod: true
+  parent: NitroxClient.Unity.Helper.GUISkinUtils
+  langs:
+  - csharp
+  - vb
+  name: SetCustomStyle(GUISkin, string, GUIStyle, Action<GUIStyle>)
+  nameWithType: GUISkinUtils.SetCustomStyle(GUISkin, string, GUIStyle, Action<GUIStyle>)
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle(UnityEngine.GUISkin, string, UnityEngine.GUIStyle, System.Action<UnityEngine.GUIStyle>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/GUISkinUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SetCustomStyle
+    path: ../NitroxClient/Unity/Helper/GUISkinUtils.cs
+    startLine: 113
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  summary: Adds or sets a custom style to the skin.
+  remarks: Custom skins can be used by passing the "nameofskin" to the <xref href="UnityEngine.GUIStyle" data-throw-if-not-resolved="false"></xref> parameter of <xref href="UnityEngine.GUILayout.Label(System.String%2cUnityEngine.GUIStyle%2cUnityEngine.GUILayoutOption%5b%5d)" data-throw-if-not-resolved="false"></xref> and similar.
+  example: []
+  syntax:
+    content: public static void SetCustomStyle(this GUISkin skin, string name, GUIStyle baseStyle, Action<GUIStyle> modify)
+    parameters:
+    - id: skin
+      type: UnityEngine.GUISkin
+      description: Skin to add a custom style to.
+    - id: name
+      type: System.String
+      description: Name of the new custom style.
+    - id: baseStyle
+      type: UnityEngine.GUIStyle
+      description: Style to base your custom style on.
+    - id: modify
+      type: System.Action{UnityEngine.GUIStyle}
+      description: Function that changes the custom style to your liking.
+    content.vb: Public Shared Sub SetCustomStyle(skin As GUISkin, name As String, baseStyle As GUIStyle, modify As Action(Of GUIStyle))
+  overload: NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle*
+  nameWithType.vb: GUISkinUtils.SetCustomStyle(GUISkin, String, GUIStyle, Action(Of GUIStyle))
+  fullName.vb: NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle(UnityEngine.GUISkin, String, UnityEngine.GUIStyle, System.Action(Of UnityEngine.GUIStyle))
+  name.vb: SetCustomStyle(GUISkin, String, GUIStyle, Action(Of GUIStyle))
+references:
+- uid: NitroxClient.Unity.Helper
+  commentId: N:NitroxClient.Unity.Helper
+  href: NitroxClient.html
+  name: NitroxClient.Unity.Helper
+  nameWithType: NitroxClient.Unity.Helper
+  fullName: NitroxClient.Unity.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived*
+  commentId: Overload:NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived
+  href: NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived.html#NitroxClient_Unity_Helper_GUISkinUtils_CreateDerived_UnityEngine_GUISkin_System_String_
+  name: CreateDerived
+  nameWithType: GUISkinUtils.CreateDerived
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.CreateDerived
+- uid: UnityEngine.GUISkin
+  commentId: T:UnityEngine.GUISkin
+  parent: UnityEngine
+  isExternal: true
+  name: GUISkin
+  nameWithType: GUISkin
+  fullName: UnityEngine.GUISkin
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived*
+  commentId: Overload:NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived
+  href: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived.html#NitroxClient_Unity_Helper_GUISkinUtils_RegisterDerived_System_String_UnityEngine_GUISkin_
+  name: RegisterDerived
+  nameWithType: GUISkinUtils.RegisterDerived
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerived
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce*
+  commentId: Overload:NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce
+  href: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce.html#NitroxClient_Unity_Helper_GUISkinUtils_RegisterDerivedOnce_System_String_System_Action_UnityEngine_GUISkin__UnityEngine_GUISkin_
+  name: RegisterDerivedOnce
+  nameWithType: GUISkinUtils.RegisterDerivedOnce
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.RegisterDerivedOnce
+- uid: System.Action{UnityEngine.GUISkin}
+  commentId: T:System.Action{UnityEngine.GUISkin}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<GUISkin>
+  nameWithType: Action<GUISkin>
+  fullName: System.Action<UnityEngine.GUISkin>
+  nameWithType.vb: Action(Of GUISkin)
+  fullName.vb: System.Action(Of UnityEngine.GUISkin)
+  name.vb: Action(Of GUISkin)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: UnityEngine.GUISkin
+    name: GUISkin
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: UnityEngine.GUISkin
+    name: GUISkin
+    isExternal: true
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin*
+  commentId: Overload:NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin
+  href: NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin.html#NitroxClient_Unity_Helper_GUISkinUtils_RenderWithSkin_UnityEngine_GUISkin_System_Action_
+  name: RenderWithSkin
+  nameWithType: GUISkinUtils.RenderWithSkin
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.RenderWithSkin
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: UnityEngine.GUIStyle
+  commentId: T:UnityEngine.GUIStyle
+  parent: UnityEngine
+  isExternal: true
+  name: GUIStyle
+  nameWithType: GUIStyle
+  fullName: UnityEngine.GUIStyle
+- uid: UnityEngine.GUILayout.Label(System.String,UnityEngine.GUIStyle,UnityEngine.GUILayoutOption[])
+  commentId: M:UnityEngine.GUILayout.Label(System.String,UnityEngine.GUIStyle,UnityEngine.GUILayoutOption[])
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Label(string, GUIStyle, params GUILayoutOption[])
+  nameWithType: GUILayout.Label(string, GUIStyle, params GUILayoutOption[])
+  fullName: UnityEngine.GUILayout.Label(string, UnityEngine.GUIStyle, params UnityEngine.GUILayoutOption[])
+  nameWithType.vb: GUILayout.Label(String, GUIStyle, ParamArray GUILayoutOption())
+  fullName.vb: UnityEngine.GUILayout.Label(String, UnityEngine.GUIStyle, ParamArray UnityEngine.GUILayoutOption())
+  name.vb: Label(String, GUIStyle, ParamArray GUILayoutOption())
+  spec.csharp:
+  - uid: UnityEngine.GUILayout.Label(System.String,UnityEngine.GUIStyle,UnityEngine.GUILayoutOption[])
+    name: Label
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: UnityEngine.GUIStyle
+    name: GUIStyle
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: params
+  - name: " "
+  - uid: UnityEngine.GUILayoutOption
+    name: GUILayoutOption
+    isExternal: true
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: UnityEngine.GUILayout.Label(System.String,UnityEngine.GUIStyle,UnityEngine.GUILayoutOption[])
+    name: Label
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: UnityEngine.GUIStyle
+    name: GUIStyle
+    isExternal: true
+  - name: ','
+  - name: " "
+  - name: ParamArray
+  - name: " "
+  - uid: UnityEngine.GUILayoutOption
+    name: GUILayoutOption
+    isExternal: true
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle*
+  commentId: Overload:NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle
+  href: NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle.html#NitroxClient_Unity_Helper_GUISkinUtils_SetCustomStyle_UnityEngine_GUISkin_System_String_UnityEngine_GUIStyle_System_Action_UnityEngine_GUIStyle__
+  name: SetCustomStyle
+  nameWithType: GUISkinUtils.SetCustomStyle
+  fullName: NitroxClient.Unity.Helper.GUISkinUtils.SetCustomStyle
+- uid: System.Action{UnityEngine.GUIStyle}
+  commentId: T:System.Action{UnityEngine.GUIStyle}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<GUIStyle>
+  nameWithType: Action<GUIStyle>
+  fullName: System.Action<UnityEngine.GUIStyle>
+  nameWithType.vb: Action(Of GUIStyle)
+  fullName.vb: System.Action(Of UnityEngine.GUIStyle)
+  name.vb: Action(Of GUIStyle)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: UnityEngine.GUIStyle
+    name: GUIStyle
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: UnityEngine.GUIStyle
+    name: GUIStyle
+    isExternal: true
+  - name: )
+memberLayout: SeparatePages

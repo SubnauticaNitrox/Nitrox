@@ -1,0 +1,180 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper
+  commentId: T:NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper
+  id: IEntityBootstrapper
+  parent: NitroxServer.GameLogic.Entities.Spawning
+  children:
+  - NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxServer.Helper.DeterministicGenerator)
+  langs:
+  - csharp
+  - vb
+  name: IEntityBootstrapper
+  nameWithType: IEntityBootstrapper
+  fullName: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper
+  type: Interface
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/Spawning/IEntityBootstrapper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IEntityBootstrapper
+    path: ../NitroxServer/GameLogic/Entities/Spawning/IEntityBootstrapper.cs
+    startLine: 5
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities.Spawning
+  syntax:
+    content: public interface IEntityBootstrapper
+    content.vb: Public Interface IEntityBootstrapper
+- uid: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxServer.Helper.DeterministicGenerator)
+  commentId: M:NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxServer.Helper.DeterministicGenerator)
+  id: Prepare(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxServer.Helper.DeterministicGenerator)
+  parent: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper
+  langs:
+  - csharp
+  - vb
+  name: Prepare(WorldEntity, DeterministicGenerator)
+  nameWithType: IEntityBootstrapper.Prepare(WorldEntity, DeterministicGenerator)
+  fullName: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity, NitroxServer.Helper.DeterministicGenerator)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/Spawning/IEntityBootstrapper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Prepare
+    path: ../NitroxServer/GameLogic/Entities/Spawning/IEntityBootstrapper.cs
+    startLine: 7
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities.Spawning
+  syntax:
+    content: void Prepare(WorldEntity spawnedEntity, DeterministicGenerator idGenerator)
+    parameters:
+    - id: spawnedEntity
+      type: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+    - id: idGenerator
+      type: NitroxServer.Helper.DeterministicGenerator
+    content.vb: Sub Prepare(spawnedEntity As WorldEntity, idGenerator As DeterministicGenerator)
+  overload: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare*
+references:
+- uid: NitroxServer.GameLogic.Entities.Spawning
+  commentId: N:NitroxServer.GameLogic.Entities.Spawning
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities.Spawning
+  nameWithType: NitroxServer.GameLogic.Entities.Spawning
+  fullName: NitroxServer.GameLogic.Entities.Spawning
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+- uid: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare*
+  commentId: Overload:NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare
+  href: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare.html#NitroxServer_GameLogic_Entities_Spawning_IEntityBootstrapper_Prepare_NitroxModel_DataStructures_GameLogic_Entities_WorldEntity_NitroxServer_Helper_DeterministicGenerator_
+  name: Prepare
+  nameWithType: IEntityBootstrapper.Prepare
+  fullName: NitroxServer.GameLogic.Entities.Spawning.IEntityBootstrapper.Prepare
+- uid: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity.html
+  name: WorldEntity
+  nameWithType: WorldEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+- uid: NitroxServer.Helper.DeterministicGenerator
+  commentId: T:NitroxServer.Helper.DeterministicGenerator
+  parent: NitroxServer.Helper
+  href: NitroxServer.Helper.DeterministicGenerator.html
+  name: DeterministicGenerator
+  nameWithType: DeterministicGenerator
+  fullName: NitroxServer.Helper.DeterministicGenerator
+- uid: NitroxModel.DataStructures.GameLogic.Entities
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities
+  fullName: NitroxModel.DataStructures.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+- uid: NitroxServer.Helper
+  commentId: N:NitroxServer.Helper
+  href: NitroxServer.html
+  name: NitroxServer.Helper
+  nameWithType: NitroxServer.Helper
+  fullName: NitroxServer.Helper
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Helper
+    name: Helper
+    href: NitroxServer.Helper.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Helper
+    name: Helper
+    href: NitroxServer.Helper.html
+memberLayout: SeparatePages

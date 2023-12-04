@@ -1,0 +1,637 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser
+  commentId: T:NitroxServer_Subnautica.Resources.Parsers.RandomStartParser
+  id: RandomStartParser
+  parent: NitroxServer_Subnautica.Resources.Parsers
+  children:
+  - NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.#ctor
+  - NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile
+  langs:
+  - csharp
+  - vb
+  name: RandomStartParser
+  nameWithType: RandomStartParser
+  fullName: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser
+  type: Class
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/Parsers/RandomStartParser.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RandomStartParser
+    path: ../NitroxServer-Subnautica/Resources/Parsers/RandomStartParser.cs
+    startLine: 11
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources.Parsers
+  syntax:
+    content: 'public class RandomStartParser : BundleFileParser<RandomStartGenerator>'
+    content.vb: Public Class RandomStartParser Inherits BundleFileParser(Of RandomStartGenerator)
+  inheritance:
+  - System.Object
+  - NitroxServer_Subnautica.Resources.Parsers.AssetParser
+  - NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}
+  inheritedMembers:
+  - NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.assetFileInst
+  - NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.bundleFile
+  - NitroxServer_Subnautica.Resources.Parsers.AssetParser.rootPath
+  - NitroxServer_Subnautica.Resources.Parsers.AssetParser.assetsManager
+  - NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.#ctor
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.#ctor
+  id: '#ctor'
+  parent: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser
+  langs:
+  - csharp
+  - vb
+  name: RandomStartParser()
+  nameWithType: RandomStartParser.RandomStartParser()
+  fullName: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.RandomStartParser()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/Parsers/RandomStartParser.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxServer-Subnautica/Resources/Parsers/RandomStartParser.cs
+    startLine: 13
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources.Parsers
+  syntax:
+    content: public RandomStartParser()
+    content.vb: Public Sub New()
+  overload: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.#ctor*
+  nameWithType.vb: RandomStartParser.New()
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.New()
+  name.vb: New()
+- uid: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile
+  id: ParseFile
+  parent: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser
+  langs:
+  - csharp
+  - vb
+  name: ParseFile()
+  nameWithType: RandomStartParser.ParseFile()
+  fullName: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/Parsers/RandomStartParser.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ParseFile
+    path: ../NitroxServer-Subnautica/Resources/Parsers/RandomStartParser.cs
+    startLine: 15
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources.Parsers
+  example: []
+  syntax:
+    content: public override RandomStartGenerator ParseFile()
+    return:
+      type: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+    content.vb: Public Overrides Function ParseFile() As RandomStartGenerator
+  overridden: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.ParseFile
+  overload: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile*
+references:
+- uid: NitroxServer_Subnautica.Resources.Parsers
+  commentId: N:NitroxServer_Subnautica.Resources.Parsers
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica.Resources.Parsers
+  nameWithType: NitroxServer_Subnautica.Resources.Parsers
+  fullName: NitroxServer_Subnautica.Resources.Parsers
+  spec.csharp:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+  spec.vb:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxServer_Subnautica.Resources.Parsers.AssetParser
+  commentId: T:NitroxServer_Subnautica.Resources.Parsers.AssetParser
+  parent: NitroxServer_Subnautica.Resources.Parsers
+  href: NitroxServer_Subnautica.Resources.Parsers.AssetParser.html
+  name: AssetParser
+  nameWithType: AssetParser
+  fullName: NitroxServer_Subnautica.Resources.Parsers.AssetParser
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}
+  commentId: T:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}
+  parent: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  definition: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  name: BundleFileParser<RandomStartGenerator>
+  nameWithType: BundleFileParser<RandomStartGenerator>
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<NitroxModel.DataStructures.GameLogic.RandomStartGenerator>
+  nameWithType.vb: BundleFileParser(Of RandomStartGenerator)
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of NitroxModel.DataStructures.GameLogic.RandomStartGenerator)
+  name.vb: BundleFileParser(Of RandomStartGenerator)
+  spec.csharp:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+    name: BundleFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+    name: RandomStartGenerator
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+    name: BundleFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+    name: RandomStartGenerator
+  - name: )
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.assetFileInst
+  commentId: F:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.assetFileInst
+  parent: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}
+  definition: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.assetFileInst
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.assetFileInst.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_assetFileInst
+  name: assetFileInst
+  nameWithType: BundleFileParser<RandomStartGenerator>.assetFileInst
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<NitroxModel.DataStructures.GameLogic.RandomStartGenerator>.assetFileInst
+  nameWithType.vb: BundleFileParser(Of RandomStartGenerator).assetFileInst
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of NitroxModel.DataStructures.GameLogic.RandomStartGenerator).assetFileInst
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.bundleFile
+  commentId: F:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.bundleFile
+  parent: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}
+  definition: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.bundleFile
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.bundleFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_bundleFile
+  name: bundleFile
+  nameWithType: BundleFileParser<RandomStartGenerator>.bundleFile
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<NitroxModel.DataStructures.GameLogic.RandomStartGenerator>.bundleFile
+  nameWithType.vb: BundleFileParser(Of RandomStartGenerator).bundleFile
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of NitroxModel.DataStructures.GameLogic.RandomStartGenerator).bundleFile
+- uid: NitroxServer_Subnautica.Resources.Parsers.AssetParser.rootPath
+  commentId: F:NitroxServer_Subnautica.Resources.Parsers.AssetParser.rootPath
+  parent: NitroxServer_Subnautica.Resources.Parsers.AssetParser
+  href: NitroxServer_Subnautica.Resources.Parsers.AssetParser.rootPath.html#NitroxServer_Subnautica_Resources_Parsers_AssetParser_rootPath
+  name: rootPath
+  nameWithType: AssetParser.rootPath
+  fullName: NitroxServer_Subnautica.Resources.Parsers.AssetParser.rootPath
+- uid: NitroxServer_Subnautica.Resources.Parsers.AssetParser.assetsManager
+  commentId: F:NitroxServer_Subnautica.Resources.Parsers.AssetParser.assetsManager
+  parent: NitroxServer_Subnautica.Resources.Parsers.AssetParser
+  href: NitroxServer_Subnautica.Resources.Parsers.AssetParser.assetsManager.html#NitroxServer_Subnautica_Resources_Parsers_AssetParser_assetsManager
+  name: assetsManager
+  nameWithType: AssetParser.assetsManager
+  fullName: NitroxServer_Subnautica.Resources.Parsers.AssetParser.assetsManager
+- uid: NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose
+  parent: NitroxServer_Subnautica.Resources.Parsers.AssetParser
+  href: NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose.html#NitroxServer_Subnautica_Resources_Parsers_AssetParser_Dispose
+  name: Dispose()
+  nameWithType: AssetParser.Dispose()
+  fullName: NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose()
+  spec.csharp:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose
+    name: Dispose
+    href: NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose.html#NitroxServer_Subnautica_Resources_Parsers_AssetParser_Dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose
+    name: Dispose
+    href: NitroxServer_Subnautica.Resources.Parsers.AssetParser.Dispose.html#NitroxServer_Subnautica_Resources_Parsers_AssetParser_Dispose
+  - name: (
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+  commentId: T:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  name: BundleFileParser<T>
+  nameWithType: BundleFileParser<T>
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<T>
+  nameWithType.vb: BundleFileParser(Of T)
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of T)
+  name.vb: BundleFileParser(Of T)
+  spec.csharp:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+    name: BundleFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+    name: BundleFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  commentId: N:NitroxServer_Subnautica.Resources.Parsers.Abstract
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  nameWithType: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  spec.csharp:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract
+    name: Abstract
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.html
+  spec.vb:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract
+    name: Abstract
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.html
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.assetFileInst
+  commentId: F:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.assetFileInst
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.assetFileInst.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_assetFileInst
+  name: assetFileInst
+  nameWithType: BundleFileParser<T>.assetFileInst
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<T>.assetFileInst
+  nameWithType.vb: BundleFileParser(Of T).assetFileInst
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of T).assetFileInst
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.bundleFile
+  commentId: F:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.bundleFile
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.bundleFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_bundleFile
+  name: bundleFile
+  nameWithType: BundleFileParser<T>.bundleFile
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<T>.bundleFile
+  nameWithType.vb: BundleFileParser(Of T).bundleFile
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of T).bundleFile
+- uid: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.#ctor*
+  commentId: Overload:NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.#ctor
+  href: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.-ctor.html#NitroxServer_Subnautica_Resources_Parsers_RandomStartParser__ctor
+  name: RandomStartParser
+  nameWithType: RandomStartParser.RandomStartParser
+  fullName: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.RandomStartParser
+  nameWithType.vb: RandomStartParser.New
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.New
+  name.vb: New
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.ParseFile
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.ParseFile
+  parent: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}
+  definition: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.ParseFile
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.ParseFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_ParseFile
+  name: ParseFile()
+  nameWithType: BundleFileParser<RandomStartGenerator>.ParseFile()
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<NitroxModel.DataStructures.GameLogic.RandomStartGenerator>.ParseFile()
+  nameWithType.vb: BundleFileParser(Of RandomStartGenerator).ParseFile()
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of NitroxModel.DataStructures.GameLogic.RandomStartGenerator).ParseFile()
+  spec.csharp:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.ParseFile
+    name: ParseFile
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.ParseFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_ParseFile
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser{NitroxModel.DataStructures.GameLogic.RandomStartGenerator}.ParseFile
+    name: ParseFile
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.ParseFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_ParseFile
+  - name: (
+  - name: )
+- uid: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile*
+  commentId: Overload:NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile
+  href: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile.html#NitroxServer_Subnautica_Resources_Parsers_RandomStartParser_ParseFile
+  name: ParseFile
+  nameWithType: RandomStartParser.ParseFile
+  fullName: NitroxServer_Subnautica.Resources.Parsers.RandomStartParser.ParseFile
+- uid: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+  commentId: T:NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.RandomStartGenerator.html
+  name: RandomStartGenerator
+  nameWithType: RandomStartGenerator
+  fullName: NitroxModel.DataStructures.GameLogic.RandomStartGenerator
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.ParseFile
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.ParseFile
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.ParseFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_ParseFile
+  name: ParseFile()
+  nameWithType: BundleFileParser<T>.ParseFile()
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<T>.ParseFile()
+  nameWithType.vb: BundleFileParser(Of T).ParseFile()
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of T).ParseFile()
+  spec.csharp:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.ParseFile
+    name: ParseFile
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.ParseFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_ParseFile
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1.ParseFile
+    name: ParseFile
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.ParseFile.html#NitroxServer_Subnautica_Resources_Parsers_Abstract_BundleFileParser_1_ParseFile
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+memberLayout: SeparatePages

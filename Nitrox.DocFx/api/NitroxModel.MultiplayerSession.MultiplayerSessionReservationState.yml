@@ -1,0 +1,506 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  commentId: T:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  id: MultiplayerSessionReservationState
+  parent: NitroxModel.MultiplayerSession
+  children:
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.AUTHENTICATION_FAILED
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.INCORRECT_USERNAME
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.REJECTED
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.RESERVED
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+  langs:
+  - csharp
+  - vb
+  name: MultiplayerSessionReservationState
+  nameWithType: MultiplayerSessionReservationState
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  type: Enum
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MultiplayerSessionReservationState
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum MultiplayerSessionReservationState
+    content.vb: >-
+      <Flags>
+
+      Public Enum MultiplayerSessionReservationState
+  extensionMethods:
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe
+  - NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.RESERVED
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.RESERVED
+  id: RESERVED
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: RESERVED
+  nameWithType: MultiplayerSessionReservationState.RESERVED
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.RESERVED
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RESERVED
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: RESERVED = 0
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.REJECTED
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.REJECTED
+  id: REJECTED
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: REJECTED
+  nameWithType: MultiplayerSessionReservationState.REJECTED
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.REJECTED
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: REJECTED
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: REJECTED = 1
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+  id: UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+  nameWithType: MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED = 2
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED
+  id: SERVER_PLAYER_CAPACITY_REACHED
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: SERVER_PLAYER_CAPACITY_REACHED
+  nameWithType: MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SERVER_PLAYER_CAPACITY_REACHED
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: SERVER_PLAYER_CAPACITY_REACHED = 4
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.AUTHENTICATION_FAILED
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.AUTHENTICATION_FAILED
+  id: AUTHENTICATION_FAILED
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: AUTHENTICATION_FAILED
+  nameWithType: MultiplayerSessionReservationState.AUTHENTICATION_FAILED
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.AUTHENTICATION_FAILED
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AUTHENTICATION_FAILED
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: AUTHENTICATION_FAILED = 8
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD
+  id: HARDCORE_PLAYER_DEAD
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: HARDCORE_PLAYER_DEAD
+  nameWithType: MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: HARDCORE_PLAYER_DEAD
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: HARDCORE_PLAYER_DEAD = 16
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE
+  id: ENQUEUED_IN_JOIN_QUEUE
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: ENQUEUED_IN_JOIN_QUEUE
+  nameWithType: MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ENQUEUED_IN_JOIN_QUEUE
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: ENQUEUED_IN_JOIN_QUEUE = 32
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.INCORRECT_USERNAME
+  commentId: F:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.INCORRECT_USERNAME
+  id: INCORRECT_USERNAME
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  langs:
+  - csharp
+  - vb
+  name: INCORRECT_USERNAME
+  nameWithType: MultiplayerSessionReservationState.INCORRECT_USERNAME
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.INCORRECT_USERNAME
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: INCORRECT_USERNAME
+    path: ../NitroxModel/MultiplayerSession/MultiplayerSessionReservationState.cs
+    startLine: 28
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.MultiplayerSession
+  syntax:
+    content: INCORRECT_USERNAME = 64
+    return:
+      type: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+references:
+- uid: NitroxModel.MultiplayerSession
+  commentId: N:NitroxModel.MultiplayerSession
+  href: NitroxModel.html
+  name: NitroxModel.MultiplayerSession
+  nameWithType: NitroxModel.MultiplayerSession
+  fullName: NitroxModel.MultiplayerSession
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxModel.MultiplayerSession.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxModel.MultiplayerSession.html
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe
+  commentId: M:NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions
+  definition: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_Describe_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  name: Describe(MultiplayerSessionReservationState)
+  nameWithType: MultiplayerSessionReservationStateExtensions.Describe(MultiplayerSessionReservationState)
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  spec.csharp:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: Describe
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_Describe_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: Describe
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_Describe_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  commentId: M:NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  parent: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions
+  definition: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_HasStateFlag_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  name: HasStateFlag(MultiplayerSessionReservationState, MultiplayerSessionReservationState)
+  nameWithType: MultiplayerSessionReservationStateExtensions.HasStateFlag(MultiplayerSessionReservationState, MultiplayerSessionReservationState)
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState, NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  spec.csharp:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: HasStateFlag
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_HasStateFlag_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: HasStateFlag
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_HasStateFlag_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  commentId: M:NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_Describe_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  name: Describe(MultiplayerSessionReservationState)
+  nameWithType: MultiplayerSessionReservationStateExtensions.Describe(MultiplayerSessionReservationState)
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  spec.csharp:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: Describe
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_Describe_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: Describe
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.Describe.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_Describe_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions
+  commentId: T:NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions
+  parent: NitroxModel.MultiplayerSession
+  href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.html
+  name: MultiplayerSessionReservationStateExtensions
+  nameWithType: MultiplayerSessionReservationStateExtensions
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  commentId: M:NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_HasStateFlag_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  name: HasStateFlag(MultiplayerSessionReservationState, MultiplayerSessionReservationState)
+  nameWithType: MultiplayerSessionReservationStateExtensions.HasStateFlag(MultiplayerSessionReservationState, MultiplayerSessionReservationState)
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState, NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+  spec.csharp:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: HasStateFlag
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_HasStateFlag_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag(NitroxModel.MultiplayerSession.MultiplayerSessionReservationState,NitroxModel.MultiplayerSession.MultiplayerSessionReservationState)
+    name: HasStateFlag
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationStateExtensions.HasStateFlag.html#NitroxModel_MultiplayerSession_MultiplayerSessionReservationStateExtensions_HasStateFlag_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_NitroxModel_MultiplayerSession_MultiplayerSessionReservationState_
+  - name: (
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+    name: MultiplayerSessionReservationState
+    href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  commentId: T:NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+  parent: NitroxModel.MultiplayerSession
+  href: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState.html
+  name: MultiplayerSessionReservationState
+  nameWithType: MultiplayerSessionReservationState
+  fullName: NitroxModel.MultiplayerSession.MultiplayerSessionReservationState
+memberLayout: SeparatePages

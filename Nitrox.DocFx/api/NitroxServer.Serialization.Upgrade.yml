@@ -1,0 +1,56 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Serialization.Upgrade
+  commentId: N:NitroxServer.Serialization.Upgrade
+  id: Upgrade
+  parent: NitroxServer.Serialization
+  children:
+  - NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.Serialization.Upgrade
+  nameWithType: NitroxServer.Serialization.Upgrade
+  fullName: NitroxServer.Serialization.Upgrade
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  commentId: T:NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  parent: NitroxServer.Serialization.Upgrade
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.html
+  name: SaveDataUpgrade
+  nameWithType: SaveDataUpgrade
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+- uid: NitroxServer.Serialization.Upgrade
+  commentId: N:NitroxServer.Serialization.Upgrade
+  href: NitroxServer.html
+  name: NitroxServer.Serialization.Upgrade
+  nameWithType: NitroxServer.Serialization.Upgrade
+  fullName: NitroxServer.Serialization.Upgrade
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.Upgrade
+    name: Upgrade
+    href: NitroxServer.Serialization.Upgrade.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.Upgrade
+    name: Upgrade
+    href: NitroxServer.Serialization.Upgrade.html
+memberLayout: SeparatePages

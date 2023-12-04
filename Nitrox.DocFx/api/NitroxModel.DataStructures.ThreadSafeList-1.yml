@@ -1,0 +1,2744 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.ThreadSafeList`1
+  commentId: T:NitroxModel.DataStructures.ThreadSafeList`1
+  id: ThreadSafeList`1
+  parent: NitroxModel.DataStructures
+  children:
+  - NitroxModel.DataStructures.ThreadSafeList`1.#ctor
+  - NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Collections.Generic.IEnumerable{`0})
+  - NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Collections.Generic.List{`0},System.Boolean)
+  - NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Int32)
+  - NitroxModel.DataStructures.ThreadSafeList`1.Add(`0)
+  - NitroxModel.DataStructures.ThreadSafeList`1.AddRange(System.Collections.Generic.IEnumerable{`0})
+  - NitroxModel.DataStructures.ThreadSafeList`1.Clear
+  - NitroxModel.DataStructures.ThreadSafeList`1.Clone
+  - NitroxModel.DataStructures.ThreadSafeList`1.Contains(`0)
+  - NitroxModel.DataStructures.ThreadSafeList`1.CopyTo(`0[],System.Int32)
+  - NitroxModel.DataStructures.ThreadSafeList`1.Count
+  - NitroxModel.DataStructures.ThreadSafeList`1.Find(System.Predicate{`0})
+  - NitroxModel.DataStructures.ThreadSafeList`1.GetEnumerator
+  - NitroxModel.DataStructures.ThreadSafeList`1.IndexOf(`0)
+  - NitroxModel.DataStructures.ThreadSafeList`1.Insert(System.Int32,`0)
+  - NitroxModel.DataStructures.ThreadSafeList`1.IsReadOnly
+  - NitroxModel.DataStructures.ThreadSafeList`1.Item(System.Int32)
+  - NitroxModel.DataStructures.ThreadSafeList`1.Remove(`0)
+  - NitroxModel.DataStructures.ThreadSafeList`1.RemoveAll(System.Predicate{`0})
+  - NitroxModel.DataStructures.ThreadSafeList`1.RemoveAt(System.Int32)
+  - NitroxModel.DataStructures.ThreadSafeList`1.Set(System.Collections.Generic.IEnumerable{`0})
+  - NitroxModel.DataStructures.ThreadSafeList`1.ToList
+  - NitroxModel.DataStructures.ThreadSafeList`1.TryGetValue(System.Int32,`0@)
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeList<T>
+  nameWithType: ThreadSafeList<T>
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ThreadSafeList
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: >-
+      [DataContract]
+
+      [Serializable]
+
+      public class ThreadSafeList<T> : IList<T>, ICollection<T>, IEnumerable<T>, IEnumerable
+    typeParameters:
+    - id: T
+    content.vb: >-
+      <DataContract>
+
+      <Serializable>
+
+      Public Class ThreadSafeList(Of T) Implements IList(Of T), ICollection(Of T), IEnumerable(Of T), IEnumerable
+  inheritance:
+  - System.Object
+  implements:
+  - System.Collections.Generic.IList{{T}}
+  - System.Collections.Generic.ICollection{{T}}
+  - System.Collections.Generic.IEnumerable{{T}}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  extensionMethods:
+  - System.Collections.Generic.IEnumerable{`0}.NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{{T}})
+  - System.Collections.Generic.IList{`0}.NitroxModel.Extensions.RemoveAllFast``2({TParameter},System.Func{{T},{TParameter},System.Boolean})
+  attributes:
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+  nameWithType.vb: ThreadSafeList(Of T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T)
+  name.vb: ThreadSafeList(Of T)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Item(System.Int32)
+  commentId: P:NitroxModel.DataStructures.ThreadSafeList`1.Item(System.Int32)
+  id: Item(System.Int32)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: this[int]
+  nameWithType: ThreadSafeList<T>.this[int]
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.this[int]
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: this[]
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets or sets the element at the specified index.
+  example: []
+  syntax:
+    content: public T this[int i] { get; set; }
+    parameters:
+    - id: i
+      type: System.Int32
+    return:
+      type: '{T}'
+      description: The element at the specified index.
+    content.vb: Public Default Property this[](i As Integer) As T
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Item*
+  exceptions:
+  - type: System.ArgumentOutOfRangeException
+    commentId: T:System.ArgumentOutOfRangeException
+    description: <code class="paramref">index</code> is not a valid index in the <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref>.
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The property is set and the <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.IList{{T}}.Item(System.Int32)
+  nameWithType.vb: ThreadSafeList(Of T).this[](Integer)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).this[](Integer)
+  name.vb: this[](Integer)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Count
+  commentId: P:NitroxModel.DataStructures.ThreadSafeList`1.Count
+  id: Count
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: ThreadSafeList<T>.Count
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Count
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Count
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 43
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets the number of elements contained in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: The number of elements contained in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Count*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Count
+  nameWithType.vb: ThreadSafeList(Of T).Count
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Count
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.IsReadOnly
+  commentId: P:NitroxModel.DataStructures.ThreadSafeList`1.IsReadOnly
+  id: IsReadOnly
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: IsReadOnly
+  nameWithType: ThreadSafeList<T>.IsReadOnly
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.IsReadOnly
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsReadOnly
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 54
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Gets a value indicating whether the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  example: []
+  syntax:
+    content: public bool IsReadOnly { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public ReadOnly Property IsReadOnly As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.IsReadOnly*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.IsReadOnly
+  nameWithType.vb: ThreadSafeList(Of T).IsReadOnly
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).IsReadOnly
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.#ctor
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.#ctor
+  id: '#ctor'
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeList()
+  nameWithType: ThreadSafeList<T>.ThreadSafeList()
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.ThreadSafeList()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 56
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ThreadSafeList()
+    content.vb: Public Sub New()
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.#ctor*
+  nameWithType.vb: ThreadSafeList(Of T).New()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).New()
+  name.vb: New()
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Int32)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Int32)
+  id: '#ctor(System.Int32)'
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeList(int)
+  nameWithType: ThreadSafeList<T>.ThreadSafeList(int)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.ThreadSafeList(int)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 61
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ThreadSafeList(int initialCapacity)
+    parameters:
+    - id: initialCapacity
+      type: System.Int32
+    content.vb: Public Sub New(initialCapacity As Integer)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.#ctor*
+  nameWithType.vb: ThreadSafeList(Of T).New(Integer)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).New(Integer)
+  name.vb: New(Integer)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Collections.Generic.IEnumerable{`0})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Collections.Generic.IEnumerable{`0})
+  id: '#ctor(System.Collections.Generic.IEnumerable{`0})'
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeList(IEnumerable<T>)
+  nameWithType: ThreadSafeList<T>.ThreadSafeList(IEnumerable<T>)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.ThreadSafeList(System.Collections.Generic.IEnumerable<T>)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 66
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ThreadSafeList(IEnumerable<T> values)
+    parameters:
+    - id: values
+      type: System.Collections.Generic.IEnumerable{{T}}
+    content.vb: Public Sub New(values As IEnumerable(Of T))
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.#ctor*
+  nameWithType.vb: ThreadSafeList(Of T).New(IEnumerable(Of T))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).New(System.Collections.Generic.IEnumerable(Of T))
+  name.vb: New(IEnumerable(Of T))
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Collections.Generic.List{`0},System.Boolean)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.#ctor(System.Collections.Generic.List{`0},System.Boolean)
+  id: '#ctor(System.Collections.Generic.List{`0},System.Boolean)'
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeList(List<T>, bool)
+  nameWithType: ThreadSafeList<T>.ThreadSafeList(List<T>, bool)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.ThreadSafeList(System.Collections.Generic.List<T>, bool)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 71
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ThreadSafeList(List<T> list, bool createCopy = true)
+    parameters:
+    - id: list
+      type: System.Collections.Generic.List{{T}}
+    - id: createCopy
+      type: System.Boolean
+    content.vb: Public Sub New(list As List(Of T), createCopy As Boolean = True)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.#ctor*
+  nameWithType.vb: ThreadSafeList(Of T).New(List(Of T), Boolean)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).New(System.Collections.Generic.List(Of T), Boolean)
+  name.vb: New(List(Of T), Boolean)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Add(`0)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Add(`0)
+  id: Add(`0)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Add(T)
+  nameWithType: ThreadSafeList<T>.Add(T)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Add(T)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Add
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 76
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Adds an item to the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void Add(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+      description: The object to add to the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Sub Add(item As T)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Add*
+  exceptions:
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Add({T})
+  nameWithType.vb: ThreadSafeList(Of T).Add(T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Add(T)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.AddRange(System.Collections.Generic.IEnumerable{`0})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.AddRange(System.Collections.Generic.IEnumerable{`0})
+  id: AddRange(System.Collections.Generic.IEnumerable{`0})
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: AddRange(IEnumerable<T>)
+  nameWithType: ThreadSafeList<T>.AddRange(IEnumerable<T>)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.AddRange(System.Collections.Generic.IEnumerable<T>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AddRange
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 84
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public void AddRange(IEnumerable<T> collection)
+    parameters:
+    - id: collection
+      type: System.Collections.Generic.IEnumerable{{T}}
+    content.vb: Public Sub AddRange(collection As IEnumerable(Of T))
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.AddRange*
+  nameWithType.vb: ThreadSafeList(Of T).AddRange(IEnumerable(Of T))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).AddRange(System.Collections.Generic.IEnumerable(Of T))
+  name.vb: AddRange(IEnumerable(Of T))
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Clear
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Clear
+  id: Clear
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: ThreadSafeList<T>.Clear()
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Clear()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Clear
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 92
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Removes all items from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Clear*
+  exceptions:
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Clear
+  nameWithType.vb: ThreadSafeList(Of T).Clear()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Clear()
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.CopyTo(`0[],System.Int32)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.CopyTo(`0[],System.Int32)
+  id: CopyTo(`0[],System.Int32)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: CopyTo(T[], int)
+  nameWithType: ThreadSafeList<T>.CopyTo(T[], int)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.CopyTo(T[], int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CopyTo
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 100
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Copies the elements of the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> to an <xref href="System.Array" data-throw-if-not-resolved="false"></xref>, starting at a particular <xref href="System.Array" data-throw-if-not-resolved="false"></xref> index.
+  example: []
+  syntax:
+    content: public void CopyTo(T[] array, int arrayIndex)
+    parameters:
+    - id: array
+      type: '{T}[]'
+      description: The one-dimensional <xref href="System.Array" data-throw-if-not-resolved="false"></xref> that is the destination of the elements copied from <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>. The <xref href="System.Array" data-throw-if-not-resolved="false"></xref> must have zero-based indexing.
+    - id: arrayIndex
+      type: System.Int32
+      description: The zero-based index in <code class="paramref">array</code> at which copying begins.
+    content.vb: Public Sub CopyTo(array As T(), arrayIndex As Integer)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.CopyTo*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: <code class="paramref">array</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.
+  - type: System.ArgumentOutOfRangeException
+    commentId: T:System.ArgumentOutOfRangeException
+    description: <code class="paramref">arrayIndex</code> is less than 0.
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: The number of elements in the source <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is greater than the available space from <code class="paramref">arrayIndex</code> to the end of the destination <code class="paramref">array</code>.
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.CopyTo({T}[],System.Int32)
+  nameWithType.vb: ThreadSafeList(Of T).CopyTo(T(), Integer)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Remove(`0)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Remove(`0)
+  id: Remove(`0)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Remove(T)
+  nameWithType: ThreadSafeList<T>.Remove(T)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Remove(T)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Remove
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 108
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Removes the first occurrence of a specific object from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public bool Remove(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+      description: The object to remove from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">item</code> was successfully removed from the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>. This method also returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> if <code class="paramref">item</code> is not found in the original <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Function Remove(item As T) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Remove*
+  exceptions:
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Remove({T})
+  nameWithType.vb: ThreadSafeList(Of T).Remove(T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Remove(T)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.IndexOf(`0)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.IndexOf(`0)
+  id: IndexOf(`0)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: IndexOf(T)
+  nameWithType: ThreadSafeList<T>.IndexOf(T)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.IndexOf(T)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IndexOf
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 116
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Determines the index of a specific item in the <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public int IndexOf(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+      description: The object to locate in the <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Int32
+      description: The index of <code class="paramref">item</code> if found in the list; otherwise, -1.
+    content.vb: Public Function IndexOf(item As T) As Integer
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.IndexOf*
+  implements:
+  - System.Collections.Generic.IList{{T}}.IndexOf({T})
+  nameWithType.vb: ThreadSafeList(Of T).IndexOf(T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).IndexOf(T)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Insert(System.Int32,`0)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Insert(System.Int32,`0)
+  id: Insert(System.Int32,`0)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Insert(int, T)
+  nameWithType: ThreadSafeList<T>.Insert(int, T)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Insert(int, T)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Insert
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 124
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Inserts an item to the <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref> at the specified index.
+  example: []
+  syntax:
+    content: public void Insert(int index, T item)
+    parameters:
+    - id: index
+      type: System.Int32
+      description: The zero-based index at which <code class="paramref">item</code> should be inserted.
+    - id: item
+      type: '{T}'
+      description: The object to insert into the <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Sub Insert(index As Integer, item As T)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Insert*
+  exceptions:
+  - type: System.ArgumentOutOfRangeException
+    commentId: T:System.ArgumentOutOfRangeException
+    description: <code class="paramref">index</code> is not a valid index in the <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref>.
+  - type: System.NotSupportedException
+    commentId: T:System.NotSupportedException
+    description: The <xref href="System.Collections.Generic.IList%601" data-throw-if-not-resolved="false"></xref> is read-only.
+  implements:
+  - System.Collections.Generic.IList{{T}}.Insert(System.Int32,{T})
+  nameWithType.vb: ThreadSafeList(Of T).Insert(Integer, T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Insert(Integer, T)
+  name.vb: Insert(Integer, T)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.RemoveAt(System.Int32)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.RemoveAt(System.Int32)
+  id: RemoveAt(System.Int32)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: RemoveAt(int)
+  nameWithType: ThreadSafeList<T>.RemoveAt(int)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.RemoveAt(int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAt
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 132
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public bool RemoveAt(int index)
+    parameters:
+    - id: index
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Public Function RemoveAt(index As Integer) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.RemoveAt*
+  nameWithType.vb: ThreadSafeList(Of T).RemoveAt(Integer)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).RemoveAt(Integer)
+  name.vb: RemoveAt(Integer)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Contains(`0)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Contains(`0)
+  id: Contains(`0)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Contains(T)
+  nameWithType: ThreadSafeList<T>.Contains(T)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Contains(T)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Contains
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 146
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Determines whether the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref> contains a specific value.
+  example: []
+  syntax:
+    content: public bool Contains(T item)
+    parameters:
+    - id: item
+      type: '{T}'
+      description: The object to locate in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">item</code> is found in the <xref href="System.Collections.Generic.ICollection%601" data-throw-if-not-resolved="false"></xref>; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function Contains(item As T) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Contains*
+  implements:
+  - System.Collections.Generic.ICollection{{T}}.Contains({T})
+  nameWithType.vb: ThreadSafeList(Of T).Contains(T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Contains(T)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.TryGetValue(System.Int32,`0@)
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.TryGetValue(System.Int32,`0@)
+  id: TryGetValue(System.Int32,`0@)
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: TryGetValue(int, out T)
+  nameWithType: ThreadSafeList<T>.TryGetValue(int, out T)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.TryGetValue(int, out T)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TryGetValue
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 154
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public bool TryGetValue(int index, out T item)
+    parameters:
+    - id: index
+      type: System.Int32
+    - id: item
+      type: '{T}'
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetValue(index As Integer, item As T) As Boolean
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.TryGetValue*
+  nameWithType.vb: ThreadSafeList(Of T).TryGetValue(Integer, T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).TryGetValue(Integer, T)
+  name.vb: TryGetValue(Integer, T)
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.ToList
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.ToList
+  id: ToList
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: ToList()
+  nameWithType: ThreadSafeList<T>.ToList()
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.ToList()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToList
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 168
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public List<T> ToList()
+    return:
+      type: System.Collections.Generic.List{{T}}
+    content.vb: Public Function ToList() As List(Of T)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.ToList*
+  nameWithType.vb: ThreadSafeList(Of T).ToList()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).ToList()
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.GetEnumerator
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.GetEnumerator
+  id: GetEnumerator
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: GetEnumerator()
+  nameWithType: ThreadSafeList<T>.GetEnumerator()
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.GetEnumerator()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetEnumerator
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 176
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Returns an enumerator that iterates through the collection.
+  example: []
+  syntax:
+    content: public IEnumerator<T> GetEnumerator()
+    return:
+      type: System.Collections.Generic.IEnumerator{{T}}
+      description: An enumerator that can be used to iterate through the collection.
+    content.vb: Public Function GetEnumerator() As IEnumerator(Of T)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.GetEnumerator*
+  implements:
+  - System.Collections.Generic.IEnumerable{{T}}.GetEnumerator
+  nameWithType.vb: ThreadSafeList(Of T).GetEnumerator()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).GetEnumerator()
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Set(System.Collections.Generic.IEnumerable{`0})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Set(System.Collections.Generic.IEnumerable{`0})
+  id: Set(System.Collections.Generic.IEnumerable{`0})
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Set(IEnumerable<T>)
+  nameWithType: ThreadSafeList<T>.Set(IEnumerable<T>)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Set(System.Collections.Generic.IEnumerable<T>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Set
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 188
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Clears the list and adds the given items.
+  example: []
+  syntax:
+    content: public void Set(IEnumerable<T> items)
+    parameters:
+    - id: items
+      type: System.Collections.Generic.IEnumerable{{T}}
+      description: Items to add onto the empty list.
+    content.vb: Public Sub [Set](items As IEnumerable(Of T))
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Set*
+  nameWithType.vb: ThreadSafeList(Of T).Set(IEnumerable(Of T))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Set(System.Collections.Generic.IEnumerable(Of T))
+  name.vb: Set(IEnumerable(Of T))
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.RemoveAll(System.Predicate{`0})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.RemoveAll(System.Predicate{`0})
+  id: RemoveAll(System.Predicate{`0})
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: RemoveAll(Predicate<T>)
+  nameWithType: ThreadSafeList<T>.RemoveAll(Predicate<T>)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.RemoveAll(System.Predicate<T>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveAll
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 200
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public void RemoveAll(Predicate<T> predicate)
+    parameters:
+    - id: predicate
+      type: System.Predicate{{T}}
+    content.vb: Public Sub RemoveAll(predicate As Predicate(Of T))
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.RemoveAll*
+  nameWithType.vb: ThreadSafeList(Of T).RemoveAll(Predicate(Of T))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).RemoveAll(System.Predicate(Of T))
+  name.vb: RemoveAll(Predicate(Of T))
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Clone
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Clone
+  id: Clone
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: ThreadSafeList<T>.Clone()
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Clone()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Clone
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 214
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public IEnumerable<T> Clone()
+    return:
+      type: System.Collections.Generic.IEnumerable{{T}}
+    content.vb: Public Function Clone() As IEnumerable(Of T)
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Clone*
+  nameWithType.vb: ThreadSafeList(Of T).Clone()
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Clone()
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Find(System.Predicate{`0})
+  commentId: M:NitroxModel.DataStructures.ThreadSafeList`1.Find(System.Predicate{`0})
+  id: Find(System.Predicate{`0})
+  parent: NitroxModel.DataStructures.ThreadSafeList`1
+  langs:
+  - csharp
+  - vb
+  name: Find(Predicate<T>)
+  nameWithType: ThreadSafeList<T>.Find(Predicate<T>)
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Find(System.Predicate<T>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/ThreadSafeList.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Find
+    path: ../NitroxModel/DataStructures/ThreadSafeList.cs
+    startLine: 222
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public T Find(Predicate<T> predicate)
+    parameters:
+    - id: predicate
+      type: System.Predicate{{T}}
+    return:
+      type: '{T}'
+    content.vb: Public Function Find(predicate As Predicate(Of T)) As T
+  overload: NitroxModel.DataStructures.ThreadSafeList`1.Find*
+  nameWithType.vb: ThreadSafeList(Of T).Find(Predicate(Of T))
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Find(System.Predicate(Of T))
+  name.vb: Find(Predicate(Of T))
+references:
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Collections.Generic.IList{{T}}
+  commentId: T:System.Collections.Generic.IList{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.ICollection{{T}}
+  commentId: T:System.Collections.Generic.ICollection{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.ICollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<T>
+  nameWithType: ICollection<T>
+  fullName: System.Collections.Generic.ICollection<T>
+  nameWithType.vb: ICollection(Of T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T)
+  name.vb: ICollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{{T}}
+  commentId: T:System.Collections.Generic.IEnumerable{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerable
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{`0}.NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{{T}})
+  commentId: M:NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  name: SequenceEqualOrBothNull<T>(IEnumerable<T>, IEnumerable<T>)
+  nameWithType: Extensions.SequenceEqualOrBothNull<T>(IEnumerable<T>, IEnumerable<T>)
+  fullName: NitroxModel.Extensions.SequenceEqualOrBothNull<T>(System.Collections.Generic.IEnumerable<T>, System.Collections.Generic.IEnumerable<T>)
+  nameWithType.vb: Extensions.SequenceEqualOrBothNull(Of T)(IEnumerable(Of T), IEnumerable(Of T))
+  fullName.vb: NitroxModel.Extensions.SequenceEqualOrBothNull(Of T)(System.Collections.Generic.IEnumerable(Of T), System.Collections.Generic.IEnumerable(Of T))
+  name.vb: SequenceEqualOrBothNull(Of T)(IEnumerable(Of T), IEnumerable(Of T))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`0})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`0})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.IList{`0}.NitroxModel.Extensions.RemoveAllFast``2({TParameter},System.Func{{T},{TParameter},System.Boolean})
+  commentId: M:NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{``0},``1,System.Func{``0,``1,System.Boolean})
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{``0},``1,System.Func{``0,``1,System.Boolean})
+  href: NitroxModel.Extensions.RemoveAllFast.html#NitroxModel_Extensions_RemoveAllFast__2_System_Collections_Generic_IList___0____1_System_Func___0___1_System_Boolean__
+  name: RemoveAllFast<T, TParameter>(IList<T>, TParameter, Func<T, TParameter, bool>)
+  nameWithType: Extensions.RemoveAllFast<T, TParameter>(IList<T>, TParameter, Func<T, TParameter, bool>)
+  fullName: NitroxModel.Extensions.RemoveAllFast<T, TParameter>(System.Collections.Generic.IList<T>, TParameter, System.Func<T, TParameter, bool>)
+  nameWithType.vb: Extensions.RemoveAllFast(Of T, TParameter)(IList(Of T), TParameter, Func(Of T, TParameter, Boolean))
+  fullName.vb: NitroxModel.Extensions.RemoveAllFast(Of T, TParameter)(System.Collections.Generic.IList(Of T), TParameter, System.Func(Of T, TParameter, Boolean))
+  name.vb: RemoveAllFast(Of T, TParameter)(IList(Of T), TParameter, Func(Of T, TParameter, Boolean))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{`0},``1,System.Func{`0,``1,System.Boolean})
+    name: RemoveAllFast
+    href: NitroxModel.Extensions.RemoveAllFast.html#NitroxModel_Extensions_RemoveAllFast__2_System_Collections_Generic_IList___0____1_System_Func___0___1_System_Boolean__
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{`0},``1,System.Func{`0,``1,System.Boolean})
+    name: RemoveAllFast
+    href: NitroxModel.Extensions.RemoveAllFast.html#NitroxModel_Extensions_RemoveAllFast__2_System_Collections_Generic_IList___0____1_System_Func___0___1_System_Boolean__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections.Generic.ICollection`1
+  commentId: T:System.Collections.Generic.ICollection`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  name: ICollection<T>
+  nameWithType: ICollection<T>
+  fullName: System.Collections.Generic.ICollection<T>
+  nameWithType.vb: ICollection(Of T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T)
+  name.vb: ICollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1
+    name: ICollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  commentId: M:NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+  isExternal: true
+  href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  name: SequenceEqualOrBothNull<TSource>(IEnumerable<TSource>, IEnumerable<TSource>)
+  nameWithType: Extensions.SequenceEqualOrBothNull<TSource>(IEnumerable<TSource>, IEnumerable<TSource>)
+  fullName: NitroxModel.Extensions.SequenceEqualOrBothNull<TSource>(System.Collections.Generic.IEnumerable<TSource>, System.Collections.Generic.IEnumerable<TSource>)
+  nameWithType.vb: Extensions.SequenceEqualOrBothNull(Of TSource)(IEnumerable(Of TSource), IEnumerable(Of TSource))
+  fullName.vb: NitroxModel.Extensions.SequenceEqualOrBothNull(Of TSource)(System.Collections.Generic.IEnumerable(Of TSource), System.Collections.Generic.IEnumerable(Of TSource))
+  name.vb: SequenceEqualOrBothNull(Of TSource)(IEnumerable(Of TSource), IEnumerable(Of TSource))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: <
+  - name: TSource
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: TSource
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: TSource
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.SequenceEqualOrBothNull``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})
+    name: SequenceEqualOrBothNull
+    href: NitroxModel.Extensions.SequenceEqualOrBothNull.html#NitroxModel_Extensions_SequenceEqualOrBothNull__1_System_Collections_Generic_IEnumerable___0__System_Collections_Generic_IEnumerable___0__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSource
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSource
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TSource
+  - name: )
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{``0},``1,System.Func{``0,``1,System.Boolean})
+  commentId: M:NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{``0},``1,System.Func{``0,``1,System.Boolean})
+  isExternal: true
+  href: NitroxModel.Extensions.RemoveAllFast.html#NitroxModel_Extensions_RemoveAllFast__2_System_Collections_Generic_IList___0____1_System_Func___0___1_System_Boolean__
+  name: RemoveAllFast<TItem, TParameter>(IList<TItem>, TParameter, Func<TItem, TParameter, bool>)
+  nameWithType: Extensions.RemoveAllFast<TItem, TParameter>(IList<TItem>, TParameter, Func<TItem, TParameter, bool>)
+  fullName: NitroxModel.Extensions.RemoveAllFast<TItem, TParameter>(System.Collections.Generic.IList<TItem>, TParameter, System.Func<TItem, TParameter, bool>)
+  nameWithType.vb: Extensions.RemoveAllFast(Of TItem, TParameter)(IList(Of TItem), TParameter, Func(Of TItem, TParameter, Boolean))
+  fullName.vb: NitroxModel.Extensions.RemoveAllFast(Of TItem, TParameter)(System.Collections.Generic.IList(Of TItem), TParameter, System.Func(Of TItem, TParameter, Boolean))
+  name.vb: RemoveAllFast(Of TItem, TParameter)(IList(Of TItem), TParameter, Func(Of TItem, TParameter, Boolean))
+  spec.csharp:
+  - uid: NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{``0},``1,System.Func{``0,``1,System.Boolean})
+    name: RemoveAllFast
+    href: NitroxModel.Extensions.RemoveAllFast.html#NitroxModel_Extensions_RemoveAllFast__2_System_Collections_Generic_IList___0____1_System_Func___0___1_System_Boolean__
+  - name: <
+  - name: TItem
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: '>'
+  - name: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - name: TItem
+  - name: '>'
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: TItem
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.RemoveAllFast``2(System.Collections.Generic.IList{``0},``1,System.Func{``0,``1,System.Boolean})
+    name: RemoveAllFast
+    href: NitroxModel.Extensions.RemoveAllFast.html#NitroxModel_Extensions_RemoveAllFast__2_System_Collections_Generic_IList___0____1_System_Func___0___1_System_Boolean__
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TItem
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: )
+  - name: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TItem
+  - name: )
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TItem
+  - name: ','
+  - name: " "
+  - name: TParameter
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  - name: )
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: System.ArgumentOutOfRangeException
+  commentId: T:System.ArgumentOutOfRangeException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception
+  name: ArgumentOutOfRangeException
+  nameWithType: ArgumentOutOfRangeException
+  fullName: System.ArgumentOutOfRangeException
+- uid: System.NotSupportedException
+  commentId: T:System.NotSupportedException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.notsupportedexception
+  name: NotSupportedException
+  nameWithType: NotSupportedException
+  fullName: System.NotSupportedException
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Item*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Item
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Item.html#NitroxModel_DataStructures_ThreadSafeList_1_Item_System_Int32_
+  name: this
+  nameWithType: ThreadSafeList<T>.this
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.this
+  nameWithType.vb: ThreadSafeList(Of T).this[]
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).this[]
+  name.vb: this[]
+- uid: System.Collections.Generic.IList{{T}}.Item(System.Int32)
+  commentId: P:System.Collections.Generic.IList{`0}.Item(System.Int32)
+  parent: System.Collections.Generic.IList{{T}}
+  definition: System.Collections.Generic.IList`1.Item(System.Int32)
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: this[int]
+  nameWithType: IList<T>.this[int]
+  fullName: System.Collections.Generic.IList<T>.this[int]
+  nameWithType.vb: IList(Of T).this[](Integer)
+  fullName.vb: System.Collections.Generic.IList(Of T).this[](Integer)
+  name.vb: this[](Integer)
+  spec.csharp:
+  - name: this
+  - name: '['
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ']'
+  spec.vb:
+  - uid: System.Collections.Generic.IList{`0}.Item(System.Int32)
+    name: this[]
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.item
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.Collections.Generic.IList`1.Item(System.Int32)
+  commentId: P:System.Collections.Generic.IList`1.Item(System.Int32)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: this[int]
+  nameWithType: IList<T>.this[int]
+  fullName: System.Collections.Generic.IList<T>.this[int]
+  nameWithType.vb: IList(Of T).this[](Integer)
+  fullName.vb: System.Collections.Generic.IList(Of T).this[](Integer)
+  name.vb: this[](Integer)
+  spec.csharp:
+  - name: this
+  - name: '['
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ']'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1.Item(System.Int32)
+    name: this[]
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.item
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Count*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Count
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Count.html#NitroxModel_DataStructures_ThreadSafeList_1_Count
+  name: Count
+  nameWithType: ThreadSafeList<T>.Count
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Count
+  nameWithType.vb: ThreadSafeList(Of T).Count
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Count
+- uid: System.Collections.Generic.ICollection{{T}}.Count
+  commentId: P:System.Collections.Generic.ICollection{`0}.Count
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Count
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.count
+  name: Count
+  nameWithType: ICollection<T>.Count
+  fullName: System.Collections.Generic.ICollection<T>.Count
+  nameWithType.vb: ICollection(Of T).Count
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Count
+- uid: System.Collections.Generic.ICollection`1.Count
+  commentId: P:System.Collections.Generic.ICollection`1.Count
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.count
+  name: Count
+  nameWithType: ICollection<T>.Count
+  fullName: System.Collections.Generic.ICollection<T>.Count
+  nameWithType.vb: ICollection(Of T).Count
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Count
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.IsReadOnly*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.IsReadOnly
+  href: NitroxModel.DataStructures.ThreadSafeList-1.IsReadOnly.html#NitroxModel_DataStructures_ThreadSafeList_1_IsReadOnly
+  name: IsReadOnly
+  nameWithType: ThreadSafeList<T>.IsReadOnly
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.IsReadOnly
+  nameWithType.vb: ThreadSafeList(Of T).IsReadOnly
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).IsReadOnly
+- uid: System.Collections.Generic.ICollection{{T}}.IsReadOnly
+  commentId: P:System.Collections.Generic.ICollection{`0}.IsReadOnly
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.IsReadOnly
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.isreadonly
+  name: IsReadOnly
+  nameWithType: ICollection<T>.IsReadOnly
+  fullName: System.Collections.Generic.ICollection<T>.IsReadOnly
+  nameWithType.vb: ICollection(Of T).IsReadOnly
+  fullName.vb: System.Collections.Generic.ICollection(Of T).IsReadOnly
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Collections.Generic.ICollection`1.IsReadOnly
+  commentId: P:System.Collections.Generic.ICollection`1.IsReadOnly
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.isreadonly
+  name: IsReadOnly
+  nameWithType: ICollection<T>.IsReadOnly
+  fullName: System.Collections.Generic.ICollection<T>.IsReadOnly
+  nameWithType.vb: ICollection(Of T).IsReadOnly
+  fullName.vb: System.Collections.Generic.ICollection(Of T).IsReadOnly
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.#ctor
+  href: NitroxModel.DataStructures.ThreadSafeList-1.-ctor.html#NitroxModel_DataStructures_ThreadSafeList_1__ctor
+  name: ThreadSafeList
+  nameWithType: ThreadSafeList<T>.ThreadSafeList
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.ThreadSafeList
+  nameWithType.vb: ThreadSafeList(Of T).New
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).New
+  name.vb: New
+- uid: System.Collections.Generic.List{{T}}
+  commentId: T:System.Collections.Generic.List{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Add*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Add
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Add.html#NitroxModel_DataStructures_ThreadSafeList_1_Add__0_
+  name: Add
+  nameWithType: ThreadSafeList<T>.Add
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Add
+  nameWithType.vb: ThreadSafeList(Of T).Add
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Add
+- uid: System.Collections.Generic.ICollection{{T}}.Add({T})
+  commentId: M:System.Collections.Generic.ICollection{`0}.Add(`0)
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Add(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  name: Add(T)
+  nameWithType: ICollection<T>.Add(T)
+  fullName: System.Collections.Generic.ICollection<T>.Add(T)
+  nameWithType.vb: ICollection(Of T).Add(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Add(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.Add(`0)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.Add(`0)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Add(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Add(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  name: Add(T)
+  nameWithType: ICollection<T>.Add(T)
+  fullName: System.Collections.Generic.ICollection<T>.Add(T)
+  nameWithType.vb: ICollection(Of T).Add(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Add(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Add(`0)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Add(`0)
+    name: Add
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.add
+  - name: (
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.AddRange*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.AddRange
+  href: NitroxModel.DataStructures.ThreadSafeList-1.AddRange.html#NitroxModel_DataStructures_ThreadSafeList_1_AddRange_System_Collections_Generic_IEnumerable__0__
+  name: AddRange
+  nameWithType: ThreadSafeList<T>.AddRange
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.AddRange
+  nameWithType.vb: ThreadSafeList(Of T).AddRange
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).AddRange
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Clear*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Clear
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Clear.html#NitroxModel_DataStructures_ThreadSafeList_1_Clear
+  name: Clear
+  nameWithType: ThreadSafeList<T>.Clear
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Clear
+  nameWithType.vb: ThreadSafeList(Of T).Clear
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Clear
+- uid: System.Collections.Generic.ICollection{{T}}.Clear
+  commentId: M:System.Collections.Generic.ICollection{`0}.Clear
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Clear
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  name: Clear()
+  nameWithType: ICollection<T>.Clear()
+  fullName: System.Collections.Generic.ICollection<T>.Clear()
+  nameWithType.vb: ICollection(Of T).Clear()
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Clear()
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Clear
+  commentId: M:System.Collections.Generic.ICollection`1.Clear
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  name: Clear()
+  nameWithType: ICollection<T>.Clear()
+  fullName: System.Collections.Generic.ICollection<T>.Clear()
+  nameWithType.vb: ICollection(Of T).Clear()
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Clear()
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Clear
+    name: Clear
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.clear
+  - name: (
+  - name: )
+- uid: System.Array
+  commentId: T:System.Array
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.array
+  name: Array
+  nameWithType: Array
+  fullName: System.Array
+- uid: System.ArgumentNullException
+  commentId: T:System.ArgumentNullException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentnullexception
+  name: ArgumentNullException
+  nameWithType: ArgumentNullException
+  fullName: System.ArgumentNullException
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.CopyTo*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.CopyTo
+  href: NitroxModel.DataStructures.ThreadSafeList-1.CopyTo.html#NitroxModel_DataStructures_ThreadSafeList_1_CopyTo__0___System_Int32_
+  name: CopyTo
+  nameWithType: ThreadSafeList<T>.CopyTo
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.CopyTo
+  nameWithType.vb: ThreadSafeList(Of T).CopyTo
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).CopyTo
+- uid: System.Collections.Generic.ICollection{{T}}.CopyTo({T}[],System.Int32)
+  commentId: M:System.Collections.Generic.ICollection{`0}.CopyTo(`0[],System.Int32)
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  name: CopyTo(T[], int)
+  nameWithType: ICollection<T>.CopyTo(T[], int)
+  fullName: System.Collections.Generic.ICollection<T>.CopyTo(T[], int)
+  nameWithType.vb: ICollection(Of T).CopyTo(T(), Integer)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: '{T}[]'
+  isExternal: true
+  name: T[]
+  nameWithType: T[]
+  fullName: T[]
+  nameWithType.vb: T()
+  fullName.vb: T()
+  name.vb: T()
+  spec.csharp:
+  - name: T
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: T
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  commentId: M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  name: CopyTo(T[], int)
+  nameWithType: ICollection<T>.CopyTo(T[], int)
+  fullName: System.Collections.Generic.ICollection<T>.CopyTo(T[], int)
+  nameWithType.vb: ICollection(Of T).CopyTo(T(), Integer)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).CopyTo(T(), Integer)
+  name.vb: CopyTo(T(), Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.copyto
+  - name: (
+  - name: T
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Remove*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Remove
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Remove.html#NitroxModel_DataStructures_ThreadSafeList_1_Remove__0_
+  name: Remove
+  nameWithType: ThreadSafeList<T>.Remove
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Remove
+  nameWithType.vb: ThreadSafeList(Of T).Remove
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Remove
+- uid: System.Collections.Generic.ICollection{{T}}.Remove({T})
+  commentId: M:System.Collections.Generic.ICollection{`0}.Remove(`0)
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Remove(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  name: Remove(T)
+  nameWithType: ICollection<T>.Remove(T)
+  fullName: System.Collections.Generic.ICollection<T>.Remove(T)
+  nameWithType.vb: ICollection(Of T).Remove(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Remove(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Remove(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Remove(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  name: Remove(T)
+  nameWithType: ICollection<T>.Remove(T)
+  fullName: System.Collections.Generic.ICollection<T>.Remove(T)
+  nameWithType.vb: ICollection(Of T).Remove(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Remove(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Remove(`0)
+    name: Remove
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.remove
+  - name: (
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.IndexOf*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.IndexOf
+  href: NitroxModel.DataStructures.ThreadSafeList-1.IndexOf.html#NitroxModel_DataStructures_ThreadSafeList_1_IndexOf__0_
+  name: IndexOf
+  nameWithType: ThreadSafeList<T>.IndexOf
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.IndexOf
+  nameWithType.vb: ThreadSafeList(Of T).IndexOf
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).IndexOf
+- uid: System.Collections.Generic.IList{{T}}.IndexOf({T})
+  commentId: M:System.Collections.Generic.IList{`0}.IndexOf(`0)
+  parent: System.Collections.Generic.IList{{T}}
+  definition: System.Collections.Generic.IList`1.IndexOf(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.indexof
+  name: IndexOf(T)
+  nameWithType: IList<T>.IndexOf(T)
+  fullName: System.Collections.Generic.IList<T>.IndexOf(T)
+  nameWithType.vb: IList(Of T).IndexOf(T)
+  fullName.vb: System.Collections.Generic.IList(Of T).IndexOf(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList{`0}.IndexOf(`0)
+    name: IndexOf
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.indexof
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IList{`0}.IndexOf(`0)
+    name: IndexOf
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.indexof
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IList`1.IndexOf(`0)
+  commentId: M:System.Collections.Generic.IList`1.IndexOf(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.indexof
+  name: IndexOf(T)
+  nameWithType: IList<T>.IndexOf(T)
+  fullName: System.Collections.Generic.IList<T>.IndexOf(T)
+  nameWithType.vb: IList(Of T).IndexOf(T)
+  fullName.vb: System.Collections.Generic.IList(Of T).IndexOf(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1.IndexOf(`0)
+    name: IndexOf
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.indexof
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1.IndexOf(`0)
+    name: IndexOf
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.indexof
+  - name: (
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Insert*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Insert
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Insert.html#NitroxModel_DataStructures_ThreadSafeList_1_Insert_System_Int32__0_
+  name: Insert
+  nameWithType: ThreadSafeList<T>.Insert
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Insert
+  nameWithType.vb: ThreadSafeList(Of T).Insert
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Insert
+- uid: System.Collections.Generic.IList{{T}}.Insert(System.Int32,{T})
+  commentId: M:System.Collections.Generic.IList{`0}.Insert(System.Int32,`0)
+  parent: System.Collections.Generic.IList{{T}}
+  definition: System.Collections.Generic.IList`1.Insert(System.Int32,`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.insert
+  name: Insert(int, T)
+  nameWithType: IList<T>.Insert(int, T)
+  fullName: System.Collections.Generic.IList<T>.Insert(int, T)
+  nameWithType.vb: IList(Of T).Insert(Integer, T)
+  fullName.vb: System.Collections.Generic.IList(Of T).Insert(Integer, T)
+  name.vb: Insert(Integer, T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList{`0}.Insert(System.Int32,`0)
+    name: Insert
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.insert
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IList{`0}.Insert(System.Int32,`0)
+    name: Insert
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.insert
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IList`1.Insert(System.Int32,`0)
+  commentId: M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.insert
+  name: Insert(int, T)
+  nameWithType: IList<T>.Insert(int, T)
+  fullName: System.Collections.Generic.IList<T>.Insert(int, T)
+  nameWithType.vb: IList(Of T).Insert(Integer, T)
+  fullName.vb: System.Collections.Generic.IList(Of T).Insert(Integer, T)
+  name.vb: Insert(Integer, T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1.Insert(System.Int32,`0)
+    name: Insert
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.insert
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1.Insert(System.Int32,`0)
+    name: Insert
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1.insert
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.RemoveAt*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.RemoveAt
+  href: NitroxModel.DataStructures.ThreadSafeList-1.RemoveAt.html#NitroxModel_DataStructures_ThreadSafeList_1_RemoveAt_System_Int32_
+  name: RemoveAt
+  nameWithType: ThreadSafeList<T>.RemoveAt
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.RemoveAt
+  nameWithType.vb: ThreadSafeList(Of T).RemoveAt
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).RemoveAt
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Contains*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Contains
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Contains.html#NitroxModel_DataStructures_ThreadSafeList_1_Contains__0_
+  name: Contains
+  nameWithType: ThreadSafeList<T>.Contains
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Contains
+  nameWithType.vb: ThreadSafeList(Of T).Contains
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Contains
+- uid: System.Collections.Generic.ICollection{{T}}.Contains({T})
+  commentId: M:System.Collections.Generic.ICollection{`0}.Contains(`0)
+  parent: System.Collections.Generic.ICollection{{T}}
+  definition: System.Collections.Generic.ICollection`1.Contains(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  name: Contains(T)
+  nameWithType: ICollection<T>.Contains(T)
+  fullName: System.Collections.Generic.ICollection<T>.Contains(T)
+  nameWithType.vb: ICollection(Of T).Contains(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Contains(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection{`0}.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection{`0}.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.ICollection`1.Contains(`0)
+  commentId: M:System.Collections.Generic.ICollection`1.Contains(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  name: Contains(T)
+  nameWithType: ICollection<T>.Contains(T)
+  fullName: System.Collections.Generic.ICollection<T>.Contains(T)
+  nameWithType.vb: ICollection(Of T).Contains(T)
+  fullName.vb: System.Collections.Generic.ICollection(Of T).Contains(T)
+  spec.csharp:
+  - uid: System.Collections.Generic.ICollection`1.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.ICollection`1.Contains(`0)
+    name: Contains
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1.contains
+  - name: (
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.TryGetValue*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.TryGetValue
+  href: NitroxModel.DataStructures.ThreadSafeList-1.TryGetValue.html#NitroxModel_DataStructures_ThreadSafeList_1_TryGetValue_System_Int32__0__
+  name: TryGetValue
+  nameWithType: ThreadSafeList<T>.TryGetValue
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.TryGetValue
+  nameWithType.vb: ThreadSafeList(Of T).TryGetValue
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).TryGetValue
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.ToList*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.ToList
+  href: NitroxModel.DataStructures.ThreadSafeList-1.ToList.html#NitroxModel_DataStructures_ThreadSafeList_1_ToList
+  name: ToList
+  nameWithType: ThreadSafeList<T>.ToList
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.ToList
+  nameWithType.vb: ThreadSafeList(Of T).ToList
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).ToList
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.GetEnumerator*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.GetEnumerator
+  href: NitroxModel.DataStructures.ThreadSafeList-1.GetEnumerator.html#NitroxModel_DataStructures_ThreadSafeList_1_GetEnumerator
+  name: GetEnumerator
+  nameWithType: ThreadSafeList<T>.GetEnumerator
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.GetEnumerator
+  nameWithType.vb: ThreadSafeList(Of T).GetEnumerator
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).GetEnumerator
+- uid: System.Collections.Generic.IEnumerable{{T}}.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+  parent: System.Collections.Generic.IEnumerable{{T}}
+  definition: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable{`0}.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator{{T}}
+  commentId: T:System.Collections.Generic.IEnumerator{`0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerator`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable`1.GetEnumerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1.getenumerator
+  - name: (
+  - name: )
+- uid: System.Collections.Generic.IEnumerator`1
+  commentId: T:System.Collections.Generic.IEnumerator`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  name: IEnumerator<T>
+  nameWithType: IEnumerator<T>
+  fullName: System.Collections.Generic.IEnumerator<T>
+  nameWithType.vb: IEnumerator(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerator(Of T)
+  name.vb: IEnumerator(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerator`1
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Set*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Set
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Set.html#NitroxModel_DataStructures_ThreadSafeList_1_Set_System_Collections_Generic_IEnumerable__0__
+  name: Set
+  nameWithType: ThreadSafeList<T>.Set
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Set
+  nameWithType.vb: ThreadSafeList(Of T).Set
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Set
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.RemoveAll*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.RemoveAll
+  href: NitroxModel.DataStructures.ThreadSafeList-1.RemoveAll.html#NitroxModel_DataStructures_ThreadSafeList_1_RemoveAll_System_Predicate__0__
+  name: RemoveAll
+  nameWithType: ThreadSafeList<T>.RemoveAll
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.RemoveAll
+  nameWithType.vb: ThreadSafeList(Of T).RemoveAll
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).RemoveAll
+- uid: System.Predicate{{T}}
+  commentId: T:System.Predicate{`0}
+  parent: System
+  definition: System.Predicate`1
+  href: https://learn.microsoft.com/dotnet/api/system.predicate-1
+  name: Predicate<T>
+  nameWithType: Predicate<T>
+  fullName: System.Predicate<T>
+  nameWithType.vb: Predicate(Of T)
+  fullName.vb: System.Predicate(Of T)
+  name.vb: Predicate(Of T)
+  spec.csharp:
+  - uid: System.Predicate`1
+    name: Predicate
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.predicate-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Predicate`1
+    name: Predicate
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.predicate-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Predicate`1
+  commentId: T:System.Predicate`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.predicate-1
+  name: Predicate<T>
+  nameWithType: Predicate<T>
+  fullName: System.Predicate<T>
+  nameWithType.vb: Predicate(Of T)
+  fullName.vb: System.Predicate(Of T)
+  name.vb: Predicate(Of T)
+  spec.csharp:
+  - uid: System.Predicate`1
+    name: Predicate
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.predicate-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Predicate`1
+    name: Predicate
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.predicate-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Clone*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Clone
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Clone.html#NitroxModel_DataStructures_ThreadSafeList_1_Clone
+  name: Clone
+  nameWithType: ThreadSafeList<T>.Clone
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Clone
+  nameWithType.vb: ThreadSafeList(Of T).Clone
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Clone
+- uid: NitroxModel.DataStructures.ThreadSafeList`1.Find*
+  commentId: Overload:NitroxModel.DataStructures.ThreadSafeList`1.Find
+  href: NitroxModel.DataStructures.ThreadSafeList-1.Find.html#NitroxModel_DataStructures_ThreadSafeList_1_Find_System_Predicate__0__
+  name: Find
+  nameWithType: ThreadSafeList<T>.Find
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>.Find
+  nameWithType.vb: ThreadSafeList(Of T).Find
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T).Find
+memberLayout: SeparatePages

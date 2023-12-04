@@ -1,0 +1,39 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  id: Strategy
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  children:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.AlphaChannelSwapper
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSwapper
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.AlphaChannelSwapper
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.AlphaChannelSwapper
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.AlphaChannelSwapper.html
+  name: AlphaChannelSwapper
+  nameWithType: AlphaChannelSwapper
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.AlphaChannelSwapper
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.html
+  name: HueSaturationVibrancySwapper
+  nameWithType: HueSaturationVibrancySwapper
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSwapper
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSwapper
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSwapper.html
+  name: HueSwapper
+  nameWithType: HueSwapper
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSwapper
+memberLayout: SeparatePages

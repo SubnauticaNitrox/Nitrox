@@ -1,0 +1,67 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Debuggers.Drawer.Unity
+  commentId: N:NitroxClient.Debuggers.Drawer.Unity
+  id: Unity
+  parent: NitroxClient.Debuggers.Drawer
+  children:
+  - NitroxClient.Debuggers.Drawer.Unity.ColorDrawer
+  - NitroxClient.Debuggers.Drawer.Unity.MaterialDrawer
+  - NitroxClient.Debuggers.Drawer.Unity.RectDrawer
+  - NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  - NitroxClient.Debuggers.Drawer.Unity.TransformDrawer
+  - NitroxClient.Debuggers.Drawer.Unity.UnityEventDrawer
+  - NitroxClient.Debuggers.Drawer.Unity.VectorDrawer
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Debuggers.Drawer.Unity
+  nameWithType: NitroxClient.Debuggers.Drawer.Unity
+  fullName: NitroxClient.Debuggers.Drawer.Unity
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.Debuggers.Drawer.Unity.ColorDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.ColorDrawer
+  href: NitroxClient.Debuggers.Drawer.Unity.ColorDrawer.html
+  name: ColorDrawer
+  nameWithType: ColorDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.ColorDrawer
+- uid: NitroxClient.Debuggers.Drawer.Unity.MaterialDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.MaterialDrawer
+  href: NitroxClient.Debuggers.Drawer.Unity.MaterialDrawer.html
+  name: MaterialDrawer
+  nameWithType: MaterialDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.MaterialDrawer
+- uid: NitroxClient.Debuggers.Drawer.Unity.RectDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.RectDrawer
+  href: NitroxClient.Debuggers.Drawer.Unity.RectDrawer.html
+  name: RectDrawer
+  nameWithType: RectDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.RectDrawer
+- uid: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+  href: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer.html
+  name: RigidbodyDrawer
+  nameWithType: RigidbodyDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.RigidbodyDrawer
+- uid: NitroxClient.Debuggers.Drawer.Unity.TransformDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.TransformDrawer
+  href: NitroxClient.Debuggers.Drawer.Unity.TransformDrawer.html
+  name: TransformDrawer
+  nameWithType: TransformDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.TransformDrawer
+- uid: NitroxClient.Debuggers.Drawer.Unity.UnityEventDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.UnityEventDrawer
+  href: NitroxClient.Debuggers.Drawer.Unity.UnityEventDrawer.html
+  name: UnityEventDrawer
+  nameWithType: UnityEventDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.UnityEventDrawer
+- uid: NitroxClient.Debuggers.Drawer.Unity.VectorDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.Unity.VectorDrawer
+  href: NitroxClient.Debuggers.Drawer.Unity.VectorDrawer.html
+  name: VectorDrawer
+  nameWithType: VectorDrawer
+  fullName: NitroxClient.Debuggers.Drawer.Unity.VectorDrawer
+memberLayout: SeparatePages

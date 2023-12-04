@@ -1,0 +1,560 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory
+  commentId: T:NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory
+  id: EntitySpawnPointFactory
+  parent: NitroxServer.GameLogic.Entities.Spawning
+  children:
+  - NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From(NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell,NitroxModel.DataStructures.Unity.NitroxTransform,NitroxServer.UnityStubs.GameObject)
+  langs:
+  - csharp
+  - vb
+  name: EntitySpawnPointFactory
+  nameWithType: EntitySpawnPointFactory
+  fullName: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/Spawning/EntitySpawnPointFactory.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntitySpawnPointFactory
+    path: ../NitroxServer/GameLogic/Entities/Spawning/EntitySpawnPointFactory.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities.Spawning
+  syntax:
+    content: public abstract class EntitySpawnPointFactory
+    content.vb: Public MustInherit Class EntitySpawnPointFactory
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - NitroxServer_Subnautica.GameLogic.Entities.Spawning.SubnauticaEntitySpawnPointFactory
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From(NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell,NitroxModel.DataStructures.Unity.NitroxTransform,NitroxServer.UnityStubs.GameObject)
+  commentId: M:NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From(NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell,NitroxModel.DataStructures.Unity.NitroxTransform,NitroxServer.UnityStubs.GameObject)
+  id: From(NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell,NitroxModel.DataStructures.Unity.NitroxTransform,NitroxServer.UnityStubs.GameObject)
+  parent: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory
+  langs:
+  - csharp
+  - vb
+  name: From(AbsoluteEntityCell, NitroxTransform, GameObject)
+  nameWithType: EntitySpawnPointFactory.From(AbsoluteEntityCell, NitroxTransform, GameObject)
+  fullName: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From(NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell, NitroxModel.DataStructures.Unity.NitroxTransform, NitroxServer.UnityStubs.GameObject)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Entities/Spawning/EntitySpawnPointFactory.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: From
+    path: ../NitroxServer/GameLogic/Entities/Spawning/EntitySpawnPointFactory.cs
+    startLine: 10
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Entities.Spawning
+  syntax:
+    content: public abstract List<EntitySpawnPoint> From(AbsoluteEntityCell absoluteEntityCell, NitroxTransform transform, GameObject gameObject)
+    parameters:
+    - id: absoluteEntityCell
+      type: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell
+    - id: transform
+      type: NitroxModel.DataStructures.Unity.NitroxTransform
+    - id: gameObject
+      type: NitroxServer.UnityStubs.GameObject
+    return:
+      type: System.Collections.Generic.List{NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint}
+    content.vb: Public MustOverride Function From(absoluteEntityCell As AbsoluteEntityCell, transform As NitroxTransform, gameObject As GameObject) As List(Of EntitySpawnPoint)
+  overload: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From*
+references:
+- uid: NitroxServer.GameLogic.Entities.Spawning
+  commentId: N:NitroxServer.GameLogic.Entities.Spawning
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities.Spawning
+  nameWithType: NitroxServer.GameLogic.Entities.Spawning
+  fullName: NitroxServer.GameLogic.Entities.Spawning
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From*
+  commentId: Overload:NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From
+  href: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From.html#NitroxServer_GameLogic_Entities_Spawning_EntitySpawnPointFactory_From_NitroxModel_DataStructures_GameLogic_AbsoluteEntityCell_NitroxModel_DataStructures_Unity_NitroxTransform_NitroxServer_UnityStubs_GameObject_
+  name: From
+  nameWithType: EntitySpawnPointFactory.From
+  fullName: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPointFactory.From
+- uid: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell
+  commentId: T:NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell.html
+  name: AbsoluteEntityCell
+  nameWithType: AbsoluteEntityCell
+  fullName: NitroxModel.DataStructures.GameLogic.AbsoluteEntityCell
+- uid: NitroxModel.DataStructures.Unity.NitroxTransform
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxTransform
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxTransform.html
+  name: NitroxTransform
+  nameWithType: NitroxTransform
+  fullName: NitroxModel.DataStructures.Unity.NitroxTransform
+- uid: NitroxServer.UnityStubs.GameObject
+  commentId: T:NitroxServer.UnityStubs.GameObject
+  parent: NitroxServer.UnityStubs
+  href: NitroxServer.UnityStubs.GameObject.html
+  name: GameObject
+  nameWithType: GameObject
+  fullName: NitroxServer.UnityStubs.GameObject
+- uid: System.Collections.Generic.List{NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint}
+  commentId: T:System.Collections.Generic.List{NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<EntitySpawnPoint>
+  nameWithType: List<EntitySpawnPoint>
+  fullName: System.Collections.Generic.List<NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint>
+  nameWithType.vb: List(Of EntitySpawnPoint)
+  fullName.vb: System.Collections.Generic.List(Of NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint)
+  name.vb: List(Of EntitySpawnPoint)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint
+    name: EntitySpawnPoint
+    href: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint
+    name: EntitySpawnPoint
+    href: NitroxServer.GameLogic.Entities.Spawning.EntitySpawnPoint.html
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: NitroxServer.UnityStubs
+  commentId: N:NitroxServer.UnityStubs
+  href: NitroxServer.html
+  name: NitroxServer.UnityStubs
+  nameWithType: NitroxServer.UnityStubs
+  fullName: NitroxServer.UnityStubs
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.UnityStubs
+    name: UnityStubs
+    href: NitroxServer.UnityStubs.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.UnityStubs
+    name: UnityStubs
+    href: NitroxServer.UnityStubs.html
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+memberLayout: SeparatePages

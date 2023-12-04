@@ -1,0 +1,624 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  commentId: T:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  id: Upgrade_V1600
+  parent: NitroxServer.Serialization.SaveDataUpgrades
+  children:
+  - NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion
+  - NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  langs:
+  - csharp
+  - vb
+  name: Upgrade_V1600
+  nameWithType: Upgrade_V1600
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/Serialization/SaveDataUpgrades/Upgrade_V1600.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Upgrade_V1600
+    path: ../NitroxServer/Serialization/SaveDataUpgrades/Upgrade_V1600.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.SaveDataUpgrades
+  syntax:
+    content: 'public class Upgrade_V1600 : SaveDataUpgrade'
+    content.vb: Public Class Upgrade_V1600 Inherits SaveDataUpgrade
+  inheritance:
+  - System.Object
+  - NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  inheritedMembers:
+  - NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles(System.String,System.String)
+  - NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData(Newtonsoft.Json.Linq.JObject)
+  - NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData(Newtonsoft.Json.Linq.JObject)
+  - NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData(Newtonsoft.Json.Linq.JObject)
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion
+  commentId: P:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion
+  id: TargetVersion
+  parent: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  langs:
+  - csharp
+  - vb
+  name: TargetVersion
+  nameWithType: Upgrade_V1600.TargetVersion
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/SaveDataUpgrades/Upgrade_V1600.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TargetVersion
+    path: ../NitroxServer/Serialization/SaveDataUpgrades/Upgrade_V1600.cs
+    startLine: 10
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.SaveDataUpgrades
+  example: []
+  syntax:
+    content: public override Version TargetVersion { get; }
+    parameters: []
+    return:
+      type: System.Version
+    content.vb: Public Overrides ReadOnly Property TargetVersion As Version
+  overridden: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.TargetVersion
+  overload: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion*
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  commentId: M:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  id: UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  parent: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  langs:
+  - csharp
+  - vb
+  name: UpgradeWorldData(JObject)
+  nameWithType: Upgrade_V1600.UpgradeWorldData(JObject)
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Serialization/SaveDataUpgrades/Upgrade_V1600.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UpgradeWorldData
+    path: ../NitroxServer/Serialization/SaveDataUpgrades/Upgrade_V1600.cs
+    startLine: 12
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.SaveDataUpgrades
+  example: []
+  syntax:
+    content: protected override void UpgradeWorldData(JObject data)
+    parameters:
+    - id: data
+      type: Newtonsoft.Json.Linq.JObject
+    content.vb: Protected Overrides Sub UpgradeWorldData(data As JObject)
+  overridden: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  overload: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData*
+references:
+- uid: NitroxServer.Serialization.SaveDataUpgrades
+  commentId: N:NitroxServer.Serialization.SaveDataUpgrades
+  href: NitroxServer.html
+  name: NitroxServer.Serialization.SaveDataUpgrades
+  nameWithType: NitroxServer.Serialization.SaveDataUpgrades
+  fullName: NitroxServer.Serialization.SaveDataUpgrades
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.SaveDataUpgrades
+    name: SaveDataUpgrades
+    href: NitroxServer.Serialization.SaveDataUpgrades.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.SaveDataUpgrades
+    name: SaveDataUpgrades
+    href: NitroxServer.Serialization.SaveDataUpgrades.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  commentId: T:NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  parent: NitroxServer.Serialization.Upgrade
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.html
+  name: SaveDataUpgrade
+  nameWithType: SaveDataUpgrade
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles(System.String,System.String)
+  commentId: M:NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles(System.String,System.String)
+  parent: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  isExternal: true
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeSaveFiles_System_String_System_String_
+  name: UpgradeSaveFiles(string, string)
+  nameWithType: SaveDataUpgrade.UpgradeSaveFiles(string, string)
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles(string, string)
+  nameWithType.vb: SaveDataUpgrade.UpgradeSaveFiles(String, String)
+  fullName.vb: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles(String, String)
+  name.vb: UpgradeSaveFiles(String, String)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles(System.String,System.String)
+    name: UpgradeSaveFiles
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeSaveFiles_System_String_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles(System.String,System.String)
+    name: UpgradeSaveFiles
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeSaveFiles.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeSaveFiles_System_String_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData(Newtonsoft.Json.Linq.JObject)
+  commentId: M:NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData(Newtonsoft.Json.Linq.JObject)
+  parent: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  isExternal: true
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeBaseData_Newtonsoft_Json_Linq_JObject_
+  name: UpgradeBaseData(JObject)
+  nameWithType: SaveDataUpgrade.UpgradeBaseData(JObject)
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData(Newtonsoft.Json.Linq.JObject)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradeBaseData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeBaseData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradeBaseData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeBaseData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeBaseData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData(Newtonsoft.Json.Linq.JObject)
+  commentId: M:NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData(Newtonsoft.Json.Linq.JObject)
+  parent: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  isExternal: true
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradePlayerData_Newtonsoft_Json_Linq_JObject_
+  name: UpgradePlayerData(JObject)
+  nameWithType: SaveDataUpgrade.UpgradePlayerData(JObject)
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData(Newtonsoft.Json.Linq.JObject)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradePlayerData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradePlayerData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradePlayerData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradePlayerData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradePlayerData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData(Newtonsoft.Json.Linq.JObject)
+  commentId: M:NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData(Newtonsoft.Json.Linq.JObject)
+  parent: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  isExternal: true
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeEntityData_Newtonsoft_Json_Linq_JObject_
+  name: UpgradeEntityData(JObject)
+  nameWithType: SaveDataUpgrade.UpgradeEntityData(JObject)
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData(Newtonsoft.Json.Linq.JObject)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradeEntityData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeEntityData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradeEntityData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeEntityData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeEntityData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.Serialization.Upgrade
+  commentId: N:NitroxServer.Serialization.Upgrade
+  href: NitroxServer.html
+  name: NitroxServer.Serialization.Upgrade
+  nameWithType: NitroxServer.Serialization.Upgrade
+  fullName: NitroxServer.Serialization.Upgrade
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.Upgrade
+    name: Upgrade
+    href: NitroxServer.Serialization.Upgrade.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.Upgrade
+    name: Upgrade
+    href: NitroxServer.Serialization.Upgrade.html
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.TargetVersion
+  commentId: P:NitroxServer.Serialization.Upgrade.SaveDataUpgrade.TargetVersion
+  parent: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.TargetVersion.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_TargetVersion
+  name: TargetVersion
+  nameWithType: SaveDataUpgrade.TargetVersion
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.TargetVersion
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion*
+  commentId: Overload:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion
+  href: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion.html#NitroxServer_Serialization_SaveDataUpgrades_Upgrade_V1600_TargetVersion
+  name: TargetVersion
+  nameWithType: Upgrade_V1600.TargetVersion
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.TargetVersion
+- uid: System.Version
+  commentId: T:System.Version
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.version
+  name: Version
+  nameWithType: Version
+  fullName: System.Version
+- uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  commentId: M:NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  parent: NitroxServer.Serialization.Upgrade.SaveDataUpgrade
+  isExternal: true
+  href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeWorldData_Newtonsoft_Json_Linq_JObject_
+  name: UpgradeWorldData(JObject)
+  nameWithType: SaveDataUpgrade.UpgradeWorldData(JObject)
+  fullName: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradeWorldData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeWorldData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData(Newtonsoft.Json.Linq.JObject)
+    name: UpgradeWorldData
+    href: NitroxServer.Serialization.Upgrade.SaveDataUpgrade.UpgradeWorldData.html#NitroxServer_Serialization_Upgrade_SaveDataUpgrade_UpgradeWorldData_Newtonsoft_Json_Linq_JObject_
+  - name: (
+  - uid: Newtonsoft.Json.Linq.JObject
+    name: JObject
+    isExternal: true
+  - name: )
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData*
+  commentId: Overload:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData
+  href: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData.html#NitroxServer_Serialization_SaveDataUpgrades_Upgrade_V1600_UpgradeWorldData_Newtonsoft_Json_Linq_JObject_
+  name: UpgradeWorldData
+  nameWithType: Upgrade_V1600.UpgradeWorldData
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.UpgradeWorldData
+- uid: Newtonsoft.Json.Linq.JObject
+  commentId: T:Newtonsoft.Json.Linq.JObject
+  parent: Newtonsoft.Json.Linq
+  isExternal: true
+  name: JObject
+  nameWithType: JObject
+  fullName: Newtonsoft.Json.Linq.JObject
+- uid: Newtonsoft.Json.Linq
+  commentId: N:Newtonsoft.Json.Linq
+  isExternal: true
+  name: Newtonsoft.Json.Linq
+  nameWithType: Newtonsoft.Json.Linq
+  fullName: Newtonsoft.Json.Linq
+  spec.csharp:
+  - uid: Newtonsoft
+    name: Newtonsoft
+    isExternal: true
+  - name: .
+  - uid: Newtonsoft.Json
+    name: Json
+    isExternal: true
+  - name: .
+  - uid: Newtonsoft.Json.Linq
+    name: Linq
+    isExternal: true
+  spec.vb:
+  - uid: Newtonsoft
+    name: Newtonsoft
+    isExternal: true
+  - name: .
+  - uid: Newtonsoft.Json
+    name: Json
+    isExternal: true
+  - name: .
+  - uid: Newtonsoft.Json.Linq
+    name: Linq
+    isExternal: true
+memberLayout: SeparatePages

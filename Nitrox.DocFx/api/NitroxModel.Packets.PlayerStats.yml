@@ -1,0 +1,732 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.PlayerStats
+  commentId: T:NitroxModel.Packets.PlayerStats
+  id: PlayerStats
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.PlayerStats.#ctor(System.UInt16,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  - NitroxModel.Packets.PlayerStats.Food
+  - NitroxModel.Packets.PlayerStats.Health
+  - NitroxModel.Packets.PlayerStats.InfectionAmount
+  - NitroxModel.Packets.PlayerStats.MaxOxygen
+  - NitroxModel.Packets.PlayerStats.Oxygen
+  - NitroxModel.Packets.PlayerStats.PlayerId
+  - NitroxModel.Packets.PlayerStats.Water
+  langs:
+  - csharp
+  - vb
+  name: PlayerStats
+  nameWithType: PlayerStats
+  fullName: NitroxModel.Packets.PlayerStats
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerStats
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class PlayerStats : Packet
+    content.vb: >-
+      <Serializable>
+
+      Public Class PlayerStats Inherits Packet
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  inheritedMembers:
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - NitroxModel.Packets.Packet.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.PlayerStats.PlayerId
+  commentId: P:NitroxModel.Packets.PlayerStats.PlayerId
+  id: PlayerId
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: PlayerId
+  nameWithType: PlayerStats.PlayerId
+  fullName: NitroxModel.Packets.PlayerStats.PlayerId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerId
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public ushort PlayerId { get; set; }
+    parameters: []
+    return:
+      type: System.UInt16
+    content.vb: Public Property PlayerId As UShort
+  overload: NitroxModel.Packets.PlayerStats.PlayerId*
+- uid: NitroxModel.Packets.PlayerStats.Oxygen
+  commentId: P:NitroxModel.Packets.PlayerStats.Oxygen
+  id: Oxygen
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: Oxygen
+  nameWithType: PlayerStats.Oxygen
+  fullName: NitroxModel.Packets.PlayerStats.Oxygen
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Oxygen
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public float Oxygen { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property Oxygen As Single
+  overload: NitroxModel.Packets.PlayerStats.Oxygen*
+- uid: NitroxModel.Packets.PlayerStats.MaxOxygen
+  commentId: P:NitroxModel.Packets.PlayerStats.MaxOxygen
+  id: MaxOxygen
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: MaxOxygen
+  nameWithType: PlayerStats.MaxOxygen
+  fullName: NitroxModel.Packets.PlayerStats.MaxOxygen
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MaxOxygen
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public float MaxOxygen { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property MaxOxygen As Single
+  overload: NitroxModel.Packets.PlayerStats.MaxOxygen*
+- uid: NitroxModel.Packets.PlayerStats.Health
+  commentId: P:NitroxModel.Packets.PlayerStats.Health
+  id: Health
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: Health
+  nameWithType: PlayerStats.Health
+  fullName: NitroxModel.Packets.PlayerStats.Health
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Health
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public float Health { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property Health As Single
+  overload: NitroxModel.Packets.PlayerStats.Health*
+- uid: NitroxModel.Packets.PlayerStats.Food
+  commentId: P:NitroxModel.Packets.PlayerStats.Food
+  id: Food
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: Food
+  nameWithType: PlayerStats.Food
+  fullName: NitroxModel.Packets.PlayerStats.Food
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Food
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public float Food { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property Food As Single
+  overload: NitroxModel.Packets.PlayerStats.Food*
+- uid: NitroxModel.Packets.PlayerStats.Water
+  commentId: P:NitroxModel.Packets.PlayerStats.Water
+  id: Water
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: Water
+  nameWithType: PlayerStats.Water
+  fullName: NitroxModel.Packets.PlayerStats.Water
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Water
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public float Water { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property Water As Single
+  overload: NitroxModel.Packets.PlayerStats.Water*
+- uid: NitroxModel.Packets.PlayerStats.InfectionAmount
+  commentId: P:NitroxModel.Packets.PlayerStats.InfectionAmount
+  id: InfectionAmount
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: InfectionAmount
+  nameWithType: PlayerStats.InfectionAmount
+  fullName: NitroxModel.Packets.PlayerStats.InfectionAmount
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: InfectionAmount
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 14
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public float InfectionAmount { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property InfectionAmount As Single
+  overload: NitroxModel.Packets.PlayerStats.InfectionAmount*
+- uid: NitroxModel.Packets.PlayerStats.#ctor(System.UInt16,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  commentId: M:NitroxModel.Packets.PlayerStats.#ctor(System.UInt16,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  id: '#ctor(System.UInt16,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)'
+  parent: NitroxModel.Packets.PlayerStats
+  langs:
+  - csharp
+  - vb
+  name: PlayerStats(ushort, float, float, float, float, float, float)
+  nameWithType: PlayerStats.PlayerStats(ushort, float, float, float, float, float, float)
+  fullName: NitroxModel.Packets.PlayerStats.PlayerStats(ushort, float, float, float, float, float, float)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/PlayerStats.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/PlayerStats.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
+    parameters:
+    - id: playerId
+      type: System.UInt16
+    - id: oxygen
+      type: System.Single
+    - id: maxOxygen
+      type: System.Single
+    - id: health
+      type: System.Single
+    - id: food
+      type: System.Single
+    - id: water
+      type: System.Single
+    - id: infectionAmount
+      type: System.Single
+    content.vb: Public Sub New(playerId As UShort, oxygen As Single, maxOxygen As Single, health As Single, food As Single, water As Single, infectionAmount As Single)
+  overload: NitroxModel.Packets.PlayerStats.#ctor*
+  nameWithType.vb: PlayerStats.New(UShort, Single, Single, Single, Single, Single, Single)
+  fullName.vb: NitroxModel.Packets.PlayerStats.New(UShort, Single, Single, Single, Single, Single, Single)
+  name.vb: New(UShort, Single, Single, Single, Single, Single, Single)
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.PlayerStats.PlayerId*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.PlayerId
+  href: NitroxModel.Packets.PlayerStats.PlayerId.html#NitroxModel_Packets_PlayerStats_PlayerId
+  name: PlayerId
+  nameWithType: PlayerStats.PlayerId
+  fullName: NitroxModel.Packets.PlayerStats.PlayerId
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: NitroxModel.Packets.PlayerStats.Oxygen*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.Oxygen
+  href: NitroxModel.Packets.PlayerStats.Oxygen.html#NitroxModel_Packets_PlayerStats_Oxygen
+  name: Oxygen
+  nameWithType: PlayerStats.Oxygen
+  fullName: NitroxModel.Packets.PlayerStats.Oxygen
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxModel.Packets.PlayerStats.MaxOxygen*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.MaxOxygen
+  href: NitroxModel.Packets.PlayerStats.MaxOxygen.html#NitroxModel_Packets_PlayerStats_MaxOxygen
+  name: MaxOxygen
+  nameWithType: PlayerStats.MaxOxygen
+  fullName: NitroxModel.Packets.PlayerStats.MaxOxygen
+- uid: NitroxModel.Packets.PlayerStats.Health*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.Health
+  href: NitroxModel.Packets.PlayerStats.Health.html#NitroxModel_Packets_PlayerStats_Health
+  name: Health
+  nameWithType: PlayerStats.Health
+  fullName: NitroxModel.Packets.PlayerStats.Health
+- uid: NitroxModel.Packets.PlayerStats.Food*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.Food
+  href: NitroxModel.Packets.PlayerStats.Food.html#NitroxModel_Packets_PlayerStats_Food
+  name: Food
+  nameWithType: PlayerStats.Food
+  fullName: NitroxModel.Packets.PlayerStats.Food
+- uid: NitroxModel.Packets.PlayerStats.Water*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.Water
+  href: NitroxModel.Packets.PlayerStats.Water.html#NitroxModel_Packets_PlayerStats_Water
+  name: Water
+  nameWithType: PlayerStats.Water
+  fullName: NitroxModel.Packets.PlayerStats.Water
+- uid: NitroxModel.Packets.PlayerStats.InfectionAmount*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.InfectionAmount
+  href: NitroxModel.Packets.PlayerStats.InfectionAmount.html#NitroxModel_Packets_PlayerStats_InfectionAmount
+  name: InfectionAmount
+  nameWithType: PlayerStats.InfectionAmount
+  fullName: NitroxModel.Packets.PlayerStats.InfectionAmount
+- uid: NitroxModel.Packets.PlayerStats.#ctor*
+  commentId: Overload:NitroxModel.Packets.PlayerStats.#ctor
+  href: NitroxModel.Packets.PlayerStats.-ctor.html#NitroxModel_Packets_PlayerStats__ctor_System_UInt16_System_Single_System_Single_System_Single_System_Single_System_Single_System_Single_
+  name: PlayerStats
+  nameWithType: PlayerStats.PlayerStats
+  fullName: NitroxModel.Packets.PlayerStats.PlayerStats
+  nameWithType.vb: PlayerStats.New
+  fullName.vb: NitroxModel.Packets.PlayerStats.New
+  name.vb: New
+memberLayout: SeparatePages

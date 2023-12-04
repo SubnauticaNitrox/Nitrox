@@ -1,0 +1,707 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Terrain
+  commentId: T:NitroxClient.GameLogic.Terrain
+  id: Terrain
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.Terrain.#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Map.VisibleCells,NitroxClient.Map.VisibleBatches)
+  - NitroxClient.GameLogic.Terrain.BatchLoaded(Int3)
+  - NitroxClient.GameLogic.Terrain.BatchUnloaded(Int3)
+  - NitroxClient.GameLogic.Terrain.CellLoaded(Int3,Int3,System.Int32)
+  - NitroxClient.GameLogic.Terrain.CellUnloaded(Int3,Int3,System.Int32)
+  - NitroxClient.GameLogic.Terrain.UpdateVisibility
+  - NitroxClient.GameLogic.Terrain.WaitForWorldLoad
+  langs:
+  - csharp
+  - vb
+  name: Terrain
+  nameWithType: Terrain
+  fullName: NitroxClient.GameLogic.Terrain
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Terrain
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 13
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public class Terrain
+    content.vb: Public Class Terrain
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Terrain.#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Map.VisibleCells,NitroxClient.Map.VisibleBatches)
+  commentId: M:NitroxClient.GameLogic.Terrain.#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Map.VisibleCells,NitroxClient.Map.VisibleBatches)
+  id: '#ctor(NitroxClient.Communication.Abstract.IMultiplayerSession,NitroxClient.Communication.Abstract.IPacketSender,NitroxClient.Map.VisibleCells,NitroxClient.Map.VisibleBatches)'
+  parent: NitroxClient.GameLogic.Terrain
+  langs:
+  - csharp
+  - vb
+  name: Terrain(IMultiplayerSession, IPacketSender, VisibleCells, VisibleBatches)
+  nameWithType: Terrain.Terrain(IMultiplayerSession, IPacketSender, VisibleCells, VisibleBatches)
+  fullName: NitroxClient.GameLogic.Terrain.Terrain(NitroxClient.Communication.Abstract.IMultiplayerSession, NitroxClient.Communication.Abstract.IPacketSender, NitroxClient.Map.VisibleCells, NitroxClient.Map.VisibleBatches)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 30
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, VisibleBatches visibleBatches)
+    parameters:
+    - id: multiplayerSession
+      type: NitroxClient.Communication.Abstract.IMultiplayerSession
+    - id: packetSender
+      type: NitroxClient.Communication.Abstract.IPacketSender
+    - id: visibleCells
+      type: NitroxClient.Map.VisibleCells
+    - id: visibleBatches
+      type: NitroxClient.Map.VisibleBatches
+    content.vb: Public Sub New(multiplayerSession As IMultiplayerSession, packetSender As IPacketSender, visibleCells As VisibleCells, visibleBatches As VisibleBatches)
+  overload: NitroxClient.GameLogic.Terrain.#ctor*
+  nameWithType.vb: Terrain.New(IMultiplayerSession, IPacketSender, VisibleCells, VisibleBatches)
+  fullName.vb: NitroxClient.GameLogic.Terrain.New(NitroxClient.Communication.Abstract.IMultiplayerSession, NitroxClient.Communication.Abstract.IPacketSender, NitroxClient.Map.VisibleCells, NitroxClient.Map.VisibleBatches)
+  name.vb: New(IMultiplayerSession, IPacketSender, VisibleCells, VisibleBatches)
+- uid: NitroxClient.GameLogic.Terrain.CellLoaded(Int3,Int3,System.Int32)
+  commentId: M:NitroxClient.GameLogic.Terrain.CellLoaded(Int3,Int3,System.Int32)
+  id: CellLoaded(Int3,Int3,System.Int32)
+  parent: NitroxClient.GameLogic.Terrain
+  langs:
+  - csharp
+  - vb
+  name: CellLoaded(Int3, Int3, int)
+  nameWithType: Terrain.CellLoaded(Int3, Int3, int)
+  fullName: NitroxClient.GameLogic.Terrain.CellLoaded(Int3, Int3, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CellLoaded
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 38
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void CellLoaded(Int3 batchId, Int3 cellId, int level)
+    parameters:
+    - id: batchId
+      type: Int3
+    - id: cellId
+      type: Int3
+    - id: level
+      type: System.Int32
+    content.vb: Public Sub CellLoaded(batchId As Int3, cellId As Int3, level As Integer)
+  overload: NitroxClient.GameLogic.Terrain.CellLoaded*
+  nameWithType.vb: Terrain.CellLoaded(Int3, Int3, Integer)
+  fullName.vb: NitroxClient.GameLogic.Terrain.CellLoaded(Int3, Int3, Integer)
+  name.vb: CellLoaded(Int3, Int3, Integer)
+- uid: NitroxClient.GameLogic.Terrain.CellUnloaded(Int3,Int3,System.Int32)
+  commentId: M:NitroxClient.GameLogic.Terrain.CellUnloaded(Int3,Int3,System.Int32)
+  id: CellUnloaded(Int3,Int3,System.Int32)
+  parent: NitroxClient.GameLogic.Terrain
+  langs:
+  - csharp
+  - vb
+  name: CellUnloaded(Int3, Int3, int)
+  nameWithType: Terrain.CellUnloaded(Int3, Int3, int)
+  fullName: NitroxClient.GameLogic.Terrain.CellUnloaded(Int3, Int3, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CellUnloaded
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 50
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
+    parameters:
+    - id: batchId
+      type: Int3
+    - id: cellId
+      type: Int3
+    - id: level
+      type: System.Int32
+    content.vb: Public Sub CellUnloaded(batchId As Int3, cellId As Int3, level As Integer)
+  overload: NitroxClient.GameLogic.Terrain.CellUnloaded*
+  nameWithType.vb: Terrain.CellUnloaded(Int3, Int3, Integer)
+  fullName.vb: NitroxClient.GameLogic.Terrain.CellUnloaded(Int3, Int3, Integer)
+  name.vb: CellUnloaded(Int3, Int3, Integer)
+- uid: NitroxClient.GameLogic.Terrain.BatchLoaded(Int3)
+  commentId: M:NitroxClient.GameLogic.Terrain.BatchLoaded(Int3)
+  id: BatchLoaded(Int3)
+  parent: NitroxClient.GameLogic.Terrain
+  langs:
+  - csharp
+  - vb
+  name: BatchLoaded(Int3)
+  nameWithType: Terrain.BatchLoaded(Int3)
+  fullName: NitroxClient.GameLogic.Terrain.BatchLoaded(Int3)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BatchLoaded
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 61
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BatchLoaded(Int3 batchId)
+    parameters:
+    - id: batchId
+      type: Int3
+    content.vb: Public Sub BatchLoaded(batchId As Int3)
+  overload: NitroxClient.GameLogic.Terrain.BatchLoaded*
+- uid: NitroxClient.GameLogic.Terrain.BatchUnloaded(Int3)
+  commentId: M:NitroxClient.GameLogic.Terrain.BatchUnloaded(Int3)
+  id: BatchUnloaded(Int3)
+  parent: NitroxClient.GameLogic.Terrain
+  langs:
+  - csharp
+  - vb
+  name: BatchUnloaded(Int3)
+  nameWithType: Terrain.BatchUnloaded(Int3)
+  fullName: NitroxClient.GameLogic.Terrain.BatchUnloaded(Int3)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BatchUnloaded
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 72
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void BatchUnloaded(Int3 batchId)
+    parameters:
+    - id: batchId
+      type: Int3
+    content.vb: Public Sub BatchUnloaded(batchId As Int3)
+  overload: NitroxClient.GameLogic.Terrain.BatchUnloaded*
+- uid: NitroxClient.GameLogic.Terrain.UpdateVisibility
+  commentId: M:NitroxClient.GameLogic.Terrain.UpdateVisibility
+  id: UpdateVisibility
+  parent: NitroxClient.GameLogic.Terrain
+  langs:
+  - csharp
+  - vb
+  name: UpdateVisibility()
+  nameWithType: Terrain.UpdateVisibility()
+  fullName: NitroxClient.GameLogic.Terrain.UpdateVisibility()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UpdateVisibility
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 83
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  syntax:
+    content: public void UpdateVisibility()
+    content.vb: Public Sub UpdateVisibility()
+  overload: NitroxClient.GameLogic.Terrain.UpdateVisibility*
+- uid: NitroxClient.GameLogic.Terrain.WaitForWorldLoad
+  commentId: M:NitroxClient.GameLogic.Terrain.WaitForWorldLoad
+  id: WaitForWorldLoad
+  parent: NitroxClient.GameLogic.Terrain
+  langs:
+  - csharp
+  - vb
+  name: WaitForWorldLoad()
+  nameWithType: Terrain.WaitForWorldLoad()
+  fullName: NitroxClient.GameLogic.Terrain.WaitForWorldLoad()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Terrain.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitForWorldLoad
+    path: ../NitroxClient/GameLogic/Terrain.cs
+    startLine: 117
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic
+  summary: Forces world streamer's to load the terrain around the MainCamera and waits until it's done to unfreeze the player.
+  example: []
+  syntax:
+    content: public static IEnumerator WaitForWorldLoad()
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Shared Function WaitForWorldLoad() As IEnumerator
+  overload: NitroxClient.GameLogic.Terrain.WaitForWorldLoad*
+references:
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Terrain.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.Terrain.#ctor
+  href: NitroxClient.GameLogic.Terrain.-ctor.html#NitroxClient_GameLogic_Terrain__ctor_NitroxClient_Communication_Abstract_IMultiplayerSession_NitroxClient_Communication_Abstract_IPacketSender_NitroxClient_Map_VisibleCells_NitroxClient_Map_VisibleBatches_
+  name: Terrain
+  nameWithType: Terrain.Terrain
+  fullName: NitroxClient.GameLogic.Terrain.Terrain
+  nameWithType.vb: Terrain.New
+  fullName.vb: NitroxClient.GameLogic.Terrain.New
+  name.vb: New
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSession
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSession
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSession.html
+  name: IMultiplayerSession
+  nameWithType: IMultiplayerSession
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSession
+- uid: NitroxClient.Communication.Abstract.IPacketSender
+  commentId: T:NitroxClient.Communication.Abstract.IPacketSender
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IPacketSender.html
+  name: IPacketSender
+  nameWithType: IPacketSender
+  fullName: NitroxClient.Communication.Abstract.IPacketSender
+- uid: NitroxClient.Map.VisibleCells
+  commentId: T:NitroxClient.Map.VisibleCells
+  parent: NitroxClient.Map
+  href: NitroxClient.Map.VisibleCells.html
+  name: VisibleCells
+  nameWithType: VisibleCells
+  fullName: NitroxClient.Map.VisibleCells
+- uid: NitroxClient.Map.VisibleBatches
+  commentId: T:NitroxClient.Map.VisibleBatches
+  parent: NitroxClient.Map
+  href: NitroxClient.Map.VisibleBatches.html
+  name: VisibleBatches
+  nameWithType: VisibleBatches
+  fullName: NitroxClient.Map.VisibleBatches
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Map
+  commentId: N:NitroxClient.Map
+  href: NitroxClient.html
+  name: NitroxClient.Map
+  nameWithType: NitroxClient.Map
+  fullName: NitroxClient.Map
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Map
+    name: Map
+    href: NitroxClient.Map.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Map
+    name: Map
+    href: NitroxClient.Map.html
+- uid: NitroxClient.GameLogic.Terrain.CellLoaded*
+  commentId: Overload:NitroxClient.GameLogic.Terrain.CellLoaded
+  href: NitroxClient.GameLogic.Terrain.CellLoaded.html#NitroxClient_GameLogic_Terrain_CellLoaded_Int3_Int3_System_Int32_
+  name: CellLoaded
+  nameWithType: Terrain.CellLoaded
+  fullName: NitroxClient.GameLogic.Terrain.CellLoaded
+- uid: Int3
+  commentId: T:Int3
+  isExternal: true
+  name: Int3
+  nameWithType: Int3
+  fullName: Int3
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxClient.GameLogic.Terrain.CellUnloaded*
+  commentId: Overload:NitroxClient.GameLogic.Terrain.CellUnloaded
+  href: NitroxClient.GameLogic.Terrain.CellUnloaded.html#NitroxClient_GameLogic_Terrain_CellUnloaded_Int3_Int3_System_Int32_
+  name: CellUnloaded
+  nameWithType: Terrain.CellUnloaded
+  fullName: NitroxClient.GameLogic.Terrain.CellUnloaded
+- uid: NitroxClient.GameLogic.Terrain.BatchLoaded*
+  commentId: Overload:NitroxClient.GameLogic.Terrain.BatchLoaded
+  href: NitroxClient.GameLogic.Terrain.BatchLoaded.html#NitroxClient_GameLogic_Terrain_BatchLoaded_Int3_
+  name: BatchLoaded
+  nameWithType: Terrain.BatchLoaded
+  fullName: NitroxClient.GameLogic.Terrain.BatchLoaded
+- uid: NitroxClient.GameLogic.Terrain.BatchUnloaded*
+  commentId: Overload:NitroxClient.GameLogic.Terrain.BatchUnloaded
+  href: NitroxClient.GameLogic.Terrain.BatchUnloaded.html#NitroxClient_GameLogic_Terrain_BatchUnloaded_Int3_
+  name: BatchUnloaded
+  nameWithType: Terrain.BatchUnloaded
+  fullName: NitroxClient.GameLogic.Terrain.BatchUnloaded
+- uid: NitroxClient.GameLogic.Terrain.UpdateVisibility*
+  commentId: Overload:NitroxClient.GameLogic.Terrain.UpdateVisibility
+  href: NitroxClient.GameLogic.Terrain.UpdateVisibility.html#NitroxClient_GameLogic_Terrain_UpdateVisibility
+  name: UpdateVisibility
+  nameWithType: Terrain.UpdateVisibility
+  fullName: NitroxClient.GameLogic.Terrain.UpdateVisibility
+- uid: NitroxClient.GameLogic.Terrain.WaitForWorldLoad*
+  commentId: Overload:NitroxClient.GameLogic.Terrain.WaitForWorldLoad
+  href: NitroxClient.GameLogic.Terrain.WaitForWorldLoad.html#NitroxClient_GameLogic_Terrain_WaitForWorldLoad
+  name: WaitForWorldLoad
+  nameWithType: Terrain.WaitForWorldLoad
+  fullName: NitroxClient.GameLogic.Terrain.WaitForWorldLoad
+- uid: System.Collections.IEnumerator
+  commentId: T:System.Collections.IEnumerator
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerator
+  name: IEnumerator
+  nameWithType: IEnumerator
+  fullName: System.Collections.IEnumerator
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+memberLayout: SeparatePages

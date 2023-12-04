@@ -1,0 +1,508 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  id: HueSaturationVibrancySwapper
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  children:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.#ctor(UnityEngine.Color)
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor(UnityEngine.Color)
+  langs:
+  - csharp
+  - vb
+  name: HueSaturationVibrancySwapper
+  nameWithType: HueSaturationVibrancySwapper
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/ColorSwap/Strategy/HueSaturationVibrancySwapper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: HueSaturationVibrancySwapper
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/ColorSwap/Strategy/HueSaturationVibrancySwapper.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  syntax:
+    content: 'public class HueSaturationVibrancySwapper : IColorSwapStrategy'
+    content.vb: Public Class HueSaturationVibrancySwapper Implements IColorSwapStrategy
+  inheritance:
+  - System.Object
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.#ctor(UnityEngine.Color)
+  commentId: M:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.#ctor(UnityEngine.Color)
+  id: '#ctor(UnityEngine.Color)'
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  langs:
+  - csharp
+  - vb
+  name: HueSaturationVibrancySwapper(Color)
+  nameWithType: HueSaturationVibrancySwapper.HueSaturationVibrancySwapper(Color)
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.HueSaturationVibrancySwapper(UnityEngine.Color)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/ColorSwap/Strategy/HueSaturationVibrancySwapper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/ColorSwap/Strategy/HueSaturationVibrancySwapper.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  syntax:
+    content: public HueSaturationVibrancySwapper(Color playerColor)
+    parameters:
+    - id: playerColor
+      type: UnityEngine.Color
+    content.vb: Public Sub New(playerColor As Color)
+  overload: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.#ctor*
+  nameWithType.vb: HueSaturationVibrancySwapper.New(Color)
+  fullName.vb: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.New(UnityEngine.Color)
+  name.vb: New(Color)
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor(UnityEngine.Color)
+  commentId: M:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor(UnityEngine.Color)
+  id: SwapColor(UnityEngine.Color)
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper
+  langs:
+  - csharp
+  - vb
+  name: SwapColor(Color)
+  nameWithType: HueSaturationVibrancySwapper.SwapColor(Color)
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor(UnityEngine.Color)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/ColorSwap/Strategy/HueSaturationVibrancySwapper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SwapColor
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/ColorSwap/Strategy/HueSaturationVibrancySwapper.cs
+    startLine: 16
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  example: []
+  syntax:
+    content: public Color SwapColor(Color originalColor)
+    parameters:
+    - id: originalColor
+      type: UnityEngine.Color
+    return:
+      type: UnityEngine.Color
+    content.vb: Public Function SwapColor(originalColor As Color) As Color
+  overload: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor*
+  implements:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor(UnityEngine.Color)
+references:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+    name: ColorSwap
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+    name: Strategy
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+    name: ColorSwap
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+    name: Strategy
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.html
+  name: IColorSwapStrategy
+  nameWithType: IColorSwapStrategy
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.#ctor
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.-ctor.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_ColorSwap_Strategy_HueSaturationVibrancySwapper__ctor_UnityEngine_Color_
+  name: HueSaturationVibrancySwapper
+  nameWithType: HueSaturationVibrancySwapper.HueSaturationVibrancySwapper
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.HueSaturationVibrancySwapper
+  nameWithType.vb: HueSaturationVibrancySwapper.New
+  fullName.vb: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.New
+  name.vb: New
+- uid: UnityEngine.Color
+  commentId: T:UnityEngine.Color
+  parent: UnityEngine
+  isExternal: true
+  name: Color
+  nameWithType: Color
+  fullName: UnityEngine.Color
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor*
+  commentId: Overload:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_ColorSwap_Strategy_HueSaturationVibrancySwapper_SwapColor_UnityEngine_Color_
+  name: SwapColor
+  nameWithType: HueSaturationVibrancySwapper.SwapColor
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.HueSaturationVibrancySwapper.SwapColor
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor(UnityEngine.Color)
+  commentId: M:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor(UnityEngine.Color)
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy
+  isExternal: true
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_IColorSwapStrategy_SwapColor_UnityEngine_Color_
+  name: SwapColor(Color)
+  nameWithType: IColorSwapStrategy.SwapColor(Color)
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor(UnityEngine.Color)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor(UnityEngine.Color)
+    name: SwapColor
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_IColorSwapStrategy_SwapColor_UnityEngine_Color_
+  - name: (
+  - uid: UnityEngine.Color
+    name: Color
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor(UnityEngine.Color)
+    name: SwapColor
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.IColorSwapStrategy.SwapColor.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_IColorSwapStrategy_SwapColor_UnityEngine_Color_
+  - name: (
+  - uid: UnityEngine.Color
+    name: Color
+    isExternal: true
+  - name: )
+memberLayout: SeparatePages

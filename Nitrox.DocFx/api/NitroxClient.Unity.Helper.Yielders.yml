@@ -1,0 +1,532 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Unity.Helper.Yielders
+  commentId: T:NitroxClient.Unity.Helper.Yielders
+  id: Yielders
+  parent: NitroxClient.Unity.Helper
+  children:
+  - NitroxClient.Unity.Helper.Yielders.WaitFor100Milliseconds
+  - NitroxClient.Unity.Helper.Yielders.WaitFor1Second
+  - NitroxClient.Unity.Helper.Yielders.WaitFor2Seconds
+  - NitroxClient.Unity.Helper.Yielders.WaitFor3Seconds
+  - NitroxClient.Unity.Helper.Yielders.WaitForEndOfFrame
+  - NitroxClient.Unity.Helper.Yielders.WaitForFixedUpdate
+  - NitroxClient.Unity.Helper.Yielders.WaitForHalfSecond
+  langs:
+  - csharp
+  - vb
+  name: Yielders
+  nameWithType: Yielders
+  fullName: NitroxClient.Unity.Helper.Yielders
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Yielders
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  summary: Cache for yields in IEnumeration to reduce GC pressure.
+  example: []
+  syntax:
+    content: public static class Yielders
+    content.vb: Public Module Yielders
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Unity.Helper.Yielders.WaitForFixedUpdate
+  commentId: F:NitroxClient.Unity.Helper.Yielders.WaitForFixedUpdate
+  id: WaitForFixedUpdate
+  parent: NitroxClient.Unity.Helper.Yielders
+  langs:
+  - csharp
+  - vb
+  name: WaitForFixedUpdate
+  nameWithType: Yielders.WaitForFixedUpdate
+  fullName: NitroxClient.Unity.Helper.Yielders.WaitForFixedUpdate
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitForFixedUpdate
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly WaitForFixedUpdate WaitForFixedUpdate
+    return:
+      type: UnityEngine.WaitForFixedUpdate
+    content.vb: Public Shared ReadOnly WaitForFixedUpdate As WaitForFixedUpdate
+- uid: NitroxClient.Unity.Helper.Yielders.WaitForEndOfFrame
+  commentId: F:NitroxClient.Unity.Helper.Yielders.WaitForEndOfFrame
+  id: WaitForEndOfFrame
+  parent: NitroxClient.Unity.Helper.Yielders
+  langs:
+  - csharp
+  - vb
+  name: WaitForEndOfFrame
+  nameWithType: Yielders.WaitForEndOfFrame
+  fullName: NitroxClient.Unity.Helper.Yielders.WaitForEndOfFrame
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitForEndOfFrame
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly WaitForEndOfFrame WaitForEndOfFrame
+    return:
+      type: UnityEngine.WaitForEndOfFrame
+    content.vb: Public Shared ReadOnly WaitForEndOfFrame As WaitForEndOfFrame
+- uid: NitroxClient.Unity.Helper.Yielders.WaitFor100Milliseconds
+  commentId: F:NitroxClient.Unity.Helper.Yielders.WaitFor100Milliseconds
+  id: WaitFor100Milliseconds
+  parent: NitroxClient.Unity.Helper.Yielders
+  langs:
+  - csharp
+  - vb
+  name: WaitFor100Milliseconds
+  nameWithType: Yielders.WaitFor100Milliseconds
+  fullName: NitroxClient.Unity.Helper.Yielders.WaitFor100Milliseconds
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitFor100Milliseconds
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly WaitForSeconds WaitFor100Milliseconds
+    return:
+      type: UnityEngine.WaitForSeconds
+    content.vb: Public Shared ReadOnly WaitFor100Milliseconds As WaitForSeconds
+- uid: NitroxClient.Unity.Helper.Yielders.WaitForHalfSecond
+  commentId: F:NitroxClient.Unity.Helper.Yielders.WaitForHalfSecond
+  id: WaitForHalfSecond
+  parent: NitroxClient.Unity.Helper.Yielders
+  langs:
+  - csharp
+  - vb
+  name: WaitForHalfSecond
+  nameWithType: Yielders.WaitForHalfSecond
+  fullName: NitroxClient.Unity.Helper.Yielders.WaitForHalfSecond
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitForHalfSecond
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 12
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly WaitForSeconds WaitForHalfSecond
+    return:
+      type: UnityEngine.WaitForSeconds
+    content.vb: Public Shared ReadOnly WaitForHalfSecond As WaitForSeconds
+- uid: NitroxClient.Unity.Helper.Yielders.WaitFor1Second
+  commentId: F:NitroxClient.Unity.Helper.Yielders.WaitFor1Second
+  id: WaitFor1Second
+  parent: NitroxClient.Unity.Helper.Yielders
+  langs:
+  - csharp
+  - vb
+  name: WaitFor1Second
+  nameWithType: Yielders.WaitFor1Second
+  fullName: NitroxClient.Unity.Helper.Yielders.WaitFor1Second
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitFor1Second
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 13
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly WaitForSeconds WaitFor1Second
+    return:
+      type: UnityEngine.WaitForSeconds
+    content.vb: Public Shared ReadOnly WaitFor1Second As WaitForSeconds
+- uid: NitroxClient.Unity.Helper.Yielders.WaitFor2Seconds
+  commentId: F:NitroxClient.Unity.Helper.Yielders.WaitFor2Seconds
+  id: WaitFor2Seconds
+  parent: NitroxClient.Unity.Helper.Yielders
+  langs:
+  - csharp
+  - vb
+  name: WaitFor2Seconds
+  nameWithType: Yielders.WaitFor2Seconds
+  fullName: NitroxClient.Unity.Helper.Yielders.WaitFor2Seconds
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitFor2Seconds
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 14
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly WaitForSeconds WaitFor2Seconds
+    return:
+      type: UnityEngine.WaitForSeconds
+    content.vb: Public Shared ReadOnly WaitFor2Seconds As WaitForSeconds
+- uid: NitroxClient.Unity.Helper.Yielders.WaitFor3Seconds
+  commentId: F:NitroxClient.Unity.Helper.Yielders.WaitFor3Seconds
+  id: WaitFor3Seconds
+  parent: NitroxClient.Unity.Helper.Yielders
+  langs:
+  - csharp
+  - vb
+  name: WaitFor3Seconds
+  nameWithType: Yielders.WaitFor3Seconds
+  fullName: NitroxClient.Unity.Helper.Yielders.WaitFor3Seconds
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Unity/Helper/Yielders.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WaitFor3Seconds
+    path: ../NitroxClient/Unity/Helper/Yielders.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Unity.Helper
+  syntax:
+    content: public static readonly WaitForSeconds WaitFor3Seconds
+    return:
+      type: UnityEngine.WaitForSeconds
+    content.vb: Public Shared ReadOnly WaitFor3Seconds As WaitForSeconds
+references:
+- uid: NitroxClient.Unity.Helper
+  commentId: N:NitroxClient.Unity.Helper
+  href: NitroxClient.html
+  name: NitroxClient.Unity.Helper
+  nameWithType: NitroxClient.Unity.Helper
+  fullName: NitroxClient.Unity.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Unity
+    name: Unity
+    href: NitroxClient.Unity.html
+  - name: .
+  - uid: NitroxClient.Unity.Helper
+    name: Helper
+    href: NitroxClient.Unity.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: UnityEngine.WaitForFixedUpdate
+  commentId: T:UnityEngine.WaitForFixedUpdate
+  parent: UnityEngine
+  isExternal: true
+  name: WaitForFixedUpdate
+  nameWithType: WaitForFixedUpdate
+  fullName: UnityEngine.WaitForFixedUpdate
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: UnityEngine.WaitForEndOfFrame
+  commentId: T:UnityEngine.WaitForEndOfFrame
+  parent: UnityEngine
+  isExternal: true
+  name: WaitForEndOfFrame
+  nameWithType: WaitForEndOfFrame
+  fullName: UnityEngine.WaitForEndOfFrame
+- uid: UnityEngine.WaitForSeconds
+  commentId: T:UnityEngine.WaitForSeconds
+  parent: UnityEngine
+  isExternal: true
+  name: WaitForSeconds
+  nameWithType: WaitForSeconds
+  fullName: UnityEngine.WaitForSeconds
+memberLayout: SeparatePages

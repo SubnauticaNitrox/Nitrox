@@ -1,0 +1,1055 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Serialization.World.World
+  commentId: T:NitroxServer.Serialization.World.World
+  id: World
+  parent: NitroxServer.Serialization.World
+  children:
+  - NitroxServer.Serialization.World.World.BatchEntitySpawner
+  - NitroxServer.Serialization.World.World.BuildingManager
+  - NitroxServer.Serialization.World.World.EntityRegistry
+  - NitroxServer.Serialization.World.World.EntitySimulation
+  - NitroxServer.Serialization.World.World.EscapePodManager
+  - NitroxServer.Serialization.World.World.GameData
+  - NitroxServer.Serialization.World.World.GameMode
+  - NitroxServer.Serialization.World.World.PlayerManager
+  - NitroxServer.Serialization.World.World.ScheduleKeeper
+  - NitroxServer.Serialization.World.World.Seed
+  - NitroxServer.Serialization.World.World.SimulationOwnershipData
+  - NitroxServer.Serialization.World.World.StoryManager
+  - NitroxServer.Serialization.World.World.TimeKeeper
+  - NitroxServer.Serialization.World.World.WorldEntityManager
+  langs:
+  - csharp
+  - vb
+  name: World
+  nameWithType: World
+  fullName: NitroxServer.Serialization.World.World
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: World
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public class World
+    content.vb: Public Class World
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.Serialization.World.World.PlayerManager
+  commentId: P:NitroxServer.Serialization.World.World.PlayerManager
+  id: PlayerManager
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: PlayerManager
+  nameWithType: World.PlayerManager
+  fullName: NitroxServer.Serialization.World.World.PlayerManager
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerManager
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 10
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public PlayerManager PlayerManager { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.PlayerManager
+    content.vb: Public Property PlayerManager As PlayerManager
+  overload: NitroxServer.Serialization.World.World.PlayerManager*
+- uid: NitroxServer.Serialization.World.World.ScheduleKeeper
+  commentId: P:NitroxServer.Serialization.World.World.ScheduleKeeper
+  id: ScheduleKeeper
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: ScheduleKeeper
+  nameWithType: World.ScheduleKeeper
+  fullName: NitroxServer.Serialization.World.World.ScheduleKeeper
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ScheduleKeeper
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 11
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public ScheduleKeeper ScheduleKeeper { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.ScheduleKeeper
+    content.vb: Public Property ScheduleKeeper As ScheduleKeeper
+  overload: NitroxServer.Serialization.World.World.ScheduleKeeper*
+- uid: NitroxServer.Serialization.World.World.TimeKeeper
+  commentId: P:NitroxServer.Serialization.World.World.TimeKeeper
+  id: TimeKeeper
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: TimeKeeper
+  nameWithType: World.TimeKeeper
+  fullName: NitroxServer.Serialization.World.World.TimeKeeper
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TimeKeeper
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 12
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public TimeKeeper TimeKeeper { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.TimeKeeper
+    content.vb: Public Property TimeKeeper As TimeKeeper
+  overload: NitroxServer.Serialization.World.World.TimeKeeper*
+- uid: NitroxServer.Serialization.World.World.SimulationOwnershipData
+  commentId: P:NitroxServer.Serialization.World.World.SimulationOwnershipData
+  id: SimulationOwnershipData
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: SimulationOwnershipData
+  nameWithType: World.SimulationOwnershipData
+  fullName: NitroxServer.Serialization.World.World.SimulationOwnershipData
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SimulationOwnershipData
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 13
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public SimulationOwnershipData SimulationOwnershipData { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.SimulationOwnershipData
+    content.vb: Public Property SimulationOwnershipData As SimulationOwnershipData
+  overload: NitroxServer.Serialization.World.World.SimulationOwnershipData*
+- uid: NitroxServer.Serialization.World.World.EscapePodManager
+  commentId: P:NitroxServer.Serialization.World.World.EscapePodManager
+  id: EscapePodManager
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: EscapePodManager
+  nameWithType: World.EscapePodManager
+  fullName: NitroxServer.Serialization.World.World.EscapePodManager
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EscapePodManager
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 14
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public EscapePodManager EscapePodManager { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.EscapePodManager
+    content.vb: Public Property EscapePodManager As EscapePodManager
+  overload: NitroxServer.Serialization.World.World.EscapePodManager*
+- uid: NitroxServer.Serialization.World.World.BatchEntitySpawner
+  commentId: P:NitroxServer.Serialization.World.World.BatchEntitySpawner
+  id: BatchEntitySpawner
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: BatchEntitySpawner
+  nameWithType: World.BatchEntitySpawner
+  fullName: NitroxServer.Serialization.World.World.BatchEntitySpawner
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BatchEntitySpawner
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 15
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public BatchEntitySpawner BatchEntitySpawner { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.Entities.Spawning.BatchEntitySpawner
+    content.vb: Public Property BatchEntitySpawner As BatchEntitySpawner
+  overload: NitroxServer.Serialization.World.World.BatchEntitySpawner*
+- uid: NitroxServer.Serialization.World.World.EntitySimulation
+  commentId: P:NitroxServer.Serialization.World.World.EntitySimulation
+  id: EntitySimulation
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: EntitySimulation
+  nameWithType: World.EntitySimulation
+  fullName: NitroxServer.Serialization.World.World.EntitySimulation
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntitySimulation
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 16
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public EntitySimulation EntitySimulation { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.Entities.EntitySimulation
+    content.vb: Public Property EntitySimulation As EntitySimulation
+  overload: NitroxServer.Serialization.World.World.EntitySimulation*
+- uid: NitroxServer.Serialization.World.World.EntityRegistry
+  commentId: P:NitroxServer.Serialization.World.World.EntityRegistry
+  id: EntityRegistry
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: EntityRegistry
+  nameWithType: World.EntityRegistry
+  fullName: NitroxServer.Serialization.World.World.EntityRegistry
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntityRegistry
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 17
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public EntityRegistry EntityRegistry { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.Entities.EntityRegistry
+    content.vb: Public Property EntityRegistry As EntityRegistry
+  overload: NitroxServer.Serialization.World.World.EntityRegistry*
+- uid: NitroxServer.Serialization.World.World.WorldEntityManager
+  commentId: P:NitroxServer.Serialization.World.World.WorldEntityManager
+  id: WorldEntityManager
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: WorldEntityManager
+  nameWithType: World.WorldEntityManager
+  fullName: NitroxServer.Serialization.World.World.WorldEntityManager
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WorldEntityManager
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 18
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public WorldEntityManager WorldEntityManager { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.Entities.WorldEntityManager
+    content.vb: Public Property WorldEntityManager As WorldEntityManager
+  overload: NitroxServer.Serialization.World.World.WorldEntityManager*
+- uid: NitroxServer.Serialization.World.World.BuildingManager
+  commentId: P:NitroxServer.Serialization.World.World.BuildingManager
+  id: BuildingManager
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: BuildingManager
+  nameWithType: World.BuildingManager
+  fullName: NitroxServer.Serialization.World.World.BuildingManager
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BuildingManager
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 19
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public BuildingManager BuildingManager { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.Bases.BuildingManager
+    content.vb: Public Property BuildingManager As BuildingManager
+  overload: NitroxServer.Serialization.World.World.BuildingManager*
+- uid: NitroxServer.Serialization.World.World.StoryManager
+  commentId: P:NitroxServer.Serialization.World.World.StoryManager
+  id: StoryManager
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: StoryManager
+  nameWithType: World.StoryManager
+  fullName: NitroxServer.Serialization.World.World.StoryManager
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: StoryManager
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 20
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public StoryManager StoryManager { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.StoryManager
+    content.vb: Public Property StoryManager As StoryManager
+  overload: NitroxServer.Serialization.World.World.StoryManager*
+- uid: NitroxServer.Serialization.World.World.GameData
+  commentId: P:NitroxServer.Serialization.World.World.GameData
+  id: GameData
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: GameData
+  nameWithType: World.GameData
+  fullName: NitroxServer.Serialization.World.World.GameData
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GameData
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 21
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public GameData GameData { get; set; }
+    parameters: []
+    return:
+      type: NitroxServer.GameLogic.Bases.GameData
+    content.vb: Public Property GameData As GameData
+  overload: NitroxServer.Serialization.World.World.GameData*
+- uid: NitroxServer.Serialization.World.World.GameMode
+  commentId: P:NitroxServer.Serialization.World.World.GameMode
+  id: GameMode
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: GameMode
+  nameWithType: World.GameMode
+  fullName: NitroxServer.Serialization.World.World.GameMode
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GameMode
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 22
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public NitroxGameMode GameMode { get; set; }
+    parameters: []
+    return:
+      type: NitroxModel.Server.NitroxGameMode
+    content.vb: Public Property GameMode As NitroxGameMode
+  overload: NitroxServer.Serialization.World.World.GameMode*
+- uid: NitroxServer.Serialization.World.World.Seed
+  commentId: P:NitroxServer.Serialization.World.World.Seed
+  id: Seed
+  parent: NitroxServer.Serialization.World.World
+  langs:
+  - csharp
+  - vb
+  name: Seed
+  nameWithType: World.Seed
+  fullName: NitroxServer.Serialization.World.World.Seed
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/World/World.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Seed
+    path: ../NitroxServer/Serialization/World/World.cs
+    startLine: 23
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization.World
+  syntax:
+    content: public string Seed { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Seed As String
+  overload: NitroxServer.Serialization.World.World.Seed*
+references:
+- uid: NitroxServer.Serialization.World
+  commentId: N:NitroxServer.Serialization.World
+  href: NitroxServer.html
+  name: NitroxServer.Serialization.World
+  nameWithType: NitroxServer.Serialization.World
+  fullName: NitroxServer.Serialization.World
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.World
+    name: World
+    href: NitroxServer.Serialization.World.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  - name: .
+  - uid: NitroxServer.Serialization.World
+    name: World
+    href: NitroxServer.Serialization.World.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.Serialization.World.World.PlayerManager*
+  commentId: Overload:NitroxServer.Serialization.World.World.PlayerManager
+  href: NitroxServer.Serialization.World.World.PlayerManager.html#NitroxServer_Serialization_World_World_PlayerManager
+  name: PlayerManager
+  nameWithType: World.PlayerManager
+  fullName: NitroxServer.Serialization.World.World.PlayerManager
+- uid: NitroxServer.GameLogic.PlayerManager
+  commentId: T:NitroxServer.GameLogic.PlayerManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.PlayerManager.html
+  name: PlayerManager
+  nameWithType: PlayerManager
+  fullName: NitroxServer.GameLogic.PlayerManager
+- uid: NitroxServer.GameLogic
+  commentId: N:NitroxServer.GameLogic
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic
+  nameWithType: NitroxServer.GameLogic
+  fullName: NitroxServer.GameLogic
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+- uid: NitroxServer.Serialization.World.World.ScheduleKeeper*
+  commentId: Overload:NitroxServer.Serialization.World.World.ScheduleKeeper
+  href: NitroxServer.Serialization.World.World.ScheduleKeeper.html#NitroxServer_Serialization_World_World_ScheduleKeeper
+  name: ScheduleKeeper
+  nameWithType: World.ScheduleKeeper
+  fullName: NitroxServer.Serialization.World.World.ScheduleKeeper
+- uid: NitroxServer.GameLogic.ScheduleKeeper
+  commentId: T:NitroxServer.GameLogic.ScheduleKeeper
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.ScheduleKeeper.html
+  name: ScheduleKeeper
+  nameWithType: ScheduleKeeper
+  fullName: NitroxServer.GameLogic.ScheduleKeeper
+- uid: NitroxServer.Serialization.World.World.TimeKeeper*
+  commentId: Overload:NitroxServer.Serialization.World.World.TimeKeeper
+  href: NitroxServer.Serialization.World.World.TimeKeeper.html#NitroxServer_Serialization_World_World_TimeKeeper
+  name: TimeKeeper
+  nameWithType: World.TimeKeeper
+  fullName: NitroxServer.Serialization.World.World.TimeKeeper
+- uid: NitroxServer.GameLogic.TimeKeeper
+  commentId: T:NitroxServer.GameLogic.TimeKeeper
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.TimeKeeper.html
+  name: TimeKeeper
+  nameWithType: TimeKeeper
+  fullName: NitroxServer.GameLogic.TimeKeeper
+- uid: NitroxServer.Serialization.World.World.SimulationOwnershipData*
+  commentId: Overload:NitroxServer.Serialization.World.World.SimulationOwnershipData
+  href: NitroxServer.Serialization.World.World.SimulationOwnershipData.html#NitroxServer_Serialization_World_World_SimulationOwnershipData
+  name: SimulationOwnershipData
+  nameWithType: World.SimulationOwnershipData
+  fullName: NitroxServer.Serialization.World.World.SimulationOwnershipData
+- uid: NitroxServer.GameLogic.SimulationOwnershipData
+  commentId: T:NitroxServer.GameLogic.SimulationOwnershipData
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.SimulationOwnershipData.html
+  name: SimulationOwnershipData
+  nameWithType: SimulationOwnershipData
+  fullName: NitroxServer.GameLogic.SimulationOwnershipData
+- uid: NitroxServer.Serialization.World.World.EscapePodManager*
+  commentId: Overload:NitroxServer.Serialization.World.World.EscapePodManager
+  href: NitroxServer.Serialization.World.World.EscapePodManager.html#NitroxServer_Serialization_World_World_EscapePodManager
+  name: EscapePodManager
+  nameWithType: World.EscapePodManager
+  fullName: NitroxServer.Serialization.World.World.EscapePodManager
+- uid: NitroxServer.GameLogic.EscapePodManager
+  commentId: T:NitroxServer.GameLogic.EscapePodManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.EscapePodManager.html
+  name: EscapePodManager
+  nameWithType: EscapePodManager
+  fullName: NitroxServer.GameLogic.EscapePodManager
+- uid: NitroxServer.Serialization.World.World.BatchEntitySpawner*
+  commentId: Overload:NitroxServer.Serialization.World.World.BatchEntitySpawner
+  href: NitroxServer.Serialization.World.World.BatchEntitySpawner.html#NitroxServer_Serialization_World_World_BatchEntitySpawner
+  name: BatchEntitySpawner
+  nameWithType: World.BatchEntitySpawner
+  fullName: NitroxServer.Serialization.World.World.BatchEntitySpawner
+- uid: NitroxServer.GameLogic.Entities.Spawning.BatchEntitySpawner
+  commentId: T:NitroxServer.GameLogic.Entities.Spawning.BatchEntitySpawner
+  parent: NitroxServer.GameLogic.Entities.Spawning
+  href: NitroxServer.GameLogic.Entities.Spawning.BatchEntitySpawner.html
+  name: BatchEntitySpawner
+  nameWithType: BatchEntitySpawner
+  fullName: NitroxServer.GameLogic.Entities.Spawning.BatchEntitySpawner
+- uid: NitroxServer.GameLogic.Entities.Spawning
+  commentId: N:NitroxServer.GameLogic.Entities.Spawning
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities.Spawning
+  nameWithType: NitroxServer.GameLogic.Entities.Spawning
+  fullName: NitroxServer.GameLogic.Entities.Spawning
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer.GameLogic.Entities.Spawning.html
+- uid: NitroxServer.Serialization.World.World.EntitySimulation*
+  commentId: Overload:NitroxServer.Serialization.World.World.EntitySimulation
+  href: NitroxServer.Serialization.World.World.EntitySimulation.html#NitroxServer_Serialization_World_World_EntitySimulation
+  name: EntitySimulation
+  nameWithType: World.EntitySimulation
+  fullName: NitroxServer.Serialization.World.World.EntitySimulation
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation
+  commentId: T:NitroxServer.GameLogic.Entities.EntitySimulation
+  parent: NitroxServer.GameLogic.Entities
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.html
+  name: EntitySimulation
+  nameWithType: EntitySimulation
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation
+- uid: NitroxServer.GameLogic.Entities
+  commentId: N:NitroxServer.GameLogic.Entities
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities
+  nameWithType: NitroxServer.GameLogic.Entities
+  fullName: NitroxServer.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+- uid: NitroxServer.Serialization.World.World.EntityRegistry*
+  commentId: Overload:NitroxServer.Serialization.World.World.EntityRegistry
+  href: NitroxServer.Serialization.World.World.EntityRegistry.html#NitroxServer_Serialization_World_World_EntityRegistry
+  name: EntityRegistry
+  nameWithType: World.EntityRegistry
+  fullName: NitroxServer.Serialization.World.World.EntityRegistry
+- uid: NitroxServer.GameLogic.Entities.EntityRegistry
+  commentId: T:NitroxServer.GameLogic.Entities.EntityRegistry
+  parent: NitroxServer.GameLogic.Entities
+  href: NitroxServer.GameLogic.Entities.EntityRegistry.html
+  name: EntityRegistry
+  nameWithType: EntityRegistry
+  fullName: NitroxServer.GameLogic.Entities.EntityRegistry
+- uid: NitroxServer.Serialization.World.World.WorldEntityManager*
+  commentId: Overload:NitroxServer.Serialization.World.World.WorldEntityManager
+  href: NitroxServer.Serialization.World.World.WorldEntityManager.html#NitroxServer_Serialization_World_World_WorldEntityManager
+  name: WorldEntityManager
+  nameWithType: World.WorldEntityManager
+  fullName: NitroxServer.Serialization.World.World.WorldEntityManager
+- uid: NitroxServer.GameLogic.Entities.WorldEntityManager
+  commentId: T:NitroxServer.GameLogic.Entities.WorldEntityManager
+  parent: NitroxServer.GameLogic.Entities
+  href: NitroxServer.GameLogic.Entities.WorldEntityManager.html
+  name: WorldEntityManager
+  nameWithType: WorldEntityManager
+  fullName: NitroxServer.GameLogic.Entities.WorldEntityManager
+- uid: NitroxServer.Serialization.World.World.BuildingManager*
+  commentId: Overload:NitroxServer.Serialization.World.World.BuildingManager
+  href: NitroxServer.Serialization.World.World.BuildingManager.html#NitroxServer_Serialization_World_World_BuildingManager
+  name: BuildingManager
+  nameWithType: World.BuildingManager
+  fullName: NitroxServer.Serialization.World.World.BuildingManager
+- uid: NitroxServer.GameLogic.Bases.BuildingManager
+  commentId: T:NitroxServer.GameLogic.Bases.BuildingManager
+  parent: NitroxServer.GameLogic.Bases
+  href: NitroxServer.GameLogic.Bases.BuildingManager.html
+  name: BuildingManager
+  nameWithType: BuildingManager
+  fullName: NitroxServer.GameLogic.Bases.BuildingManager
+- uid: NitroxServer.GameLogic.Bases
+  commentId: N:NitroxServer.GameLogic.Bases
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Bases
+  nameWithType: NitroxServer.GameLogic.Bases
+  fullName: NitroxServer.GameLogic.Bases
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Bases
+    name: Bases
+    href: NitroxServer.GameLogic.Bases.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Bases
+    name: Bases
+    href: NitroxServer.GameLogic.Bases.html
+- uid: NitroxServer.Serialization.World.World.StoryManager*
+  commentId: Overload:NitroxServer.Serialization.World.World.StoryManager
+  href: NitroxServer.Serialization.World.World.StoryManager.html#NitroxServer_Serialization_World_World_StoryManager
+  name: StoryManager
+  nameWithType: World.StoryManager
+  fullName: NitroxServer.Serialization.World.World.StoryManager
+- uid: NitroxServer.GameLogic.StoryManager
+  commentId: T:NitroxServer.GameLogic.StoryManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.StoryManager.html
+  name: StoryManager
+  nameWithType: StoryManager
+  fullName: NitroxServer.GameLogic.StoryManager
+- uid: NitroxServer.Serialization.World.World.GameData*
+  commentId: Overload:NitroxServer.Serialization.World.World.GameData
+  href: NitroxServer.Serialization.World.World.GameData.html#NitroxServer_Serialization_World_World_GameData
+  name: GameData
+  nameWithType: World.GameData
+  fullName: NitroxServer.Serialization.World.World.GameData
+- uid: NitroxServer.GameLogic.Bases.GameData
+  commentId: T:NitroxServer.GameLogic.Bases.GameData
+  parent: NitroxServer.GameLogic.Bases
+  href: NitroxServer.GameLogic.Bases.GameData.html
+  name: GameData
+  nameWithType: GameData
+  fullName: NitroxServer.GameLogic.Bases.GameData
+- uid: NitroxServer.Serialization.World.World.GameMode*
+  commentId: Overload:NitroxServer.Serialization.World.World.GameMode
+  href: NitroxServer.Serialization.World.World.GameMode.html#NitroxServer_Serialization_World_World_GameMode
+  name: GameMode
+  nameWithType: World.GameMode
+  fullName: NitroxServer.Serialization.World.World.GameMode
+- uid: NitroxModel.Server.NitroxGameMode
+  commentId: T:NitroxModel.Server.NitroxGameMode
+  parent: NitroxModel.Server
+  href: NitroxModel.Server.NitroxGameMode.html
+  name: NitroxGameMode
+  nameWithType: NitroxGameMode
+  fullName: NitroxModel.Server.NitroxGameMode
+- uid: NitroxModel.Server
+  commentId: N:NitroxModel.Server
+  href: NitroxModel.html
+  name: NitroxModel.Server
+  nameWithType: NitroxModel.Server
+  fullName: NitroxModel.Server
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Server
+    name: Server
+    href: NitroxModel.Server.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Server
+    name: Server
+    href: NitroxModel.Server.html
+- uid: NitroxServer.Serialization.World.World.Seed*
+  commentId: Overload:NitroxServer.Serialization.World.World.Seed
+  href: NitroxServer.Serialization.World.World.Seed.html#NitroxServer_Serialization_World_World_Seed
+  name: Seed
+  nameWithType: World.Seed
+  fullName: NitroxServer.Serialization.World.World.Seed
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

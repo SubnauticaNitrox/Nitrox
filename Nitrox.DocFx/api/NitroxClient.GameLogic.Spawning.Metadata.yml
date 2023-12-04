@@ -1,0 +1,284 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.Metadata
+  commentId: N:NitroxClient.GameLogic.Spawning.Metadata
+  id: Metadata
+  parent: NitroxClient.GameLogic.Spawning
+  children:
+  - NitroxClient.GameLogic.Spawning.Metadata.BatteryMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.ConstructorMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.CrafterMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.CyclopsLightingMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.CyclopsMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.EntityMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.EntitySignMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  - NitroxClient.GameLogic.Spawning.Metadata.FireExtinguisherHolderMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.FlashlightMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor`1
+  - NitroxClient.GameLogic.Spawning.Metadata.KeypadMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.PlantableMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.PlayerMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.PrecursorDoorwayMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.PrecursorKeyTerminalMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterActivationTerminalMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.RepairedComponentMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.RocketMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.SealedDoorMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.SeamothMetadataProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.SubNameInputProcessor
+  - NitroxClient.GameLogic.Spawning.Metadata.WaterParkCreatureMetadataProcessor
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.Spawning.Metadata
+  nameWithType: NitroxClient.GameLogic.Spawning.Metadata
+  fullName: NitroxClient.GameLogic.Spawning.Metadata
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  commentId: N:NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  nameWithType: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+    name: Extractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+    name: Extractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.html
+- uid: NitroxClient.GameLogic.Spawning.Metadata.BatteryMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.BatteryMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.BatteryMetadataProcessor.html
+  name: BatteryMetadataProcessor
+  nameWithType: BatteryMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.BatteryMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.ConstructorMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.ConstructorMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.ConstructorMetadataProcessor.html
+  name: ConstructorMetadataProcessor
+  nameWithType: ConstructorMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.ConstructorMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.CrafterMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.CrafterMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.CrafterMetadataProcessor.html
+  name: CrafterMetadataProcessor
+  nameWithType: CrafterMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.CrafterMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.CyclopsLightingMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.CyclopsLightingMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.CyclopsLightingMetadataProcessor.html
+  name: CyclopsLightingMetadataProcessor
+  nameWithType: CyclopsLightingMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.CyclopsLightingMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.CyclopsMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.CyclopsMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.CyclopsMetadataProcessor.html
+  name: CyclopsMetadataProcessor
+  nameWithType: CyclopsMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.CyclopsMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.EntityMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.EntityMetadataProcessor
+  parent: NitroxClient.GameLogic.Spawning.Metadata
+  href: NitroxClient.GameLogic.Spawning.Metadata.EntityMetadataProcessor.html
+  name: EntityMetadataProcessor
+  nameWithType: EntityMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.EntityMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.EntitySignMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.EntitySignMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.EntitySignMetadataProcessor.html
+  name: EntitySignMetadataProcessor
+  nameWithType: EntitySignMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.EntitySignMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.FireExtinguisherHolderMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.FireExtinguisherHolderMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.FireExtinguisherHolderMetadataProcessor.html
+  name: FireExtinguisherHolderMetadataProcessor
+  nameWithType: FireExtinguisherHolderMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.FireExtinguisherHolderMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.FlashlightMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.FlashlightMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.FlashlightMetadataProcessor.html
+  name: FlashlightMetadataProcessor
+  nameWithType: FlashlightMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.FlashlightMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor`1
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor`1
+  href: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor-1.html
+  name: GenericEntityMetadataProcessor<T>
+  nameWithType: GenericEntityMetadataProcessor<T>
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor<T>
+  nameWithType.vb: GenericEntityMetadataProcessor(Of T)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor(Of T)
+  name.vb: GenericEntityMetadataProcessor(Of T)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor`1
+    name: GenericEntityMetadataProcessor
+    href: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor`1
+    name: GenericEntityMetadataProcessor
+    href: NitroxClient.GameLogic.Spawning.Metadata.GenericEntityMetadataProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.KeypadMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.KeypadMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.KeypadMetadataProcessor.html
+  name: KeypadMetadataProcessor
+  nameWithType: KeypadMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.KeypadMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.PlantableMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.PlantableMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.PlantableMetadataProcessor.html
+  name: PlantableMetadataProcessor
+  nameWithType: PlantableMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.PlantableMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.PlayerMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.PlayerMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.PlayerMetadataProcessor.html
+  name: PlayerMetadataProcessor
+  nameWithType: PlayerMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.PlayerMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorDoorwayMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.PrecursorDoorwayMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.PrecursorDoorwayMetadataProcessor.html
+  name: PrecursorDoorwayMetadataProcessor
+  nameWithType: PrecursorDoorwayMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.PrecursorDoorwayMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorKeyTerminalMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.PrecursorKeyTerminalMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.PrecursorKeyTerminalMetadataProcessor.html
+  name: PrecursorKeyTerminalMetadataProcessor
+  nameWithType: PrecursorKeyTerminalMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.PrecursorKeyTerminalMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterActivationTerminalMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterActivationTerminalMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterActivationTerminalMetadataProcessor.html
+  name: PrecursorTeleporterActivationTerminalMetadataProcessor
+  nameWithType: PrecursorTeleporterActivationTerminalMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterActivationTerminalMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterMetadataProcessor.html
+  name: PrecursorTeleporterMetadataProcessor
+  nameWithType: PrecursorTeleporterMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.PrecursorTeleporterMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.RepairedComponentMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.RepairedComponentMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.RepairedComponentMetadataProcessor.html
+  name: RepairedComponentMetadataProcessor
+  nameWithType: RepairedComponentMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.RepairedComponentMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.RocketMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.RocketMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.RocketMetadataProcessor.html
+  name: RocketMetadataProcessor
+  nameWithType: RocketMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.RocketMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.SealedDoorMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.SealedDoorMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.SealedDoorMetadataProcessor.html
+  name: SealedDoorMetadataProcessor
+  nameWithType: SealedDoorMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.SealedDoorMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.SeamothMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.SeamothMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.SeamothMetadataProcessor.html
+  name: SeamothMetadataProcessor
+  nameWithType: SeamothMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.SeamothMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.SubNameInputProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.SubNameInputProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.SubNameInputProcessor.html
+  name: SubNameInputProcessor
+  nameWithType: SubNameInputProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.SubNameInputProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.WaterParkCreatureMetadataProcessor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.WaterParkCreatureMetadataProcessor
+  href: NitroxClient.GameLogic.Spawning.Metadata.WaterParkCreatureMetadataProcessor.html
+  name: WaterParkCreatureMetadataProcessor
+  nameWithType: WaterParkCreatureMetadataProcessor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.WaterParkCreatureMetadataProcessor
+- uid: NitroxClient.GameLogic.Spawning.Metadata
+  commentId: N:NitroxClient.GameLogic.Spawning.Metadata
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Metadata
+  nameWithType: NitroxClient.GameLogic.Spawning.Metadata
+  fullName: NitroxClient.GameLogic.Spawning.Metadata
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+memberLayout: SeparatePages

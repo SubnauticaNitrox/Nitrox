@@ -1,0 +1,68 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+  commentId: T:NitroxModel.Packets.Processors.Abstract.IProcessorContext
+  id: IProcessorContext
+  parent: NitroxModel.Packets.Processors.Abstract
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IProcessorContext
+  nameWithType: IProcessorContext
+  fullName: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+  type: Interface
+  source:
+    remote:
+      path: NitroxModel/Packets/Processors/Abstract/IProcessorContext.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IProcessorContext
+    path: ../NitroxModel/Packets/Processors/Abstract/IProcessorContext.cs
+    startLine: 2
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets.Processors.Abstract
+  syntax:
+    content: public interface IProcessorContext
+    content.vb: Public Interface IProcessorContext
+references:
+- uid: NitroxModel.Packets.Processors.Abstract
+  commentId: N:NitroxModel.Packets.Processors.Abstract
+  href: NitroxModel.html
+  name: NitroxModel.Packets.Processors.Abstract
+  nameWithType: NitroxModel.Packets.Processors.Abstract
+  fullName: NitroxModel.Packets.Processors.Abstract
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxModel.Packets.Processors.Abstract.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxModel.Packets.Processors.Abstract.html
+memberLayout: SeparatePages

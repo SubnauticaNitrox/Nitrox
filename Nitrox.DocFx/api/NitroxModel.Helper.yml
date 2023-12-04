@@ -1,0 +1,214 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Helper
+  commentId: N:NitroxModel.Helper
+  id: Helper
+  parent: NitroxModel
+  children:
+  - NitroxModel.Helper.IMap
+  - NitroxModel.Helper.Mathf
+  - NitroxModel.Helper.Matrix4x4Extension
+  - NitroxModel.Helper.NatHelper
+  - NitroxModel.Helper.NatHelper.ResultCodes
+  - NitroxModel.Helper.NetHelper
+  - NitroxModel.Helper.NetHelperTest
+  - NitroxModel.Helper.NitroxEnvironment
+  - NitroxModel.Helper.NitroxEnvironment.Types
+  - NitroxModel.Helper.NitroxUser
+  - NitroxModel.Helper.PirateDetection
+  - NitroxModel.Helper.Reflect
+  - NitroxModel.Helper.Reflect.Ref`1
+  - NitroxModel.Helper.ReflectTest
+  - NitroxModel.Helper.StringHelper
+  - NitroxModel.Helper.Validate
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Helper
+  nameWithType: NitroxModel.Helper
+  fullName: NitroxModel.Helper
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: NitroxModel.Helper.IMap
+  commentId: T:NitroxModel.Helper.IMap
+  parent: NitroxModel.Helper
+  href: NitroxModel.Helper.IMap.html
+  name: IMap
+  nameWithType: IMap
+  fullName: NitroxModel.Helper.IMap
+- uid: NitroxModel.Helper.Mathf
+  commentId: T:NitroxModel.Helper.Mathf
+  href: NitroxModel.Helper.Mathf.html
+  name: Mathf
+  nameWithType: Mathf
+  fullName: NitroxModel.Helper.Mathf
+- uid: NitroxModel.Helper.Matrix4x4Extension
+  commentId: T:NitroxModel.Helper.Matrix4x4Extension
+  href: NitroxModel.Helper.Matrix4x4Extension.html
+  name: Matrix4x4Extension
+  nameWithType: Matrix4x4Extension
+  fullName: NitroxModel.Helper.Matrix4x4Extension
+- uid: NitroxModel.Helper.NatHelper
+  commentId: T:NitroxModel.Helper.NatHelper
+  href: NitroxModel.Helper.NatHelper.html
+  name: NatHelper
+  nameWithType: NatHelper
+  fullName: NitroxModel.Helper.NatHelper
+- uid: NitroxModel.Helper.NatHelper.ResultCodes
+  commentId: T:NitroxModel.Helper.NatHelper.ResultCodes
+  parent: NitroxModel.Helper
+  href: NitroxModel.Helper.NatHelper.html
+  name: NatHelper.ResultCodes
+  nameWithType: NatHelper.ResultCodes
+  fullName: NitroxModel.Helper.NatHelper.ResultCodes
+  spec.csharp:
+  - uid: NitroxModel.Helper.NatHelper
+    name: NatHelper
+    href: NitroxModel.Helper.NatHelper.html
+  - name: .
+  - uid: NitroxModel.Helper.NatHelper.ResultCodes
+    name: ResultCodes
+    href: NitroxModel.Helper.NatHelper.ResultCodes.html
+  spec.vb:
+  - uid: NitroxModel.Helper.NatHelper
+    name: NatHelper
+    href: NitroxModel.Helper.NatHelper.html
+  - name: .
+  - uid: NitroxModel.Helper.NatHelper.ResultCodes
+    name: ResultCodes
+    href: NitroxModel.Helper.NatHelper.ResultCodes.html
+- uid: NitroxModel.Helper.NetHelper
+  commentId: T:NitroxModel.Helper.NetHelper
+  href: NitroxModel.Helper.NetHelper.html
+  name: NetHelper
+  nameWithType: NetHelper
+  fullName: NitroxModel.Helper.NetHelper
+- uid: NitroxModel.Helper.NetHelperTest
+  commentId: T:NitroxModel.Helper.NetHelperTest
+  href: NitroxModel.Helper.NetHelperTest.html
+  name: NetHelperTest
+  nameWithType: NetHelperTest
+  fullName: NitroxModel.Helper.NetHelperTest
+- uid: NitroxModel.Helper.NitroxEnvironment
+  commentId: T:NitroxModel.Helper.NitroxEnvironment
+  href: NitroxModel.Helper.NitroxEnvironment.html
+  name: NitroxEnvironment
+  nameWithType: NitroxEnvironment
+  fullName: NitroxModel.Helper.NitroxEnvironment
+- uid: NitroxModel.Helper.NitroxEnvironment.Types
+  commentId: T:NitroxModel.Helper.NitroxEnvironment.Types
+  parent: NitroxModel.Helper
+  href: NitroxModel.Helper.NitroxEnvironment.html
+  name: NitroxEnvironment.Types
+  nameWithType: NitroxEnvironment.Types
+  fullName: NitroxModel.Helper.NitroxEnvironment.Types
+  spec.csharp:
+  - uid: NitroxModel.Helper.NitroxEnvironment
+    name: NitroxEnvironment
+    href: NitroxModel.Helper.NitroxEnvironment.html
+  - name: .
+  - uid: NitroxModel.Helper.NitroxEnvironment.Types
+    name: Types
+    href: NitroxModel.Helper.NitroxEnvironment.Types.html
+  spec.vb:
+  - uid: NitroxModel.Helper.NitroxEnvironment
+    name: NitroxEnvironment
+    href: NitroxModel.Helper.NitroxEnvironment.html
+  - name: .
+  - uid: NitroxModel.Helper.NitroxEnvironment.Types
+    name: Types
+    href: NitroxModel.Helper.NitroxEnvironment.Types.html
+- uid: NitroxModel.Helper.NitroxUser
+  commentId: T:NitroxModel.Helper.NitroxUser
+  href: NitroxModel.Helper.NitroxUser.html
+  name: NitroxUser
+  nameWithType: NitroxUser
+  fullName: NitroxModel.Helper.NitroxUser
+- uid: NitroxModel.Helper.PirateDetection
+  commentId: T:NitroxModel.Helper.PirateDetection
+  href: NitroxModel.Helper.PirateDetection.html
+  name: PirateDetection
+  nameWithType: PirateDetection
+  fullName: NitroxModel.Helper.PirateDetection
+- uid: NitroxModel.Helper.Reflect
+  commentId: T:NitroxModel.Helper.Reflect
+  href: NitroxModel.Helper.Reflect.html
+  name: Reflect
+  nameWithType: Reflect
+  fullName: NitroxModel.Helper.Reflect
+- uid: NitroxModel.Helper.Reflect.Ref`1
+  commentId: T:NitroxModel.Helper.Reflect.Ref`1
+  href: NitroxModel.Helper.Reflect.html
+  name: Reflect.Ref<T>
+  nameWithType: Reflect.Ref<T>
+  fullName: NitroxModel.Helper.Reflect.Ref<T>
+  nameWithType.vb: Reflect.Ref(Of T)
+  fullName.vb: NitroxModel.Helper.Reflect.Ref(Of T)
+  name.vb: Reflect.Ref(Of T)
+  spec.csharp:
+  - uid: NitroxModel.Helper.Reflect
+    name: Reflect
+    href: NitroxModel.Helper.Reflect.html
+  - name: .
+  - uid: NitroxModel.Helper.Reflect.Ref`1
+    name: Ref
+    href: NitroxModel.Helper.Reflect.Ref-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.Helper.Reflect
+    name: Reflect
+    href: NitroxModel.Helper.Reflect.html
+  - name: .
+  - uid: NitroxModel.Helper.Reflect.Ref`1
+    name: Ref
+    href: NitroxModel.Helper.Reflect.Ref-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.Helper.ReflectTest
+  commentId: T:NitroxModel.Helper.ReflectTest
+  href: NitroxModel.Helper.ReflectTest.html
+  name: ReflectTest
+  nameWithType: ReflectTest
+  fullName: NitroxModel.Helper.ReflectTest
+- uid: NitroxModel.Helper.StringHelper
+  commentId: T:NitroxModel.Helper.StringHelper
+  href: NitroxModel.Helper.StringHelper.html
+  name: StringHelper
+  nameWithType: StringHelper
+  fullName: NitroxModel.Helper.StringHelper
+- uid: NitroxModel.Helper.Validate
+  commentId: T:NitroxModel.Helper.Validate
+  href: NitroxModel.Helper.Validate.html
+  name: Validate
+  nameWithType: Validate
+  fullName: NitroxModel.Helper.Validate
+- uid: NitroxModel.Helper
+  commentId: N:NitroxModel.Helper
+  href: NitroxModel.html
+  name: NitroxModel.Helper
+  nameWithType: NitroxModel.Helper
+  fullName: NitroxModel.Helper
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Helper
+    name: Helper
+    href: NitroxModel.Helper.html
+memberLayout: SeparatePages

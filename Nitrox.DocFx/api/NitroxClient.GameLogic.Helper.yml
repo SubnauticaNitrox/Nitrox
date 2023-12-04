@@ -1,0 +1,128 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Helper
+  commentId: N:NitroxClient.GameLogic.Helper
+  id: Helper
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelperTest
+  - NitroxClient.GameLogic.Helper.BatteryChildEntityHelper
+  - NitroxClient.GameLogic.Helper.EquipmentHelper
+  - NitroxClient.GameLogic.Helper.InventoryContainerHelper
+  - NitroxClient.GameLogic.Helper.SerializationHelper
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+  - NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  - NitroxClient.GameLogic.Helper.VehicleChildEntityHelper
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.Helper
+  nameWithType: NitroxClient.GameLogic.Helper
+  fullName: NitroxClient.GameLogic.Helper
+  type: Namespace
+  assemblies:
+  - Nitrox.Test
+references:
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  commentId: T:NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelper.html
+  name: BaseSerializationHelper
+  nameWithType: BaseSerializationHelper
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelperTest
+  commentId: T:NitroxClient.GameLogic.Helper.BaseSerializationHelperTest
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelperTest.html
+  name: BaseSerializationHelperTest
+  nameWithType: BaseSerializationHelperTest
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelperTest
+- uid: NitroxClient.GameLogic.Helper.BatteryChildEntityHelper
+  commentId: T:NitroxClient.GameLogic.Helper.BatteryChildEntityHelper
+  href: NitroxClient.GameLogic.Helper.BatteryChildEntityHelper.html
+  name: BatteryChildEntityHelper
+  nameWithType: BatteryChildEntityHelper
+  fullName: NitroxClient.GameLogic.Helper.BatteryChildEntityHelper
+- uid: NitroxClient.GameLogic.Helper.EquipmentHelper
+  commentId: T:NitroxClient.GameLogic.Helper.EquipmentHelper
+  href: NitroxClient.GameLogic.Helper.EquipmentHelper.html
+  name: EquipmentHelper
+  nameWithType: EquipmentHelper
+  fullName: NitroxClient.GameLogic.Helper.EquipmentHelper
+- uid: NitroxClient.GameLogic.Helper.InventoryContainerHelper
+  commentId: T:NitroxClient.GameLogic.Helper.InventoryContainerHelper
+  href: NitroxClient.GameLogic.Helper.InventoryContainerHelper.html
+  name: InventoryContainerHelper
+  nameWithType: InventoryContainerHelper
+  fullName: NitroxClient.GameLogic.Helper.InventoryContainerHelper
+- uid: NitroxClient.GameLogic.Helper.SerializationHelper
+  commentId: T:NitroxClient.GameLogic.Helper.SerializationHelper
+  href: NitroxClient.GameLogic.Helper.SerializationHelper.html
+  name: SerializationHelper
+  nameWithType: SerializationHelper
+  fullName: NitroxClient.GameLogic.Helper.SerializationHelper
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+  commentId: T:NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+  href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.html
+  name: TransientLocalObjectManager
+  nameWithType: TransientLocalObjectManager
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+- uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  commentId: T:NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  parent: NitroxClient.GameLogic.Helper
+  href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.html
+  name: TransientLocalObjectManager.TransientObjectType
+  nameWithType: TransientLocalObjectManager.TransientObjectType
+  fullName: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+    name: TransientLocalObjectManager
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+    name: TransientObjectType
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager
+    name: TransientLocalObjectManager
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType
+    name: TransientObjectType
+    href: NitroxClient.GameLogic.Helper.TransientLocalObjectManager.TransientObjectType.html
+- uid: NitroxClient.GameLogic.Helper.VehicleChildEntityHelper
+  commentId: T:NitroxClient.GameLogic.Helper.VehicleChildEntityHelper
+  href: NitroxClient.GameLogic.Helper.VehicleChildEntityHelper.html
+  name: VehicleChildEntityHelper
+  nameWithType: VehicleChildEntityHelper
+  fullName: NitroxClient.GameLogic.Helper.VehicleChildEntityHelper
+- uid: NitroxClient.GameLogic.Helper
+  commentId: N:NitroxClient.GameLogic.Helper
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Helper
+  nameWithType: NitroxClient.GameLogic.Helper
+  fullName: NitroxClient.GameLogic.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+memberLayout: SeparatePages

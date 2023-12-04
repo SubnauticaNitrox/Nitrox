@@ -1,0 +1,1581 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  id: NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  children:
+  - NitroxModel.DataStructures.Unity.NitroxVector3.#ctor(System.Single,System.Single,System.Single)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Cross(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Distance(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Equals(System.Object)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Length(NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Normalize(NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.One
+  - NitroxModel.DataStructures.Unity.NitroxVector3.ToString
+  - NitroxModel.DataStructures.Unity.NitroxVector3.X
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Y
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Z
+  - NitroxModel.DataStructures.Unity.NitroxVector3.Zero
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Division(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit(NitroxModel.DataStructures.Unity.NitroxVector3)~System.Numerics.Vector3
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit(System.Numerics.Vector3)~NitroxModel.DataStructures.Unity.NitroxVector3
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  - NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation(NitroxModel.DataStructures.Unity.NitroxVector3)
+  langs:
+  - csharp
+  - vb
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+  type: Struct
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxVector3
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataContract]
+
+      [Serializable]
+
+      public struct NitroxVector3 : IEquatable<NitroxVector3>
+    content.vb: >-
+      <DataContract>
+
+      <Serializable>
+
+      Public Structure NitroxVector3 Implements IEquatable(Of NitroxVector3)
+  implements:
+  - System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+  attributes:
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.X
+  commentId: F:NitroxModel.DataStructures.Unity.NitroxVector3.X
+  id: X
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: X
+  nameWithType: NitroxVector3.X
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.X
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: X
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public float X
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public X As Single
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Y
+  commentId: F:NitroxModel.DataStructures.Unity.NitroxVector3.Y
+  id: Y
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Y
+  nameWithType: NitroxVector3.Y
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Y
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Y
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public float Y
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public Y As Single
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Z
+  commentId: F:NitroxModel.DataStructures.Unity.NitroxVector3.Z
+  id: Z
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Z
+  nameWithType: NitroxVector3.Z
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Z
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Z
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: >-
+      [DataMember(Order = 3)]
+
+      public float Z
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=3)>
+
+      Public Z As Single
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 3
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.#ctor(System.Single,System.Single,System.Single)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.#ctor(System.Single,System.Single,System.Single)
+  id: '#ctor(System.Single,System.Single,System.Single)'
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: NitroxVector3(float, float, float)
+  nameWithType: NitroxVector3.NitroxVector3(float, float, float)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.NitroxVector3(float, float, float)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public NitroxVector3(float x, float y, float z)
+    parameters:
+    - id: x
+      type: System.Single
+    - id: y
+      type: System.Single
+    - id: z
+      type: System.Single
+    content.vb: Public Sub New(x As Single, y As Single, z As Single)
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.#ctor*
+  nameWithType.vb: NitroxVector3.New(Single, Single, Single)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.New(Single, Single, Single)
+  name.vb: New(Single, Single, Single)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Zero
+  commentId: P:NitroxModel.DataStructures.Unity.NitroxVector3.Zero
+  id: Zero
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Zero
+  nameWithType: NitroxVector3.Zero
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Zero
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Zero
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 Zero { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared ReadOnly Property Zero As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Zero*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.One
+  commentId: P:NitroxModel.DataStructures.Unity.NitroxVector3.One
+  id: One
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: One
+  nameWithType: NitroxVector3.One
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.One
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: One
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 One { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared ReadOnly Property One As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.One*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: op_Equality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: operator ==(NitroxVector3, NitroxVector3)
+  nameWithType: NitroxVector3.operator ==(NitroxVector3, NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator ==(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Equality
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 32
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static bool operator ==(NitroxVector3 left, NitroxVector3 right)
+    parameters:
+    - id: left
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: right
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator =(left As NitroxVector3, right As NitroxVector3) As Boolean
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality*
+  nameWithType.vb: NitroxVector3.=(NitroxVector3, NitroxVector3)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.=(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: =(NitroxVector3, NitroxVector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: op_Inequality(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: operator !=(NitroxVector3, NitroxVector3)
+  nameWithType: NitroxVector3.operator !=(NitroxVector3, NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator !=(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Inequality
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 34
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static bool operator !=(NitroxVector3 left, NitroxVector3 right)
+    parameters:
+    - id: left
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: right
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator <>(left As NitroxVector3, right As NitroxVector3) As Boolean
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality*
+  nameWithType.vb: NitroxVector3.<>(NitroxVector3, NitroxVector3)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.<>(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: <>(NitroxVector3, NitroxVector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(System.Object)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Equals(object)
+  nameWithType: NitroxVector3.Equals(object)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(object)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Equals
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 36
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  summary: Indicates whether this instance and a specified object are equal.
+  example: []
+  syntax:
+    content: public override bool Equals(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+      description: The object to compare with the current instance.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">obj</code> and this instance are the same type and represent the same value; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Overrides Function Equals(obj As Object) As Boolean
+  overridden: System.ValueType.Equals(System.Object)
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Equals*
+  nameWithType.vb: NitroxVector3.Equals(Object)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(Object)
+  name.vb: Equals(Object)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Equals(NitroxVector3)
+  nameWithType: NitroxVector3.Equals(NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Equals
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 41
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  summary: Indicates whether the current object is equal to another object of the same type.
+  example: []
+  syntax:
+    content: public bool Equals(NitroxVector3 other)
+    parameters:
+    - id: other
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+      description: An object to compare with this object.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the current object is equal to the <code class="paramref">other</code> parameter; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function Equals(other As NitroxVector3) As Boolean
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Equals*
+  implements:
+  - System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  id: Equals(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Equals(NitroxVector3, float)
+  nameWithType: NitroxVector3.Equals(NitroxVector3, float)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3, float)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Equals
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 46
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public bool Equals(NitroxVector3 other, float tolerance)
+    parameters:
+    - id: other
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: tolerance
+      type: System.Single
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As NitroxVector3, tolerance As Single) As Boolean
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Equals*
+  nameWithType.vb: NitroxVector3.Equals(NitroxVector3, Single)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.Equals(NitroxModel.DataStructures.Unity.NitroxVector3, Single)
+  name.vb: Equals(NitroxVector3, Single)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode
+  id: GetHashCode
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: NitroxVector3.GetHashCode()
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetHashCode
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 54
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  summary: Returns the hash code for this instance.
+  example: []
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+      description: A 32-bit signed integer that is the hash code for this instance.
+    content.vb: Public Overrides Function GetHashCode() As Integer
+  overridden: System.ValueType.GetHashCode
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: op_Addition(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: operator +(NitroxVector3, NitroxVector3)
+  nameWithType: NitroxVector3.operator +(NitroxVector3, NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator +(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Addition
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 65
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 operator +(NitroxVector3 a, NitroxVector3 b)
+    parameters:
+    - id: a
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: b
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Operator +(a As NitroxVector3, b As NitroxVector3) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition*
+  nameWithType.vb: NitroxVector3.+(NitroxVector3, NitroxVector3)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.+(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: +(NitroxVector3, NitroxVector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: op_Subtraction(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: operator -(NitroxVector3, NitroxVector3)
+  nameWithType: NitroxVector3.operator -(NitroxVector3, NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator -(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Subtraction
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 72
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 operator -(NitroxVector3 a, NitroxVector3 b)
+    parameters:
+    - id: a
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: b
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Operator -(a As NitroxVector3, b As NitroxVector3) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction*
+  nameWithType.vb: NitroxVector3.-(NitroxVector3, NitroxVector3)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.-(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: -(NitroxVector3, NitroxVector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation(NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation(NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: op_UnaryNegation(NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: operator -(NitroxVector3)
+  nameWithType: NitroxVector3.operator -(NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator -(NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_UnaryNegation
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 79
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 operator -(NitroxVector3 a)
+    parameters:
+    - id: a
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Operator -(a As NitroxVector3) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation*
+  nameWithType.vb: NitroxVector3.-(NitroxVector3)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.-(NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: -(NitroxVector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Division(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Division(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  id: op_Division(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: operator /(NitroxVector3, float)
+  nameWithType: NitroxVector3.operator /(NitroxVector3, float)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator /(NitroxModel.DataStructures.Unity.NitroxVector3, float)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Division
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 84
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 operator /(NitroxVector3 lhs, float rhs)
+    parameters:
+    - id: lhs
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: rhs
+      type: System.Single
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Operator /(lhs As NitroxVector3, rhs As Single) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Division*
+  nameWithType.vb: NitroxVector3./(NitroxVector3, Single)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3./(NitroxModel.DataStructures.Unity.NitroxVector3, Single)
+  name.vb: /(NitroxVector3, Single)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  id: op_Multiply(NitroxModel.DataStructures.Unity.NitroxVector3,System.Single)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: operator *(NitroxVector3, float)
+  nameWithType: NitroxVector3.operator *(NitroxVector3, float)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator *(NitroxModel.DataStructures.Unity.NitroxVector3, float)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Multiply
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 89
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 operator *(NitroxVector3 lhs, float rhs)
+    parameters:
+    - id: lhs
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: rhs
+      type: System.Single
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Operator *(lhs As NitroxVector3, rhs As Single) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply*
+  nameWithType.vb: NitroxVector3.*(NitroxVector3, Single)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.*(NitroxModel.DataStructures.Unity.NitroxVector3, Single)
+  name.vb: '*(NitroxVector3, Single)'
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit(NitroxModel.DataStructures.Unity.NitroxVector3)~System.Numerics.Vector3
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit(NitroxModel.DataStructures.Unity.NitroxVector3)~System.Numerics.Vector3
+  id: op_Explicit(NitroxModel.DataStructures.Unity.NitroxVector3)~System.Numerics.Vector3
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: explicit operator Vector3(NitroxVector3)
+  nameWithType: NitroxVector3.explicit operator Vector3(NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.explicit operator System.Numerics.Vector3(NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Explicit
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 94
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static explicit operator Vector3(NitroxVector3 v)
+    parameters:
+    - id: v
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: System.Numerics.Vector3
+    content.vb: Public Shared Narrowing Operator CType(v As NitroxVector3) As Vector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit*
+  nameWithType.vb: NitroxVector3.CType(NitroxVector3)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.CType(NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: CType(NitroxVector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit(System.Numerics.Vector3)~NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit(System.Numerics.Vector3)~NitroxModel.DataStructures.Unity.NitroxVector3
+  id: op_Explicit(System.Numerics.Vector3)~NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: explicit operator NitroxVector3(Vector3)
+  nameWithType: NitroxVector3.explicit operator NitroxVector3(Vector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.explicit operator NitroxModel.DataStructures.Unity.NitroxVector3(System.Numerics.Vector3)
+  type: Operator
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: op_Explicit
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 95
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static explicit operator NitroxVector3(Vector3 v)
+    parameters:
+    - id: v
+      type: System.Numerics.Vector3
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Narrowing Operator CType(v As Vector3) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit*
+  nameWithType.vb: NitroxVector3.CType(Vector3)
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.CType(System.Numerics.Vector3)
+  name.vb: CType(Vector3)
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Normalize(NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.Normalize(NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: Normalize(NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Normalize(NitroxVector3)
+  nameWithType: NitroxVector3.Normalize(NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Normalize(NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Normalize
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 97
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 Normalize(NitroxVector3 value)
+    parameters:
+    - id: value
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Function Normalize(value As NitroxVector3) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Normalize*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Length(NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.Length(NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: Length(NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Length(NitroxVector3)
+  nameWithType: NitroxVector3.Length(NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Length(NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Length
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 103
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static float Length(NitroxVector3 value)
+    parameters:
+    - id: value
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Length(value As NitroxVector3) As Single
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Length*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Cross(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.Cross(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: Cross(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Cross(NitroxVector3, NitroxVector3)
+  nameWithType: NitroxVector3.Cross(NitroxVector3, NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Cross(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Cross
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 109
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static NitroxVector3 Cross(NitroxVector3 vector1, NitroxVector3 vector2)
+    parameters:
+    - id: vector1
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: vector2
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public Shared Function Cross(vector1 As NitroxVector3, vector2 As NitroxVector3) As NitroxVector3
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Cross*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Distance(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.Distance(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  id: Distance(NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Distance(NitroxVector3, NitroxVector3)
+  nameWithType: NitroxVector3.Distance(NitroxVector3, NitroxVector3)
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Distance(NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxVector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Distance
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 117
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public static float Distance(NitroxVector3 lhs, NitroxVector3 rhs)
+    parameters:
+    - id: lhs
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: rhs
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Distance(lhs As NitroxVector3, rhs As NitroxVector3) As Single
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Distance*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude
+  commentId: P:NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude
+  id: Magnitude
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: Magnitude
+  nameWithType: NitroxVector3.Magnitude
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Magnitude
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 125
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  syntax:
+    content: public float Magnitude { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property Magnitude As Single
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude*
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.ToString
+  commentId: M:NitroxModel.DataStructures.Unity.NitroxVector3.ToString
+  id: ToString
+  parent: NitroxModel.DataStructures.Unity.NitroxVector3
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: NitroxVector3.ToString()
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/Unity/NitroxVector3.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel/DataStructures/Unity/NitroxVector3.cs
+    startLine: 127
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.Unity
+  summary: Returns the fully qualified type name of this instance.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: The fully qualified type name.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: NitroxModel.DataStructures.Unity.NitroxVector3.ToString*
+references:
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}
+  commentId: T:System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<NitroxVector3>
+  nameWithType: IEquatable<NitroxVector3>
+  fullName: System.IEquatable<NitroxModel.DataStructures.Unity.NitroxVector3>
+  nameWithType.vb: IEquatable(Of NitroxVector3)
+  fullName.vb: System.IEquatable(Of NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: IEquatable(Of NitroxVector3)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3
+    name: NitroxVector3
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3
+    name: NitroxVector3
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.#ctor
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.-ctor.html#NitroxModel_DataStructures_Unity_NitroxVector3__ctor_System_Single_System_Single_System_Single_
+  name: NitroxVector3
+  nameWithType: NitroxVector3.NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.NitroxVector3
+  nameWithType.vb: NitroxVector3.New
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.New
+  name.vb: New
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Zero*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.Zero
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.Zero.html#NitroxModel_DataStructures_Unity_NitroxVector3_Zero
+  name: Zero
+  nameWithType: NitroxVector3.Zero
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Zero
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.One*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.One
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.One.html#NitroxModel_DataStructures_Unity_NitroxVector3_One
+  name: One
+  nameWithType: NitroxVector3.One
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.One
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Equality_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: operator ==
+  nameWithType: NitroxVector3.operator ==
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator ==
+  nameWithType.vb: NitroxVector3.=
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.=
+  name.vb: =
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality*
+    name: ==
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Equality.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Equality_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Inequality_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: operator !=
+  nameWithType: NitroxVector3.operator !=
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator !=
+  nameWithType.vb: NitroxVector3.<>
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.<>
+  name.vb: <>
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality*
+    name: '!='
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Inequality.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Inequality_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Equals*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.Equals
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.Equals.html#NitroxModel_DataStructures_Unity_NitroxVector3_Equals_System_Object_
+  name: Equals
+  nameWithType: NitroxVector3.Equals
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Equals
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  commentId: M:System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  parent: System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}
+  definition: System.IEquatable`1.Equals(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(NitroxVector3)
+  nameWithType: IEquatable<NitroxVector3>.Equals(NitroxVector3)
+  fullName: System.IEquatable<NitroxModel.DataStructures.Unity.NitroxVector3>.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  nameWithType.vb: IEquatable(Of NitroxVector3).Equals(NitroxVector3)
+  fullName.vb: System.IEquatable(Of NitroxModel.DataStructures.Unity.NitroxVector3).Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+  spec.csharp:
+  - uid: System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3
+    name: NitroxVector3
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable{NitroxModel.DataStructures.Unity.NitroxVector3}.Equals(NitroxModel.DataStructures.Unity.NitroxVector3)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3
+    name: NitroxVector3
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  - name: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode.html#NitroxModel_DataStructures_Unity_NitroxVector3_GetHashCode
+  name: GetHashCode
+  nameWithType: NitroxVector3.GetHashCode
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.GetHashCode
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Addition_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: operator +
+  nameWithType: NitroxVector3.operator +
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator +
+  nameWithType.vb: NitroxVector3.+
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.+
+  name.vb: +
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition*
+    name: +
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Addition.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Addition_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Subtraction_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: operator -
+  nameWithType: NitroxVector3.operator -
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator -
+  nameWithType.vb: NitroxVector3.-
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.-
+  name.vb: '-'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction*
+    name: '-'
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Subtraction.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Subtraction_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_UnaryNegation_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: operator -
+  nameWithType: NitroxVector3.operator -
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator -
+  nameWithType.vb: NitroxVector3.-
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.-
+  name.vb: '-'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation*
+    name: '-'
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.op_UnaryNegation.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_UnaryNegation_NitroxModel_DataStructures_Unity_NitroxVector3_
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Division*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_Division
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Division.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Division_NitroxModel_DataStructures_Unity_NitroxVector3_System_Single_
+  name: operator /
+  nameWithType: NitroxVector3.operator /
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator /
+  nameWithType.vb: NitroxVector3./
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3./
+  name.vb: /
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Division*
+    name: /
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Division.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Division_NitroxModel_DataStructures_Unity_NitroxVector3_System_Single_
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Multiply_NitroxModel_DataStructures_Unity_NitroxVector3_System_Single_
+  name: operator *
+  nameWithType: NitroxVector3.operator *
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.operator *
+  nameWithType.vb: NitroxVector3.*
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.*
+  name.vb: '*'
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply*
+    name: '*'
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.op_Multiply.html#NitroxModel_DataStructures_Unity_NitroxVector3_op_Multiply_NitroxModel_DataStructures_Unity_NitroxVector3_System_Single_
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.op_Explicit
+  name: explicit operator
+  nameWithType: NitroxVector3.explicit operator
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.explicit operator
+  nameWithType.vb: NitroxVector3.CType
+  fullName.vb: NitroxModel.DataStructures.Unity.NitroxVector3.CType
+  name.vb: CType
+  spec.csharp:
+  - name: explicit
+  - name: " "
+  - name: operator
+- uid: System.Numerics.Vector3
+  commentId: T:System.Numerics.Vector3
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector3
+  name: Vector3
+  nameWithType: Vector3
+  fullName: System.Numerics.Vector3
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Normalize*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.Normalize
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.Normalize.html#NitroxModel_DataStructures_Unity_NitroxVector3_Normalize_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: Normalize
+  nameWithType: NitroxVector3.Normalize
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Normalize
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Length*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.Length
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.Length.html#NitroxModel_DataStructures_Unity_NitroxVector3_Length_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: Length
+  nameWithType: NitroxVector3.Length
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Length
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Cross*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.Cross
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.Cross.html#NitroxModel_DataStructures_Unity_NitroxVector3_Cross_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: Cross
+  nameWithType: NitroxVector3.Cross
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Cross
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Distance*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.Distance
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.Distance.html#NitroxModel_DataStructures_Unity_NitroxVector3_Distance_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxVector3_
+  name: Distance
+  nameWithType: NitroxVector3.Distance
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Distance
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude.html#NitroxModel_DataStructures_Unity_NitroxVector3_Magnitude
+  name: Magnitude
+  nameWithType: NitroxVector3.Magnitude
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.Magnitude
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3.ToString*
+  commentId: Overload:NitroxModel.DataStructures.Unity.NitroxVector3.ToString
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.ToString.html#NitroxModel_DataStructures_Unity_NitroxVector3_ToString
+  name: ToString
+  nameWithType: NitroxVector3.ToString
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

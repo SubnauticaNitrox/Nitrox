@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+  commentId: T:NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+  id: MultiplayerSessionConnectionStateChangedEventHandler
+  parent: NitroxClient.Communication.Abstract
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: MultiplayerSessionConnectionStateChangedEventHandler
+  nameWithType: MultiplayerSessionConnectionStateChangedEventHandler
+  fullName: NitroxClient.Communication.Abstract.MultiplayerSessionConnectionStateChangedEventHandler
+  type: Delegate
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSession.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MultiplayerSessionConnectionStateChangedEventHandler
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSession.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: public delegate void MultiplayerSessionConnectionStateChangedEventHandler(IMultiplayerSessionConnectionState newState)
+    parameters:
+    - id: newState
+      type: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+    content.vb: Public Delegate Sub MultiplayerSessionConnectionStateChangedEventHandler(newState As IMultiplayerSessionConnectionState)
+references:
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState.html
+  name: IMultiplayerSessionConnectionState
+  nameWithType: IMultiplayerSessionConnectionState
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionConnectionState
+memberLayout: SeparatePages

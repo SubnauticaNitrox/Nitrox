@@ -1,0 +1,768 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  commentId: T:NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  id: BaseSerializationHelper
+  parent: NitroxClient.GameLogic.Helper
+  children:
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes(System.Byte[])
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData``1(``0[],System.Converter{``0,System.Byte})
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream(System.IO.Stream,System.Byte[])
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes(System.Byte[],System.Int32)
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData``1(System.Byte[],System.Int32,System.Converter{System.Byte,``0})
+  - NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream(System.IO.Stream,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: BaseSerializationHelper
+  nameWithType: BaseSerializationHelper
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BaseSerializationHelper
+    path: ../NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public static class BaseSerializationHelper
+    content.vb: Public Module BaseSerializationHelper
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes(System.Byte[])
+  commentId: M:NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes(System.Byte[])
+  id: CompressBytes(System.Byte[])
+  parent: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  langs:
+  - csharp
+  - vb
+  name: CompressBytes(byte[])
+  nameWithType: BaseSerializationHelper.CompressBytes(byte[])
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes(byte[])
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CompressBytes
+    path: ../NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public static byte[] CompressBytes(byte[] array)
+    parameters:
+    - id: array
+      type: System.Byte[]
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function CompressBytes(array As Byte()) As Byte()
+  overload: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes*
+  nameWithType.vb: BaseSerializationHelper.CompressBytes(Byte())
+  fullName.vb: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes(Byte())
+  name.vb: CompressBytes(Byte())
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes(System.Byte[],System.Int32)
+  commentId: M:NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes(System.Byte[],System.Int32)
+  id: DecompressBytes(System.Byte[],System.Int32)
+  parent: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  langs:
+  - csharp
+  - vb
+  name: DecompressBytes(byte[], int)
+  nameWithType: BaseSerializationHelper.DecompressBytes(byte[], int)
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes(byte[], int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DecompressBytes
+    path: ../NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+    startLine: 21
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public static byte[] DecompressBytes(byte[] array, int size)
+    parameters:
+    - id: array
+      type: System.Byte[]
+    - id: size
+      type: System.Int32
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function DecompressBytes(array As Byte(), size As Integer) As Byte()
+  overload: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes*
+  nameWithType.vb: BaseSerializationHelper.DecompressBytes(Byte(), Integer)
+  fullName.vb: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes(Byte(), Integer)
+  name.vb: DecompressBytes(Byte(), Integer)
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream(System.IO.Stream,System.Byte[])
+  commentId: M:NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream(System.IO.Stream,System.Byte[])
+  id: CompressStream(System.IO.Stream,System.Byte[])
+  parent: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  langs:
+  - csharp
+  - vb
+  name: CompressStream(Stream, byte[])
+  nameWithType: BaseSerializationHelper.CompressStream(Stream, byte[])
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream(System.IO.Stream, byte[])
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CompressStream
+    path: ../NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+    startLine: 32
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public static void CompressStream(Stream stream, byte[] array)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    - id: array
+      type: System.Byte[]
+    content.vb: Public Shared Sub CompressStream(stream As Stream, array As Byte())
+  overload: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream*
+  nameWithType.vb: BaseSerializationHelper.CompressStream(Stream, Byte())
+  fullName.vb: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream(System.IO.Stream, Byte())
+  name.vb: CompressStream(Stream, Byte())
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream(System.IO.Stream,System.Int32)
+  commentId: M:NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream(System.IO.Stream,System.Int32)
+  id: DecompressStream(System.IO.Stream,System.Int32)
+  parent: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  langs:
+  - csharp
+  - vb
+  name: DecompressStream(Stream, int)
+  nameWithType: BaseSerializationHelper.DecompressStream(Stream, int)
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream(System.IO.Stream, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DecompressStream
+    path: ../NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+    startLine: 59
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public static byte[] DecompressStream(Stream stream, int size)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    - id: size
+      type: System.Int32
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function DecompressStream(stream As Stream, size As Integer) As Byte()
+  overload: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream*
+  nameWithType.vb: BaseSerializationHelper.DecompressStream(Stream, Integer)
+  fullName.vb: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream(System.IO.Stream, Integer)
+  name.vb: DecompressStream(Stream, Integer)
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData``1(``0[],System.Converter{``0,System.Byte})
+  commentId: M:NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData``1(``0[],System.Converter{``0,System.Byte})
+  id: CompressData``1(``0[],System.Converter{``0,System.Byte})
+  parent: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  langs:
+  - csharp
+  - vb
+  name: CompressData<TInput>(TInput[], Converter<TInput, byte>)
+  nameWithType: BaseSerializationHelper.CompressData<TInput>(TInput[], Converter<TInput, byte>)
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData<TInput>(TInput[], System.Converter<TInput, byte>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CompressData
+    path: ../NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+    startLine: 90
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public static byte[] CompressData<TInput>(TInput[] array, Converter<TInput, byte> converter)
+    parameters:
+    - id: array
+      type: '{TInput}[]'
+    - id: converter
+      type: System.Converter{{TInput},System.Byte}
+    typeParameters:
+    - id: TInput
+    return:
+      type: System.Byte[]
+    content.vb: Public Shared Function CompressData(Of TInput)(array As TInput(), converter As Converter(Of TInput, Byte)) As Byte()
+  overload: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData*
+  nameWithType.vb: BaseSerializationHelper.CompressData(Of TInput)(TInput(), Converter(Of TInput, Byte))
+  fullName.vb: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData(Of TInput)(TInput(), System.Converter(Of TInput, Byte))
+  name.vb: CompressData(Of TInput)(TInput(), Converter(Of TInput, Byte))
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData``1(System.Byte[],System.Int32,System.Converter{System.Byte,``0})
+  commentId: M:NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData``1(System.Byte[],System.Int32,System.Converter{System.Byte,``0})
+  id: DecompressData``1(System.Byte[],System.Int32,System.Converter{System.Byte,``0})
+  parent: NitroxClient.GameLogic.Helper.BaseSerializationHelper
+  langs:
+  - csharp
+  - vb
+  name: DecompressData<TInput>(byte[], int, Converter<byte, TInput>)
+  nameWithType: BaseSerializationHelper.DecompressData<TInput>(byte[], int, Converter<byte, TInput>)
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData<TInput>(byte[], int, System.Converter<byte, TInput>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DecompressData
+    path: ../NitroxClient/GameLogic/Helper/BaseSerializationHelper.cs
+    startLine: 95
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Helper
+  syntax:
+    content: public static TInput[] DecompressData<TInput>(byte[] array, int size, Converter<byte, TInput> converter)
+    parameters:
+    - id: array
+      type: System.Byte[]
+    - id: size
+      type: System.Int32
+    - id: converter
+      type: System.Converter{System.Byte,{TInput}}
+    typeParameters:
+    - id: TInput
+    return:
+      type: '{TInput}[]'
+    content.vb: Public Shared Function DecompressData(Of TInput)(array As Byte(), size As Integer, converter As Converter(Of Byte, TInput)) As TInput()
+  overload: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData*
+  nameWithType.vb: BaseSerializationHelper.DecompressData(Of TInput)(Byte(), Integer, Converter(Of Byte, TInput))
+  fullName.vb: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData(Of TInput)(Byte(), Integer, System.Converter(Of Byte, TInput))
+  name.vb: DecompressData(Of TInput)(Byte(), Integer, Converter(Of Byte, TInput))
+references:
+- uid: NitroxClient.GameLogic.Helper
+  commentId: N:NitroxClient.GameLogic.Helper
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Helper
+  nameWithType: NitroxClient.GameLogic.Helper
+  fullName: NitroxClient.GameLogic.Helper
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Helper
+    name: Helper
+    href: NitroxClient.GameLogic.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes*
+  commentId: Overload:NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes.html#NitroxClient_GameLogic_Helper_BaseSerializationHelper_CompressBytes_System_Byte___
+  name: CompressBytes
+  nameWithType: BaseSerializationHelper.CompressBytes
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressBytes
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes*
+  commentId: Overload:NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes.html#NitroxClient_GameLogic_Helper_BaseSerializationHelper_DecompressBytes_System_Byte___System_Int32_
+  name: DecompressBytes
+  nameWithType: BaseSerializationHelper.DecompressBytes
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressBytes
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream*
+  commentId: Overload:NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream.html#NitroxClient_GameLogic_Helper_BaseSerializationHelper_CompressStream_System_IO_Stream_System_Byte___
+  name: CompressStream
+  nameWithType: BaseSerializationHelper.CompressStream
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressStream
+- uid: System.IO.Stream
+  commentId: T:System.IO.Stream
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  name: Stream
+  nameWithType: Stream
+  fullName: System.IO.Stream
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream*
+  commentId: Overload:NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream.html#NitroxClient_GameLogic_Helper_BaseSerializationHelper_DecompressStream_System_IO_Stream_System_Int32_
+  name: DecompressStream
+  nameWithType: BaseSerializationHelper.DecompressStream
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressStream
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData*
+  commentId: Overload:NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData.html#NitroxClient_GameLogic_Helper_BaseSerializationHelper_CompressData__1___0___System_Converter___0_System_Byte__
+  name: CompressData
+  nameWithType: BaseSerializationHelper.CompressData
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.CompressData
+- uid: '{TInput}[]'
+  isExternal: true
+  name: TInput[]
+  nameWithType: TInput[]
+  fullName: TInput[]
+  nameWithType.vb: TInput()
+  fullName.vb: TInput()
+  name.vb: TInput()
+  spec.csharp:
+  - name: TInput
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - name: TInput
+  - name: (
+  - name: )
+- uid: System.Converter{{TInput},System.Byte}
+  commentId: T:System.Converter{``0,System.Byte}
+  parent: System
+  definition: System.Converter`2
+  href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  name: Converter<TInput, byte>
+  nameWithType: Converter<TInput, byte>
+  fullName: System.Converter<TInput, byte>
+  nameWithType.vb: Converter(Of TInput, Byte)
+  fullName.vb: System.Converter(Of TInput, Byte)
+  name.vb: Converter(Of TInput, Byte)
+  spec.csharp:
+  - uid: System.Converter`2
+    name: Converter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  - name: <
+  - name: TInput
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.Converter`2
+    name: Converter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TInput
+  - name: ','
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: System.Converter`2
+  commentId: T:System.Converter`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  name: Converter<TInput, TOutput>
+  nameWithType: Converter<TInput, TOutput>
+  fullName: System.Converter<TInput, TOutput>
+  nameWithType.vb: Converter(Of TInput, TOutput)
+  fullName.vb: System.Converter(Of TInput, TOutput)
+  name.vb: Converter(Of TInput, TOutput)
+  spec.csharp:
+  - uid: System.Converter`2
+    name: Converter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  - name: <
+  - name: TInput
+  - name: ','
+  - name: " "
+  - name: TOutput
+  - name: '>'
+  spec.vb:
+  - uid: System.Converter`2
+    name: Converter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TInput
+  - name: ','
+  - name: " "
+  - name: TOutput
+  - name: )
+- uid: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData*
+  commentId: Overload:NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData
+  href: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData.html#NitroxClient_GameLogic_Helper_BaseSerializationHelper_DecompressData__1_System_Byte___System_Int32_System_Converter_System_Byte___0__
+  name: DecompressData
+  nameWithType: BaseSerializationHelper.DecompressData
+  fullName: NitroxClient.GameLogic.Helper.BaseSerializationHelper.DecompressData
+- uid: System.Converter{System.Byte,{TInput}}
+  commentId: T:System.Converter{System.Byte,``0}
+  parent: System
+  definition: System.Converter`2
+  href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  name: Converter<byte, TInput>
+  nameWithType: Converter<byte, TInput>
+  fullName: System.Converter<byte, TInput>
+  nameWithType.vb: Converter(Of Byte, TInput)
+  fullName.vb: System.Converter(Of Byte, TInput)
+  name.vb: Converter(Of Byte, TInput)
+  spec.csharp:
+  - uid: System.Converter`2
+    name: Converter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - name: TInput
+  - name: '>'
+  spec.vb:
+  - uid: System.Converter`2
+    name: Converter
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.converter-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: ','
+  - name: " "
+  - name: TInput
+  - name: )
+memberLayout: SeparatePages

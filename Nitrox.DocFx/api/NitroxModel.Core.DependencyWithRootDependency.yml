@@ -1,0 +1,384 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Core.DependencyWithRootDependency
+  commentId: T:NitroxModel.Core.DependencyWithRootDependency
+  id: DependencyWithRootDependency
+  parent: NitroxModel.Core
+  children:
+  - NitroxModel.Core.DependencyWithRootDependency.#ctor(NitroxModel.Core.IRootDependency)
+  - NitroxModel.Core.DependencyWithRootDependency.RootDependency
+  langs:
+  - csharp
+  - vb
+  name: DependencyWithRootDependency
+  nameWithType: DependencyWithRootDependency
+  fullName: NitroxModel.Core.DependencyWithRootDependency
+  type: Class
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DependencyWithRootDependency
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 104
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  syntax:
+    content: public class DependencyWithRootDependency
+    content.vb: Public Class DependencyWithRootDependency
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxModel.Core.DependencyWithRootDependency.RootDependency
+  commentId: P:NitroxModel.Core.DependencyWithRootDependency.RootDependency
+  id: RootDependency
+  parent: NitroxModel.Core.DependencyWithRootDependency
+  langs:
+  - csharp
+  - vb
+  name: RootDependency
+  nameWithType: DependencyWithRootDependency.RootDependency
+  fullName: NitroxModel.Core.DependencyWithRootDependency.RootDependency
+  type: Property
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RootDependency
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 106
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  syntax:
+    content: public IRootDependency RootDependency { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Core.IRootDependency
+    content.vb: Public ReadOnly Property RootDependency As IRootDependency
+  overload: NitroxModel.Core.DependencyWithRootDependency.RootDependency*
+- uid: NitroxModel.Core.DependencyWithRootDependency.#ctor(NitroxModel.Core.IRootDependency)
+  commentId: M:NitroxModel.Core.DependencyWithRootDependency.#ctor(NitroxModel.Core.IRootDependency)
+  id: '#ctor(NitroxModel.Core.IRootDependency)'
+  parent: NitroxModel.Core.DependencyWithRootDependency
+  langs:
+  - csharp
+  - vb
+  name: DependencyWithRootDependency(IRootDependency)
+  nameWithType: DependencyWithRootDependency.DependencyWithRootDependency(IRootDependency)
+  fullName: NitroxModel.Core.DependencyWithRootDependency.DependencyWithRootDependency(NitroxModel.Core.IRootDependency)
+  type: Constructor
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 108
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  syntax:
+    content: public DependencyWithRootDependency(IRootDependency rootDependency)
+    parameters:
+    - id: rootDependency
+      type: NitroxModel.Core.IRootDependency
+    content.vb: Public Sub New(rootDependency As IRootDependency)
+  overload: NitroxModel.Core.DependencyWithRootDependency.#ctor*
+  nameWithType.vb: DependencyWithRootDependency.New(IRootDependency)
+  fullName.vb: NitroxModel.Core.DependencyWithRootDependency.New(NitroxModel.Core.IRootDependency)
+  name.vb: New(IRootDependency)
+references:
+- uid: NitroxModel.Core
+  commentId: N:NitroxModel.Core
+  href: NitroxModel.html
+  name: NitroxModel.Core
+  nameWithType: NitroxModel.Core
+  fullName: NitroxModel.Core
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Core.DependencyWithRootDependency.RootDependency*
+  commentId: Overload:NitroxModel.Core.DependencyWithRootDependency.RootDependency
+  href: NitroxModel.Core.DependencyWithRootDependency.RootDependency.html#NitroxModel_Core_DependencyWithRootDependency_RootDependency
+  name: RootDependency
+  nameWithType: DependencyWithRootDependency.RootDependency
+  fullName: NitroxModel.Core.DependencyWithRootDependency.RootDependency
+- uid: NitroxModel.Core.IRootDependency
+  commentId: T:NitroxModel.Core.IRootDependency
+  parent: NitroxModel.Core
+  href: NitroxModel.Core.IRootDependency.html
+  name: IRootDependency
+  nameWithType: IRootDependency
+  fullName: NitroxModel.Core.IRootDependency
+- uid: NitroxModel.Core.DependencyWithRootDependency.#ctor*
+  commentId: Overload:NitroxModel.Core.DependencyWithRootDependency.#ctor
+  href: NitroxModel.Core.DependencyWithRootDependency.-ctor.html#NitroxModel_Core_DependencyWithRootDependency__ctor_NitroxModel_Core_IRootDependency_
+  name: DependencyWithRootDependency
+  nameWithType: DependencyWithRootDependency.DependencyWithRootDependency
+  fullName: NitroxModel.Core.DependencyWithRootDependency.DependencyWithRootDependency
+  nameWithType.vb: DependencyWithRootDependency.New
+  fullName.vb: NitroxModel.Core.DependencyWithRootDependency.New
+  name.vb: New
+memberLayout: SeparatePages

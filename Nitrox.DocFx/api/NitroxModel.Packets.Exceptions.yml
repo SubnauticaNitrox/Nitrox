@@ -1,0 +1,25 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.Exceptions
+  commentId: N:NitroxModel.Packets.Exceptions
+  id: Exceptions
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.Exceptions.UncorrelatedPacketException
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Packets.Exceptions
+  nameWithType: NitroxModel.Packets.Exceptions
+  fullName: NitroxModel.Packets.Exceptions
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.Packets.Exceptions.UncorrelatedPacketException
+  commentId: T:NitroxModel.Packets.Exceptions.UncorrelatedPacketException
+  href: NitroxModel.Packets.Exceptions.UncorrelatedPacketException.html
+  name: UncorrelatedPacketException
+  nameWithType: UncorrelatedPacketException
+  fullName: NitroxModel.Packets.Exceptions.UncorrelatedPacketException
+memberLayout: SeparatePages

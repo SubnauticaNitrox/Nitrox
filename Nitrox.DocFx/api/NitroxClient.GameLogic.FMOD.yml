@@ -1,0 +1,71 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.FMOD
+  commentId: N:NitroxClient.GameLogic.FMOD
+  id: FMOD
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.FMOD.FMODSuppressor
+  - NitroxClient.GameLogic.FMOD.FMODSystem
+  - NitroxClient.GameLogic.FMOD.SoundData
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.FMOD
+  nameWithType: NitroxClient.GameLogic.FMOD
+  fullName: NitroxClient.GameLogic.FMOD
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.FMOD.FMODSuppressor
+  commentId: T:NitroxClient.GameLogic.FMOD.FMODSuppressor
+  parent: NitroxClient.GameLogic.FMOD
+  href: NitroxClient.GameLogic.FMOD.FMODSuppressor.html
+  name: FMODSuppressor
+  nameWithType: FMODSuppressor
+  fullName: NitroxClient.GameLogic.FMOD.FMODSuppressor
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem
+  commentId: T:NitroxClient.GameLogic.FMOD.FMODSystem
+  parent: NitroxClient.GameLogic.FMOD
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.html
+  name: FMODSystem
+  nameWithType: FMODSystem
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem
+- uid: NitroxClient.GameLogic.FMOD.SoundData
+  commentId: T:NitroxClient.GameLogic.FMOD.SoundData
+  href: NitroxClient.GameLogic.FMOD.SoundData.html
+  name: SoundData
+  nameWithType: SoundData
+  fullName: NitroxClient.GameLogic.FMOD.SoundData
+- uid: NitroxClient.GameLogic.FMOD
+  commentId: N:NitroxClient.GameLogic.FMOD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.FMOD
+  nameWithType: NitroxClient.GameLogic.FMOD
+  fullName: NitroxClient.GameLogic.FMOD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+memberLayout: SeparatePages

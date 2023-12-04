@@ -1,0 +1,1018 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  id: NitroxSettingsManager.Setting
+  parent: NitroxClient.GameLogic.Settings
+  children:
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Boolean})
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Int32},System.String[])
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Single},System.Single,System.Single,System.Single,System.Single)
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,UnityEngine.Events.UnityAction)
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Callback
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue``1
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Label
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.ListItems
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.NitroxPref
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SettingType
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderDefaultValue
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMaxValue
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMinValue
+  - NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderStep
+  langs:
+  - csharp
+  - vb
+  name: NitroxSettingsManager.Setting
+  nameWithType: NitroxSettingsManager.Setting
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Setting
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 68
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public class NitroxSettingsManager.Setting
+    content.vb: Public Class NitroxSettingsManager.Setting
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SettingType
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SettingType
+  id: SettingType
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: SettingType
+  nameWithType: NitroxSettingsManager.Setting.SettingType
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SettingType
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SettingType
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 72
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly NitroxSettingsManager.SettingType SettingType
+    return:
+      type: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+    content.vb: Public ReadOnly SettingType As NitroxSettingsManager.SettingType
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Label
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Label
+  id: Label
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: Label
+  nameWithType: NitroxSettingsManager.Setting.Label
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Label
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Label
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 73
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly string Label
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Label As String
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.NitroxPref
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.NitroxPref
+  id: NitroxPref
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: NitroxPref
+  nameWithType: NitroxSettingsManager.Setting.NitroxPref
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.NitroxPref
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxPref
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 74
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly NitroxPref NitroxPref
+    return:
+      type: NitroxClient.GameLogic.Settings.NitroxPref
+    content.vb: Public ReadOnly NitroxPref As NitroxPref
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Callback
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Callback
+  id: Callback
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: Callback
+  nameWithType: NitroxSettingsManager.Setting.Callback
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Callback
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Callback
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 75
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly Delegate Callback
+    return:
+      type: System.Delegate
+    content.vb: Public ReadOnly Callback As [Delegate]
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMinValue
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMinValue
+  id: SliderMinValue
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: SliderMinValue
+  nameWithType: NitroxSettingsManager.Setting.SliderMinValue
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMinValue
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SliderMinValue
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 78
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly float SliderMinValue
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly SliderMinValue As Single
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMaxValue
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMaxValue
+  id: SliderMaxValue
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: SliderMaxValue
+  nameWithType: NitroxSettingsManager.Setting.SliderMaxValue
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderMaxValue
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SliderMaxValue
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 79
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly float SliderMaxValue
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly SliderMaxValue As Single
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderDefaultValue
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderDefaultValue
+  id: SliderDefaultValue
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: SliderDefaultValue
+  nameWithType: NitroxSettingsManager.Setting.SliderDefaultValue
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderDefaultValue
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SliderDefaultValue
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 80
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly float SliderDefaultValue
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly SliderDefaultValue As Single
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderStep
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderStep
+  id: SliderStep
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: SliderStep
+  nameWithType: NitroxSettingsManager.Setting.SliderStep
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.SliderStep
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SliderStep
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 81
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly float SliderStep
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly SliderStep As Single
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.ListItems
+  commentId: F:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.ListItems
+  id: ListItems
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: ListItems
+  nameWithType: NitroxSettingsManager.Setting.ListItems
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.ListItems
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ListItems
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 84
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: public readonly string[] ListItems
+    return:
+      type: System.String[]
+    content.vb: Public ReadOnly ListItems As String()
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,UnityEngine.Events.UnityAction)
+  commentId: M:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,UnityEngine.Events.UnityAction)
+  id: '#ctor(System.String,UnityEngine.Events.UnityAction)'
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: Setting(string, UnityAction)
+  nameWithType: NitroxSettingsManager.Setting.Setting(string, UnityAction)
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Setting(string, UnityEngine.Events.UnityAction)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 96
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  summary: Constructor for buttons (doesn't need a NitroxPref)
+  example: []
+  syntax:
+    content: public Setting(string label, UnityAction callback)
+    parameters:
+    - id: label
+      type: System.String
+    - id: callback
+      type: UnityEngine.Events.UnityAction
+    content.vb: Public Sub New(label As String, callback As UnityAction)
+  overload: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor*
+  nameWithType.vb: NitroxSettingsManager.Setting.New(String, UnityAction)
+  fullName.vb: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.New(String, UnityEngine.Events.UnityAction)
+  name.vb: New(String, UnityAction)
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Boolean})
+  commentId: M:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Boolean})
+  id: '#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Boolean})'
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: Setting(string, NitroxPref, UnityAction<bool>)
+  nameWithType: NitroxSettingsManager.Setting.Setting(string, NitroxPref, UnityAction<bool>)
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Setting(string, NitroxClient.GameLogic.Settings.NitroxPref, UnityEngine.Events.UnityAction<bool>)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 104
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  summary: Constructor for a Toggle setting
+  example: []
+  syntax:
+    content: public Setting(string label, NitroxPref nitroxPref, UnityAction<bool> callback)
+    parameters:
+    - id: label
+      type: System.String
+    - id: nitroxPref
+      type: NitroxClient.GameLogic.Settings.NitroxPref
+    - id: callback
+      type: UnityEngine.Events.UnityAction{System.Boolean}
+    content.vb: Public Sub New(label As String, nitroxPref As NitroxPref, callback As UnityAction(Of Boolean))
+  overload: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor*
+  nameWithType.vb: NitroxSettingsManager.Setting.New(String, NitroxPref, UnityAction(Of Boolean))
+  fullName.vb: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.New(String, NitroxClient.GameLogic.Settings.NitroxPref, UnityEngine.Events.UnityAction(Of Boolean))
+  name.vb: New(String, NitroxPref, UnityAction(Of Boolean))
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Single},System.Single,System.Single,System.Single,System.Single)
+  commentId: M:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Single},System.Single,System.Single,System.Single,System.Single)
+  id: '#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Single},System.Single,System.Single,System.Single,System.Single)'
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: Setting(string, NitroxPref, UnityAction<float>, float, float, float, float)
+  nameWithType: NitroxSettingsManager.Setting.Setting(string, NitroxPref, UnityAction<float>, float, float, float, float)
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Setting(string, NitroxClient.GameLogic.Settings.NitroxPref, UnityEngine.Events.UnityAction<float>, float, float, float, float)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 107
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  summary: Constructor for a Slider setting
+  example: []
+  syntax:
+    content: public Setting(string label, NitroxPref nitroxPref, UnityAction<float> callback, float sliderMinValue, float sliderMaxValue, float sliderDefaultValue, float sliderStep)
+    parameters:
+    - id: label
+      type: System.String
+    - id: nitroxPref
+      type: NitroxClient.GameLogic.Settings.NitroxPref
+    - id: callback
+      type: UnityEngine.Events.UnityAction{System.Single}
+    - id: sliderMinValue
+      type: System.Single
+    - id: sliderMaxValue
+      type: System.Single
+    - id: sliderDefaultValue
+      type: System.Single
+    - id: sliderStep
+      type: System.Single
+    content.vb: Public Sub New(label As String, nitroxPref As NitroxPref, callback As UnityAction(Of Single), sliderMinValue As Single, sliderMaxValue As Single, sliderDefaultValue As Single, sliderStep As Single)
+  overload: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor*
+  nameWithType.vb: NitroxSettingsManager.Setting.New(String, NitroxPref, UnityAction(Of Single), Single, Single, Single, Single)
+  fullName.vb: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.New(String, NitroxClient.GameLogic.Settings.NitroxPref, UnityEngine.Events.UnityAction(Of Single), Single, Single, Single, Single)
+  name.vb: New(String, NitroxPref, UnityAction(Of Single), Single, Single, Single, Single)
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Int32},System.String[])
+  commentId: M:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Int32},System.String[])
+  id: '#ctor(System.String,NitroxClient.GameLogic.Settings.NitroxPref,UnityEngine.Events.UnityAction{System.Int32},System.String[])'
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: Setting(string, NitroxPref, UnityAction<int>, string[])
+  nameWithType: NitroxSettingsManager.Setting.Setting(string, NitroxPref, UnityAction<int>, string[])
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Setting(string, NitroxClient.GameLogic.Settings.NitroxPref, UnityEngine.Events.UnityAction<int>, string[])
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 116
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  summary: Constructor for a List setting
+  example: []
+  syntax:
+    content: public Setting(string label, NitroxPref nitroxPref, UnityAction<int> callback, string[] listItems)
+    parameters:
+    - id: label
+      type: System.String
+    - id: nitroxPref
+      type: NitroxClient.GameLogic.Settings.NitroxPref
+    - id: callback
+      type: UnityEngine.Events.UnityAction{System.Int32}
+    - id: listItems
+      type: System.String[]
+    content.vb: Public Sub New(label As String, nitroxPref As NitroxPref, callback As UnityAction(Of Integer), listItems As String())
+  overload: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor*
+  nameWithType.vb: NitroxSettingsManager.Setting.New(String, NitroxPref, UnityAction(Of Integer), String())
+  fullName.vb: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.New(String, NitroxClient.GameLogic.Settings.NitroxPref, UnityEngine.Events.UnityAction(Of Integer), String())
+  name.vb: New(String, NitroxPref, UnityAction(Of Integer), String())
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue``1
+  commentId: M:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue``1
+  id: GetValue``1
+  parent: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting
+  langs:
+  - csharp
+  - vb
+  name: GetValue<T>()
+  nameWithType: NitroxSettingsManager.Setting.GetValue<T>()
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue<T>()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetValue
+    path: ../NitroxClient/GameLogic/Settings/NitroxSettingsManager.cs
+    startLine: 121
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Settings
+  syntax:
+    content: 'public T GetValue<T>() where T : IConvertible'
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function GetValue(Of T As IConvertible)() As T
+  overload: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue*
+  nameWithType.vb: NitroxSettingsManager.Setting.GetValue(Of T)()
+  fullName.vb: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue(Of T)()
+  name.vb: GetValue(Of T)()
+references:
+- uid: NitroxClient.GameLogic.Settings
+  commentId: N:NitroxClient.GameLogic.Settings
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Settings
+  nameWithType: NitroxClient.GameLogic.Settings
+  fullName: NitroxClient.GameLogic.Settings
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings
+    name: Settings
+    href: NitroxClient.GameLogic.Settings.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings
+    name: Settings
+    href: NitroxClient.GameLogic.Settings.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+  parent: NitroxClient.GameLogic.Settings
+  href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  name: NitroxSettingsManager.SettingType
+  nameWithType: NitroxSettingsManager.SettingType
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+    name: NitroxSettingsManager
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+    name: SettingType
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager
+    name: NitroxSettingsManager
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType
+    name: SettingType
+    href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.SettingType.html
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxClient.GameLogic.Settings.NitroxPref
+  commentId: T:NitroxClient.GameLogic.Settings.NitroxPref
+  parent: NitroxClient.GameLogic.Settings
+  href: NitroxClient.GameLogic.Settings.NitroxPref.html
+  name: NitroxPref
+  nameWithType: NitroxPref
+  fullName: NitroxClient.GameLogic.Settings.NitroxPref
+- uid: System.Delegate
+  commentId: T:System.Delegate
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.delegate
+  name: Delegate
+  nameWithType: Delegate
+  fullName: System.Delegate
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.#ctor
+  href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.-ctor.html#NitroxClient_GameLogic_Settings_NitroxSettingsManager_Setting__ctor_System_String_UnityEngine_Events_UnityAction_
+  name: Setting
+  nameWithType: NitroxSettingsManager.Setting.Setting
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.Setting
+  nameWithType.vb: NitroxSettingsManager.Setting.New
+  fullName.vb: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.New
+  name.vb: New
+- uid: UnityEngine.Events.UnityAction
+  commentId: T:UnityEngine.Events.UnityAction
+  parent: UnityEngine.Events
+  isExternal: true
+  name: UnityAction
+  nameWithType: UnityAction
+  fullName: UnityEngine.Events.UnityAction
+- uid: UnityEngine.Events
+  commentId: N:UnityEngine.Events
+  isExternal: true
+  name: UnityEngine.Events
+  nameWithType: UnityEngine.Events
+  fullName: UnityEngine.Events
+  spec.csharp:
+  - uid: UnityEngine
+    name: UnityEngine
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.Events
+    name: Events
+    isExternal: true
+  spec.vb:
+  - uid: UnityEngine
+    name: UnityEngine
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.Events
+    name: Events
+    isExternal: true
+- uid: UnityEngine.Events.UnityAction{System.Boolean}
+  commentId: T:UnityEngine.Events.UnityAction{System.Boolean}
+  parent: UnityEngine.Events
+  definition: UnityEngine.Events.UnityAction`1
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: UnityAction<bool>
+  nameWithType: UnityAction<bool>
+  fullName: UnityEngine.Events.UnityAction<bool>
+  nameWithType.vb: UnityAction(Of Boolean)
+  fullName.vb: UnityEngine.Events.UnityAction(Of Boolean)
+  name.vb: UnityAction(Of Boolean)
+  spec.csharp:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: UnityEngine.Events.UnityAction`1
+  commentId: T:UnityEngine.Events.UnityAction`1
+  isExternal: true
+  name: UnityAction<T0>
+  nameWithType: UnityAction<T0>
+  fullName: UnityEngine.Events.UnityAction<T0>
+  nameWithType.vb: UnityAction(Of T0)
+  fullName.vb: UnityEngine.Events.UnityAction(Of T0)
+  name.vb: UnityAction(Of T0)
+  spec.csharp:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: <
+  - name: T0
+  - name: '>'
+  spec.vb:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T0
+  - name: )
+- uid: UnityEngine.Events.UnityAction{System.Single}
+  commentId: T:UnityEngine.Events.UnityAction{System.Single}
+  parent: UnityEngine.Events
+  definition: UnityEngine.Events.UnityAction`1
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: UnityAction<float>
+  nameWithType: UnityAction<float>
+  fullName: UnityEngine.Events.UnityAction<float>
+  nameWithType.vb: UnityAction(Of Single)
+  fullName.vb: UnityEngine.Events.UnityAction(Of Single)
+  name.vb: UnityAction(Of Single)
+  spec.csharp:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: <
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '>'
+  spec.vb:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+- uid: UnityEngine.Events.UnityAction{System.Int32}
+  commentId: T:UnityEngine.Events.UnityAction{System.Int32}
+  parent: UnityEngine.Events
+  definition: UnityEngine.Events.UnityAction`1
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: UnityAction<int>
+  nameWithType: UnityAction<int>
+  fullName: UnityEngine.Events.UnityAction<int>
+  nameWithType.vb: UnityAction(Of Integer)
+  fullName.vb: UnityEngine.Events.UnityAction(Of Integer)
+  name.vb: UnityAction(Of Integer)
+  spec.csharp:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: UnityEngine.Events.UnityAction`1
+    name: UnityAction
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue*
+  commentId: Overload:NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue
+  href: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue.html#NitroxClient_GameLogic_Settings_NitroxSettingsManager_Setting_GetValue__1
+  name: GetValue
+  nameWithType: NitroxSettingsManager.Setting.GetValue
+  fullName: NitroxClient.GameLogic.Settings.NitroxSettingsManager.Setting.GetValue
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+memberLayout: SeparatePages

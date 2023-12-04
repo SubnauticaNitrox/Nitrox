@@ -1,0 +1,52 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Core.IRootDependency
+  commentId: T:NitroxModel.Core.IRootDependency
+  id: IRootDependency
+  parent: NitroxModel.Core
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IRootDependency
+  nameWithType: IRootDependency
+  fullName: NitroxModel.Core.IRootDependency
+  type: Interface
+  source:
+    remote:
+      path: Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IRootDependency
+    path: ../Nitrox.Test/Model/Core/DependencyInjectionTests.cs
+    startLine: 96
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxModel.Core
+  syntax:
+    content: public interface IRootDependency
+    content.vb: Public Interface IRootDependency
+references:
+- uid: NitroxModel.Core
+  commentId: N:NitroxModel.Core
+  href: NitroxModel.html
+  name: NitroxModel.Core
+  nameWithType: NitroxModel.Core
+  fullName: NitroxModel.Core
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Core
+    name: Core
+    href: NitroxModel.Core.html
+memberLayout: SeparatePages

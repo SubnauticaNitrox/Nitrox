@@ -1,0 +1,420 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  commentId: T:NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  id: IMultiplayerSessionState
+  parent: NitroxClient.Communication.Abstract
+  children:
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort
+  - NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy
+  langs:
+  - csharp
+  - vb
+  name: IMultiplayerSessionState
+  nameWithType: IMultiplayerSessionState
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IMultiplayerSessionState
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: public interface IMultiplayerSessionState
+    content.vb: Public Interface IMultiplayerSessionState
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client
+  commentId: P:NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client
+  id: Client
+  parent: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  langs:
+  - csharp
+  - vb
+  name: Client
+  nameWithType: IMultiplayerSessionState.Client
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Client
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: IClient Client { get; }
+    parameters: []
+    return:
+      type: NitroxClient.Communication.Abstract.IClient
+    content.vb: ReadOnly Property Client As IClient
+  overload: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client*
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress
+  commentId: P:NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress
+  id: IpAddress
+  parent: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  langs:
+  - csharp
+  - vb
+  name: IpAddress
+  nameWithType: IMultiplayerSessionState.IpAddress
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IpAddress
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: string IpAddress { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property IpAddress As String
+  overload: NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress*
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort
+  commentId: P:NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort
+  id: ServerPort
+  parent: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  langs:
+  - csharp
+  - vb
+  name: ServerPort
+  nameWithType: IMultiplayerSessionState.ServerPort
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ServerPort
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: int ServerPort { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property ServerPort As Integer
+  overload: NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort*
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy
+  commentId: P:NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy
+  id: SessionPolicy
+  parent: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  langs:
+  - csharp
+  - vb
+  name: SessionPolicy
+  nameWithType: IMultiplayerSessionState.SessionPolicy
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SessionPolicy
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: MultiplayerSessionPolicy SessionPolicy { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Packets.MultiplayerSessionPolicy
+    content.vb: ReadOnly Property SessionPolicy As MultiplayerSessionPolicy
+  overload: NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy*
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings
+  commentId: P:NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings
+  id: PlayerSettings
+  parent: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  langs:
+  - csharp
+  - vb
+  name: PlayerSettings
+  nameWithType: IMultiplayerSessionState.PlayerSettings
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerSettings
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: PlayerSettings PlayerSettings { get; }
+    parameters: []
+    return:
+      type: NitroxModel.MultiplayerSession.PlayerSettings
+    content.vb: ReadOnly Property PlayerSettings As PlayerSettings
+  overload: NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings*
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext
+  commentId: P:NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext
+  id: AuthenticationContext
+  parent: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationContext
+  nameWithType: IMultiplayerSessionState.AuthenticationContext
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AuthenticationContext
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 12
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: AuthenticationContext AuthenticationContext { get; }
+    parameters: []
+    return:
+      type: NitroxModel.MultiplayerSession.AuthenticationContext
+    content.vb: ReadOnly Property AuthenticationContext As AuthenticationContext
+  overload: NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext*
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation
+  commentId: P:NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation
+  id: Reservation
+  parent: NitroxClient.Communication.Abstract.IMultiplayerSessionState
+  langs:
+  - csharp
+  - vb
+  name: Reservation
+  nameWithType: IMultiplayerSessionState.Reservation
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Reservation
+    path: ../NitroxClient/Communication/Abstract/IMultiplayerSessionState.cs
+    startLine: 13
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Abstract
+  syntax:
+    content: MultiplayerSessionReservation Reservation { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Packets.MultiplayerSessionReservation
+    content.vb: ReadOnly Property Reservation As MultiplayerSessionReservation
+  overload: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation*
+references:
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client*
+  commentId: Overload:NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client.html#NitroxClient_Communication_Abstract_IMultiplayerSessionState_Client
+  name: Client
+  nameWithType: IMultiplayerSessionState.Client
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Client
+- uid: NitroxClient.Communication.Abstract.IClient
+  commentId: T:NitroxClient.Communication.Abstract.IClient
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IClient.html
+  name: IClient
+  nameWithType: IClient
+  fullName: NitroxClient.Communication.Abstract.IClient
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress*
+  commentId: Overload:NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress.html#NitroxClient_Communication_Abstract_IMultiplayerSessionState_IpAddress
+  name: IpAddress
+  nameWithType: IMultiplayerSessionState.IpAddress
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.IpAddress
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort*
+  commentId: Overload:NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort.html#NitroxClient_Communication_Abstract_IMultiplayerSessionState_ServerPort
+  name: ServerPort
+  nameWithType: IMultiplayerSessionState.ServerPort
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.ServerPort
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy*
+  commentId: Overload:NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy.html#NitroxClient_Communication_Abstract_IMultiplayerSessionState_SessionPolicy
+  name: SessionPolicy
+  nameWithType: IMultiplayerSessionState.SessionPolicy
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.SessionPolicy
+- uid: NitroxModel.Packets.MultiplayerSessionPolicy
+  commentId: T:NitroxModel.Packets.MultiplayerSessionPolicy
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MultiplayerSessionPolicy.html
+  name: MultiplayerSessionPolicy
+  nameWithType: MultiplayerSessionPolicy
+  fullName: NitroxModel.Packets.MultiplayerSessionPolicy
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings*
+  commentId: Overload:NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings.html#NitroxClient_Communication_Abstract_IMultiplayerSessionState_PlayerSettings
+  name: PlayerSettings
+  nameWithType: IMultiplayerSessionState.PlayerSettings
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.PlayerSettings
+- uid: NitroxModel.MultiplayerSession.PlayerSettings
+  commentId: T:NitroxModel.MultiplayerSession.PlayerSettings
+  parent: NitroxModel.MultiplayerSession
+  href: NitroxModel.MultiplayerSession.PlayerSettings.html
+  name: PlayerSettings
+  nameWithType: PlayerSettings
+  fullName: NitroxModel.MultiplayerSession.PlayerSettings
+- uid: NitroxModel.MultiplayerSession
+  commentId: N:NitroxModel.MultiplayerSession
+  href: NitroxModel.html
+  name: NitroxModel.MultiplayerSession
+  nameWithType: NitroxModel.MultiplayerSession
+  fullName: NitroxModel.MultiplayerSession
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxModel.MultiplayerSession.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxModel.MultiplayerSession.html
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext*
+  commentId: Overload:NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext.html#NitroxClient_Communication_Abstract_IMultiplayerSessionState_AuthenticationContext
+  name: AuthenticationContext
+  nameWithType: IMultiplayerSessionState.AuthenticationContext
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.AuthenticationContext
+- uid: NitroxModel.MultiplayerSession.AuthenticationContext
+  commentId: T:NitroxModel.MultiplayerSession.AuthenticationContext
+  parent: NitroxModel.MultiplayerSession
+  href: NitroxModel.MultiplayerSession.AuthenticationContext.html
+  name: AuthenticationContext
+  nameWithType: AuthenticationContext
+  fullName: NitroxModel.MultiplayerSession.AuthenticationContext
+- uid: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation*
+  commentId: Overload:NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation
+  href: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation.html#NitroxClient_Communication_Abstract_IMultiplayerSessionState_Reservation
+  name: Reservation
+  nameWithType: IMultiplayerSessionState.Reservation
+  fullName: NitroxClient.Communication.Abstract.IMultiplayerSessionState.Reservation
+- uid: NitroxModel.Packets.MultiplayerSessionReservation
+  commentId: T:NitroxModel.Packets.MultiplayerSessionReservation
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.MultiplayerSessionReservation.html
+  name: MultiplayerSessionReservation
+  nameWithType: MultiplayerSessionReservation
+  fullName: NitroxModel.Packets.MultiplayerSessionReservation
+memberLayout: SeparatePages

@@ -1,0 +1,784 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  commentId: T:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  id: JoinServerJoinWindow
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu
+  children:
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize(UnityEngine.RectTransform,UnityEngine.Events.UnityAction,UnityEngine.Events.UnityAction)
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB(UnityEngine.Vector3)
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP(System.String)
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged
+  - NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged
+  langs:
+  - csharp
+  - vb
+  name: JoinServerJoinWindow
+  nameWithType: JoinServerJoinWindow
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: JoinServerJoinWindow
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 16
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public class JoinServerJoinWindow
+    content.vb: Public Class JoinServerJoinWindow
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName
+  commentId: P:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName
+  id: PlayerName
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: PlayerName
+  nameWithType: JoinServerJoinWindow.PlayerName
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerName
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 27
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public string PlayerName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PlayerName As String
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName*
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField
+  id: ActivateInputField
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: ActivateInputField()
+  nameWithType: JoinServerJoinWindow.ActivateInputField()
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ActivateInputField
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 33
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public void ActivateInputField()
+    content.vb: Public Sub ActivateInputField()
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField*
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP(System.String)
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP(System.String)
+  id: SetIP(System.String)
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: SetIP(string)
+  nameWithType: JoinServerJoinWindow.SetIP(string)
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SetIP
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 35
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public void SetIP(string serverIp)
+    parameters:
+    - id: serverIp
+      type: System.String
+    content.vb: Public Sub SetIP(serverIp As String)
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP*
+  nameWithType.vb: JoinServerJoinWindow.SetIP(String)
+  fullName.vb: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP(String)
+  name.vb: SetIP(String)
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB(UnityEngine.Vector3)
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB(UnityEngine.Vector3)
+  id: SetHSB(UnityEngine.Vector3)
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: SetHSB(Vector3)
+  nameWithType: JoinServerJoinWindow.SetHSB(Vector3)
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB(UnityEngine.Vector3)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SetHSB
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 37
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public void SetHSB(Vector3 hsb)
+    parameters:
+    - id: hsb
+      type: UnityEngine.Vector3
+    content.vb: Public Sub SetHSB(hsb As Vector3)
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB*
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor
+  id: GetCurrentColor
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentColor()
+  nameWithType: JoinServerJoinWindow.GetCurrentColor()
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetCurrentColor
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 39
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public Color GetCurrentColor()
+    return:
+      type: UnityEngine.Color
+    content.vb: Public Function GetCurrentColor() As Color
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor*
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged
+  id: SubscribeColorChanged
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: SubscribeColorChanged()
+  nameWithType: JoinServerJoinWindow.SubscribeColorChanged()
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SubscribeColorChanged
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 41
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public void SubscribeColorChanged()
+    content.vb: Public Sub SubscribeColorChanged()
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged*
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged
+  id: UnsubscribeColorChanged
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: UnsubscribeColorChanged()
+  nameWithType: JoinServerJoinWindow.UnsubscribeColorChanged()
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UnsubscribeColorChanged
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 53
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public void UnsubscribeColorChanged()
+    content.vb: Public Sub UnsubscribeColorChanged()
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged*
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize(UnityEngine.RectTransform,UnityEngine.Events.UnityAction,UnityEngine.Events.UnityAction)
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize(UnityEngine.RectTransform,UnityEngine.Events.UnityAction,UnityEngine.Events.UnityAction)
+  id: Initialize(UnityEngine.RectTransform,UnityEngine.Events.UnityAction,UnityEngine.Events.UnityAction)
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: Initialize(RectTransform, UnityAction, UnityAction)
+  nameWithType: JoinServerJoinWindow.Initialize(RectTransform, UnityAction, UnityAction)
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize(UnityEngine.RectTransform, UnityEngine.Events.UnityAction, UnityEngine.Events.UnityAction)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Initialize
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 75
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public IEnumerator Initialize(RectTransform joinServerBackground, UnityAction joinButtonCall, UnityAction cancelButtonCall)
+    parameters:
+    - id: joinServerBackground
+      type: UnityEngine.RectTransform
+    - id: joinButtonCall
+      type: UnityEngine.Events.UnityAction
+    - id: cancelButtonCall
+      type: UnityEngine.Events.UnityAction
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Function Initialize(joinServerBackground As RectTransform, joinButtonCall As UnityAction, cancelButtonCall As UnityAction) As IEnumerator
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize*
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady
+  commentId: M:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady
+  id: IsReady
+  parent: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow
+  langs:
+  - csharp
+  - vb
+  name: IsReady()
+  nameWithType: JoinServerJoinWindow.IsReady()
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsReady
+    path: ../NitroxClient/MonoBehaviours/Gui/MainMenu/JoinServerJoinWindow.cs
+    startLine: 93
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.MonoBehaviours.Gui.MainMenu
+  syntax:
+    content: public Task IsReady()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function IsReady() As Task
+  overload: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady*
+references:
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu
+  commentId: N:NitroxClient.MonoBehaviours.Gui.MainMenu
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.MainMenu
+  nameWithType: NitroxClient.MonoBehaviours.Gui.MainMenu
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.MainMenu
+    name: MainMenu
+    href: NitroxClient.MonoBehaviours.Gui.MainMenu.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.MainMenu
+    name: MainMenu
+    href: NitroxClient.MonoBehaviours.Gui.MainMenu.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_PlayerName
+  name: PlayerName
+  nameWithType: JoinServerJoinWindow.PlayerName
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.PlayerName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_ActivateInputField
+  name: ActivateInputField
+  nameWithType: JoinServerJoinWindow.ActivateInputField
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.ActivateInputField
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_SetIP_System_String_
+  name: SetIP
+  nameWithType: JoinServerJoinWindow.SetIP
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetIP
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_SetHSB_UnityEngine_Vector3_
+  name: SetHSB
+  nameWithType: JoinServerJoinWindow.SetHSB
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SetHSB
+- uid: UnityEngine.Vector3
+  commentId: T:UnityEngine.Vector3
+  parent: UnityEngine
+  isExternal: true
+  name: Vector3
+  nameWithType: Vector3
+  fullName: UnityEngine.Vector3
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_GetCurrentColor
+  name: GetCurrentColor
+  nameWithType: JoinServerJoinWindow.GetCurrentColor
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.GetCurrentColor
+- uid: UnityEngine.Color
+  commentId: T:UnityEngine.Color
+  parent: UnityEngine
+  isExternal: true
+  name: Color
+  nameWithType: Color
+  fullName: UnityEngine.Color
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_SubscribeColorChanged
+  name: SubscribeColorChanged
+  nameWithType: JoinServerJoinWindow.SubscribeColorChanged
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.SubscribeColorChanged
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_UnsubscribeColorChanged
+  name: UnsubscribeColorChanged
+  nameWithType: JoinServerJoinWindow.UnsubscribeColorChanged
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.UnsubscribeColorChanged
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_Initialize_UnityEngine_RectTransform_UnityEngine_Events_UnityAction_UnityEngine_Events_UnityAction_
+  name: Initialize
+  nameWithType: JoinServerJoinWindow.Initialize
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.Initialize
+- uid: UnityEngine.RectTransform
+  commentId: T:UnityEngine.RectTransform
+  parent: UnityEngine
+  isExternal: true
+  name: RectTransform
+  nameWithType: RectTransform
+  fullName: UnityEngine.RectTransform
+- uid: UnityEngine.Events.UnityAction
+  commentId: T:UnityEngine.Events.UnityAction
+  parent: UnityEngine.Events
+  isExternal: true
+  name: UnityAction
+  nameWithType: UnityAction
+  fullName: UnityEngine.Events.UnityAction
+- uid: System.Collections.IEnumerator
+  commentId: T:System.Collections.IEnumerator
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerator
+  name: IEnumerator
+  nameWithType: IEnumerator
+  fullName: System.Collections.IEnumerator
+- uid: UnityEngine.Events
+  commentId: N:UnityEngine.Events
+  isExternal: true
+  name: UnityEngine.Events
+  nameWithType: UnityEngine.Events
+  fullName: UnityEngine.Events
+  spec.csharp:
+  - uid: UnityEngine
+    name: UnityEngine
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.Events
+    name: Events
+    isExternal: true
+  spec.vb:
+  - uid: UnityEngine
+    name: UnityEngine
+    isExternal: true
+  - name: .
+  - uid: UnityEngine.Events
+    name: Events
+    isExternal: true
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady*
+  commentId: Overload:NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady
+  href: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady.html#NitroxClient_MonoBehaviours_Gui_MainMenu_JoinServerJoinWindow_IsReady
+  name: IsReady
+  nameWithType: JoinServerJoinWindow.IsReady
+  fullName: NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServerJoinWindow.IsReady
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+memberLayout: SeparatePages

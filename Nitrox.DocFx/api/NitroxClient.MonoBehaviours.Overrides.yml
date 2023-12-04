@@ -1,0 +1,110 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours.Overrides
+  commentId: N:NitroxClient.MonoBehaviours.Overrides
+  id: Overrides
+  parent: NitroxClient.MonoBehaviours
+  children:
+  - NitroxClient.MonoBehaviours.Overrides.CinematicControllerPrefab
+  - NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+  - NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  - NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicController
+  - NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicReference
+  - NitroxClient.MonoBehaviours.Overrides.RemotePlayerCinematicController
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.MonoBehaviours.Overrides
+  nameWithType: NitroxClient.MonoBehaviours.Overrides
+  fullName: NitroxClient.MonoBehaviours.Overrides
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.MonoBehaviours.Overrides.CinematicControllerPrefab
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.CinematicControllerPrefab
+  href: NitroxClient.MonoBehaviours.Overrides.CinematicControllerPrefab.html
+  name: CinematicControllerPrefab
+  nameWithType: CinematicControllerPrefab
+  fullName: NitroxClient.MonoBehaviours.Overrides.CinematicControllerPrefab
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+  parent: NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.html
+  name: MultiplayerBench
+  nameWithType: MultiplayerBench
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  parent: NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.html
+  name: MultiplayerBench.Side
+  nameWithType: MultiplayerBench.Side
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+  spec.csharp:
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+    name: MultiplayerBench
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+    name: Side
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.html
+  spec.vb:
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench
+    name: MultiplayerBench
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side
+    name: Side
+    href: NitroxClient.MonoBehaviours.Overrides.MultiplayerBench.Side.html
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicController
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicController
+  parent: NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicController.html
+  name: MultiplayerCinematicController
+  nameWithType: MultiplayerCinematicController
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicController
+- uid: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicReference
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicReference
+  href: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicReference.html
+  name: MultiplayerCinematicReference
+  nameWithType: MultiplayerCinematicReference
+  fullName: NitroxClient.MonoBehaviours.Overrides.MultiplayerCinematicReference
+- uid: NitroxClient.MonoBehaviours.Overrides.RemotePlayerCinematicController
+  commentId: T:NitroxClient.MonoBehaviours.Overrides.RemotePlayerCinematicController
+  parent: NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.MonoBehaviours.Overrides.RemotePlayerCinematicController.html
+  name: RemotePlayerCinematicController
+  nameWithType: RemotePlayerCinematicController
+  fullName: NitroxClient.MonoBehaviours.Overrides.RemotePlayerCinematicController
+- uid: NitroxClient.MonoBehaviours.Overrides
+  commentId: N:NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Overrides
+  nameWithType: NitroxClient.MonoBehaviours.Overrides
+  fullName: NitroxClient.MonoBehaviours.Overrides
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides
+    name: Overrides
+    href: NitroxClient.MonoBehaviours.Overrides.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides
+    name: Overrides
+    href: NitroxClient.MonoBehaviours.Overrides.html
+memberLayout: SeparatePages

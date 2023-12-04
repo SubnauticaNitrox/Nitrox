@@ -1,0 +1,847 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  commentId: T:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  id: ConstructorInput_OnCraftingBegin_Patch
+  parent: NitroxPatcher.Patches.Dynamic
+  children:
+  - NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback(ConstructorInput,UnityEngine.GameObject,TechType,System.Single)
+  - NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPCODE
+  - NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPERAND
+  - NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch(HarmonyLib.Harmony)
+  - NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.TARGET_METHOD
+  - NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler(System.Reflection.MethodBase,System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction})
+  langs:
+  - csharp
+  - vb
+  name: ConstructorInput_OnCraftingBegin_Patch
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  type: Class
+  source:
+    id: ConstructorInput_OnCraftingBegin_Patch
+    path: Nitrox.Analyzers/Nitrox.Analyzers.Generators.HarmonyRegisterPatchGenerator/NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.g.cs
+    startLine: 6
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Dynamic
+  syntax:
+    content: 'public sealed class ConstructorInput_OnCraftingBegin_Patch : NitroxPatch, IDynamicPatch, INitroxPatch'
+    content.vb: Public NotInheritable Class ConstructorInput_OnCraftingBegin_Patch Inherits NitroxPatch Implements IDynamicPatch, INitroxPatch
+  inheritance:
+  - System.Object
+  - NitroxPatcher.Patches.NitroxPatch
+  implements:
+  - NitroxPatcher.Patches.IDynamicPatch
+  - NitroxPatcher.Patches.INitroxPatch
+  inheritedMembers:
+  - NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.TARGET_METHOD
+  commentId: F:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.TARGET_METHOD
+  id: TARGET_METHOD
+  parent: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  langs:
+  - csharp
+  - vb
+  name: TARGET_METHOD
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.TARGET_METHOD
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.TARGET_METHOD
+  type: Field
+  source:
+    remote:
+      path: NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TARGET_METHOD
+    path: ../NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+    startLine: 13
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Dynamic
+  syntax:
+    content: public static readonly MethodInfo TARGET_METHOD
+    return:
+      type: System.Reflection.MethodInfo
+    content.vb: Public Shared ReadOnly TARGET_METHOD As MethodInfo
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPCODE
+  commentId: F:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPCODE
+  id: INJECTION_OPCODE
+  parent: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  langs:
+  - csharp
+  - vb
+  name: INJECTION_OPCODE
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPCODE
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPCODE
+  type: Field
+  source:
+    remote:
+      path: NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: INJECTION_OPCODE
+    path: ../NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+    startLine: 15
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Dynamic
+  syntax:
+    content: public static readonly OpCode INJECTION_OPCODE
+    return:
+      type: System.Reflection.Emit.OpCode
+    content.vb: Public Shared ReadOnly INJECTION_OPCODE As OpCode
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPERAND
+  commentId: F:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPERAND
+  id: INJECTION_OPERAND
+  parent: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  langs:
+  - csharp
+  - vb
+  name: INJECTION_OPERAND
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPERAND
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPERAND
+  type: Field
+  source:
+    remote:
+      path: NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: INJECTION_OPERAND
+    path: ../NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+    startLine: 16
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Dynamic
+  syntax:
+    content: public static readonly object INJECTION_OPERAND
+    return:
+      type: System.Object
+    content.vb: Public Shared ReadOnly INJECTION_OPERAND As Object
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler(System.Reflection.MethodBase,System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction})
+  commentId: M:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler(System.Reflection.MethodBase,System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction})
+  id: Transpiler(System.Reflection.MethodBase,System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction})
+  parent: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  langs:
+  - csharp
+  - vb
+  name: Transpiler(MethodBase, IEnumerable<CodeInstruction>)
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.Transpiler(MethodBase, IEnumerable<CodeInstruction>)
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler(System.Reflection.MethodBase, System.Collections.Generic.IEnumerable<HarmonyLib.CodeInstruction>)
+  type: Method
+  source:
+    remote:
+      path: NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Transpiler
+    path: ../NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+    startLine: 18
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Dynamic
+  syntax:
+    content: public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    parameters:
+    - id: original
+      type: System.Reflection.MethodBase
+    - id: instructions
+      type: System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction}
+    return:
+      type: System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction}
+    content.vb: Public Shared Function Transpiler(original As MethodBase, instructions As IEnumerable(Of CodeInstruction)) As IEnumerable(Of CodeInstruction)
+  overload: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler*
+  nameWithType.vb: ConstructorInput_OnCraftingBegin_Patch.Transpiler(MethodBase, IEnumerable(Of CodeInstruction))
+  fullName.vb: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler(System.Reflection.MethodBase, System.Collections.Generic.IEnumerable(Of HarmonyLib.CodeInstruction))
+  name.vb: Transpiler(MethodBase, IEnumerable(Of CodeInstruction))
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback(ConstructorInput,UnityEngine.GameObject,TechType,System.Single)
+  commentId: M:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback(ConstructorInput,UnityEngine.GameObject,TechType,System.Single)
+  id: Callback(ConstructorInput,UnityEngine.GameObject,TechType,System.Single)
+  parent: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  langs:
+  - csharp
+  - vb
+  name: Callback(ConstructorInput, GameObject, TechType, float)
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.Callback(ConstructorInput, GameObject, TechType, float)
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback(ConstructorInput, UnityEngine.GameObject, TechType, float)
+  type: Method
+  source:
+    remote:
+      path: NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Callback
+    path: ../NitroxPatcher/Patches/Dynamic/ConstructorInput_OnCraftingBegin_Patch.cs
+    startLine: 42
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Dynamic
+  syntax:
+    content: public static void Callback(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
+    parameters:
+    - id: constructor
+      type: ConstructorInput
+    - id: constructedObject
+      type: UnityEngine.GameObject
+    - id: techType
+      type: TechType
+    - id: duration
+      type: System.Single
+    content.vb: Public Shared Sub Callback(constructor As ConstructorInput, constructedObject As GameObject, techType As TechType, duration As Single)
+  overload: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback*
+  nameWithType.vb: ConstructorInput_OnCraftingBegin_Patch.Callback(ConstructorInput, GameObject, TechType, Single)
+  fullName.vb: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback(ConstructorInput, UnityEngine.GameObject, TechType, Single)
+  name.vb: Callback(ConstructorInput, GameObject, TechType, Single)
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch(HarmonyLib.Harmony)
+  id: Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch
+  langs:
+  - csharp
+  - vb
+  name: Patch(Harmony)
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch(HarmonyLib.Harmony)
+  type: Method
+  source:
+    id: Patch
+    path: Nitrox.Analyzers/Nitrox.Analyzers.Generators.HarmonyRegisterPatchGenerator/NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.g.cs
+    startLine: 8
+  assemblies:
+  - NitroxPatcher
+  namespace: NitroxPatcher.Patches.Dynamic
+  example: []
+  syntax:
+    content: public override void Patch(Harmony harmony)
+    parameters:
+    - id: harmony
+      type: HarmonyLib.Harmony
+    content.vb: Public Overrides Sub Patch(harmony As Harmony)
+  overridden: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  overload: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch*
+  implements:
+  - NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+references:
+- uid: NitroxPatcher.Patches.Dynamic
+  commentId: N:NitroxPatcher.Patches.Dynamic
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches.Dynamic
+  nameWithType: NitroxPatcher.Patches.Dynamic
+  fullName: NitroxPatcher.Patches.Dynamic
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Dynamic
+    name: Dynamic
+    href: NitroxPatcher.Patches.Dynamic.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  - name: .
+  - uid: NitroxPatcher.Patches.Dynamic
+    name: Dynamic
+    href: NitroxPatcher.Patches.Dynamic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxPatcher.Patches.NitroxPatch
+  commentId: T:NitroxPatcher.Patches.NitroxPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.NitroxPatch.html
+  name: NitroxPatch
+  nameWithType: NitroxPatch
+  fullName: NitroxPatcher.Patches.NitroxPatch
+- uid: NitroxPatcher.Patches.IDynamicPatch
+  commentId: T:NitroxPatcher.Patches.IDynamicPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.IDynamicPatch.html
+  name: IDynamicPatch
+  nameWithType: IDynamicPatch
+  fullName: NitroxPatcher.Patches.IDynamicPatch
+- uid: NitroxPatcher.Patches.INitroxPatch
+  commentId: T:NitroxPatcher.Patches.INitroxPatch
+  parent: NitroxPatcher.Patches
+  href: NitroxPatcher.Patches.INitroxPatch.html
+  name: INitroxPatch
+  nameWithType: INitroxPatch
+  fullName: NitroxPatcher.Patches.INitroxPatch
+- uid: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.Restore.html#NitroxPatcher_Patches_NitroxPatch_Restore_HarmonyLib_Harmony_
+  name: Restore(Harmony)
+  nameWithType: NitroxPatch.Restore(Harmony)
+  fullName: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+    name: Restore
+    href: NitroxPatcher.Patches.NitroxPatch.Restore.html#NitroxPatcher_Patches_NitroxPatch_Restore_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Restore(HarmonyLib.Harmony)
+    name: Restore
+    href: NitroxPatcher.Patches.NitroxPatch.Restore.html#NitroxPatcher_Patches_NitroxPatch_Restore_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxPatcher.Patches
+  commentId: N:NitroxPatcher.Patches
+  href: NitroxPatcher.html
+  name: NitroxPatcher.Patches
+  nameWithType: NitroxPatcher.Patches
+  fullName: NitroxPatcher.Patches
+  spec.csharp:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+  spec.vb:
+  - uid: NitroxPatcher
+    name: NitroxPatcher
+    href: NitroxPatcher.html
+  - name: .
+  - uid: NitroxPatcher.Patches
+    name: Patches
+    href: NitroxPatcher.Patches.html
+- uid: System.Reflection.MethodInfo
+  commentId: T:System.Reflection.MethodInfo
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo
+  name: MethodInfo
+  nameWithType: MethodInfo
+  fullName: System.Reflection.MethodInfo
+- uid: System.Reflection
+  commentId: N:System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Reflection
+  nameWithType: System.Reflection
+  fullName: System.Reflection
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+- uid: System.Reflection.Emit.OpCode
+  commentId: T:System.Reflection.Emit.OpCode
+  parent: System.Reflection.Emit
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.emit.opcode
+  name: OpCode
+  nameWithType: OpCode
+  fullName: System.Reflection.Emit.OpCode
+- uid: System.Reflection.Emit
+  commentId: N:System.Reflection.Emit
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Reflection.Emit
+  nameWithType: System.Reflection.Emit
+  fullName: System.Reflection.Emit
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+  - name: .
+  - uid: System.Reflection.Emit
+    name: Emit
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.emit
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+  - name: .
+  - uid: System.Reflection.Emit
+    name: Emit
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection.emit
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler*
+  commentId: Overload:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler
+  href: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler.html#NitroxPatcher_Patches_Dynamic_ConstructorInput_OnCraftingBegin_Patch_Transpiler_System_Reflection_MethodBase_System_Collections_Generic_IEnumerable_HarmonyLib_CodeInstruction__
+  name: Transpiler
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.Transpiler
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Transpiler
+- uid: System.Reflection.MethodBase
+  commentId: T:System.Reflection.MethodBase
+  parent: System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.methodbase
+  name: MethodBase
+  nameWithType: MethodBase
+  fullName: System.Reflection.MethodBase
+- uid: System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction}
+  commentId: T:System.Collections.Generic.IEnumerable{HarmonyLib.CodeInstruction}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<CodeInstruction>
+  nameWithType: IEnumerable<CodeInstruction>
+  fullName: System.Collections.Generic.IEnumerable<HarmonyLib.CodeInstruction>
+  nameWithType.vb: IEnumerable(Of CodeInstruction)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of HarmonyLib.CodeInstruction)
+  name.vb: IEnumerable(Of CodeInstruction)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: HarmonyLib.CodeInstruction
+    name: CodeInstruction
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: HarmonyLib.CodeInstruction
+    name: CodeInstruction
+    isExternal: true
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback*
+  commentId: Overload:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback
+  href: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback.html#NitroxPatcher_Patches_Dynamic_ConstructorInput_OnCraftingBegin_Patch_Callback_ConstructorInput_UnityEngine_GameObject_TechType_System_Single_
+  name: Callback
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.Callback
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Callback
+- uid: ConstructorInput
+  commentId: T:ConstructorInput
+  isExternal: true
+  name: ConstructorInput
+  nameWithType: ConstructorInput
+  fullName: ConstructorInput
+- uid: UnityEngine.GameObject
+  commentId: T:UnityEngine.GameObject
+  parent: UnityEngine
+  isExternal: true
+  name: GameObject
+  nameWithType: GameObject
+  fullName: UnityEngine.GameObject
+- uid: TechType
+  commentId: T:TechType
+  isExternal: true
+  name: TechType
+  nameWithType: TechType
+  fullName: TechType
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.NitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.NitroxPatch.Patch.html#NitroxPatcher_Patches_NitroxPatch_Patch_HarmonyLib_Harmony_
+  name: Patch(Harmony)
+  nameWithType: NitroxPatch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.NitroxPatch.Patch.html#NitroxPatcher_Patches_NitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.NitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.NitroxPatch.Patch.html#NitroxPatcher_Patches_NitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch*
+  commentId: Overload:NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch
+  href: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch.html#NitroxPatcher_Patches_Dynamic_ConstructorInput_OnCraftingBegin_Patch_Patch_HarmonyLib_Harmony_
+  name: Patch
+  nameWithType: ConstructorInput_OnCraftingBegin_Patch.Patch
+  fullName: NitroxPatcher.Patches.Dynamic.ConstructorInput_OnCraftingBegin_Patch.Patch
+- uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  commentId: M:NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  parent: NitroxPatcher.Patches.INitroxPatch
+  isExternal: true
+  href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  name: Patch(Harmony)
+  nameWithType: INitroxPatch.Patch(Harmony)
+  fullName: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+  spec.csharp:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: NitroxPatcher.Patches.INitroxPatch.Patch(HarmonyLib.Harmony)
+    name: Patch
+    href: NitroxPatcher.Patches.INitroxPatch.Patch.html#NitroxPatcher_Patches_INitroxPatch_Patch_HarmonyLib_Harmony_
+  - name: (
+  - uid: HarmonyLib.Harmony
+    name: Harmony
+    isExternal: true
+  - name: )
+- uid: HarmonyLib.Harmony
+  commentId: T:HarmonyLib.Harmony
+  parent: HarmonyLib
+  isExternal: true
+  name: Harmony
+  nameWithType: Harmony
+  fullName: HarmonyLib.Harmony
+- uid: HarmonyLib
+  commentId: N:HarmonyLib
+  isExternal: true
+  name: HarmonyLib
+  nameWithType: HarmonyLib
+  fullName: HarmonyLib
+memberLayout: SeparatePages

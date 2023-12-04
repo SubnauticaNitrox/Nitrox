@@ -1,0 +1,71 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Networking
+  commentId: N:NitroxModel.Networking
+  id: Networking
+  parent: NitroxModel
+  children:
+  - NitroxModel.Networking.NitroxDeliveryMethod
+  - NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Networking
+  nameWithType: NitroxModel.Networking
+  fullName: NitroxModel.Networking
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.Networking.NitroxDeliveryMethod
+  commentId: T:NitroxModel.Networking.NitroxDeliveryMethod
+  href: NitroxModel.Networking.NitroxDeliveryMethod.html
+  name: NitroxDeliveryMethod
+  nameWithType: NitroxDeliveryMethod
+  fullName: NitroxModel.Networking.NitroxDeliveryMethod
+- uid: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+  commentId: T:NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+  parent: NitroxModel.Networking
+  href: NitroxModel.Networking.NitroxDeliveryMethod.html
+  name: NitroxDeliveryMethod.DeliveryMethod
+  nameWithType: NitroxDeliveryMethod.DeliveryMethod
+  fullName: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+  spec.csharp:
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod
+    name: NitroxDeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.html
+  - name: .
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+    name: DeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod.html
+  spec.vb:
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod
+    name: NitroxDeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.html
+  - name: .
+  - uid: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod
+    name: DeliveryMethod
+    href: NitroxModel.Networking.NitroxDeliveryMethod.DeliveryMethod.html
+- uid: NitroxModel.Networking
+  commentId: N:NitroxModel.Networking
+  href: NitroxModel.html
+  name: NitroxModel.Networking
+  nameWithType: NitroxModel.Networking
+  fullName: NitroxModel.Networking
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Networking
+    name: Networking
+    href: NitroxModel.Networking.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Networking
+    name: Networking
+    href: NitroxModel.Networking.html
+memberLayout: SeparatePages

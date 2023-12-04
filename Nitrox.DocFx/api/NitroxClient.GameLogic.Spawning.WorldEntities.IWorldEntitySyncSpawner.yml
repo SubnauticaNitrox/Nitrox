@@ -1,0 +1,332 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner
+  id: IWorldEntitySyncSpawner
+  parent: NitroxClient.GameLogic.Spawning.WorldEntities
+  children:
+  - NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject},EntityCell,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  langs:
+  - csharp
+  - vb
+  name: IWorldEntitySyncSpawner
+  nameWithType: IWorldEntitySyncSpawner
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/WorldEntities/IWorldEntitySyncSpawner.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IWorldEntitySyncSpawner
+    path: ../NitroxClient/GameLogic/Spawning/WorldEntities/IWorldEntitySyncSpawner.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.WorldEntities
+  syntax:
+    content: public interface IWorldEntitySyncSpawner
+    content.vb: Public Interface IWorldEntitySyncSpawner
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject},EntityCell,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  commentId: M:NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject},EntityCell,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  id: SpawnSync(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity,NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject},EntityCell,TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}})
+  parent: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner
+  langs:
+  - csharp
+  - vb
+  name: SpawnSync(WorldEntity, Optional<GameObject>, EntityCell, TaskResult<Optional<GameObject>>)
+  nameWithType: IWorldEntitySyncSpawner.SpawnSync(WorldEntity, Optional<GameObject>, EntityCell, TaskResult<Optional<GameObject>>)
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity, NitroxModel.DataStructures.Util.Optional<UnityEngine.GameObject>, EntityCell, TaskResult<NitroxModel.DataStructures.Util.Optional<UnityEngine.GameObject>>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/WorldEntities/IWorldEntitySyncSpawner.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SpawnSync
+    path: ../NitroxClient/GameLogic/Spawning/WorldEntities/IWorldEntitySyncSpawner.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.WorldEntities
+  syntax:
+    content: bool SpawnSync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+    - id: parent
+      type: NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}
+    - id: cellRoot
+      type: EntityCell
+    - id: result
+      type: TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}}
+    return:
+      type: System.Boolean
+    content.vb: Function SpawnSync(entity As WorldEntity, parent As [Optional](Of GameObject), cellRoot As EntityCell, result As TaskResult(Of [Optional](Of GameObject))) As Boolean
+  overload: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync*
+  nameWithType.vb: IWorldEntitySyncSpawner.SpawnSync(WorldEntity, Optional(Of GameObject), EntityCell, TaskResult(Of Optional(Of GameObject)))
+  fullName.vb: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity, NitroxModel.DataStructures.Util.Optional(Of UnityEngine.GameObject), EntityCell, TaskResult(Of NitroxModel.DataStructures.Util.Optional(Of UnityEngine.GameObject)))
+  name.vb: SpawnSync(WorldEntity, Optional(Of GameObject), EntityCell, TaskResult(Of Optional(Of GameObject)))
+references:
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities
+  commentId: N:NitroxClient.GameLogic.Spawning.WorldEntities
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.WorldEntities
+  nameWithType: NitroxClient.GameLogic.Spawning.WorldEntities
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.WorldEntities
+    name: WorldEntities
+    href: NitroxClient.GameLogic.Spawning.WorldEntities.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.WorldEntities
+    name: WorldEntities
+    href: NitroxClient.GameLogic.Spawning.WorldEntities.html
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync*
+  commentId: Overload:NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync
+  href: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync.html#NitroxClient_GameLogic_Spawning_WorldEntities_IWorldEntitySyncSpawner_SpawnSync_NitroxModel_DataStructures_GameLogic_Entities_WorldEntity_NitroxModel_DataStructures_Util_Optional_UnityEngine_GameObject__EntityCell_TaskResult_NitroxModel_DataStructures_Util_Optional_UnityEngine_GameObject___
+  name: SpawnSync
+  nameWithType: IWorldEntitySyncSpawner.SpawnSync
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySyncSpawner.SpawnSync
+- uid: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity.html
+  name: WorldEntity
+  nameWithType: WorldEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+- uid: NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}
+  commentId: T:NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}
+  parent: NitroxModel.DataStructures.Util
+  definition: NitroxModel.DataStructures.Util.Optional`1
+  name: Optional<GameObject>
+  nameWithType: Optional<GameObject>
+  fullName: NitroxModel.DataStructures.Util.Optional<UnityEngine.GameObject>
+  nameWithType.vb: Optional(Of GameObject)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of UnityEngine.GameObject)
+  name.vb: Optional(Of GameObject)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: <
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: )
+- uid: EntityCell
+  commentId: T:EntityCell
+  isExternal: true
+  name: EntityCell
+  nameWithType: EntityCell
+  fullName: EntityCell
+- uid: TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}}
+  commentId: T:TaskResult{NitroxModel.DataStructures.Util.Optional{UnityEngine.GameObject}}
+  definition: TaskResult`1
+  name: TaskResult<Optional<GameObject>>
+  nameWithType: TaskResult<Optional<GameObject>>
+  fullName: TaskResult<NitroxModel.DataStructures.Util.Optional<UnityEngine.GameObject>>
+  nameWithType.vb: TaskResult(Of Optional(Of GameObject))
+  fullName.vb: TaskResult(Of NitroxModel.DataStructures.Util.Optional(Of UnityEngine.GameObject))
+  name.vb: TaskResult(Of Optional(Of GameObject))
+  spec.csharp:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: <
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: <
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: UnityEngine.GameObject
+    name: GameObject
+    isExternal: true
+  - name: )
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.DataStructures.GameLogic.Entities
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities
+  fullName: NitroxModel.DataStructures.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+- uid: NitroxModel.DataStructures.Util.Optional`1
+  commentId: T:NitroxModel.DataStructures.Util.Optional`1
+  parent: NitroxModel.DataStructures.Util
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<T>
+  nameWithType: Optional<T>
+  fullName: NitroxModel.DataStructures.Util.Optional<T>
+  nameWithType.vb: Optional(Of T)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of T)
+  name.vb: Optional(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Util
+  commentId: N:NitroxModel.DataStructures.Util
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Util
+  nameWithType: NitroxModel.DataStructures.Util
+  fullName: NitroxModel.DataStructures.Util
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+- uid: TaskResult`1
+  commentId: T:TaskResult`1
+  isExternal: true
+  name: TaskResult<T>
+  nameWithType: TaskResult<T>
+  fullName: TaskResult<T>
+  nameWithType.vb: TaskResult(Of T)
+  fullName.vb: TaskResult(Of T)
+  name.vb: TaskResult(Of T)
+  spec.csharp:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: TaskResult`1
+    name: TaskResult
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+memberLayout: SeparatePages

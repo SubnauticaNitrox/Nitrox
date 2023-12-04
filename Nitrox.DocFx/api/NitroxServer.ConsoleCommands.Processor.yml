@@ -1,0 +1,56 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.ConsoleCommands.Processor
+  commentId: N:NitroxServer.ConsoleCommands.Processor
+  id: Processor
+  parent: NitroxServer.ConsoleCommands
+  children:
+  - NitroxServer.ConsoleCommands.Processor.ConsoleCommandProcessor
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.ConsoleCommands.Processor
+  nameWithType: NitroxServer.ConsoleCommands.Processor
+  fullName: NitroxServer.ConsoleCommands.Processor
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.ConsoleCommands.Processor.ConsoleCommandProcessor
+  commentId: T:NitroxServer.ConsoleCommands.Processor.ConsoleCommandProcessor
+  parent: NitroxServer.ConsoleCommands.Processor
+  href: NitroxServer.ConsoleCommands.Processor.ConsoleCommandProcessor.html
+  name: ConsoleCommandProcessor
+  nameWithType: ConsoleCommandProcessor
+  fullName: NitroxServer.ConsoleCommands.Processor.ConsoleCommandProcessor
+- uid: NitroxServer.ConsoleCommands.Processor
+  commentId: N:NitroxServer.ConsoleCommands.Processor
+  href: NitroxServer.html
+  name: NitroxServer.ConsoleCommands.Processor
+  nameWithType: NitroxServer.ConsoleCommands.Processor
+  fullName: NitroxServer.ConsoleCommands.Processor
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Processor
+    name: Processor
+    href: NitroxServer.ConsoleCommands.Processor.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands.Processor
+    name: Processor
+    href: NitroxServer.ConsoleCommands.Processor.html
+memberLayout: SeparatePages

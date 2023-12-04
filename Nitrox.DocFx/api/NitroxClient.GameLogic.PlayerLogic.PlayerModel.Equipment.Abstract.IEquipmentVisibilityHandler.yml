@@ -1,0 +1,221 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler
+  id: IEquipmentVisibilityHandler
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  children:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility(System.Collections.ObjectModel.ReadOnlyCollection{TechType})
+  langs:
+  - csharp
+  - vb
+  name: IEquipmentVisibilityHandler
+  nameWithType: IEquipmentVisibilityHandler
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/Equipment/Abstract/IEquipmentVisibilityHandler.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IEquipmentVisibilityHandler
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/Equipment/Abstract/IEquipmentVisibilityHandler.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  syntax:
+    content: public interface IEquipmentVisibilityHandler
+    content.vb: Public Interface IEquipmentVisibilityHandler
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility(System.Collections.ObjectModel.ReadOnlyCollection{TechType})
+  commentId: M:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility(System.Collections.ObjectModel.ReadOnlyCollection{TechType})
+  id: UpdateEquipmentVisibility(System.Collections.ObjectModel.ReadOnlyCollection{TechType})
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler
+  langs:
+  - csharp
+  - vb
+  name: UpdateEquipmentVisibility(ReadOnlyCollection<TechType>)
+  nameWithType: IEquipmentVisibilityHandler.UpdateEquipmentVisibility(ReadOnlyCollection<TechType>)
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility(System.Collections.ObjectModel.ReadOnlyCollection<TechType>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/PlayerLogic/PlayerModel/Equipment/Abstract/IEquipmentVisibilityHandler.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UpdateEquipmentVisibility
+    path: ../NitroxClient/GameLogic/PlayerLogic/PlayerModel/Equipment/Abstract/IEquipmentVisibilityHandler.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  syntax:
+    content: void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
+    parameters:
+    - id: currentEquipment
+      type: System.Collections.ObjectModel.ReadOnlyCollection{TechType}
+    content.vb: Sub UpdateEquipmentVisibility(currentEquipment As ReadOnlyCollection(Of TechType))
+  overload: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility*
+  nameWithType.vb: IEquipmentVisibilityHandler.UpdateEquipmentVisibility(ReadOnlyCollection(Of TechType))
+  fullName.vb: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility(System.Collections.ObjectModel.ReadOnlyCollection(Of TechType))
+  name.vb: UpdateEquipmentVisibility(ReadOnlyCollection(Of TechType))
+references:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
+    name: Equipment
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
+    name: Equipment
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.html
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility*
+  commentId: Overload:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility.html#NitroxClient_GameLogic_PlayerLogic_PlayerModel_Equipment_Abstract_IEquipmentVisibilityHandler_UpdateEquipmentVisibility_System_Collections_ObjectModel_ReadOnlyCollection_TechType__
+  name: UpdateEquipmentVisibility
+  nameWithType: IEquipmentVisibilityHandler.UpdateEquipmentVisibility
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract.IEquipmentVisibilityHandler.UpdateEquipmentVisibility
+- uid: System.Collections.ObjectModel.ReadOnlyCollection{TechType}
+  commentId: T:System.Collections.ObjectModel.ReadOnlyCollection{TechType}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ReadOnlyCollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  name: ReadOnlyCollection<TechType>
+  nameWithType: ReadOnlyCollection<TechType>
+  fullName: System.Collections.ObjectModel.ReadOnlyCollection<TechType>
+  nameWithType.vb: ReadOnlyCollection(Of TechType)
+  fullName.vb: System.Collections.ObjectModel.ReadOnlyCollection(Of TechType)
+  name.vb: ReadOnlyCollection(Of TechType)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: <
+  - uid: TechType
+    name: TechType
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: TechType
+    name: TechType
+    isExternal: true
+  - name: )
+- uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+  commentId: T:System.Collections.ObjectModel.ReadOnlyCollection`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  name: ReadOnlyCollection<T>
+  nameWithType: ReadOnlyCollection<T>
+  fullName: System.Collections.ObjectModel.ReadOnlyCollection<T>
+  nameWithType.vb: ReadOnlyCollection(Of T)
+  fullName.vb: System.Collections.ObjectModel.ReadOnlyCollection(Of T)
+  name.vb: ReadOnlyCollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.ObjectModel
+  commentId: N:System.Collections.ObjectModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.ObjectModel
+  nameWithType: System.Collections.ObjectModel
+  fullName: System.Collections.ObjectModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+memberLayout: SeparatePages

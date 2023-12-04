@@ -1,0 +1,46 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Serialization.SaveDataUpgrades
+  commentId: N:NitroxServer.Serialization.SaveDataUpgrades
+  id: SaveDataUpgrades
+  parent: NitroxServer.Serialization
+  children:
+  - NitroxServer.Serialization.SaveDataUpgrades.NewtonsoftExtensions
+  - NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1500
+  - NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  - NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1601
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.Serialization.SaveDataUpgrades
+  nameWithType: NitroxServer.Serialization.SaveDataUpgrades
+  fullName: NitroxServer.Serialization.SaveDataUpgrades
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Serialization.SaveDataUpgrades.NewtonsoftExtensions
+  commentId: T:NitroxServer.Serialization.SaveDataUpgrades.NewtonsoftExtensions
+  href: NitroxServer.Serialization.SaveDataUpgrades.NewtonsoftExtensions.html
+  name: NewtonsoftExtensions
+  nameWithType: NewtonsoftExtensions
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.NewtonsoftExtensions
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1500
+  commentId: T:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1500
+  href: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1500.html
+  name: Upgrade_V1500
+  nameWithType: Upgrade_V1500
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1500
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  commentId: T:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+  href: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600.html
+  name: Upgrade_V1600
+  nameWithType: Upgrade_V1600
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1600
+- uid: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1601
+  commentId: T:NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1601
+  href: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1601.html
+  name: Upgrade_V1601
+  nameWithType: Upgrade_V1601
+  fullName: NitroxServer.Serialization.SaveDataUpgrades.Upgrade_V1601
+memberLayout: SeparatePages

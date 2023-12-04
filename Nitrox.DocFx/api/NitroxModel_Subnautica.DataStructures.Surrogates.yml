@@ -1,0 +1,78 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates
+  commentId: N:NitroxModel_Subnautica.DataStructures.Surrogates
+  id: Surrogates
+  parent: NitroxModel_Subnautica.DataStructures
+  children:
+  - NitroxModel_Subnautica.DataStructures.Surrogates.ColorSurrogate
+  - NitroxModel_Subnautica.DataStructures.Surrogates.QuaternionSurrogate
+  - NitroxModel_Subnautica.DataStructures.Surrogates.TechTypeSurrogate
+  - NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel_Subnautica.DataStructures.Surrogates
+  nameWithType: NitroxModel_Subnautica.DataStructures.Surrogates
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates
+  type: Namespace
+  assemblies:
+  - NitroxModel-Subnautica
+references:
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.ColorSurrogate
+  commentId: T:NitroxModel_Subnautica.DataStructures.Surrogates.ColorSurrogate
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.ColorSurrogate.html
+  name: ColorSurrogate
+  nameWithType: ColorSurrogate
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.ColorSurrogate
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.QuaternionSurrogate
+  commentId: T:NitroxModel_Subnautica.DataStructures.Surrogates.QuaternionSurrogate
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.QuaternionSurrogate.html
+  name: QuaternionSurrogate
+  nameWithType: QuaternionSurrogate
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.QuaternionSurrogate
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.TechTypeSurrogate
+  commentId: T:NitroxModel_Subnautica.DataStructures.Surrogates.TechTypeSurrogate
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.TechTypeSurrogate.html
+  name: TechTypeSurrogate
+  nameWithType: TechTypeSurrogate
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.TechTypeSurrogate
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  commentId: T:NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+  parent: NitroxModel_Subnautica.DataStructures.Surrogates
+  href: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate.html
+  name: Vector3Surrogate
+  nameWithType: Vector3Surrogate
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates.Vector3Surrogate
+- uid: NitroxModel_Subnautica.DataStructures.Surrogates
+  commentId: N:NitroxModel_Subnautica.DataStructures.Surrogates
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.Surrogates
+  nameWithType: NitroxModel_Subnautica.DataStructures.Surrogates
+  fullName: NitroxModel_Subnautica.DataStructures.Surrogates
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel_Subnautica.DataStructures.Surrogates.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.Surrogates
+    name: Surrogates
+    href: NitroxModel_Subnautica.DataStructures.Surrogates.html
+memberLayout: SeparatePages

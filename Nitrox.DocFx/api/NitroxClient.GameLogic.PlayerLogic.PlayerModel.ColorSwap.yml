@@ -1,0 +1,220 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  id: ColorSwap
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+  children:
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorSwapAsyncOperation
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorValueRange
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.DiveSuitColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.FinColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.HsvSwapper
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationHelmetColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitVestColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationTankColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RebreatherColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ReinforcedSuitColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ScubaTankColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.StillSuitColorSwapManager
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  - NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.TextureBlock
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+    name: ColorSwap
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+    name: Strategy
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+    name: ColorSwap
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy
+    name: Strategy
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy.html
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorSwapAsyncOperation
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorSwapAsyncOperation
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorSwapAsyncOperation.html
+  name: ColorSwapAsyncOperation
+  nameWithType: ColorSwapAsyncOperation
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorSwapAsyncOperation
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorValueRange
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorValueRange
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorValueRange.html
+  name: ColorValueRange
+  nameWithType: ColorValueRange
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ColorValueRange
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.DiveSuitColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.DiveSuitColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.DiveSuitColorSwapManager.html
+  name: DiveSuitColorSwapManager
+  nameWithType: DiveSuitColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.DiveSuitColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.FinColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.FinColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.FinColorSwapManager.html
+  name: FinColorSwapManager
+  nameWithType: FinColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.FinColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.HsvSwapper
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.HsvSwapper
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.HsvSwapper.html
+  name: HsvSwapper
+  nameWithType: HsvSwapper
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.HsvSwapper
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationHelmetColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationHelmetColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationHelmetColorSwapManager.html
+  name: RadiationHelmetColorSwapManager
+  nameWithType: RadiationHelmetColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationHelmetColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitColorSwapManager.html
+  name: RadiationSuitColorSwapManager
+  nameWithType: RadiationSuitColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitVestColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitVestColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitVestColorSwapManager.html
+  name: RadiationSuitVestColorSwapManager
+  nameWithType: RadiationSuitVestColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationSuitVestColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationTankColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationTankColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationTankColorSwapManager.html
+  name: RadiationTankColorSwapManager
+  nameWithType: RadiationTankColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RadiationTankColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RebreatherColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RebreatherColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RebreatherColorSwapManager.html
+  name: RebreatherColorSwapManager
+  nameWithType: RebreatherColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.RebreatherColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ReinforcedSuitColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ReinforcedSuitColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ReinforcedSuitColorSwapManager.html
+  name: ReinforcedSuitColorSwapManager
+  nameWithType: ReinforcedSuitColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ReinforcedSuitColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ScubaTankColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ScubaTankColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ScubaTankColorSwapManager.html
+  name: ScubaTankColorSwapManager
+  nameWithType: ScubaTankColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.ScubaTankColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.StillSuitColorSwapManager
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.StillSuitColorSwapManager
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.StillSuitColorSwapManager.html
+  name: StillSuitColorSwapManager
+  nameWithType: StillSuitColorSwapManager
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.StillSuitColorSwapManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.TextureBlock
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.TextureBlock
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.TextureBlock.html
+  name: TextureBlock
+  nameWithType: TextureBlock
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.TextureBlock
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+    name: ColorSwap
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
+    name: ColorSwap
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.html
+memberLayout: SeparatePages

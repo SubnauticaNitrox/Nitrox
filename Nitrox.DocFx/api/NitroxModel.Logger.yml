@@ -1,0 +1,98 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Logger
+  commentId: N:NitroxModel.Logger
+  id: Logger
+  parent: NitroxModel
+  children:
+  - NitroxModel.Logger.ColoredConsoleSink
+  - NitroxModel.Logger.ColoredConsoleSinkExtensions
+  - NitroxModel.Logger.InGameLogger
+  - NitroxModel.Logger.LiteNetLibLogger
+  - NitroxModel.Logger.Log
+  - NitroxModel.Logger.LogLevel
+  - NitroxModel.Logger.MessageSink
+  - NitroxModel.Logger.MessageSinkExtensions
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.Logger
+  nameWithType: NitroxModel.Logger
+  fullName: NitroxModel.Logger
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.Logger.ColoredConsoleSink
+  commentId: T:NitroxModel.Logger.ColoredConsoleSink
+  href: NitroxModel.Logger.ColoredConsoleSink.html
+  name: ColoredConsoleSink
+  nameWithType: ColoredConsoleSink
+  fullName: NitroxModel.Logger.ColoredConsoleSink
+- uid: NitroxModel.Logger.ColoredConsoleSinkExtensions
+  commentId: T:NitroxModel.Logger.ColoredConsoleSinkExtensions
+  href: NitroxModel.Logger.ColoredConsoleSinkExtensions.html
+  name: ColoredConsoleSinkExtensions
+  nameWithType: ColoredConsoleSinkExtensions
+  fullName: NitroxModel.Logger.ColoredConsoleSinkExtensions
+- uid: NitroxModel.Logger.InGameLogger
+  commentId: T:NitroxModel.Logger.InGameLogger
+  parent: NitroxModel.Logger
+  href: NitroxModel.Logger.InGameLogger.html
+  name: InGameLogger
+  nameWithType: InGameLogger
+  fullName: NitroxModel.Logger.InGameLogger
+- uid: NitroxModel.Logger.LiteNetLibLogger
+  commentId: T:NitroxModel.Logger.LiteNetLibLogger
+  href: NitroxModel.Logger.LiteNetLibLogger.html
+  name: LiteNetLibLogger
+  nameWithType: LiteNetLibLogger
+  fullName: NitroxModel.Logger.LiteNetLibLogger
+- uid: NitroxModel.Logger.Log
+  commentId: T:NitroxModel.Logger.Log
+  href: NitroxModel.Logger.Log.html
+  name: Log
+  nameWithType: Log
+  fullName: NitroxModel.Logger.Log
+- uid: NitroxModel.Logger.LogLevel
+  commentId: T:NitroxModel.Logger.LogLevel
+  parent: NitroxModel.Logger
+  href: NitroxModel.Logger.LogLevel.html
+  name: LogLevel
+  nameWithType: LogLevel
+  fullName: NitroxModel.Logger.LogLevel
+- uid: NitroxModel.Logger.MessageSink
+  commentId: T:NitroxModel.Logger.MessageSink
+  href: NitroxModel.Logger.MessageSink.html
+  name: MessageSink
+  nameWithType: MessageSink
+  fullName: NitroxModel.Logger.MessageSink
+- uid: NitroxModel.Logger.MessageSinkExtensions
+  commentId: T:NitroxModel.Logger.MessageSinkExtensions
+  href: NitroxModel.Logger.MessageSinkExtensions.html
+  name: MessageSinkExtensions
+  nameWithType: MessageSinkExtensions
+  fullName: NitroxModel.Logger.MessageSinkExtensions
+- uid: NitroxModel.Logger
+  commentId: N:NitroxModel.Logger
+  href: NitroxModel.html
+  name: NitroxModel.Logger
+  nameWithType: NitroxModel.Logger
+  fullName: NitroxModel.Logger
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Logger
+    name: Logger
+    href: NitroxModel.Logger.html
+memberLayout: SeparatePages

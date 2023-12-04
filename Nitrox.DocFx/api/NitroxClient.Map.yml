@@ -1,0 +1,56 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Map
+  commentId: N:NitroxClient.Map
+  id: Map
+  parent: NitroxClient
+  children:
+  - NitroxClient.Map.VisibleBatches
+  - NitroxClient.Map.VisibleCells
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Map
+  nameWithType: NitroxClient.Map
+  fullName: NitroxClient.Map
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.Map.VisibleBatches
+  commentId: T:NitroxClient.Map.VisibleBatches
+  parent: NitroxClient.Map
+  href: NitroxClient.Map.VisibleBatches.html
+  name: VisibleBatches
+  nameWithType: VisibleBatches
+  fullName: NitroxClient.Map.VisibleBatches
+- uid: NitroxClient.Map.VisibleCells
+  commentId: T:NitroxClient.Map.VisibleCells
+  parent: NitroxClient.Map
+  href: NitroxClient.Map.VisibleCells.html
+  name: VisibleCells
+  nameWithType: VisibleCells
+  fullName: NitroxClient.Map.VisibleCells
+- uid: NitroxClient.Map
+  commentId: N:NitroxClient.Map
+  href: NitroxClient.html
+  name: NitroxClient.Map
+  nameWithType: NitroxClient.Map
+  fullName: NitroxClient.Map
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Map
+    name: Map
+    href: NitroxClient.Map.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Map
+    name: Map
+    href: NitroxClient.Map.html
+memberLayout: SeparatePages

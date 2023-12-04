@@ -1,0 +1,922 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  id: ImageDosHeader
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  children:
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cblp
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cp
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cparhdr
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_crlc
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cs
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_csum
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ip
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfanew
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfarlc
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_magic_byte
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_maxalloc
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_minalloc
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oemid
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oeminfo
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ovno
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res1
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res2
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_sp
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ss
+  langs:
+  - csharp
+  - vb
+  name: ImageDosHeader
+  nameWithType: ImageDosHeader
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  type: Struct
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ImageDosHeader
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public struct ImageDosHeader
+    content.vb: Public Structure ImageDosHeader
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_magic_byte
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_magic_byte
+  id: e_magic_byte
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_magic_byte
+  nameWithType: ImageDosHeader.e_magic_byte
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_magic_byte
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_magic_byte
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public char[] e_magic_byte
+    return:
+      type: System.Char[]
+    content.vb: Public e_magic_byte As Char()
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cblp
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cblp
+  id: e_cblp
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_cblp
+  nameWithType: ImageDosHeader.e_cblp
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cblp
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_cblp
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Bytes on last page of file
+  example: []
+  syntax:
+    content: public ushort e_cblp
+    return:
+      type: System.UInt16
+    content.vb: Public e_cblp As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cp
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cp
+  id: e_cp
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_cp
+  nameWithType: ImageDosHeader.e_cp
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cp
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_cp
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Pages in file
+  example: []
+  syntax:
+    content: public ushort e_cp
+    return:
+      type: System.UInt16
+    content.vb: Public e_cp As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_crlc
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_crlc
+  id: e_crlc
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_crlc
+  nameWithType: ImageDosHeader.e_crlc
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_crlc
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_crlc
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public ushort e_crlc
+    return:
+      type: System.UInt16
+    content.vb: Public e_crlc As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cparhdr
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cparhdr
+  id: e_cparhdr
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_cparhdr
+  nameWithType: ImageDosHeader.e_cparhdr
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cparhdr
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_cparhdr
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Size of header in paragraphs
+  example: []
+  syntax:
+    content: public ushort e_cparhdr
+    return:
+      type: System.UInt16
+    content.vb: Public e_cparhdr As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_minalloc
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_minalloc
+  id: e_minalloc
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_minalloc
+  nameWithType: ImageDosHeader.e_minalloc
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_minalloc
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_minalloc
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public ushort e_minalloc
+    return:
+      type: System.UInt16
+    content.vb: Public e_minalloc As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_maxalloc
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_maxalloc
+  id: e_maxalloc
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_maxalloc
+  nameWithType: ImageDosHeader.e_maxalloc
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_maxalloc
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_maxalloc
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 28
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public ushort e_maxalloc
+    return:
+      type: System.UInt16
+    content.vb: Public e_maxalloc As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ss
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ss
+  id: e_ss
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_ss
+  nameWithType: ImageDosHeader.e_ss
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ss
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_ss
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public ushort e_ss
+    return:
+      type: System.UInt16
+    content.vb: Public e_ss As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_sp
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_sp
+  id: e_sp
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_sp
+  nameWithType: ImageDosHeader.e_sp
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_sp
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_sp
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 30
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public ushort e_sp
+    return:
+      type: System.UInt16
+    content.vb: Public e_sp As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_csum
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_csum
+  id: e_csum
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_csum
+  nameWithType: ImageDosHeader.e_csum
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_csum
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_csum
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 35
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Checksum
+  example: []
+  syntax:
+    content: public ushort e_csum
+    return:
+      type: System.UInt16
+    content.vb: Public e_csum As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ip
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ip
+  id: e_ip
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_ip
+  nameWithType: ImageDosHeader.e_ip
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ip
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_ip
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 40
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Initial IP value
+  example: []
+  syntax:
+    content: public ushort e_ip
+    return:
+      type: System.UInt16
+    content.vb: Public e_ip As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cs
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cs
+  id: e_cs
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_cs
+  nameWithType: ImageDosHeader.e_cs
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_cs
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_cs
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 45
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Initial (relative) CS value
+  example: []
+  syntax:
+    content: public ushort e_cs
+    return:
+      type: System.UInt16
+    content.vb: Public e_cs As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfarlc
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfarlc
+  id: e_lfarlc
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_lfarlc
+  nameWithType: ImageDosHeader.e_lfarlc
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfarlc
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_lfarlc
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 50
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: File address of relocation table
+  example: []
+  syntax:
+    content: public ushort e_lfarlc
+    return:
+      type: System.UInt16
+    content.vb: Public e_lfarlc As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ovno
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ovno
+  id: e_ovno
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_ovno
+  nameWithType: ImageDosHeader.e_ovno
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_ovno
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_ovno
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 55
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Overlay number
+  example: []
+  syntax:
+    content: public ushort e_ovno
+    return:
+      type: System.UInt16
+    content.vb: Public e_ovno As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res1
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res1
+  id: e_res1
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_res1
+  nameWithType: ImageDosHeader.e_res1
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res1
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_res1
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 61
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Reserved words
+  example: []
+  syntax:
+    content: public ushort[] e_res1
+    return:
+      type: System.UInt16[]
+    content.vb: Public e_res1 As UShort()
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oemid
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oemid
+  id: e_oemid
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_oemid
+  nameWithType: ImageDosHeader.e_oemid
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oemid
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_oemid
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 63
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public ushort e_oemid
+    return:
+      type: System.UInt16
+    content.vb: Public e_oemid As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oeminfo
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oeminfo
+  id: e_oeminfo
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_oeminfo
+  nameWithType: ImageDosHeader.e_oeminfo
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_oeminfo
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_oeminfo
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 64
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public ushort e_oeminfo
+    return:
+      type: System.UInt16
+    content.vb: Public e_oeminfo As UShort
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res2
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res2
+  id: e_res2
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_res2
+  nameWithType: ImageDosHeader.e_res2
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_res2
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_res2
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 70
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Reserved words
+  example: []
+  syntax:
+    content: public ushort[] e_res2
+    return:
+      type: System.UInt16[]
+    content.vb: Public e_res2 As UShort()
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfanew
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfanew
+  id: e_lfanew
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader
+  langs:
+  - csharp
+  - vb
+  name: e_lfanew
+  nameWithType: ImageDosHeader.e_lfanew
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDosHeader.e_lfanew
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: e_lfanew
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ImageDosHeader.cs
+    startLine: 75
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Image base offset to address of PE header.
+  example: []
+  syntax:
+    content: public int e_lfanew
+    return:
+      type: System.Int32
+    content.vb: Public e_lfanew As Integer
+references:
+- uid: NitroxModel.Platforms.OS.Windows.Internal
+  commentId: N:NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Windows.Internal
+  nameWithType: NitroxModel.Platforms.OS.Windows.Internal
+  fullName: NitroxModel.Platforms.OS.Windows.Internal
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Char[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.char
+  name: char[]
+  nameWithType: char[]
+  fullName: char[]
+  nameWithType.vb: Char()
+  fullName.vb: Char()
+  name.vb: Char()
+  spec.csharp:
+  - uid: System.Char
+    name: char
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.char
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Char
+    name: Char
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.char
+  - name: (
+  - name: )
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: System.UInt16[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort[]
+  nameWithType: ushort[]
+  fullName: ushort[]
+  nameWithType.vb: UShort()
+  fullName.vb: UShort()
+  name.vb: UShort()
+  spec.csharp:
+  - uid: System.UInt16
+    name: ushort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.UInt16
+    name: UShort
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uint16
+  - name: (
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+memberLayout: SeparatePages

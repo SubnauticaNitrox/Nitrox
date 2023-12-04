@@ -1,0 +1,649 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData
+  commentId: T:NitroxModel.DataStructures.GameLogic.EquippedItemData
+  id: EquippedItemData
+  parent: NitroxModel.DataStructures.GameLogic
+  children:
+  - NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor
+  - NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId,System.Byte[],System.String,NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  - NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot
+  - NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType
+  - NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString
+  langs:
+  - csharp
+  - vb
+  name: EquippedItemData
+  nameWithType: EquippedItemData
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EquippedItemData
+    path: ../NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [Serializable]
+
+      [DataContract]
+
+      public class EquippedItemData : ItemData
+    content.vb: >-
+      <Serializable>
+
+      <DataContract>
+
+      Public Class EquippedItemData Inherits ItemData
+  inheritance:
+  - System.Object
+  - NitroxModel.DataStructures.GameLogic.ItemData
+  inheritedMembers:
+  - NitroxModel.DataStructures.GameLogic.ItemData.ContainerId
+  - NitroxModel.DataStructures.GameLogic.ItemData.ItemId
+  - NitroxModel.DataStructures.GameLogic.ItemData.SerializedData
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot
+  commentId: P:NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot
+  id: Slot
+  parent: NitroxModel.DataStructures.GameLogic.EquippedItemData
+  langs:
+  - csharp
+  - vb
+  name: Slot
+  nameWithType: EquippedItemData.Slot
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Slot
+    path: ../NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public string Slot { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public ReadOnly Property Slot As String
+  overload: NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType
+  commentId: P:NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType
+  id: TechType
+  parent: NitroxModel.DataStructures.GameLogic.EquippedItemData
+  langs:
+  - csharp
+  - vb
+  name: TechType
+  nameWithType: EquippedItemData.TechType
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TechType
+    path: ../NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public NitroxTechType TechType { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public ReadOnly Property TechType As NitroxTechType
+  overload: NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor
+  commentId: M:NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor
+  id: '#ctor'
+  parent: NitroxModel.DataStructures.GameLogic.EquippedItemData
+  langs:
+  - csharp
+  - vb
+  name: EquippedItemData()
+  nameWithType: EquippedItemData.EquippedItemData()
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.EquippedItemData()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [IgnoreConstructor]
+
+      protected EquippedItemData()
+    content.vb: >-
+      <IgnoreConstructor>
+
+      Protected Sub New()
+  overload: NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor*
+  attributes:
+  - type: BinaryPack.Attributes.IgnoreConstructorAttribute
+    ctor: BinaryPack.Attributes.IgnoreConstructorAttribute.#ctor
+    arguments: []
+  nameWithType.vb: EquippedItemData.New()
+  fullName.vb: NitroxModel.DataStructures.GameLogic.EquippedItemData.New()
+  name.vb: New()
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId,System.Byte[],System.String,NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  commentId: M:NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId,System.Byte[],System.String,NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  id: '#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId,System.Byte[],System.String,NitroxModel.DataStructures.GameLogic.NitroxTechType)'
+  parent: NitroxModel.DataStructures.GameLogic.EquippedItemData
+  langs:
+  - csharp
+  - vb
+  name: EquippedItemData(NitroxId, NitroxId, byte[], string, NitroxTechType)
+  nameWithType: EquippedItemData.EquippedItemData(NitroxId, NitroxId, byte[], string, NitroxTechType)
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.EquippedItemData(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.NitroxId, byte[], string, NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public EquippedItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData, string slot, NitroxTechType techType)
+    parameters:
+    - id: containerId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: itemId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: serializedData
+      type: System.Byte[]
+    - id: slot
+      type: System.String
+    - id: techType
+      type: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    content.vb: Public Sub New(containerId As NitroxId, itemId As NitroxId, serializedData As Byte(), slot As String, techType As NitroxTechType)
+  overload: NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor*
+  nameWithType.vb: EquippedItemData.New(NitroxId, NitroxId, Byte(), String, NitroxTechType)
+  fullName.vb: NitroxModel.DataStructures.GameLogic.EquippedItemData.New(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.NitroxId, Byte(), String, NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  name.vb: New(NitroxId, NitroxId, Byte(), String, NitroxTechType)
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString
+  commentId: M:NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString
+  id: ToString
+  parent: NitroxModel.DataStructures.GameLogic.EquippedItemData
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: EquippedItemData.ToString()
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel/DataStructures/GameLogic/EquippedItemData.cs
+    startLine: 28
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: NitroxModel.DataStructures.GameLogic.ItemData.ToString
+  overload: NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString*
+references:
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.DataStructures.GameLogic.ItemData
+  commentId: T:NitroxModel.DataStructures.GameLogic.ItemData
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.ItemData.html
+  name: ItemData
+  nameWithType: ItemData
+  fullName: NitroxModel.DataStructures.GameLogic.ItemData
+- uid: NitroxModel.DataStructures.GameLogic.ItemData.ContainerId
+  commentId: P:NitroxModel.DataStructures.GameLogic.ItemData.ContainerId
+  parent: NitroxModel.DataStructures.GameLogic.ItemData
+  href: NitroxModel.DataStructures.GameLogic.ItemData.ContainerId.html#NitroxModel_DataStructures_GameLogic_ItemData_ContainerId
+  name: ContainerId
+  nameWithType: ItemData.ContainerId
+  fullName: NitroxModel.DataStructures.GameLogic.ItemData.ContainerId
+- uid: NitroxModel.DataStructures.GameLogic.ItemData.ItemId
+  commentId: P:NitroxModel.DataStructures.GameLogic.ItemData.ItemId
+  parent: NitroxModel.DataStructures.GameLogic.ItemData
+  href: NitroxModel.DataStructures.GameLogic.ItemData.ItemId.html#NitroxModel_DataStructures_GameLogic_ItemData_ItemId
+  name: ItemId
+  nameWithType: ItemData.ItemId
+  fullName: NitroxModel.DataStructures.GameLogic.ItemData.ItemId
+- uid: NitroxModel.DataStructures.GameLogic.ItemData.SerializedData
+  commentId: P:NitroxModel.DataStructures.GameLogic.ItemData.SerializedData
+  parent: NitroxModel.DataStructures.GameLogic.ItemData
+  href: NitroxModel.DataStructures.GameLogic.ItemData.SerializedData.html#NitroxModel_DataStructures_GameLogic_ItemData_SerializedData
+  name: SerializedData
+  nameWithType: ItemData.SerializedData
+  fullName: NitroxModel.DataStructures.GameLogic.ItemData.SerializedData
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot
+  href: NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot.html#NitroxModel_DataStructures_GameLogic_EquippedItemData_Slot
+  name: Slot
+  nameWithType: EquippedItemData.Slot
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.Slot
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType
+  href: NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType.html#NitroxModel_DataStructures_GameLogic_EquippedItemData_TechType
+  name: TechType
+  nameWithType: EquippedItemData.TechType
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.TechType
+- uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+  commentId: T:NitroxModel.DataStructures.GameLogic.NitroxTechType
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  name: NitroxTechType
+  nameWithType: NitroxTechType
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxTechType
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.EquippedItemData.#ctor
+  href: NitroxModel.DataStructures.GameLogic.EquippedItemData.-ctor.html#NitroxModel_DataStructures_GameLogic_EquippedItemData__ctor
+  name: EquippedItemData
+  nameWithType: EquippedItemData.EquippedItemData
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.EquippedItemData
+  nameWithType.vb: EquippedItemData.New
+  fullName.vb: NitroxModel.DataStructures.GameLogic.EquippedItemData.New
+  name.vb: New
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxModel.DataStructures.GameLogic.ItemData.ToString
+  commentId: M:NitroxModel.DataStructures.GameLogic.ItemData.ToString
+  parent: NitroxModel.DataStructures.GameLogic.ItemData
+  href: NitroxModel.DataStructures.GameLogic.ItemData.ToString.html#NitroxModel_DataStructures_GameLogic_ItemData_ToString
+  name: ToString()
+  nameWithType: ItemData.ToString()
+  fullName: NitroxModel.DataStructures.GameLogic.ItemData.ToString()
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.GameLogic.ItemData.ToString
+    name: ToString
+    href: NitroxModel.DataStructures.GameLogic.ItemData.ToString.html#NitroxModel_DataStructures_GameLogic_ItemData_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.DataStructures.GameLogic.ItemData.ToString
+    name: ToString
+    href: NitroxModel.DataStructures.GameLogic.ItemData.ToString.html#NitroxModel_DataStructures_GameLogic_ItemData_ToString
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString
+  href: NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString.html#NitroxModel_DataStructures_GameLogic_EquippedItemData_ToString
+  name: ToString
+  nameWithType: EquippedItemData.ToString
+  fullName: NitroxModel.DataStructures.GameLogic.EquippedItemData.ToString
+memberLayout: SeparatePages

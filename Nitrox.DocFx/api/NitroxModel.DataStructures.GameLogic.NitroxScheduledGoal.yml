@@ -1,0 +1,683 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  commentId: T:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  id: NitroxScheduledGoal
+  parent: NitroxModel.DataStructures.GameLogic
+  children:
+  - NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor
+  - NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor(System.Single,System.String,System.Int32)
+  - NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From(System.Single,System.String,System.Int32)
+  - NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey
+  - NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType
+  - NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute
+  - NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString
+  langs:
+  - csharp
+  - vb
+  name: NitroxScheduledGoal
+  nameWithType: NitroxScheduledGoal
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxScheduledGoal
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [Serializable]
+
+      [DataContract]
+
+      public class NitroxScheduledGoal
+    content.vb: >-
+      <Serializable>
+
+      <DataContract>
+
+      Public Class NitroxScheduledGoal
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute
+  commentId: P:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute
+  id: TimeExecute
+  parent: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  langs:
+  - csharp
+  - vb
+  name: TimeExecute
+  nameWithType: NitroxScheduledGoal.TimeExecute
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TimeExecute
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public float TimeExecute { get; set; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public Property TimeExecute As Single
+  overload: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey
+  commentId: P:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey
+  id: GoalKey
+  parent: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  langs:
+  - csharp
+  - vb
+  name: GoalKey
+  nameWithType: NitroxScheduledGoal.GoalKey
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GoalKey
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public string GoalKey { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public Property GoalKey As String
+  overload: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType
+  commentId: P:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType
+  id: GoalType
+  parent: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  langs:
+  - csharp
+  - vb
+  name: GoalType
+  nameWithType: NitroxScheduledGoal.GoalType
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GoalType
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 3)]
+
+      public int GoalType { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <DataMember(Order:=3)>
+
+      Public Property GoalType As Integer
+  overload: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 3
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor
+  commentId: M:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor
+  id: '#ctor'
+  parent: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  langs:
+  - csharp
+  - vb
+  name: NitroxScheduledGoal()
+  nameWithType: NitroxScheduledGoal.NitroxScheduledGoal()
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.NitroxScheduledGoal()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [IgnoreConstructor]
+
+      protected NitroxScheduledGoal()
+    content.vb: >-
+      <IgnoreConstructor>
+
+      Protected Sub New()
+  overload: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor*
+  attributes:
+  - type: BinaryPack.Attributes.IgnoreConstructorAttribute
+    ctor: BinaryPack.Attributes.IgnoreConstructorAttribute.#ctor
+    arguments: []
+  nameWithType.vb: NitroxScheduledGoal.New()
+  fullName.vb: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.New()
+  name.vb: New()
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor(System.Single,System.String,System.Int32)
+  commentId: M:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor(System.Single,System.String,System.Int32)
+  id: '#ctor(System.Single,System.String,System.Int32)'
+  parent: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  langs:
+  - csharp
+  - vb
+  name: NitroxScheduledGoal(float, string, int)
+  nameWithType: NitroxScheduledGoal.NitroxScheduledGoal(float, string, int)
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.NitroxScheduledGoal(float, string, int)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public NitroxScheduledGoal(float timeExecute, string goalKey, int goalType)
+    parameters:
+    - id: timeExecute
+      type: System.Single
+    - id: goalKey
+      type: System.String
+    - id: goalType
+      type: System.Int32
+    content.vb: Public Sub New(timeExecute As Single, goalKey As String, goalType As Integer)
+  overload: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor*
+  nameWithType.vb: NitroxScheduledGoal.New(Single, String, Integer)
+  fullName.vb: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.New(Single, String, Integer)
+  name.vb: New(Single, String, Integer)
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From(System.Single,System.String,System.Int32)
+  commentId: M:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From(System.Single,System.String,System.Int32)
+  id: From(System.Single,System.String,System.Int32)
+  parent: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  langs:
+  - csharp
+  - vb
+  name: From(float, string, int)
+  nameWithType: NitroxScheduledGoal.From(float, string, int)
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From(float, string, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: From
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  syntax:
+    content: public static NitroxScheduledGoal From(float timeExecute, string goalKey, int goalType)
+    parameters:
+    - id: timeExecute
+      type: System.Single
+    - id: goalKey
+      type: System.String
+    - id: goalType
+      type: System.Int32
+    return:
+      type: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+    content.vb: Public Shared Function From(timeExecute As Single, goalKey As String, goalType As Integer) As NitroxScheduledGoal
+  overload: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From*
+  nameWithType.vb: NitroxScheduledGoal.From(Single, String, Integer)
+  fullName.vb: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From(Single, String, Integer)
+  name.vb: From(Single, String, Integer)
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString
+  commentId: M:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString
+  id: ToString
+  parent: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: NitroxScheduledGoal.ToString()
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel/DataStructures/GameLogic/NitroxScheduledGoal.cs
+    startLine: 34
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures.GameLogic
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.Object.ToString
+  overload: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString*
+references:
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute
+  href: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute.html#NitroxModel_DataStructures_GameLogic_NitroxScheduledGoal_TimeExecute
+  name: TimeExecute
+  nameWithType: NitroxScheduledGoal.TimeExecute
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.TimeExecute
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey
+  href: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey.html#NitroxModel_DataStructures_GameLogic_NitroxScheduledGoal_GoalKey
+  name: GoalKey
+  nameWithType: NitroxScheduledGoal.GoalKey
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalKey
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType
+  href: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType.html#NitroxModel_DataStructures_GameLogic_NitroxScheduledGoal_GoalType
+  name: GoalType
+  nameWithType: NitroxScheduledGoal.GoalType
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.GoalType
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.#ctor
+  href: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.-ctor.html#NitroxModel_DataStructures_GameLogic_NitroxScheduledGoal__ctor
+  name: NitroxScheduledGoal
+  nameWithType: NitroxScheduledGoal.NitroxScheduledGoal
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.NitroxScheduledGoal
+  nameWithType.vb: NitroxScheduledGoal.New
+  fullName.vb: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.New
+  name.vb: New
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From
+  href: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From.html#NitroxModel_DataStructures_GameLogic_NitroxScheduledGoal_From_System_Single_System_String_System_Int32_
+  name: From
+  nameWithType: NitroxScheduledGoal.From
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.From
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  commentId: T:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.html
+  name: NitroxScheduledGoal
+  nameWithType: NitroxScheduledGoal
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString*
+  commentId: Overload:NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString
+  href: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString.html#NitroxModel_DataStructures_GameLogic_NitroxScheduledGoal_ToString
+  name: ToString
+  nameWithType: NitroxScheduledGoal.ToString
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal.ToString
+memberLayout: SeparatePages

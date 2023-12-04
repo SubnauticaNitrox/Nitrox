@@ -1,0 +1,181 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Debuggers.INetworkDebugger
+  commentId: T:NitroxClient.Debuggers.INetworkDebugger
+  id: INetworkDebugger
+  parent: NitroxClient.Debuggers
+  children:
+  - NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  - NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: INetworkDebugger
+  nameWithType: INetworkDebugger
+  fullName: NitroxClient.Debuggers.INetworkDebugger
+  type: Interface
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: INetworkDebugger
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 252
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  syntax:
+    content: public interface INetworkDebugger
+    content.vb: Public Interface INetworkDebugger
+- uid: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  commentId: M:NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  id: PacketSent(NitroxModel.Packets.Packet,System.Int32)
+  parent: NitroxClient.Debuggers.INetworkDebugger
+  langs:
+  - csharp
+  - vb
+  name: PacketSent(Packet, int)
+  nameWithType: INetworkDebugger.PacketSent(Packet, int)
+  fullName: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PacketSent
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 254
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  syntax:
+    content: void PacketSent(Packet packet, int size)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    - id: size
+      type: System.Int32
+    content.vb: Sub PacketSent(packet As Packet, size As Integer)
+  overload: NitroxClient.Debuggers.INetworkDebugger.PacketSent*
+  nameWithType.vb: INetworkDebugger.PacketSent(Packet, Integer)
+  fullName.vb: NitroxClient.Debuggers.INetworkDebugger.PacketSent(NitroxModel.Packets.Packet, Integer)
+  name.vb: PacketSent(Packet, Integer)
+- uid: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  commentId: M:NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  id: PacketReceived(NitroxModel.Packets.Packet,System.Int32)
+  parent: NitroxClient.Debuggers.INetworkDebugger
+  langs:
+  - csharp
+  - vb
+  name: PacketReceived(Packet, int)
+  nameWithType: INetworkDebugger.PacketReceived(Packet, int)
+  fullName: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Debuggers/NetworkDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PacketReceived
+    path: ../NitroxClient/Debuggers/NetworkDebugger.cs
+    startLine: 255
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  syntax:
+    content: void PacketReceived(Packet packet, int size)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    - id: size
+      type: System.Int32
+    content.vb: Sub PacketReceived(packet As Packet, size As Integer)
+  overload: NitroxClient.Debuggers.INetworkDebugger.PacketReceived*
+  nameWithType.vb: INetworkDebugger.PacketReceived(Packet, Integer)
+  fullName.vb: NitroxClient.Debuggers.INetworkDebugger.PacketReceived(NitroxModel.Packets.Packet, Integer)
+  name.vb: PacketReceived(Packet, Integer)
+references:
+- uid: NitroxClient.Debuggers
+  commentId: N:NitroxClient.Debuggers
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers
+  nameWithType: NitroxClient.Debuggers
+  fullName: NitroxClient.Debuggers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+- uid: NitroxClient.Debuggers.INetworkDebugger.PacketSent*
+  commentId: Overload:NitroxClient.Debuggers.INetworkDebugger.PacketSent
+  href: NitroxClient.Debuggers.INetworkDebugger.PacketSent.html#NitroxClient_Debuggers_INetworkDebugger_PacketSent_NitroxModel_Packets_Packet_System_Int32_
+  name: PacketSent
+  nameWithType: INetworkDebugger.PacketSent
+  fullName: NitroxClient.Debuggers.INetworkDebugger.PacketSent
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Debuggers.INetworkDebugger.PacketReceived*
+  commentId: Overload:NitroxClient.Debuggers.INetworkDebugger.PacketReceived
+  href: NitroxClient.Debuggers.INetworkDebugger.PacketReceived.html#NitroxClient_Debuggers_INetworkDebugger_PacketReceived_NitroxModel_Packets_Packet_System_Int32_
+  name: PacketReceived
+  nameWithType: INetworkDebugger.PacketReceived
+  fullName: NitroxClient.Debuggers.INetworkDebugger.PacketReceived
+memberLayout: SeparatePages

@@ -1,0 +1,889 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  commentId: T:NitroxServer.GameLogic.Unlockables.StoryGoalData
+  id: StoryGoalData
+  parent: NitroxServer.GameLogic.Unlockables
+  children:
+  - NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals
+  - NitroxServer.GameLogic.Unlockables.StoryGoalData.From(NitroxServer.GameLogic.Unlockables.StoryGoalData,NitroxServer.GameLogic.ScheduleKeeper)
+  - NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData(NitroxServer.GameLogic.ScheduleKeeper,NitroxServer.Player)
+  - NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks
+  - NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue
+  - NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage
+  - NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals
+  langs:
+  - csharp
+  - vb
+  name: StoryGoalData
+  nameWithType: StoryGoalData
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: StoryGoalData
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 7
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: >-
+      [DataContract]
+
+      public class StoryGoalData
+    content.vb: >-
+      <DataContract>
+
+      Public Class StoryGoalData
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals
+  commentId: P:NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals
+  id: CompletedGoals
+  parent: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  langs:
+  - csharp
+  - vb
+  name: CompletedGoals
+  nameWithType: StoryGoalData.CompletedGoals
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CompletedGoals
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 10
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public ThreadSafeSet<string> CompletedGoals { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.ThreadSafeSet{System.String}
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public ReadOnly Property CompletedGoals As ThreadSafeSet(Of String)
+  overload: NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue
+  commentId: P:NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue
+  id: RadioQueue
+  parent: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  langs:
+  - csharp
+  - vb
+  name: RadioQueue
+  nameWithType: StoryGoalData.RadioQueue
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RadioQueue
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 13
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public ThreadSafeList<string> RadioQueue { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.ThreadSafeList{System.String}
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public ReadOnly Property RadioQueue As ThreadSafeList(Of String)
+  overload: NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks
+  commentId: P:NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks
+  id: GoalUnlocks
+  parent: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  langs:
+  - csharp
+  - vb
+  name: GoalUnlocks
+  nameWithType: StoryGoalData.GoalUnlocks
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GoalUnlocks
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 16
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: >-
+      [DataMember(Order = 3)]
+
+      public ThreadSafeSet<string> GoalUnlocks { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.ThreadSafeSet{System.String}
+    content.vb: >-
+      <DataMember(Order:=3)>
+
+      Public ReadOnly Property GoalUnlocks As ThreadSafeSet(Of String)
+  overload: NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 3
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals
+  commentId: P:NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals
+  id: ScheduledGoals
+  parent: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  langs:
+  - csharp
+  - vb
+  name: ScheduledGoals
+  nameWithType: StoryGoalData.ScheduledGoals
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ScheduledGoals
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 19
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: >-
+      [DataMember(Order = 4)]
+
+      public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.ThreadSafeList{NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal}
+    content.vb: >-
+      <DataMember(Order:=4)>
+
+      Public Property ScheduledGoals As ThreadSafeList(Of NitroxScheduledGoal)
+  overload: NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 4
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage
+  commentId: M:NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage
+  id: RemovedLatestRadioMessage
+  parent: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  langs:
+  - csharp
+  - vb
+  name: RemovedLatestRadioMessage()
+  nameWithType: StoryGoalData.RemovedLatestRadioMessage()
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemovedLatestRadioMessage
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 22
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: public bool RemovedLatestRadioMessage()
+    return:
+      type: System.Boolean
+    content.vb: Public Function RemovedLatestRadioMessage() As Boolean
+  overload: NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage*
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.From(NitroxServer.GameLogic.Unlockables.StoryGoalData,NitroxServer.GameLogic.ScheduleKeeper)
+  commentId: M:NitroxServer.GameLogic.Unlockables.StoryGoalData.From(NitroxServer.GameLogic.Unlockables.StoryGoalData,NitroxServer.GameLogic.ScheduleKeeper)
+  id: From(NitroxServer.GameLogic.Unlockables.StoryGoalData,NitroxServer.GameLogic.ScheduleKeeper)
+  parent: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  langs:
+  - csharp
+  - vb
+  name: From(StoryGoalData, ScheduleKeeper)
+  nameWithType: StoryGoalData.From(StoryGoalData, ScheduleKeeper)
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.From(NitroxServer.GameLogic.Unlockables.StoryGoalData, NitroxServer.GameLogic.ScheduleKeeper)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: From
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 33
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
+    parameters:
+    - id: storyGoals
+      type: NitroxServer.GameLogic.Unlockables.StoryGoalData
+    - id: scheduleKeeper
+      type: NitroxServer.GameLogic.ScheduleKeeper
+    return:
+      type: NitroxServer.GameLogic.Unlockables.StoryGoalData
+    content.vb: Public Shared Function From(storyGoals As StoryGoalData, scheduleKeeper As ScheduleKeeper) As StoryGoalData
+  overload: NitroxServer.GameLogic.Unlockables.StoryGoalData.From*
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData(NitroxServer.GameLogic.ScheduleKeeper,NitroxServer.Player)
+  commentId: M:NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData(NitroxServer.GameLogic.ScheduleKeeper,NitroxServer.Player)
+  id: GetInitialStoryGoalData(NitroxServer.GameLogic.ScheduleKeeper,NitroxServer.Player)
+  parent: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  langs:
+  - csharp
+  - vb
+  name: GetInitialStoryGoalData(ScheduleKeeper, Player)
+  nameWithType: StoryGoalData.GetInitialStoryGoalData(ScheduleKeeper, Player)
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData(NitroxServer.GameLogic.ScheduleKeeper, NitroxServer.Player)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetInitialStoryGoalData
+    path: ../NitroxServer/GameLogic/Unlockables/StoryGoalData.cs
+    startLine: 39
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.GameLogic.Unlockables
+  syntax:
+    content: public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper, Player player)
+    parameters:
+    - id: scheduleKeeper
+      type: NitroxServer.GameLogic.ScheduleKeeper
+    - id: player
+      type: NitroxServer.Player
+    return:
+      type: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+    content.vb: Public Function GetInitialStoryGoalData(scheduleKeeper As ScheduleKeeper, player As Player) As InitialStoryGoalData
+  overload: NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData*
+references:
+- uid: NitroxServer.GameLogic.Unlockables
+  commentId: N:NitroxServer.GameLogic.Unlockables
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Unlockables
+  nameWithType: NitroxServer.GameLogic.Unlockables
+  fullName: NitroxServer.GameLogic.Unlockables
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Unlockables
+    name: Unlockables
+    href: NitroxServer.GameLogic.Unlockables.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Unlockables
+    name: Unlockables
+    href: NitroxServer.GameLogic.Unlockables.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals*
+  commentId: Overload:NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals.html#NitroxServer_GameLogic_Unlockables_StoryGoalData_CompletedGoals
+  name: CompletedGoals
+  nameWithType: StoryGoalData.CompletedGoals
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.CompletedGoals
+- uid: NitroxModel.DataStructures.ThreadSafeSet{System.String}
+  commentId: T:NitroxModel.DataStructures.ThreadSafeSet{System.String}
+  parent: NitroxModel.DataStructures
+  definition: NitroxModel.DataStructures.ThreadSafeSet`1
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: ThreadSafeSet<string>
+  nameWithType: ThreadSafeSet<string>
+  fullName: NitroxModel.DataStructures.ThreadSafeSet<string>
+  nameWithType.vb: ThreadSafeSet(Of String)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeSet(Of String)
+  name.vb: ThreadSafeSet(Of String)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeSet`1
+    name: ThreadSafeSet
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeSet`1
+    name: ThreadSafeSet
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeSet`1
+  commentId: T:NitroxModel.DataStructures.ThreadSafeSet`1
+  href: NitroxModel.DataStructures.ThreadSafeSet-1.html
+  name: ThreadSafeSet<T>
+  nameWithType: ThreadSafeSet<T>
+  fullName: NitroxModel.DataStructures.ThreadSafeSet<T>
+  nameWithType.vb: ThreadSafeSet(Of T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeSet(Of T)
+  name.vb: ThreadSafeSet(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeSet`1
+    name: ThreadSafeSet
+    href: NitroxModel.DataStructures.ThreadSafeSet-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeSet`1
+    name: ThreadSafeSet
+    href: NitroxModel.DataStructures.ThreadSafeSet-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue*
+  commentId: Overload:NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue.html#NitroxServer_GameLogic_Unlockables_StoryGoalData_RadioQueue
+  name: RadioQueue
+  nameWithType: StoryGoalData.RadioQueue
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.RadioQueue
+- uid: NitroxModel.DataStructures.ThreadSafeList{System.String}
+  commentId: T:NitroxModel.DataStructures.ThreadSafeList{System.String}
+  parent: NitroxModel.DataStructures
+  definition: NitroxModel.DataStructures.ThreadSafeList`1
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: ThreadSafeList<string>
+  nameWithType: ThreadSafeList<string>
+  fullName: NitroxModel.DataStructures.ThreadSafeList<string>
+  nameWithType.vb: ThreadSafeList(Of String)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of String)
+  name.vb: ThreadSafeList(Of String)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: NitroxModel.DataStructures.ThreadSafeList`1
+  commentId: T:NitroxModel.DataStructures.ThreadSafeList`1
+  href: NitroxModel.DataStructures.ThreadSafeList-1.html
+  name: ThreadSafeList<T>
+  nameWithType: ThreadSafeList<T>
+  fullName: NitroxModel.DataStructures.ThreadSafeList<T>
+  nameWithType.vb: ThreadSafeList(Of T)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of T)
+  name.vb: ThreadSafeList(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+    href: NitroxModel.DataStructures.ThreadSafeList-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+    href: NitroxModel.DataStructures.ThreadSafeList-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks*
+  commentId: Overload:NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks.html#NitroxServer_GameLogic_Unlockables_StoryGoalData_GoalUnlocks
+  name: GoalUnlocks
+  nameWithType: StoryGoalData.GoalUnlocks
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.GoalUnlocks
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals*
+  commentId: Overload:NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals.html#NitroxServer_GameLogic_Unlockables_StoryGoalData_ScheduledGoals
+  name: ScheduledGoals
+  nameWithType: StoryGoalData.ScheduledGoals
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.ScheduledGoals
+- uid: NitroxModel.DataStructures.ThreadSafeList{NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal}
+  commentId: T:NitroxModel.DataStructures.ThreadSafeList{NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal}
+  parent: NitroxModel.DataStructures
+  definition: NitroxModel.DataStructures.ThreadSafeList`1
+  name: ThreadSafeList<NitroxScheduledGoal>
+  nameWithType: ThreadSafeList<NitroxScheduledGoal>
+  fullName: NitroxModel.DataStructures.ThreadSafeList<NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal>
+  nameWithType.vb: ThreadSafeList(Of NitroxScheduledGoal)
+  fullName.vb: NitroxModel.DataStructures.ThreadSafeList(Of NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal)
+  name.vb: ThreadSafeList(Of NitroxScheduledGoal)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+    name: NitroxScheduledGoal
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.ThreadSafeList`1
+    name: ThreadSafeList
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxScheduledGoal
+    name: NitroxScheduledGoal
+  - name: )
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage*
+  commentId: Overload:NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage.html#NitroxServer_GameLogic_Unlockables_StoryGoalData_RemovedLatestRadioMessage
+  name: RemovedLatestRadioMessage
+  nameWithType: StoryGoalData.RemovedLatestRadioMessage
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.RemovedLatestRadioMessage
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.From*
+  commentId: Overload:NitroxServer.GameLogic.Unlockables.StoryGoalData.From
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.From.html#NitroxServer_GameLogic_Unlockables_StoryGoalData_From_NitroxServer_GameLogic_Unlockables_StoryGoalData_NitroxServer_GameLogic_ScheduleKeeper_
+  name: From
+  nameWithType: StoryGoalData.From
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.From
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData
+  commentId: T:NitroxServer.GameLogic.Unlockables.StoryGoalData
+  parent: NitroxServer.GameLogic.Unlockables
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.html
+  name: StoryGoalData
+  nameWithType: StoryGoalData
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData
+- uid: NitroxServer.GameLogic.ScheduleKeeper
+  commentId: T:NitroxServer.GameLogic.ScheduleKeeper
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.ScheduleKeeper.html
+  name: ScheduleKeeper
+  nameWithType: ScheduleKeeper
+  fullName: NitroxServer.GameLogic.ScheduleKeeper
+- uid: NitroxServer.GameLogic
+  commentId: N:NitroxServer.GameLogic
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic
+  nameWithType: NitroxServer.GameLogic
+  fullName: NitroxServer.GameLogic
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+- uid: NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData*
+  commentId: Overload:NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData
+  href: NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData.html#NitroxServer_GameLogic_Unlockables_StoryGoalData_GetInitialStoryGoalData_NitroxServer_GameLogic_ScheduleKeeper_NitroxServer_Player_
+  name: GetInitialStoryGoalData
+  nameWithType: StoryGoalData.GetInitialStoryGoalData
+  fullName: NitroxServer.GameLogic.Unlockables.StoryGoalData.GetInitialStoryGoalData
+- uid: NitroxServer.Player
+  commentId: T:NitroxServer.Player
+  parent: NitroxServer
+  href: NitroxServer.Player.html
+  name: Player
+  nameWithType: Player
+  fullName: NitroxServer.Player
+- uid: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+  commentId: T:NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData.html
+  name: InitialStoryGoalData
+  nameWithType: InitialStoryGoalData
+  fullName: NitroxModel.DataStructures.GameLogic.InitialStoryGoalData
+- uid: NitroxServer
+  commentId: N:NitroxServer
+  href: NitroxServer.html
+  name: NitroxServer
+  nameWithType: NitroxServer
+  fullName: NitroxServer
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+memberLayout: SeparatePages

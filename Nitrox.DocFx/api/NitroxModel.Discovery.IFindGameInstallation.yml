@@ -1,0 +1,215 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Discovery.IFindGameInstallation
+  commentId: T:NitroxModel.Discovery.IFindGameInstallation
+  id: IFindGameInstallation
+  parent: NitroxModel.Discovery
+  children:
+  - NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+  langs:
+  - csharp
+  - vb
+  name: IFindGameInstallation
+  nameWithType: IFindGameInstallation
+  fullName: NitroxModel.Discovery.IFindGameInstallation
+  type: Interface
+  source:
+    remote:
+      path: NitroxModel/Discovery/IFindGameInstallation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IFindGameInstallation
+    path: ../NitroxModel/Discovery/IFindGameInstallation.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  syntax:
+    content: public interface IFindGameInstallation
+    content.vb: Public Interface IFindGameInstallation
+- uid: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+  commentId: M:NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList{System.String})
+  id: FindGame(System.Collections.Generic.IList{System.String})
+  parent: NitroxModel.Discovery.IFindGameInstallation
+  langs:
+  - csharp
+  - vb
+  name: FindGame(IList<string>)
+  nameWithType: IFindGameInstallation.FindGame(IList<string>)
+  fullName: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList<string>)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Discovery/IFindGameInstallation.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FindGame
+    path: ../NitroxModel/Discovery/IFindGameInstallation.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Discovery
+  summary: Searches for Subnautica installation directory.
+  example: []
+  syntax:
+    content: string FindGame(IList<string> errors = null)
+    parameters:
+    - id: errors
+      type: System.Collections.Generic.IList{System.String}
+      description: Error messages that can be set if it failed to find the game.
+    return:
+      type: System.String
+      description: Nullable path to the Subnautica installation path.
+    content.vb: Function FindGame(errors As IList(Of String) = Nothing) As String
+  overload: NitroxModel.Discovery.IFindGameInstallation.FindGame*
+  nameWithType.vb: IFindGameInstallation.FindGame(IList(Of String))
+  fullName.vb: NitroxModel.Discovery.IFindGameInstallation.FindGame(System.Collections.Generic.IList(Of String))
+  name.vb: FindGame(IList(Of String))
+references:
+- uid: NitroxModel.Discovery
+  commentId: N:NitroxModel.Discovery
+  href: NitroxModel.html
+  name: NitroxModel.Discovery
+  nameWithType: NitroxModel.Discovery
+  fullName: NitroxModel.Discovery
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Discovery
+    name: Discovery
+    href: NitroxModel.Discovery.html
+- uid: NitroxModel.Discovery.IFindGameInstallation.FindGame*
+  commentId: Overload:NitroxModel.Discovery.IFindGameInstallation.FindGame
+  href: NitroxModel.Discovery.IFindGameInstallation.FindGame.html#NitroxModel_Discovery_IFindGameInstallation_FindGame_System_Collections_Generic_IList_System_String__
+  name: FindGame
+  nameWithType: IFindGameInstallation.FindGame
+  fullName: NitroxModel.Discovery.IFindGameInstallation.FindGame
+- uid: System.Collections.Generic.IList{System.String}
+  commentId: T:System.Collections.Generic.IList{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  name: IList<string>
+  nameWithType: IList<string>
+  fullName: System.Collections.Generic.IList<string>
+  nameWithType.vb: IList(Of String)
+  fullName.vb: System.Collections.Generic.IList(Of String)
+  name.vb: IList(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+memberLayout: SeparatePages

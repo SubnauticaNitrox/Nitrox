@@ -1,0 +1,781 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Serialization.ServerJsonSerializer
+  commentId: T:NitroxServer.Serialization.ServerJsonSerializer
+  id: ServerJsonSerializer
+  parent: NitroxServer.Serialization
+  children:
+  - NitroxServer.Serialization.ServerJsonSerializer.#ctor
+  - NitroxServer.Serialization.ServerJsonSerializer.Deserialize``1(System.IO.Stream)
+  - NitroxServer.Serialization.ServerJsonSerializer.Deserialize``1(System.String)
+  - NitroxServer.Serialization.ServerJsonSerializer.FileEnding
+  - NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.IO.Stream,System.Object)
+  - NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.String,System.Object)
+  langs:
+  - csharp
+  - vb
+  name: ServerJsonSerializer
+  nameWithType: ServerJsonSerializer
+  fullName: NitroxServer.Serialization.ServerJsonSerializer
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/Serialization/ServerJsonSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ServerJsonSerializer
+    path: ../NitroxServer/Serialization/ServerJsonSerializer.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: 'public class ServerJsonSerializer : IServerSerializer'
+    content.vb: Public Class ServerJsonSerializer Implements IServerSerializer
+  inheritance:
+  - System.Object
+  implements:
+  - NitroxServer.Serialization.IServerSerializer
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.Serialization.ServerJsonSerializer.#ctor
+  commentId: M:NitroxServer.Serialization.ServerJsonSerializer.#ctor
+  id: '#ctor'
+  parent: NitroxServer.Serialization.ServerJsonSerializer
+  langs:
+  - csharp
+  - vb
+  name: ServerJsonSerializer()
+  nameWithType: ServerJsonSerializer.ServerJsonSerializer()
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.ServerJsonSerializer()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxServer/Serialization/ServerJsonSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxServer/Serialization/ServerJsonSerializer.cs
+    startLine: 12
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization
+  syntax:
+    content: public ServerJsonSerializer()
+    content.vb: Public Sub New()
+  overload: NitroxServer.Serialization.ServerJsonSerializer.#ctor*
+  nameWithType.vb: ServerJsonSerializer.New()
+  fullName.vb: NitroxServer.Serialization.ServerJsonSerializer.New()
+  name.vb: New()
+- uid: NitroxServer.Serialization.ServerJsonSerializer.FileEnding
+  commentId: P:NitroxServer.Serialization.ServerJsonSerializer.FileEnding
+  id: FileEnding
+  parent: NitroxServer.Serialization.ServerJsonSerializer
+  langs:
+  - csharp
+  - vb
+  name: FileEnding
+  nameWithType: ServerJsonSerializer.FileEnding
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.FileEnding
+  type: Property
+  source:
+    remote:
+      path: NitroxServer/Serialization/ServerJsonSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FileEnding
+    path: ../NitroxServer/Serialization/ServerJsonSerializer.cs
+    startLine: 30
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization
+  example: []
+  syntax:
+    content: public string FileEnding { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property FileEnding As String
+  overload: NitroxServer.Serialization.ServerJsonSerializer.FileEnding*
+  implements:
+  - NitroxServer.Serialization.IServerSerializer.FileEnding
+- uid: NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.IO.Stream,System.Object)
+  commentId: M:NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.IO.Stream,System.Object)
+  id: Serialize(System.IO.Stream,System.Object)
+  parent: NitroxServer.Serialization.ServerJsonSerializer
+  langs:
+  - csharp
+  - vb
+  name: Serialize(Stream, object)
+  nameWithType: ServerJsonSerializer.Serialize(Stream, object)
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.IO.Stream, object)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Serialization/ServerJsonSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Serialize
+    path: ../NitroxServer/Serialization/ServerJsonSerializer.cs
+    startLine: 32
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization
+  example: []
+  syntax:
+    content: public void Serialize(Stream stream, object o)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    - id: o
+      type: System.Object
+    content.vb: Public Sub Serialize(stream As Stream, o As Object)
+  overload: NitroxServer.Serialization.ServerJsonSerializer.Serialize*
+  implements:
+  - NitroxServer.Serialization.IServerSerializer.Serialize(System.IO.Stream,System.Object)
+  nameWithType.vb: ServerJsonSerializer.Serialize(Stream, Object)
+  fullName.vb: NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.IO.Stream, Object)
+  name.vb: Serialize(Stream, Object)
+- uid: NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.String,System.Object)
+  commentId: M:NitroxServer.Serialization.ServerJsonSerializer.Serialize(System.String,System.Object)
+  id: Serialize(System.String,System.Object)
+  parent: NitroxServer.Serialization.ServerJsonSerializer
+  langs:
+  - csharp
+  - vb
+  name: Serialize(string, object)
+  nameWithType: ServerJsonSerializer.Serialize(string, object)
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.Serialize(string, object)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Serialization/ServerJsonSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Serialize
+    path: ../NitroxServer/Serialization/ServerJsonSerializer.cs
+    startLine: 39
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization
+  example: []
+  syntax:
+    content: public void Serialize(string filePath, object o)
+    parameters:
+    - id: filePath
+      type: System.String
+    - id: o
+      type: System.Object
+    content.vb: Public Sub Serialize(filePath As String, o As Object)
+  overload: NitroxServer.Serialization.ServerJsonSerializer.Serialize*
+  implements:
+  - NitroxServer.Serialization.IServerSerializer.Serialize(System.String,System.Object)
+  nameWithType.vb: ServerJsonSerializer.Serialize(String, Object)
+  fullName.vb: NitroxServer.Serialization.ServerJsonSerializer.Serialize(String, Object)
+  name.vb: Serialize(String, Object)
+- uid: NitroxServer.Serialization.ServerJsonSerializer.Deserialize``1(System.IO.Stream)
+  commentId: M:NitroxServer.Serialization.ServerJsonSerializer.Deserialize``1(System.IO.Stream)
+  id: Deserialize``1(System.IO.Stream)
+  parent: NitroxServer.Serialization.ServerJsonSerializer
+  langs:
+  - csharp
+  - vb
+  name: Deserialize<T>(Stream)
+  nameWithType: ServerJsonSerializer.Deserialize<T>(Stream)
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.Deserialize<T>(System.IO.Stream)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Serialization/ServerJsonSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Deserialize
+    path: ../NitroxServer/Serialization/ServerJsonSerializer.cs
+    startLine: 49
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization
+  example: []
+  syntax:
+    content: public T Deserialize<T>(Stream stream)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function Deserialize(Of T)(stream As Stream) As T
+  overload: NitroxServer.Serialization.ServerJsonSerializer.Deserialize*
+  implements:
+  - NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.IO.Stream)
+  nameWithType.vb: ServerJsonSerializer.Deserialize(Of T)(Stream)
+  fullName.vb: NitroxServer.Serialization.ServerJsonSerializer.Deserialize(Of T)(System.IO.Stream)
+  name.vb: Deserialize(Of T)(Stream)
+- uid: NitroxServer.Serialization.ServerJsonSerializer.Deserialize``1(System.String)
+  commentId: M:NitroxServer.Serialization.ServerJsonSerializer.Deserialize``1(System.String)
+  id: Deserialize``1(System.String)
+  parent: NitroxServer.Serialization.ServerJsonSerializer
+  langs:
+  - csharp
+  - vb
+  name: Deserialize<T>(string)
+  nameWithType: ServerJsonSerializer.Deserialize<T>(string)
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.Deserialize<T>(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Serialization/ServerJsonSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Deserialize
+    path: ../NitroxServer/Serialization/ServerJsonSerializer.cs
+    startLine: 56
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Serialization
+  example: []
+  syntax:
+    content: public T Deserialize<T>(string filePath)
+    parameters:
+    - id: filePath
+      type: System.String
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function Deserialize(Of T)(filePath As String) As T
+  overload: NitroxServer.Serialization.ServerJsonSerializer.Deserialize*
+  implements:
+  - NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.String)
+  nameWithType.vb: ServerJsonSerializer.Deserialize(Of T)(String)
+  fullName.vb: NitroxServer.Serialization.ServerJsonSerializer.Deserialize(Of T)(String)
+  name.vb: Deserialize(Of T)(String)
+references:
+- uid: NitroxServer.Serialization
+  commentId: N:NitroxServer.Serialization
+  href: NitroxServer.html
+  name: NitroxServer.Serialization
+  nameWithType: NitroxServer.Serialization
+  fullName: NitroxServer.Serialization
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxServer.Serialization.IServerSerializer
+  commentId: T:NitroxServer.Serialization.IServerSerializer
+  parent: NitroxServer.Serialization
+  href: NitroxServer.Serialization.IServerSerializer.html
+  name: IServerSerializer
+  nameWithType: IServerSerializer
+  fullName: NitroxServer.Serialization.IServerSerializer
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.Serialization.ServerJsonSerializer.#ctor*
+  commentId: Overload:NitroxServer.Serialization.ServerJsonSerializer.#ctor
+  href: NitroxServer.Serialization.ServerJsonSerializer.-ctor.html#NitroxServer_Serialization_ServerJsonSerializer__ctor
+  name: ServerJsonSerializer
+  nameWithType: ServerJsonSerializer.ServerJsonSerializer
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.ServerJsonSerializer
+  nameWithType.vb: ServerJsonSerializer.New
+  fullName.vb: NitroxServer.Serialization.ServerJsonSerializer.New
+  name.vb: New
+- uid: NitroxServer.Serialization.ServerJsonSerializer.FileEnding*
+  commentId: Overload:NitroxServer.Serialization.ServerJsonSerializer.FileEnding
+  href: NitroxServer.Serialization.ServerJsonSerializer.FileEnding.html#NitroxServer_Serialization_ServerJsonSerializer_FileEnding
+  name: FileEnding
+  nameWithType: ServerJsonSerializer.FileEnding
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.FileEnding
+- uid: NitroxServer.Serialization.IServerSerializer.FileEnding
+  commentId: P:NitroxServer.Serialization.IServerSerializer.FileEnding
+  parent: NitroxServer.Serialization.IServerSerializer
+  href: NitroxServer.Serialization.IServerSerializer.FileEnding.html#NitroxServer_Serialization_IServerSerializer_FileEnding
+  name: FileEnding
+  nameWithType: IServerSerializer.FileEnding
+  fullName: NitroxServer.Serialization.IServerSerializer.FileEnding
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxServer.Serialization.ServerJsonSerializer.Serialize*
+  commentId: Overload:NitroxServer.Serialization.ServerJsonSerializer.Serialize
+  href: NitroxServer.Serialization.ServerJsonSerializer.Serialize.html#NitroxServer_Serialization_ServerJsonSerializer_Serialize_System_IO_Stream_System_Object_
+  name: Serialize
+  nameWithType: ServerJsonSerializer.Serialize
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.Serialize
+- uid: NitroxServer.Serialization.IServerSerializer.Serialize(System.IO.Stream,System.Object)
+  commentId: M:NitroxServer.Serialization.IServerSerializer.Serialize(System.IO.Stream,System.Object)
+  parent: NitroxServer.Serialization.IServerSerializer
+  isExternal: true
+  href: NitroxServer.Serialization.IServerSerializer.Serialize.html#NitroxServer_Serialization_IServerSerializer_Serialize_System_IO_Stream_System_Object_
+  name: Serialize(Stream, object)
+  nameWithType: IServerSerializer.Serialize(Stream, object)
+  fullName: NitroxServer.Serialization.IServerSerializer.Serialize(System.IO.Stream, object)
+  nameWithType.vb: IServerSerializer.Serialize(Stream, Object)
+  fullName.vb: NitroxServer.Serialization.IServerSerializer.Serialize(System.IO.Stream, Object)
+  name.vb: Serialize(Stream, Object)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.IServerSerializer.Serialize(System.IO.Stream,System.Object)
+    name: Serialize
+    href: NitroxServer.Serialization.IServerSerializer.Serialize.html#NitroxServer_Serialization_IServerSerializer_Serialize_System_IO_Stream_System_Object_
+  - name: (
+  - uid: System.IO.Stream
+    name: Stream
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.IServerSerializer.Serialize(System.IO.Stream,System.Object)
+    name: Serialize
+    href: NitroxServer.Serialization.IServerSerializer.Serialize.html#NitroxServer_Serialization_IServerSerializer_Serialize_System_IO_Stream_System_Object_
+  - name: (
+  - uid: System.IO.Stream
+    name: Stream
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.IO.Stream
+  commentId: T:System.IO.Stream
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  name: Stream
+  nameWithType: Stream
+  fullName: System.IO.Stream
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: NitroxServer.Serialization.IServerSerializer.Serialize(System.String,System.Object)
+  commentId: M:NitroxServer.Serialization.IServerSerializer.Serialize(System.String,System.Object)
+  parent: NitroxServer.Serialization.IServerSerializer
+  isExternal: true
+  href: NitroxServer.Serialization.IServerSerializer.Serialize.html#NitroxServer_Serialization_IServerSerializer_Serialize_System_String_System_Object_
+  name: Serialize(string, object)
+  nameWithType: IServerSerializer.Serialize(string, object)
+  fullName: NitroxServer.Serialization.IServerSerializer.Serialize(string, object)
+  nameWithType.vb: IServerSerializer.Serialize(String, Object)
+  fullName.vb: NitroxServer.Serialization.IServerSerializer.Serialize(String, Object)
+  name.vb: Serialize(String, Object)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.IServerSerializer.Serialize(System.String,System.Object)
+    name: Serialize
+    href: NitroxServer.Serialization.IServerSerializer.Serialize.html#NitroxServer_Serialization_IServerSerializer_Serialize_System_String_System_Object_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.IServerSerializer.Serialize(System.String,System.Object)
+    name: Serialize
+    href: NitroxServer.Serialization.IServerSerializer.Serialize.html#NitroxServer_Serialization_IServerSerializer_Serialize_System_String_System_Object_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: NitroxServer.Serialization.ServerJsonSerializer.Deserialize*
+  commentId: Overload:NitroxServer.Serialization.ServerJsonSerializer.Deserialize
+  href: NitroxServer.Serialization.ServerJsonSerializer.Deserialize.html#NitroxServer_Serialization_ServerJsonSerializer_Deserialize__1_System_IO_Stream_
+  name: Deserialize
+  nameWithType: ServerJsonSerializer.Deserialize
+  fullName: NitroxServer.Serialization.ServerJsonSerializer.Deserialize
+- uid: NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.IO.Stream)
+  commentId: M:NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.IO.Stream)
+  parent: NitroxServer.Serialization.IServerSerializer
+  isExternal: true
+  href: NitroxServer.Serialization.IServerSerializer.Deserialize.html#NitroxServer_Serialization_IServerSerializer_Deserialize__1_System_IO_Stream_
+  name: Deserialize<T>(Stream)
+  nameWithType: IServerSerializer.Deserialize<T>(Stream)
+  fullName: NitroxServer.Serialization.IServerSerializer.Deserialize<T>(System.IO.Stream)
+  nameWithType.vb: IServerSerializer.Deserialize(Of T)(Stream)
+  fullName.vb: NitroxServer.Serialization.IServerSerializer.Deserialize(Of T)(System.IO.Stream)
+  name.vb: Deserialize(Of T)(Stream)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.IO.Stream)
+    name: Deserialize
+    href: NitroxServer.Serialization.IServerSerializer.Deserialize.html#NitroxServer_Serialization_IServerSerializer_Deserialize__1_System_IO_Stream_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - uid: System.IO.Stream
+    name: Stream
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.IO.Stream)
+    name: Deserialize
+    href: NitroxServer.Serialization.IServerSerializer.Deserialize.html#NitroxServer_Serialization_IServerSerializer_Deserialize__1_System_IO_Stream_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: System.IO.Stream
+    name: Stream
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  - name: )
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.String)
+  commentId: M:NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.String)
+  parent: NitroxServer.Serialization.IServerSerializer
+  isExternal: true
+  href: NitroxServer.Serialization.IServerSerializer.Deserialize.html#NitroxServer_Serialization_IServerSerializer_Deserialize__1_System_String_
+  name: Deserialize<T>(string)
+  nameWithType: IServerSerializer.Deserialize<T>(string)
+  fullName: NitroxServer.Serialization.IServerSerializer.Deserialize<T>(string)
+  nameWithType.vb: IServerSerializer.Deserialize(Of T)(String)
+  fullName.vb: NitroxServer.Serialization.IServerSerializer.Deserialize(Of T)(String)
+  name.vb: Deserialize(Of T)(String)
+  spec.csharp:
+  - uid: NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.String)
+    name: Deserialize
+    href: NitroxServer.Serialization.IServerSerializer.Deserialize.html#NitroxServer_Serialization_IServerSerializer_Deserialize__1_System_String_
+  - name: <
+  - name: T
+  - name: '>'
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Serialization.IServerSerializer.Deserialize``1(System.String)
+    name: Deserialize
+    href: NitroxServer.Serialization.IServerSerializer.Deserialize.html#NitroxServer_Serialization_IServerSerializer_Deserialize__1_System_String_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+memberLayout: SeparatePages

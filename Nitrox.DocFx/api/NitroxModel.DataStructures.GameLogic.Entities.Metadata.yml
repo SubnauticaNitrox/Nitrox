@@ -1,0 +1,342 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  id: Metadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities
+  children:
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.BatteryMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.CrafterMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsLightingMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntitySignMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.FireExtinguisherHolderMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.FlashlightMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.IncubatorMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.KeypadMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlantableMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorDoorwayMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorKeyTerminalMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterActivationTerminalMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.RepairedComponentMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.RocketMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.SealedDoorMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.SeamothMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.StarshipDoorMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.SubNameInputMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.WaterParkCreatureMetadata
+  - NitroxModel.DataStructures.GameLogic.Entities.Metadata.WeldableWallPanelGenericMetadata
+  langs:
+  - csharp
+  - vb
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  type: Namespace
+  assemblies:
+  - NitroxModel
+references:
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases.html
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.BatteryMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.BatteryMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.BatteryMetadata.html
+  name: BatteryMetadata
+  nameWithType: BatteryMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.BatteryMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata.html
+  name: ConstructorMetadata
+  nameWithType: ConstructorMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.ConstructorMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CrafterMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.CrafterMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CrafterMetadata.html
+  name: CrafterMetadata
+  nameWithType: CrafterMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CrafterMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsLightingMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsLightingMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsLightingMetadata.html
+  name: CyclopsLightingMetadata
+  nameWithType: CyclopsLightingMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsLightingMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsMetadata.html
+  name: CyclopsMetadata
+  nameWithType: CyclopsMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.CyclopsMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata.html
+  name: EntityMetadata
+  nameWithType: EntityMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntityMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntitySignMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntitySignMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntitySignMetadata.html
+  name: EntitySignMetadata
+  nameWithType: EntitySignMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.EntitySignMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FireExtinguisherHolderMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.FireExtinguisherHolderMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FireExtinguisherHolderMetadata.html
+  name: FireExtinguisherHolderMetadata
+  nameWithType: FireExtinguisherHolderMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FireExtinguisherHolderMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FlashlightMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.FlashlightMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FlashlightMetadata.html
+  name: FlashlightMetadata
+  nameWithType: FlashlightMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.FlashlightMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.IncubatorMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.IncubatorMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.IncubatorMetadata.html
+  name: IncubatorMetadata
+  nameWithType: IncubatorMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.IncubatorMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.KeypadMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.KeypadMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.KeypadMetadata.html
+  name: KeypadMetadata
+  nameWithType: KeypadMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.KeypadMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlantableMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlantableMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlantableMetadata.html
+  name: PlantableMetadata
+  nameWithType: PlantableMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlantableMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.html
+  name: PlayerMetadata
+  nameWithType: PlayerMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.html
+  name: PlayerMetadata.EquippedItem
+  nameWithType: PlayerMetadata.EquippedItem
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata
+    name: PlayerMetadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem
+    name: EquippedItem
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem.html
+  spec.vb:
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata
+    name: PlayerMetadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem
+    name: EquippedItem
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata.EquippedItem.html
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorDoorwayMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorDoorwayMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorDoorwayMetadata.html
+  name: PrecursorDoorwayMetadata
+  nameWithType: PrecursorDoorwayMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorDoorwayMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorKeyTerminalMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorKeyTerminalMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorKeyTerminalMetadata.html
+  name: PrecursorKeyTerminalMetadata
+  nameWithType: PrecursorKeyTerminalMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorKeyTerminalMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterActivationTerminalMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterActivationTerminalMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterActivationTerminalMetadata.html
+  name: PrecursorTeleporterActivationTerminalMetadata
+  nameWithType: PrecursorTeleporterActivationTerminalMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterActivationTerminalMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterMetadata.html
+  name: PrecursorTeleporterMetadata
+  nameWithType: PrecursorTeleporterMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.PrecursorTeleporterMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RepairedComponentMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.RepairedComponentMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RepairedComponentMetadata.html
+  name: RepairedComponentMetadata
+  nameWithType: RepairedComponentMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RepairedComponentMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RocketMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.RocketMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RocketMetadata.html
+  name: RocketMetadata
+  nameWithType: RocketMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.RocketMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SealedDoorMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.SealedDoorMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SealedDoorMetadata.html
+  name: SealedDoorMetadata
+  nameWithType: SealedDoorMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SealedDoorMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SeamothMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.SeamothMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SeamothMetadata.html
+  name: SeamothMetadata
+  nameWithType: SeamothMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SeamothMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.StarshipDoorMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.StarshipDoorMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.StarshipDoorMetadata.html
+  name: StarshipDoorMetadata
+  nameWithType: StarshipDoorMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.StarshipDoorMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SubNameInputMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.SubNameInputMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SubNameInputMetadata.html
+  name: SubNameInputMetadata
+  nameWithType: SubNameInputMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.SubNameInputMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WaterParkCreatureMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.WaterParkCreatureMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WaterParkCreatureMetadata.html
+  name: WaterParkCreatureMetadata
+  nameWithType: WaterParkCreatureMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WaterParkCreatureMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WeldableWallPanelGenericMetadata
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Metadata.WeldableWallPanelGenericMetadata
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WeldableWallPanelGenericMetadata.html
+  name: WeldableWallPanelGenericMetadata
+  nameWithType: WeldableWallPanelGenericMetadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata.WeldableWallPanelGenericMetadata
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Metadata
+    name: Metadata
+    href: NitroxModel.DataStructures.GameLogic.Entities.Metadata.html
+memberLayout: SeparatePages

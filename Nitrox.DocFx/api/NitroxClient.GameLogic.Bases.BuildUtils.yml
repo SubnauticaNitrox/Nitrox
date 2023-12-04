@@ -1,0 +1,1247 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Bases.BuildUtils
+  commentId: T:NitroxClient.GameLogic.Bases.BuildUtils
+  id: BuildUtils
+  parent: NitroxClient.GameLogic.Bases
+  children:
+  - NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull(IBaseModule)
+  - NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom(MapRoomFunctionality,Base,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities(Base,NitroxModel.DataStructures.NitroxId)
+  - NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren(UnityEngine.Transform)
+  - NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier(BaseDeconstructable,BaseCell,System.Nullable{Base.Face})
+  - NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell(BaseGhost)
+  - NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable(ConstructableBase)
+  - NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable(BaseGhost,System.Boolean)
+  - NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace(BaseGhost,Base.Face@)
+  - NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier(BaseDeconstructable,NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier@,BaseCell,System.Nullable{Base.Face})
+  - NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule(BaseGhost,NitroxModel.DataStructures.NitroxId,ConstructableBase,UnityEngine.GameObject@)
+  langs:
+  - csharp
+  - vb
+  name: BuildUtils
+  nameWithType: BuildUtils
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BuildUtils
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static class BuildUtils
+    content.vb: Public Module BuildUtils
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier(BaseDeconstructable,NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier@,BaseCell,System.Nullable{Base.Face})
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier(BaseDeconstructable,NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier@,BaseCell,System.Nullable{Base.Face})
+  id: TryGetIdentifier(BaseDeconstructable,NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier@,BaseCell,System.Nullable{Base.Face})
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: TryGetIdentifier(BaseDeconstructable, out BuildPieceIdentifier, BaseCell, Face?)
+  nameWithType: BuildUtils.TryGetIdentifier(BaseDeconstructable, out BuildPieceIdentifier, BaseCell, Base.Face?)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier(BaseDeconstructable, out NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier, BaseCell, Base.Face?)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TryGetIdentifier
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 17
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static bool TryGetIdentifier(BaseDeconstructable baseDeconstructable, out BuildPieceIdentifier identifier, BaseCell baseCell = null, Base.Face? baseFace = null)
+    parameters:
+    - id: baseDeconstructable
+      type: BaseDeconstructable
+    - id: identifier
+      type: NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier
+    - id: baseCell
+      type: BaseCell
+    - id: baseFace
+      type: System.Nullable{Base.Face}
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function TryGetIdentifier(baseDeconstructable As BaseDeconstructable, identifier As BuildPieceIdentifier, baseCell As BaseCell = Nothing, baseFace As Base.Face? = Nothing) As Boolean
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier*
+  nameWithType.vb: BuildUtils.TryGetIdentifier(BaseDeconstructable, BuildPieceIdentifier, BaseCell, Base.Face?)
+  fullName.vb: NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier(BaseDeconstructable, NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier, BaseCell, Base.Face?)
+  name.vb: TryGetIdentifier(BaseDeconstructable, BuildPieceIdentifier, BaseCell, Face?)
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier(BaseDeconstructable,BaseCell,System.Nullable{Base.Face})
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier(BaseDeconstructable,BaseCell,System.Nullable{Base.Face})
+  id: GetIdentifier(BaseDeconstructable,BaseCell,System.Nullable{Base.Face})
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: GetIdentifier(BaseDeconstructable, BaseCell, Face?)
+  nameWithType: BuildUtils.GetIdentifier(BaseDeconstructable, BaseCell, Base.Face?)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier(BaseDeconstructable, BaseCell, Base.Face?)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetIdentifier
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 30
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static BuildPieceIdentifier GetIdentifier(BaseDeconstructable baseDeconstructable, BaseCell baseCell, Base.Face? baseFace = null)
+    parameters:
+    - id: baseDeconstructable
+      type: BaseDeconstructable
+    - id: baseCell
+      type: BaseCell
+    - id: baseFace
+      type: System.Nullable{Base.Face}
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier
+    content.vb: Public Shared Function GetIdentifier(baseDeconstructable As BaseDeconstructable, baseCell As BaseCell, baseFace As Base.Face? = Nothing) As BuildPieceIdentifier
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier*
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace(BaseGhost,Base.Face@)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace(BaseGhost,Base.Face@)
+  id: TryGetGhostFace(BaseGhost,Base.Face@)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: TryGetGhostFace(BaseGhost, out Face)
+  nameWithType: BuildUtils.TryGetGhostFace(BaseGhost, out Base.Face)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace(BaseGhost, out Base.Face)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TryGetGhostFace
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 41
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static bool TryGetGhostFace(BaseGhost baseGhost, out Base.Face face)
+    parameters:
+    - id: baseGhost
+      type: BaseGhost
+    - id: face
+      type: Base.Face
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function TryGetGhostFace(baseGhost As BaseGhost, face As Base.Face) As Boolean
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace*
+  nameWithType.vb: BuildUtils.TryGetGhostFace(BaseGhost, Base.Face)
+  fullName.vb: NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace(BaseGhost, Base.Face)
+  name.vb: TryGetGhostFace(BaseGhost, Face)
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule(BaseGhost,NitroxModel.DataStructures.NitroxId,ConstructableBase,UnityEngine.GameObject@)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule(BaseGhost,NitroxModel.DataStructures.NitroxId,ConstructableBase,UnityEngine.GameObject@)
+  id: TryTransferIdFromGhostToModule(BaseGhost,NitroxModel.DataStructures.NitroxId,ConstructableBase,UnityEngine.GameObject@)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: TryTransferIdFromGhostToModule(BaseGhost, NitroxId, ConstructableBase, out GameObject)
+  nameWithType: BuildUtils.TryTransferIdFromGhostToModule(BaseGhost, NitroxId, ConstructableBase, out GameObject)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule(BaseGhost, NitroxModel.DataStructures.NitroxId, ConstructableBase, out UnityEngine.GameObject)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TryTransferIdFromGhostToModule
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 89
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  remarks: >-
+    Even if the corresponding module was found, in some cases (with WaterParks notably) we don't want to transfer the id.
+
+    We then return false because the GameObject may have already been marked.
+  example: []
+  syntax:
+    content: public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase, out GameObject moduleObject)
+    parameters:
+    - id: baseGhost
+      type: BaseGhost
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: constructableBase
+      type: ConstructableBase
+    - id: moduleObject
+      type: UnityEngine.GameObject
+    return:
+      type: System.Boolean
+      description: Whether or not the id was successfully transferred
+    content.vb: Public Shared Function TryTransferIdFromGhostToModule(baseGhost As BaseGhost, id As NitroxId, constructableBase As ConstructableBase, moduleObject As GameObject) As Boolean
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule*
+  nameWithType.vb: BuildUtils.TryTransferIdFromGhostToModule(BaseGhost, NitroxId, ConstructableBase, GameObject)
+  fullName.vb: NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule(BaseGhost, NitroxModel.DataStructures.NitroxId, ConstructableBase, UnityEngine.GameObject)
+  name.vb: TryTransferIdFromGhostToModule(BaseGhost, NitroxId, ConstructableBase, GameObject)
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable(ConstructableBase)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable(ConstructableBase)
+  id: IsBaseDeconstructable(ConstructableBase)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: IsBaseDeconstructable(ConstructableBase)
+  nameWithType: BuildUtils.IsBaseDeconstructable(ConstructableBase)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable(ConstructableBase)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsBaseDeconstructable
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 211
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  remarks: >-
+    The criteria to make sure that a ConstructableBase is one of a BaseDeconstructable is if it has a moduleFace
+
+    because this field is only filled for the base deconstruction (<xref href="BaseDeconstructable.Deconstruct" data-throw-if-not-resolved="false"></xref>, <xref href="ConstructableBase.LinkModule(System.Nullable%7bBase.Face%7d)" data-throw-if-not-resolved="false"></xref>).
+  example: []
+  syntax:
+    content: public static bool IsBaseDeconstructable(ConstructableBase constructableBase)
+    parameters:
+    - id: constructableBase
+      type: ConstructableBase
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsBaseDeconstructable(constructableBase As ConstructableBase) As Boolean
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable*
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable(BaseGhost,System.Boolean)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable(BaseGhost,System.Boolean)
+  id: IsUnderBaseDeconstructable(BaseGhost,System.Boolean)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: IsUnderBaseDeconstructable(BaseGhost, bool)
+  nameWithType: BuildUtils.IsUnderBaseDeconstructable(BaseGhost, bool)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable(BaseGhost, bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsUnderBaseDeconstructable
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 220
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  remarks: A BaseDeconstructable's ghost component is a simple BaseGhost so we need to identify it by the parent ConstructableBase instead.
+  example: []
+  syntax:
+    content: public static bool IsUnderBaseDeconstructable(BaseGhost baseGhost, bool faceAlreadyLinked)
+    parameters:
+    - id: baseGhost
+      type: BaseGhost
+    - id: faceAlreadyLinked
+      type: System.Boolean
+      description: Whether <xref href="ConstructableBase.moduleFace" data-throw-if-not-resolved="false"></xref> was already set or not
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsUnderBaseDeconstructable(baseGhost As BaseGhost, faceAlreadyLinked As Boolean) As Boolean
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable*
+  nameWithType.vb: BuildUtils.IsUnderBaseDeconstructable(BaseGhost, Boolean)
+  fullName.vb: NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable(BaseGhost, Boolean)
+  name.vb: IsUnderBaseDeconstructable(BaseGhost, Boolean)
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell(BaseGhost)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell(BaseGhost)
+  id: GetMapRoomFunctionalityCell(BaseGhost)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: GetMapRoomFunctionalityCell(BaseGhost)
+  nameWithType: BuildUtils.GetMapRoomFunctionalityCell(BaseGhost)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell(BaseGhost)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetMapRoomFunctionalityCell
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 226
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static Int3 GetMapRoomFunctionalityCell(BaseGhost baseGhost)
+    parameters:
+    - id: baseGhost
+      type: BaseGhost
+    return:
+      type: Int3
+    content.vb: Public Shared Function GetMapRoomFunctionalityCell(baseGhost As BaseGhost) As Int3
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell*
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom(MapRoomFunctionality,Base,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom(MapRoomFunctionality,Base,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId)
+  id: CreateMapRoomEntityFrom(MapRoomFunctionality,Base,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: CreateMapRoomEntityFrom(MapRoomFunctionality, Base, NitroxId, NitroxId)
+  nameWithType: BuildUtils.CreateMapRoomEntityFrom(MapRoomFunctionality, Base, NitroxId, NitroxId)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom(MapRoomFunctionality, Base, NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CreateMapRoomEntityFrom
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 232
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static MapRoomEntity CreateMapRoomEntityFrom(MapRoomFunctionality mapRoomFunctionality, Base @base, NitroxId id, NitroxId parentId)
+    parameters:
+    - id: mapRoomFunctionality
+      type: MapRoomFunctionality
+    - id: base
+      type: Base
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: parentId
+      type: NitroxModel.DataStructures.NitroxId
+    return:
+      type: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+    content.vb: Public Shared Function CreateMapRoomEntityFrom(mapRoomFunctionality As MapRoomFunctionality, base As Base, id As NitroxId, parentId As NitroxId) As MapRoomEntity
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom*
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren(UnityEngine.Transform)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren(UnityEngine.Transform)
+  id: GetGlobalRootChildren(UnityEngine.Transform)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: GetGlobalRootChildren(Transform)
+  nameWithType: BuildUtils.GetGlobalRootChildren(Transform)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren(UnityEngine.Transform)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetGlobalRootChildren
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 238
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static List<GlobalRootEntity> GetGlobalRootChildren(Transform globalRoot)
+    parameters:
+    - id: globalRoot
+      type: UnityEngine.Transform
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity}
+    content.vb: Public Shared Function GetGlobalRootChildren(globalRoot As Transform) As List(Of GlobalRootEntity)
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren*
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities(Base,NitroxModel.DataStructures.NitroxId)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities(Base,NitroxModel.DataStructures.NitroxId)
+  id: GetChildEntities(Base,NitroxModel.DataStructures.NitroxId)
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: GetChildEntities(Base, NitroxId)
+  nameWithType: BuildUtils.GetChildEntities(Base, NitroxId)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities(Base, NitroxModel.DataStructures.NitroxId)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetChildEntities
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 260
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static List<Entity> GetChildEntities(Base targetBase, NitroxId baseId)
+    parameters:
+    - id: targetBase
+      type: Base
+    - id: baseId
+      type: NitroxModel.DataStructures.NitroxId
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+    content.vb: Public Shared Function GetChildEntities(targetBase As Base, baseId As NitroxId) As List(Of Entity)
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities*
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull(IBaseModule)
+  commentId: M:NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull(IBaseModule)
+  id: AliveOrNull(IBaseModule)
+  isExtensionMethod: true
+  parent: NitroxClient.GameLogic.Bases.BuildUtils
+  langs:
+  - csharp
+  - vb
+  name: AliveOrNull(IBaseModule)
+  nameWithType: BuildUtils.AliveOrNull(IBaseModule)
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull(IBaseModule)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Bases/BuildUtils.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AliveOrNull
+    path: ../NitroxClient/GameLogic/Bases/BuildUtils.cs
+    startLine: 309
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Bases
+  syntax:
+    content: public static Component AliveOrNull(this IBaseModule baseModule)
+    parameters:
+    - id: baseModule
+      type: IBaseModule
+    return:
+      type: UnityEngine.Component
+    content.vb: Public Shared Function AliveOrNull(baseModule As IBaseModule) As Component
+  overload: NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull*
+references:
+- uid: NitroxClient.GameLogic.Bases
+  commentId: N:NitroxClient.GameLogic.Bases
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Bases
+  nameWithType: NitroxClient.GameLogic.Bases
+  fullName: NitroxClient.GameLogic.Bases
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Bases
+    name: Bases
+    href: NitroxClient.GameLogic.Bases.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Bases
+    name: Bases
+    href: NitroxClient.GameLogic.Bases.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier
+  href: NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier.html#NitroxClient_GameLogic_Bases_BuildUtils_TryGetIdentifier_BaseDeconstructable_NitroxModel_DataStructures_GameLogic_Bases_BuildPieceIdentifier__BaseCell_System_Nullable_Base_Face__
+  name: TryGetIdentifier
+  nameWithType: BuildUtils.TryGetIdentifier
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.TryGetIdentifier
+- uid: BaseDeconstructable
+  commentId: T:BaseDeconstructable
+  isExternal: true
+  name: BaseDeconstructable
+  nameWithType: BaseDeconstructable
+  fullName: BaseDeconstructable
+- uid: NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier
+  commentId: T:NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier
+  parent: NitroxModel.DataStructures.GameLogic.Bases
+  href: NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier.html
+  name: BuildPieceIdentifier
+  nameWithType: BuildPieceIdentifier
+  fullName: NitroxModel.DataStructures.GameLogic.Bases.BuildPieceIdentifier
+- uid: BaseCell
+  commentId: T:BaseCell
+  isExternal: true
+  name: BaseCell
+  nameWithType: BaseCell
+  fullName: BaseCell
+- uid: System.Nullable{Base.Face}
+  commentId: T:System.Nullable{Base.Face}
+  parent: System
+  definition: System.Nullable`1
+  name: Base.Face?
+  nameWithType: Base.Face?
+  fullName: Base.Face?
+  spec.csharp:
+  - uid: Base
+    name: Base
+    isExternal: true
+  - name: .
+  - uid: Base.Face
+    name: Face
+    isExternal: true
+  - name: '?'
+  spec.vb:
+  - uid: Base
+    name: Base
+    isExternal: true
+  - name: .
+  - uid: Base.Face
+    name: Face
+    isExternal: true
+  - name: '?'
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.DataStructures.GameLogic.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Bases.html
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier
+  href: NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier.html#NitroxClient_GameLogic_Bases_BuildUtils_GetIdentifier_BaseDeconstructable_BaseCell_System_Nullable_Base_Face__
+  name: GetIdentifier
+  nameWithType: BuildUtils.GetIdentifier
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetIdentifier
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace
+  href: NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace.html#NitroxClient_GameLogic_Bases_BuildUtils_TryGetGhostFace_BaseGhost_Base_Face__
+  name: TryGetGhostFace
+  nameWithType: BuildUtils.TryGetGhostFace
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.TryGetGhostFace
+- uid: BaseGhost
+  commentId: T:BaseGhost
+  isExternal: true
+  name: BaseGhost
+  nameWithType: BaseGhost
+  fullName: BaseGhost
+- uid: Base.Face
+  commentId: T:Base.Face
+  isExternal: true
+  name: Base.Face
+  nameWithType: Base.Face
+  fullName: Base.Face
+  spec.csharp:
+  - uid: Base
+    name: Base
+    isExternal: true
+  - name: .
+  - uid: Base.Face
+    name: Face
+    isExternal: true
+  spec.vb:
+  - uid: Base
+    name: Base
+    isExternal: true
+  - name: .
+  - uid: Base.Face
+    name: Face
+    isExternal: true
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule
+  href: NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule.html#NitroxClient_GameLogic_Bases_BuildUtils_TryTransferIdFromGhostToModule_BaseGhost_NitroxModel_DataStructures_NitroxId_ConstructableBase_UnityEngine_GameObject__
+  name: TryTransferIdFromGhostToModule
+  nameWithType: BuildUtils.TryTransferIdFromGhostToModule
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.TryTransferIdFromGhostToModule
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: ConstructableBase
+  commentId: T:ConstructableBase
+  isExternal: true
+  name: ConstructableBase
+  nameWithType: ConstructableBase
+  fullName: ConstructableBase
+- uid: UnityEngine.GameObject
+  commentId: T:UnityEngine.GameObject
+  parent: UnityEngine
+  isExternal: true
+  name: GameObject
+  nameWithType: GameObject
+  fullName: UnityEngine.GameObject
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: ConstructableBase.LinkModule(System.Nullable{Base.Face})
+  commentId: M:ConstructableBase.LinkModule(System.Nullable{Base.Face})
+  isExternal: true
+  name: LinkModule(Face?)
+  nameWithType: ConstructableBase.LinkModule(Base.Face?)
+  fullName: ConstructableBase.LinkModule(Base.Face?)
+  spec.csharp:
+  - uid: ConstructableBase.LinkModule(System.Nullable{Base.Face})
+    name: LinkModule
+    isExternal: true
+  - name: (
+  - uid: Base.Face
+    name: Face
+    isExternal: true
+  - name: '?'
+  - name: )
+  spec.vb:
+  - uid: ConstructableBase.LinkModule(System.Nullable{Base.Face})
+    name: LinkModule
+    isExternal: true
+  - name: (
+  - uid: Base.Face
+    name: Face
+    isExternal: true
+  - name: '?'
+  - name: )
+- uid: BaseDeconstructable.Deconstruct
+  commentId: M:BaseDeconstructable.Deconstruct
+  isExternal: true
+  name: Deconstruct()
+  nameWithType: BaseDeconstructable.Deconstruct()
+  fullName: BaseDeconstructable.Deconstruct()
+  spec.csharp:
+  - uid: BaseDeconstructable.Deconstruct
+    name: Deconstruct
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: BaseDeconstructable.Deconstruct
+    name: Deconstruct
+    isExternal: true
+  - name: (
+  - name: )
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable
+  href: NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable.html#NitroxClient_GameLogic_Bases_BuildUtils_IsBaseDeconstructable_ConstructableBase_
+  name: IsBaseDeconstructable
+  nameWithType: BuildUtils.IsBaseDeconstructable
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.IsBaseDeconstructable
+- uid: ConstructableBase.moduleFace
+  commentId: F:ConstructableBase.moduleFace
+  isExternal: true
+  name: moduleFace
+  nameWithType: ConstructableBase.moduleFace
+  fullName: ConstructableBase.moduleFace
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable
+  href: NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable.html#NitroxClient_GameLogic_Bases_BuildUtils_IsUnderBaseDeconstructable_BaseGhost_System_Boolean_
+  name: IsUnderBaseDeconstructable
+  nameWithType: BuildUtils.IsUnderBaseDeconstructable
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.IsUnderBaseDeconstructable
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell
+  href: NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell.html#NitroxClient_GameLogic_Bases_BuildUtils_GetMapRoomFunctionalityCell_BaseGhost_
+  name: GetMapRoomFunctionalityCell
+  nameWithType: BuildUtils.GetMapRoomFunctionalityCell
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetMapRoomFunctionalityCell
+- uid: Int3
+  commentId: T:Int3
+  isExternal: true
+  name: Int3
+  nameWithType: Int3
+  fullName: Int3
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom
+  href: NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom.html#NitroxClient_GameLogic_Bases_BuildUtils_CreateMapRoomEntityFrom_MapRoomFunctionality_Base_NitroxModel_DataStructures_NitroxId_NitroxModel_DataStructures_NitroxId_
+  name: CreateMapRoomEntityFrom
+  nameWithType: BuildUtils.CreateMapRoomEntityFrom
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.CreateMapRoomEntityFrom
+- uid: MapRoomFunctionality
+  commentId: T:MapRoomFunctionality
+  isExternal: true
+  name: MapRoomFunctionality
+  nameWithType: MapRoomFunctionality
+  fullName: MapRoomFunctionality
+- uid: Base
+  commentId: T:Base
+  isExternal: true
+  name: Base
+  nameWithType: Base
+  fullName: Base
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity.html
+  name: MapRoomEntity
+  nameWithType: MapRoomEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.MapRoomEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren
+  href: NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren.html#NitroxClient_GameLogic_Bases_BuildUtils_GetGlobalRootChildren_UnityEngine_Transform_
+  name: GetGlobalRootChildren
+  nameWithType: BuildUtils.GetGlobalRootChildren
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetGlobalRootChildren
+- uid: UnityEngine.Transform
+  commentId: T:UnityEngine.Transform
+  parent: UnityEngine
+  isExternal: true
+  name: Transform
+  nameWithType: Transform
+  fullName: UnityEngine.Transform
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<GlobalRootEntity>
+  nameWithType: List<GlobalRootEntity>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity>
+  nameWithType.vb: List(Of GlobalRootEntity)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity)
+  name.vb: List(Of GlobalRootEntity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity
+    name: GlobalRootEntity
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.GlobalRootEntity
+    name: GlobalRootEntity
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities
+  href: NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities.html#NitroxClient_GameLogic_Bases_BuildUtils_GetChildEntities_Base_NitroxModel_DataStructures_NitroxId_
+  name: GetChildEntities
+  nameWithType: BuildUtils.GetChildEntities
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.GetChildEntities
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.Entity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Entity>
+  nameWithType: List<Entity>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.Entity>
+  nameWithType.vb: List(Of Entity)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.Entity)
+  name.vb: List(Of Entity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entity
+    name: Entity
+    href: NitroxModel.DataStructures.GameLogic.Entity.html
+  - name: )
+- uid: NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull*
+  commentId: Overload:NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull
+  href: NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull.html#NitroxClient_GameLogic_Bases_BuildUtils_AliveOrNull_IBaseModule_
+  name: AliveOrNull
+  nameWithType: BuildUtils.AliveOrNull
+  fullName: NitroxClient.GameLogic.Bases.BuildUtils.AliveOrNull
+- uid: IBaseModule
+  commentId: T:IBaseModule
+  isExternal: true
+  name: IBaseModule
+  nameWithType: IBaseModule
+  fullName: IBaseModule
+- uid: UnityEngine.Component
+  commentId: T:UnityEngine.Component
+  parent: UnityEngine
+  isExternal: true
+  name: Component
+  nameWithType: Component
+  fullName: UnityEngine.Component
+memberLayout: SeparatePages

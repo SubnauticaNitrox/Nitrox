@@ -1,0 +1,539 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  commentId: T:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  id: EntityTransformUpdates.EntityTransformUpdate
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion)
+  - NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id
+  - NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position
+  - NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation
+  langs:
+  - csharp
+  - vb
+  name: EntityTransformUpdates.EntityTransformUpdate
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/EntityTransformUpdates.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntityTransformUpdate
+    path: ../NitroxModel/Packets/EntityTransformUpdates.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public abstract class EntityTransformUpdates.EntityTransformUpdate
+    content.vb: >-
+      <Serializable>
+
+      Public MustInherit Class EntityTransformUpdates.EntityTransformUpdate
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - NitroxModel.Packets.EntityTransformUpdates.RawTransformUpdate
+  - NitroxModel.Packets.EntityTransformUpdates.SplineTransformUpdate
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id
+  commentId: P:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id
+  id: Id
+  parent: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.Id
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/EntityTransformUpdates.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Id
+    path: ../NitroxModel/Packets/EntityTransformUpdates.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxId Id { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public ReadOnly Property Id As NitroxId
+  overload: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id*
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position
+  commentId: P:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position
+  id: Position
+  parent: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.Position
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/EntityTransformUpdates.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Position
+    path: ../NitroxModel/Packets/EntityTransformUpdates.cs
+    startLine: 26
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxVector3 Position { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: Public ReadOnly Property Position As NitroxVector3
+  overload: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position*
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation
+  commentId: P:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation
+  id: Rotation
+  parent: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  langs:
+  - csharp
+  - vb
+  name: Rotation
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.Rotation
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/EntityTransformUpdates.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Rotation
+    path: ../NitroxModel/Packets/EntityTransformUpdates.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxQuaternion Rotation { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxQuaternion
+    content.vb: Public ReadOnly Property Rotation As NitroxQuaternion
+  overload: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation*
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion)
+  commentId: M:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion)
+  id: '#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Unity.NitroxVector3,NitroxModel.DataStructures.Unity.NitroxQuaternion)'
+  parent: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate
+  langs:
+  - csharp
+  - vb
+  name: EntityTransformUpdate(NitroxId, NitroxVector3, NitroxQuaternion)
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.EntityTransformUpdate(NitroxId, NitroxVector3, NitroxQuaternion)
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.EntityTransformUpdate(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxQuaternion)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/EntityTransformUpdates.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/EntityTransformUpdates.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public EntityTransformUpdate(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: position
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: rotation
+      type: NitroxModel.DataStructures.Unity.NitroxQuaternion
+    content.vb: Public Sub New(id As NitroxId, position As NitroxVector3, rotation As NitroxQuaternion)
+  overload: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.#ctor*
+  nameWithType.vb: EntityTransformUpdates.EntityTransformUpdate.New(NitroxId, NitroxVector3, NitroxQuaternion)
+  fullName.vb: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.New(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.Unity.NitroxVector3, NitroxModel.DataStructures.Unity.NitroxQuaternion)
+  name.vb: New(NitroxId, NitroxVector3, NitroxQuaternion)
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id*
+  commentId: Overload:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id
+  href: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id.html#NitroxModel_Packets_EntityTransformUpdates_EntityTransformUpdate_Id
+  name: Id
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.Id
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Id
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position*
+  commentId: Overload:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position
+  href: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position.html#NitroxModel_Packets_EntityTransformUpdates_EntityTransformUpdate_Position
+  name: Position
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.Position
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Position
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation*
+  commentId: Overload:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation
+  href: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation.html#NitroxModel_Packets_EntityTransformUpdates_EntityTransformUpdate_Rotation
+  name: Rotation
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.Rotation
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.Rotation
+- uid: NitroxModel.DataStructures.Unity.NitroxQuaternion
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxQuaternion
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxQuaternion.html
+  name: NitroxQuaternion
+  nameWithType: NitroxQuaternion
+  fullName: NitroxModel.DataStructures.Unity.NitroxQuaternion
+- uid: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.#ctor*
+  commentId: Overload:NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.#ctor
+  href: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.-ctor.html#NitroxModel_Packets_EntityTransformUpdates_EntityTransformUpdate__ctor_NitroxModel_DataStructures_NitroxId_NitroxModel_DataStructures_Unity_NitroxVector3_NitroxModel_DataStructures_Unity_NitroxQuaternion_
+  name: EntityTransformUpdate
+  nameWithType: EntityTransformUpdates.EntityTransformUpdate.EntityTransformUpdate
+  fullName: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.EntityTransformUpdate
+  nameWithType.vb: EntityTransformUpdates.EntityTransformUpdate.New
+  fullName.vb: NitroxModel.Packets.EntityTransformUpdates.EntityTransformUpdate.New
+  name.vb: New
+memberLayout: SeparatePages

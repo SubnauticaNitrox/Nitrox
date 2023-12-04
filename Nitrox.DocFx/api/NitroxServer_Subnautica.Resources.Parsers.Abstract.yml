@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  commentId: N:NitroxServer_Subnautica.Resources.Parsers.Abstract
+  id: Abstract
+  parent: NitroxServer_Subnautica.Resources.Parsers
+  children:
+  - NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+  - NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser`1
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  nameWithType: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract
+  type: Namespace
+  assemblies:
+  - NitroxServer-Subnautica
+references:
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+  commentId: T:NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  name: BundleFileParser<T>
+  nameWithType: BundleFileParser<T>
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser<T>
+  nameWithType.vb: BundleFileParser(Of T)
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser(Of T)
+  name.vb: BundleFileParser(Of T)
+  spec.csharp:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+    name: BundleFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser`1
+    name: BundleFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.BundleFileParser-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser`1
+  commentId: T:NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser`1
+  href: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser-1.html
+  name: ResourceFileParser<T>
+  nameWithType: ResourceFileParser<T>
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser<T>
+  nameWithType.vb: ResourceFileParser(Of T)
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser(Of T)
+  name.vb: ResourceFileParser(Of T)
+  spec.csharp:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser`1
+    name: ResourceFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser`1
+    name: ResourceFileParser
+    href: NitroxServer_Subnautica.Resources.Parsers.Abstract.ResourceFileParser-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+memberLayout: SeparatePages

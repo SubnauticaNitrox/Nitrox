@@ -1,0 +1,460 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.FMOD.SoundData
+  commentId: T:NitroxClient.GameLogic.FMOD.SoundData
+  id: SoundData
+  parent: NitroxClient.GameLogic.FMOD
+  children:
+  - NitroxClient.GameLogic.FMOD.SoundData.#ctor(System.Boolean,System.Boolean,System.Single)
+  - NitroxClient.GameLogic.FMOD.SoundData.IsGlobal
+  - NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted
+  - NitroxClient.GameLogic.FMOD.SoundData.SoundRadius
+  langs:
+  - csharp
+  - vb
+  name: SoundData
+  nameWithType: SoundData
+  fullName: NitroxClient.GameLogic.FMOD.SoundData
+  type: Struct
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/SoundData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SoundData
+    path: ../NitroxClient/GameLogic/FMOD/SoundData.cs
+    startLine: 2
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public readonly struct SoundData
+    content.vb: Public Structure SoundData
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+- uid: NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted
+  commentId: P:NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted
+  id: IsWhitelisted
+  parent: NitroxClient.GameLogic.FMOD.SoundData
+  langs:
+  - csharp
+  - vb
+  name: IsWhitelisted
+  nameWithType: SoundData.IsWhitelisted
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/SoundData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsWhitelisted
+    path: ../NitroxClient/GameLogic/FMOD/SoundData.cs
+    startLine: 4
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public bool IsWhitelisted { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsWhitelisted As Boolean
+  overload: NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted*
+- uid: NitroxClient.GameLogic.FMOD.SoundData.IsGlobal
+  commentId: P:NitroxClient.GameLogic.FMOD.SoundData.IsGlobal
+  id: IsGlobal
+  parent: NitroxClient.GameLogic.FMOD.SoundData
+  langs:
+  - csharp
+  - vb
+  name: IsGlobal
+  nameWithType: SoundData.IsGlobal
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.IsGlobal
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/SoundData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsGlobal
+    path: ../NitroxClient/GameLogic/FMOD/SoundData.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public bool IsGlobal { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsGlobal As Boolean
+  overload: NitroxClient.GameLogic.FMOD.SoundData.IsGlobal*
+- uid: NitroxClient.GameLogic.FMOD.SoundData.SoundRadius
+  commentId: P:NitroxClient.GameLogic.FMOD.SoundData.SoundRadius
+  id: SoundRadius
+  parent: NitroxClient.GameLogic.FMOD.SoundData
+  langs:
+  - csharp
+  - vb
+  name: SoundRadius
+  nameWithType: SoundData.SoundRadius
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.SoundRadius
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/SoundData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SoundRadius
+    path: ../NitroxClient/GameLogic/FMOD/SoundData.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public float SoundRadius { get; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: Public ReadOnly Property SoundRadius As Single
+  overload: NitroxClient.GameLogic.FMOD.SoundData.SoundRadius*
+- uid: NitroxClient.GameLogic.FMOD.SoundData.#ctor(System.Boolean,System.Boolean,System.Single)
+  commentId: M:NitroxClient.GameLogic.FMOD.SoundData.#ctor(System.Boolean,System.Boolean,System.Single)
+  id: '#ctor(System.Boolean,System.Boolean,System.Single)'
+  parent: NitroxClient.GameLogic.FMOD.SoundData
+  langs:
+  - csharp
+  - vb
+  name: SoundData(bool, bool, float)
+  nameWithType: SoundData.SoundData(bool, bool, float)
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.SoundData(bool, bool, float)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/SoundData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/FMOD/SoundData.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public SoundData(bool isWhitelisted, bool isGlobal, float soundRadius)
+    parameters:
+    - id: isWhitelisted
+      type: System.Boolean
+    - id: isGlobal
+      type: System.Boolean
+    - id: soundRadius
+      type: System.Single
+    content.vb: Public Sub New(isWhitelisted As Boolean, isGlobal As Boolean, soundRadius As Single)
+  overload: NitroxClient.GameLogic.FMOD.SoundData.#ctor*
+  nameWithType.vb: SoundData.New(Boolean, Boolean, Single)
+  fullName.vb: NitroxClient.GameLogic.FMOD.SoundData.New(Boolean, Boolean, Single)
+  name.vb: New(Boolean, Boolean, Single)
+references:
+- uid: NitroxClient.GameLogic.FMOD
+  commentId: N:NitroxClient.GameLogic.FMOD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.FMOD
+  nameWithType: NitroxClient.GameLogic.FMOD
+  fullName: NitroxClient.GameLogic.FMOD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted
+  href: NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted.html#NitroxClient_GameLogic_FMOD_SoundData_IsWhitelisted
+  name: IsWhitelisted
+  nameWithType: SoundData.IsWhitelisted
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.IsWhitelisted
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxClient.GameLogic.FMOD.SoundData.IsGlobal*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.SoundData.IsGlobal
+  href: NitroxClient.GameLogic.FMOD.SoundData.IsGlobal.html#NitroxClient_GameLogic_FMOD_SoundData_IsGlobal
+  name: IsGlobal
+  nameWithType: SoundData.IsGlobal
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.IsGlobal
+- uid: NitroxClient.GameLogic.FMOD.SoundData.SoundRadius*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.SoundData.SoundRadius
+  href: NitroxClient.GameLogic.FMOD.SoundData.SoundRadius.html#NitroxClient_GameLogic_FMOD_SoundData_SoundRadius
+  name: SoundRadius
+  nameWithType: SoundData.SoundRadius
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.SoundRadius
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxClient.GameLogic.FMOD.SoundData.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.SoundData.#ctor
+  href: NitroxClient.GameLogic.FMOD.SoundData.-ctor.html#NitroxClient_GameLogic_FMOD_SoundData__ctor_System_Boolean_System_Boolean_System_Single_
+  name: SoundData
+  nameWithType: SoundData.SoundData
+  fullName: NitroxClient.GameLogic.FMOD.SoundData.SoundData
+  nameWithType.vb: SoundData.New
+  fullName.vb: NitroxClient.GameLogic.FMOD.SoundData.New
+  name.vb: New
+memberLayout: SeparatePages

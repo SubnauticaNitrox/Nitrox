@@ -1,0 +1,638 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator
+  commentId: T:NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator
+  id: ThreadSafeMonoCecilTempGenerator
+  parent: NitroxServer_Subnautica.Resources.Parsers.Helper
+  children:
+  - NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.#ctor(System.String)
+  - NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose
+  - NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeMonoCecilTempGenerator
+  nameWithType: ThreadSafeMonoCecilTempGenerator
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator
+  type: Class
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ThreadSafeMonoCecilTempGenerator
+    path: ../NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+    startLine: 8
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources.Parsers.Helper
+  syntax:
+    content: 'public class ThreadSafeMonoCecilTempGenerator : IMonoBehaviourTemplateGenerator, IDisposable'
+    content.vb: Public Class ThreadSafeMonoCecilTempGenerator Implements IMonoBehaviourTemplateGenerator, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.#ctor(System.String)
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator
+  langs:
+  - csharp
+  - vb
+  name: ThreadSafeMonoCecilTempGenerator(string)
+  nameWithType: ThreadSafeMonoCecilTempGenerator.ThreadSafeMonoCecilTempGenerator(string)
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.ThreadSafeMonoCecilTempGenerator(string)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+    startLine: 13
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources.Parsers.Helper
+  syntax:
+    content: public ThreadSafeMonoCecilTempGenerator(string managedPath)
+    parameters:
+    - id: managedPath
+      type: System.String
+    content.vb: Public Sub New(managedPath As String)
+  overload: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.#ctor*
+  nameWithType.vb: ThreadSafeMonoCecilTempGenerator.New(String)
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.New(String)
+  name.vb: New(String)
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+  id: GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+  parent: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator
+  langs:
+  - csharp
+  - vb
+  name: GetTemplateField(AssetTypeTemplateField, string, string, string, UnityVersion)
+  nameWithType: ThreadSafeMonoCecilTempGenerator.GetTemplateField(AssetTypeTemplateField, string, string, string, UnityVersion)
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField, string, string, string, AssetsTools.NET.Extra.UnityVersion)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetTemplateField
+    path: ../NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+    startLine: 18
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources.Parsers.Helper
+  example: []
+  syntax:
+    content: public AssetTypeTemplateField GetTemplateField(AssetTypeTemplateField baseField, string assemblyName, string nameSpace, string className, UnityVersion unityVersion)
+    parameters:
+    - id: baseField
+      type: AssetsTools.NET.AssetTypeTemplateField
+    - id: assemblyName
+      type: System.String
+    - id: nameSpace
+      type: System.String
+    - id: className
+      type: System.String
+    - id: unityVersion
+      type: AssetsTools.NET.Extra.UnityVersion
+    return:
+      type: AssetsTools.NET.AssetTypeTemplateField
+    content.vb: Public Function GetTemplateField(baseField As AssetTypeTemplateField, assemblyName As String, [nameSpace] As String, className As String, unityVersion As UnityVersion) As AssetTypeTemplateField
+  overload: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField*
+  implements:
+  - AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+  nameWithType.vb: ThreadSafeMonoCecilTempGenerator.GetTemplateField(AssetTypeTemplateField, String, String, String, UnityVersion)
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField, String, String, String, AssetsTools.NET.Extra.UnityVersion)
+  name.vb: GetTemplateField(AssetTypeTemplateField, String, String, String, UnityVersion)
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose
+  commentId: M:NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose
+  id: Dispose
+  parent: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: ThreadSafeMonoCecilTempGenerator.Dispose()
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Dispose
+    path: ../NitroxServer-Subnautica/Resources/Parsers/Helper/ThreadSafeMonoCecilTempGenerator.cs
+    startLine: 31
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.Resources.Parsers.Helper
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+references:
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper
+  commentId: N:NitroxServer_Subnautica.Resources.Parsers.Helper
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica.Resources.Parsers.Helper
+  nameWithType: NitroxServer_Subnautica.Resources.Parsers.Helper
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper
+  spec.csharp:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Helper
+    name: Helper
+    href: NitroxServer_Subnautica.Resources.Parsers.Helper.html
+  spec.vb:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources
+    name: Resources
+    href: NitroxServer_Subnautica.Resources.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers
+    name: Parsers
+    href: NitroxServer_Subnautica.Resources.Parsers.html
+  - name: .
+  - uid: NitroxServer_Subnautica.Resources.Parsers.Helper
+    name: Helper
+    href: NitroxServer_Subnautica.Resources.Parsers.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator
+  commentId: T:AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator
+  parent: AssetsTools.NET.Extra
+  isExternal: true
+  name: IMonoBehaviourTemplateGenerator
+  nameWithType: IMonoBehaviourTemplateGenerator
+  fullName: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: AssetsTools.NET.Extra
+  commentId: N:AssetsTools.NET.Extra
+  isExternal: true
+  name: AssetsTools.NET.Extra
+  nameWithType: AssetsTools.NET.Extra
+  fullName: AssetsTools.NET.Extra
+  spec.csharp:
+  - uid: AssetsTools
+    name: AssetsTools
+    isExternal: true
+  - name: .
+  - uid: AssetsTools.NET
+    name: NET
+    isExternal: true
+  - name: .
+  - uid: AssetsTools.NET.Extra
+    name: Extra
+    isExternal: true
+  spec.vb:
+  - uid: AssetsTools
+    name: AssetsTools
+    isExternal: true
+  - name: .
+  - uid: AssetsTools.NET
+    name: NET
+    isExternal: true
+  - name: .
+  - uid: AssetsTools.NET.Extra
+    name: Extra
+    isExternal: true
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.#ctor*
+  commentId: Overload:NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.#ctor
+  href: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.-ctor.html#NitroxServer_Subnautica_Resources_Parsers_Helper_ThreadSafeMonoCecilTempGenerator__ctor_System_String_
+  name: ThreadSafeMonoCecilTempGenerator
+  nameWithType: ThreadSafeMonoCecilTempGenerator.ThreadSafeMonoCecilTempGenerator
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.ThreadSafeMonoCecilTempGenerator
+  nameWithType.vb: ThreadSafeMonoCecilTempGenerator.New
+  fullName.vb: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField*
+  commentId: Overload:NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField
+  href: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField.html#NitroxServer_Subnautica_Resources_Parsers_Helper_ThreadSafeMonoCecilTempGenerator_GetTemplateField_AssetsTools_NET_AssetTypeTemplateField_System_String_System_String_System_String_AssetsTools_NET_Extra_UnityVersion_
+  name: GetTemplateField
+  nameWithType: ThreadSafeMonoCecilTempGenerator.GetTemplateField
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.GetTemplateField
+- uid: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+  commentId: M:AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+  parent: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: GetTemplateField(AssetTypeTemplateField, string, string, string, UnityVersion)
+  nameWithType: IMonoBehaviourTemplateGenerator.GetTemplateField(AssetTypeTemplateField, string, string, string, UnityVersion)
+  fullName: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField, string, string, string, AssetsTools.NET.Extra.UnityVersion)
+  nameWithType.vb: IMonoBehaviourTemplateGenerator.GetTemplateField(AssetTypeTemplateField, String, String, String, UnityVersion)
+  fullName.vb: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField, String, String, String, AssetsTools.NET.Extra.UnityVersion)
+  name.vb: GetTemplateField(AssetTypeTemplateField, String, String, String, UnityVersion)
+  spec.csharp:
+  - uid: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+    name: GetTemplateField
+    isExternal: true
+  - name: (
+  - uid: AssetsTools.NET.AssetTypeTemplateField
+    name: AssetTypeTemplateField
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: AssetsTools.NET.Extra.UnityVersion
+    name: UnityVersion
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: AssetsTools.NET.Extra.IMonoBehaviourTemplateGenerator.GetTemplateField(AssetsTools.NET.AssetTypeTemplateField,System.String,System.String,System.String,AssetsTools.NET.Extra.UnityVersion)
+    name: GetTemplateField
+    isExternal: true
+  - name: (
+  - uid: AssetsTools.NET.AssetTypeTemplateField
+    name: AssetTypeTemplateField
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: AssetsTools.NET.Extra.UnityVersion
+    name: UnityVersion
+    isExternal: true
+  - name: )
+- uid: AssetsTools.NET.AssetTypeTemplateField
+  commentId: T:AssetsTools.NET.AssetTypeTemplateField
+  parent: AssetsTools.NET
+  isExternal: true
+  name: AssetTypeTemplateField
+  nameWithType: AssetTypeTemplateField
+  fullName: AssetsTools.NET.AssetTypeTemplateField
+- uid: AssetsTools.NET.Extra.UnityVersion
+  commentId: T:AssetsTools.NET.Extra.UnityVersion
+  parent: AssetsTools.NET.Extra
+  isExternal: true
+  name: UnityVersion
+  nameWithType: UnityVersion
+  fullName: AssetsTools.NET.Extra.UnityVersion
+- uid: AssetsTools.NET
+  commentId: N:AssetsTools.NET
+  isExternal: true
+  name: AssetsTools.NET
+  nameWithType: AssetsTools.NET
+  fullName: AssetsTools.NET
+  spec.csharp:
+  - uid: AssetsTools
+    name: AssetsTools
+    isExternal: true
+  - name: .
+  - uid: AssetsTools.NET
+    name: NET
+    isExternal: true
+  spec.vb:
+  - uid: AssetsTools
+    name: AssetsTools
+    isExternal: true
+  - name: .
+  - uid: AssetsTools.NET
+    name: NET
+    isExternal: true
+- uid: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose*
+  commentId: Overload:NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose
+  href: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose.html#NitroxServer_Subnautica_Resources_Parsers_Helper_ThreadSafeMonoCecilTempGenerator_Dispose
+  name: Dispose
+  nameWithType: ThreadSafeMonoCecilTempGenerator.Dispose
+  fullName: NitroxServer_Subnautica.Resources.Parsers.Helper.ThreadSafeMonoCecilTempGenerator.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+memberLayout: SeparatePages

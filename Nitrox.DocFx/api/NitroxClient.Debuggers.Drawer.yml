@@ -1,0 +1,211 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Debuggers.Drawer
+  commentId: N:NitroxClient.Debuggers.Drawer
+  id: Drawer
+  parent: NitroxClient.Debuggers
+  children:
+  - NitroxClient.Debuggers.Drawer.IDrawer
+  - NitroxClient.Debuggers.Drawer.IStructDrawer
+  - NitroxClient.Debuggers.Drawer.Nitrox
+  - NitroxClient.Debuggers.Drawer.NitroxGUILayout
+  - NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope
+  - NitroxClient.Debuggers.Drawer.Unity
+  - NitroxClient.Debuggers.Drawer.UnityUI
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.Debuggers.Drawer
+  nameWithType: NitroxClient.Debuggers.Drawer
+  fullName: NitroxClient.Debuggers.Drawer
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.Debuggers.Drawer.Nitrox
+  commentId: N:NitroxClient.Debuggers.Drawer.Nitrox
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers.Drawer.Nitrox
+  nameWithType: NitroxClient.Debuggers.Drawer.Nitrox
+  fullName: NitroxClient.Debuggers.Drawer.Nitrox
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.Nitrox
+    name: Nitrox
+    href: NitroxClient.Debuggers.Drawer.Nitrox.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.Nitrox
+    name: Nitrox
+    href: NitroxClient.Debuggers.Drawer.Nitrox.html
+- uid: NitroxClient.Debuggers.Drawer.Unity
+  commentId: N:NitroxClient.Debuggers.Drawer.Unity
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers.Drawer.Unity
+  nameWithType: NitroxClient.Debuggers.Drawer.Unity
+  fullName: NitroxClient.Debuggers.Drawer.Unity
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.Unity
+    name: Unity
+    href: NitroxClient.Debuggers.Drawer.Unity.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.Unity
+    name: Unity
+    href: NitroxClient.Debuggers.Drawer.Unity.html
+- uid: NitroxClient.Debuggers.Drawer.UnityUI
+  commentId: N:NitroxClient.Debuggers.Drawer.UnityUI
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers.Drawer.UnityUI
+  nameWithType: NitroxClient.Debuggers.Drawer.UnityUI
+  fullName: NitroxClient.Debuggers.Drawer.UnityUI
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.UnityUI
+    name: UnityUI
+    href: NitroxClient.Debuggers.Drawer.UnityUI.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.UnityUI
+    name: UnityUI
+    href: NitroxClient.Debuggers.Drawer.UnityUI.html
+- uid: NitroxClient.Debuggers.Drawer.IDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.IDrawer
+  parent: NitroxClient.Debuggers.Drawer
+  href: NitroxClient.Debuggers.Drawer.IDrawer.html
+  name: IDrawer
+  nameWithType: IDrawer
+  fullName: NitroxClient.Debuggers.Drawer.IDrawer
+- uid: NitroxClient.Debuggers.Drawer.IStructDrawer
+  commentId: T:NitroxClient.Debuggers.Drawer.IStructDrawer
+  parent: NitroxClient.Debuggers.Drawer
+  href: NitroxClient.Debuggers.Drawer.IStructDrawer.html
+  name: IStructDrawer
+  nameWithType: IStructDrawer
+  fullName: NitroxClient.Debuggers.Drawer.IStructDrawer
+- uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout
+  commentId: T:NitroxClient.Debuggers.Drawer.NitroxGUILayout
+  href: NitroxClient.Debuggers.Drawer.NitroxGUILayout.html
+  name: NitroxGUILayout
+  nameWithType: NitroxGUILayout
+  fullName: NitroxClient.Debuggers.Drawer.NitroxGUILayout
+- uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope
+  commentId: T:NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope
+  href: NitroxClient.Debuggers.Drawer.NitroxGUILayout.html
+  name: NitroxGUILayout.BackgroundColorScope
+  nameWithType: NitroxGUILayout.BackgroundColorScope
+  fullName: NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout
+    name: NitroxGUILayout
+    href: NitroxClient.Debuggers.Drawer.NitroxGUILayout.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope
+    name: BackgroundColorScope
+    href: NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope.html
+  spec.vb:
+  - uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout
+    name: NitroxGUILayout
+    href: NitroxClient.Debuggers.Drawer.NitroxGUILayout.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope
+    name: BackgroundColorScope
+    href: NitroxClient.Debuggers.Drawer.NitroxGUILayout.BackgroundColorScope.html
+- uid: NitroxClient.Debuggers.Drawer
+  commentId: N:NitroxClient.Debuggers.Drawer
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers.Drawer
+  nameWithType: NitroxClient.Debuggers.Drawer
+  fullName: NitroxClient.Debuggers.Drawer
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  - name: .
+  - uid: NitroxClient.Debuggers.Drawer
+    name: Drawer
+    href: NitroxClient.Debuggers.Drawer.html
+memberLayout: SeparatePages

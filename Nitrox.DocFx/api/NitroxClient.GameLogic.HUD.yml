@@ -1,0 +1,180 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.HUD
+  commentId: N:NitroxClient.GameLogic.HUD
+  id: HUD
+  parent: NitroxClient.GameLogic
+  children:
+  - NitroxClient.GameLogic.HUD.Components
+  - NitroxClient.GameLogic.HUD.NitroxPDATab
+  - NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  - NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+  - NitroxClient.GameLogic.HUD.PdaTabs
+  - NitroxClient.GameLogic.HUD.PlayerListTab
+  - NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.HUD
+  nameWithType: NitroxClient.GameLogic.HUD
+  fullName: NitroxClient.GameLogic.HUD
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.HUD.Components
+  commentId: N:NitroxClient.GameLogic.HUD.Components
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.HUD.Components
+  nameWithType: NitroxClient.GameLogic.HUD.Components
+  fullName: NitroxClient.GameLogic.HUD.Components
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.Components
+    name: Components
+    href: NitroxClient.GameLogic.HUD.Components.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.Components
+    name: Components
+    href: NitroxClient.GameLogic.HUD.Components.html
+- uid: NitroxClient.GameLogic.HUD.PdaTabs
+  commentId: N:NitroxClient.GameLogic.HUD.PdaTabs
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.HUD.PdaTabs
+  nameWithType: NitroxClient.GameLogic.HUD.PdaTabs
+  fullName: NitroxClient.GameLogic.HUD.PdaTabs
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.PdaTabs
+    name: PdaTabs
+    href: NitroxClient.GameLogic.HUD.PdaTabs.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.PdaTabs
+    name: PdaTabs
+    href: NitroxClient.GameLogic.HUD.PdaTabs.html
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATab
+  commentId: T:NitroxClient.GameLogic.HUD.NitroxPDATab
+  parent: NitroxClient.GameLogic.HUD
+  href: NitroxClient.GameLogic.HUD.NitroxPDATab.html
+  name: NitroxPDATab
+  nameWithType: NitroxPDATab
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATab
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  commentId: T:NitroxClient.GameLogic.HUD.NitroxPDATabManager
+  href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.html
+  name: NitroxPDATabManager
+  nameWithType: NitroxPDATabManager
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+- uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+  commentId: T:NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+  parent: NitroxClient.GameLogic.HUD
+  href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.html
+  name: NitroxPDATabManager.TabSpriteLoadedEvent
+  nameWithType: NitroxPDATabManager.TabSpriteLoadedEvent
+  fullName: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+    name: NitroxPDATabManager
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+    name: TabSpriteLoadedEvent
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager
+    name: NitroxPDATabManager
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent
+    name: TabSpriteLoadedEvent
+    href: NitroxClient.GameLogic.HUD.NitroxPDATabManager.TabSpriteLoadedEvent.html
+- uid: NitroxClient.GameLogic.HUD.PlayerListTab
+  commentId: T:NitroxClient.GameLogic.HUD.PlayerListTab
+  href: NitroxClient.GameLogic.HUD.PlayerListTab.html
+  name: PlayerListTab
+  nameWithType: PlayerListTab
+  fullName: NitroxClient.GameLogic.HUD.PlayerListTab
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  commentId: T:NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  parent: NitroxClient.GameLogic.HUD
+  href: NitroxClient.GameLogic.HUD.PlayerVitalsManager.html
+  name: PlayerVitalsManager
+  nameWithType: PlayerVitalsManager
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+- uid: NitroxClient.GameLogic.HUD
+  commentId: N:NitroxClient.GameLogic.HUD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.HUD
+  nameWithType: NitroxClient.GameLogic.HUD
+  fullName: NitroxClient.GameLogic.HUD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+memberLayout: SeparatePages

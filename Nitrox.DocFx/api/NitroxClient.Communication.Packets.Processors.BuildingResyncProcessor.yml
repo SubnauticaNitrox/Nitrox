@@ -1,0 +1,1490 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  commentId: T:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  id: BuildingResyncProcessor
+  parent: NitroxClient.Communication.Packets.Processors
+  children:
+  - NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.#ctor(NitroxClient.GameLogic.Entities)
+  - NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren(Base)
+  - NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase(Base,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  - NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule(Constructable,NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity)
+  - NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process(NitroxModel.Packets.BuildingResync)
+  - NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities(System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity,System.Int32},System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity,System.Int32})
+  - NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities``2(System.Collections.Generic.List{``1},System.Func{``0,``1,System.Collections.IEnumerator},System.Func{``1,``0,System.Boolean})
+  langs:
+  - csharp
+  - vb
+  name: BuildingResyncProcessor
+  nameWithType: BuildingResyncProcessor
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: BuildingResyncProcessor
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 21
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  syntax:
+    content: 'public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>'
+    content.vb: Public Class BuildingResyncProcessor Inherits ClientPacketProcessor(Of BuildingResync)
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  - NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}
+  inheritedMembers:
+  - NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  - NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.#ctor(NitroxClient.GameLogic.Entities)
+  commentId: M:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.#ctor(NitroxClient.GameLogic.Entities)
+  id: '#ctor(NitroxClient.GameLogic.Entities)'
+  parent: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: BuildingResyncProcessor(Entities)
+  nameWithType: BuildingResyncProcessor.BuildingResyncProcessor(Entities)
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.BuildingResyncProcessor(NitroxClient.GameLogic.Entities)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 25
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  syntax:
+    content: public BuildingResyncProcessor(Entities entities)
+    parameters:
+    - id: entities
+      type: NitroxClient.GameLogic.Entities
+    content.vb: Public Sub New(entities As Entities)
+  overload: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.#ctor*
+  nameWithType.vb: BuildingResyncProcessor.New(Entities)
+  fullName.vb: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.New(NitroxClient.GameLogic.Entities)
+  name.vb: New(Entities)
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process(NitroxModel.Packets.BuildingResync)
+  commentId: M:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process(NitroxModel.Packets.BuildingResync)
+  id: Process(NitroxModel.Packets.BuildingResync)
+  parent: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: Process(BuildingResync)
+  nameWithType: BuildingResyncProcessor.Process(BuildingResync)
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process(NitroxModel.Packets.BuildingResync)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Process
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 30
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  example: []
+  syntax:
+    content: public override void Process(BuildingResync packet)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.BuildingResync
+    content.vb: Public Overrides Sub Process(packet As BuildingResync)
+  overridden: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.Process(NitroxModel.Packets.BuildingResync)
+  overload: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process*
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities(System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity,System.Int32},System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity,System.Int32})
+  commentId: M:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities(System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity,System.Int32},System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity,System.Int32})
+  id: ResyncBuildingEntities(System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity,System.Int32},System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity,System.Int32})
+  parent: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: ResyncBuildingEntities(Dictionary<BuildEntity, int>, Dictionary<ModuleEntity, int>)
+  nameWithType: BuildingResyncProcessor.ResyncBuildingEntities(Dictionary<BuildEntity, int>, Dictionary<ModuleEntity, int>)
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities(System.Collections.Generic.Dictionary<NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity, int>, System.Collections.Generic.Dictionary<NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity, int>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ResyncBuildingEntities
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 40
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  syntax:
+    content: public IEnumerator ResyncBuildingEntities(Dictionary<BuildEntity, int> buildEntities, Dictionary<ModuleEntity, int> moduleEntities)
+    parameters:
+    - id: buildEntities
+      type: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity,System.Int32}
+    - id: moduleEntities
+      type: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity,System.Int32}
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Function ResyncBuildingEntities(buildEntities As Dictionary(Of BuildEntity, Integer), moduleEntities As Dictionary(Of ModuleEntity, Integer)) As IEnumerator
+  overload: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities*
+  nameWithType.vb: BuildingResyncProcessor.ResyncBuildingEntities(Dictionary(Of BuildEntity, Integer), Dictionary(Of ModuleEntity, Integer))
+  fullName.vb: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities(System.Collections.Generic.Dictionary(Of NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity, Integer), System.Collections.Generic.Dictionary(Of NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity, Integer))
+  name.vb: ResyncBuildingEntities(Dictionary(Of BuildEntity, Integer), Dictionary(Of ModuleEntity, Integer))
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities``2(System.Collections.Generic.List{``1},System.Func{``0,``1,System.Collections.IEnumerator},System.Func{``1,``0,System.Boolean})
+  commentId: M:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities``2(System.Collections.Generic.List{``1},System.Func{``0,``1,System.Collections.IEnumerator},System.Func{``1,``0,System.Boolean})
+  id: UpdateEntities``2(System.Collections.Generic.List{``1},System.Func{``0,``1,System.Collections.IEnumerator},System.Func{``1,``0,System.Boolean})
+  parent: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: UpdateEntities<C, E>(List<E>, Func<C, E, IEnumerator>, Func<E, C, bool>)
+  nameWithType: BuildingResyncProcessor.UpdateEntities<C, E>(List<E>, Func<C, E, IEnumerator>, Func<E, C, bool>)
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities<C, E>(System.Collections.Generic.List<E>, System.Func<C, E, System.Collections.IEnumerator>, System.Func<E, C, bool>)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UpdateEntities
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 75
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  summary: >-
+    Tries to overwrite components of the provided type found in GlobalRoot's hierarchy by the provided list of entities to update.
+
+    If no component is found to be corresponding to a provided entity, the entity will be spawned independently.
+
+    Other components of the provided type which weren't updated shall be destroyed.
+  remarks: The provided list is modified by the function. Make sure it's not used somewhere else.
+  example: []
+  syntax:
+    content: 'public IEnumerator UpdateEntities<C, E>(List<E> entitiesToUpdate, Func<C, E, IEnumerator> overwrite, Func<E, C, bool> correspondingPredicate) where C : Component where E : GlobalRootEntity'
+    parameters:
+    - id: entitiesToUpdate
+      type: System.Collections.Generic.List{{E}}
+    - id: overwrite
+      type: System.Func{{C},{E},System.Collections.IEnumerator}
+      description: A function to overwrite a given component by a given entity
+    - id: correspondingPredicate
+      type: System.Func{{E},{C},System.Boolean}
+      description: Predicate to determine if an entity can overwrite the GameObject of the provided component.
+    typeParameters:
+    - id: C
+      description: The Unity component to be looked for
+    - id: E
+      description: The GlobalRootEntity type which will be updated
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Function UpdateEntities(Of C As Component, E As GlobalRootEntity)(entitiesToUpdate As List(Of E), overwrite As Func(Of C, E, IEnumerator), correspondingPredicate As Func(Of E, C, Boolean)) As IEnumerator
+  overload: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities*
+  nameWithType.vb: BuildingResyncProcessor.UpdateEntities(Of C, E)(List(Of E), Func(Of C, E, IEnumerator), Func(Of E, C, Boolean))
+  fullName.vb: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities(Of C, E)(System.Collections.Generic.List(Of E), System.Func(Of C, E, System.Collections.IEnumerator), System.Func(Of E, C, Boolean))
+  name.vb: UpdateEntities(Of C, E)(List(Of E), Func(Of C, E, IEnumerator), Func(Of E, C, Boolean))
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase(Base,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  commentId: M:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase(Base,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  id: OverwriteBase(Base,NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  parent: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: OverwriteBase(Base, BuildEntity)
+  nameWithType: BuildingResyncProcessor.OverwriteBase(Base, BuildEntity)
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase(Base, NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OverwriteBase
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 117
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  syntax:
+    content: public IEnumerator OverwriteBase(Base @base, BuildEntity buildEntity)
+    parameters:
+    - id: base
+      type: Base
+    - id: buildEntity
+      type: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Function OverwriteBase(base As Base, buildEntity As BuildEntity) As IEnumerator
+  overload: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase*
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule(Constructable,NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity)
+  commentId: M:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule(Constructable,NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity)
+  id: OverwriteModule(Constructable,NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity)
+  parent: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: OverwriteModule(Constructable, ModuleEntity)
+  nameWithType: BuildingResyncProcessor.OverwriteModule(Constructable, ModuleEntity)
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule(Constructable, NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OverwriteModule
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 130
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  syntax:
+    content: public IEnumerator OverwriteModule(Constructable constructable, ModuleEntity moduleEntity)
+    parameters:
+    - id: constructable
+      type: Constructable
+    - id: moduleEntity
+      type: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+    return:
+      type: System.Collections.IEnumerator
+    content.vb: Public Function OverwriteModule(constructable As Constructable, moduleEntity As ModuleEntity) As IEnumerator
+  overload: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule*
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren(Base)
+  commentId: M:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren(Base)
+  id: ClearBaseChildren(Base)
+  parent: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: ClearBaseChildren(Base)
+  nameWithType: BuildingResyncProcessor.ClearBaseChildren(Base)
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren(Base)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ClearBaseChildren
+    path: ../NitroxClient/Communication/Packets/Processors/BuildingResyncProcessor.cs
+    startLine: 143
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication.Packets.Processors
+  summary: Destroys manually ghosts, modules, interior pieces and vehicles of a base
+  remarks: This is the destructive way of clearing the base, if the base isn't modified consequently, IBaseModuleGeometry under the base cells may start spamming errors.
+  example: []
+  syntax:
+    content: public static void ClearBaseChildren(Base @base)
+    parameters:
+    - id: base
+      type: Base
+    content.vb: Public Shared Sub ClearBaseChildren(base As Base)
+  overload: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren*
+references:
+- uid: NitroxClient.Communication.Packets.Processors
+  commentId: N:NitroxClient.Communication.Packets.Processors
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Packets.Processors
+  nameWithType: NitroxClient.Communication.Packets.Processors
+  fullName: NitroxClient.Communication.Packets.Processors
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  commentId: T:NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  parent: NitroxModel.Packets.Processors.Abstract
+  href: NitroxModel.Packets.Processors.Abstract.PacketProcessor.html
+  name: PacketProcessor
+  nameWithType: PacketProcessor
+  fullName: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+- uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}
+  commentId: T:NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}
+  parent: NitroxClient.Communication.Packets.Processors.Abstract
+  definition: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+  href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.html
+  name: ClientPacketProcessor<BuildingResync>
+  nameWithType: ClientPacketProcessor<BuildingResync>
+  fullName: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor<NitroxModel.Packets.BuildingResync>
+  nameWithType.vb: ClientPacketProcessor(Of BuildingResync)
+  fullName.vb: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor(Of NitroxModel.Packets.BuildingResync)
+  name.vb: ClientPacketProcessor(Of BuildingResync)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+    name: ClientPacketProcessor
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.html
+  - name: <
+  - uid: NitroxModel.Packets.BuildingResync
+    name: BuildingResync
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+    name: ClientPacketProcessor
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Packets.BuildingResync
+    name: BuildingResync
+  - name: )
+- uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  commentId: M:NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  parent: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}
+  definition: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.ProcessPacket.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_ProcessPacket_NitroxModel_Packets_Packet_NitroxModel_Packets_Processors_Abstract_IProcessorContext_
+  name: ProcessPacket(Packet, IProcessorContext)
+  nameWithType: ClientPacketProcessor<BuildingResync>.ProcessPacket(Packet, IProcessorContext)
+  fullName: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor<NitroxModel.Packets.BuildingResync>.ProcessPacket(NitroxModel.Packets.Packet, NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  nameWithType.vb: ClientPacketProcessor(Of BuildingResync).ProcessPacket(Packet, IProcessorContext)
+  fullName.vb: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor(Of NitroxModel.Packets.BuildingResync).ProcessPacket(NitroxModel.Packets.Packet, NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+    name: ProcessPacket
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.ProcessPacket.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_ProcessPacket_NitroxModel_Packets_Packet_NitroxModel_Packets_Processors_Abstract_IProcessorContext_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+    name: IProcessorContext
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+    name: ProcessPacket
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.ProcessPacket.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_ProcessPacket_NitroxModel_Packets_Packet_NitroxModel_Packets_Processors_Abstract_IProcessorContext_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+    name: IProcessorContext
+  - name: )
+- uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+  commentId: M:NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+  parent: NitroxModel.Packets.Processors.Abstract.PacketProcessor
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: GetProcessors(Dictionary<Type, object>, Func<Type, bool>)
+  nameWithType: PacketProcessor.GetProcessors(Dictionary<Type, object>, Func<Type, bool>)
+  fullName: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary<System.Type, object>, System.Func<System.Type, bool>)
+  nameWithType.vb: PacketProcessor.GetProcessors(Dictionary(Of Type, Object), Func(Of Type, Boolean))
+  fullName.vb: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary(Of System.Type, Object), System.Func(Of System.Type, Boolean))
+  name.vb: GetProcessors(Dictionary(Of Type, Object), Func(Of Type, Boolean))
+  spec.csharp:
+  - uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+    name: GetProcessors
+  - name: (
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Processors.Abstract.PacketProcessor.GetProcessors(System.Collections.Generic.Dictionary{System.Type,System.Object},System.Func{System.Type,System.Boolean})
+    name: GetProcessors
+  - name: (
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.Processors.Abstract
+  commentId: N:NitroxModel.Packets.Processors.Abstract
+  href: NitroxModel.html
+  name: NitroxModel.Packets.Processors.Abstract
+  nameWithType: NitroxModel.Packets.Processors.Abstract
+  fullName: NitroxModel.Packets.Processors.Abstract
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxModel.Packets.Processors.Abstract.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors
+    name: Processors
+    href: NitroxModel.Packets.Processors.html
+  - name: .
+  - uid: NitroxModel.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxModel.Packets.Processors.Abstract.html
+- uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+  commentId: T:NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+  href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.html
+  name: ClientPacketProcessor<T>
+  nameWithType: ClientPacketProcessor<T>
+  fullName: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor<T>
+  nameWithType.vb: ClientPacketProcessor(Of T)
+  fullName.vb: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor(Of T)
+  name.vb: ClientPacketProcessor(Of T)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+    name: ClientPacketProcessor
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1
+    name: ClientPacketProcessor
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxClient.Communication.Packets.Processors.Abstract
+  commentId: N:NitroxClient.Communication.Packets.Processors.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Packets.Processors.Abstract
+  nameWithType: NitroxClient.Communication.Packets.Processors.Abstract
+  fullName: NitroxClient.Communication.Packets.Processors.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Packets.Processors.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets
+    name: Packets
+    href: NitroxClient.Communication.Packets.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors
+    name: Processors
+    href: NitroxClient.Communication.Packets.Processors.html
+  - name: .
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Packets.Processors.Abstract.html
+- uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  commentId: M:NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.ProcessPacket.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_ProcessPacket_NitroxModel_Packets_Packet_NitroxModel_Packets_Processors_Abstract_IProcessorContext_
+  name: ProcessPacket(Packet, IProcessorContext)
+  nameWithType: ClientPacketProcessor<T>.ProcessPacket(Packet, IProcessorContext)
+  fullName: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor<T>.ProcessPacket(NitroxModel.Packets.Packet, NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  nameWithType.vb: ClientPacketProcessor(Of T).ProcessPacket(Packet, IProcessorContext)
+  fullName.vb: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor(Of T).ProcessPacket(NitroxModel.Packets.Packet, NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+    name: ProcessPacket
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.ProcessPacket.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_ProcessPacket_NitroxModel_Packets_Packet_NitroxModel_Packets_Processors_Abstract_IProcessorContext_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+    name: IProcessorContext
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.ProcessPacket(NitroxModel.Packets.Packet,NitroxModel.Packets.Processors.Abstract.IProcessorContext)
+    name: ProcessPacket
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.ProcessPacket.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_ProcessPacket_NitroxModel_Packets_Packet_NitroxModel_Packets_Processors_Abstract_IProcessorContext_
+  - name: (
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Processors.Abstract.IProcessorContext
+    name: IProcessorContext
+  - name: )
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.#ctor*
+  commentId: Overload:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.#ctor
+  href: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.-ctor.html#NitroxClient_Communication_Packets_Processors_BuildingResyncProcessor__ctor_NitroxClient_GameLogic_Entities_
+  name: BuildingResyncProcessor
+  nameWithType: BuildingResyncProcessor.BuildingResyncProcessor
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.BuildingResyncProcessor
+  nameWithType.vb: BuildingResyncProcessor.New
+  fullName.vb: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.New
+  name.vb: New
+- uid: NitroxClient.GameLogic.Entities
+  commentId: T:NitroxClient.GameLogic.Entities
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Entities.html
+  name: Entities
+  nameWithType: Entities
+  fullName: NitroxClient.GameLogic.Entities
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+- uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.Process(NitroxModel.Packets.BuildingResync)
+  commentId: M:NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.Process(NitroxModel.Packets.BuildingResync)
+  parent: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}
+  definition: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.Process(`0)
+  href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.Process.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_Process__0_
+  name: Process(BuildingResync)
+  nameWithType: ClientPacketProcessor<BuildingResync>.Process(BuildingResync)
+  fullName: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor<NitroxModel.Packets.BuildingResync>.Process(NitroxModel.Packets.BuildingResync)
+  nameWithType.vb: ClientPacketProcessor(Of BuildingResync).Process(BuildingResync)
+  fullName.vb: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor(Of NitroxModel.Packets.BuildingResync).Process(NitroxModel.Packets.BuildingResync)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.Process(NitroxModel.Packets.BuildingResync)
+    name: Process
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.Process.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_Process__0_
+  - name: (
+  - uid: NitroxModel.Packets.BuildingResync
+    name: BuildingResync
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor{NitroxModel.Packets.BuildingResync}.Process(NitroxModel.Packets.BuildingResync)
+    name: Process
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.Process.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_Process__0_
+  - name: (
+  - uid: NitroxModel.Packets.BuildingResync
+    name: BuildingResync
+  - name: )
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process*
+  commentId: Overload:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process
+  href: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process.html#NitroxClient_Communication_Packets_Processors_BuildingResyncProcessor_Process_NitroxModel_Packets_BuildingResync_
+  name: Process
+  nameWithType: BuildingResyncProcessor.Process
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.Process
+- uid: NitroxModel.Packets.BuildingResync
+  commentId: T:NitroxModel.Packets.BuildingResync
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.BuildingResync.html
+  name: BuildingResync
+  nameWithType: BuildingResync
+  fullName: NitroxModel.Packets.BuildingResync
+- uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.Process(`0)
+  commentId: M:NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.Process(`0)
+  href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.Process.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_Process__0_
+  name: Process(T)
+  nameWithType: ClientPacketProcessor<T>.Process(T)
+  fullName: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor<T>.Process(T)
+  nameWithType.vb: ClientPacketProcessor(Of T).Process(T)
+  fullName.vb: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor(Of T).Process(T)
+  spec.csharp:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.Process(`0)
+    name: Process
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.Process.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_Process__0_
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor`1.Process(`0)
+    name: Process
+    href: NitroxClient.Communication.Packets.Processors.Abstract.ClientPacketProcessor-1.Process.html#NitroxClient_Communication_Packets_Processors_Abstract_ClientPacketProcessor_1_Process__0_
+  - name: (
+  - name: T
+  - name: )
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities*
+  commentId: Overload:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities
+  href: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities.html#NitroxClient_Communication_Packets_Processors_BuildingResyncProcessor_ResyncBuildingEntities_System_Collections_Generic_Dictionary_NitroxModel_DataStructures_GameLogic_Entities_Bases_BuildEntity_System_Int32__System_Collections_Generic_Dictionary_NitroxModel_DataStructures_GameLogic_Entities_Bases_ModuleEntity_System_Int32__
+  name: ResyncBuildingEntities
+  nameWithType: BuildingResyncProcessor.ResyncBuildingEntities
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ResyncBuildingEntities
+- uid: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<BuildEntity, int>
+  nameWithType: Dictionary<BuildEntity, int>
+  fullName: System.Collections.Generic.Dictionary<NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity, int>
+  nameWithType.vb: Dictionary(Of BuildEntity, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity, Integer)
+  name.vb: Dictionary(Of BuildEntity, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+    name: BuildEntity
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+    name: BuildEntity
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<ModuleEntity, int>
+  nameWithType: Dictionary<ModuleEntity, int>
+  fullName: System.Collections.Generic.Dictionary<NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity, int>
+  nameWithType.vb: Dictionary(Of ModuleEntity, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity, Integer)
+  name.vb: Dictionary(Of ModuleEntity, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+    name: ModuleEntity
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+    name: ModuleEntity
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.IEnumerator
+  commentId: T:System.Collections.IEnumerator
+  parent: System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerator
+  name: IEnumerator
+  nameWithType: IEnumerator
+  fullName: System.Collections.IEnumerator
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities*
+  commentId: Overload:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities
+  href: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities.html#NitroxClient_Communication_Packets_Processors_BuildingResyncProcessor_UpdateEntities__2_System_Collections_Generic_List___1__System_Func___0___1_System_Collections_IEnumerator__System_Func___1___0_System_Boolean__
+  name: UpdateEntities
+  nameWithType: BuildingResyncProcessor.UpdateEntities
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.UpdateEntities
+- uid: System.Collections.Generic.List{{E}}
+  commentId: T:System.Collections.Generic.List{``1}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<E>
+  nameWithType: List<E>
+  fullName: System.Collections.Generic.List<E>
+  nameWithType.vb: List(Of E)
+  fullName.vb: System.Collections.Generic.List(Of E)
+  name.vb: List(Of E)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: E
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: E
+  - name: )
+- uid: System.Func{{C},{E},System.Collections.IEnumerator}
+  commentId: T:System.Func{``0,``1,System.Collections.IEnumerator}
+  parent: System
+  definition: System.Func`3
+  href: https://learn.microsoft.com/dotnet/api/system.func-3
+  name: Func<C, E, IEnumerator>
+  nameWithType: Func<C, E, IEnumerator>
+  fullName: System.Func<C, E, System.Collections.IEnumerator>
+  nameWithType.vb: Func(Of C, E, IEnumerator)
+  fullName.vb: System.Func(Of C, E, System.Collections.IEnumerator)
+  name.vb: Func(Of C, E, IEnumerator)
+  spec.csharp:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: C
+  - name: ','
+  - name: " "
+  - name: E
+  - name: ','
+  - name: " "
+  - uid: System.Collections.IEnumerator
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerator
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: C
+  - name: ','
+  - name: " "
+  - name: E
+  - name: ','
+  - name: " "
+  - uid: System.Collections.IEnumerator
+    name: IEnumerator
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.ienumerator
+  - name: )
+- uid: System.Func{{E},{C},System.Boolean}
+  commentId: T:System.Func{``1,``0,System.Boolean}
+  parent: System
+  definition: System.Func`3
+  href: https://learn.microsoft.com/dotnet/api/system.func-3
+  name: Func<E, C, bool>
+  nameWithType: Func<E, C, bool>
+  fullName: System.Func<E, C, bool>
+  nameWithType.vb: Func(Of E, C, Boolean)
+  fullName.vb: System.Func(Of E, C, Boolean)
+  name.vb: Func(Of E, C, Boolean)
+  spec.csharp:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: E
+  - name: ','
+  - name: " "
+  - name: C
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: E
+  - name: ','
+  - name: " "
+  - name: C
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Func`3
+  commentId: T:System.Func`3
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-3
+  name: Func<T1, T2, TResult>
+  nameWithType: Func<T1, T2, TResult>
+  fullName: System.Func<T1, T2, TResult>
+  nameWithType.vb: Func(Of T1, T2, TResult)
+  fullName.vb: System.Func(Of T1, T2, TResult)
+  name.vb: Func(Of T1, T2, TResult)
+  spec.csharp:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`3
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-3
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase*
+  commentId: Overload:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase
+  href: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase.html#NitroxClient_Communication_Packets_Processors_BuildingResyncProcessor_OverwriteBase_Base_NitroxModel_DataStructures_GameLogic_Entities_Bases_BuildEntity_
+  name: OverwriteBase
+  nameWithType: BuildingResyncProcessor.OverwriteBase
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteBase
+- uid: Base
+  commentId: T:Base
+  isExternal: true
+  name: Base
+  nameWithType: Base
+  fullName: Base
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity.html
+  name: BuildEntity
+  nameWithType: BuildEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.BuildEntity
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities.Bases
+    name: Bases
+    href: NitroxModel.DataStructures.GameLogic.Entities.Bases.html
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule*
+  commentId: Overload:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule
+  href: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule.html#NitroxClient_Communication_Packets_Processors_BuildingResyncProcessor_OverwriteModule_Constructable_NitroxModel_DataStructures_GameLogic_Entities_Bases_ModuleEntity_
+  name: OverwriteModule
+  nameWithType: BuildingResyncProcessor.OverwriteModule
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.OverwriteModule
+- uid: Constructable
+  commentId: T:Constructable
+  isExternal: true
+  name: Constructable
+  nameWithType: Constructable
+  fullName: Constructable
+- uid: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities.Bases
+  href: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity.html
+  name: ModuleEntity
+  nameWithType: ModuleEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.Bases.ModuleEntity
+- uid: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren*
+  commentId: Overload:NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren
+  href: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren.html#NitroxClient_Communication_Packets_Processors_BuildingResyncProcessor_ClearBaseChildren_Base_
+  name: ClearBaseChildren
+  nameWithType: BuildingResyncProcessor.ClearBaseChildren
+  fullName: NitroxClient.Communication.Packets.Processors.BuildingResyncProcessor.ClearBaseChildren
+memberLayout: SeparatePages

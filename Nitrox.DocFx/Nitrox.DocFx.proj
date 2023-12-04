@@ -1,0 +1,11 @@
+<Project ToolsVersion="4.0" DefaultTargets="BuildDocs" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PackageReference Include="Docfx" Version="2.74.1"/>
+  </ItemGroup>
+  <Target Name="DotnetToolRestore" BeforeTargets="BuildDocs">
+    <Exec Command="dotnet tool restore"/>
+  </Target>
+  <Target Name="BuildDocs">
+    <Exec Command="dotnet docfx"/>
+  </Target>
+</Project>

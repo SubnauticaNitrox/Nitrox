@@ -1,0 +1,925 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  commentId: T:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  id: CyclopsDamageInfoData
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic
+  children:
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},System.Single,System.Single,NitroxModel.DataStructures.Unity.NitroxVector3,DamageType)
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString
+  - NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type
+  langs:
+  - csharp
+  - vb
+  name: CyclopsDamageInfoData
+  nameWithType: CyclopsDamageInfoData
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  type: Class
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CyclopsDamageInfoData
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [Serializable]
+
+      [DataContract]
+
+      public class CyclopsDamageInfoData
+    content.vb: >-
+      <Serializable>
+
+      <DataContract>
+
+      Public Class CyclopsDamageInfoData
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+  - type: System.Runtime.Serialization.DataContractAttribute
+    ctor: System.Runtime.Serialization.DataContractAttribute.#ctor
+    arguments: []
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId
+  commentId: P:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId
+  id: ReceiverId
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: ReceiverId
+  nameWithType: CyclopsDamageInfoData.ReceiverId
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReceiverId
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 1)]
+
+      public NitroxId ReceiverId { get; set; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: >-
+      <DataMember(Order:=1)>
+
+      Public Property ReceiverId As NitroxId
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 1
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId
+  commentId: P:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId
+  id: DealerId
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: DealerId
+  nameWithType: CyclopsDamageInfoData.DealerId
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DealerId
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 2)]
+
+      public Optional<NitroxId> DealerId { get; set; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+    content.vb: >-
+      <DataMember(Order:=2)>
+
+      Public Property DealerId As [Optional](Of NitroxId)
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 2
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage
+  commentId: P:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage
+  id: OriginalDamage
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: OriginalDamage
+  nameWithType: CyclopsDamageInfoData.OriginalDamage
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OriginalDamage
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 3)]
+
+      public float OriginalDamage { get; set; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=3)>
+
+      Public Property OriginalDamage As Single
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 3
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage
+  commentId: P:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage
+  id: Damage
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: Damage
+  nameWithType: CyclopsDamageInfoData.Damage
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Damage
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 4)]
+
+      public float Damage { get; set; }
+    parameters: []
+    return:
+      type: System.Single
+    content.vb: >-
+      <DataMember(Order:=4)>
+
+      Public Property Damage As Single
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 4
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position
+  commentId: P:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position
+  id: Position
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: CyclopsDamageInfoData.Position
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Position
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 24
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 5)]
+
+      public NitroxVector3 Position { get; set; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    content.vb: >-
+      <DataMember(Order:=5)>
+
+      Public Property Position As NitroxVector3
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 5
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type
+  commentId: P:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type
+  id: Type
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: CyclopsDamageInfoData.Type
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type
+  type: Property
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Type
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: >-
+      [DataMember(Order = 6)]
+
+      public DamageType Type { get; set; }
+    parameters: []
+    return:
+      type: DamageType
+    content.vb: >-
+      <DataMember(Order:=6)>
+
+      Public Property Type As DamageType
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type*
+  attributes:
+  - type: System.Runtime.Serialization.DataMemberAttribute
+    ctor: System.Runtime.Serialization.DataMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: 6
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor
+  commentId: M:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor
+  id: '#ctor'
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: CyclopsDamageInfoData()
+  nameWithType: CyclopsDamageInfoData.CyclopsDamageInfoData()
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.CyclopsDamageInfoData()
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 30
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: protected CyclopsDamageInfoData()
+    content.vb: Protected Sub New()
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor*
+  nameWithType.vb: CyclopsDamageInfoData.New()
+  fullName.vb: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.New()
+  name.vb: New()
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},System.Single,System.Single,NitroxModel.DataStructures.Unity.NitroxVector3,DamageType)
+  commentId: M:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},System.Single,System.Single,NitroxModel.DataStructures.Unity.NitroxVector3,DamageType)
+  id: '#ctor(NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId},System.Single,System.Single,NitroxModel.DataStructures.Unity.NitroxVector3,DamageType)'
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: CyclopsDamageInfoData(NitroxId, Optional<NitroxId>, float, float, NitroxVector3, DamageType)
+  nameWithType: CyclopsDamageInfoData.CyclopsDamageInfoData(NitroxId, Optional<NitroxId>, float, float, NitroxVector3, DamageType)
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.CyclopsDamageInfoData(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>, float, float, NitroxModel.DataStructures.Unity.NitroxVector3, DamageType)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 35
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  syntax:
+    content: public CyclopsDamageInfoData(NitroxId receiverId, Optional<NitroxId> dealerId, float originalDamage, float damage, NitroxVector3 position, DamageType type)
+    parameters:
+    - id: receiverId
+      type: NitroxModel.DataStructures.NitroxId
+    - id: dealerId
+      type: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+    - id: originalDamage
+      type: System.Single
+    - id: damage
+      type: System.Single
+    - id: position
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: type
+      type: DamageType
+    content.vb: Public Sub New(receiverId As NitroxId, dealerId As [Optional](Of NitroxId), originalDamage As Single, damage As Single, position As NitroxVector3, type As DamageType)
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor*
+  nameWithType.vb: CyclopsDamageInfoData.New(NitroxId, Optional(Of NitroxId), Single, Single, NitroxVector3, DamageType)
+  fullName.vb: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.New(NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId), Single, Single, NitroxModel.DataStructures.Unity.NitroxVector3, DamageType)
+  name.vb: New(NitroxId, Optional(Of NitroxId), Single, Single, NitroxVector3, DamageType)
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString
+  commentId: M:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString
+  id: ToString
+  parent: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: CyclopsDamageInfoData.ToString()
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel-Subnautica/DataStructures/GameLogic/CyclopsDamageInfoData.cs
+    startLine: 45
+  assemblies:
+  - NitroxModel-Subnautica
+  namespace: NitroxModel_Subnautica.DataStructures.GameLogic
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.Object.ToString
+  overload: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString*
+references:
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic
+  commentId: N:NitroxModel_Subnautica.DataStructures.GameLogic
+  href: NitroxModel_Subnautica.html
+  name: NitroxModel_Subnautica.DataStructures.GameLogic
+  nameWithType: NitroxModel_Subnautica.DataStructures.GameLogic
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel_Subnautica
+    name: NitroxModel_Subnautica
+    href: NitroxModel_Subnautica.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures
+    name: DataStructures
+    href: NitroxModel_Subnautica.DataStructures.html
+  - name: .
+  - uid: NitroxModel_Subnautica.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel_Subnautica.DataStructures.GameLogic.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData_ReceiverId
+  name: ReceiverId
+  nameWithType: CyclopsDamageInfoData.ReceiverId
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ReceiverId
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData_DealerId
+  name: DealerId
+  nameWithType: CyclopsDamageInfoData.DealerId
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.DealerId
+- uid: NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+  commentId: T:NitroxModel.DataStructures.Util.Optional{NitroxModel.DataStructures.NitroxId}
+  parent: NitroxModel.DataStructures.Util
+  definition: NitroxModel.DataStructures.Util.Optional`1
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<NitroxId>
+  nameWithType: Optional<NitroxId>
+  fullName: NitroxModel.DataStructures.Util.Optional<NitroxModel.DataStructures.NitroxId>
+  nameWithType.vb: Optional(Of NitroxId)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of NitroxModel.DataStructures.NitroxId)
+  name.vb: Optional(Of NitroxId)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxId
+    name: NitroxId
+    href: NitroxModel.DataStructures.NitroxId.html
+  - name: )
+- uid: NitroxModel.DataStructures.Util.Optional`1
+  commentId: T:NitroxModel.DataStructures.Util.Optional`1
+  parent: NitroxModel.DataStructures.Util
+  href: NitroxModel.DataStructures.Util.Optional-1.html
+  name: Optional<T>
+  nameWithType: Optional<T>
+  fullName: NitroxModel.DataStructures.Util.Optional<T>
+  nameWithType.vb: Optional(Of T)
+  fullName.vb: NitroxModel.DataStructures.Util.Optional(Of T)
+  name.vb: Optional(Of T)
+  spec.csharp:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: NitroxModel.DataStructures.Util.Optional`1
+    name: Optional
+    href: NitroxModel.DataStructures.Util.Optional-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.DataStructures.Util
+  commentId: N:NitroxModel.DataStructures.Util
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Util
+  nameWithType: NitroxModel.DataStructures.Util
+  fullName: NitroxModel.DataStructures.Util
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Util
+    name: Util
+    href: NitroxModel.DataStructures.Util.html
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData_OriginalDamage
+  name: OriginalDamage
+  nameWithType: CyclopsDamageInfoData.OriginalDamage
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.OriginalDamage
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData_Damage
+  name: Damage
+  nameWithType: CyclopsDamageInfoData.Damage
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Damage
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData_Position
+  name: Position
+  nameWithType: CyclopsDamageInfoData.Position
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Position
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData_Type
+  name: Type
+  nameWithType: CyclopsDamageInfoData.Type
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.Type
+- uid: DamageType
+  commentId: T:DamageType
+  isExternal: true
+  name: DamageType
+  nameWithType: DamageType
+  fullName: DamageType
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.#ctor
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.-ctor.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData__ctor
+  name: CyclopsDamageInfoData
+  nameWithType: CyclopsDamageInfoData.CyclopsDamageInfoData
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.CyclopsDamageInfoData
+  nameWithType.vb: CyclopsDamageInfoData.New
+  fullName.vb: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.New
+  name.vb: New
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString*
+  commentId: Overload:NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString
+  href: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString.html#NitroxModel_Subnautica_DataStructures_GameLogic_CyclopsDamageInfoData_ToString
+  name: ToString
+  nameWithType: CyclopsDamageInfoData.ToString
+  fullName: NitroxModel_Subnautica.DataStructures.GameLogic.CyclopsDamageInfoData.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

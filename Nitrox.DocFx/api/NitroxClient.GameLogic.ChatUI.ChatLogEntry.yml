@@ -1,0 +1,597 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  commentId: T:NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  id: ChatLogEntry
+  parent: NitroxClient.GameLogic.ChatUI
+  children:
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry.#ctor(System.String,System.String,UnityEngine.Color32)
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time
+  - NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime
+  langs:
+  - csharp
+  - vb
+  name: ChatLogEntry
+  nameWithType: ChatLogEntry
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ChatLogEntry
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 5
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public class ChatLogEntry
+    content.vb: Public Class ChatLogEntry
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName
+  commentId: P:NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName
+  id: PlayerName
+  parent: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  langs:
+  - csharp
+  - vb
+  name: PlayerName
+  nameWithType: ChatLogEntry.PlayerName
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerName
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public string PlayerName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property PlayerName As String
+  overload: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName*
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText
+  commentId: P:NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText
+  id: MessageText
+  parent: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  langs:
+  - csharp
+  - vb
+  name: MessageText
+  nameWithType: ChatLogEntry.MessageText
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: MessageText
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 8
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public string MessageText { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property MessageText As String
+  overload: NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText*
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor
+  commentId: P:NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor
+  id: PlayerColor
+  parent: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  langs:
+  - csharp
+  - vb
+  name: PlayerColor
+  nameWithType: ChatLogEntry.PlayerColor
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerColor
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 9
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public Color32 PlayerColor { get; }
+    parameters: []
+    return:
+      type: UnityEngine.Color32
+    content.vb: Public ReadOnly Property PlayerColor As Color32
+  overload: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor*
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time
+  commentId: P:NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time
+  id: Time
+  parent: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  langs:
+  - csharp
+  - vb
+  name: Time
+  nameWithType: ChatLogEntry.Time
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Time
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public string Time { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Time As String
+  overload: NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time*
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject
+  commentId: P:NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject
+  id: EntryObject
+  parent: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  langs:
+  - csharp
+  - vb
+  name: EntryObject
+  nameWithType: ChatLogEntry.EntryObject
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EntryObject
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public GameObject EntryObject { get; set; }
+    parameters: []
+    return:
+      type: UnityEngine.GameObject
+    content.vb: Public Property EntryObject As GameObject
+  overload: NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject*
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.#ctor(System.String,System.String,UnityEngine.Color32)
+  commentId: M:NitroxClient.GameLogic.ChatUI.ChatLogEntry.#ctor(System.String,System.String,UnityEngine.Color32)
+  id: '#ctor(System.String,System.String,UnityEngine.Color32)'
+  parent: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  langs:
+  - csharp
+  - vb
+  name: ChatLogEntry(string, string, Color32)
+  nameWithType: ChatLogEntry.ChatLogEntry(string, string, Color32)
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.ChatLogEntry(string, string, UnityEngine.Color32)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 13
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public ChatLogEntry(string playerName, string messageText, Color32 playerColor)
+    parameters:
+    - id: playerName
+      type: System.String
+    - id: messageText
+      type: System.String
+    - id: playerColor
+      type: UnityEngine.Color32
+    content.vb: Public Sub New(playerName As String, messageText As String, playerColor As Color32)
+  overload: NitroxClient.GameLogic.ChatUI.ChatLogEntry.#ctor*
+  nameWithType.vb: ChatLogEntry.New(String, String, Color32)
+  fullName.vb: NitroxClient.GameLogic.ChatUI.ChatLogEntry.New(String, String, UnityEngine.Color32)
+  name.vb: New(String, String, Color32)
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime
+  commentId: M:NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime
+  id: UpdateTime
+  parent: NitroxClient.GameLogic.ChatUI.ChatLogEntry
+  langs:
+  - csharp
+  - vb
+  name: UpdateTime()
+  nameWithType: ChatLogEntry.UpdateTime()
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UpdateTime
+    path: ../NitroxClient/GameLogic/ChatUI/ChatLogEntry.cs
+    startLine: 21
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.ChatUI
+  syntax:
+    content: public void UpdateTime()
+    content.vb: Public Sub UpdateTime()
+  overload: NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime*
+references:
+- uid: NitroxClient.GameLogic.ChatUI
+  commentId: N:NitroxClient.GameLogic.ChatUI
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.ChatUI
+  nameWithType: NitroxClient.GameLogic.ChatUI
+  fullName: NitroxClient.GameLogic.ChatUI
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.ChatUI
+    name: ChatUI
+    href: NitroxClient.GameLogic.ChatUI.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.ChatUI
+    name: ChatUI
+    href: NitroxClient.GameLogic.ChatUI.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName*
+  commentId: Overload:NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName.html#NitroxClient_GameLogic_ChatUI_ChatLogEntry_PlayerName
+  name: PlayerName
+  nameWithType: ChatLogEntry.PlayerName
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText*
+  commentId: Overload:NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText.html#NitroxClient_GameLogic_ChatUI_ChatLogEntry_MessageText
+  name: MessageText
+  nameWithType: ChatLogEntry.MessageText
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.MessageText
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor*
+  commentId: Overload:NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor.html#NitroxClient_GameLogic_ChatUI_ChatLogEntry_PlayerColor
+  name: PlayerColor
+  nameWithType: ChatLogEntry.PlayerColor
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.PlayerColor
+- uid: UnityEngine.Color32
+  commentId: T:UnityEngine.Color32
+  parent: UnityEngine
+  isExternal: true
+  name: Color32
+  nameWithType: Color32
+  fullName: UnityEngine.Color32
+- uid: UnityEngine
+  commentId: N:UnityEngine
+  isExternal: true
+  name: UnityEngine
+  nameWithType: UnityEngine
+  fullName: UnityEngine
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time*
+  commentId: Overload:NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time.html#NitroxClient_GameLogic_ChatUI_ChatLogEntry_Time
+  name: Time
+  nameWithType: ChatLogEntry.Time
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.Time
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject*
+  commentId: Overload:NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject.html#NitroxClient_GameLogic_ChatUI_ChatLogEntry_EntryObject
+  name: EntryObject
+  nameWithType: ChatLogEntry.EntryObject
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.EntryObject
+- uid: UnityEngine.GameObject
+  commentId: T:UnityEngine.GameObject
+  parent: UnityEngine
+  isExternal: true
+  name: GameObject
+  nameWithType: GameObject
+  fullName: UnityEngine.GameObject
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.ChatUI.ChatLogEntry.#ctor
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.-ctor.html#NitroxClient_GameLogic_ChatUI_ChatLogEntry__ctor_System_String_System_String_UnityEngine_Color32_
+  name: ChatLogEntry
+  nameWithType: ChatLogEntry.ChatLogEntry
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.ChatLogEntry
+  nameWithType.vb: ChatLogEntry.New
+  fullName.vb: NitroxClient.GameLogic.ChatUI.ChatLogEntry.New
+  name.vb: New
+- uid: NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime*
+  commentId: Overload:NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime
+  href: NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime.html#NitroxClient_GameLogic_ChatUI_ChatLogEntry_UpdateTime
+  name: UpdateTime
+  nameWithType: ChatLogEntry.UpdateTime
+  fullName: NitroxClient.GameLogic.ChatUI.ChatLogEntry.UpdateTime
+memberLayout: SeparatePages

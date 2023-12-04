@@ -1,0 +1,369 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory
+  id: ImageDataDirectory
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  children:
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.Size
+  - NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.VirtualAddress
+  langs:
+  - csharp
+  - vb
+  name: ImageDataDirectory
+  nameWithType: ImageDataDirectory
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory
+  type: Struct
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/OptionalHeader64.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ImageDataDirectory
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/OptionalHeader64.cs
+    startLine: 74
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public struct ImageDataDirectory
+    content.vb: Public Structure ImageDataDirectory
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.VirtualAddress
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.VirtualAddress
+  id: VirtualAddress
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory
+  langs:
+  - csharp
+  - vb
+  name: VirtualAddress
+  nameWithType: ImageDataDirectory.VirtualAddress
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.VirtualAddress
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/OptionalHeader64.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: VirtualAddress
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/OptionalHeader64.cs
+    startLine: 80
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  summary: Location of the data in this directory. Add this value to the base address of the image to get the real address.
+  example: []
+  syntax:
+    content: public uint VirtualAddress
+    return:
+      type: System.UInt32
+    content.vb: Public VirtualAddress As UInteger
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.Size
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.Size
+  id: Size
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory
+  langs:
+  - csharp
+  - vb
+  name: Size
+  nameWithType: ImageDataDirectory.Size
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ImageDataDirectory.Size
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/OptionalHeader64.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Size
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/OptionalHeader64.cs
+    startLine: 82
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: public uint Size
+    return:
+      type: System.UInt32
+    content.vb: Public Size As UInteger
+references:
+- uid: NitroxModel.Platforms.OS.Windows.Internal
+  commentId: N:NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Windows.Internal
+  nameWithType: NitroxModel.Platforms.OS.Windows.Internal
+  fullName: NitroxModel.Platforms.OS.Windows.Internal
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+memberLayout: SeparatePages

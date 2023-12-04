@@ -1,0 +1,526 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.PacketReceiver
+  commentId: T:NitroxClient.Communication.PacketReceiver
+  id: PacketReceiver
+  parent: NitroxClient.Communication
+  children:
+  - NitroxClient.Communication.PacketReceiver.Add(NitroxModel.Packets.Packet)
+  - NitroxClient.Communication.PacketReceiver.ConsumePackets``1(System.Action{NitroxModel.Packets.Packet,``0},``0)
+  - NitroxClient.Communication.PacketReceiver.GetNextPacket
+  langs:
+  - csharp
+  - vb
+  name: PacketReceiver
+  nameWithType: PacketReceiver
+  fullName: NitroxClient.Communication.PacketReceiver
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Communication/PacketReceiver.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PacketReceiver
+    path: ../NitroxClient/Communication/PacketReceiver.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication
+  syntax:
+    content: public class PacketReceiver
+    content.vb: Public Class PacketReceiver
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Communication.PacketReceiver.Add(NitroxModel.Packets.Packet)
+  commentId: M:NitroxClient.Communication.PacketReceiver.Add(NitroxModel.Packets.Packet)
+  id: Add(NitroxModel.Packets.Packet)
+  parent: NitroxClient.Communication.PacketReceiver
+  langs:
+  - csharp
+  - vb
+  name: Add(Packet)
+  nameWithType: PacketReceiver.Add(Packet)
+  fullName: NitroxClient.Communication.PacketReceiver.Add(NitroxModel.Packets.Packet)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/PacketReceiver.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Add
+    path: ../NitroxClient/Communication/PacketReceiver.cs
+    startLine: 11
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication
+  syntax:
+    content: public void Add(Packet packet)
+    parameters:
+    - id: packet
+      type: NitroxModel.Packets.Packet
+    content.vb: Public Sub Add(packet As Packet)
+  overload: NitroxClient.Communication.PacketReceiver.Add*
+- uid: NitroxClient.Communication.PacketReceiver.GetNextPacket
+  commentId: M:NitroxClient.Communication.PacketReceiver.GetNextPacket
+  id: GetNextPacket
+  parent: NitroxClient.Communication.PacketReceiver
+  langs:
+  - csharp
+  - vb
+  name: GetNextPacket()
+  nameWithType: PacketReceiver.GetNextPacket()
+  fullName: NitroxClient.Communication.PacketReceiver.GetNextPacket()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/PacketReceiver.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GetNextPacket
+    path: ../NitroxClient/Communication/PacketReceiver.cs
+    startLine: 19
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication
+  syntax:
+    content: public Packet GetNextPacket()
+    return:
+      type: NitroxModel.Packets.Packet
+    content.vb: Public Function GetNextPacket() As Packet
+  overload: NitroxClient.Communication.PacketReceiver.GetNextPacket*
+- uid: NitroxClient.Communication.PacketReceiver.ConsumePackets``1(System.Action{NitroxModel.Packets.Packet,``0},``0)
+  commentId: M:NitroxClient.Communication.PacketReceiver.ConsumePackets``1(System.Action{NitroxModel.Packets.Packet,``0},``0)
+  id: ConsumePackets``1(System.Action{NitroxModel.Packets.Packet,``0},``0)
+  parent: NitroxClient.Communication.PacketReceiver
+  langs:
+  - csharp
+  - vb
+  name: ConsumePackets<TExtra>(Action<Packet, TExtra>, TExtra)
+  nameWithType: PacketReceiver.ConsumePackets<TExtra>(Action<Packet, TExtra>, TExtra)
+  fullName: NitroxClient.Communication.PacketReceiver.ConsumePackets<TExtra>(System.Action<NitroxModel.Packets.Packet, TExtra>, TExtra)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Communication/PacketReceiver.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ConsumePackets
+    path: ../NitroxClient/Communication/PacketReceiver.cs
+    startLine: 30
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Communication
+  summary: Applies an operation on each packet waiting to be processed and removes it from the queue.
+  example: []
+  syntax:
+    content: public void ConsumePackets<TExtra>(Action<Packet, TExtra> consumer, TExtra extraParameter)
+    parameters:
+    - id: consumer
+      type: System.Action{NitroxModel.Packets.Packet,{TExtra}}
+    - id: extraParameter
+      type: '{TExtra}'
+    typeParameters:
+    - id: TExtra
+    content.vb: Public Sub ConsumePackets(Of TExtra)(consumer As Action(Of Packet, TExtra), extraParameter As TExtra)
+  overload: NitroxClient.Communication.PacketReceiver.ConsumePackets*
+  nameWithType.vb: PacketReceiver.ConsumePackets(Of TExtra)(Action(Of Packet, TExtra), TExtra)
+  fullName.vb: NitroxClient.Communication.PacketReceiver.ConsumePackets(Of TExtra)(System.Action(Of NitroxModel.Packets.Packet, TExtra), TExtra)
+  name.vb: ConsumePackets(Of TExtra)(Action(Of Packet, TExtra), TExtra)
+references:
+- uid: NitroxClient.Communication
+  commentId: N:NitroxClient.Communication
+  href: NitroxClient.html
+  name: NitroxClient.Communication
+  nameWithType: NitroxClient.Communication
+  fullName: NitroxClient.Communication
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Communication.PacketReceiver.Add*
+  commentId: Overload:NitroxClient.Communication.PacketReceiver.Add
+  href: NitroxClient.Communication.PacketReceiver.Add.html#NitroxClient_Communication_PacketReceiver_Add_NitroxModel_Packets_Packet_
+  name: Add
+  nameWithType: PacketReceiver.Add
+  fullName: NitroxClient.Communication.PacketReceiver.Add
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: NitroxClient.Communication.PacketReceiver.GetNextPacket*
+  commentId: Overload:NitroxClient.Communication.PacketReceiver.GetNextPacket
+  href: NitroxClient.Communication.PacketReceiver.GetNextPacket.html#NitroxClient_Communication_PacketReceiver_GetNextPacket
+  name: GetNextPacket
+  nameWithType: PacketReceiver.GetNextPacket
+  fullName: NitroxClient.Communication.PacketReceiver.GetNextPacket
+- uid: NitroxClient.Communication.PacketReceiver.ConsumePackets*
+  commentId: Overload:NitroxClient.Communication.PacketReceiver.ConsumePackets
+  href: NitroxClient.Communication.PacketReceiver.ConsumePackets.html#NitroxClient_Communication_PacketReceiver_ConsumePackets__1_System_Action_NitroxModel_Packets_Packet___0____0_
+  name: ConsumePackets
+  nameWithType: PacketReceiver.ConsumePackets
+  fullName: NitroxClient.Communication.PacketReceiver.ConsumePackets
+- uid: System.Action{NitroxModel.Packets.Packet,{TExtra}}
+  commentId: T:System.Action{NitroxModel.Packets.Packet,``0}
+  parent: System
+  definition: System.Action`2
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<Packet, TExtra>
+  nameWithType: Action<Packet, TExtra>
+  fullName: System.Action<NitroxModel.Packets.Packet, TExtra>
+  nameWithType.vb: Action(Of Packet, TExtra)
+  fullName.vb: System.Action(Of NitroxModel.Packets.Packet, TExtra)
+  name.vb: Action(Of Packet, TExtra)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - name: TExtra
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: ','
+  - name: " "
+  - name: TExtra
+  - name: )
+- uid: '{TExtra}'
+  commentId: '!:TExtra'
+  definition: TExtra
+  name: TExtra
+  nameWithType: TExtra
+  fullName: TExtra
+- uid: System.Action`2
+  commentId: T:System.Action`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-2
+  name: Action<T1, T2>
+  nameWithType: Action<T1, T2>
+  fullName: System.Action<T1, T2>
+  nameWithType.vb: Action(Of T1, T2)
+  fullName.vb: System.Action(Of T1, T2)
+  name.vb: Action(Of T1, T2)
+  spec.csharp:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: <
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`2
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T1
+  - name: ','
+  - name: " "
+  - name: T2
+  - name: )
+- uid: TExtra
+  commentId: '!:TExtra'
+  name: TExtra
+  nameWithType: TExtra
+  fullName: TExtra
+memberLayout: SeparatePages

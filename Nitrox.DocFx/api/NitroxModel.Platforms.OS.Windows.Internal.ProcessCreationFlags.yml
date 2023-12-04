@@ -1,0 +1,644 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  id: ProcessCreationFlags
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  children:
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_BREAKAWAY_FROM_JOB
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_DEFAULT_ERROR_MODE
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_CONSOLE
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_PROCESS_GROUP
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NO_WINDOW
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PROTECTED_PROCESS
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SECURE_PROCESS
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SEPARATE_WOW_VDM
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SHARED_WOW_VDM
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SUSPENDED
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_UNICODE_ENVIRONMENT
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_ONLY_THIS_PROCESS
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_PROCESS
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DETACHED_PROCESS
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.EXTENDED_STARTUPINFO_PRESENT
+  - NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.INHERIT_PARENT_AFFINITY
+  langs:
+  - csharp
+  - vb
+  name: ProcessCreationFlags
+  nameWithType: ProcessCreationFlags
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  type: Enum
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ProcessCreationFlags
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum ProcessCreationFlags : uint
+    content.vb: >-
+      <Flags>
+
+      Public Enum ProcessCreationFlags As UInteger
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_BREAKAWAY_FROM_JOB
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_BREAKAWAY_FROM_JOB
+  id: CREATE_BREAKAWAY_FROM_JOB
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_BREAKAWAY_FROM_JOB
+  nameWithType: ProcessCreationFlags.CREATE_BREAKAWAY_FROM_JOB
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_BREAKAWAY_FROM_JOB
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_BREAKAWAY_FROM_JOB
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_BREAKAWAY_FROM_JOB = 16777216
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_DEFAULT_ERROR_MODE
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_DEFAULT_ERROR_MODE
+  id: CREATE_DEFAULT_ERROR_MODE
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_DEFAULT_ERROR_MODE
+  nameWithType: ProcessCreationFlags.CREATE_DEFAULT_ERROR_MODE
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_DEFAULT_ERROR_MODE
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_DEFAULT_ERROR_MODE
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_DEFAULT_ERROR_MODE = 67108864
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_PROCESS_GROUP
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_PROCESS_GROUP
+  id: CREATE_NEW_PROCESS_GROUP
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_NEW_PROCESS_GROUP
+  nameWithType: ProcessCreationFlags.CREATE_NEW_PROCESS_GROUP
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_PROCESS_GROUP
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_NEW_PROCESS_GROUP
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_NEW_PROCESS_GROUP = 512
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_CONSOLE
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_CONSOLE
+  id: CREATE_NEW_CONSOLE
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_NEW_CONSOLE
+  nameWithType: ProcessCreationFlags.CREATE_NEW_CONSOLE
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NEW_CONSOLE
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_NEW_CONSOLE
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_NEW_CONSOLE = 16
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NO_WINDOW
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NO_WINDOW
+  id: CREATE_NO_WINDOW
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_NO_WINDOW
+  nameWithType: ProcessCreationFlags.CREATE_NO_WINDOW
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_NO_WINDOW
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_NO_WINDOW
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_NO_WINDOW = 134217728
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PROTECTED_PROCESS
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PROTECTED_PROCESS
+  id: CREATE_PROTECTED_PROCESS
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_PROTECTED_PROCESS
+  nameWithType: ProcessCreationFlags.CREATE_PROTECTED_PROCESS
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PROTECTED_PROCESS
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_PROTECTED_PROCESS
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_PROTECTED_PROCESS = 262144
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+  id: CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+  nameWithType: ProcessCreationFlags.CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_PRESERVE_CODE_AUTHZ_LEVEL
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 13
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_PRESERVE_CODE_AUTHZ_LEVEL = 33554432
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SECURE_PROCESS
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SECURE_PROCESS
+  id: CREATE_SECURE_PROCESS
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_SECURE_PROCESS
+  nameWithType: ProcessCreationFlags.CREATE_SECURE_PROCESS
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SECURE_PROCESS
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_SECURE_PROCESS
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 14
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_SECURE_PROCESS = 4194304
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SEPARATE_WOW_VDM
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SEPARATE_WOW_VDM
+  id: CREATE_SEPARATE_WOW_VDM
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_SEPARATE_WOW_VDM
+  nameWithType: ProcessCreationFlags.CREATE_SEPARATE_WOW_VDM
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SEPARATE_WOW_VDM
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_SEPARATE_WOW_VDM
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_SEPARATE_WOW_VDM = 2048
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SHARED_WOW_VDM
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SHARED_WOW_VDM
+  id: CREATE_SHARED_WOW_VDM
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_SHARED_WOW_VDM
+  nameWithType: ProcessCreationFlags.CREATE_SHARED_WOW_VDM
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SHARED_WOW_VDM
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_SHARED_WOW_VDM
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 16
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_SHARED_WOW_VDM = 4096
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SUSPENDED
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SUSPENDED
+  id: CREATE_SUSPENDED
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_SUSPENDED
+  nameWithType: ProcessCreationFlags.CREATE_SUSPENDED
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_SUSPENDED
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_SUSPENDED
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 17
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_SUSPENDED = 4
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_UNICODE_ENVIRONMENT
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_UNICODE_ENVIRONMENT
+  id: CREATE_UNICODE_ENVIRONMENT
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: CREATE_UNICODE_ENVIRONMENT
+  nameWithType: ProcessCreationFlags.CREATE_UNICODE_ENVIRONMENT
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.CREATE_UNICODE_ENVIRONMENT
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CREATE_UNICODE_ENVIRONMENT
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: CREATE_UNICODE_ENVIRONMENT = 1024
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_ONLY_THIS_PROCESS
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_ONLY_THIS_PROCESS
+  id: DEBUG_ONLY_THIS_PROCESS
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: DEBUG_ONLY_THIS_PROCESS
+  nameWithType: ProcessCreationFlags.DEBUG_ONLY_THIS_PROCESS
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_ONLY_THIS_PROCESS
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DEBUG_ONLY_THIS_PROCESS
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 19
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: DEBUG_ONLY_THIS_PROCESS = 2
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_PROCESS
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_PROCESS
+  id: DEBUG_PROCESS
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: DEBUG_PROCESS
+  nameWithType: ProcessCreationFlags.DEBUG_PROCESS
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DEBUG_PROCESS
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DEBUG_PROCESS
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 20
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: DEBUG_PROCESS = 1
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DETACHED_PROCESS
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DETACHED_PROCESS
+  id: DETACHED_PROCESS
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: DETACHED_PROCESS
+  nameWithType: ProcessCreationFlags.DETACHED_PROCESS
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.DETACHED_PROCESS
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DETACHED_PROCESS
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: DETACHED_PROCESS = 8
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.EXTENDED_STARTUPINFO_PRESENT
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.EXTENDED_STARTUPINFO_PRESENT
+  id: EXTENDED_STARTUPINFO_PRESENT
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: EXTENDED_STARTUPINFO_PRESENT
+  nameWithType: ProcessCreationFlags.EXTENDED_STARTUPINFO_PRESENT
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.EXTENDED_STARTUPINFO_PRESENT
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: EXTENDED_STARTUPINFO_PRESENT
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 22
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: EXTENDED_STARTUPINFO_PRESENT = 524288
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.INHERIT_PARENT_AFFINITY
+  commentId: F:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.INHERIT_PARENT_AFFINITY
+  id: INHERIT_PARENT_AFFINITY
+  parent: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  langs:
+  - csharp
+  - vb
+  name: INHERIT_PARENT_AFFINITY
+  nameWithType: ProcessCreationFlags.INHERIT_PARENT_AFFINITY
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.INHERIT_PARENT_AFFINITY
+  type: Field
+  source:
+    remote:
+      path: NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: INHERIT_PARENT_AFFINITY
+    path: ../NitroxModel/Platforms/OS/Windows/Internal/ProcessCreationFlags.cs
+    startLine: 23
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Platforms.OS.Windows.Internal
+  syntax:
+    content: INHERIT_PARENT_AFFINITY = 65536
+    return:
+      type: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+references:
+- uid: NitroxModel.Platforms.OS.Windows.Internal
+  commentId: N:NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.html
+  name: NitroxModel.Platforms.OS.Windows.Internal
+  nameWithType: NitroxModel.Platforms.OS.Windows.Internal
+  fullName: NitroxModel.Platforms.OS.Windows.Internal
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Platforms
+    name: Platforms
+    href: NitroxModel.Platforms.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS
+    name: OS
+    href: NitroxModel.Platforms.OS.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows
+    name: Windows
+    href: NitroxModel.Platforms.OS.Windows.html
+  - name: .
+  - uid: NitroxModel.Platforms.OS.Windows.Internal
+    name: Internal
+    href: NitroxModel.Platforms.OS.Windows.Internal.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  commentId: T:NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+  parent: NitroxModel.Platforms.OS.Windows.Internal
+  href: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags.html
+  name: ProcessCreationFlags
+  nameWithType: ProcessCreationFlags
+  fullName: NitroxModel.Platforms.OS.Windows.Internal.ProcessCreationFlags
+memberLayout: SeparatePages

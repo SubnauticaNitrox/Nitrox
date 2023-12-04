@@ -1,0 +1,669 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  commentId: T:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  id: AwaitingSessionReservationStateTests
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  children:
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  - NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  langs:
+  - csharp
+  - vb
+  name: AwaitingSessionReservationStateTests
+  nameWithType: AwaitingSessionReservationStateTests
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  type: Class
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: AwaitingSessionReservationStateTests
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 11
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestClass]
+
+      public class AwaitingSessionReservationStateTests
+    content.vb: >-
+      <TestClass>
+
+      Public Class AwaitingSessionReservationStateTests
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  id: NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation()
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 14
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  id: NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId()
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 35
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  id: NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation()
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 56
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  id: NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull()
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 74
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException
+  id: JoinSessionShouldThrowInvalidOperationException
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: JoinSessionShouldThrowInvalidOperationException()
+  nameWithType: AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: JoinSessionShouldThrowInvalidOperationException
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 90
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void JoinSessionShouldThrowInvalidOperationException()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub JoinSessionShouldThrowInvalidOperationException()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient
+  id: DisconnectShouldStopTheClient
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: DisconnectShouldStopTheClient()
+  nameWithType: AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DisconnectShouldStopTheClient
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 104
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void DisconnectShouldStopTheClient()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub DisconnectShouldStopTheClient()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext
+  id: DisconnectShouldResetTheConnectionContext
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: DisconnectShouldResetTheConnectionContext()
+  nameWithType: AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DisconnectShouldResetTheConnectionContext
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 121
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void DisconnectShouldResetTheConnectionContext()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub DisconnectShouldResetTheConnectionContext()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState
+  commentId: M:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState
+  id: DisconnectShouldTransitionToDisconnectedState
+  parent: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests
+  langs:
+  - csharp
+  - vb
+  name: DisconnectShouldTransitionToDisconnectedState()
+  nameWithType: AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState()
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState()
+  type: Method
+  source:
+    remote:
+      path: Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DisconnectShouldTransitionToDisconnectedState
+    path: ../Nitrox.Test/Client/Communication/MultiplayerSession/ConnectionState/ConnectionNegotiatingState/AwaitingSessionReservationStateTests.cs
+    startLine: 138
+  assemblies:
+  - Nitrox.Test
+  namespace: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  syntax:
+    content: >-
+      [TestMethod]
+
+      public void DisconnectShouldTransitionToDisconnectedState()
+    content.vb: >-
+      <TestMethod>
+
+      Public Sub DisconnectShouldTransitionToDisconnectedState()
+  overload: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState*
+  attributes:
+  - type: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
+    ctor: Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute.#ctor
+    arguments: []
+references:
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  commentId: N:NitroxClient.Communication.MultiplayerSession.ConnectionState
+  href: NitroxClient.html
+  name: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  nameWithType: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState
+    name: ConnectionState
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession
+    name: MultiplayerSession
+    href: NitroxClient.Communication.MultiplayerSession.html
+  - name: .
+  - uid: NitroxClient.Communication.MultiplayerSession.ConnectionState
+    name: ConnectionState
+    href: NitroxClient.Communication.MultiplayerSession.ConnectionState.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  name: NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  name: NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  name: NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  name: NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  nameWithType: AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_JoinSessionShouldThrowInvalidOperationException
+  name: JoinSessionShouldThrowInvalidOperationException
+  nameWithType: AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.JoinSessionShouldThrowInvalidOperationException
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_DisconnectShouldStopTheClient
+  name: DisconnectShouldStopTheClient
+  nameWithType: AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldStopTheClient
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_DisconnectShouldResetTheConnectionContext
+  name: DisconnectShouldResetTheConnectionContext
+  nameWithType: AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldResetTheConnectionContext
+- uid: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState*
+  commentId: Overload:NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState
+  href: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState.html#NitroxClient_Communication_MultiplayerSession_ConnectionState_AwaitingSessionReservationStateTests_DisconnectShouldTransitionToDisconnectedState
+  name: DisconnectShouldTransitionToDisconnectedState
+  nameWithType: AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState
+  fullName: NitroxClient.Communication.MultiplayerSession.ConnectionState.AwaitingSessionReservationStateTests.DisconnectShouldTransitionToDisconnectedState
+memberLayout: SeparatePages

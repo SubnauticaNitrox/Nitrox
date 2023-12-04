@@ -1,0 +1,534 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+  commentId: T:NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+  id: ReefbackSpawnData
+  parent: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  children:
+  - NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints
+  - NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures
+  langs:
+  - csharp
+  - vb
+  name: ReefbackSpawnData
+  nameWithType: ReefbackSpawnData
+  fullName: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+  type: Class
+  source:
+    remote:
+      path: NitroxServer-Subnautica/GameLogic/Entities/Spawning/ReefbackSpawnData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ReefbackSpawnData
+    path: ../NitroxServer-Subnautica/GameLogic/Entities/Spawning/ReefbackSpawnData.cs
+    startLine: 5
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  syntax:
+    content: public static class ReefbackSpawnData
+    content.vb: Public Module ReefbackSpawnData
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures
+  commentId: P:NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures
+  id: SpawnableCreatures
+  parent: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+  langs:
+  - csharp
+  - vb
+  name: SpawnableCreatures
+  nameWithType: ReefbackSpawnData.SpawnableCreatures
+  fullName: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures
+  type: Property
+  source:
+    remote:
+      path: NitroxServer-Subnautica/GameLogic/Entities/Spawning/ReefbackSpawnData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SpawnableCreatures
+    path: ../NitroxServer-Subnautica/GameLogic/Entities/Spawning/ReefbackSpawnData.cs
+    startLine: 16
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  syntax:
+    content: public static List<ReefbackSpawnData.ReefbackEntity> SpawnableCreatures { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity}
+    content.vb: Public Shared ReadOnly Property SpawnableCreatures As List(Of ReefbackSpawnData.ReefbackEntity)
+  overload: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures*
+- uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints
+  commentId: P:NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints
+  id: LocalCreatureSpawnPoints
+  parent: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+  langs:
+  - csharp
+  - vb
+  name: LocalCreatureSpawnPoints
+  nameWithType: ReefbackSpawnData.LocalCreatureSpawnPoints
+  fullName: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints
+  type: Property
+  source:
+    remote:
+      path: NitroxServer-Subnautica/GameLogic/Entities/Spawning/ReefbackSpawnData.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LocalCreatureSpawnPoints
+    path: ../NitroxServer-Subnautica/GameLogic/Entities/Spawning/ReefbackSpawnData.cs
+    startLine: 31
+  assemblies:
+  - NitroxServer-Subnautica
+  namespace: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  syntax:
+    content: public static List<NitroxVector3> LocalCreatureSpawnPoints { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.Unity.NitroxVector3}
+    content.vb: Public Shared ReadOnly Property LocalCreatureSpawnPoints As List(Of NitroxVector3)
+  overload: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints*
+references:
+- uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  commentId: N:NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  href: NitroxServer_Subnautica.html
+  name: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  nameWithType: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  fullName: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+  spec.csharp:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic
+    name: GameLogic
+    href: NitroxServer_Subnautica.GameLogic.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities
+    name: Entities
+    href: NitroxServer_Subnautica.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+    name: EntityBootstrappers
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.html
+  spec.vb:
+  - uid: NitroxServer_Subnautica
+    name: NitroxServer_Subnautica
+    href: NitroxServer_Subnautica.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic
+    name: GameLogic
+    href: NitroxServer_Subnautica.GameLogic.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities
+    name: Entities
+    href: NitroxServer_Subnautica.GameLogic.Entities.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning
+    name: Spawning
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+    name: EntityBootstrappers
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures*
+  commentId: Overload:NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures
+  href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures.html#NitroxServer_Subnautica_GameLogic_Entities_Spawning_EntityBootstrappers_ReefbackSpawnData_SpawnableCreatures
+  name: SpawnableCreatures
+  nameWithType: ReefbackSpawnData.SpawnableCreatures
+  fullName: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.SpawnableCreatures
+- uid: System.Collections.Generic.List{NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity}
+  commentId: T:System.Collections.Generic.List{NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<ReefbackSpawnData.ReefbackEntity>
+  nameWithType: List<ReefbackSpawnData.ReefbackEntity>
+  fullName: System.Collections.Generic.List<NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity>
+  nameWithType.vb: List(Of ReefbackSpawnData.ReefbackEntity)
+  fullName.vb: System.Collections.Generic.List(Of NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity)
+  name.vb: List(Of ReefbackSpawnData.ReefbackEntity)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+    name: ReefbackSpawnData
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity
+    name: ReefbackEntity
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData
+    name: ReefbackSpawnData
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.html
+  - name: .
+  - uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity
+    name: ReefbackEntity
+    href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.ReefbackEntity.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints*
+  commentId: Overload:NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints
+  href: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints.html#NitroxServer_Subnautica_GameLogic_Entities_Spawning_EntityBootstrappers_ReefbackSpawnData_LocalCreatureSpawnPoints
+  name: LocalCreatureSpawnPoints
+  nameWithType: ReefbackSpawnData.LocalCreatureSpawnPoints
+  fullName: NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData.LocalCreatureSpawnPoints
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.Unity.NitroxVector3}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.Unity.NitroxVector3}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<NitroxVector3>
+  nameWithType: List<NitroxVector3>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.Unity.NitroxVector3>
+  nameWithType.vb: List(Of NitroxVector3)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.Unity.NitroxVector3)
+  name.vb: List(Of NitroxVector3)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3
+    name: NitroxVector3
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.Unity.NitroxVector3
+    name: NitroxVector3
+    href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  - name: )
+memberLayout: SeparatePages

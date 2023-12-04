@@ -1,0 +1,605 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.SimulationOwnershipRequest
+  commentId: T:NitroxModel.Packets.SimulationOwnershipRequest
+  id: SimulationOwnershipRequest
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.SimulationOwnershipRequest.#ctor(System.UInt16,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.SimulationLockType)
+  - NitroxModel.Packets.SimulationOwnershipRequest.Id
+  - NitroxModel.Packets.SimulationOwnershipRequest.LockType
+  - NitroxModel.Packets.SimulationOwnershipRequest.PlayerId
+  langs:
+  - csharp
+  - vb
+  name: SimulationOwnershipRequest
+  nameWithType: SimulationOwnershipRequest
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/SimulationOwnershipRequest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SimulationOwnershipRequest
+    path: ../NitroxModel/Packets/SimulationOwnershipRequest.cs
+    startLine: 5
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class SimulationOwnershipRequest : Packet
+    content.vb: >-
+      <Serializable>
+
+      Public Class SimulationOwnershipRequest Inherits Packet
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  inheritedMembers:
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - NitroxModel.Packets.Packet.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.PlayerId
+  commentId: P:NitroxModel.Packets.SimulationOwnershipRequest.PlayerId
+  id: PlayerId
+  parent: NitroxModel.Packets.SimulationOwnershipRequest
+  langs:
+  - csharp
+  - vb
+  name: PlayerId
+  nameWithType: SimulationOwnershipRequest.PlayerId
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.PlayerId
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/SimulationOwnershipRequest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerId
+    path: ../NitroxModel/Packets/SimulationOwnershipRequest.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public ushort PlayerId { get; }
+    parameters: []
+    return:
+      type: System.UInt16
+    content.vb: Public ReadOnly Property PlayerId As UShort
+  overload: NitroxModel.Packets.SimulationOwnershipRequest.PlayerId*
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.Id
+  commentId: P:NitroxModel.Packets.SimulationOwnershipRequest.Id
+  id: Id
+  parent: NitroxModel.Packets.SimulationOwnershipRequest
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: SimulationOwnershipRequest.Id
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.Id
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/SimulationOwnershipRequest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Id
+    path: ../NitroxModel/Packets/SimulationOwnershipRequest.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxId Id { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public ReadOnly Property Id As NitroxId
+  overload: NitroxModel.Packets.SimulationOwnershipRequest.Id*
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.LockType
+  commentId: P:NitroxModel.Packets.SimulationOwnershipRequest.LockType
+  id: LockType
+  parent: NitroxModel.Packets.SimulationOwnershipRequest
+  langs:
+  - csharp
+  - vb
+  name: LockType
+  nameWithType: SimulationOwnershipRequest.LockType
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.LockType
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/SimulationOwnershipRequest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LockType
+    path: ../NitroxModel/Packets/SimulationOwnershipRequest.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public SimulationLockType LockType { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.SimulationLockType
+    content.vb: Public ReadOnly Property LockType As SimulationLockType
+  overload: NitroxModel.Packets.SimulationOwnershipRequest.LockType*
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.#ctor(System.UInt16,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.SimulationLockType)
+  commentId: M:NitroxModel.Packets.SimulationOwnershipRequest.#ctor(System.UInt16,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.SimulationLockType)
+  id: '#ctor(System.UInt16,NitroxModel.DataStructures.NitroxId,NitroxModel.DataStructures.SimulationLockType)'
+  parent: NitroxModel.Packets.SimulationOwnershipRequest
+  langs:
+  - csharp
+  - vb
+  name: SimulationOwnershipRequest(ushort, NitroxId, SimulationLockType)
+  nameWithType: SimulationOwnershipRequest.SimulationOwnershipRequest(ushort, NitroxId, SimulationLockType)
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.SimulationOwnershipRequest(ushort, NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.SimulationLockType)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/SimulationOwnershipRequest.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/SimulationOwnershipRequest.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public SimulationOwnershipRequest(ushort playerId, NitroxId id, SimulationLockType lockType)
+    parameters:
+    - id: playerId
+      type: System.UInt16
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: lockType
+      type: NitroxModel.DataStructures.SimulationLockType
+    content.vb: Public Sub New(playerId As UShort, id As NitroxId, lockType As SimulationLockType)
+  overload: NitroxModel.Packets.SimulationOwnershipRequest.#ctor*
+  nameWithType.vb: SimulationOwnershipRequest.New(UShort, NitroxId, SimulationLockType)
+  fullName.vb: NitroxModel.Packets.SimulationOwnershipRequest.New(UShort, NitroxModel.DataStructures.NitroxId, NitroxModel.DataStructures.SimulationLockType)
+  name.vb: New(UShort, NitroxId, SimulationLockType)
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.PlayerId*
+  commentId: Overload:NitroxModel.Packets.SimulationOwnershipRequest.PlayerId
+  href: NitroxModel.Packets.SimulationOwnershipRequest.PlayerId.html#NitroxModel_Packets_SimulationOwnershipRequest_PlayerId
+  name: PlayerId
+  nameWithType: SimulationOwnershipRequest.PlayerId
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.PlayerId
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.Id*
+  commentId: Overload:NitroxModel.Packets.SimulationOwnershipRequest.Id
+  href: NitroxModel.Packets.SimulationOwnershipRequest.Id.html#NitroxModel_Packets_SimulationOwnershipRequest_Id
+  name: Id
+  nameWithType: SimulationOwnershipRequest.Id
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.Id
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.LockType*
+  commentId: Overload:NitroxModel.Packets.SimulationOwnershipRequest.LockType
+  href: NitroxModel.Packets.SimulationOwnershipRequest.LockType.html#NitroxModel_Packets_SimulationOwnershipRequest_LockType
+  name: LockType
+  nameWithType: SimulationOwnershipRequest.LockType
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.LockType
+- uid: NitroxModel.DataStructures.SimulationLockType
+  commentId: T:NitroxModel.DataStructures.SimulationLockType
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.SimulationLockType.html
+  name: SimulationLockType
+  nameWithType: SimulationLockType
+  fullName: NitroxModel.DataStructures.SimulationLockType
+- uid: NitroxModel.Packets.SimulationOwnershipRequest.#ctor*
+  commentId: Overload:NitroxModel.Packets.SimulationOwnershipRequest.#ctor
+  href: NitroxModel.Packets.SimulationOwnershipRequest.-ctor.html#NitroxModel_Packets_SimulationOwnershipRequest__ctor_System_UInt16_NitroxModel_DataStructures_NitroxId_NitroxModel_DataStructures_SimulationLockType_
+  name: SimulationOwnershipRequest
+  nameWithType: SimulationOwnershipRequest.SimulationOwnershipRequest
+  fullName: NitroxModel.Packets.SimulationOwnershipRequest.SimulationOwnershipRequest
+  nameWithType.vb: SimulationOwnershipRequest.New
+  fullName.vb: NitroxModel.Packets.SimulationOwnershipRequest.New
+  name.vb: New
+memberLayout: SeparatePages

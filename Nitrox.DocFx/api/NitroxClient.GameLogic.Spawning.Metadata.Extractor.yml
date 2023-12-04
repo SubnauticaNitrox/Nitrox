@@ -1,0 +1,219 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  commentId: N:NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  id: Extractor
+  parent: NitroxClient.GameLogic.Spawning.Metadata
+  children:
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.BatteryMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsLightningMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.FireExtinguisherHolderMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.FlashlightMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlantableMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlayerMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.RocketMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.SealedDoorMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.SeamothMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.SubNameInputMetadataExtractor
+  - NitroxClient.GameLogic.Spawning.Metadata.Extractor.WaterParkCreatureMetadataExtractor
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  nameWithType: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.BatteryMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.BatteryMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.BatteryMetadataExtractor.html
+  name: BatteryMetadataExtractor
+  nameWithType: BatteryMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.BatteryMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor.html
+  name: ConstructorMetadataExtractor
+  nameWithType: ConstructorMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.ConstructorMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsLightningMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsLightningMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsLightningMetadataExtractor.html
+  name: CyclopsLightningMetadataExtractor
+  nameWithType: CyclopsLightningMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsLightningMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.html
+  name: CyclopsMetadataExtractor
+  nameWithType: CyclopsMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.html
+  name: CyclopsMetadataExtractor.CyclopsGameObject
+  nameWithType: CyclopsMetadataExtractor.CyclopsGameObject
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor
+    name: CyclopsMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject
+    name: CyclopsGameObject
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject.html
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor
+    name: CyclopsMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject
+    name: CyclopsGameObject
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.CyclopsMetadataExtractor.CyclopsGameObject.html
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+  parent: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor.html
+  name: EntityMetadataExtractor
+  nameWithType: EntityMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.EntityMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FireExtinguisherHolderMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.FireExtinguisherHolderMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FireExtinguisherHolderMetadataExtractor.html
+  name: FireExtinguisherHolderMetadataExtractor
+  nameWithType: FireExtinguisherHolderMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FireExtinguisherHolderMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FlashlightMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.FlashlightMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FlashlightMetadataExtractor.html
+  name: FlashlightMetadataExtractor
+  nameWithType: FlashlightMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.FlashlightMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  name: GenericEntityMetadataExtractor<I, O>
+  nameWithType: GenericEntityMetadataExtractor<I, O>
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor<I, O>
+  nameWithType.vb: GenericEntityMetadataExtractor(Of I, O)
+  fullName.vb: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor(Of I, O)
+  name.vb: GenericEntityMetadataExtractor(Of I, O)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+    name: GenericEntityMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  - name: <
+  - name: I
+  - name: ','
+  - name: " "
+  - name: O
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor`2
+    name: GenericEntityMetadataExtractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.GenericEntityMetadataExtractor-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: I
+  - name: ','
+  - name: " "
+  - name: O
+  - name: )
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlantableMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlantableMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlantableMetadataExtractor.html
+  name: PlantableMetadataExtractor
+  nameWithType: PlantableMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlantableMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlayerMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlayerMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlayerMetadataExtractor.html
+  name: PlayerMetadataExtractor
+  nameWithType: PlayerMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.PlayerMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.RocketMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.RocketMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.RocketMetadataExtractor.html
+  name: RocketMetadataExtractor
+  nameWithType: RocketMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.RocketMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SealedDoorMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.SealedDoorMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SealedDoorMetadataExtractor.html
+  name: SealedDoorMetadataExtractor
+  nameWithType: SealedDoorMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SealedDoorMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SeamothMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.SeamothMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SeamothMetadataExtractor.html
+  name: SeamothMetadataExtractor
+  nameWithType: SeamothMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SeamothMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SubNameInputMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.SubNameInputMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SubNameInputMetadataExtractor.html
+  name: SubNameInputMetadataExtractor
+  nameWithType: SubNameInputMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.SubNameInputMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor.WaterParkCreatureMetadataExtractor
+  commentId: T:NitroxClient.GameLogic.Spawning.Metadata.Extractor.WaterParkCreatureMetadataExtractor
+  href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.WaterParkCreatureMetadataExtractor.html
+  name: WaterParkCreatureMetadataExtractor
+  nameWithType: WaterParkCreatureMetadataExtractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor.WaterParkCreatureMetadataExtractor
+- uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  commentId: N:NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  nameWithType: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  fullName: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+    name: Extractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata
+    name: Metadata
+    href: NitroxClient.GameLogic.Spawning.Metadata.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.Metadata.Extractor
+    name: Extractor
+    href: NitroxClient.GameLogic.Spawning.Metadata.Extractor.html
+memberLayout: SeparatePages

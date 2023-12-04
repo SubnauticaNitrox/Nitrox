@@ -1,0 +1,254 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  commentId: T:NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  id: BaseDebugger.GUISkinCreationOptions
+  parent: NitroxClient.Debuggers
+  children:
+  - NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DEFAULT
+  - NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  - NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  langs:
+  - csharp
+  - vb
+  name: BaseDebugger.GUISkinCreationOptions
+  nameWithType: BaseDebugger.GUISkinCreationOptions
+  fullName: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  type: Enum
+  source:
+    remote:
+      path: NitroxClient/Debuggers/BaseDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: GUISkinCreationOptions
+    path: ../NitroxClient/Debuggers/BaseDebugger.cs
+    startLine: 72
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  syntax:
+    content: public enum BaseDebugger.GUISkinCreationOptions
+    content.vb: Public Enum BaseDebugger.GUISkinCreationOptions
+  extensionMethods:
+  - System.Enum.NitroxModel.Extensions.GetAttribute``1
+- uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DEFAULT
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DEFAULT
+  id: DEFAULT
+  parent: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  langs:
+  - csharp
+  - vb
+  name: DEFAULT
+  nameWithType: BaseDebugger.GUISkinCreationOptions.DEFAULT
+  fullName: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DEFAULT
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Debuggers/BaseDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DEFAULT
+    path: ../NitroxClient/Debuggers/BaseDebugger.cs
+    startLine: 77
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  summary: Uses the NitroxDebug skin.
+  example: []
+  syntax:
+    content: DEFAULT = 0
+    return:
+      type: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+- uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  id: UNITYCOPY
+  parent: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  langs:
+  - csharp
+  - vb
+  name: UNITYCOPY
+  nameWithType: BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  fullName: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.UNITYCOPY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Debuggers/BaseDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: UNITYCOPY
+    path: ../NitroxClient/Debuggers/BaseDebugger.cs
+    startLine: 82
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  summary: Creates a copy of the default Unity IMGUI skin and sets the copied skin as render skin.
+  example: []
+  syntax:
+    content: UNITYCOPY = 1
+    return:
+      type: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+- uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  commentId: F:NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  id: DERIVEDCOPY
+  parent: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  langs:
+  - csharp
+  - vb
+  name: DERIVEDCOPY
+  nameWithType: BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  fullName: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.DERIVEDCOPY
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Debuggers/BaseDebugger.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DERIVEDCOPY
+    path: ../NitroxClient/Debuggers/BaseDebugger.cs
+    startLine: 87
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Debuggers
+  summary: Creates a copy based on the NitroxDebug skin and sets the copied skin as render skin.
+  example: []
+  syntax:
+    content: DERIVEDCOPY = 2
+    return:
+      type: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+references:
+- uid: NitroxClient.Debuggers
+  commentId: N:NitroxClient.Debuggers
+  href: NitroxClient.html
+  name: NitroxClient.Debuggers
+  nameWithType: NitroxClient.Debuggers
+  fullName: NitroxClient.Debuggers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Debuggers
+    name: Debuggers
+    href: NitroxClient.Debuggers.html
+- uid: System.Enum.NitroxModel.Extensions.GetAttribute``1
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  parent: NitroxModel.Extensions
+  definition: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  commentId: M:NitroxModel.Extensions.GetAttribute``1(System.Enum)
+  isExternal: true
+  href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  name: GetAttribute<TAttribute>(Enum)
+  nameWithType: Extensions.GetAttribute<TAttribute>(Enum)
+  fullName: NitroxModel.Extensions.GetAttribute<TAttribute>(System.Enum)
+  nameWithType.vb: Extensions.GetAttribute(Of TAttribute)(Enum)
+  fullName.vb: NitroxModel.Extensions.GetAttribute(Of TAttribute)(System.Enum)
+  name.vb: GetAttribute(Of TAttribute)(Enum)
+  spec.csharp:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: <
+  - name: TAttribute
+  - name: '>'
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Extensions.GetAttribute``1(System.Enum)
+    name: GetAttribute
+    href: NitroxModel.Extensions.GetAttribute.html#NitroxModel_Extensions_GetAttribute__1_System_Enum_
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TAttribute
+  - name: )
+  - name: (
+  - uid: System.Enum
+    name: Enum
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.enum
+  - name: )
+- uid: NitroxModel.Extensions
+  commentId: T:NitroxModel.Extensions
+  parent: NitroxModel
+  href: NitroxModel.Extensions.html
+  name: Extensions
+  nameWithType: Extensions
+  fullName: NitroxModel.Extensions
+- uid: NitroxModel
+  commentId: N:NitroxModel
+  href: NitroxModel.html
+  name: NitroxModel
+  nameWithType: NitroxModel
+  fullName: NitroxModel
+- uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  commentId: T:NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  parent: NitroxClient.Debuggers
+  href: NitroxClient.Debuggers.BaseDebugger.html
+  name: BaseDebugger.GUISkinCreationOptions
+  nameWithType: BaseDebugger.GUISkinCreationOptions
+  fullName: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+  spec.csharp:
+  - uid: NitroxClient.Debuggers.BaseDebugger
+    name: BaseDebugger
+    href: NitroxClient.Debuggers.BaseDebugger.html
+  - name: .
+  - uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+    name: GUISkinCreationOptions
+    href: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.html
+  spec.vb:
+  - uid: NitroxClient.Debuggers.BaseDebugger
+    name: BaseDebugger
+    href: NitroxClient.Debuggers.BaseDebugger.html
+  - name: .
+  - uid: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions
+    name: GUISkinCreationOptions
+    href: NitroxClient.Debuggers.BaseDebugger.GUISkinCreationOptions.html
+memberLayout: SeparatePages

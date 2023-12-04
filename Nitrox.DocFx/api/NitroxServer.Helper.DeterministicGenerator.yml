@@ -1,0 +1,555 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Helper.DeterministicGenerator
+  commentId: T:NitroxServer.Helper.DeterministicGenerator
+  id: DeterministicGenerator
+  parent: NitroxServer.Helper
+  children:
+  - NitroxServer.Helper.DeterministicGenerator.#ctor(System.String,System.Object)
+  - NitroxServer.Helper.DeterministicGenerator.NextDouble
+  - NitroxServer.Helper.DeterministicGenerator.NextDouble(System.Double,System.Double)
+  - NitroxServer.Helper.DeterministicGenerator.NextId
+  - NitroxServer.Helper.DeterministicGenerator.NextInt(System.Int32,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: DeterministicGenerator
+  nameWithType: DeterministicGenerator
+  fullName: NitroxServer.Helper.DeterministicGenerator
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/Helper/DeterministicGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: DeterministicGenerator
+    path: ../NitroxServer/Helper/DeterministicGenerator.cs
+    startLine: 5
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Helper
+  syntax:
+    content: public class DeterministicGenerator
+    content.vb: Public Class DeterministicGenerator
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.Helper.DeterministicGenerator.#ctor(System.String,System.Object)
+  commentId: M:NitroxServer.Helper.DeterministicGenerator.#ctor(System.String,System.Object)
+  id: '#ctor(System.String,System.Object)'
+  parent: NitroxServer.Helper.DeterministicGenerator
+  langs:
+  - csharp
+  - vb
+  name: DeterministicGenerator(string, object)
+  nameWithType: DeterministicGenerator.DeterministicGenerator(string, object)
+  fullName: NitroxServer.Helper.DeterministicGenerator.DeterministicGenerator(string, object)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxServer/Helper/DeterministicGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxServer/Helper/DeterministicGenerator.cs
+    startLine: 9
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Helper
+  syntax:
+    content: public DeterministicGenerator(string worldSeed, object reference)
+    parameters:
+    - id: worldSeed
+      type: System.String
+    - id: reference
+      type: System.Object
+    content.vb: Public Sub New(worldSeed As String, reference As Object)
+  overload: NitroxServer.Helper.DeterministicGenerator.#ctor*
+  nameWithType.vb: DeterministicGenerator.New(String, Object)
+  fullName.vb: NitroxServer.Helper.DeterministicGenerator.New(String, Object)
+  name.vb: New(String, Object)
+- uid: NitroxServer.Helper.DeterministicGenerator.NextDouble
+  commentId: M:NitroxServer.Helper.DeterministicGenerator.NextDouble
+  id: NextDouble
+  parent: NitroxServer.Helper.DeterministicGenerator
+  langs:
+  - csharp
+  - vb
+  name: NextDouble()
+  nameWithType: DeterministicGenerator.NextDouble()
+  fullName: NitroxServer.Helper.DeterministicGenerator.NextDouble()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Helper/DeterministicGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NextDouble
+    path: ../NitroxServer/Helper/DeterministicGenerator.cs
+    startLine: 14
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Helper
+  syntax:
+    content: public double NextDouble()
+    return:
+      type: System.Double
+    content.vb: Public Function NextDouble() As Double
+  overload: NitroxServer.Helper.DeterministicGenerator.NextDouble*
+- uid: NitroxServer.Helper.DeterministicGenerator.NextDouble(System.Double,System.Double)
+  commentId: M:NitroxServer.Helper.DeterministicGenerator.NextDouble(System.Double,System.Double)
+  id: NextDouble(System.Double,System.Double)
+  parent: NitroxServer.Helper.DeterministicGenerator
+  langs:
+  - csharp
+  - vb
+  name: NextDouble(double, double)
+  nameWithType: DeterministicGenerator.NextDouble(double, double)
+  fullName: NitroxServer.Helper.DeterministicGenerator.NextDouble(double, double)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Helper/DeterministicGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NextDouble
+    path: ../NitroxServer/Helper/DeterministicGenerator.cs
+    startLine: 19
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Helper
+  syntax:
+    content: public double NextDouble(double min, double max)
+    parameters:
+    - id: min
+      type: System.Double
+    - id: max
+      type: System.Double
+    return:
+      type: System.Double
+    content.vb: Public Function NextDouble(min As Double, max As Double) As Double
+  overload: NitroxServer.Helper.DeterministicGenerator.NextDouble*
+  nameWithType.vb: DeterministicGenerator.NextDouble(Double, Double)
+  fullName.vb: NitroxServer.Helper.DeterministicGenerator.NextDouble(Double, Double)
+  name.vb: NextDouble(Double, Double)
+- uid: NitroxServer.Helper.DeterministicGenerator.NextInt(System.Int32,System.Int32)
+  commentId: M:NitroxServer.Helper.DeterministicGenerator.NextInt(System.Int32,System.Int32)
+  id: NextInt(System.Int32,System.Int32)
+  parent: NitroxServer.Helper.DeterministicGenerator
+  langs:
+  - csharp
+  - vb
+  name: NextInt(int, int)
+  nameWithType: DeterministicGenerator.NextInt(int, int)
+  fullName: NitroxServer.Helper.DeterministicGenerator.NextInt(int, int)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Helper/DeterministicGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NextInt
+    path: ../NitroxServer/Helper/DeterministicGenerator.cs
+    startLine: 24
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Helper
+  syntax:
+    content: public int NextInt(int min, int max)
+    parameters:
+    - id: min
+      type: System.Int32
+    - id: max
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Function NextInt(min As Integer, max As Integer) As Integer
+  overload: NitroxServer.Helper.DeterministicGenerator.NextInt*
+  nameWithType.vb: DeterministicGenerator.NextInt(Integer, Integer)
+  fullName.vb: NitroxServer.Helper.DeterministicGenerator.NextInt(Integer, Integer)
+  name.vb: NextInt(Integer, Integer)
+- uid: NitroxServer.Helper.DeterministicGenerator.NextId
+  commentId: M:NitroxServer.Helper.DeterministicGenerator.NextId
+  id: NextId
+  parent: NitroxServer.Helper.DeterministicGenerator
+  langs:
+  - csharp
+  - vb
+  name: NextId()
+  nameWithType: DeterministicGenerator.NextId()
+  fullName: NitroxServer.Helper.DeterministicGenerator.NextId()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Helper/DeterministicGenerator.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NextId
+    path: ../NitroxServer/Helper/DeterministicGenerator.cs
+    startLine: 29
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Helper
+  syntax:
+    content: public NitroxId NextId()
+    return:
+      type: NitroxModel.DataStructures.NitroxId
+    content.vb: Public Function NextId() As NitroxId
+  overload: NitroxServer.Helper.DeterministicGenerator.NextId*
+references:
+- uid: NitroxServer.Helper
+  commentId: N:NitroxServer.Helper
+  href: NitroxServer.html
+  name: NitroxServer.Helper
+  nameWithType: NitroxServer.Helper
+  fullName: NitroxServer.Helper
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Helper
+    name: Helper
+    href: NitroxServer.Helper.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Helper
+    name: Helper
+    href: NitroxServer.Helper.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.Helper.DeterministicGenerator.#ctor*
+  commentId: Overload:NitroxServer.Helper.DeterministicGenerator.#ctor
+  href: NitroxServer.Helper.DeterministicGenerator.-ctor.html#NitroxServer_Helper_DeterministicGenerator__ctor_System_String_System_Object_
+  name: DeterministicGenerator
+  nameWithType: DeterministicGenerator.DeterministicGenerator
+  fullName: NitroxServer.Helper.DeterministicGenerator.DeterministicGenerator
+  nameWithType.vb: DeterministicGenerator.New
+  fullName.vb: NitroxServer.Helper.DeterministicGenerator.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxServer.Helper.DeterministicGenerator.NextDouble*
+  commentId: Overload:NitroxServer.Helper.DeterministicGenerator.NextDouble
+  href: NitroxServer.Helper.DeterministicGenerator.NextDouble.html#NitroxServer_Helper_DeterministicGenerator_NextDouble
+  name: NextDouble
+  nameWithType: DeterministicGenerator.NextDouble
+  fullName: NitroxServer.Helper.DeterministicGenerator.NextDouble
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.double
+  name: double
+  nameWithType: double
+  fullName: double
+  nameWithType.vb: Double
+  fullName.vb: Double
+  name.vb: Double
+- uid: NitroxServer.Helper.DeterministicGenerator.NextInt*
+  commentId: Overload:NitroxServer.Helper.DeterministicGenerator.NextInt
+  href: NitroxServer.Helper.DeterministicGenerator.NextInt.html#NitroxServer_Helper_DeterministicGenerator_NextInt_System_Int32_System_Int32_
+  name: NextInt
+  nameWithType: DeterministicGenerator.NextInt
+  fullName: NitroxServer.Helper.DeterministicGenerator.NextInt
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxServer.Helper.DeterministicGenerator.NextId*
+  commentId: Overload:NitroxServer.Helper.DeterministicGenerator.NextId
+  href: NitroxServer.Helper.DeterministicGenerator.NextId.html#NitroxServer_Helper_DeterministicGenerator_NextId
+  name: NextId
+  nameWithType: DeterministicGenerator.NextId
+  fullName: NitroxServer.Helper.DeterministicGenerator.NextId
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+memberLayout: SeparatePages

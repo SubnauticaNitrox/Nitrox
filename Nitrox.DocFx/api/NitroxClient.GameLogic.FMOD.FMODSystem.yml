@@ -1,0 +1,935 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem
+  commentId: T:NitroxClient.GameLogic.FMOD.FMODSystem
+  id: FMODSystem
+  parent: NitroxClient.GameLogic.FMOD
+  children:
+  - NitroxClient.GameLogic.FMOD.FMODSystem.#ctor(NitroxClient.Communication.Abstract.IPacketSender)
+  - NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(System.String)
+  - NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(System.String,System.Boolean@,System.Single@)
+  - NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset(System.String,NitroxModel.DataStructures.Unity.NitroxVector3,System.Single,System.Single,System.Boolean)
+  - NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean)
+  - NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter(NitroxModel.DataStructures.NitroxId,System.String)
+  - NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean,System.Boolean)
+  - NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList
+  - NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds
+  langs:
+  - csharp
+  - vb
+  name: FMODSystem
+  nameWithType: FMODSystem
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: FMODSystem
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public class FMODSystem
+    content.vb: Public Class FMODSystem
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.#ctor(NitroxClient.Communication.Abstract.IPacketSender)
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.#ctor(NitroxClient.Communication.Abstract.IPacketSender)
+  id: '#ctor(NitroxClient.Communication.Abstract.IPacketSender)'
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: FMODSystem(IPacketSender)
+  nameWithType: FMODSystem.FMODSystem(IPacketSender)
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.FMODSystem(NitroxClient.Communication.Abstract.IPacketSender)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public FMODSystem(IPacketSender packetSender)
+    parameters:
+    - id: packetSender
+      type: NitroxClient.Communication.Abstract.IPacketSender
+    content.vb: Public Sub New(packetSender As IPacketSender)
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.#ctor*
+  nameWithType.vb: FMODSystem.New(IPacketSender)
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.New(NitroxClient.Communication.Abstract.IPacketSender)
+  name.vb: New(IPacketSender)
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds
+  id: SuppressSounds
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: SuppressSounds()
+  nameWithType: FMODSystem.SuppressSounds()
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds()
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SuppressSounds
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 45
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public static FMODSuppressor SuppressSounds()
+    return:
+      type: NitroxClient.GameLogic.FMOD.FMODSuppressor
+    content.vb: Public Shared Function SuppressSounds() As FMODSuppressor
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds*
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(System.String)
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(System.String)
+  id: IsWhitelisted(System.String)
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: IsWhitelisted(string)
+  nameWithType: FMODSystem.IsWhitelisted(string)
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(string)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsWhitelisted
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 50
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public bool IsWhitelisted(string path)
+    parameters:
+    - id: path
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsWhitelisted(path As String) As Boolean
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted*
+  nameWithType.vb: FMODSystem.IsWhitelisted(String)
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(String)
+  name.vb: IsWhitelisted(String)
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(System.String,System.Boolean@,System.Single@)
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(System.String,System.Boolean@,System.Single@)
+  id: IsWhitelisted(System.String,System.Boolean@,System.Single@)
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: IsWhitelisted(string, out bool, out float)
+  nameWithType: FMODSystem.IsWhitelisted(string, out bool, out float)
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(string, out bool, out float)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: IsWhitelisted
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 55
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public bool IsWhitelisted(string path, out bool isGlobal, out float radius)
+    parameters:
+    - id: path
+      type: System.String
+    - id: isGlobal
+      type: System.Boolean
+    - id: radius
+      type: System.Single
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsWhitelisted(path As String, isGlobal As Boolean, radius As Single) As Boolean
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted*
+  nameWithType.vb: FMODSystem.IsWhitelisted(String, Boolean, Single)
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted(String, Boolean, Single)
+  name.vb: IsWhitelisted(String, Boolean, Single)
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset(System.String,NitroxModel.DataStructures.Unity.NitroxVector3,System.Single,System.Single,System.Boolean)
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset(System.String,NitroxModel.DataStructures.Unity.NitroxVector3,System.Single,System.Single,System.Boolean)
+  id: PlayAsset(System.String,NitroxModel.DataStructures.Unity.NitroxVector3,System.Single,System.Single,System.Boolean)
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: PlayAsset(string, NitroxVector3, float, float, bool)
+  nameWithType: FMODSystem.PlayAsset(string, NitroxVector3, float, float, bool)
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset(string, NitroxModel.DataStructures.Unity.NitroxVector3, float, float, bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayAsset
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 69
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public void PlayAsset(string path, NitroxVector3 position, float volume, float radius, bool isGlobal)
+    parameters:
+    - id: path
+      type: System.String
+    - id: position
+      type: NitroxModel.DataStructures.Unity.NitroxVector3
+    - id: volume
+      type: System.Single
+    - id: radius
+      type: System.Single
+    - id: isGlobal
+      type: System.Boolean
+    content.vb: Public Sub PlayAsset(path As String, position As NitroxVector3, volume As Single, radius As Single, isGlobal As Boolean)
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset*
+  nameWithType.vb: FMODSystem.PlayAsset(String, NitroxVector3, Single, Single, Boolean)
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset(String, NitroxModel.DataStructures.Unity.NitroxVector3, Single, Single, Boolean)
+  name.vb: PlayAsset(String, NitroxVector3, Single, Single, Boolean)
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean)
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean)
+  id: PlayCustomEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean)
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: PlayCustomEmitter(NitroxId, string, bool)
+  nameWithType: FMODSystem.PlayCustomEmitter(NitroxId, string, bool)
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter(NitroxModel.DataStructures.NitroxId, string, bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayCustomEmitter
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 74
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public void PlayCustomEmitter(NitroxId id, string assetPath, bool play)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: assetPath
+      type: System.String
+    - id: play
+      type: System.Boolean
+    content.vb: Public Sub PlayCustomEmitter(id As NitroxId, assetPath As String, play As Boolean)
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter*
+  nameWithType.vb: FMODSystem.PlayCustomEmitter(NitroxId, String, Boolean)
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter(NitroxModel.DataStructures.NitroxId, String, Boolean)
+  name.vb: PlayCustomEmitter(NitroxId, String, Boolean)
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter(NitroxModel.DataStructures.NitroxId,System.String)
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter(NitroxModel.DataStructures.NitroxId,System.String)
+  id: PlayCustomLoopingEmitter(NitroxModel.DataStructures.NitroxId,System.String)
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: PlayCustomLoopingEmitter(NitroxId, string)
+  nameWithType: FMODSystem.PlayCustomLoopingEmitter(NitroxId, string)
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter(NitroxModel.DataStructures.NitroxId, string)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayCustomLoopingEmitter
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 79
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public void PlayCustomLoopingEmitter(NitroxId id, string assetPath)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: assetPath
+      type: System.String
+    content.vb: Public Sub PlayCustomLoopingEmitter(id As NitroxId, assetPath As String)
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter*
+  nameWithType.vb: FMODSystem.PlayCustomLoopingEmitter(NitroxId, String)
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter(NitroxModel.DataStructures.NitroxId, String)
+  name.vb: PlayCustomLoopingEmitter(NitroxId, String)
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean,System.Boolean)
+  commentId: M:NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean,System.Boolean)
+  id: PlayStudioEmitter(NitroxModel.DataStructures.NitroxId,System.String,System.Boolean,System.Boolean)
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: PlayStudioEmitter(NitroxId, string, bool, bool)
+  nameWithType: FMODSystem.PlayStudioEmitter(NitroxId, string, bool, bool)
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter(NitroxModel.DataStructures.NitroxId, string, bool, bool)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayStudioEmitter
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 84
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public void PlayStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
+    parameters:
+    - id: id
+      type: NitroxModel.DataStructures.NitroxId
+    - id: assetPath
+      type: System.String
+    - id: play
+      type: System.Boolean
+    - id: allowFadeout
+      type: System.Boolean
+    content.vb: Public Sub PlayStudioEmitter(id As NitroxId, assetPath As String, play As Boolean, allowFadeout As Boolean)
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter*
+  nameWithType.vb: FMODSystem.PlayStudioEmitter(NitroxId, String, Boolean, Boolean)
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter(NitroxModel.DataStructures.NitroxId, String, Boolean, Boolean)
+  name.vb: PlayStudioEmitter(NitroxId, String, Boolean, Boolean)
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList
+  commentId: P:NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList
+  id: SoundDataList
+  parent: NitroxClient.GameLogic.FMOD.FMODSystem
+  langs:
+  - csharp
+  - vb
+  name: SoundDataList
+  nameWithType: FMODSystem.SoundDataList
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/GameLogic/FMOD/FMODSystem.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: SoundDataList
+    path: ../NitroxClient/GameLogic/FMOD/FMODSystem.cs
+    startLine: 89
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.FMOD
+  syntax:
+    content: public Dictionary<string, SoundData> SoundDataList { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,NitroxClient.GameLogic.FMOD.SoundData}
+    content.vb: Public ReadOnly Property SoundDataList As Dictionary(Of String, SoundData)
+  overload: NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList*
+references:
+- uid: NitroxClient.GameLogic.FMOD
+  commentId: N:NitroxClient.GameLogic.FMOD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.FMOD
+  nameWithType: NitroxClient.GameLogic.FMOD
+  fullName: NitroxClient.GameLogic.FMOD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.FMOD
+    name: FMOD
+    href: NitroxClient.GameLogic.FMOD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.#ctor
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.-ctor.html#NitroxClient_GameLogic_FMOD_FMODSystem__ctor_NitroxClient_Communication_Abstract_IPacketSender_
+  name: FMODSystem
+  nameWithType: FMODSystem.FMODSystem
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.FMODSystem
+  nameWithType.vb: FMODSystem.New
+  fullName.vb: NitroxClient.GameLogic.FMOD.FMODSystem.New
+  name.vb: New
+- uid: NitroxClient.Communication.Abstract.IPacketSender
+  commentId: T:NitroxClient.Communication.Abstract.IPacketSender
+  parent: NitroxClient.Communication.Abstract
+  href: NitroxClient.Communication.Abstract.IPacketSender.html
+  name: IPacketSender
+  nameWithType: IPacketSender
+  fullName: NitroxClient.Communication.Abstract.IPacketSender
+- uid: NitroxClient.Communication.Abstract
+  commentId: N:NitroxClient.Communication.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.Communication.Abstract
+  nameWithType: NitroxClient.Communication.Abstract
+  fullName: NitroxClient.Communication.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Communication
+    name: Communication
+    href: NitroxClient.Communication.html
+  - name: .
+  - uid: NitroxClient.Communication.Abstract
+    name: Abstract
+    href: NitroxClient.Communication.Abstract.html
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds.html#NitroxClient_GameLogic_FMOD_FMODSystem_SuppressSounds
+  name: SuppressSounds
+  nameWithType: FMODSystem.SuppressSounds
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.SuppressSounds
+- uid: NitroxClient.GameLogic.FMOD.FMODSuppressor
+  commentId: T:NitroxClient.GameLogic.FMOD.FMODSuppressor
+  parent: NitroxClient.GameLogic.FMOD
+  href: NitroxClient.GameLogic.FMOD.FMODSuppressor.html
+  name: FMODSuppressor
+  nameWithType: FMODSuppressor
+  fullName: NitroxClient.GameLogic.FMOD.FMODSuppressor
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted.html#NitroxClient_GameLogic_FMOD_FMODSystem_IsWhitelisted_System_String_
+  name: IsWhitelisted
+  nameWithType: FMODSystem.IsWhitelisted
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.IsWhitelisted
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset.html#NitroxClient_GameLogic_FMOD_FMODSystem_PlayAsset_System_String_NitroxModel_DataStructures_Unity_NitroxVector3_System_Single_System_Single_System_Boolean_
+  name: PlayAsset
+  nameWithType: FMODSystem.PlayAsset
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayAsset
+- uid: NitroxModel.DataStructures.Unity.NitroxVector3
+  commentId: T:NitroxModel.DataStructures.Unity.NitroxVector3
+  parent: NitroxModel.DataStructures.Unity
+  href: NitroxModel.DataStructures.Unity.NitroxVector3.html
+  name: NitroxVector3
+  nameWithType: NitroxVector3
+  fullName: NitroxModel.DataStructures.Unity.NitroxVector3
+- uid: NitroxModel.DataStructures.Unity
+  commentId: N:NitroxModel.DataStructures.Unity
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.Unity
+  nameWithType: NitroxModel.DataStructures.Unity
+  fullName: NitroxModel.DataStructures.Unity
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.Unity
+    name: Unity
+    href: NitroxModel.DataStructures.Unity.html
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter.html#NitroxClient_GameLogic_FMOD_FMODSystem_PlayCustomEmitter_NitroxModel_DataStructures_NitroxId_System_String_System_Boolean_
+  name: PlayCustomEmitter
+  nameWithType: FMODSystem.PlayCustomEmitter
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomEmitter
+- uid: NitroxModel.DataStructures.NitroxId
+  commentId: T:NitroxModel.DataStructures.NitroxId
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxId.html
+  name: NitroxId
+  nameWithType: NitroxId
+  fullName: NitroxModel.DataStructures.NitroxId
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter.html#NitroxClient_GameLogic_FMOD_FMODSystem_PlayCustomLoopingEmitter_NitroxModel_DataStructures_NitroxId_System_String_
+  name: PlayCustomLoopingEmitter
+  nameWithType: FMODSystem.PlayCustomLoopingEmitter
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayCustomLoopingEmitter
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter.html#NitroxClient_GameLogic_FMOD_FMODSystem_PlayStudioEmitter_NitroxModel_DataStructures_NitroxId_System_String_System_Boolean_System_Boolean_
+  name: PlayStudioEmitter
+  nameWithType: FMODSystem.PlayStudioEmitter
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.PlayStudioEmitter
+- uid: NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList*
+  commentId: Overload:NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList
+  href: NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList.html#NitroxClient_GameLogic_FMOD_FMODSystem_SoundDataList
+  name: SoundDataList
+  nameWithType: FMODSystem.SoundDataList
+  fullName: NitroxClient.GameLogic.FMOD.FMODSystem.SoundDataList
+- uid: System.Collections.Generic.Dictionary{System.String,NitroxClient.GameLogic.FMOD.SoundData}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,NitroxClient.GameLogic.FMOD.SoundData}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, SoundData>
+  nameWithType: Dictionary<string, SoundData>
+  fullName: System.Collections.Generic.Dictionary<string, NitroxClient.GameLogic.FMOD.SoundData>
+  nameWithType.vb: Dictionary(Of String, SoundData)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, NitroxClient.GameLogic.FMOD.SoundData)
+  name.vb: Dictionary(Of String, SoundData)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: NitroxClient.GameLogic.FMOD.SoundData
+    name: SoundData
+    href: NitroxClient.GameLogic.FMOD.SoundData.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: NitroxClient.GameLogic.FMOD.SoundData
+    name: SoundData
+    href: NitroxClient.GameLogic.FMOD.SoundData.html
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+memberLayout: SeparatePages

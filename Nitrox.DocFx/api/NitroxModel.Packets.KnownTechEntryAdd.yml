@@ -1,0 +1,765 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.KnownTechEntryAdd
+  commentId: T:NitroxModel.Packets.KnownTechEntryAdd
+  id: KnownTechEntryAdd
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.KnownTechEntryAdd.#ctor(NitroxModel.Packets.KnownTechEntryAdd.EntryCategory,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Boolean,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  - NitroxModel.Packets.KnownTechEntryAdd.Category
+  - NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove
+  - NitroxModel.Packets.KnownTechEntryAdd.TechType
+  - NitroxModel.Packets.KnownTechEntryAdd.Verbose
+  langs:
+  - csharp
+  - vb
+  name: KnownTechEntryAdd
+  nameWithType: KnownTechEntryAdd
+  fullName: NitroxModel.Packets.KnownTechEntryAdd
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/KnownTechEntryAdd.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: KnownTechEntryAdd
+    path: ../NitroxModel/Packets/KnownTechEntryAdd.cs
+    startLine: 6
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class KnownTechEntryAdd : Packet
+    content.vb: >-
+      <Serializable>
+
+      Public Class KnownTechEntryAdd Inherits Packet
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  inheritedMembers:
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - NitroxModel.Packets.Packet.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.KnownTechEntryAdd.TechType
+  commentId: P:NitroxModel.Packets.KnownTechEntryAdd.TechType
+  id: TechType
+  parent: NitroxModel.Packets.KnownTechEntryAdd
+  langs:
+  - csharp
+  - vb
+  name: TechType
+  nameWithType: KnownTechEntryAdd.TechType
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.TechType
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/KnownTechEntryAdd.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TechType
+    path: ../NitroxModel/Packets/KnownTechEntryAdd.cs
+    startLine: 24
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public NitroxTechType TechType { get; }
+    parameters: []
+    return:
+      type: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    content.vb: Public ReadOnly Property TechType As NitroxTechType
+  overload: NitroxModel.Packets.KnownTechEntryAdd.TechType*
+- uid: NitroxModel.Packets.KnownTechEntryAdd.Verbose
+  commentId: P:NitroxModel.Packets.KnownTechEntryAdd.Verbose
+  id: Verbose
+  parent: NitroxModel.Packets.KnownTechEntryAdd
+  langs:
+  - csharp
+  - vb
+  name: Verbose
+  nameWithType: KnownTechEntryAdd.Verbose
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.Verbose
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/KnownTechEntryAdd.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Verbose
+    path: ../NitroxModel/Packets/KnownTechEntryAdd.cs
+    startLine: 25
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public bool Verbose { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property Verbose As Boolean
+  overload: NitroxModel.Packets.KnownTechEntryAdd.Verbose*
+- uid: NitroxModel.Packets.KnownTechEntryAdd.Category
+  commentId: P:NitroxModel.Packets.KnownTechEntryAdd.Category
+  id: Category
+  parent: NitroxModel.Packets.KnownTechEntryAdd
+  langs:
+  - csharp
+  - vb
+  name: Category
+  nameWithType: KnownTechEntryAdd.Category
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.Category
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/KnownTechEntryAdd.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Category
+    path: ../NitroxModel/Packets/KnownTechEntryAdd.cs
+    startLine: 26
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public KnownTechEntryAdd.EntryCategory Category { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+    content.vb: Public ReadOnly Property Category As KnownTechEntryAdd.EntryCategory
+  overload: NitroxModel.Packets.KnownTechEntryAdd.Category*
+- uid: NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove
+  commentId: P:NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove
+  id: PartialTechTypesToRemove
+  parent: NitroxModel.Packets.KnownTechEntryAdd
+  langs:
+  - csharp
+  - vb
+  name: PartialTechTypesToRemove
+  nameWithType: KnownTechEntryAdd.PartialTechTypesToRemove
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/KnownTechEntryAdd.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PartialTechTypesToRemove
+    path: ../NitroxModel/Packets/KnownTechEntryAdd.cs
+    startLine: 27
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public List<NitroxTechType> PartialTechTypesToRemove { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public ReadOnly Property PartialTechTypesToRemove As List(Of NitroxTechType)
+  overload: NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove*
+- uid: NitroxModel.Packets.KnownTechEntryAdd.#ctor(NitroxModel.Packets.KnownTechEntryAdd.EntryCategory,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Boolean,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  commentId: M:NitroxModel.Packets.KnownTechEntryAdd.#ctor(NitroxModel.Packets.KnownTechEntryAdd.EntryCategory,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Boolean,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})
+  id: '#ctor(NitroxModel.Packets.KnownTechEntryAdd.EntryCategory,NitroxModel.DataStructures.GameLogic.NitroxTechType,System.Boolean,System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType})'
+  parent: NitroxModel.Packets.KnownTechEntryAdd
+  langs:
+  - csharp
+  - vb
+  name: KnownTechEntryAdd(EntryCategory, NitroxTechType, bool, List<NitroxTechType>)
+  nameWithType: KnownTechEntryAdd.KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory, NitroxTechType, bool, List<NitroxTechType>)
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.KnownTechEntryAdd(NitroxModel.Packets.KnownTechEntryAdd.EntryCategory, NitroxModel.DataStructures.GameLogic.NitroxTechType, bool, System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/KnownTechEntryAdd.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/KnownTechEntryAdd.cs
+    startLine: 29
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory category, NitroxTechType techType, bool verbose, List<NitroxTechType> partialTechTypesToRemove = null)
+    parameters:
+    - id: category
+      type: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+    - id: techType
+      type: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    - id: verbose
+      type: System.Boolean
+    - id: partialTechTypesToRemove
+      type: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+    content.vb: Public Sub New(category As KnownTechEntryAdd.EntryCategory, techType As NitroxTechType, verbose As Boolean, partialTechTypesToRemove As List(Of NitroxTechType) = Nothing)
+  overload: NitroxModel.Packets.KnownTechEntryAdd.#ctor*
+  nameWithType.vb: KnownTechEntryAdd.New(KnownTechEntryAdd.EntryCategory, NitroxTechType, Boolean, List(Of NitroxTechType))
+  fullName.vb: NitroxModel.Packets.KnownTechEntryAdd.New(NitroxModel.Packets.KnownTechEntryAdd.EntryCategory, NitroxModel.DataStructures.GameLogic.NitroxTechType, Boolean, System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType))
+  name.vb: New(EntryCategory, NitroxTechType, Boolean, List(Of NitroxTechType))
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.KnownTechEntryAdd.TechType*
+  commentId: Overload:NitroxModel.Packets.KnownTechEntryAdd.TechType
+  href: NitroxModel.Packets.KnownTechEntryAdd.TechType.html#NitroxModel_Packets_KnownTechEntryAdd_TechType
+  name: TechType
+  nameWithType: KnownTechEntryAdd.TechType
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.TechType
+- uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+  commentId: T:NitroxModel.DataStructures.GameLogic.NitroxTechType
+  parent: NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  name: NitroxTechType
+  nameWithType: NitroxTechType
+  fullName: NitroxModel.DataStructures.GameLogic.NitroxTechType
+- uid: NitroxModel.DataStructures.GameLogic
+  commentId: N:NitroxModel.DataStructures.GameLogic
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic
+  nameWithType: NitroxModel.DataStructures.GameLogic
+  fullName: NitroxModel.DataStructures.GameLogic
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+- uid: NitroxModel.Packets.KnownTechEntryAdd.Verbose*
+  commentId: Overload:NitroxModel.Packets.KnownTechEntryAdd.Verbose
+  href: NitroxModel.Packets.KnownTechEntryAdd.Verbose.html#NitroxModel_Packets_KnownTechEntryAdd_Verbose
+  name: Verbose
+  nameWithType: KnownTechEntryAdd.Verbose
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.Verbose
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxModel.Packets.KnownTechEntryAdd.Category*
+  commentId: Overload:NitroxModel.Packets.KnownTechEntryAdd.Category
+  href: NitroxModel.Packets.KnownTechEntryAdd.Category.html#NitroxModel_Packets_KnownTechEntryAdd_Category
+  name: Category
+  nameWithType: KnownTechEntryAdd.Category
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.Category
+- uid: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+  commentId: T:NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.KnownTechEntryAdd.html
+  name: KnownTechEntryAdd.EntryCategory
+  nameWithType: KnownTechEntryAdd.EntryCategory
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+  spec.csharp:
+  - uid: NitroxModel.Packets.KnownTechEntryAdd
+    name: KnownTechEntryAdd
+    href: NitroxModel.Packets.KnownTechEntryAdd.html
+  - name: .
+  - uid: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+    name: EntryCategory
+    href: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.html
+  spec.vb:
+  - uid: NitroxModel.Packets.KnownTechEntryAdd
+    name: KnownTechEntryAdd
+    href: NitroxModel.Packets.KnownTechEntryAdd.html
+  - name: .
+  - uid: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory
+    name: EntryCategory
+    href: NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.html
+- uid: NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove*
+  commentId: Overload:NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove
+  href: NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove.html#NitroxModel_Packets_KnownTechEntryAdd_PartialTechTypesToRemove
+  name: PartialTechTypesToRemove
+  nameWithType: KnownTechEntryAdd.PartialTechTypesToRemove
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.PartialTechTypesToRemove
+- uid: System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  commentId: T:System.Collections.Generic.List{NitroxModel.DataStructures.GameLogic.NitroxTechType}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<NitroxTechType>
+  nameWithType: List<NitroxTechType>
+  fullName: System.Collections.Generic.List<NitroxModel.DataStructures.GameLogic.NitroxTechType>
+  nameWithType.vb: List(Of NitroxTechType)
+  fullName.vb: System.Collections.Generic.List(Of NitroxModel.DataStructures.GameLogic.NitroxTechType)
+  name.vb: List(Of NitroxTechType)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.GameLogic.NitroxTechType
+    name: NitroxTechType
+    href: NitroxModel.DataStructures.GameLogic.NitroxTechType.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxModel.Packets.KnownTechEntryAdd.#ctor*
+  commentId: Overload:NitroxModel.Packets.KnownTechEntryAdd.#ctor
+  href: NitroxModel.Packets.KnownTechEntryAdd.-ctor.html#NitroxModel_Packets_KnownTechEntryAdd__ctor_NitroxModel_Packets_KnownTechEntryAdd_EntryCategory_NitroxModel_DataStructures_GameLogic_NitroxTechType_System_Boolean_System_Collections_Generic_List_NitroxModel_DataStructures_GameLogic_NitroxTechType__
+  name: KnownTechEntryAdd
+  nameWithType: KnownTechEntryAdd.KnownTechEntryAdd
+  fullName: NitroxModel.Packets.KnownTechEntryAdd.KnownTechEntryAdd
+  nameWithType.vb: KnownTechEntryAdd.New
+  fullName.vb: NitroxModel.Packets.KnownTechEntryAdd.New
+  name.vb: New
+memberLayout: SeparatePages

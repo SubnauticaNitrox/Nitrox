@@ -1,0 +1,681 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.Packets.StoryGoalExecuted
+  commentId: T:NitroxModel.Packets.StoryGoalExecuted
+  id: StoryGoalExecuted
+  parent: NitroxModel.Packets
+  children:
+  - NitroxModel.Packets.StoryGoalExecuted.#ctor(System.String,NitroxModel.Packets.StoryGoalExecuted.EventType,System.Nullable{System.Single})
+  - NitroxModel.Packets.StoryGoalExecuted.Key
+  - NitroxModel.Packets.StoryGoalExecuted.Timestamp
+  - NitroxModel.Packets.StoryGoalExecuted.ToString
+  - NitroxModel.Packets.StoryGoalExecuted.Type
+  langs:
+  - csharp
+  - vb
+  name: StoryGoalExecuted
+  nameWithType: StoryGoalExecuted
+  fullName: NitroxModel.Packets.StoryGoalExecuted
+  type: Class
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: StoryGoalExecuted
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 4
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: >-
+      [Serializable]
+
+      public class StoryGoalExecuted : Packet
+    content.vb: >-
+      <Serializable>
+
+      Public Class StoryGoalExecuted Inherits Packet
+  inheritance:
+  - System.Object
+  - NitroxModel.Packets.Packet
+  inheritedMembers:
+  - NitroxModel.Packets.Packet.InitSerializer
+  - NitroxModel.Packets.Packet.DeliveryMethod
+  - NitroxModel.Packets.Packet.UdpChannel
+  - NitroxModel.Packets.Packet.Serialize
+  - NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.Packets.StoryGoalExecuted.Key
+  commentId: P:NitroxModel.Packets.StoryGoalExecuted.Key
+  id: Key
+  parent: NitroxModel.Packets.StoryGoalExecuted
+  langs:
+  - csharp
+  - vb
+  name: Key
+  nameWithType: StoryGoalExecuted.Key
+  fullName: NitroxModel.Packets.StoryGoalExecuted.Key
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Key
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public string Key { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Key As String
+  overload: NitroxModel.Packets.StoryGoalExecuted.Key*
+- uid: NitroxModel.Packets.StoryGoalExecuted.Type
+  commentId: P:NitroxModel.Packets.StoryGoalExecuted.Type
+  id: Type
+  parent: NitroxModel.Packets.StoryGoalExecuted
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: StoryGoalExecuted.Type
+  fullName: NitroxModel.Packets.StoryGoalExecuted.Type
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Type
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 8
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public StoryGoalExecuted.EventType Type { get; }
+    parameters: []
+    return:
+      type: NitroxModel.Packets.StoryGoalExecuted.EventType
+    content.vb: Public ReadOnly Property Type As StoryGoalExecuted.EventType
+  overload: NitroxModel.Packets.StoryGoalExecuted.Type*
+- uid: NitroxModel.Packets.StoryGoalExecuted.Timestamp
+  commentId: P:NitroxModel.Packets.StoryGoalExecuted.Timestamp
+  id: Timestamp
+  parent: NitroxModel.Packets.StoryGoalExecuted
+  langs:
+  - csharp
+  - vb
+  name: Timestamp
+  nameWithType: StoryGoalExecuted.Timestamp
+  fullName: NitroxModel.Packets.StoryGoalExecuted.Timestamp
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Timestamp
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 9
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public float? Timestamp { get; set; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Single}
+    content.vb: Public Property Timestamp As Single?
+  overload: NitroxModel.Packets.StoryGoalExecuted.Timestamp*
+- uid: NitroxModel.Packets.StoryGoalExecuted.#ctor(System.String,NitroxModel.Packets.StoryGoalExecuted.EventType,System.Nullable{System.Single})
+  commentId: M:NitroxModel.Packets.StoryGoalExecuted.#ctor(System.String,NitroxModel.Packets.StoryGoalExecuted.EventType,System.Nullable{System.Single})
+  id: '#ctor(System.String,NitroxModel.Packets.StoryGoalExecuted.EventType,System.Nullable{System.Single})'
+  parent: NitroxModel.Packets.StoryGoalExecuted
+  langs:
+  - csharp
+  - vb
+  name: StoryGoalExecuted(string, EventType, float?)
+  nameWithType: StoryGoalExecuted.StoryGoalExecuted(string, StoryGoalExecuted.EventType, float?)
+  fullName: NitroxModel.Packets.StoryGoalExecuted.StoryGoalExecuted(string, NitroxModel.Packets.StoryGoalExecuted.EventType, float?)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 11
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  syntax:
+    content: public StoryGoalExecuted(string key, StoryGoalExecuted.EventType type, float? timestamp = null)
+    parameters:
+    - id: key
+      type: System.String
+    - id: type
+      type: NitroxModel.Packets.StoryGoalExecuted.EventType
+    - id: timestamp
+      type: System.Nullable{System.Single}
+    content.vb: Public Sub New(key As String, type As StoryGoalExecuted.EventType, timestamp As Single? = Nothing)
+  overload: NitroxModel.Packets.StoryGoalExecuted.#ctor*
+  nameWithType.vb: StoryGoalExecuted.New(String, StoryGoalExecuted.EventType, Single?)
+  fullName.vb: NitroxModel.Packets.StoryGoalExecuted.New(String, NitroxModel.Packets.StoryGoalExecuted.EventType, Single?)
+  name.vb: New(String, EventType, Single?)
+- uid: NitroxModel.Packets.StoryGoalExecuted.ToString
+  commentId: M:NitroxModel.Packets.StoryGoalExecuted.ToString
+  id: ToString
+  parent: NitroxModel.Packets.StoryGoalExecuted
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: StoryGoalExecuted.ToString()
+  fullName: NitroxModel.Packets.StoryGoalExecuted.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/Packets/StoryGoalExecuted.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel/Packets/StoryGoalExecuted.cs
+    startLine: 18
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.Packets
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: NitroxModel.Packets.Packet.ToString
+  overload: NitroxModel.Packets.StoryGoalExecuted.ToString*
+references:
+- uid: NitroxModel.Packets
+  commentId: N:NitroxModel.Packets
+  href: NitroxModel.html
+  name: NitroxModel.Packets
+  nameWithType: NitroxModel.Packets
+  fullName: NitroxModel.Packets
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.Packets
+    name: Packets
+    href: NitroxModel.Packets.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.Packets.Packet
+  commentId: T:NitroxModel.Packets.Packet
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.Packet.html
+  name: Packet
+  nameWithType: Packet
+  fullName: NitroxModel.Packets.Packet
+- uid: NitroxModel.Packets.Packet.InitSerializer
+  commentId: M:NitroxModel.Packets.Packet.InitSerializer
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  name: InitSerializer()
+  nameWithType: Packet.InitSerializer()
+  fullName: NitroxModel.Packets.Packet.InitSerializer()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.InitSerializer
+    name: InitSerializer
+    href: NitroxModel.Packets.Packet.InitSerializer.html#NitroxModel_Packets_Packet_InitSerializer
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.DeliveryMethod
+  commentId: P:NitroxModel.Packets.Packet.DeliveryMethod
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.DeliveryMethod.html#NitroxModel_Packets_Packet_DeliveryMethod
+  name: DeliveryMethod
+  nameWithType: Packet.DeliveryMethod
+  fullName: NitroxModel.Packets.Packet.DeliveryMethod
+- uid: NitroxModel.Packets.Packet.UdpChannel
+  commentId: P:NitroxModel.Packets.Packet.UdpChannel
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.UdpChannel.html#NitroxModel_Packets_Packet_UdpChannel
+  name: UdpChannel
+  nameWithType: Packet.UdpChannel
+  fullName: NitroxModel.Packets.Packet.UdpChannel
+- uid: NitroxModel.Packets.Packet.Serialize
+  commentId: M:NitroxModel.Packets.Packet.Serialize
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  name: Serialize()
+  nameWithType: Packet.Serialize()
+  fullName: NitroxModel.Packets.Packet.Serialize()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Serialize
+    name: Serialize
+    href: NitroxModel.Packets.Packet.Serialize.html#NitroxModel_Packets_Packet_Serialize
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  commentId: M:NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+  parent: NitroxModel.Packets.Packet
+  isExternal: true
+  href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  name: Deserialize(byte[])
+  nameWithType: Packet.Deserialize(byte[])
+  fullName: NitroxModel.Packets.Packet.Deserialize(byte[])
+  nameWithType.vb: Packet.Deserialize(Byte())
+  fullName.vb: NitroxModel.Packets.Packet.Deserialize(Byte())
+  name.vb: Deserialize(Byte())
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.Deserialize(System.Byte[])
+    name: Deserialize
+    href: NitroxModel.Packets.Packet.Deserialize.html#NitroxModel_Packets_Packet_Deserialize_System_Byte___
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxModel.Packets.StoryGoalExecuted.Key*
+  commentId: Overload:NitroxModel.Packets.StoryGoalExecuted.Key
+  href: NitroxModel.Packets.StoryGoalExecuted.Key.html#NitroxModel_Packets_StoryGoalExecuted_Key
+  name: Key
+  nameWithType: StoryGoalExecuted.Key
+  fullName: NitroxModel.Packets.StoryGoalExecuted.Key
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: NitroxModel.Packets.StoryGoalExecuted.Type*
+  commentId: Overload:NitroxModel.Packets.StoryGoalExecuted.Type
+  href: NitroxModel.Packets.StoryGoalExecuted.Type.html#NitroxModel_Packets_StoryGoalExecuted_Type
+  name: Type
+  nameWithType: StoryGoalExecuted.Type
+  fullName: NitroxModel.Packets.StoryGoalExecuted.Type
+- uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+  commentId: T:NitroxModel.Packets.StoryGoalExecuted.EventType
+  parent: NitroxModel.Packets
+  href: NitroxModel.Packets.StoryGoalExecuted.html
+  name: StoryGoalExecuted.EventType
+  nameWithType: StoryGoalExecuted.EventType
+  fullName: NitroxModel.Packets.StoryGoalExecuted.EventType
+  spec.csharp:
+  - uid: NitroxModel.Packets.StoryGoalExecuted
+    name: StoryGoalExecuted
+    href: NitroxModel.Packets.StoryGoalExecuted.html
+  - name: .
+  - uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+    name: EventType
+    href: NitroxModel.Packets.StoryGoalExecuted.EventType.html
+  spec.vb:
+  - uid: NitroxModel.Packets.StoryGoalExecuted
+    name: StoryGoalExecuted
+    href: NitroxModel.Packets.StoryGoalExecuted.html
+  - name: .
+  - uid: NitroxModel.Packets.StoryGoalExecuted.EventType
+    name: EventType
+    href: NitroxModel.Packets.StoryGoalExecuted.EventType.html
+- uid: NitroxModel.Packets.StoryGoalExecuted.Timestamp*
+  commentId: Overload:NitroxModel.Packets.StoryGoalExecuted.Timestamp
+  href: NitroxModel.Packets.StoryGoalExecuted.Timestamp.html#NitroxModel_Packets_StoryGoalExecuted_Timestamp
+  name: Timestamp
+  nameWithType: StoryGoalExecuted.Timestamp
+  fullName: NitroxModel.Packets.StoryGoalExecuted.Timestamp
+- uid: System.Nullable{System.Single}
+  commentId: T:System.Nullable{System.Single}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float?
+  nameWithType: float?
+  fullName: float?
+  nameWithType.vb: Single?
+  fullName.vb: Single?
+  name.vb: Single?
+  spec.csharp:
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '?'
+  spec.vb:
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: NitroxModel.Packets.StoryGoalExecuted.#ctor*
+  commentId: Overload:NitroxModel.Packets.StoryGoalExecuted.#ctor
+  href: NitroxModel.Packets.StoryGoalExecuted.-ctor.html#NitroxModel_Packets_StoryGoalExecuted__ctor_System_String_NitroxModel_Packets_StoryGoalExecuted_EventType_System_Nullable_System_Single__
+  name: StoryGoalExecuted
+  nameWithType: StoryGoalExecuted.StoryGoalExecuted
+  fullName: NitroxModel.Packets.StoryGoalExecuted.StoryGoalExecuted
+  nameWithType.vb: StoryGoalExecuted.New
+  fullName.vb: NitroxModel.Packets.StoryGoalExecuted.New
+  name.vb: New
+- uid: NitroxModel.Packets.Packet.ToString
+  commentId: M:NitroxModel.Packets.Packet.ToString
+  parent: NitroxModel.Packets.Packet
+  href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  name: ToString()
+  nameWithType: Packet.ToString()
+  fullName: NitroxModel.Packets.Packet.ToString()
+  spec.csharp:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxModel.Packets.Packet.ToString
+    name: ToString
+    href: NitroxModel.Packets.Packet.ToString.html#NitroxModel_Packets_Packet_ToString
+  - name: (
+  - name: )
+- uid: NitroxModel.Packets.StoryGoalExecuted.ToString*
+  commentId: Overload:NitroxModel.Packets.StoryGoalExecuted.ToString
+  href: NitroxModel.Packets.StoryGoalExecuted.ToString.html#NitroxModel_Packets_StoryGoalExecuted_ToString
+  name: ToString
+  nameWithType: StoryGoalExecuted.ToString
+  fullName: NitroxModel.Packets.StoryGoalExecuted.ToString
+memberLayout: SeparatePages

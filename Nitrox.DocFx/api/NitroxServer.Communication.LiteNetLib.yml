@@ -1,0 +1,63 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Communication.LiteNetLib
+  commentId: N:NitroxServer.Communication.LiteNetLib
+  id: LiteNetLib
+  parent: NitroxServer.Communication
+  children:
+  - NitroxServer.Communication.LiteNetLib.LiteNetLibConnection
+  - NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.Communication.LiteNetLib
+  nameWithType: NitroxServer.Communication.LiteNetLib
+  fullName: NitroxServer.Communication.LiteNetLib
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibConnection
+  commentId: T:NitroxServer.Communication.LiteNetLib.LiteNetLibConnection
+  parent: NitroxServer.Communication.LiteNetLib
+  href: NitroxServer.Communication.LiteNetLib.LiteNetLibConnection.html
+  name: LiteNetLibConnection
+  nameWithType: LiteNetLibConnection
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibConnection
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  commentId: T:NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  href: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.html
+  name: LiteNetLibServer
+  nameWithType: LiteNetLibServer
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+- uid: NitroxServer.Communication.LiteNetLib
+  commentId: N:NitroxServer.Communication.LiteNetLib
+  href: NitroxServer.html
+  name: NitroxServer.Communication.LiteNetLib
+  nameWithType: NitroxServer.Communication.LiteNetLib
+  fullName: NitroxServer.Communication.LiteNetLib
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.LiteNetLib
+    name: LiteNetLib
+    href: NitroxServer.Communication.LiteNetLib.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.LiteNetLib
+    name: LiteNetLib
+    href: NitroxServer.Communication.LiteNetLib.html
+memberLayout: SeparatePages

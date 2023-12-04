@@ -1,0 +1,237 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.MonoBehaviours
+  commentId: N:NitroxClient.MonoBehaviours
+  id: MonoBehaviours
+  parent: NitroxClient
+  children:
+  - NitroxClient.MonoBehaviours.AnimChangeState
+  - NitroxClient.MonoBehaviours.AnimChangeType
+  - NitroxClient.MonoBehaviours.AnimationController
+  - NitroxClient.MonoBehaviours.AnimationSender
+  - NitroxClient.MonoBehaviours.Discord
+  - NitroxClient.MonoBehaviours.EntityPositionBroadcaster
+  - NitroxClient.MonoBehaviours.FMODEmitterController
+  - NitroxClient.MonoBehaviours.Gui
+  - NitroxClient.MonoBehaviours.MoonpoolManager
+  - NitroxClient.MonoBehaviours.Multiplayer
+  - NitroxClient.MonoBehaviours.MultiplayerCyclops
+  - NitroxClient.MonoBehaviours.MultiplayerSeaMoth
+  - NitroxClient.MonoBehaviours.MultiplayerVehicleControl
+  - NitroxClient.MonoBehaviours.NitroxBootstrapper
+  - NitroxClient.MonoBehaviours.NitroxDebugManager
+  - NitroxClient.MonoBehaviours.NitroxEntity
+  - NitroxClient.MonoBehaviours.Overrides
+  - NitroxClient.MonoBehaviours.PlayerDeathBroadcaster
+  - NitroxClient.MonoBehaviours.PlayerMovementBroadcaster
+  - NitroxClient.MonoBehaviours.PlayerStatsBroadcaster
+  - NitroxClient.MonoBehaviours.RemotelyControlled
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.MonoBehaviours
+  nameWithType: NitroxClient.MonoBehaviours
+  fullName: NitroxClient.MonoBehaviours
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.MonoBehaviours.Discord
+  commentId: N:NitroxClient.MonoBehaviours.Discord
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Discord
+  nameWithType: NitroxClient.MonoBehaviours.Discord
+  fullName: NitroxClient.MonoBehaviours.Discord
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Discord
+    name: Discord
+    href: NitroxClient.MonoBehaviours.Discord.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Discord
+    name: Discord
+    href: NitroxClient.MonoBehaviours.Discord.html
+- uid: NitroxClient.MonoBehaviours.Gui
+  isExternal: true
+- uid: NitroxClient.MonoBehaviours.Overrides
+  commentId: N:NitroxClient.MonoBehaviours.Overrides
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Overrides
+  nameWithType: NitroxClient.MonoBehaviours.Overrides
+  fullName: NitroxClient.MonoBehaviours.Overrides
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides
+    name: Overrides
+    href: NitroxClient.MonoBehaviours.Overrides.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Overrides
+    name: Overrides
+    href: NitroxClient.MonoBehaviours.Overrides.html
+- uid: NitroxClient.MonoBehaviours.AnimChangeState
+  commentId: T:NitroxClient.MonoBehaviours.AnimChangeState
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.AnimChangeState.html
+  name: AnimChangeState
+  nameWithType: AnimChangeState
+  fullName: NitroxClient.MonoBehaviours.AnimChangeState
+- uid: NitroxClient.MonoBehaviours.AnimChangeType
+  commentId: T:NitroxClient.MonoBehaviours.AnimChangeType
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.AnimChangeType.html
+  name: AnimChangeType
+  nameWithType: AnimChangeType
+  fullName: NitroxClient.MonoBehaviours.AnimChangeType
+- uid: NitroxClient.MonoBehaviours.AnimationController
+  commentId: T:NitroxClient.MonoBehaviours.AnimationController
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.AnimationController.html
+  name: AnimationController
+  nameWithType: AnimationController
+  fullName: NitroxClient.MonoBehaviours.AnimationController
+- uid: NitroxClient.MonoBehaviours.AnimationSender
+  commentId: T:NitroxClient.MonoBehaviours.AnimationSender
+  href: NitroxClient.MonoBehaviours.AnimationSender.html
+  name: AnimationSender
+  nameWithType: AnimationSender
+  fullName: NitroxClient.MonoBehaviours.AnimationSender
+- uid: NitroxClient.MonoBehaviours.EntityPositionBroadcaster
+  commentId: T:NitroxClient.MonoBehaviours.EntityPositionBroadcaster
+  href: NitroxClient.MonoBehaviours.EntityPositionBroadcaster.html
+  name: EntityPositionBroadcaster
+  nameWithType: EntityPositionBroadcaster
+  fullName: NitroxClient.MonoBehaviours.EntityPositionBroadcaster
+- uid: NitroxClient.MonoBehaviours.FMODEmitterController
+  commentId: T:NitroxClient.MonoBehaviours.FMODEmitterController
+  href: NitroxClient.MonoBehaviours.FMODEmitterController.html
+  name: FMODEmitterController
+  nameWithType: FMODEmitterController
+  fullName: NitroxClient.MonoBehaviours.FMODEmitterController
+- uid: NitroxClient.MonoBehaviours.MoonpoolManager
+  commentId: T:NitroxClient.MonoBehaviours.MoonpoolManager
+  href: NitroxClient.MonoBehaviours.MoonpoolManager.html
+  name: MoonpoolManager
+  nameWithType: MoonpoolManager
+  fullName: NitroxClient.MonoBehaviours.MoonpoolManager
+- uid: NitroxClient.MonoBehaviours.Multiplayer
+  commentId: T:NitroxClient.MonoBehaviours.Multiplayer
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.Multiplayer.html
+  name: Multiplayer
+  nameWithType: Multiplayer
+  fullName: NitroxClient.MonoBehaviours.Multiplayer
+- uid: NitroxClient.MonoBehaviours.MultiplayerCyclops
+  commentId: T:NitroxClient.MonoBehaviours.MultiplayerCyclops
+  href: NitroxClient.MonoBehaviours.MultiplayerCyclops.html
+  name: MultiplayerCyclops
+  nameWithType: MultiplayerCyclops
+  fullName: NitroxClient.MonoBehaviours.MultiplayerCyclops
+- uid: NitroxClient.MonoBehaviours.MultiplayerSeaMoth
+  commentId: T:NitroxClient.MonoBehaviours.MultiplayerSeaMoth
+  href: NitroxClient.MonoBehaviours.MultiplayerSeaMoth.html
+  name: MultiplayerSeaMoth
+  nameWithType: MultiplayerSeaMoth
+  fullName: NitroxClient.MonoBehaviours.MultiplayerSeaMoth
+- uid: NitroxClient.MonoBehaviours.MultiplayerVehicleControl
+  commentId: T:NitroxClient.MonoBehaviours.MultiplayerVehicleControl
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.MultiplayerVehicleControl.html
+  name: MultiplayerVehicleControl
+  nameWithType: MultiplayerVehicleControl
+  fullName: NitroxClient.MonoBehaviours.MultiplayerVehicleControl
+- uid: NitroxClient.MonoBehaviours.NitroxBootstrapper
+  commentId: T:NitroxClient.MonoBehaviours.NitroxBootstrapper
+  href: NitroxClient.MonoBehaviours.NitroxBootstrapper.html
+  name: NitroxBootstrapper
+  nameWithType: NitroxBootstrapper
+  fullName: NitroxClient.MonoBehaviours.NitroxBootstrapper
+- uid: NitroxClient.MonoBehaviours.NitroxDebugManager
+  commentId: T:NitroxClient.MonoBehaviours.NitroxDebugManager
+  href: NitroxClient.MonoBehaviours.NitroxDebugManager.html
+  name: NitroxDebugManager
+  nameWithType: NitroxDebugManager
+  fullName: NitroxClient.MonoBehaviours.NitroxDebugManager
+- uid: NitroxClient.MonoBehaviours.NitroxEntity
+  commentId: T:NitroxClient.MonoBehaviours.NitroxEntity
+  parent: NitroxClient.MonoBehaviours
+  href: NitroxClient.MonoBehaviours.NitroxEntity.html
+  name: NitroxEntity
+  nameWithType: NitroxEntity
+  fullName: NitroxClient.MonoBehaviours.NitroxEntity
+- uid: NitroxClient.MonoBehaviours.PlayerDeathBroadcaster
+  commentId: T:NitroxClient.MonoBehaviours.PlayerDeathBroadcaster
+  href: NitroxClient.MonoBehaviours.PlayerDeathBroadcaster.html
+  name: PlayerDeathBroadcaster
+  nameWithType: PlayerDeathBroadcaster
+  fullName: NitroxClient.MonoBehaviours.PlayerDeathBroadcaster
+- uid: NitroxClient.MonoBehaviours.PlayerMovementBroadcaster
+  commentId: T:NitroxClient.MonoBehaviours.PlayerMovementBroadcaster
+  href: NitroxClient.MonoBehaviours.PlayerMovementBroadcaster.html
+  name: PlayerMovementBroadcaster
+  nameWithType: PlayerMovementBroadcaster
+  fullName: NitroxClient.MonoBehaviours.PlayerMovementBroadcaster
+- uid: NitroxClient.MonoBehaviours.PlayerStatsBroadcaster
+  commentId: T:NitroxClient.MonoBehaviours.PlayerStatsBroadcaster
+  href: NitroxClient.MonoBehaviours.PlayerStatsBroadcaster.html
+  name: PlayerStatsBroadcaster
+  nameWithType: PlayerStatsBroadcaster
+  fullName: NitroxClient.MonoBehaviours.PlayerStatsBroadcaster
+- uid: NitroxClient.MonoBehaviours.RemotelyControlled
+  commentId: T:NitroxClient.MonoBehaviours.RemotelyControlled
+  href: NitroxClient.MonoBehaviours.RemotelyControlled.html
+  name: RemotelyControlled
+  nameWithType: RemotelyControlled
+  fullName: NitroxClient.MonoBehaviours.RemotelyControlled
+- uid: NitroxClient.MonoBehaviours
+  commentId: N:NitroxClient.MonoBehaviours
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours
+  nameWithType: NitroxClient.MonoBehaviours
+  fullName: NitroxClient.MonoBehaviours
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+memberLayout: SeparatePages

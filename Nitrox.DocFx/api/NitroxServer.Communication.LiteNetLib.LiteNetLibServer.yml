@@ -1,0 +1,811 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  commentId: T:NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  id: LiteNetLibServer
+  parent: NitroxServer.Communication.LiteNetLib
+  children:
+  - NitroxServer.Communication.LiteNetLib.LiteNetLibServer.#ctor(NitroxServer.Communication.Packets.PacketHandler,NitroxServer.GameLogic.PlayerManager,NitroxServer.GameLogic.Entities.EntitySimulation,NitroxServer.Serialization.ServerConfig)
+  - NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest(LiteNetLib.ConnectionRequest)
+  - NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start
+  - NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop
+  langs:
+  - csharp
+  - vb
+  name: LiteNetLibServer
+  nameWithType: LiteNetLibServer
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  type: Class
+  source:
+    remote:
+      path: NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: LiteNetLibServer
+    path: ../NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+    startLine: 15
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.LiteNetLib
+  syntax:
+    content: 'public class LiteNetLibServer : NitroxServer'
+    content.vb: Public Class LiteNetLibServer Inherits NitroxServer
+  inheritance:
+  - System.Object
+  - NitroxServer.Communication.NitroxServer
+  inheritedMembers:
+  - NitroxServer.Communication.NitroxServer.portNumber
+  - NitroxServer.Communication.NitroxServer.maxConnections
+  - NitroxServer.Communication.NitroxServer.useUpnpPortForwarding
+  - NitroxServer.Communication.NitroxServer.useLANBroadcast
+  - NitroxServer.Communication.NitroxServer.packetHandler
+  - NitroxServer.Communication.NitroxServer.entitySimulation
+  - NitroxServer.Communication.NitroxServer.connectionsByRemoteIdentifier
+  - NitroxServer.Communication.NitroxServer.playerManager
+  - NitroxServer.Communication.NitroxServer.ClientDisconnected(NitroxServer.Communication.NitroxConnection)
+  - NitroxServer.Communication.NitroxServer.ProcessIncomingData(NitroxServer.Communication.NitroxConnection,NitroxModel.Packets.Packet)
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.#ctor(NitroxServer.Communication.Packets.PacketHandler,NitroxServer.GameLogic.PlayerManager,NitroxServer.GameLogic.Entities.EntitySimulation,NitroxServer.Serialization.ServerConfig)
+  commentId: M:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.#ctor(NitroxServer.Communication.Packets.PacketHandler,NitroxServer.GameLogic.PlayerManager,NitroxServer.GameLogic.Entities.EntitySimulation,NitroxServer.Serialization.ServerConfig)
+  id: '#ctor(NitroxServer.Communication.Packets.PacketHandler,NitroxServer.GameLogic.PlayerManager,NitroxServer.GameLogic.Entities.EntitySimulation,NitroxServer.Serialization.ServerConfig)'
+  parent: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  langs:
+  - csharp
+  - vb
+  name: LiteNetLibServer(PacketHandler, PlayerManager, EntitySimulation, ServerConfig)
+  nameWithType: LiteNetLibServer.LiteNetLibServer(PacketHandler, PlayerManager, EntitySimulation, ServerConfig)
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.LiteNetLibServer(NitroxServer.Communication.Packets.PacketHandler, NitroxServer.GameLogic.PlayerManager, NitroxServer.GameLogic.Entities.EntitySimulation, NitroxServer.Serialization.ServerConfig)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+    startLine: 20
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.LiteNetLib
+  syntax:
+    content: public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
+    parameters:
+    - id: packetHandler
+      type: NitroxServer.Communication.Packets.PacketHandler
+    - id: playerManager
+      type: NitroxServer.GameLogic.PlayerManager
+    - id: entitySimulation
+      type: NitroxServer.GameLogic.Entities.EntitySimulation
+    - id: serverConfig
+      type: NitroxServer.Serialization.ServerConfig
+    content.vb: Public Sub New(packetHandler As PacketHandler, playerManager As PlayerManager, entitySimulation As EntitySimulation, serverConfig As ServerConfig)
+  overload: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.#ctor*
+  nameWithType.vb: LiteNetLibServer.New(PacketHandler, PlayerManager, EntitySimulation, ServerConfig)
+  fullName.vb: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.New(NitroxServer.Communication.Packets.PacketHandler, NitroxServer.GameLogic.PlayerManager, NitroxServer.GameLogic.Entities.EntitySimulation, NitroxServer.Serialization.ServerConfig)
+  name.vb: New(PacketHandler, PlayerManager, EntitySimulation, ServerConfig)
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start
+  commentId: M:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start
+  id: Start
+  parent: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  langs:
+  - csharp
+  - vb
+  name: Start()
+  nameWithType: LiteNetLibServer.Start()
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Start
+    path: ../NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+    startLine: 26
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.LiteNetLib
+  example: []
+  syntax:
+    content: public override bool Start()
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Start() As Boolean
+  overridden: NitroxServer.Communication.NitroxServer.Start
+  overload: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start*
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop
+  commentId: M:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop
+  id: Stop
+  parent: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  langs:
+  - csharp
+  - vb
+  name: Stop()
+  nameWithType: LiteNetLibServer.Stop()
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop()
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Stop
+    path: ../NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+    startLine: 82
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.LiteNetLib
+  example: []
+  syntax:
+    content: public override void Stop()
+    content.vb: Public Overrides Sub [Stop]()
+  overridden: NitroxServer.Communication.NitroxServer.Stop
+  overload: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop*
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest(LiteNetLib.ConnectionRequest)
+  commentId: M:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest(LiteNetLib.ConnectionRequest)
+  id: OnConnectionRequest(LiteNetLib.ConnectionRequest)
+  parent: NitroxServer.Communication.LiteNetLib.LiteNetLibServer
+  langs:
+  - csharp
+  - vb
+  name: OnConnectionRequest(ConnectionRequest)
+  nameWithType: LiteNetLibServer.OnConnectionRequest(ConnectionRequest)
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest(LiteNetLib.ConnectionRequest)
+  type: Method
+  source:
+    remote:
+      path: NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: OnConnectionRequest
+    path: ../NitroxServer/Communication/LiteNetLib/LiteNetLibServer.cs
+    startLine: 99
+  assemblies:
+  - NitroxServer
+  namespace: NitroxServer.Communication.LiteNetLib
+  syntax:
+    content: public void OnConnectionRequest(ConnectionRequest request)
+    parameters:
+    - id: request
+      type: LiteNetLib.ConnectionRequest
+    content.vb: Public Sub OnConnectionRequest(request As ConnectionRequest)
+  overload: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest*
+references:
+- uid: NitroxServer.Communication.LiteNetLib
+  commentId: N:NitroxServer.Communication.LiteNetLib
+  href: NitroxServer.html
+  name: NitroxServer.Communication.LiteNetLib
+  nameWithType: NitroxServer.Communication.LiteNetLib
+  fullName: NitroxServer.Communication.LiteNetLib
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.LiteNetLib
+    name: LiteNetLib
+    href: NitroxServer.Communication.LiteNetLib.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.LiteNetLib
+    name: LiteNetLib
+    href: NitroxServer.Communication.LiteNetLib.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxServer.Communication.NitroxServer
+  commentId: T:NitroxServer.Communication.NitroxServer
+  parent: NitroxServer.Communication
+  href: NitroxServer.Communication.NitroxServer.html
+  name: NitroxServer
+  nameWithType: NitroxServer
+  fullName: NitroxServer.Communication.NitroxServer
+- uid: NitroxServer.Communication.NitroxServer.portNumber
+  commentId: F:NitroxServer.Communication.NitroxServer.portNumber
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.portNumber.html#NitroxServer_Communication_NitroxServer_portNumber
+  name: portNumber
+  nameWithType: NitroxServer.portNumber
+  fullName: NitroxServer.Communication.NitroxServer.portNumber
+- uid: NitroxServer.Communication.NitroxServer.maxConnections
+  commentId: F:NitroxServer.Communication.NitroxServer.maxConnections
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.maxConnections.html#NitroxServer_Communication_NitroxServer_maxConnections
+  name: maxConnections
+  nameWithType: NitroxServer.maxConnections
+  fullName: NitroxServer.Communication.NitroxServer.maxConnections
+- uid: NitroxServer.Communication.NitroxServer.useUpnpPortForwarding
+  commentId: F:NitroxServer.Communication.NitroxServer.useUpnpPortForwarding
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.useUpnpPortForwarding.html#NitroxServer_Communication_NitroxServer_useUpnpPortForwarding
+  name: useUpnpPortForwarding
+  nameWithType: NitroxServer.useUpnpPortForwarding
+  fullName: NitroxServer.Communication.NitroxServer.useUpnpPortForwarding
+- uid: NitroxServer.Communication.NitroxServer.useLANBroadcast
+  commentId: F:NitroxServer.Communication.NitroxServer.useLANBroadcast
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.useLANBroadcast.html#NitroxServer_Communication_NitroxServer_useLANBroadcast
+  name: useLANBroadcast
+  nameWithType: NitroxServer.useLANBroadcast
+  fullName: NitroxServer.Communication.NitroxServer.useLANBroadcast
+- uid: NitroxServer.Communication.NitroxServer.packetHandler
+  commentId: F:NitroxServer.Communication.NitroxServer.packetHandler
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.packetHandler.html#NitroxServer_Communication_NitroxServer_packetHandler
+  name: packetHandler
+  nameWithType: NitroxServer.packetHandler
+  fullName: NitroxServer.Communication.NitroxServer.packetHandler
+- uid: NitroxServer.Communication.NitroxServer.entitySimulation
+  commentId: F:NitroxServer.Communication.NitroxServer.entitySimulation
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.entitySimulation.html#NitroxServer_Communication_NitroxServer_entitySimulation
+  name: entitySimulation
+  nameWithType: NitroxServer.entitySimulation
+  fullName: NitroxServer.Communication.NitroxServer.entitySimulation
+- uid: NitroxServer.Communication.NitroxServer.connectionsByRemoteIdentifier
+  commentId: F:NitroxServer.Communication.NitroxServer.connectionsByRemoteIdentifier
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.connectionsByRemoteIdentifier.html#NitroxServer_Communication_NitroxServer_connectionsByRemoteIdentifier
+  name: connectionsByRemoteIdentifier
+  nameWithType: NitroxServer.connectionsByRemoteIdentifier
+  fullName: NitroxServer.Communication.NitroxServer.connectionsByRemoteIdentifier
+- uid: NitroxServer.Communication.NitroxServer.playerManager
+  commentId: F:NitroxServer.Communication.NitroxServer.playerManager
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.playerManager.html#NitroxServer_Communication_NitroxServer_playerManager
+  name: playerManager
+  nameWithType: NitroxServer.playerManager
+  fullName: NitroxServer.Communication.NitroxServer.playerManager
+- uid: NitroxServer.Communication.NitroxServer.ClientDisconnected(NitroxServer.Communication.NitroxConnection)
+  commentId: M:NitroxServer.Communication.NitroxServer.ClientDisconnected(NitroxServer.Communication.NitroxConnection)
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.ClientDisconnected.html#NitroxServer_Communication_NitroxServer_ClientDisconnected_NitroxServer_Communication_NitroxConnection_
+  name: ClientDisconnected(NitroxConnection)
+  nameWithType: NitroxServer.ClientDisconnected(NitroxConnection)
+  fullName: NitroxServer.Communication.NitroxServer.ClientDisconnected(NitroxServer.Communication.NitroxConnection)
+  spec.csharp:
+  - uid: NitroxServer.Communication.NitroxServer.ClientDisconnected(NitroxServer.Communication.NitroxConnection)
+    name: ClientDisconnected
+    href: NitroxServer.Communication.NitroxServer.ClientDisconnected.html#NitroxServer_Communication_NitroxServer_ClientDisconnected_NitroxServer_Communication_NitroxConnection_
+  - name: (
+  - uid: NitroxServer.Communication.NitroxConnection
+    name: NitroxConnection
+    href: NitroxServer.Communication.NitroxConnection.html
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Communication.NitroxServer.ClientDisconnected(NitroxServer.Communication.NitroxConnection)
+    name: ClientDisconnected
+    href: NitroxServer.Communication.NitroxServer.ClientDisconnected.html#NitroxServer_Communication_NitroxServer_ClientDisconnected_NitroxServer_Communication_NitroxConnection_
+  - name: (
+  - uid: NitroxServer.Communication.NitroxConnection
+    name: NitroxConnection
+    href: NitroxServer.Communication.NitroxConnection.html
+  - name: )
+- uid: NitroxServer.Communication.NitroxServer.ProcessIncomingData(NitroxServer.Communication.NitroxConnection,NitroxModel.Packets.Packet)
+  commentId: M:NitroxServer.Communication.NitroxServer.ProcessIncomingData(NitroxServer.Communication.NitroxConnection,NitroxModel.Packets.Packet)
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.ProcessIncomingData.html#NitroxServer_Communication_NitroxServer_ProcessIncomingData_NitroxServer_Communication_NitroxConnection_NitroxModel_Packets_Packet_
+  name: ProcessIncomingData(NitroxConnection, Packet)
+  nameWithType: NitroxServer.ProcessIncomingData(NitroxConnection, Packet)
+  fullName: NitroxServer.Communication.NitroxServer.ProcessIncomingData(NitroxServer.Communication.NitroxConnection, NitroxModel.Packets.Packet)
+  spec.csharp:
+  - uid: NitroxServer.Communication.NitroxServer.ProcessIncomingData(NitroxServer.Communication.NitroxConnection,NitroxModel.Packets.Packet)
+    name: ProcessIncomingData
+    href: NitroxServer.Communication.NitroxServer.ProcessIncomingData.html#NitroxServer_Communication_NitroxServer_ProcessIncomingData_NitroxServer_Communication_NitroxConnection_NitroxModel_Packets_Packet_
+  - name: (
+  - uid: NitroxServer.Communication.NitroxConnection
+    name: NitroxConnection
+    href: NitroxServer.Communication.NitroxConnection.html
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Communication.NitroxServer.ProcessIncomingData(NitroxServer.Communication.NitroxConnection,NitroxModel.Packets.Packet)
+    name: ProcessIncomingData
+    href: NitroxServer.Communication.NitroxServer.ProcessIncomingData.html#NitroxServer_Communication_NitroxServer_ProcessIncomingData_NitroxServer_Communication_NitroxConnection_NitroxModel_Packets_Packet_
+  - name: (
+  - uid: NitroxServer.Communication.NitroxConnection
+    name: NitroxConnection
+    href: NitroxServer.Communication.NitroxConnection.html
+  - name: ','
+  - name: " "
+  - uid: NitroxModel.Packets.Packet
+    name: Packet
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxServer.Communication
+  commentId: N:NitroxServer.Communication
+  href: NitroxServer.html
+  name: NitroxServer.Communication
+  nameWithType: NitroxServer.Communication
+  fullName: NitroxServer.Communication
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.#ctor*
+  commentId: Overload:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.#ctor
+  href: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.-ctor.html#NitroxServer_Communication_LiteNetLib_LiteNetLibServer__ctor_NitroxServer_Communication_Packets_PacketHandler_NitroxServer_GameLogic_PlayerManager_NitroxServer_GameLogic_Entities_EntitySimulation_NitroxServer_Serialization_ServerConfig_
+  name: LiteNetLibServer
+  nameWithType: LiteNetLibServer.LiteNetLibServer
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.LiteNetLibServer
+  nameWithType.vb: LiteNetLibServer.New
+  fullName.vb: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.New
+  name.vb: New
+- uid: NitroxServer.Communication.Packets.PacketHandler
+  commentId: T:NitroxServer.Communication.Packets.PacketHandler
+  parent: NitroxServer.Communication.Packets
+  href: NitroxServer.Communication.Packets.PacketHandler.html
+  name: PacketHandler
+  nameWithType: PacketHandler
+  fullName: NitroxServer.Communication.Packets.PacketHandler
+- uid: NitroxServer.GameLogic.PlayerManager
+  commentId: T:NitroxServer.GameLogic.PlayerManager
+  parent: NitroxServer.GameLogic
+  href: NitroxServer.GameLogic.PlayerManager.html
+  name: PlayerManager
+  nameWithType: PlayerManager
+  fullName: NitroxServer.GameLogic.PlayerManager
+- uid: NitroxServer.GameLogic.Entities.EntitySimulation
+  commentId: T:NitroxServer.GameLogic.Entities.EntitySimulation
+  parent: NitroxServer.GameLogic.Entities
+  href: NitroxServer.GameLogic.Entities.EntitySimulation.html
+  name: EntitySimulation
+  nameWithType: EntitySimulation
+  fullName: NitroxServer.GameLogic.Entities.EntitySimulation
+- uid: NitroxServer.Serialization.ServerConfig
+  commentId: T:NitroxServer.Serialization.ServerConfig
+  parent: NitroxServer.Serialization
+  href: NitroxServer.Serialization.ServerConfig.html
+  name: ServerConfig
+  nameWithType: ServerConfig
+  fullName: NitroxServer.Serialization.ServerConfig
+- uid: NitroxServer.Communication.Packets
+  commentId: N:NitroxServer.Communication.Packets
+  href: NitroxServer.html
+  name: NitroxServer.Communication.Packets
+  nameWithType: NitroxServer.Communication.Packets
+  fullName: NitroxServer.Communication.Packets
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+- uid: NitroxServer.GameLogic
+  commentId: N:NitroxServer.GameLogic
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic
+  nameWithType: NitroxServer.GameLogic
+  fullName: NitroxServer.GameLogic
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+- uid: NitroxServer.GameLogic.Entities
+  commentId: N:NitroxServer.GameLogic.Entities
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Entities
+  nameWithType: NitroxServer.GameLogic.Entities
+  fullName: NitroxServer.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Entities
+    name: Entities
+    href: NitroxServer.GameLogic.Entities.html
+- uid: NitroxServer.Serialization
+  commentId: N:NitroxServer.Serialization
+  href: NitroxServer.html
+  name: NitroxServer.Serialization
+  nameWithType: NitroxServer.Serialization
+  fullName: NitroxServer.Serialization
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+- uid: NitroxServer.Communication.NitroxServer.Start
+  commentId: M:NitroxServer.Communication.NitroxServer.Start
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.Start.html#NitroxServer_Communication_NitroxServer_Start
+  name: Start()
+  nameWithType: NitroxServer.Start()
+  fullName: NitroxServer.Communication.NitroxServer.Start()
+  spec.csharp:
+  - uid: NitroxServer.Communication.NitroxServer.Start
+    name: Start
+    href: NitroxServer.Communication.NitroxServer.Start.html#NitroxServer_Communication_NitroxServer_Start
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Communication.NitroxServer.Start
+    name: Start
+    href: NitroxServer.Communication.NitroxServer.Start.html#NitroxServer_Communication_NitroxServer_Start
+  - name: (
+  - name: )
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start*
+  commentId: Overload:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start
+  href: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start.html#NitroxServer_Communication_LiteNetLib_LiteNetLibServer_Start
+  name: Start
+  nameWithType: LiteNetLibServer.Start
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Start
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: NitroxServer.Communication.NitroxServer.Stop
+  commentId: M:NitroxServer.Communication.NitroxServer.Stop
+  parent: NitroxServer.Communication.NitroxServer
+  href: NitroxServer.Communication.NitroxServer.Stop.html#NitroxServer_Communication_NitroxServer_Stop
+  name: Stop()
+  nameWithType: NitroxServer.Stop()
+  fullName: NitroxServer.Communication.NitroxServer.Stop()
+  spec.csharp:
+  - uid: NitroxServer.Communication.NitroxServer.Stop
+    name: Stop
+    href: NitroxServer.Communication.NitroxServer.Stop.html#NitroxServer_Communication_NitroxServer_Stop
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: NitroxServer.Communication.NitroxServer.Stop
+    name: Stop
+    href: NitroxServer.Communication.NitroxServer.Stop.html#NitroxServer_Communication_NitroxServer_Stop
+  - name: (
+  - name: )
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop*
+  commentId: Overload:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop
+  href: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop.html#NitroxServer_Communication_LiteNetLib_LiteNetLibServer_Stop
+  name: Stop
+  nameWithType: LiteNetLibServer.Stop
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.Stop
+- uid: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest*
+  commentId: Overload:NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest
+  href: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest.html#NitroxServer_Communication_LiteNetLib_LiteNetLibServer_OnConnectionRequest_LiteNetLib_ConnectionRequest_
+  name: OnConnectionRequest
+  nameWithType: LiteNetLibServer.OnConnectionRequest
+  fullName: NitroxServer.Communication.LiteNetLib.LiteNetLibServer.OnConnectionRequest
+- uid: LiteNetLib.ConnectionRequest
+  commentId: T:LiteNetLib.ConnectionRequest
+  parent: LiteNetLib
+  isExternal: true
+  name: ConnectionRequest
+  nameWithType: ConnectionRequest
+  fullName: LiteNetLib.ConnectionRequest
+- uid: LiteNetLib
+  commentId: N:LiteNetLib
+  isExternal: true
+  name: LiteNetLib
+  nameWithType: LiteNetLib
+  fullName: LiteNetLib
+memberLayout: SeparatePages

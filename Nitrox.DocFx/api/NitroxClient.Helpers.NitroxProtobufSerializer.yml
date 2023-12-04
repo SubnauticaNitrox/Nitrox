@@ -1,0 +1,779 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer
+  commentId: T:NitroxClient.Helpers.NitroxProtobufSerializer
+  id: NitroxProtobufSerializer
+  parent: NitroxClient.Helpers
+  children:
+  - NitroxClient.Helpers.NitroxProtobufSerializer.#ctor(System.String[])
+  - NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize(System.IO.Stream,System.Object,System.Type)
+  - NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize``1(System.IO.Stream)
+  - NitroxClient.Helpers.NitroxProtobufSerializer.Model
+  - NitroxClient.Helpers.NitroxProtobufSerializer.NitroxTypes
+  - NitroxClient.Helpers.NitroxProtobufSerializer.Serialize(System.IO.Stream,System.Object)
+  - NitroxClient.Helpers.NitroxProtobufSerializer.model
+  langs:
+  - csharp
+  - vb
+  name: NitroxProtobufSerializer
+  nameWithType: NitroxProtobufSerializer
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxProtobufSerializer
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: public class NitroxProtobufSerializer
+    content.vb: Public Class NitroxProtobufSerializer
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.model
+  commentId: F:NitroxClient.Helpers.NitroxProtobufSerializer.model
+  id: model
+  parent: NitroxClient.Helpers.NitroxProtobufSerializer
+  langs:
+  - csharp
+  - vb
+  name: model
+  nameWithType: NitroxProtobufSerializer.model
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.model
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: model
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 12
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: public readonly RuntimeTypeModel model
+    return:
+      type: ProtoBuf.Meta.RuntimeTypeModel
+    content.vb: Public ReadOnly model As RuntimeTypeModel
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.NitroxTypes
+  commentId: F:NitroxClient.Helpers.NitroxProtobufSerializer.NitroxTypes
+  id: NitroxTypes
+  parent: NitroxClient.Helpers.NitroxProtobufSerializer
+  langs:
+  - csharp
+  - vb
+  name: NitroxTypes
+  nameWithType: NitroxProtobufSerializer.NitroxTypes
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.NitroxTypes
+  type: Field
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxTypes
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 13
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: public readonly Dictionary<Type, int> NitroxTypes
+    return:
+      type: System.Collections.Generic.Dictionary{System.Type,System.Int32}
+    content.vb: Public ReadOnly NitroxTypes As Dictionary(Of Type, Integer)
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.Model
+  commentId: P:NitroxClient.Helpers.NitroxProtobufSerializer.Model
+  id: Model
+  parent: NitroxClient.Helpers.NitroxProtobufSerializer
+  langs:
+  - csharp
+  - vb
+  name: Model
+  nameWithType: NitroxProtobufSerializer.Model
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.Model
+  type: Property
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Model
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 15
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: protected RuntimeTypeModel Model { get; }
+    parameters: []
+    return:
+      type: ProtoBuf.Meta.RuntimeTypeModel
+    content.vb: Protected ReadOnly Property Model As RuntimeTypeModel
+  overload: NitroxClient.Helpers.NitroxProtobufSerializer.Model*
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.#ctor(System.String[])
+  commentId: M:NitroxClient.Helpers.NitroxProtobufSerializer.#ctor(System.String[])
+  id: '#ctor(System.String[])'
+  parent: NitroxClient.Helpers.NitroxProtobufSerializer
+  langs:
+  - csharp
+  - vb
+  name: NitroxProtobufSerializer(params string[])
+  nameWithType: NitroxProtobufSerializer.NitroxProtobufSerializer(params string[])
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.NitroxProtobufSerializer(params string[])
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 17
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: public NitroxProtobufSerializer(params string[] assemblies)
+    parameters:
+    - id: assemblies
+      type: System.String[]
+    content.vb: Public Sub New(ParamArray assemblies As String())
+  overload: NitroxClient.Helpers.NitroxProtobufSerializer.#ctor*
+  nameWithType.vb: NitroxProtobufSerializer.New(ParamArray String())
+  fullName.vb: NitroxClient.Helpers.NitroxProtobufSerializer.New(ParamArray String())
+  name.vb: New(ParamArray String())
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.Serialize(System.IO.Stream,System.Object)
+  commentId: M:NitroxClient.Helpers.NitroxProtobufSerializer.Serialize(System.IO.Stream,System.Object)
+  id: Serialize(System.IO.Stream,System.Object)
+  parent: NitroxClient.Helpers.NitroxProtobufSerializer
+  langs:
+  - csharp
+  - vb
+  name: Serialize(Stream, object)
+  nameWithType: NitroxProtobufSerializer.Serialize(Stream, object)
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.Serialize(System.IO.Stream, object)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Serialize
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 50
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: public void Serialize(Stream stream, object o)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    - id: o
+      type: System.Object
+    content.vb: Public Sub Serialize(stream As Stream, o As Object)
+  overload: NitroxClient.Helpers.NitroxProtobufSerializer.Serialize*
+  nameWithType.vb: NitroxProtobufSerializer.Serialize(Stream, Object)
+  fullName.vb: NitroxClient.Helpers.NitroxProtobufSerializer.Serialize(System.IO.Stream, Object)
+  name.vb: Serialize(Stream, Object)
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize``1(System.IO.Stream)
+  commentId: M:NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize``1(System.IO.Stream)
+  id: Deserialize``1(System.IO.Stream)
+  parent: NitroxClient.Helpers.NitroxProtobufSerializer
+  langs:
+  - csharp
+  - vb
+  name: Deserialize<T>(Stream)
+  nameWithType: NitroxProtobufSerializer.Deserialize<T>(Stream)
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize<T>(System.IO.Stream)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Deserialize
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 55
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: public T Deserialize<T>(Stream stream)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    typeParameters:
+    - id: T
+    return:
+      type: '{T}'
+    content.vb: Public Function Deserialize(Of T)(stream As Stream) As T
+  overload: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize*
+  nameWithType.vb: NitroxProtobufSerializer.Deserialize(Of T)(Stream)
+  fullName.vb: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize(Of T)(System.IO.Stream)
+  name.vb: Deserialize(Of T)(Stream)
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize(System.IO.Stream,System.Object,System.Type)
+  commentId: M:NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize(System.IO.Stream,System.Object,System.Type)
+  id: Deserialize(System.IO.Stream,System.Object,System.Type)
+  parent: NitroxClient.Helpers.NitroxProtobufSerializer
+  langs:
+  - csharp
+  - vb
+  name: Deserialize(Stream, object, Type)
+  nameWithType: NitroxProtobufSerializer.Deserialize(Stream, object, Type)
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize(System.IO.Stream, object, System.Type)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/Helpers/NitroxProtobufSerializer.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Deserialize
+    path: ../NitroxClient/Helpers/NitroxProtobufSerializer.cs
+    startLine: 61
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.Helpers
+  syntax:
+    content: public object Deserialize(Stream stream, object o, Type t)
+    parameters:
+    - id: stream
+      type: System.IO.Stream
+    - id: o
+      type: System.Object
+    - id: t
+      type: System.Type
+    return:
+      type: System.Object
+    content.vb: Public Function Deserialize(stream As Stream, o As Object, t As Type) As Object
+  overload: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize*
+  nameWithType.vb: NitroxProtobufSerializer.Deserialize(Stream, Object, Type)
+  fullName.vb: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize(System.IO.Stream, Object, System.Type)
+  name.vb: Deserialize(Stream, Object, Type)
+references:
+- uid: NitroxClient.Helpers
+  commentId: N:NitroxClient.Helpers
+  href: NitroxClient.html
+  name: NitroxClient.Helpers
+  nameWithType: NitroxClient.Helpers
+  fullName: NitroxClient.Helpers
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.Helpers
+    name: Helpers
+    href: NitroxClient.Helpers.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ProtoBuf.Meta.RuntimeTypeModel
+  commentId: T:ProtoBuf.Meta.RuntimeTypeModel
+  parent: ProtoBuf.Meta
+  isExternal: true
+  name: RuntimeTypeModel
+  nameWithType: RuntimeTypeModel
+  fullName: ProtoBuf.Meta.RuntimeTypeModel
+- uid: ProtoBuf.Meta
+  commentId: N:ProtoBuf.Meta
+  isExternal: true
+  name: ProtoBuf.Meta
+  nameWithType: ProtoBuf.Meta
+  fullName: ProtoBuf.Meta
+  spec.csharp:
+  - uid: ProtoBuf
+    name: ProtoBuf
+    isExternal: true
+  - name: .
+  - uid: ProtoBuf.Meta
+    name: Meta
+    isExternal: true
+  spec.vb:
+  - uid: ProtoBuf
+    name: ProtoBuf
+    isExternal: true
+  - name: .
+  - uid: ProtoBuf.Meta
+    name: Meta
+    isExternal: true
+- uid: System.Collections.Generic.Dictionary{System.Type,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{System.Type,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<Type, int>
+  nameWithType: Dictionary<Type, int>
+  fullName: System.Collections.Generic.Dictionary<System.Type, int>
+  nameWithType.vb: Dictionary(Of Type, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of System.Type, Integer)
+  name.vb: Dictionary(Of Type, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.Model*
+  commentId: Overload:NitroxClient.Helpers.NitroxProtobufSerializer.Model
+  href: NitroxClient.Helpers.NitroxProtobufSerializer.Model.html#NitroxClient_Helpers_NitroxProtobufSerializer_Model
+  name: Model
+  nameWithType: NitroxProtobufSerializer.Model
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.Model
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.#ctor*
+  commentId: Overload:NitroxClient.Helpers.NitroxProtobufSerializer.#ctor
+  href: NitroxClient.Helpers.NitroxProtobufSerializer.-ctor.html#NitroxClient_Helpers_NitroxProtobufSerializer__ctor_System_String___
+  name: NitroxProtobufSerializer
+  nameWithType: NitroxProtobufSerializer.NitroxProtobufSerializer
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.NitroxProtobufSerializer
+  nameWithType.vb: NitroxProtobufSerializer.New
+  fullName.vb: NitroxClient.Helpers.NitroxProtobufSerializer.New
+  name.vb: New
+- uid: System.String[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string[]
+  nameWithType: string[]
+  fullName: string[]
+  nameWithType.vb: String()
+  fullName.vb: String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: (
+  - name: )
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.Serialize*
+  commentId: Overload:NitroxClient.Helpers.NitroxProtobufSerializer.Serialize
+  href: NitroxClient.Helpers.NitroxProtobufSerializer.Serialize.html#NitroxClient_Helpers_NitroxProtobufSerializer_Serialize_System_IO_Stream_System_Object_
+  name: Serialize
+  nameWithType: NitroxProtobufSerializer.Serialize
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.Serialize
+- uid: System.IO.Stream
+  commentId: T:System.IO.Stream
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.stream
+  name: Stream
+  nameWithType: Stream
+  fullName: System.IO.Stream
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+- uid: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize*
+  commentId: Overload:NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize
+  href: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize.html#NitroxClient_Helpers_NitroxProtobufSerializer_Deserialize__1_System_IO_Stream_
+  name: Deserialize
+  nameWithType: NitroxProtobufSerializer.Deserialize
+  fullName: NitroxClient.Helpers.NitroxProtobufSerializer.Deserialize
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+memberLayout: SeparatePages

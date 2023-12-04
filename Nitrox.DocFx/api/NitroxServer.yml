@@ -1,0 +1,208 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer
+  commentId: N:NitroxServer
+  id: NitroxServer
+  children:
+  - NitroxServer.Communication
+  - NitroxServer.ConsoleCommands
+  - NitroxServer.GameLogic
+  - NitroxServer.Helper
+  - NitroxServer.Player
+  - NitroxServer.Resources
+  - NitroxServer.Serialization
+  - NitroxServer.Server
+  - NitroxServer.ServerAutoFacRegistrar
+  - NitroxServer.UnityStubs
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer
+  nameWithType: NitroxServer
+  fullName: NitroxServer
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Communication
+  commentId: N:NitroxServer.Communication
+  href: NitroxServer.html
+  name: NitroxServer.Communication
+  nameWithType: NitroxServer.Communication
+  fullName: NitroxServer.Communication
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+- uid: NitroxServer.ConsoleCommands
+  commentId: N:NitroxServer.ConsoleCommands
+  href: NitroxServer.html
+  name: NitroxServer.ConsoleCommands
+  nameWithType: NitroxServer.ConsoleCommands
+  fullName: NitroxServer.ConsoleCommands
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.ConsoleCommands
+    name: ConsoleCommands
+    href: NitroxServer.ConsoleCommands.html
+- uid: NitroxServer.GameLogic
+  commentId: N:NitroxServer.GameLogic
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic
+  nameWithType: NitroxServer.GameLogic
+  fullName: NitroxServer.GameLogic
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+- uid: NitroxServer.Helper
+  commentId: N:NitroxServer.Helper
+  href: NitroxServer.html
+  name: NitroxServer.Helper
+  nameWithType: NitroxServer.Helper
+  fullName: NitroxServer.Helper
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Helper
+    name: Helper
+    href: NitroxServer.Helper.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Helper
+    name: Helper
+    href: NitroxServer.Helper.html
+- uid: NitroxServer.Resources
+  commentId: N:NitroxServer.Resources
+  href: NitroxServer.html
+  name: NitroxServer.Resources
+  nameWithType: NitroxServer.Resources
+  fullName: NitroxServer.Resources
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Resources
+    name: Resources
+    href: NitroxServer.Resources.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Resources
+    name: Resources
+    href: NitroxServer.Resources.html
+- uid: NitroxServer.Serialization
+  commentId: N:NitroxServer.Serialization
+  href: NitroxServer.html
+  name: NitroxServer.Serialization
+  nameWithType: NitroxServer.Serialization
+  fullName: NitroxServer.Serialization
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Serialization
+    name: Serialization
+    href: NitroxServer.Serialization.html
+- uid: NitroxServer.UnityStubs
+  commentId: N:NitroxServer.UnityStubs
+  href: NitroxServer.html
+  name: NitroxServer.UnityStubs
+  nameWithType: NitroxServer.UnityStubs
+  fullName: NitroxServer.UnityStubs
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.UnityStubs
+    name: UnityStubs
+    href: NitroxServer.UnityStubs.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.UnityStubs
+    name: UnityStubs
+    href: NitroxServer.UnityStubs.html
+- uid: NitroxServer.Player
+  commentId: T:NitroxServer.Player
+  parent: NitroxServer
+  href: NitroxServer.Player.html
+  name: Player
+  nameWithType: Player
+  fullName: NitroxServer.Player
+- uid: NitroxServer.Server
+  commentId: T:NitroxServer.Server
+  parent: NitroxServer
+  href: NitroxServer.Server.html
+  name: Server
+  nameWithType: Server
+  fullName: NitroxServer.Server
+- uid: NitroxServer.ServerAutoFacRegistrar
+  commentId: T:NitroxServer.ServerAutoFacRegistrar
+  parent: NitroxServer
+  href: NitroxServer.ServerAutoFacRegistrar.html
+  name: ServerAutoFacRegistrar
+  nameWithType: ServerAutoFacRegistrar
+  fullName: NitroxServer.ServerAutoFacRegistrar
+- uid: NitroxServer
+  commentId: N:NitroxServer
+  href: NitroxServer.html
+  name: NitroxServer
+  nameWithType: NitroxServer
+  fullName: NitroxServer
+memberLayout: SeparatePages

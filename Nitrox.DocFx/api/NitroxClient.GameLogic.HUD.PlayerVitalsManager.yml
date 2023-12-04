@@ -1,0 +1,523 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  commentId: T:NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  id: PlayerVitalsManager
+  parent: NitroxClient.GameLogic.HUD
+  children:
+  - NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer(NitroxClient.GameLogic.RemotePlayer)
+  - NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer(System.UInt16)
+  - NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer(System.UInt16,NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals@)
+  langs:
+  - csharp
+  - vb
+  name: PlayerVitalsManager
+  nameWithType: PlayerVitalsManager
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: PlayerVitalsManager
+    path: ../NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+    startLine: 6
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public class PlayerVitalsManager
+    content.vb: Public Class PlayerVitalsManager
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer(NitroxClient.GameLogic.RemotePlayer)
+  commentId: M:NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer(NitroxClient.GameLogic.RemotePlayer)
+  id: CreateOrFindForPlayer(NitroxClient.GameLogic.RemotePlayer)
+  parent: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  langs:
+  - csharp
+  - vb
+  name: CreateOrFindForPlayer(RemotePlayer)
+  nameWithType: PlayerVitalsManager.CreateOrFindForPlayer(RemotePlayer)
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer(NitroxClient.GameLogic.RemotePlayer)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CreateOrFindForPlayer
+    path: ../NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+    startLine: 10
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public RemotePlayerVitals CreateOrFindForPlayer(RemotePlayer remotePlayer)
+    parameters:
+    - id: remotePlayer
+      type: NitroxClient.GameLogic.RemotePlayer
+    return:
+      type: NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals
+    content.vb: Public Function CreateOrFindForPlayer(remotePlayer As RemotePlayer) As RemotePlayerVitals
+  overload: NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer*
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer(System.UInt16)
+  commentId: M:NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer(System.UInt16)
+  id: RemoveForPlayer(System.UInt16)
+  parent: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  langs:
+  - csharp
+  - vb
+  name: RemoveForPlayer(ushort)
+  nameWithType: PlayerVitalsManager.RemoveForPlayer(ushort)
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer(ushort)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: RemoveForPlayer
+    path: ../NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+    startLine: 19
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public void RemoveForPlayer(ushort playerId)
+    parameters:
+    - id: playerId
+      type: System.UInt16
+    content.vb: Public Sub RemoveForPlayer(playerId As UShort)
+  overload: NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer*
+  nameWithType.vb: PlayerVitalsManager.RemoveForPlayer(UShort)
+  fullName.vb: NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer(UShort)
+  name.vb: RemoveForPlayer(UShort)
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer(System.UInt16,NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals@)
+  commentId: M:NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer(System.UInt16,NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals@)
+  id: TryFindForPlayer(System.UInt16,NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals@)
+  parent: NitroxClient.GameLogic.HUD.PlayerVitalsManager
+  langs:
+  - csharp
+  - vb
+  name: TryFindForPlayer(ushort, out RemotePlayerVitals)
+  nameWithType: PlayerVitalsManager.TryFindForPlayer(ushort, out RemotePlayerVitals)
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer(ushort, out NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: TryFindForPlayer
+    path: ../NitroxClient/GameLogic/HUD/PlayerVitalsManager.cs
+    startLine: 28
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.HUD
+  syntax:
+    content: public bool TryFindForPlayer(ushort playerId, out RemotePlayerVitals vitals)
+    parameters:
+    - id: playerId
+      type: System.UInt16
+    - id: vitals
+      type: NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryFindForPlayer(playerId As UShort, vitals As RemotePlayerVitals) As Boolean
+  overload: NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer*
+  nameWithType.vb: PlayerVitalsManager.TryFindForPlayer(UShort, RemotePlayerVitals)
+  fullName.vb: NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer(UShort, NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals)
+  name.vb: TryFindForPlayer(UShort, RemotePlayerVitals)
+references:
+- uid: NitroxClient.GameLogic.HUD
+  commentId: N:NitroxClient.GameLogic.HUD
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.HUD
+  nameWithType: NitroxClient.GameLogic.HUD
+  fullName: NitroxClient.GameLogic.HUD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.HUD
+    name: HUD
+    href: NitroxClient.GameLogic.HUD.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer*
+  commentId: Overload:NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer
+  href: NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer.html#NitroxClient_GameLogic_HUD_PlayerVitalsManager_CreateOrFindForPlayer_NitroxClient_GameLogic_RemotePlayer_
+  name: CreateOrFindForPlayer
+  nameWithType: PlayerVitalsManager.CreateOrFindForPlayer
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager.CreateOrFindForPlayer
+- uid: NitroxClient.GameLogic.RemotePlayer
+  commentId: T:NitroxClient.GameLogic.RemotePlayer
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.RemotePlayer.html
+  name: RemotePlayer
+  nameWithType: RemotePlayer
+  fullName: NitroxClient.GameLogic.RemotePlayer
+- uid: NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals
+  commentId: T:NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals
+  parent: NitroxClient.MonoBehaviours.Gui.HUD
+  href: NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals.html
+  name: RemotePlayerVitals
+  nameWithType: RemotePlayerVitals
+  fullName: NitroxClient.MonoBehaviours.Gui.HUD.RemotePlayerVitals
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+- uid: NitroxClient.MonoBehaviours.Gui.HUD
+  commentId: N:NitroxClient.MonoBehaviours.Gui.HUD
+  href: NitroxClient.html
+  name: NitroxClient.MonoBehaviours.Gui.HUD
+  nameWithType: NitroxClient.MonoBehaviours.Gui.HUD
+  fullName: NitroxClient.MonoBehaviours.Gui.HUD
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.HUD
+    name: HUD
+    href: NitroxClient.MonoBehaviours.Gui.HUD.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours
+    name: MonoBehaviours
+    href: NitroxClient.MonoBehaviours.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui
+    name: Gui
+    href: NitroxClient.MonoBehaviours.Gui.html
+  - name: .
+  - uid: NitroxClient.MonoBehaviours.Gui.HUD
+    name: HUD
+    href: NitroxClient.MonoBehaviours.Gui.HUD.html
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer*
+  commentId: Overload:NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer
+  href: NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer.html#NitroxClient_GameLogic_HUD_PlayerVitalsManager_RemoveForPlayer_System_UInt16_
+  name: RemoveForPlayer
+  nameWithType: PlayerVitalsManager.RemoveForPlayer
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager.RemoveForPlayer
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer*
+  commentId: Overload:NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer
+  href: NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer.html#NitroxClient_GameLogic_HUD_PlayerVitalsManager_TryFindForPlayer_System_UInt16_NitroxClient_MonoBehaviours_Gui_HUD_RemotePlayerVitals__
+  name: TryFindForPlayer
+  nameWithType: PlayerVitalsManager.TryFindForPlayer
+  fullName: NitroxClient.GameLogic.HUD.PlayerVitalsManager.TryFindForPlayer
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+memberLayout: SeparatePages

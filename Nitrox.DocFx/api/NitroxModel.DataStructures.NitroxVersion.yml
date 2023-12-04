@@ -1,0 +1,687 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxModel.DataStructures.NitroxVersion
+  commentId: T:NitroxModel.DataStructures.NitroxVersion
+  id: NitroxVersion
+  parent: NitroxModel.DataStructures
+  children:
+  - NitroxModel.DataStructures.NitroxVersion.#ctor(System.Int32,System.Int32)
+  - NitroxModel.DataStructures.NitroxVersion.#ctor(System.UInt16,System.UInt16)
+  - NitroxModel.DataStructures.NitroxVersion.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  - NitroxModel.DataStructures.NitroxVersion.Major
+  - NitroxModel.DataStructures.NitroxVersion.Minor
+  - NitroxModel.DataStructures.NitroxVersion.ToString
+  langs:
+  - csharp
+  - vb
+  name: NitroxVersion
+  nameWithType: NitroxVersion
+  fullName: NitroxModel.DataStructures.NitroxVersion
+  type: Struct
+  source:
+    remote:
+      path: NitroxModel/DataStructures/NitroxVersion.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: NitroxVersion
+    path: ../NitroxModel/DataStructures/NitroxVersion.cs
+    startLine: 7
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Serializable version of <xref href="System.Version" data-throw-if-not-resolved="false"></xref> with only major and minor properties.
+  example: []
+  syntax:
+    content: >-
+      [Serializable]
+
+      public readonly struct NitroxVersion : IComparable<NitroxVersion>
+    content.vb: >-
+      <Serializable>
+
+      Public Structure NitroxVersion Implements IComparable(Of NitroxVersion)
+  implements:
+  - System.IComparable{NitroxModel.DataStructures.NitroxVersion}
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+  attributes:
+  - type: System.SerializableAttribute
+    ctor: System.SerializableAttribute.#ctor
+    arguments: []
+- uid: NitroxModel.DataStructures.NitroxVersion.Major
+  commentId: P:NitroxModel.DataStructures.NitroxVersion.Major
+  id: Major
+  parent: NitroxModel.DataStructures.NitroxVersion
+  langs:
+  - csharp
+  - vb
+  name: Major
+  nameWithType: NitroxVersion.Major
+  fullName: NitroxModel.DataStructures.NitroxVersion.Major
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/NitroxVersion.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Major
+    path: ../NitroxModel/DataStructures/NitroxVersion.cs
+    startLine: 10
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ushort Major { get; init; }
+    parameters: []
+    return:
+      type: System.UInt16
+    content.vb: Public Property Major As UShort
+  overload: NitroxModel.DataStructures.NitroxVersion.Major*
+- uid: NitroxModel.DataStructures.NitroxVersion.Minor
+  commentId: P:NitroxModel.DataStructures.NitroxVersion.Minor
+  id: Minor
+  parent: NitroxModel.DataStructures.NitroxVersion
+  langs:
+  - csharp
+  - vb
+  name: Minor
+  nameWithType: NitroxVersion.Minor
+  fullName: NitroxModel.DataStructures.NitroxVersion.Minor
+  type: Property
+  source:
+    remote:
+      path: NitroxModel/DataStructures/NitroxVersion.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: Minor
+    path: ../NitroxModel/DataStructures/NitroxVersion.cs
+    startLine: 12
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public ushort Minor { get; init; }
+    parameters: []
+    return:
+      type: System.UInt16
+    content.vb: Public Property Minor As UShort
+  overload: NitroxModel.DataStructures.NitroxVersion.Minor*
+- uid: NitroxModel.DataStructures.NitroxVersion.#ctor(System.UInt16,System.UInt16)
+  commentId: M:NitroxModel.DataStructures.NitroxVersion.#ctor(System.UInt16,System.UInt16)
+  id: '#ctor(System.UInt16,System.UInt16)'
+  parent: NitroxModel.DataStructures.NitroxVersion
+  langs:
+  - csharp
+  - vb
+  name: NitroxVersion(ushort, ushort)
+  nameWithType: NitroxVersion.NitroxVersion(ushort, ushort)
+  fullName: NitroxModel.DataStructures.NitroxVersion.NitroxVersion(ushort, ushort)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/NitroxVersion.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/NitroxVersion.cs
+    startLine: 15
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public NitroxVersion(ushort major, ushort minor)
+    parameters:
+    - id: major
+      type: System.UInt16
+    - id: minor
+      type: System.UInt16
+    content.vb: Public Sub New(major As UShort, minor As UShort)
+  overload: NitroxModel.DataStructures.NitroxVersion.#ctor*
+  nameWithType.vb: NitroxVersion.New(UShort, UShort)
+  fullName.vb: NitroxModel.DataStructures.NitroxVersion.New(UShort, UShort)
+  name.vb: New(UShort, UShort)
+- uid: NitroxModel.DataStructures.NitroxVersion.#ctor(System.Int32,System.Int32)
+  commentId: M:NitroxModel.DataStructures.NitroxVersion.#ctor(System.Int32,System.Int32)
+  id: '#ctor(System.Int32,System.Int32)'
+  parent: NitroxModel.DataStructures.NitroxVersion
+  langs:
+  - csharp
+  - vb
+  name: NitroxVersion(int, int)
+  nameWithType: NitroxVersion.NitroxVersion(int, int)
+  fullName: NitroxModel.DataStructures.NitroxVersion.NitroxVersion(int, int)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxModel/DataStructures/NitroxVersion.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxModel/DataStructures/NitroxVersion.cs
+    startLine: 21
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  syntax:
+    content: public NitroxVersion(int major, int minor)
+    parameters:
+    - id: major
+      type: System.Int32
+    - id: minor
+      type: System.Int32
+    content.vb: Public Sub New(major As Integer, minor As Integer)
+  overload: NitroxModel.DataStructures.NitroxVersion.#ctor*
+  nameWithType.vb: NitroxVersion.New(Integer, Integer)
+  fullName.vb: NitroxModel.DataStructures.NitroxVersion.New(Integer, Integer)
+  name.vb: New(Integer, Integer)
+- uid: NitroxModel.DataStructures.NitroxVersion.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  commentId: M:NitroxModel.DataStructures.NitroxVersion.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  id: CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  parent: NitroxModel.DataStructures.NitroxVersion
+  langs:
+  - csharp
+  - vb
+  name: CompareTo(NitroxVersion)
+  nameWithType: NitroxVersion.CompareTo(NitroxVersion)
+  fullName: NitroxModel.DataStructures.NitroxVersion.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/NitroxVersion.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: CompareTo
+    path: ../NitroxModel/DataStructures/NitroxVersion.cs
+    startLine: 33
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+  example: []
+  syntax:
+    content: public int CompareTo(NitroxVersion other)
+    parameters:
+    - id: other
+      type: NitroxModel.DataStructures.NitroxVersion
+      description: An object to compare with this instance.
+    return:
+      type: System.Int32
+      description: 'A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance precedes <code class="paramref">other</code> in the sort order.  Zero This instance occurs in the same position in the sort order as <code class="paramref">other</code>. Greater than zero This instance follows <code class="paramref">other</code> in the sort order.'
+    content.vb: Public Function CompareTo(other As NitroxVersion) As Integer
+  overload: NitroxModel.DataStructures.NitroxVersion.CompareTo*
+  implements:
+  - System.IComparable{NitroxModel.DataStructures.NitroxVersion}.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+- uid: NitroxModel.DataStructures.NitroxVersion.ToString
+  commentId: M:NitroxModel.DataStructures.NitroxVersion.ToString
+  id: ToString
+  parent: NitroxModel.DataStructures.NitroxVersion
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: NitroxVersion.ToString()
+  fullName: NitroxModel.DataStructures.NitroxVersion.ToString()
+  type: Method
+  source:
+    remote:
+      path: NitroxModel/DataStructures/NitroxVersion.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ToString
+    path: ../NitroxModel/DataStructures/NitroxVersion.cs
+    startLine: 47
+  assemblies:
+  - NitroxModel
+  namespace: NitroxModel.DataStructures
+  summary: Returns the fully qualified type name of this instance.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: The fully qualified type name.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: NitroxModel.DataStructures.NitroxVersion.ToString*
+references:
+- uid: System.Version
+  commentId: T:System.Version
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.version
+  name: Version
+  nameWithType: Version
+  fullName: System.Version
+- uid: NitroxModel.DataStructures
+  commentId: N:NitroxModel.DataStructures
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures
+  nameWithType: NitroxModel.DataStructures
+  fullName: NitroxModel.DataStructures
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+- uid: System.IComparable{NitroxModel.DataStructures.NitroxVersion}
+  commentId: T:System.IComparable{NitroxModel.DataStructures.NitroxVersion}
+  parent: System
+  definition: System.IComparable`1
+  href: https://learn.microsoft.com/dotnet/api/system.icomparable-1
+  name: IComparable<NitroxVersion>
+  nameWithType: IComparable<NitroxVersion>
+  fullName: System.IComparable<NitroxModel.DataStructures.NitroxVersion>
+  nameWithType.vb: IComparable(Of NitroxVersion)
+  fullName.vb: System.IComparable(Of NitroxModel.DataStructures.NitroxVersion)
+  name.vb: IComparable(Of NitroxVersion)
+  spec.csharp:
+  - uid: System.IComparable`1
+    name: IComparable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1
+  - name: <
+  - uid: NitroxModel.DataStructures.NitroxVersion
+    name: NitroxVersion
+    href: NitroxModel.DataStructures.NitroxVersion.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IComparable`1
+    name: IComparable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: NitroxModel.DataStructures.NitroxVersion
+    name: NitroxVersion
+    href: NitroxModel.DataStructures.NitroxVersion.html
+  - name: )
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.IComparable`1
+  commentId: T:System.IComparable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.icomparable-1
+  name: IComparable<T>
+  nameWithType: IComparable<T>
+  fullName: System.IComparable<T>
+  nameWithType.vb: IComparable(Of T)
+  fullName.vb: System.IComparable(Of T)
+  name.vb: IComparable(Of T)
+  spec.csharp:
+  - uid: System.IComparable`1
+    name: IComparable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IComparable`1
+    name: IComparable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NitroxModel.DataStructures.NitroxVersion.Major*
+  commentId: Overload:NitroxModel.DataStructures.NitroxVersion.Major
+  href: NitroxModel.DataStructures.NitroxVersion.Major.html#NitroxModel_DataStructures_NitroxVersion_Major
+  name: Major
+  nameWithType: NitroxVersion.Major
+  fullName: NitroxModel.DataStructures.NitroxVersion.Major
+- uid: System.UInt16
+  commentId: T:System.UInt16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint16
+  name: ushort
+  nameWithType: ushort
+  fullName: ushort
+  nameWithType.vb: UShort
+  fullName.vb: UShort
+  name.vb: UShort
+- uid: NitroxModel.DataStructures.NitroxVersion.Minor*
+  commentId: Overload:NitroxModel.DataStructures.NitroxVersion.Minor
+  href: NitroxModel.DataStructures.NitroxVersion.Minor.html#NitroxModel_DataStructures_NitroxVersion_Minor
+  name: Minor
+  nameWithType: NitroxVersion.Minor
+  fullName: NitroxModel.DataStructures.NitroxVersion.Minor
+- uid: NitroxModel.DataStructures.NitroxVersion.#ctor*
+  commentId: Overload:NitroxModel.DataStructures.NitroxVersion.#ctor
+  href: NitroxModel.DataStructures.NitroxVersion.-ctor.html#NitroxModel_DataStructures_NitroxVersion__ctor_System_UInt16_System_UInt16_
+  name: NitroxVersion
+  nameWithType: NitroxVersion.NitroxVersion
+  fullName: NitroxModel.DataStructures.NitroxVersion.NitroxVersion
+  nameWithType.vb: NitroxVersion.New
+  fullName.vb: NitroxModel.DataStructures.NitroxVersion.New
+  name.vb: New
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: NitroxModel.DataStructures.NitroxVersion.CompareTo*
+  commentId: Overload:NitroxModel.DataStructures.NitroxVersion.CompareTo
+  href: NitroxModel.DataStructures.NitroxVersion.CompareTo.html#NitroxModel_DataStructures_NitroxVersion_CompareTo_NitroxModel_DataStructures_NitroxVersion_
+  name: CompareTo
+  nameWithType: NitroxVersion.CompareTo
+  fullName: NitroxModel.DataStructures.NitroxVersion.CompareTo
+- uid: System.IComparable{NitroxModel.DataStructures.NitroxVersion}.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  commentId: M:System.IComparable{NitroxModel.DataStructures.NitroxVersion}.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  parent: System.IComparable{NitroxModel.DataStructures.NitroxVersion}
+  definition: System.IComparable`1.CompareTo(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.icomparable-1.compareto
+  name: CompareTo(NitroxVersion)
+  nameWithType: IComparable<NitroxVersion>.CompareTo(NitroxVersion)
+  fullName: System.IComparable<NitroxModel.DataStructures.NitroxVersion>.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  nameWithType.vb: IComparable(Of NitroxVersion).CompareTo(NitroxVersion)
+  fullName.vb: System.IComparable(Of NitroxModel.DataStructures.NitroxVersion).CompareTo(NitroxModel.DataStructures.NitroxVersion)
+  spec.csharp:
+  - uid: System.IComparable{NitroxModel.DataStructures.NitroxVersion}.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+    name: CompareTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1.compareto
+  - name: (
+  - uid: NitroxModel.DataStructures.NitroxVersion
+    name: NitroxVersion
+    href: NitroxModel.DataStructures.NitroxVersion.html
+  - name: )
+  spec.vb:
+  - uid: System.IComparable{NitroxModel.DataStructures.NitroxVersion}.CompareTo(NitroxModel.DataStructures.NitroxVersion)
+    name: CompareTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1.compareto
+  - name: (
+  - uid: NitroxModel.DataStructures.NitroxVersion
+    name: NitroxVersion
+    href: NitroxModel.DataStructures.NitroxVersion.html
+  - name: )
+- uid: NitroxModel.DataStructures.NitroxVersion
+  commentId: T:NitroxModel.DataStructures.NitroxVersion
+  parent: NitroxModel.DataStructures
+  href: NitroxModel.DataStructures.NitroxVersion.html
+  name: NitroxVersion
+  nameWithType: NitroxVersion
+  fullName: NitroxModel.DataStructures.NitroxVersion
+- uid: System.IComparable`1.CompareTo(`0)
+  commentId: M:System.IComparable`1.CompareTo(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.icomparable-1.compareto
+  name: CompareTo(T)
+  nameWithType: IComparable<T>.CompareTo(T)
+  fullName: System.IComparable<T>.CompareTo(T)
+  nameWithType.vb: IComparable(Of T).CompareTo(T)
+  fullName.vb: System.IComparable(Of T).CompareTo(T)
+  spec.csharp:
+  - uid: System.IComparable`1.CompareTo(`0)
+    name: CompareTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1.compareto
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IComparable`1.CompareTo(`0)
+    name: CompareTo
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.icomparable-1.compareto
+  - name: (
+  - name: T
+  - name: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: NitroxModel.DataStructures.NitroxVersion.ToString*
+  commentId: Overload:NitroxModel.DataStructures.NitroxVersion.ToString
+  href: NitroxModel.DataStructures.NitroxVersion.ToString.html#NitroxModel_DataStructures_NitroxVersion_ToString
+  name: ToString
+  nameWithType: NitroxVersion.ToString
+  fullName: NitroxModel.DataStructures.NitroxVersion.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+memberLayout: SeparatePages

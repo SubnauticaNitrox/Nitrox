@@ -1,0 +1,25 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer_Subnautica.Communication.Packets.Processors
+  commentId: N:NitroxServer_Subnautica.Communication.Packets.Processors
+  id: Communication.Packets.Processors
+  parent: NitroxServer_Subnautica
+  children:
+  - NitroxServer_Subnautica.Communication.Packets.Processors.CyclopsDamageProcessor
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer_Subnautica.Communication.Packets.Processors
+  nameWithType: NitroxServer_Subnautica.Communication.Packets.Processors
+  fullName: NitroxServer_Subnautica.Communication.Packets.Processors
+  type: Namespace
+  assemblies:
+  - NitroxServer-Subnautica
+references:
+- uid: NitroxServer_Subnautica.Communication.Packets.Processors.CyclopsDamageProcessor
+  commentId: T:NitroxServer_Subnautica.Communication.Packets.Processors.CyclopsDamageProcessor
+  href: NitroxServer_Subnautica.Communication.Packets.Processors.CyclopsDamageProcessor.html
+  name: CyclopsDamageProcessor
+  nameWithType: CyclopsDamageProcessor
+  fullName: NitroxServer_Subnautica.Communication.Packets.Processors.CyclopsDamageProcessor
+memberLayout: SeparatePages

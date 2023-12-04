@@ -1,0 +1,64 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Players
+  commentId: N:NitroxServer.GameLogic.Players
+  id: Players
+  parent: NitroxServer.GameLogic
+  children:
+  - NitroxServer.GameLogic.Players.PersistedPlayerData
+  - NitroxServer.GameLogic.Players.PlayerData
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.GameLogic.Players
+  nameWithType: NitroxServer.GameLogic.Players
+  fullName: NitroxServer.GameLogic.Players
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.GameLogic.Players.PersistedPlayerData
+  commentId: T:NitroxServer.GameLogic.Players.PersistedPlayerData
+  parent: NitroxServer.GameLogic.Players
+  href: NitroxServer.GameLogic.Players.PersistedPlayerData.html
+  name: PersistedPlayerData
+  nameWithType: PersistedPlayerData
+  fullName: NitroxServer.GameLogic.Players.PersistedPlayerData
+- uid: NitroxServer.GameLogic.Players.PlayerData
+  commentId: T:NitroxServer.GameLogic.Players.PlayerData
+  parent: NitroxServer.GameLogic.Players
+  href: NitroxServer.GameLogic.Players.PlayerData.html
+  name: PlayerData
+  nameWithType: PlayerData
+  fullName: NitroxServer.GameLogic.Players.PlayerData
+- uid: NitroxServer.GameLogic.Players
+  commentId: N:NitroxServer.GameLogic.Players
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Players
+  nameWithType: NitroxServer.GameLogic.Players
+  fullName: NitroxServer.GameLogic.Players
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Players
+    name: Players
+    href: NitroxServer.GameLogic.Players.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Players
+    name: Players
+    href: NitroxServer.GameLogic.Players.html
+memberLayout: SeparatePages

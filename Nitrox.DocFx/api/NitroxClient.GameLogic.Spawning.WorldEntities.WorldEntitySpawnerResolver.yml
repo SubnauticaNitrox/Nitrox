@@ -1,0 +1,540 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver
+  commentId: T:NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver
+  id: WorldEntitySpawnerResolver
+  parent: NitroxClient.GameLogic.Spawning.WorldEntities
+  children:
+  - NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.#ctor(NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer,NitroxClient.GameLogic.Entities)
+  - NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  langs:
+  - csharp
+  - vb
+  name: WorldEntitySpawnerResolver
+  nameWithType: WorldEntitySpawnerResolver
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver
+  type: Class
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/WorldEntities/WorldEntitySpawnerResolver.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: WorldEntitySpawnerResolver
+    path: ../NitroxClient/GameLogic/Spawning/WorldEntities/WorldEntitySpawnerResolver.cs
+    startLine: 7
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.WorldEntities
+  syntax:
+    content: public class WorldEntitySpawnerResolver
+    content.vb: Public Class WorldEntitySpawnerResolver
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.#ctor(NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer,NitroxClient.GameLogic.Entities)
+  commentId: M:NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.#ctor(NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer,NitroxClient.GameLogic.Entities)
+  id: '#ctor(NitroxClient.GameLogic.PlayerManager,NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer,NitroxClient.GameLogic.Entities)'
+  parent: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver
+  langs:
+  - csharp
+  - vb
+  name: WorldEntitySpawnerResolver(PlayerManager, ILocalNitroxPlayer, Entities)
+  nameWithType: WorldEntitySpawnerResolver.WorldEntitySpawnerResolver(PlayerManager, ILocalNitroxPlayer, Entities)
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.WorldEntitySpawnerResolver(NitroxClient.GameLogic.PlayerManager, NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer, NitroxClient.GameLogic.Entities)
+  type: Constructor
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/WorldEntities/WorldEntitySpawnerResolver.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: .ctor
+    path: ../NitroxClient/GameLogic/Spawning/WorldEntities/WorldEntitySpawnerResolver.cs
+    startLine: 17
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.WorldEntities
+  syntax:
+    content: public WorldEntitySpawnerResolver(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
+    parameters:
+    - id: playerManager
+      type: NitroxClient.GameLogic.PlayerManager
+    - id: localPlayer
+      type: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+    - id: entities
+      type: NitroxClient.GameLogic.Entities
+    content.vb: Public Sub New(playerManager As PlayerManager, localPlayer As ILocalNitroxPlayer, entities As Entities)
+  overload: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.#ctor*
+  nameWithType.vb: WorldEntitySpawnerResolver.New(PlayerManager, ILocalNitroxPlayer, Entities)
+  fullName.vb: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.New(NitroxClient.GameLogic.PlayerManager, NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer, NitroxClient.GameLogic.Entities)
+  name.vb: New(PlayerManager, ILocalNitroxPlayer, Entities)
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  commentId: M:NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  id: ResolveEntitySpawner(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  parent: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver
+  langs:
+  - csharp
+  - vb
+  name: ResolveEntitySpawner(WorldEntity)
+  nameWithType: WorldEntitySpawnerResolver.ResolveEntitySpawner(WorldEntity)
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner(NitroxModel.DataStructures.GameLogic.Entities.WorldEntity)
+  type: Method
+  source:
+    remote:
+      path: NitroxClient/GameLogic/Spawning/WorldEntities/WorldEntitySpawnerResolver.cs
+      branch: docfx
+      repo: https://github.com/killzoms/Nitrox/
+    id: ResolveEntitySpawner
+    path: ../NitroxClient/GameLogic/Spawning/WorldEntities/WorldEntitySpawnerResolver.cs
+    startLine: 28
+  assemblies:
+  - NitroxClient
+  namespace: NitroxClient.GameLogic.Spawning.WorldEntities
+  syntax:
+    content: public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
+    parameters:
+    - id: entity
+      type: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+    return:
+      type: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySpawner
+    content.vb: Public Function ResolveEntitySpawner(entity As WorldEntity) As IWorldEntitySpawner
+  overload: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner*
+references:
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities
+  commentId: N:NitroxClient.GameLogic.Spawning.WorldEntities
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.Spawning.WorldEntities
+  nameWithType: NitroxClient.GameLogic.Spawning.WorldEntities
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.WorldEntities
+    name: WorldEntities
+    href: NitroxClient.GameLogic.Spawning.WorldEntities.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning
+    name: Spawning
+    href: NitroxClient.GameLogic.Spawning.html
+  - name: .
+  - uid: NitroxClient.GameLogic.Spawning.WorldEntities
+    name: WorldEntities
+    href: NitroxClient.GameLogic.Spawning.WorldEntities.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.#ctor*
+  commentId: Overload:NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.#ctor
+  href: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.-ctor.html#NitroxClient_GameLogic_Spawning_WorldEntities_WorldEntitySpawnerResolver__ctor_NitroxClient_GameLogic_PlayerManager_NitroxClient_GameLogic_PlayerLogic_PlayerModel_Abstract_ILocalNitroxPlayer_NitroxClient_GameLogic_Entities_
+  name: WorldEntitySpawnerResolver
+  nameWithType: WorldEntitySpawnerResolver.WorldEntitySpawnerResolver
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.WorldEntitySpawnerResolver
+  nameWithType.vb: WorldEntitySpawnerResolver.New
+  fullName.vb: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.New
+  name.vb: New
+- uid: NitroxClient.GameLogic.PlayerManager
+  commentId: T:NitroxClient.GameLogic.PlayerManager
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.PlayerManager.html
+  name: PlayerManager
+  nameWithType: PlayerManager
+  fullName: NitroxClient.GameLogic.PlayerManager
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  commentId: T:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+  parent: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer.html
+  name: ILocalNitroxPlayer
+  nameWithType: ILocalNitroxPlayer
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.ILocalNitroxPlayer
+- uid: NitroxClient.GameLogic.Entities
+  commentId: T:NitroxClient.GameLogic.Entities
+  parent: NitroxClient.GameLogic
+  href: NitroxClient.GameLogic.Entities.html
+  name: Entities
+  nameWithType: Entities
+  fullName: NitroxClient.GameLogic.Entities
+- uid: NitroxClient.GameLogic
+  commentId: N:NitroxClient.GameLogic
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic
+  nameWithType: NitroxClient.GameLogic
+  fullName: NitroxClient.GameLogic
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+- uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  commentId: N:NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  nameWithType: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  fullName: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic
+    name: PlayerLogic
+    href: NitroxClient.GameLogic.PlayerLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel
+    name: PlayerModel
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.html
+  - name: .
+  - uid: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract.html
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner*
+  commentId: Overload:NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner
+  href: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner.html#NitroxClient_GameLogic_Spawning_WorldEntities_WorldEntitySpawnerResolver_ResolveEntitySpawner_NitroxModel_DataStructures_GameLogic_Entities_WorldEntity_
+  name: ResolveEntitySpawner
+  nameWithType: WorldEntitySpawnerResolver.ResolveEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.WorldEntitySpawnerResolver.ResolveEntitySpawner
+- uid: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  commentId: T:NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+  parent: NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity.html
+  name: WorldEntity
+  nameWithType: WorldEntity
+  fullName: NitroxModel.DataStructures.GameLogic.Entities.WorldEntity
+- uid: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySpawner
+  commentId: T:NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySpawner
+  parent: NitroxClient.GameLogic.Spawning.WorldEntities
+  href: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySpawner.html
+  name: IWorldEntitySpawner
+  nameWithType: IWorldEntitySpawner
+  fullName: NitroxClient.GameLogic.Spawning.WorldEntities.IWorldEntitySpawner
+- uid: NitroxModel.DataStructures.GameLogic.Entities
+  commentId: N:NitroxModel.DataStructures.GameLogic.Entities
+  href: NitroxModel.html
+  name: NitroxModel.DataStructures.GameLogic.Entities
+  nameWithType: NitroxModel.DataStructures.GameLogic.Entities
+  fullName: NitroxModel.DataStructures.GameLogic.Entities
+  spec.csharp:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+  spec.vb:
+  - uid: NitroxModel
+    name: NitroxModel
+    href: NitroxModel.html
+  - name: .
+  - uid: NitroxModel.DataStructures
+    name: DataStructures
+    href: NitroxModel.DataStructures.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic
+    name: GameLogic
+    href: NitroxModel.DataStructures.GameLogic.html
+  - name: .
+  - uid: NitroxModel.DataStructures.GameLogic.Entities
+    name: Entities
+    href: NitroxModel.DataStructures.GameLogic.Entities.html
+memberLayout: SeparatePages

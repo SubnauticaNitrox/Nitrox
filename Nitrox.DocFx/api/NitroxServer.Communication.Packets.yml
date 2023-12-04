@@ -1,0 +1,95 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.Communication.Packets
+  commentId: N:NitroxServer.Communication.Packets
+  id: Packets
+  parent: NitroxServer.Communication
+  children:
+  - NitroxServer.Communication.Packets.PacketHandler
+  - NitroxServer.Communication.Packets.Processors
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.Communication.Packets
+  nameWithType: NitroxServer.Communication.Packets
+  fullName: NitroxServer.Communication.Packets
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.Communication.Packets.Processors
+  commentId: N:NitroxServer.Communication.Packets.Processors
+  href: NitroxServer.html
+  name: NitroxServer.Communication.Packets.Processors
+  nameWithType: NitroxServer.Communication.Packets.Processors
+  fullName: NitroxServer.Communication.Packets.Processors
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets.Processors
+    name: Processors
+    href: NitroxServer.Communication.Packets.Processors.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets.Processors
+    name: Processors
+    href: NitroxServer.Communication.Packets.Processors.html
+- uid: NitroxServer.Communication.Packets.PacketHandler
+  commentId: T:NitroxServer.Communication.Packets.PacketHandler
+  parent: NitroxServer.Communication.Packets
+  href: NitroxServer.Communication.Packets.PacketHandler.html
+  name: PacketHandler
+  nameWithType: PacketHandler
+  fullName: NitroxServer.Communication.Packets.PacketHandler
+- uid: NitroxServer.Communication.Packets
+  commentId: N:NitroxServer.Communication.Packets
+  href: NitroxServer.html
+  name: NitroxServer.Communication.Packets
+  nameWithType: NitroxServer.Communication.Packets
+  fullName: NitroxServer.Communication.Packets
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.Communication
+    name: Communication
+    href: NitroxServer.Communication.html
+  - name: .
+  - uid: NitroxServer.Communication.Packets
+    name: Packets
+    href: NitroxServer.Communication.Packets.html
+memberLayout: SeparatePages

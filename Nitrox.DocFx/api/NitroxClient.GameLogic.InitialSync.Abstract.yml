@@ -1,0 +1,98 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxClient.GameLogic.InitialSync.Abstract
+  commentId: N:NitroxClient.GameLogic.InitialSync.Abstract
+  id: Abstract
+  parent: NitroxClient.GameLogic.InitialSync
+  children:
+  - NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+  - NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+  - NitroxClient.GameLogic.InitialSync.Abstract.InitialSyncProcessor
+  langs:
+  - csharp
+  - vb
+  name: NitroxClient.GameLogic.InitialSync.Abstract
+  nameWithType: NitroxClient.GameLogic.InitialSync.Abstract
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract
+  type: Namespace
+  assemblies:
+  - NitroxClient
+references:
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+  commentId: T:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+  parent: NitroxClient.GameLogic.InitialSync.Abstract
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor.html
+  name: IInitialSyncProcessor
+  nameWithType: IInitialSyncProcessor
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+  commentId: T:NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+  href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  name: IInitialSyncProcessor<TPacket>
+  nameWithType: IInitialSyncProcessor<TPacket>
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor<TPacket>
+  nameWithType.vb: IInitialSyncProcessor(Of TPacket)
+  fullName.vb: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor(Of TPacket)
+  name.vb: IInitialSyncProcessor(Of TPacket)
+  spec.csharp:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+    name: IInitialSyncProcessor
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  - name: <
+  - name: TPacket
+  - name: '>'
+  spec.vb:
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor`1
+    name: IInitialSyncProcessor
+    href: NitroxClient.GameLogic.InitialSync.Abstract.IInitialSyncProcessor-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TPacket
+  - name: )
+- uid: NitroxClient.GameLogic.InitialSync.Abstract.InitialSyncProcessor
+  commentId: T:NitroxClient.GameLogic.InitialSync.Abstract.InitialSyncProcessor
+  parent: NitroxClient.GameLogic.InitialSync.Abstract
+  href: NitroxClient.GameLogic.InitialSync.Abstract.InitialSyncProcessor.html
+  name: InitialSyncProcessor
+  nameWithType: InitialSyncProcessor
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract.InitialSyncProcessor
+- uid: NitroxClient.GameLogic.InitialSync.Abstract
+  commentId: N:NitroxClient.GameLogic.InitialSync.Abstract
+  href: NitroxClient.html
+  name: NitroxClient.GameLogic.InitialSync.Abstract
+  nameWithType: NitroxClient.GameLogic.InitialSync.Abstract
+  fullName: NitroxClient.GameLogic.InitialSync.Abstract
+  spec.csharp:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync
+    name: InitialSync
+    href: NitroxClient.GameLogic.InitialSync.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.InitialSync.Abstract.html
+  spec.vb:
+  - uid: NitroxClient
+    name: NitroxClient
+    href: NitroxClient.html
+  - name: .
+  - uid: NitroxClient.GameLogic
+    name: GameLogic
+    href: NitroxClient.GameLogic.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync
+    name: InitialSync
+    href: NitroxClient.GameLogic.InitialSync.html
+  - name: .
+  - uid: NitroxClient.GameLogic.InitialSync.Abstract
+    name: Abstract
+    href: NitroxClient.GameLogic.InitialSync.Abstract.html
+memberLayout: SeparatePages

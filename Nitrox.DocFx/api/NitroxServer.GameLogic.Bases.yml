@@ -1,0 +1,64 @@
+### YamlMime:ManagedReference
+items:
+- uid: NitroxServer.GameLogic.Bases
+  commentId: N:NitroxServer.GameLogic.Bases
+  id: Bases
+  parent: NitroxServer.GameLogic
+  children:
+  - NitroxServer.GameLogic.Bases.BuildingManager
+  - NitroxServer.GameLogic.Bases.GameData
+  langs:
+  - csharp
+  - vb
+  name: NitroxServer.GameLogic.Bases
+  nameWithType: NitroxServer.GameLogic.Bases
+  fullName: NitroxServer.GameLogic.Bases
+  type: Namespace
+  assemblies:
+  - NitroxServer
+references:
+- uid: NitroxServer.GameLogic.Bases.BuildingManager
+  commentId: T:NitroxServer.GameLogic.Bases.BuildingManager
+  parent: NitroxServer.GameLogic.Bases
+  href: NitroxServer.GameLogic.Bases.BuildingManager.html
+  name: BuildingManager
+  nameWithType: BuildingManager
+  fullName: NitroxServer.GameLogic.Bases.BuildingManager
+- uid: NitroxServer.GameLogic.Bases.GameData
+  commentId: T:NitroxServer.GameLogic.Bases.GameData
+  parent: NitroxServer.GameLogic.Bases
+  href: NitroxServer.GameLogic.Bases.GameData.html
+  name: GameData
+  nameWithType: GameData
+  fullName: NitroxServer.GameLogic.Bases.GameData
+- uid: NitroxServer.GameLogic.Bases
+  commentId: N:NitroxServer.GameLogic.Bases
+  href: NitroxServer.html
+  name: NitroxServer.GameLogic.Bases
+  nameWithType: NitroxServer.GameLogic.Bases
+  fullName: NitroxServer.GameLogic.Bases
+  spec.csharp:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Bases
+    name: Bases
+    href: NitroxServer.GameLogic.Bases.html
+  spec.vb:
+  - uid: NitroxServer
+    name: NitroxServer
+    href: NitroxServer.html
+  - name: .
+  - uid: NitroxServer.GameLogic
+    name: GameLogic
+    href: NitroxServer.GameLogic.html
+  - name: .
+  - uid: NitroxServer.GameLogic.Bases
+    name: Bases
+    href: NitroxServer.GameLogic.Bases.html
+memberLayout: SeparatePages
