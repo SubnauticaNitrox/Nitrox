@@ -22,6 +22,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
     private readonly AssetsBundleManager am;
     private readonly ThreadSafeMonoCecilTempGenerator monoGen;
 
+    private readonly ConcurrentDictionary<string, string> classIdByRuntimeKey = new();
     private readonly ConcurrentDictionary<string, string[]> addressableCatalog = new();
     private readonly ConcurrentDictionary<string, PrefabPlaceholderAsset> placeholdersByClassId = new();
     private readonly ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> groupsByClassId = new();
@@ -84,7 +85,16 @@ public class PrefabPlaceholderGroupsParser : IDisposable
     private void LoadAddressableCatalog(Dictionary<string, string> prefabDatabase)
     {
         ContentCatalogData ccd = AddressablesJsonParser.FromString(File.ReadAllText(Path.Combine(aaRootPath, "catalog.json")));
+        Dictionary<string, string> classIdByPath = prefabDatabase.ToDictionary(m => m.Value, m => m.Key);
 
+        foreach (KeyValuePair<object, List<ResourceLocation>> entry in ccd.Resources)
+        {
+            if (entry.Key is string primaryKey && primaryKey.Length == 32 &&
+                classIdByPath.TryGetValue(entry.Value[0].PrimaryKey, out string classId))
+            {
+                classIdByRuntimeKey.TryAdd(primaryKey, classId);
+            }
+        }
         foreach (KeyValuePair<string, string> prefabAddressable in prefabDatabase)
         {
             foreach (ResourceLocation resourceLocation in ccd.Resources[prefabAddressable.Value])
@@ -266,6 +276,34 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             PrefabPlaceholdersGroupAsset groupAsset = GetAndCachePrefabPlaceholdersGroupOfBundle(amInst, assetFileInst, classId);
             groupsByClassId[classId] = groupAsset;
             return groupAsset;
+        }
+
+        AssetFileInfo spawnRandomInfo = amInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "SpawnRandom");
+        if (spawnRandomInfo != null)
+        {
+            // See SpawnRandom.Start
+            AssetTypeValueField spawnRandom = amInst.GetBaseField(assetFileInst, spawnRandomInfo);
+            List<string> classIds = new();
+            foreach (AssetTypeValueField assetReference in spawnRandom["assetReferences"])
+            {
+                classIds.Add(classIdByRuntimeKey[assetReference["m_AssetGUID"].AsString]);
+            }
+
+            return new PrefabPlaceholderRandomAsset(classIds);
+        }
+
+        AssetFileInfo databoxSpawnerInfo = amInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "DataboxSpawner");
+        if (databoxSpawnerInfo != null)
+        {
+            // NB: This spawning should be cancelled if the techType is from a known tech
+            // But it doesn't matter if we still spawn it so we do so.
+            // See DataboxSpawner.Start
+            AssetTypeValueField databoxSpawner = amInst.GetBaseField(assetFileInst, databoxSpawnerInfo);
+            string runtimeKey = databoxSpawner["databoxPrefabReference"]["m_AssetGUID"].AsString;
+
+            PrefabPlaceholderAsset databoxAsset = new(classIdByRuntimeKey[runtimeKey]);
+            placeholdersByClassId[classId] = databoxAsset;
+            return databoxAsset;
         }
 
         AssetFileInfo entitySlotInfo = amInst.GetMonoBehaviourFromGameObject(assetFileInst, prefabGameObjectInfo, "EntitySlot");

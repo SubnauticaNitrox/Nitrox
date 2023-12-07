@@ -10,7 +10,8 @@ public class WorldEntitySpawnerResolver
     private readonly DefaultWorldEntitySpawner defaultEntitySpawner = new();
     private readonly VehicleWorldEntitySpawner vehicleWorldEntitySpawner;
 
-    private readonly PlaceholderGroupWorldEntitySpawner prefabWorldEntitySpawner;
+    private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner;
+    private readonly PlaceholderGroupWorldEntitySpawner placeholderGroupWorldEntitySpawner;
     private readonly PlayerWorldEntitySpawner playerWorldEntitySpawner;
     private readonly SerializedWorldEntitySpawner serializedWorldEntitySpawner;
 
@@ -23,7 +24,8 @@ public class WorldEntitySpawnerResolver
         customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner();
 
         vehicleWorldEntitySpawner = new(entities);
-        prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner);
+        prefabPlaceholderEntitySpawner = new(defaultEntitySpawner);
+        placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, prefabPlaceholderEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
     }
@@ -32,8 +34,10 @@ public class WorldEntitySpawnerResolver
     {
         switch (entity)
         {
+            case PrefabPlaceholderEntity:
+                return prefabPlaceholderEntitySpawner;
             case PlaceholderGroupWorldEntity:
-                return prefabWorldEntitySpawner;
+                return placeholderGroupWorldEntitySpawner;
             case PlayerWorldEntity:
                 return playerWorldEntitySpawner;
             case VehicleWorldEntity:

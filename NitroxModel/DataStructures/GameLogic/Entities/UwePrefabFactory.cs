@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities
+namespace NitroxModel.DataStructures.GameLogic.Entities;
+
+public interface IUwePrefabFactory
 {
-    public abstract class UwePrefabFactory
-    {
-        public abstract List<UwePrefab> GetPossiblePrefabs(string biomeType);
-    }
+    public abstract List<UwePrefab> GetPossiblePrefabs(string biomeType);
 }

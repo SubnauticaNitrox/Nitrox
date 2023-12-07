@@ -51,6 +51,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(playerManager, localPlayer, this);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
@@ -99,8 +100,18 @@ namespace NitroxClient.GameLogic
 
         private IEnumerator SpawnNewEntities()
         {
-            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
-            spawningEntities = false;
+            bool restarted = false;
+            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(exception =>
+            {
+                Log.Error(exception);
+                if (EntitiesToSpawn.Count > 0)
+                {
+                    restarted = true;
+                    // It's safe to run a new time because the processed entity is removed first so it won't infinitely throw errors
+                    CoroutineHost.StartCoroutine(SpawnNewEntities());
+                }
+            });
+            spawningEntities = restarted;
         }
 
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)

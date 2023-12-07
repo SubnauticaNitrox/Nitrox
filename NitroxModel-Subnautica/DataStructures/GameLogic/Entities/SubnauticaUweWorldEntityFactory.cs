@@ -4,7 +4,7 @@ using UWE;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 
-public class SubnauticaUweWorldEntityFactory : UweWorldEntityFactory
+public class SubnauticaUweWorldEntityFactory : IUweWorldEntityFactory
 {
     private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
 
@@ -13,7 +13,7 @@ public class SubnauticaUweWorldEntityFactory : UweWorldEntityFactory
         this.worldEntitiesByClassId = worldEntitiesByClassId;
     }
 
-    public override bool TryFind(string classId, out UweWorldEntity uweWorldEntity)
+    public bool TryFind(string classId, out UweWorldEntity uweWorldEntity)
     {
         if (worldEntitiesByClassId.TryGetValue(classId, out WorldEntityInfo worldEntityInfo))
         {

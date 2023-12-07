@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class WorldEntitySpawner : EntitySpawner<WorldEntity>
+public class WorldEntitySpawner : SyncEntitySpawner<WorldEntity>
 {
     private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
     private readonly Dictionary<Int3, BatchCells> batchCellsById;
@@ -30,8 +30,6 @@ public class WorldEntitySpawner : EntitySpawner<WorldEntity>
 
     protected override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
     {
-        LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
-
         EntityCell cellRoot = EnsureCell(entity);
         if (cellRoot == null)
         {
@@ -56,6 +54,21 @@ public class WorldEntitySpawner : EntitySpawner<WorldEntity>
     {
         IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
         return entitySpawner.SpawnsOwnChildren();
+    }
+
+    protected override bool SpawnSync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        EntityCell cellRoot = EnsureCell(entity);
+        if (cellRoot == null)
+        {
+            // Error logging is done in EnsureCell
+            return true;
+        }
+
+        Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
+        IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
+
+        return entitySpawner is IWorldEntitySyncSpawner syncSpawner && syncSpawner.SpawnSync(entity, parent, cellRoot, result);
     }
 
     private EntityCell EnsureCell(WorldEntity entity)

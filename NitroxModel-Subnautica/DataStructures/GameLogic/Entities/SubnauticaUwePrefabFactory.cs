@@ -8,7 +8,7 @@ using static LootDistributionData;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 
-public class SubnauticaUwePrefabFactory : UwePrefabFactory
+public class SubnauticaUwePrefabFactory : IUwePrefabFactory
 {
     private readonly LootDistributionData lootDistributionData;
     private readonly Dictionary<string, List<UwePrefab>> cache = new();
@@ -18,7 +18,7 @@ public class SubnauticaUwePrefabFactory : UwePrefabFactory
         lootDistributionData = GetLootDistributionData(lootDistributionJson);
     }
 
-    public override List<UwePrefab> GetPossiblePrefabs(string biome)
+    public List<UwePrefab> GetPossiblePrefabs(string biome)
     {
         List<UwePrefab> prefabs = new();
         if (biome == null)

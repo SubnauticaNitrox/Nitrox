@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -20,12 +19,14 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
     private readonly Entities entities;
     private readonly WorldEntitySpawnerResolver spawnerResolver;
     private readonly DefaultWorldEntitySpawner defaultSpawner;
+    private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner;
 
-    public PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner)
+    public PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner, PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner)
     {
         this.entities = entities;
         this.spawnerResolver = spawnerResolver;
         this.defaultSpawner = defaultSpawner;
+        this.prefabPlaceholderEntitySpawner = prefabPlaceholderEntitySpawner;
     }
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
@@ -67,19 +68,22 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             switch (current)
             {
                 case PrefabPlaceholderEntity prefabEntity:
-                    PrefabPlaceholder placeholder = prefabPlaceholderGroup.prefabPlaceholders[prefabEntity.ComponentIndex];
-                    if (!SpawnWorldEntityChildSync(prefabEntity, cellRoot, placeholder.transform.parent.gameObject, childResult, out IEnumerator asyncInstructions))
+                    if (!prefabPlaceholderEntitySpawner.SpawnSync(prefabEntity, groupObject, cellRoot, childResult))
                     {
-                        yield return asyncInstructions;
+                        yield return prefabPlaceholderEntitySpawner.SpawnAsync(prefabEntity, groupObject, cellRoot, childResult);
                     }
                     break;
 
                 case PlaceholderGroupWorldEntity groupEntity:
-                    placeholder = prefabPlaceholderGroup.prefabPlaceholders[groupEntity.ComponentIndex];
+                    PrefabPlaceholder placeholder = prefabPlaceholderGroup.prefabPlaceholders[groupEntity.ComponentIndex];
                     yield return SpawnAsync(groupEntity, placeholder.transform.parent.gameObject, cellRoot, childResult);
                     break;
+
                 default:
-                    Log.Error($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Found a child entity to spawn with an unmanaged type: {entity.GetType()}");
+                    if (!SpawnWorldEntityChildSync(entity, cellRoot, parentById.GetOrDefault(current.ParentId, null), childResult, out IEnumerator asyncInstructions))
+                    {
+                        yield return asyncInstructions;
+                    }
                     break;
             }
 
@@ -93,15 +97,15 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             entities.MarkAsSpawned(current);
             parentById[current.Id] = childObject;
             EntityMetadataProcessor.ApplyMetadata(childObject, current.Metadata);
+
+            // PlaceholderGroupWorldEntity's children spawning is already handled by this function which is called recursively
             if (current is not PlaceholderGroupWorldEntity)
             {
-                continue;
-            }
-            NitroxEntity.SetNewId(childObject, current.Id);
-            // Adding children to be spawned by this loop
-            foreach (Entity slotEntityChild in current.ChildEntities)
-            {
-                stack.Push(slotEntityChild);
+                // Adding children to be spawned by this loop            
+                foreach (Entity slotEntityChild in current.ChildEntities)
+                {
+                    stack.Push(slotEntityChild);
+                }
             }
         }
 

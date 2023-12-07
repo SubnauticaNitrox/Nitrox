@@ -18,6 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     [ProtoInclude(51, typeof(CellRootEntity))]
     [ProtoInclude(52, typeof(GlobalRootEntity))]
     [ProtoInclude(53, typeof(SerializedWorldEntity))]
+    [ProtoInclude(54, typeof(PrefabPlaceholderEntity))]
     public class WorldEntity : Entity
     {
         public virtual AbsoluteEntityCell AbsoluteEntityCell => new(Transform.Position, Level);

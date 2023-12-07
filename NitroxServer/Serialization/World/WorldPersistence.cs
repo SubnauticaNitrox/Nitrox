@@ -223,8 +223,8 @@ namespace NitroxServer.Serialization.World
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
-                NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
-                NitroxServiceLocator.LocateService<UwePrefabFactory>(),
+                NitroxServiceLocator.LocateService<IUweWorldEntityFactory>(),
+                NitroxServiceLocator.LocateService<IUwePrefabFactory>(),
                 pWorldData.WorldData.ParsedBatchCells,
                 protoBufSerializer,
                 NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),

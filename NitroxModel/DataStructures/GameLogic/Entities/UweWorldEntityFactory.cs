@@ -1,7 +1,6 @@
-namespace NitroxModel.DataStructures.GameLogic.Entities
+namespace NitroxModel.DataStructures.GameLogic.Entities;
+
+public interface IUweWorldEntityFactory
 {
-    public abstract class UweWorldEntityFactory
-    {
-        public abstract bool TryFind(string classId, out UweWorldEntity uweWorldEntity);
-    }
+    public abstract bool TryFind(string classId, out UweWorldEntity uweWorldEntity);
 }
