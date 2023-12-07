@@ -6,9 +6,6 @@
           "src": "../",
           "files": [
             "**/*.csproj"
-          ],
-          "exclude": [
-            "**/NitroxLauncher.csproj"
           ]
         }
       ],
@@ -40,9 +37,14 @@
       "default",
       "modern"
     ],
+
     "globalMetadata": {
       "_appName": "Nitrox",
       "_appTitle": "Nitrox",
+      "_gitContribute": {
+	"repo": "https://github.com/SubnauticaNitrox/Nitrox",
+	"branch": "master"
+      },
       "_enableSearch": true,
       "pdf": false
     }

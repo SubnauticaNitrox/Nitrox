@@ -4,6 +4,7 @@
   </ItemGroup>
   <Target Name="DotnetToolRestore" BeforeTargets="BuildDocs">
     <Exec Command="dotnet tool restore"/>
+    <RemoveDir Directories="api;_site"/>
   </Target>
   <Target Name="BuildDocs">
     <Exec Command="dotnet docfx"/>
