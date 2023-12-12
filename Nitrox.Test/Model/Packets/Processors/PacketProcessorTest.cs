@@ -85,9 +85,6 @@ namespace NitroxModel.Packets.Processors
             List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
                                                                          .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                                                                          .ToList();
-            ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(serverDependencyRegistrar);
-            NitroxServiceLocator.BeginNewLifetimeScope();
 
             List<Type> abstractProcessorTypes = new();
 

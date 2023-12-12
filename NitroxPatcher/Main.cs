@@ -107,9 +107,6 @@ public static class Main
             }
         };
 
-        uint forGlobalUsing = 0;
-        forGlobalUsing.AsByteUnitText(); // added so Code Cleanup does not nuke NitroxModel.Extensions
-
         Log.Info($"Using Nitrox {NitroxEnvironment.ReleasePhase} V{NitroxEnvironment.Version} built on {NitroxEnvironment.BuildDate}");
         try
         {

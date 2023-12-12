@@ -55,14 +55,16 @@ public class MultiplayerMovementController : MonoBehaviour
     public static bool TryGetMovementControllerFrom(NitroxId id, out MultiplayerMovementController mc)
     {
         mc = null;
-        if (id == null) // Early Exit
+        if (id == null)
         {
             return false;
         }
 
-
-        if (!movementControllersById.TryGetValue(id, out mc))
+        if (movementControllersById.TryGetValue(id, out mc))
         {
+            return mc;
+        }
+
             if (!NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
             {
                 return false;
@@ -73,14 +75,13 @@ public class MultiplayerMovementController : MonoBehaviour
                 movementControllersById.Add(id, mc);
                 return true;
             }
-        }
 
-        return mc;
+        return false;
     }
 
     private static void StartedSimulatingEntity(NitroxId id)
     {
-        if (NitroxEntity.TryGetComponentFrom(id, out MultiplayerMovementController mc))
+        if (TryGetMovementControllerFrom(id, out MultiplayerMovementController mc))
         {
             mc.SetBroadcasting(true);
         }
@@ -88,7 +89,7 @@ public class MultiplayerMovementController : MonoBehaviour
 
     private static void StoppedSimulatingEntity(NitroxId id)
     {
-        if (NitroxEntity.TryGetComponentFrom(id, out MultiplayerMovementController mc))
+        if (TryGetMovementControllerFrom(id, out MultiplayerMovementController mc))
         {
             mc.SetReceiving(true);
         }
