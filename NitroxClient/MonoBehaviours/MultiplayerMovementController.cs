@@ -134,6 +134,9 @@ public class MultiplayerMovementController : MonoBehaviour
         if (Broadcasting && simulationOwnership.HasAnyLockType(entity.Id))
         {
             timeSinceLastBroadcast += Time.fixedDeltaTime;
+            TargetPosition = transform.position;
+            TargetRotation = transform.rotation;
+
             if (timeSinceLastBroadcast >= LOCATION_BROADCAST_TIME)
             {
                 timeSinceLastBroadcast = 0f;
