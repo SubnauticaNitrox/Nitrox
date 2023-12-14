@@ -12,7 +12,7 @@ public sealed partial class Vehicle_ShouldSetKinematic_Patch : NitroxPatch, IDyn
     {
         if (__instance.TryGetComponent(out MultiplayerMovementController movementController) && movementController.Receiving)
         {
-            __result = true;
+            __result = false;
             return false;
         }
         return true;

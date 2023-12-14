@@ -54,9 +54,9 @@ public class MultiplayerMovementController : MonoBehaviour
 
     public static bool TryGetMovementControllerFrom(NitroxId id, out MultiplayerMovementController mc)
     {
-        mc = null;
         if (id == null)
         {
+            mc = null;
             return false;
         }
 
@@ -65,16 +65,16 @@ public class MultiplayerMovementController : MonoBehaviour
             return mc;
         }
 
-            if (!NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
-            {
-                return false;
-            }
+        if (!NitroxEntity.TryGetObjectFrom(id, out GameObject gameObject))
+        {
+            return false;
+        }
 
-            if (gameObject.TryGetComponent(out mc) && mc)
-            {
-                movementControllersById.Add(id, mc);
-                return true;
-            }
+        if (gameObject.TryGetComponent(out mc) && mc)
+        {
+            movementControllersById.Add(id, mc);
+            return true;
+        }
 
         return false;
     }
@@ -120,7 +120,7 @@ public class MultiplayerMovementController : MonoBehaviour
         if (!rigidbody && Receiving)
         {
             Vector3 velocity = Velocity;
-            transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, TimeScalar * Time.deltaTime);
+            transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, TimeScalar * Time.deltaTime + LOCATION_BROADCAST_TIME);
             transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, TimeScalar * Time.deltaTime);
         }
 
@@ -148,8 +148,9 @@ public class MultiplayerMovementController : MonoBehaviour
         if (rigidbody && Receiving)
         {
             Vector3 velocity = Velocity;
-            float timing = TimeScalar * Time.fixedDeltaTime;
+            float timing = TimeScalar * Time.fixedDeltaTime + LOCATION_BROADCAST_TIME;
             Vector3 newPos = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, timing);
+            Velocity = velocity;
 
             if (rigidbody.isKinematic)
             {
