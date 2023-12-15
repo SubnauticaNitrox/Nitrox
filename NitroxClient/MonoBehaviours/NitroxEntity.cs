@@ -62,8 +62,17 @@ namespace NitroxClient.MonoBehaviours
 
         public static bool TryGetObjectFrom(NitroxId id, out GameObject gameObject)
         {
+            if (id != null && gameObjectsById.TryGetValue(id, out gameObject))
+            {
+                if (gameObject)
+                {
+                    return true;
+                }
+                gameObjectsById.Remove(id); // Stale Reference
+            }
+
             gameObject = null;
-            return id != null && gameObjectsById.TryGetValue(id, out gameObject) && gameObject;
+            return false;
         }
 
         public static bool TryGetComponentFrom<T>(NitroxId id, out T component)

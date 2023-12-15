@@ -13,7 +13,7 @@ public sealed partial class FreezeRigidbodyWhenFar_FixedUpdate_Patch : NitroxPat
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((FreezeRigidbodyWhenFar t) => t.FixedUpdate());
 
-    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         List<CodeInstruction> instructionList = instructions.ToList();
         for (int i = 0; i < instructionList.Count; i++)
@@ -23,21 +23,23 @@ public sealed partial class FreezeRigidbodyWhenFar_FixedUpdate_Patch : NitroxPat
             if (instruction.opcode == OpCodes.Call && instruction.operand.Equals(Reflect.Method((Component c) => c.GetComponent<Rigidbody>())))
             {
                 yield return instruction;
-                yield return instructionList[i + 1];
+                yield return instructionList[i + 1]; // Yield the found instruction and the instruction after it
                 object jmpLabel = null;
 
                 for (int j = i; j < instructionList.Count; j++) // search for branch instruction
                 {
                     if (instructionList[j].opcode == OpCodes.Ble_Un)
                     {
-                        jmpLabel = instructionList[j].operand;
+                        jmpLabel = instructionList[j].operand; // Copy original label
                         break;
                     }
                 }
-                yield return new CodeInstruction(OpCodes.Ldarg_0);
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Property((Component c) => c.gameObject).GetGetMethod());
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => IsMoving(default)));
-                yield return new CodeInstruction(OpCodes.Brtrue, jmpLabel);
+
+                yield return new(OpCodes.Ldarg_0);
+                yield return new(OpCodes.Call, Reflect.Property((Component c) => c.gameObject).GetGetMethod());
+                yield return new(OpCodes.Call, Reflect.Method(() => IsMoving(default)));
+                yield return new(OpCodes.Brtrue, jmpLabel); // Put down original jmp label
+
                 i = i + 1;
                 continue;
             }
