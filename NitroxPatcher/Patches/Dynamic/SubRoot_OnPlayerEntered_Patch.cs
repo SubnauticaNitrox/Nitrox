@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -59,5 +59,11 @@ public sealed partial class SubRoot_OnPlayerEntered_Patch : NitroxPatch, IDynami
             instructionList.InsertRange(injectionPoint, injectedInstructions);
         }
         return instructionList;
+    }
+
+    public static void Prefix()
+    {
+        GroundMotor motor = Player.main.groundMotor;
+        motor.movingPlatform.movementTransfer = GroundMotor.MovementTransferOnJump.PermaLocked;
     }
 }

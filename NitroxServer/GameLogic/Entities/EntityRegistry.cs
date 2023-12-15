@@ -42,7 +42,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 return new(entitiesById.Values.Where(entity => entity is not GlobalRootEntity));
             }
-            return new List<Entity>(entitiesById.Values);            
+            return new List<Entity>(entitiesById.Values);
         }
 
         public List<Entity> GetEntities(List<NitroxId> ids)
@@ -85,7 +85,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
-            foreach(Entity entity in entities)
+            foreach (Entity entity in entities)
             {
                 AddEntity(entity);
             }

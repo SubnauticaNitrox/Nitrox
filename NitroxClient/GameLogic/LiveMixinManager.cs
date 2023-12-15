@@ -1,4 +1,3 @@
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using UnityEngine;
 

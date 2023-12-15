@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
-using Nitrox.Test.Helper;
 using Nitrox.Test.Helper.Faker;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;

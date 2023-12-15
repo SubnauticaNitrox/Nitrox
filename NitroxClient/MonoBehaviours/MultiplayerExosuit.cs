@@ -1,4 +1,3 @@
-﻿using NitroxClient.Unity.Smoothing;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -15,7 +14,6 @@ namespace NitroxClient.MonoBehaviours
             WheelYawSetter = value => exosuit.steeringWheelYaw = value;
             WheelPitchSetter = value => exosuit.steeringWheelPitch = value;
             base.Awake();
-            SmoothRotation = new ExosuitSmoothRotation(gameObject.transform.rotation);
         }
 
         internal override void Enter()

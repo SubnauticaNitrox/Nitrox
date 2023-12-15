@@ -78,11 +78,6 @@ public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
             yield break;
         }
 
-        Transform rootTransform = subRoot.transform;
-        Quaternion vehicleAngle = rootTransform.rotation;
-        // "position" is a relative position and "positionInVehicle" an absolute position
-        Vector3 positionInVehicle = vehicleAngle * position + rootTransform.position;
-        Player.main.SetPosition(positionInVehicle, rotation * vehicleAngle);
         Player.main.cinematicModeActive = false;
         Player.main.UpdateIsUnderwater();
     }
@@ -99,5 +94,4 @@ public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 
         Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
     }
-
 }

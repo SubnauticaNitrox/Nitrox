@@ -1,4 +1,3 @@
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -26,11 +25,11 @@ namespace NitroxServer.Communication.Packets.Processors
             if (playerEntity.HasValue)
             {
                 playerEntity.Value.Transform.Position = packet.Position;
-                playerEntity.Value.Transform.Rotation = packet.BodyRotation;
+                playerEntity.Value.Transform.Rotation = packet.Rotation;
             }
 
             player.Position = packet.Position;
-            player.Rotation = packet.BodyRotation;
+            player.Rotation = packet.Rotation;
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

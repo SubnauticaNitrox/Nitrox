@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FMOD.Studio;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;

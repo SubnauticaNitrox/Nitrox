@@ -32,6 +32,7 @@ namespace NitroxClient.GameLogic
         public ItemsContainer Inventory { get; private set; }
         public Transform ItemAttachPoint { get; private set; }
         public RemotePlayerVitals vitals { get; private set; }
+        public MultiplayerMovementController MovementController { get; private set; }
 
         public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -61,6 +62,9 @@ namespace NitroxClient.GameLogic
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
             RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+            RigidBody.isKinematic = true;
+            MovementController = Body.EnsureComponent<MultiplayerMovementController>();
+            MovementController.AfterUpdate += OnUpdate;
 
             NitroxEntity.SetNewId(Body, PlayerContext.PlayerNitroxId);
 
@@ -109,27 +113,27 @@ namespace NitroxClient.GameLogic
             SkyEnvironmentChanged.Broadcast(Body, (GameObject)null);
         }
 
-        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
+        public void UpdatePosition(Vector3 position, Quaternion bodyRotation, Quaternion aimingRotation)
         {
             Body.SetActive(true);
-
-            // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
-            // If in a subroot the position will be relative to the subroot
-            if (SubRoot && !SubRoot.isBase)
-            {
-                Quaternion vehicleAngle = SubRoot.transform.rotation;
-                position = vehicleAngle * position;
-                position += SubRoot.transform.position;
-                bodyRotation = vehicleAngle * bodyRotation;
-                aimingRotation = vehicleAngle * aimingRotation;
-            }
-            RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
-            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
+
+            MovementController.SetReceiving(true);
+
+            MovementController.TargetPosition = position;
+            MovementController.TargetRotation = bodyRotation;
 
             AnimationController.AimingRotation = aimingRotation;
-            AnimationController.UpdatePlayerAnimations = true;
+        }
+
+        private void OnUpdate()
+        {
+            if (!Vehicle && !PilotingChair)
+            {
+                AnimationController.Velocity = MovementController.Velocity;
+                AnimationController.UpdatePlayerAnimations = true;
+            }
         }
 
         public void SetPilotingChair(PilotingChair newPilotingChair)
@@ -170,7 +174,13 @@ namespace NitroxClient.GameLogic
                     }
                 }
 
-                RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
+                bool isInPilotingChair = newPilotingChair != null;
+                RigidBody.isKinematic = AnimationController["cyclops_steering"] = isInPilotingChair;
+                RigidBody.interpolation = isInPilotingChair ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate;
+                if (isInPilotingChair)
+                {
+                    MovementController.SetReceiving(false);
+                }
             }
         }
 
@@ -243,9 +253,14 @@ namespace NitroxClient.GameLogic
                     }
                 }
 
-                RigidBody.isKinematic = newVehicle;
-
                 Vehicle = newVehicle;
+
+                RigidBody.interpolation = Vehicle ? RigidbodyInterpolation.None : RigidbodyInterpolation.Interpolate;
+                RigidBody.isKinematic = Vehicle;
+                if (Vehicle)
+                {
+                    MovementController.SetReceiving(false);
+                }
 
                 AnimationController["in_seamoth"] = newVehicle is SeaMoth;
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;

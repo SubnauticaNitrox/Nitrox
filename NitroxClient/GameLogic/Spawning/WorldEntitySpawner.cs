@@ -18,9 +18,9 @@ public class WorldEntitySpawner : EntitySpawner<WorldEntity>
     private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
     private readonly Dictionary<Int3, BatchCells> batchCellsById;
 
-    public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
+    public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, SimulationOwnership simulationOwnership, Entities entities)
     {
-        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer, entities);
+        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer, simulationOwnership, entities);
 
         if (NitroxEnvironment.IsNormal)
         {

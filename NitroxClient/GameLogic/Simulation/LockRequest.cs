@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures;
 
 namespace NitroxClient.GameLogic.Simulation
 {
@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.Simulation
         {
             if (onComplete != null)
             {
-                onComplete(id, lockAquired, (T)context);
+                onComplete(id, lockAquired, context);
             }
         }
 

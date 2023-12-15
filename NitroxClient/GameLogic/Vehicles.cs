@@ -82,11 +82,9 @@ public class Vehicles
 
             if (mvc)
             {
-                mvc.SetPositionVelocityRotation(
+                mvc.SetPositionRotation(
                     vehicleModel.Position.ToUnity(),
-                    vehicleModel.Velocity.ToUnity(),
-                    vehicleModel.Rotation.ToUnity(),
-                    vehicleModel.AngularVelocity.ToUnity()
+                    vehicleModel.Rotation.ToUnity()
                 );
                 mvc.SetThrottle(vehicleModel.AppliedThrottle);
                 mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
@@ -98,7 +96,8 @@ public class Vehicles
             RemotePlayer playerInstance = player.Value;
             playerInstance.SetVehicle(vehicle);
             playerInstance.SetSubRoot(subRoot);
-            playerInstance.SetPilotingChair(subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>());
+            PilotingChair pilotingChair = subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>();
+            playerInstance.SetPilotingChair(pilotingChair);
             playerInstance.AnimationController.UpdatePlayerAnimations = false;
         }
     }
@@ -172,16 +171,6 @@ public class Vehicles
         yield return Yielders.WaitFor3Seconds;
         playerMovementSuppressor.Dispose();
         vehicleMovementSuppressor.Dispose();
-    }
-
-    public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, TechType techType, GameObject gameObject, float cooldown)
-    {
-        yield return new WaitForSeconds(cooldown);
-
-        VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(techType.ToDto(), id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
-        ushort playerId = ushort.MaxValue;
-
-        packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
     }
 
     public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)

@@ -2,6 +2,7 @@ using System.Collections;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -13,16 +14,22 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 {
     private readonly Entities entities;
+    private readonly SimulationOwnership simulationOwnership;
+
+    // The constructor has mixed results when the remote player is a long distance away.  UWE even has a built in distance tracker to ensure
+    // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
+    // distance - anything more will simply use world spawning (no need to play the animation anyways).
+    private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
 
     public VehicleWorldEntitySpawner(Entities entities)
     {
         this.entities = entities;
     }
 
-    // The constructor has mixed results when the remote player is a long distance away.  UWE even has a built in distance tracker to ensure
-    // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
-    // distance - anything more will simply use world spawning (no need to play the animation anyways).
-    private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
+    public VehicleWorldEntitySpawner(SimulationOwnership simulationOwnership)
+    {
+        this.simulationOwnership = simulationOwnership;
+    }
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
@@ -41,12 +48,17 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             {
                 MobileVehicleBay.TransmitLocalSpawns = false;
                 yield return SpawnViaConstructor(vehicleEntity, constructor, result);
+                result.value.Value.EnsureComponent<MultiplayerMovementController>();
+
+                simulationOwnership.RequestSimulationLock(vehicleEntity.Id, SimulationLockType.TRANSIENT);
                 MobileVehicleBay.TransmitLocalSpawns = true;
                 yield break;
             }
         }
 
-        yield return SpawnInWorld(vehicleEntity, result, parent);            
+        yield return SpawnInWorld(vehicleEntity, result, parent);
+        result.value.Value.EnsureComponent<MultiplayerMovementController>();
+        simulationOwnership.RequestSimulationLock(vehicleEntity.Id, SimulationLockType.TRANSIENT);
     }
 
     private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)
@@ -162,7 +174,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
     private void RemoveConstructionAnimations(GameObject gameObject)
     {
         VFXConstructing[] vfxConstructions = gameObject.GetComponentsInChildren<VFXConstructing>();
-        
+
         foreach (VFXConstructing vfxConstructing in vfxConstructions)
         {
             vfxConstructing.EndGracefully();
@@ -187,19 +199,19 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             return;
         }
 
-        dockingBay.DockVehicle(vehicle);        
+        dockingBay.DockVehicle(vehicle);
     }
 
     public bool SpawnsOwnChildren()
     {
         return false;
     }
-    
+
     private float GetCraftDuration(TechType techType)
     {
         // UWE hard codes the build times into if/else logic inside ConstructorInput.Craft().
 
-        switch(techType)
+        switch (techType)
         {
             case TechType.Seamoth:
                 return 10f;

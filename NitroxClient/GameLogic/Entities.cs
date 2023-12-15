@@ -38,7 +38,8 @@ namespace NitroxClient.GameLogic
         public List<Entity> EntitiesToSpawn { get; private init; }
         private bool spawningEntities;
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, SimulationOwnership simulationOwnership)
+
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
@@ -50,7 +51,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InstalledBatteryEntity)] = new InstalledBatteryEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
-            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(playerManager, localPlayer, this);
+            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(playerManager, localPlayer, simulationOwnership, this);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];

@@ -15,15 +15,16 @@ public class WorldEntitySpawnerResolver
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
-    public WorldEntitySpawnerResolver(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
+    public WorldEntitySpawnerResolver(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, SimulationOwnership simulationOwnership, Entities entities)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Reefback] = new ReefbackWorldEntitySpawner(defaultEntitySpawner);
-        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner();
+        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(simulationOwnership);
 
         vehicleWorldEntitySpawner = new(entities);
         prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(this, defaultEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
+        vehicleWorldEntitySpawner = new VehicleWorldEntitySpawner(simulationOwnership);
     }
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)

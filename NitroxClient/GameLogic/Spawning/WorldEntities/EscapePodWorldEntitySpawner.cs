@@ -2,6 +2,7 @@ using System.Collections;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -18,6 +19,13 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
          */
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
 
+        private SimulationOwnership simulationOwnership;
+
+        public EscapePodWorldEntitySpawner(SimulationOwnership simulationOwnership)
+        {
+            this.simulationOwnership = simulationOwnership;
+        }
+
         public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
             if (entity is not EscapePodWorldEntity escapePodEntity)
@@ -30,6 +38,8 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = true;
 
             GameObject escapePod = CreateNewEscapePod(escapePodEntity);
+            escapePod.EnsureComponent<MultiplayerMovementController>();
+            simulationOwnership.RequestSimulationLock(entity.Id, SimulationLockType.TRANSIENT);
 
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
 
@@ -47,16 +57,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             NitroxEntity.SetNewId(escapePod, escapePodEntity.Id);
 
             EntityMetadataProcessor.ApplyMetadata(escapePod, escapePodEntity.Metadata);
-
-            Rigidbody rigidbody = escapePod.GetComponent<Rigidbody>();
-            if (rigidbody != null)
-            {
-                rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-            }
-            else
-            {
-                Log.Error("Escape pod did not have a rigid body!");
-            }
 
             escapePod.transform.position = escapePodEntity.Transform.Position.ToUnity();
 
