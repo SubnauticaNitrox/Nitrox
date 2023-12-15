@@ -1,9 +1,8 @@
 ﻿using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.Packets;
 using UnityEngine;
 using UWE;
 using Terrain = NitroxClient.GameLogic.Terrain;
@@ -22,7 +21,7 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
             if (subRoot.isCyclops)
             {
                 // Reversing calculations from PlayerMovementBroadcaster.Update()
-                Vector3 position = (subRoot.transform.rotation * packet.DestinationTo.ToUnity()) + subRoot.transform.position;
+                Vector3 position = subRoot.transform.rotation * packet.DestinationTo.ToUnity() + subRoot.transform.position;
 
                 Player.main.SetPosition(position);
                 Player.main.SetCurrentSub(subRoot);
@@ -34,7 +33,7 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
 
         Vehicle currentVehicle = Player.main.currentMountedVehicle;
         // Check to make sure the player is in a vehicle
-        if(currentVehicle != null)
+        if (currentVehicle != null)
         {
             Rigidbody vehicleRigidbody = currentVehicle.GetComponent<Rigidbody>();
             if (vehicleRigidbody != null)
@@ -51,7 +50,6 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
                     currentVehicle.teleporting = false;
                     // Reset the RB kinematic to false
                     vehicleRigidbody.isKinematic = false;
-
                 }
                 else
                 {
@@ -61,6 +59,7 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
                     currentVehicle.transform.rotation = preservedRotation;
                     currentVehicle.teleporting = false;
                 }
+
                 RunTerrainLoadCoroutine();
             }
             else
@@ -90,5 +89,3 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
         }
     }
 }
-
-
