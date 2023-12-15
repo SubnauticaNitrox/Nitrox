@@ -63,13 +63,13 @@ namespace NitroxClient.MonoBehaviours
         public static bool TryGetObjectFrom(NitroxId id, out GameObject gameObject)
         {
             gameObject = null;
-            return id != null && gameObjectsById.TryGetValue(id, out gameObject);
+            return id != null && gameObjectsById.TryGetValue(id, out gameObject) && gameObject;
         }
 
-        public static bool TryGetComponentFrom<T>(NitroxId id, out T component) where T : Component
+        public static bool TryGetComponentFrom<T>(NitroxId id, out T component)
         {
-            component = null;
-            return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) &&
+            component = default;
+            return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) && gameObject &&
                    gameObject.TryGetComponent(out component);
         }
 
@@ -85,6 +85,19 @@ namespace NitroxClient.MonoBehaviours
             else
             {
                 entity = gameObject.AddComponent<NitroxEntity>();
+            }
+            if (gameObject.TryGetComponent(out UniqueIdentifier uniqueIdentifier) && uniqueIdentifier.id != id.ToString())
+            {
+                // To avoid unrequired error spams, we do the id setting manually
+                // If the current UID was already registered, we unregister it
+                if (!string.IsNullOrEmpty(uniqueIdentifier.id) &&
+                    UniqueIdentifier.identifiers.TryGetValue(uniqueIdentifier.Id, out UniqueIdentifier registeredIdentifier) &&
+                    registeredIdentifier == uniqueIdentifier)
+                {
+                    UniqueIdentifier.identifiers.Remove(uniqueIdentifier.id);
+                }
+                uniqueIdentifier.id = id.ToString();
+                UniqueIdentifier.identifiers[id.ToString()] = uniqueIdentifier;
             }
 
             entity.Id = id;

@@ -29,7 +29,7 @@ public class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem
         if (simulationOwnershipData.RevokeOwnerOfId(packet.Id))
         {
             ushort serverId = ushort.MaxValue;
-            SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Id, serverId, SimulationLockType.TRANSIENT);
+            SimulationOwnershipChange simulationOwnershipChange = new(packet.Id, serverId, SimulationLockType.TRANSIENT);
             playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
         }
 

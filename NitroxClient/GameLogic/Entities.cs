@@ -9,6 +9,7 @@ using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -54,11 +55,13 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(GlobalRootEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
             entitySpawnersByType[typeof(InteriorPieceEntity)] = new InteriorPieceEntitySpawner(this);
+            entitySpawnersByType[typeof(OxygenPipeEntity)] = new OxygenPipeEntitySpawner(this, (WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
+            entitySpawnersByType[typeof(PlacedWorldEntity)] = new PlacedWorldEntitySpawner((WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
         }
 
         public void EntityMetadataChanged(object o, NitroxId id)
@@ -279,7 +282,7 @@ namespace NitroxClient.GameLogic
 
         public bool IsParentReady(NitroxId id)
         {
-            return WasParentSpawned(id) || (NitroxEntity.TryGetObjectFrom(id, out GameObject o) && o);
+            return WasParentSpawned(id) || NitroxEntity.TryGetObjectFrom(id, out GameObject _);
         }
 
         public bool WasParentSpawned(NitroxId id)

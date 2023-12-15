@@ -29,21 +29,6 @@ public class GlobalRootEntity : WorldEntity
 
     /// <remarks>Used for deserialization</remarks>
     public GlobalRootEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
-        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities) {}
-
-    public static GlobalRootEntity From(WorldEntity worldEntity)
-    {
-        return new GlobalRootEntity
-        {
-            Transform = worldEntity.Transform,
-            Level = worldEntity.Level,
-            ClassId = worldEntity.ClassId,
-            SpawnedByServer = worldEntity.SpawnedByServer,
-            Id = worldEntity.Id,
-            TechType = worldEntity.TechType,
-            Metadata = worldEntity.Metadata,
-            ParentId = worldEntity.ParentId,
-            ChildEntities = worldEntity.ChildEntities
-        };
-    }
+        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
+    { }
 }

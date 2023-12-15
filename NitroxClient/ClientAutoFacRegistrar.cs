@@ -48,6 +48,7 @@ namespace NitroxClient
             }
 
             RegisterCoreDependencies(containerBuilder);
+            RegisterMetadataDependencies(containerBuilder);
             RegisterPacketProcessors(containerBuilder);
             RegisterColorSwapManagers(containerBuilder);
             RegisterInitialSyncProcessors(containerBuilder);
@@ -99,18 +100,6 @@ namespace NitroxClient
                             .As<IMap>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<EntityMetadataExtractor>()
-                            .As<EntityMetadataExtractor>()
-                            .AsSelf()
-                            .SingleInstance();
-
-            containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<EntityMetadataProcessor>()
-                            .As<EntityMetadataProcessor>()
-                            .AsSelf()
-                            .SingleInstance();
-
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
@@ -142,6 +131,18 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
+        }
+
+        private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<EntityMetadataExtractor>()
+                            .As<EntityMetadataExtractor>()
+                            .InstancePerLifetimeScope();
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<EntityMetadataProcessor>()
+                            .As<EntityMetadataProcessor>()
+                            .InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)
