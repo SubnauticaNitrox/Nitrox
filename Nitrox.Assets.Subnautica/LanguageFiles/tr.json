@@ -49,6 +49,7 @@
     "Nitrox_LoadingScreenWarn": "Oyunu bozacak hatalar",
     "Nitrox_LostConnection": "Oyun sunucusuyla bağlantı kesildi",
     "Nitrox_LostConnectionWarn": "Artık sunucuya bağlı değil",
+    "Nitrox_MissingPermission": "",
     "Nitrox_Multiplayer": "Çok Oyunculu",
     "Nitrox_MultiplayerLoaded": "Çok oyunculu istemci yüklendi…",
     "Nitrox_Mute": "{PLAYER} oyuncusunu sustur",
