@@ -36,6 +36,7 @@
     "Nitrox_LoadingScreenWarn": "Forvent spill-ødeleggende bugs",
     "Nitrox_LostConnection": "Mistet tilkoblingen til spilltjeneren",
     "Nitrox_LostConnectionWarn": "Ikke lenger tilkoblet tjeneren",
+    "Nitrox_MissingPermission": "",
     "Nitrox_Multiplayer": "Flerspiller",
     "Nitrox_MultiplayerLoaded": "Flerspillerklient innlastet …",
     "Nitrox_Mute": "Demp {PLAYER}",
