@@ -21,10 +21,12 @@ namespace NitroxClient.GameLogic.Spawning.Bases;
 public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 {
     private readonly Entities entities;
+    private readonly BaseLeakEntitySpawner baseLeakEntitySpawner;
 
-    public BuildEntitySpawner(Entities entities)
+    public BuildEntitySpawner(Entities entities, BaseLeakEntitySpawner baseLeakEntitySpawner)
     {
         this.entities = entities;
+        this.baseLeakEntitySpawner = baseLeakEntitySpawner;
     }
 
     protected override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
@@ -50,10 +52,21 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 #endif
         yield return entities.SpawnBatchAsync(entity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>());
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
-        foreach (MapRoomEntity mapRoomEntity in entity.ChildEntities.OfType<MapRoomEntity>())
+
+        TaskResult<Optional<GameObject>> childResult = new();
+        foreach (Entity childEntity in entity.ChildEntities)
         {
-            yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+            switch (childEntity)
+            {
+                case MapRoomEntity mapRoomEntity:
+                    yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+                    break;
+                case BaseLeakEntity baseLeakEntity:
+                    yield return baseLeakEntitySpawner.SpawnAsync(baseLeakEntity, childResult);
+                    break;
+            }
         }
+
         result.Set(@base.gameObject);
     }
 
@@ -124,11 +137,13 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             if (childEntity is InteriorPieceEntity || childEntity is ModuleEntity ||
                 childEntity.GetType() == typeof(GlobalRootEntity))
             {
-                if (childEntity is GhostEntity ghostEntity)
+                switch (childEntity)
                 {
-                    ghostChildrenEntities.Add(ghostEntity);
-                    continue;
+                    case GhostEntity ghostEntity:
+                        ghostChildrenEntities.Add(ghostEntity);
+                        continue;
                 }
+
                 yield return entities.SpawnEntityAsync(childEntity, true);
             }
         }
