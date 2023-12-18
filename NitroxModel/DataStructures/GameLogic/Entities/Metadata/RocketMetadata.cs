@@ -41,6 +41,6 @@ public class RocketMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[RocketMetadata CurrentStage: {CurrentStage}, LastStageTransitionTime: {LastStageTransitionTime}, ElevatorState: {ElevatorState}, ElevatorPosition: {ElevatorPosition}, PreflightChecks: {string.Join(",", PreflightChecks)}]";
+        return $"[{nameof(RocketMetadata)} CurrentStage: {CurrentStage}, LastStageTransitionTime: {LastStageTransitionTime}, ElevatorState: {ElevatorState}, ElevatorPosition: {ElevatorPosition}, PreflightChecks: {string.Join(",", PreflightChecks)}]";
     }
 }

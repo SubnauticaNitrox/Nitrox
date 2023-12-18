@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.DataStructures;
 
@@ -17,15 +18,15 @@ public class WorldEntitySpawnerResolver
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
-    public WorldEntitySpawnerResolver(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
+    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.Reefback] = new ReefbackWorldEntitySpawner(defaultEntitySpawner);
-        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner();
+        customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(entityMetadataManager);
 
         vehicleWorldEntitySpawner = new(entities);
         prefabPlaceholderEntitySpawner = new(defaultEntitySpawner);
-        placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, prefabPlaceholderEntitySpawner);
+        placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, entityMetadataManager, prefabPlaceholderEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
     }

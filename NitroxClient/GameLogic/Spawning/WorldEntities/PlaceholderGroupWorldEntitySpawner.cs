@@ -19,13 +19,15 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
     private readonly Entities entities;
     private readonly WorldEntitySpawnerResolver spawnerResolver;
     private readonly DefaultWorldEntitySpawner defaultSpawner;
+    private readonly EntityMetadataManager entityMetadataManager;
     private readonly PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner;
 
-    public PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner, PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner)
+    public PlaceholderGroupWorldEntitySpawner(Entities entities, WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner, EntityMetadataManager entityMetadataManager, PrefabPlaceholderEntitySpawner prefabPlaceholderEntitySpawner)
     {
         this.entities = entities;
         this.spawnerResolver = spawnerResolver;
         this.defaultSpawner = defaultSpawner;
+        this.entityMetadataManager = entityMetadataManager;
         this.prefabPlaceholderEntitySpawner = prefabPlaceholderEntitySpawner;
     }
 
@@ -96,7 +98,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             GameObject childObject = childResult.value.Value;
             entities.MarkAsSpawned(current);
             parentById[current.Id] = childObject;
-            EntityMetadataProcessor.ApplyMetadata(childObject, current.Metadata);
+            entityMetadataManager.ApplyMetadata(childObject, current.Metadata);
 
             // PlaceholderGroupWorldEntity's children spawning is already handled by this function which is called recursively
             if (current is not PlaceholderGroupWorldEntity)

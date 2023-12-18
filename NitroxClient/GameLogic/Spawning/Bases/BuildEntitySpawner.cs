@@ -5,6 +5,7 @@ using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -58,7 +59,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
 
     protected override bool SpawnsOwnChildren(BuildEntity entity) => true;
 
-    public static BuildEntity From(Base targetBase)
+    public static BuildEntity From(Base targetBase, EntityMetadataManager entityMetadataManager)
     {
         BuildEntity buildEntity = BuildEntity.MakeEmpty();
         if (targetBase.TryGetNitroxId(out NitroxId baseId))
@@ -69,7 +70,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         buildEntity.Transform = targetBase.transform.ToLocalDto();
 
         buildEntity.BaseData = GetBaseData(targetBase);
-        buildEntity.ChildEntities.AddRange(BuildUtils.GetChildEntities(targetBase, baseId));
+        buildEntity.ChildEntities.AddRange(BuildUtils.GetChildEntities(targetBase, baseId, entityMetadataManager));
 
         return buildEntity;
     }
@@ -115,10 +116,13 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         // Ghosts need an active base to be correctly spawned onto it
         // While the rest must be spawned earlier for the base to load correctly (mostly InteriorPieceEntity)
         // Which is why the spawn loops are separated by the SetActive instruction
+        // NB: We aim at spawning very precise entity types (InteriorPieceEntity, ModuleEntity and GlobalRootEntity)
+        // Thus we use GetType() == instead of "is GlobalRootEntity" so that derived types from it aren't selected
         List<GhostEntity> ghostChildrenEntities = new();
         foreach (Entity childEntity in buildEntity.ChildEntities)
         {
-            if (childEntity is InteriorPieceEntity || childEntity is ModuleEntity)
+            if (childEntity is InteriorPieceEntity || childEntity is ModuleEntity ||
+                childEntity.GetType() == typeof(GlobalRootEntity))
             {
                 if (childEntity is GhostEntity ghostEntity)
                 {

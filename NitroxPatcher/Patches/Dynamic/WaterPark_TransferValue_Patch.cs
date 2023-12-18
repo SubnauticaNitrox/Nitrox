@@ -1,6 +1,7 @@
 using System.Reflection;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Spawning.Bases;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -42,7 +43,7 @@ public sealed partial class WaterPark_TransferValue_Patch : NitroxPatch, IDynami
             NitroxEntity.SetNewId(dstWaterPark.gameObject, newId);
             if (Temp.NewWaterPark == null)
             {
-                Temp.NewWaterPark = InteriorPieceEntitySpawner.From(dstWaterPark);
+                Temp.NewWaterPark = InteriorPieceEntitySpawner.From(dstWaterPark, Resolve<EntityMetadataManager>());
                 Temp.Transfer = true;
             }
             return;

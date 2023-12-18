@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -28,6 +29,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly ThrottledPacketSender throttledPacketSender;
+        private readonly EntityMetadataManager entityMetadataManager;
 
         private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
@@ -37,10 +39,11 @@ namespace NitroxClient.GameLogic
         public List<Entity> EntitiesToSpawn { get; private init; }
         private bool spawningEntities;
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
+            this.entityMetadataManager = entityMetadataManager;
             EntitiesToSpawn = new();
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
@@ -49,23 +52,25 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InstalledBatteryEntity)] = new InstalledBatteryEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
-            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(playerManager, localPlayer, this);
+            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-            entitySpawnersByType[typeof(GlobalRootEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
-            entitySpawnersByType[typeof(InteriorPieceEntity)] = new InteriorPieceEntitySpawner(this);
+            entitySpawnersByType[typeof(OxygenPipeEntity)] = new OxygenPipeEntitySpawner(this, (WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
+            entitySpawnersByType[typeof(PlacedWorldEntity)] = new PlacedWorldEntitySpawner((WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
+            entitySpawnersByType[typeof(InteriorPieceEntity)] = new InteriorPieceEntitySpawner(this, entityMetadataManager);
         }
 
         public void EntityMetadataChanged(object o, NitroxId id)
         {
-            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);
+            Optional<EntityMetadata> metadata = entityMetadataManager.Extract(o);
 
             if (metadata.HasValue)
             {
@@ -73,13 +78,18 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void EntityMetadataChangedThrottled(object o, NitroxId id)
+        public void EntityMetadataChangedThrottled(object o, NitroxId id, float throttleTime = 0.2f)
         {
-            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);
+            // As throttled broadcasting is done after some time by a different function, this is where the packet sending should be interrupted
+            if (PacketSuppressor<EntityMetadataUpdate>.IsSuppressed)
+            {
+                return;
+            }
+            Optional<EntityMetadata> metadata = entityMetadataManager.Extract(o);
 
             if (metadata.HasValue)
             {
-                BroadcastMetadataUpdateThrottled(id, metadata.Value);
+                BroadcastMetadataUpdateThrottled(id, metadata.Value, throttleTime);
             }
         }
 
@@ -88,9 +98,9 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntityMetadataUpdate(id, metadata));
         }
 
-        public void BroadcastMetadataUpdateThrottled(NitroxId id, EntityMetadata metadata)
+        public void BroadcastMetadataUpdateThrottled(NitroxId id, EntityMetadata metadata, float throttleTime = 0.2f)
         {
-            throttledPacketSender.SendThrottled(new EntityMetadataUpdate(id, metadata), (packet) => ((EntityMetadataUpdate)packet).Id);
+            throttledPacketSender.SendThrottled(new EntityMetadataUpdate(id, metadata), packet => packet.Id, throttleTime);
         }
 
         public void BroadcastEntitySpawnedByClient(WorldEntity entity)
@@ -187,7 +197,7 @@ namespace NitroxClient.GameLogic
 
                 MarkAsSpawned(entity);
 
-                EntityMetadataProcessor.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
+                entityMetadataManager.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
 
                 // Finding out about all children (can be hidden in the object's hierarchy or in a pending list)
                 
@@ -291,7 +301,7 @@ namespace NitroxClient.GameLogic
 
         public bool IsParentReady(NitroxId id)
         {
-            return WasParentSpawned(id) || (NitroxEntity.TryGetObjectFrom(id, out GameObject o) && o);
+            return WasParentSpawned(id) || NitroxEntity.TryGetObjectFrom(id, out GameObject _);
         }
 
         public bool WasParentSpawned(NitroxId id)
