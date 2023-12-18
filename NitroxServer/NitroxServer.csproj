@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
         <Nullable>disable</Nullable>
+        <Configurations>Debug;Release;Linux</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
