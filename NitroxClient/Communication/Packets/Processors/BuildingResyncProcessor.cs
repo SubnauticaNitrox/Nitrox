@@ -124,7 +124,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         ClearBaseChildren(@base);
         yield return BuildEntitySpawner.SetupBase(buildEntity, @base, entities);
         yield return MoonpoolManager.RestoreMoonpools(buildEntity.ChildEntities.OfType<MoonpoolEntity>(), @base);
-        yield return entities.SpawnBatchAsync(buildEntity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>(), true, false);
+        yield return entities.SpawnBatchAsync(buildEntity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>(), false, false);
 
         foreach (Entity childEntity in buildEntity.ChildEntities)
         {

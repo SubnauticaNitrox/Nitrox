@@ -280,7 +280,7 @@ namespace NitroxClient.GameLogic
         {
             if (spawnedAsType.TryGetValue(entity.Id, out Type type))
             {
-                return (type == entity.GetType());
+                return type == entity.GetType() && NitroxEntity.TryGetObjectFrom(entity.Id, out _);
             }
 
             return false;
