@@ -12,25 +12,23 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.AddHealth(default(float)));
 
-    public static bool Prefix(out float? __state, LiveMixin __instance)
+    public static bool Prefix(out float __state, LiveMixin __instance)
     {
-        __state = null;
+        // Persist the previous health value
+        __state = __instance.health;
 
         if (!Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
         {
             return true; // everyone should process this locally
         }
 
-        // Persist the previous health value
-        __state = __instance.health;
-
         return Resolve<LiveMixinManager>().ShouldApplyNextHealthUpdate(__instance);
     }
 
-    public static void Postfix(float? __state, LiveMixin __instance, float healthBack)
+    public static void Postfix(float __state, LiveMixin __instance, bool __runOriginal)
     {
         // Did we realize a change in health?
-        if (!__state.HasValue || __state.Value == __instance.health)
+        if (!__runOriginal || __state == __instance.health || HandleRadiationLeakRepair(__instance))
         {
             return;
         }
@@ -45,5 +43,21 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
                 Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
             }
         }
+    }
+
+    private static bool HandleRadiationLeakRepair(LiveMixin liveMixin)
+    {
+        if (!liveMixin.TryGetComponent(out RadiationLeak radiationLeak) || !liveMixin.TryGetNitroxId(out NitroxId leakId))
+        {
+            return false;
+        }
+        
+        Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(radiationLeak);
+        if (metadata.HasValue)
+        {
+            Resolve<Entities>().BroadcastMetadataUpdate(leakId, metadata.Value);
+            return true;
+        }
+        return false;
     }
 }
