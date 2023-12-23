@@ -19,6 +19,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [ProtoInclude(56, typeof(PlanterEntity))]
 [ProtoInclude(57, typeof(PlayerWorldEntity))]
 [ProtoInclude(58, typeof(VehicleWorldEntity))]
+[ProtoInclude(59, typeof(RadiationLeakEntity))]
 public class GlobalRootEntity : WorldEntity
 {
     [IgnoreConstructor]

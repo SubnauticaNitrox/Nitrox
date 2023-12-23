@@ -7,13 +7,33 @@ namespace NitroxClient.GameLogic;
 public class TimeManager
 {
     /// <summary>
-    /// Latest moment at which we updated the time
+    ///     Latest moment at which we updated the time
     /// </summary>
     private DateTimeOffset latestRegistrationTime;
     /// <summary>
-    /// Latest registered value of the time
+    ///     Latest registered value of the time
     /// </summary>
     private double latestRegisteredTime;
+
+    /// <summary>
+    ///     Moment at which real time elapsed was determined
+    /// </summary>
+    private DateTimeOffset realTimeElapsedRegistrationTime;
+    /// <summary>
+    ///     Only registered value of real time elapsed given when connecting. Associated to <see cref="realTimeElapsedRegistrationTime"/>
+    /// </summary>
+    private double realTimeElapsed;
+
+    public float AuroraRealExplosionTime { get; set; }
+
+    /// <summary>
+    ///     Calculates the exact real time elapsed from an offset (<see cref="realTimeElapsedRegistrationTime"/>) and the delta time between
+    ///     <see cref="DateTimeOffset.UtcNow"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
+    /// </summary>
+    public double RealTimeElapsed
+    {
+        get => (DateTimeOffset.UtcNow - realTimeElapsedRegistrationTime).TotalMilliseconds * 0.001 + realTimeElapsed;
+    }
 
     private const double DEFAULT_TIME = 480;
 
@@ -75,5 +95,11 @@ public class TimeManager
         double currentTime = CurrentTime;
         DeltaTime = (float)(currentTime - DayNightCycle.main.timePassedAsDouble);
         return currentTime;
+    }
+
+    public void InitRealTimeElapsed(double realTimeElapsed, long registrationTime)
+    {
+        this.realTimeElapsed = realTimeElapsed;
+        realTimeElapsedRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(registrationTime);
     }
 }
