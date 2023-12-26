@@ -39,6 +39,8 @@ namespace NitroxClient.GameLogic
         public List<Entity> EntitiesToSpawn { get; private init; }
         private bool spawningEntities;
 
+        private readonly HashSet<NitroxId> deletedEntitiesIds = new();
+
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager)
         {
             this.packetSender = packetSender;
@@ -124,6 +126,11 @@ namespace NitroxClient.GameLogic
                 }
             });
             spawningEntities = restarted;
+            if (!spawningEntities)
+            {
+                entityMetadataManager.ClearNewerMetadata();
+                deletedEntitiesIds.Clear();
+            }
         }
 
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)
@@ -160,6 +167,10 @@ namespace NitroxClient.GameLogic
                 batch.RemoveAt(batch.Count - 1);
 
                 // Preconditions which may get the spawn process cancelled or postponed
+                if (deletedEntitiesIds.Remove(entity.Id))
+                {
+                    continue;
+                }
                 if (WasAlreadySpawned(entity) && !forceRespawn)
                 {
                     if (entity is WorldEntity worldEntity)
@@ -316,7 +327,12 @@ namespace NitroxClient.GameLogic
             spawnedAsType[entity.Id] = entity.GetType();
         }
 
-        public bool RemoveEntity(NitroxId id) => spawnedAsType.Remove(id);
+        public void RemoveEntity(NitroxId id) => spawnedAsType.Remove(id);
+
+        public void MarkForDeletion(NitroxId id)
+        {
+            deletedEntitiesIds.Add(id);
+        }
 
         /// <summary>
         /// Allows the ability to respawn an entity and its entire hierarchy. Callers are responsible for ensuring the
