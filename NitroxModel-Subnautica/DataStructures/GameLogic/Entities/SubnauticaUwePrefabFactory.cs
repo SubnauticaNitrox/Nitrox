@@ -18,18 +18,19 @@ public class SubnauticaUwePrefabFactory : IUwePrefabFactory
         lootDistributionData = GetLootDistributionData(lootDistributionJson);
     }
 
-    public List<UwePrefab> GetPossiblePrefabs(string biome)
+    public bool TryGetPossiblePrefabs(string biome, out List<UwePrefab> prefabs)
     {
-        List<UwePrefab> prefabs = new();
         if (biome == null)
         {
-            return prefabs;
+            prefabs = null;
+            return false;
         }
-        if (cache.TryGetValue(biome, out List<UwePrefab> cachedPrefabs))
+        if (cache.TryGetValue(biome, out prefabs))
         {
-            return cachedPrefabs;
+            return true;
         }
 
+        prefabs = new();
         BiomeType biomeType = (BiomeType)Enum.Parse(typeof(BiomeType), biome);
         if (lootDistributionData.GetBiomeLoot(biomeType, out DstData dstData))
         {
@@ -37,13 +38,16 @@ public class SubnauticaUwePrefabFactory : IUwePrefabFactory
             {
                 if (lootDistributionData.srcDistribution.TryGetValue(prefabData.classId, out SrcData srcData))
                 {
+                    // Manually went through the list of those to make this "filter"
+                    // You can verify this by looping through all of SrcData (e.g in LootDistributionData.Initialize)
+                    // print the prefabPath and check the TechType related to the provided classId (WorldEntityDatabase.TryGetInfo) with PDAScanner.IsFragment
                     bool isFragment = srcData.prefabPath.Contains("Fragment") || srcData.prefabPath.Contains("BaseGlassDome");
                     prefabs.Add(new(prefabData.classId, prefabData.count, prefabData.probability, isFragment));
                 }
             }
         }
         cache[biome] = prefabs;
-        return prefabs;
+        return true;
     }
 
     private LootDistributionData GetLootDistributionData(string lootDistributionJson)

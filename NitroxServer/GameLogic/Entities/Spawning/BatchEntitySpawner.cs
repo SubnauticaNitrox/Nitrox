@@ -346,9 +346,7 @@ public class BatchEntitySpawner : IEntitySpawner
 
             if (esp.Density > 0)
             {
-                List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
-
-                if (prefabs.Count > 0)
+                if (prefabFactory.TryGetPossiblePrefabs(esp.BiomeType, out List<UwePrefab> prefabs) && prefabs.Count > 0)
                 {
                     entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, prefabs, deterministicBatchGenerator, parentEntity));
                 }
@@ -432,16 +430,18 @@ public class BatchEntitySpawner : IEntitySpawner
 
     private WorldEntity SpawnPrefabAssetInEntitySlot(NitroxTransform transform, NitroxEntitySlot entitySlot, DeterministicGenerator deterministicBatchGenerator, AbsoluteEntityCell cell, Entity parentEntity)
     {
-        List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(entitySlot.BiomeType);
+        if (!prefabFactory.TryGetPossiblePrefabs(entitySlot.BiomeType, out List<UwePrefab> prefabs) || prefabs.Count == 0)
+        {
+            return null;
+        }
         List<Entity> entities = new();
 
-        if (prefabs.Count > 0)
+        EntitySpawnPoint entitySpawnPoint = new(cell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
+        entities.AddRange(SpawnEntitiesUsingRandomDistribution(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
+        if (entities.Count > 0)
         {
-            EntitySpawnPoint entitySpawnPoint = new(cell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
-            entities.AddRange(SpawnEntitiesUsingRandomDistribution(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
+            return (WorldEntity)entities[0];
         }
-
-        Entity spawnedEntity = entities.FirstOrDefault();
-        return (WorldEntity)spawnedEntity;
+        return null;
     }
 }

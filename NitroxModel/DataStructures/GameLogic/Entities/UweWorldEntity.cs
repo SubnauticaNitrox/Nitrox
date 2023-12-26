@@ -1,4 +1,3 @@
-
 using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities;

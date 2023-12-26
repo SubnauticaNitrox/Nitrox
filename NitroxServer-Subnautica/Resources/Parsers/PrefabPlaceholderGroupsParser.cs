@@ -252,11 +252,6 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         {
             return default;
         }
-        if (!addressableCatalog.TryGetValue(classId, out string[] assetPaths))
-        {
-            Log.Error($"Couldn't get PrefabPlaceholder with classId: {classId}");
-            return default;
-        }
         if (groupsByClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset cachedGroup))
         {
             return cachedGroup;
@@ -264,6 +259,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         else if (placeholdersByClassId.TryGetValue(classId, out PrefabPlaceholderAsset cachedPlaceholder))
         {
             return cachedPlaceholder;
+        }
+        if (!addressableCatalog.TryGetValue(classId, out string[] assetPaths))
+        {
+            Log.Error($"Couldn't get PrefabPlaceholder with classId: {classId}");
+            return default;
         }
 
         AssetsFileInstance assetFileInst = amInst.LoadBundleWithDependencies(assetPaths);

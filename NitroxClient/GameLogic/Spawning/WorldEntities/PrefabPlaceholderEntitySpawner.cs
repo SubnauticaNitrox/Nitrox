@@ -15,24 +15,19 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
         this.defaultEntitySpawner = defaultEntitySpawner;
     }
 
-    // TODO: Clean the spawners (move to to Setup() and IsValidOrError() after rebase)
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
-        if (entity is not PrefabPlaceholderEntity prefabEntity)
+        if (!VerifyCanSpawnOrError(entity, parent, out PrefabPlaceholder placeholder))
         {
             yield break;
         }
-        if (!parent.Value || !parent.Value.TryGetComponent(out PrefabPlaceholdersGroup group))
-        {
-            Log.Error($"[{nameof(PrefabPlaceholderEntity)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
-            yield break;
-        }
-        PrefabPlaceholder placeholder = group.prefabPlaceholders[prefabEntity.ComponentIndex];
-        yield return defaultEntitySpawner.SpawnAsync(entity, placeholder.transform.parent.gameObject, cellRoot, result);
+
+        yield return defaultEntitySpawner.SpawnAsync(entity, placeholder.transform.parent.gameObject, cellRoot, result);        
         if (!result.value.HasValue)
         {
             yield break;
         }
+
         SetupObject(entity, result.value.Value);
     }
 
@@ -40,22 +35,32 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
 
     public bool SpawnSync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
-        if (entity is not PrefabPlaceholderEntity prefabEntity)
+        if (!VerifyCanSpawnOrError(entity, parent, out PrefabPlaceholder placeholder))
         {
             return true;
         }
-        if (!parent.Value || !parent.Value.TryGetComponent(out PrefabPlaceholdersGroup group))
-        {
-            Log.Error($"[{nameof(PrefabPlaceholderEntity)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
-            return true;
-        }
-        PrefabPlaceholder placeholder = group.prefabPlaceholders[prefabEntity.ComponentIndex];
+
         if (!defaultEntitySpawner.SpawnSync(entity, placeholder.transform.parent.gameObject, cellRoot, result))
         {
             return false;
         }
+        
         SetupObject(entity, result.value.Value);
         return true;
+    }
+
+    private bool VerifyCanSpawnOrError(WorldEntity entity, Optional<GameObject> parent, out PrefabPlaceholder placeholder)
+    {
+        if (entity is PrefabPlaceholderEntity prefabEntity &&
+            parent.Value && parent.Value.TryGetComponent(out PrefabPlaceholdersGroup group))
+        {
+            placeholder = group.prefabPlaceholders[prefabEntity.ComponentIndex];
+            return true;
+        }
+
+        Log.Error($"[{nameof(PrefabPlaceholderEntity)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
+        placeholder = null;
+        return false;
     }
 
     private void SetupObject(WorldEntity entity, GameObject gameObject)

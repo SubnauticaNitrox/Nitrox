@@ -81,12 +81,16 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                     yield return SpawnAsync(groupEntity, placeholder.transform.parent.gameObject, cellRoot, childResult);
                     break;
 
-                default:
-                    if (!SpawnWorldEntityChildSync(entity, cellRoot, parentById.GetOrDefault(current.ParentId, null), childResult, out IEnumerator asyncInstructions))
+                case WorldEntity worldEntity:
+                    if (!SpawnWorldEntityChildSync(worldEntity, cellRoot, parentById.GetOrDefault(current.ParentId, null), childResult, out IEnumerator asyncInstructions))
                     {
                         yield return asyncInstructions;
                     }
                     break;
+
+                default:
+                    Log.Error($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Can't spawn a child entity which is not a WorldEntity: {current}");
+                    continue;
             }
 
             if (!childResult.value.HasValue)
