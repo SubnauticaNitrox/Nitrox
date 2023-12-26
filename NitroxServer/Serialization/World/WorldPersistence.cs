@@ -228,7 +228,7 @@ namespace NitroxServer.Serialization.World
                 NitroxServiceLocator.LocateService<IUwePrefabFactory>(),
                 pWorldData.WorldData.ParsedBatchCells,
                 protoBufSerializer,
-                NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
+                NitroxServiceLocator.LocateService<IEntityBootstrapperManager>(),
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
                 pWorldData.WorldData.GameData.PDAState,
                 world.Seed
