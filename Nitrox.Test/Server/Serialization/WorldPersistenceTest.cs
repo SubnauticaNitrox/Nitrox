@@ -324,6 +324,9 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
                 Assert.AreEqual(metadata.FixRealTime, metadataAfter.FixRealTime);
                 break;
+            case CrashHomeMetadata metadata when entityAfter.Metadata is CrashHomeMetadata metadataAfter:
+                Assert.AreEqual(metadata.SpawnTime, metadataAfter.SpawnTime);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
