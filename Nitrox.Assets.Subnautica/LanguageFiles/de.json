@@ -26,6 +26,8 @@
     "Nitrox_FirewallInterfering": "Es scheint als ob Firewall Einstellungen die Verbindung blockieren",
     "Nitrox_HideIp": "IPs verstecken",
     "Nitrox_HidePing": "Signal verstecken",
+    "Nitrox_IntroUWEPresents": "UNKNOWN WORLDS ENTERTAINMENT\\n&\\nDAS NITROX-TEAM\\n\\nPRÄSENTIEREN",
+    "Nitrox_IntroWaitingPartner": "Es wird darauf gewartet das ein Partner beitritt\\n\\nDrücke die {0}-Taste um das Warten abzubrechen",
     "Nitrox_InvalidUserName": "Bitte gebe einen validen Spielernamen ein.\n\nDieser darf kein Leerzeichen oder andere invalide Zeichen beinhalten\nErlaubte Zeichen : A-Z a-z 0-9 _ . -\nLänge: [3, 25]",
     "Nitrox_Join": "Beitreten",
     "Nitrox_JoinServerFailed": "Die Verbindung zum Server ist gescheitert",
