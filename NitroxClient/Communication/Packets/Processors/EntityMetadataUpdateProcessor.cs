@@ -20,7 +20,11 @@ public class EntityMetadataUpdateProcessor : ClientPacketProcessor<EntityMetadat
 
     public override void Process(EntityMetadataUpdate update)
     {
-        GameObject gameObject = NitroxEntity.RequireObjectFrom(update.Id);
+        if (!NitroxEntity.TryGetObjectFrom(update.Id, out GameObject gameObject))
+        {
+            entityMetadataManager.RegisterNewerMetadata(update.Id, update.NewValue);
+            return;
+        }
 
         Optional<IEntityMetadataProcessor> metadataProcessor = entityMetadataManager.FromMetaData(update.NewValue);
         Validate.IsTrue(metadataProcessor.HasValue, $"No processor found for EntityMetadata of type {update.NewValue.GetType()}");
