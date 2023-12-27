@@ -30,7 +30,7 @@ public class InteriorPieceEntity : GlobalRootEntity
 
     /// <remarks>Used for deserialization</remarks>
     public InteriorPieceEntity(NitroxBaseFace baseFace, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
-        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
+        base(transform, level, classId, true, id, techType, metadata, parentId, childEntities)
     {
         BaseFace = baseFace;
     }

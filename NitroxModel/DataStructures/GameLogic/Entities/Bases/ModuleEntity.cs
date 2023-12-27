@@ -31,7 +31,7 @@ public class ModuleEntity : GlobalRootEntity
 
     /// <remarks>Used for deserialization</remarks>
     public ModuleEntity(float constructedAmount, bool isInside, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
-        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
+        base(transform, level, classId, true, id, techType, metadata, parentId, childEntities)
     {
         ConstructedAmount = constructedAmount;
         IsInside = isInside;

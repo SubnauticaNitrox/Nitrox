@@ -59,7 +59,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Permissions = Perms.ADMIN;
             }
 
-            List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
+            List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
             if (wasBrandNewPlayer)
             {

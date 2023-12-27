@@ -28,7 +28,9 @@ namespace NitroxServer_Subnautica
         {
             base.RegisterDependencies(containerBuilder);
 
-            containerBuilder.Register(c => SimulationWhitelist.ForServerSpawned).SingleInstance();
+            containerBuilder.RegisterType<SimulationWhitelist>()
+                            .As<ISimulationWhitelist>()
+                            .SingleInstance();
             containerBuilder.Register(c => new SubnauticaServerProtoBufSerializer(
                                           "Assembly-CSharp",
                                           "Assembly-CSharp-firstpass",
