@@ -6,6 +6,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
@@ -25,7 +26,7 @@ public class SerializedWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyn
     public SerializedWorldEntitySpawner()
     {
         // Preloading a useful asset
-        if (!ProtobufSerializer.emptyGameObjectPrefab)
+        if (!NitroxEnvironment.IsTesting && !ProtobufSerializer.emptyGameObjectPrefab)
         {
             ProtobufSerializer.emptyGameObjectPrefab = Resources.Load<GameObject>("SerializerEmptyGameObject");
         }

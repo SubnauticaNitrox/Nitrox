@@ -17,6 +17,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.Serialization;
 
@@ -355,6 +356,16 @@ public class WorldPersistenceTest
                             Assert.AreEqual(oxygenPipeEntity.RootPipeId, oxygenPipeEntityAfter.RootPipeId);
                             Assert.AreEqual(oxygenPipeEntity.ParentPosition, oxygenPipeEntityAfter.ParentPosition);
                             break;
+                        case PrefabPlaceholderEntity prefabPlaceholderEntity when entityAfter is PrefabPlaceholderEntity prefabPlaceholderEntityAfter:
+                            Assert.AreEqual(prefabPlaceholderEntity.ComponentIndex, prefabPlaceholderEntityAfter.ComponentIndex);
+                            break;
+                        case SerializedWorldEntity serializedWorldEntity when entityAfter is SerializedWorldEntity serializedWorldEntityAfter:
+                            Assert.AreEqual(serializedWorldEntity.AbsoluteEntityCell, serializedWorldEntityAfter.AbsoluteEntityCell);
+                            AssertHelper.IsListEqual(serializedWorldEntity.Components.OrderBy(c => c.GetHashCode()), serializedWorldEntityAfter.Components.OrderBy(c => c.GetHashCode()), (SerializedComponent c1, SerializedComponent c2) => c1.Equals(c2));
+                            Assert.AreEqual(serializedWorldEntity.Layer, serializedWorldEntityAfter.Layer);
+                            Assert.AreEqual(serializedWorldEntity.BatchId, serializedWorldEntityAfter.BatchId);
+                            Assert.AreEqual(serializedWorldEntity.CellId, serializedWorldEntityAfter.CellId);
+                            break;
                         case GlobalRootEntity globalRootEntity when worldEntityAfter is GlobalRootEntity globalRootEntityAfter:
                             if (globalRootEntity.GetType() != typeof(GlobalRootEntity))
                             {
@@ -419,9 +430,6 @@ public class WorldPersistenceTest
             case PrefabChildEntity prefabChildEntity when entityAfter is PrefabChildEntity prefabChildEntityAfter:
                 Assert.AreEqual(prefabChildEntity.ComponentIndex, prefabChildEntityAfter.ComponentIndex);
                 Assert.AreEqual(prefabChildEntity.ClassId, prefabChildEntityAfter.ClassId);
-                break;
-            case PrefabPlaceholderEntity prefabPlaceholderEntity when entityAfter is PrefabPlaceholderEntity prefabPlaceholderEntityAfter:
-                Assert.AreEqual(prefabPlaceholderEntity.ComponentIndex, prefabPlaceholderEntityAfter.ComponentIndex);
                 break;
             case InventoryEntity inventoryEntity when entityAfter is InventoryEntity inventoryEntityAfter:
                 Assert.AreEqual(inventoryEntity.ComponentIndex, inventoryEntityAfter.ComponentIndex);

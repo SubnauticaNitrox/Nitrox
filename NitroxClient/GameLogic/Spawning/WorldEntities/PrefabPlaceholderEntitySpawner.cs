@@ -58,7 +58,7 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             return true;
         }
 
-        Log.Error($"[{nameof(PrefabPlaceholderEntity)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
+        Log.Error($"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
         placeholder = null;
         return false;
     }
