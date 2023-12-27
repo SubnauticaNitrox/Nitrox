@@ -142,7 +142,7 @@ public class TimeKeeper
 
     public TimeChange MakeTimePacket()
     {
-        return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+        return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), RealTimeElapsed);
     }
 
     public delegate void TimeSkipped(double skipAmount);

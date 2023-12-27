@@ -1,4 +1,5 @@
 using System;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -6,6 +7,12 @@ namespace NitroxClient.GameLogic;
 
 public class TimeManager
 {
+    /// <summary>
+    ///     When first player connects to the server, time will resume when time will be resumed on server-side.
+    ///     According to this, we need to freeze time on first player connecting before it has fully loaded.
+    /// </summary>
+    private bool freezeTime = true;
+
     /// <summary>
     ///     Latest moment at which we updated the time
     /// </summary>
@@ -26,16 +33,31 @@ public class TimeManager
 
     public float AuroraRealExplosionTime { get; set; }
 
+    private const double DEFAULT_REAL_TIME = 0;
+
     /// <summary>
     ///     Calculates the exact real time elapsed from an offset (<see cref="realTimeElapsedRegistrationTime"/>) and the delta time between
     ///     <see cref="DateTimeOffset.UtcNow"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
     /// </summary>
     public double RealTimeElapsed
     {
-        get => (DateTimeOffset.UtcNow - realTimeElapsedRegistrationTime).TotalMilliseconds * 0.001 + realTimeElapsed;
+        get
+        {
+            // Unitialized state
+            if (realTimeElapsedRegistrationTime == default)
+            {
+                return DEFAULT_REAL_TIME;
+            }
+            if (freezeTime)
+            {
+                return realTimeElapsed;
+            }
+
+            return (DateTimeOffset.UtcNow - realTimeElapsedRegistrationTime).TotalMilliseconds * 0.001 + realTimeElapsed;
+        }
     }
 
-    private const double DEFAULT_TIME = 480;
+    private const double DEFAULT_SUBNAUTICA_TIME = 480;
 
     /// <summary>
     ///     Calculates the current exact time from an offset (<see cref="latestRegisteredTime"/>) and the delta time between
@@ -52,7 +74,11 @@ public class TimeManager
             // Unitialized state
             if (latestRegisteredTime == 0)
             {
-                return DEFAULT_TIME;
+                return DEFAULT_SUBNAUTICA_TIME;
+            }
+            if (freezeTime)
+            {
+                return latestRegisteredTime;
             }
             return (DateTimeOffset.UtcNow - latestRegistrationTime).TotalMilliseconds * 0.001 + latestRegisteredTime;
         }
@@ -76,6 +102,13 @@ public class TimeManager
 
     public void ProcessUpdate(TimeChange packet)
     {
+        if (freezeTime && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
+        {
+            freezeTime = false;
+        }
+        realTimeElapsedRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(packet.UpdateTime);
+        realTimeElapsed = packet.RealTimeElapsed;
+
         latestRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(packet.UpdateTime);
         latestRegisteredTime = packet.CurrentTime;
         
@@ -97,9 +130,10 @@ public class TimeManager
         return currentTime;
     }
 
-    public void InitRealTimeElapsed(double realTimeElapsed, long registrationTime)
+    public void InitRealTimeElapsed(double realTimeElapsed, long registrationTime, bool isFirstPlayer)
     {
         this.realTimeElapsed = realTimeElapsed;
         realTimeElapsedRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(registrationTime);
+        freezeTime = isFirstPlayer;
     }
 }
