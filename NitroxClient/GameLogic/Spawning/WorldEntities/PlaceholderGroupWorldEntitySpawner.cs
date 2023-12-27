@@ -35,6 +35,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
     {
         if (entity is not PlaceholderGroupWorldEntity placeholderGroupEntity)
         {
+            Log.Error($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Can't spawn {entity.Id} of type {entity.GetType()} because it is not a {nameof(PlaceholderGroupWorldEntity)}");
             yield break;
         }
 

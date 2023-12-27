@@ -372,6 +372,10 @@ public class WorldPersistenceTest
                             Assert.AreEqual(serializedWorldEntity.BatchId, serializedWorldEntityAfter.BatchId);
                             Assert.AreEqual(serializedWorldEntity.CellId, serializedWorldEntityAfter.CellId);
                             break;
+                        case GeyserEntity geyserEntity when entityAfter is GeyserEntity geyserEntityAfter:
+                            Assert.AreEqual(geyserEntity.RandomIntervalVarianceMultiplier, geyserEntityAfter.RandomIntervalVarianceMultiplier);
+                            Assert.AreEqual(geyserEntity.StartEruptTime, geyserEntityAfter.StartEruptTime);
+                            break;
                         case GlobalRootEntity globalRootEntity when worldEntityAfter is GlobalRootEntity globalRootEntityAfter:
                             if (globalRootEntity.GetType() != typeof(GlobalRootEntity))
                             {

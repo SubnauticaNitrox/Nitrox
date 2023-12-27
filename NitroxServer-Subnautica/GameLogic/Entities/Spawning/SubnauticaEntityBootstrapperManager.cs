@@ -17,6 +17,7 @@ public class SubnauticaEntityBootstrapperManager : IEntityBootstrapperManager
     };
     private static readonly Dictionary<string, IEntityBootstrapper> entityBootstrappersByClassId = new()
     {
+        ["ce0b4131-86e2-444b-a507-45f7b824a286"] = new GeyserBootstrapper()
     };
 
     public void PrepareEntityIfRequired(WorldEntity spawnedEntity, DeterministicGenerator generator)
