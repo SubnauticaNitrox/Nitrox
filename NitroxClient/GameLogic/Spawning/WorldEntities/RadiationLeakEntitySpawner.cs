@@ -12,6 +12,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class RadiationLeakEntitySpawner : SyncEntitySpawner<RadiationLeakEntity>
 {
+    // This constant is defined by Subnautica and should never be modified (same as for SubnauticaWorldModifier)
     private const int TOTAL_LEAKS = 11;
     private readonly TimeManager timeManager;
     private readonly List<float> registeredLeaksFixTime = new();

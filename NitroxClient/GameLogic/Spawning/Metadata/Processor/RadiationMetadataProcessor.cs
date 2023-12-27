@@ -1,6 +1,5 @@
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -16,10 +15,9 @@ public class RadiationMetadataProcessor : EntityMetadataProcessor<RadiationMetad
             Log.Error($"[{nameof(RadiationMetadataProcessor)}] Couldn't find LiveMixin on {gameObject}");
             return;
         }
-        LiveMixinManager liveMixinManager = NitroxServiceLocator.LocateService<LiveMixinManager>();
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
-            liveMixinManager.SyncRemoteHealth(liveMixin, metadata.Health);
+            Resolve<LiveMixinManager>().SyncRemoteHealth(liveMixin, metadata.Health);
         }
     }
 }

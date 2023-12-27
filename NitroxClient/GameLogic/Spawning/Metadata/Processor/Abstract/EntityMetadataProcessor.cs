@@ -1,3 +1,4 @@
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
@@ -10,5 +11,10 @@ public abstract class EntityMetadataProcessor<T> : IEntityMetadataProcessor wher
     public void ProcessMetadata(GameObject gameObject, EntityMetadata metadata)
     {
         ProcessMetadata(gameObject, (T)metadata);
+    }
+
+    protected T Resolve<T>() where T : class
+    {
+        return NitroxServiceLocator.Cache<T>.Value;
     }
 }
