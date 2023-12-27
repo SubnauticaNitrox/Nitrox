@@ -192,7 +192,7 @@ public class StoryManager
 
     public TimeData GetTimeData()
     {
-        return new(timeKeeper.MakeTimePacket(), MakeAuroraData(), timeKeeper.RealTimeElapsed);
+        return new(timeKeeper.MakeTimePacket(), MakeAuroraData());
     }
 
     public enum TimeModification
