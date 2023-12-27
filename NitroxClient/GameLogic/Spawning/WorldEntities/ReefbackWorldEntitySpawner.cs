@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -33,7 +33,8 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             }
 
             life.initialized = true;
-            life.SpawnPlants();
+            // TODO: Choose whether or not to spawn plants
+            // life.SpawnPlants();
             foreach (Entity childEntity in entity.ChildEntities)
             {
                 if (childEntity is WorldEntity worldChild)

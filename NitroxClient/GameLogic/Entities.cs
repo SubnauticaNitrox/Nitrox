@@ -173,10 +173,7 @@ namespace NitroxClient.GameLogic
                 }
                 if (WasAlreadySpawned(entity) && !forceRespawn)
                 {
-                    if (entity is WorldEntity worldEntity)
-                    {
-                        UpdatePosition(worldEntity);
-                    }
+                    UpdateEntity(entity);
                     continue;
                 }
                 else if (entity.ParentId != null && !IsParentReady(entity.ParentId))
@@ -256,21 +253,22 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void UpdatePosition(WorldEntity entity)
+        private void UpdateEntity(Entity entity)
         {
-            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
-
-            if (!opGameObject.HasValue)
+            if (!NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject))
             {
 #if DEBUG && ENTITY_LOG
                 Log.Error($"Entity was already spawned but not found(is it in another chunk?) NitroxId: {entity.Id} TechType: {entity.TechType} ClassId: {entity.ClassId} Transform: {entity.Transform}");
 #endif
                 return;
             }
-
-            opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
-            opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
-            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
+            if (entity is WorldEntity worldEntity)
+            {
+                gameObject.transform.position = worldEntity.Transform.Position.ToUnity();
+                gameObject.transform.rotation = worldEntity.Transform.Rotation.ToUnity();
+                gameObject.transform.localScale = worldEntity.Transform.LocalScale.ToUnity();
+            }
+            entityMetadataManager.ApplyMetadata(gameObject, entity.Metadata);
         }
 
         private void AddPendingParentEntity(Entity entity)
