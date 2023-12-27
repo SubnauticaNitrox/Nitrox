@@ -12,8 +12,6 @@ namespace NitroxClient.MonoBehaviours;
 
 public class MultiplayerMovementController : MonoBehaviour
 {
-    public const float LOCATION_BROADCAST_TIME = 0.04f;
-
     private static readonly Dictionary<NitroxId, MultiplayerMovementController> movementControllersById = new();
 
     public float TimeScalar { get; set; } = 1f;
@@ -120,7 +118,7 @@ public class MultiplayerMovementController : MonoBehaviour
         if (!rigidbody && Receiving)
         {
             Vector3 velocity = Velocity;
-            transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, TimeScalar * Time.deltaTime + LOCATION_BROADCAST_TIME);
+            transform.position = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, TimeScalar * Time.deltaTime);
             transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, TimeScalar * Time.deltaTime);
         }
 
@@ -137,18 +135,13 @@ public class MultiplayerMovementController : MonoBehaviour
             TargetPosition = transform.position;
             TargetRotation = transform.rotation;
 
-            if (timeSinceLastBroadcast >= LOCATION_BROADCAST_TIME)
-            {
-                timeSinceLastBroadcast = 0f;
-
-                packetSender.Send(new BasicMovement(entity.Id, transform.position.ToDto(), transform.rotation.ToDto()));
-            }
+            packetSender.Send(new BasicMovement(entity.Id, transform.position.ToDto(), transform.rotation.ToDto()));
         }
 
         if (rigidbody && Receiving)
         {
             Vector3 velocity = Velocity;
-            float timing = TimeScalar * Time.fixedDeltaTime + LOCATION_BROADCAST_TIME;
+            float timing = TimeScalar * Time.fixedDeltaTime;
             Vector3 newPos = Vector3.SmoothDamp(transform.position, TargetPosition, ref velocity, timing);
             Velocity = velocity;
 
