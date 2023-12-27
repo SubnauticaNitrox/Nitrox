@@ -14,6 +14,8 @@ public sealed partial class Constructor_Deploy_Patch : NitroxPatch, IDynamicPatc
         // only trigger updates when there is a valid state change.
         if (value != __instance.deployed)
         {
+            // We need to set this early so that the extracted metadata has the right value for "deployed"
+            __instance.deployed = value;
             if (__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
