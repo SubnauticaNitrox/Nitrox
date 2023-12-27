@@ -30,7 +30,7 @@ public class MapRoomEntity : GlobalRootEntity
 
     /// <remarks>Used for deserialization</remarks>
     public MapRoomEntity(NitroxInt3 cell, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
-        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
+        base(transform, level, classId, true, id, techType, metadata, parentId, childEntities)
     {
         Cell = cell;
     }
