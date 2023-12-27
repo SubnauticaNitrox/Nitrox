@@ -13,6 +13,11 @@ public class TimeKeeper
     private readonly Stopwatch stopWatch = new();
 
     /// <summary>
+    ///     Default time in Base SN is 480s
+    /// </summary>
+    public const int DEFAULT_TIME = 480;
+
+    /// <summary>
     /// Latest registered time without taking the current stopwatch time in account.
     /// </summary>
     private double elapsedTimeOutsideStopWatchMs;
@@ -65,14 +70,13 @@ public class TimeKeeper
     /// </remarks>
     private const int RESYNC_INTERVAL = 60;
 
-    public TimeSkipped OnTimeSkipped;
+    public TimeSkippedEventHandler TimeSkipped;
 
     public TimeKeeper(PlayerManager playerManager, double elapsedSeconds, double realTimeElapsed)
     {
         this.playerManager = playerManager;
 
-        // Default time in Base SN is 480s
-        elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedSeconds * 1000;
+        elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(DEFAULT_TIME).TotalMilliseconds : elapsedSeconds * 1000;
         this.realTimeElapsed = realTimeElapsed;
         ResyncTimer = MakeResyncTimer();
     }
@@ -134,7 +138,7 @@ public class TimeKeeper
         if (skipAmount > 0)
         {
             ElapsedSeconds += skipAmount;
-            OnTimeSkipped?.Invoke(skipAmount);
+            TimeSkipped?.Invoke(skipAmount);
 
             playerManager.SendPacketToAllPlayers(MakeTimePacket());
         }
@@ -145,5 +149,5 @@ public class TimeKeeper
         return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), RealTimeElapsed);
     }
 
-    public delegate void TimeSkipped(double skipAmount);
+    public delegate void TimeSkippedEventHandler(double skipAmount);
 }

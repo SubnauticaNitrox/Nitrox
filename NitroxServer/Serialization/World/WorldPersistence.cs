@@ -31,14 +31,16 @@ namespace NitroxServer.Serialization.World
         private readonly ServerJsonSerializer jsonSerializer;
         private readonly ServerConfig config;
         private readonly RandomStartGenerator randomStart;
+        private readonly IWorldModifier worldModifier;
         private readonly SaveDataUpgrade[] upgrades;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
             this.config = config;
             this.randomStart = randomStart;
+            this.worldModifier = worldModifier;
             this.upgrades = upgrades;
 
             UpdateSerializer(config.SerializerMode);
@@ -177,7 +179,6 @@ namespace NitroxServer.Serialization.World
             };
 
             World newWorld = CreateWorld(pWorldData, config.GameMode);
-            IWorldModifier worldModifier = NitroxServiceLocator.LocateService<IWorldModifier>();
             worldModifier.ModifyWorld(newWorld);
 
             return newWorld;
