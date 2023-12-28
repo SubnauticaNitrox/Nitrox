@@ -94,5 +94,4 @@ public class LiveMixinManager
         // to ensure that any floating point discrepencies aren't an issue.
         liveMixin.health = remoteHealth;
     }
-
 }

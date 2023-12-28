@@ -17,20 +17,18 @@ public sealed partial class BaseHullStrength_CrushDamageUpdate_Patch : NitroxPat
 
     public static bool Prefix(BaseHullStrength __instance)
     {
-        if (__instance.TryGetNitroxId(out NitroxId baseId) &&
-            Resolve<SimulationOwnership>().HasAnyLockType(baseId))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return __instance.TryGetNitroxId(out NitroxId baseId) && Resolve<SimulationOwnership>().HasAnyLockType(baseId);
     }
 
+    /*
+     * }
+     * ErrorMessage.AddMessage(Language.main.GetFormat<float>("BaseHullStrDamageDetected", this.totalStrength));
+     * BroadcastChange(this, random);           <------ Inserted line
+     */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        return new CodeMatcher(instructions).MatchStartForward(new CodeMatch(OpCodes.Call, Reflect.Method(() => ErrorMessage.AddMessage(default))))
+        // We add instructions right before the ret which is equivalent to inserting at last offset
+        return new CodeMatcher(instructions).End()
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
                                             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
                                             .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastChange(default, default))))

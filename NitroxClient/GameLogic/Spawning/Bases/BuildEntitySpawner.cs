@@ -54,6 +54,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         yield return MoonpoolManager.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
 
         TaskResult<Optional<GameObject>> childResult = new();
+        bool atLeastOneLeak = false;
         foreach (Entity childEntity in entity.ChildEntities)
         {
             switch (childEntity)
@@ -62,9 +63,15 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
                     yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
                     break;
                 case BaseLeakEntity baseLeakEntity:
+                    atLeastOneLeak = true;
                     yield return baseLeakEntitySpawner.SpawnAsync(baseLeakEntity, childResult);
                     break;
             }
+        }
+        if (atLeastOneLeak)
+        {
+            BaseHullStrength baseHullStrength = @base.GetComponent<BaseHullStrength>();
+            ErrorMessage.AddMessage(Language.main.GetFormat("BaseHullStrDamageDetected", baseHullStrength.totalStrength));
         }
 
         result.Set(@base.gameObject);

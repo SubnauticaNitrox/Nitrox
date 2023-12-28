@@ -44,30 +44,35 @@ public class BaseLeakManager : MonoBehaviour
 
         if (cellObject.TryGetComponent(out LiveMixin cellLiveMixin))
         {
+            // Health goes from 0 to 100
             float deltaHealth = health - cellLiveMixin.health;
             if (Mathf.Abs(deltaHealth) > 1)
             {
                 // Useful part of BaseHullStrength.CrushDamageUpdate
                 this.Resolve<LiveMixinManager>().SyncRemoteHealth(cellLiveMixin, health, cellObject.position, DamageType.Pressure);
+                
                 // Only play noise if the leak lost health
-                if (deltaHealth < 0)
+                if (deltaHealth >= 0)
                 {
-                    // Spawning multiple leaks would result in a big sounds when loading the game
-                    if (Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
+                    return;
+                }
+                // Spawning multiple leaks would result in a big sounds when loading the game
+                if (Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
+                {
+                    // Code from BaseHullStrength.CrushDamageUpdate
+                    int num = 0;
+                    if (baseHullStrength.totalStrength <= -3f)
                     {
-                        int num = 0;
-                        if (baseHullStrength.totalStrength <= -3f)
-                        {
-                            num = 2;
-                        }
-                        else if (baseHullStrength.totalStrength <= -2f)
-                        {
-                            num = 1;
-                        }
-                        if (baseHullStrength.crushSounds[num] != null)
-                        {
-                            Utils.PlayFMODAsset(baseHullStrength.crushSounds[num], cellObject, 20f);
-                        }
+                        num = 2;
+                    }
+                    else if (baseHullStrength.totalStrength <= -2f)
+                    {
+                        num = 1;
+                    }
+                    if (baseHullStrength.crushSounds[num] != null)
+                    {
+                        // TODO: When #1780 is merged, change this accordingly
+                        Utils.PlayFMODAsset(baseHullStrength.crushSounds[num], cellObject, 20f);
                     }
                     ErrorMessage.AddMessage(Language.main.GetFormat("BaseHullStrDamageDetected", baseHullStrength.totalStrength));
                 }
@@ -97,10 +102,11 @@ public class BaseLeakManager : MonoBehaviour
 
     public LeakRepaired RemoveLeakByAbsoluteCell(Int3 absoluteCell)
     {
-        if (idByRelativeCell.TryGetValue(Relative(absoluteCell), out NitroxId cellId))
+        Int3 relativeCell = Relative(absoluteCell);
+        if (idByRelativeCell.TryGetValue(relativeCell, out NitroxId cellId))
         {
-            idByRelativeCell.Remove(Relative(absoluteCell));
-            return new(baseId, cellId, Relative(absoluteCell).ToDto());
+            idByRelativeCell.Remove(relativeCell);
+            return new(baseId, cellId, relativeCell.ToDto());
         }
         return null;
     }

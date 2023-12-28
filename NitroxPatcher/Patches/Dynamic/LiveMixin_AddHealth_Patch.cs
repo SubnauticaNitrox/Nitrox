@@ -37,8 +37,7 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
 
     public static void Postfix(float __state, LiveMixin __instance, bool __runOriginal)
     {
-        bool healthChanged = __state != __instance.health;
-        if (!__runOriginal || !healthChanged)
+        if (!__runOriginal || __state == __instance.health)
         {
             return;
         }
