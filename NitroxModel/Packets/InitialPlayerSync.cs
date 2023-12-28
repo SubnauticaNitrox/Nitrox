@@ -28,7 +28,7 @@ namespace NitroxModel.Packets
         public List<PlayerContext> OtherPlayers { get; }
         public List<Entity> GlobalRootEntities { get; }
         public List<NitroxId> InitialSimulationOwnerships { get; }
-        public ServerGameMode GameMode { get; }
+        public NitroxGameMode GameMode { get; }
         public Perms Permissions { get; }
         public SubnauticaPlayerPreferences Preferences { get; }
         public TimeData TimeData { get; }
@@ -49,7 +49,7 @@ namespace NitroxModel.Packets
             IEnumerable<PlayerContext> otherPlayers,
             IEnumerable<Entity> globalRootEntities,
             IEnumerable<NitroxId> initialSimulationOwnerships,
-            ServerGameMode gameMode,
+            NitroxGameMode gameMode,
             Perms perms,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,
@@ -94,7 +94,7 @@ namespace NitroxModel.Packets
             List<PlayerContext> otherPlayers,
             List<Entity> globalRootEntities,
             List<NitroxId> initialSimulationOwnerships,
-            ServerGameMode gameMode,
+            NitroxGameMode gameMode,
             Perms permissions,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,

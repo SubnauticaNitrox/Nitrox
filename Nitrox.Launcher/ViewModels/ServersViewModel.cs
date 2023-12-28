@@ -64,7 +64,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         MainViewModel.Router.Navigate.Execute(viewModel);
     }
 
-    private void AddServer(string name, ServerGameMode gameMode)
+    private void AddServer(string name, NitroxGameMode gameMode)
     {
         Servers.Insert(0, new ServerEntry
         {

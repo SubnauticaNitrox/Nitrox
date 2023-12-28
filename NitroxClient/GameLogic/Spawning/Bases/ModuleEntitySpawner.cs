@@ -3,7 +3,6 @@ using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
-using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -100,7 +99,6 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
         constructable.UpdateMaterial();
         NitroxEntity.SetNewId(moduleObject, moduleEntity.Id);
-        EntityMetadataProcessor.ApplyMetadata(moduleObject, moduleEntity.Metadata);
         result?.Set(moduleObject);
     }
 

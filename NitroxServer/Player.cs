@@ -8,6 +8,7 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication;
+using NitroxModel.Server;
 
 namespace NitroxServer
 {
@@ -32,6 +33,7 @@ namespace NitroxServer
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
+        public NitroxGameMode GameMode { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
         public ThreadSafeDictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; }
@@ -39,7 +41,7 @@ namespace NitroxServer
         public ThreadSafeList<int> PinnedRecipePreferences { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
-                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
+                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
                       IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences)
         {
@@ -54,6 +56,7 @@ namespace NitroxServer
             GameObjectId = playerId;
             Permissions = perms;
             Stats = stats;
+            GameMode = gameMode;
             LastStoredPosition = null;
             LastStoredSubRootID = Optional.Empty;
             UsedItems = new ThreadSafeList<NitroxTechType>(usedItems);
@@ -161,7 +164,6 @@ namespace NitroxServer
                 return worldEntity is GlobalRootEntity || HasCellLoaded(worldEntity.AbsoluteEntityCell);
             }
 
-            // Assume all other entity types are in global root
             return true;
         }
 

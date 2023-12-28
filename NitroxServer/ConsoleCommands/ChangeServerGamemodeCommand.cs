@@ -8,38 +8,41 @@ using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;
 
-namespace NitroxServer.ConsoleCommands
+namespace NitroxServer.ConsoleCommands;
+
+internal class ChangeServerGamemodeCommand : Command
 {
-    internal class ChangeServerGamemodeCommand : Command
+    private readonly PlayerManager playerManager;
+    private readonly SubnauticaServerConfig serverConfig;
+
+    public ChangeServerGamemodeCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
     {
-        private readonly PlayerManager playerManager;
-        private readonly SubnauticaServerConfig serverConfig;
+        AddParameter(new TypeEnum<NitroxGameMode>("gamemode", true, "Gamemode to change to"));
 
-        public ChangeServerGamemodeCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
+        this.playerManager = playerManager;
+        this.serverConfig = serverConfig;
+    }
+
+    protected override void Execute(CallArgs args)
+    {
+        NitroxGameMode sgm = args.Get<NitroxGameMode>(0);
+
+        using (serverConfig.Update(Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)))
         {
-            AddParameter(new TypeEnum<ServerGameMode>("gamemode", true, "Gamemode to change to"));
-
-            this.playerManager = playerManager;
-            this.serverConfig = serverConfig;
-        }
-
-        protected override void Execute(CallArgs args)
-        {
-            ServerGameMode sgm = args.Get<ServerGameMode>(0);
-
-            using (serverConfig.Update(Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)))
+            if (serverConfig.GameMode != sgm)
             {
-                if (serverConfig.GameMode != sgm)
-                {
-                    serverConfig.GameMode = sgm;
+                serverConfig.GameMode = sgm;
 
-                    playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
-                    SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
-                }
-                else
+                foreach (Player player in playerManager.GetAllPlayers())
                 {
-                    SendMessage(args.Sender, "Server is already using this gamemode");
+                    player.GameMode = sgm;
                 }
+                playerManager.SendPacketToAllPlayers(GameModeChanged.ForAllPlayers(sgm));
+                SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
+            }
+            else
+            {
+                SendMessage(args.Sender, "Server is already using this gamemode");
             }
         }
     }

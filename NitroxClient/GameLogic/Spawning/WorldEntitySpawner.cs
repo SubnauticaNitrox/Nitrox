@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -18,9 +19,9 @@ public class WorldEntitySpawner : EntitySpawner<WorldEntity>
     private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
     private readonly Dictionary<Int3, BatchCells> batchCellsById;
 
-    public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
+    public WorldEntitySpawner(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
     {
-        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer, entities);
+        worldEntitySpawnResolver = new WorldEntitySpawnerResolver(entityMetadataManager, playerManager, localPlayer, entities);
 
         if (NitroxEnvironment.IsNormal)
         {
@@ -58,7 +59,7 @@ public class WorldEntitySpawner : EntitySpawner<WorldEntity>
         return entitySpawner.SpawnsOwnChildren();
     }
 
-    private EntityCell EnsureCell(WorldEntity entity)
+    public EntityCell EnsureCell(WorldEntity entity)
     {
         EntityCell entityCell;
 

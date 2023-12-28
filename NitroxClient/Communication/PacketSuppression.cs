@@ -13,12 +13,12 @@ public readonly struct PacketSuppressor<T> : IDisposable
     private static bool isSuppressed;
     public static bool IsSuppressed => isSuppressed;
 
-    public static readonly PacketSuppressor<T> Instance = new();
+    private static readonly PacketSuppressor<T> instance = new();
 
     public static PacketSuppressor<T> Suppress()
     {
         isSuppressed = true;
-        return Instance;
+        return instance;
     }
 
     public void Dispose()

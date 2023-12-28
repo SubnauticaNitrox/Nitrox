@@ -22,7 +22,8 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -48,12 +49,13 @@ namespace NitroxClient
             }
 
             RegisterCoreDependencies(containerBuilder);
+            RegisterMetadataDependencies(containerBuilder);
             RegisterPacketProcessors(containerBuilder);
             RegisterColorSwapManagers(containerBuilder);
             RegisterInitialSyncProcessors(containerBuilder);
         }
 
-        private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
+        private void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
 #if DEBUG
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
@@ -99,18 +101,6 @@ namespace NitroxClient
                             .As<IMap>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<EntityMetadataExtractor>()
-                            .As<EntityMetadataExtractor>()
-                            .AsSelf()
-                            .SingleInstance();
-
-            containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<EntityMetadataProcessor>()
-                            .As<EntityMetadataProcessor>()
-                            .AsSelf()
-                            .SingleInstance();
-
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
@@ -144,6 +134,21 @@ namespace NitroxClient
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
         }
 
+        private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<IEntityMetadataExtractor>()
+                            .As<IEntityMetadataExtractor>()
+                            .AsSelf()
+                            .SingleInstance();
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<IEntityMetadataProcessor>()
+                            .As<IEntityMetadataProcessor>()
+                            .AsSelf()
+                            .SingleInstance();
+            containerBuilder.RegisterType<EntityMetadataManager>().InstancePerLifetimeScope();
+        }
+
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)
         {
             containerBuilder
@@ -165,8 +170,8 @@ namespace NitroxClient
         {
             containerBuilder
                 .RegisterAssemblyTypes(currentAssembly)
-                .AssignableTo<InitialSyncProcessor>()
-                .As<InitialSyncProcessor>()
+                .AssignableTo<IInitialSyncProcessor>()
+                .As<IInitialSyncProcessor>()
                 .InstancePerLifetimeScope();
         }
     }

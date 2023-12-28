@@ -35,7 +35,7 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private string seed;
     [ObservableProperty]
-    private ServerGameMode gameMode = serverDefaults.GameMode;
+    private NitroxGameMode gameMode = serverDefaults.GameMode;
     [ObservableProperty]
     private Perms playerPermissions = serverDefaults.DefaultPlayerPerm;
     [ObservableProperty]

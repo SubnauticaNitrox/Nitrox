@@ -94,7 +94,7 @@
 
                 <StackPanel>
                     <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}"
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}"
                                                SelectedItem="{Binding ServerGameMode, Mode=TwoWay}"
                                                IsEnabled="{Binding !ServerIsOnline}"/>
                 </StackPanel>

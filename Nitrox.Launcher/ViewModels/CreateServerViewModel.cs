@@ -21,7 +21,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [NitroxUniqueSaveName]
     private string name;
     [ObservableProperty]
-    private ServerGameMode selectedGameMode = ServerGameMode.SURVIVAL;
+    private NitroxGameMode selectedGameMode = NitroxGameMode.SURVIVAL;
     public KeyGesture BackHotkey { get; } = new(Key.Escape);
     public KeyGesture CreateHotkey { get; } = new(Key.Return);
 
@@ -39,7 +39,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
         Close(window);
     }
 
-    public static void CreateEmptySave(string saveName, ServerGameMode saveGameMode)
+    public static void CreateEmptySave(string saveName, NitroxGameMode saveGameMode)
     {
         string saveDir = Path.Combine(ServersViewModel.SavesFolderDir, saveName);
         Directory.CreateDirectory(saveDir);

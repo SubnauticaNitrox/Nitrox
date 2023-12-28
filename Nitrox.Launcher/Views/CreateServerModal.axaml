@@ -23,7 +23,7 @@
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="GAMEMODE" />
-                <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}" SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}" />
+                <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}" />
             </StackPanel>
         </StackPanel>
         <ContentControl Classes="footer">

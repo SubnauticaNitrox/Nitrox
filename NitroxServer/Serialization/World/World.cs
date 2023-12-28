@@ -20,7 +20,7 @@ namespace NitroxServer.Serialization.World
         public BuildingManager BuildingManager { get; set; }
         public StoryManager StoryManager { get; set; }
         public GameData GameData { get; set; }
-        public ServerGameMode GameMode { get; set; }
+        public NitroxGameMode GameMode { get; set; }
         public string Seed { get; set; }
     }
 }

@@ -8,10 +8,16 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class PrefabChildEntitySpawner : EntitySpawner<PrefabChildEntity>
+public class PrefabChildEntitySpawner : SyncEntitySpawner<PrefabChildEntity>
 {
     // When we encounter a PrefabChildEntity, we need to assign the id to a prefab with the same class id and index.
     protected override IEnumerator SpawnAsync(PrefabChildEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        SpawnSync(entity, result);
+        yield break;
+    }
+
+    protected override bool SpawnSync(PrefabChildEntity entity, TaskResult<Optional<GameObject>> result)
     {
         GameObject parent = NitroxEntity.RequireObjectFrom(entity.ParentId);
         PrefabIdentifier prefab = parent.GetAllComponentsInChildren<PrefabIdentifier>()
@@ -28,8 +34,7 @@ public class PrefabChildEntitySpawner : EntitySpawner<PrefabChildEntity>
             Log.Error($"Unable to find prefab for: {entity}");
             result.Set(Optional.Empty);
         }
-
-        yield break;
+        return true;
     }
 
     protected override bool SpawnsOwnChildren(PrefabChildEntity entity) => false;

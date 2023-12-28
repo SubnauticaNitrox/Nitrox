@@ -7,6 +7,10 @@ indent_style = space
 end_of_line = lf
 
 # ReSharper properties
+resharper_blank_lines_after_block_statements = 0
+resharper_braces_for_ifelse = required_for_multiline
+resharper_braces_redundant = false
+resharper_keep_existing_attribute_arrangement = true
 resharper_wrap_object_and_collection_initializer_style = chop_if_long
 
 [*.{proj, csproj, targets}]

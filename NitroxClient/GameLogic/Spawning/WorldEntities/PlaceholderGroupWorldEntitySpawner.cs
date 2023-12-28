@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -21,11 +20,13 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 {
     private readonly WorldEntitySpawnerResolver spawnerResolver;
     private readonly DefaultWorldEntitySpawner defaultSpawner;
+    private readonly EntityMetadataManager entityMetadataManager;
 
-    public PlaceholderGroupWorldEntitySpawner(WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner)
+    public PlaceholderGroupWorldEntitySpawner(WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner, EntityMetadataManager entityMetadataManager)
     {
         this.spawnerResolver = spawnerResolver;
         this.defaultSpawner = defaultSpawner;
+        this.entityMetadataManager = entityMetadataManager;
     }
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
@@ -115,7 +116,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                 continue;
             }
 
-            EntityMetadataProcessor.ApplyMetadata(childResult.value.Value, current.Metadata);
+            entityMetadataManager.ApplyMetadata(childResult.value.Value, current.Metadata);
             // Adding children to be spawned by this loop
             foreach (WorldEntity slotEntityChild in current.ChildEntities.OfType<WorldEntity>())
             {
@@ -130,28 +131,28 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
     private IEnumerator SpawnChildPlaceholderAsync(PrefabPlaceholder prefabPlaceholder, PrefabPlaceholderEntity entity, TaskResult<Optional<GameObject>> result)
     {
         TaskResult<GameObject> goResult = new();
-        yield return DefaultWorldEntitySpawner.CreateGameObject(TechType.None, prefabPlaceholder.prefabClassId, goResult);
+        yield return DefaultWorldEntitySpawner.CreateGameObject(TechType.None, prefabPlaceholder.prefabClassId, entity.Id, goResult);
         
         if (goResult.value)
         {
-            SetupPlaceholder(goResult.value, prefabPlaceholder, entity, result);
+            SetupPlaceholder(goResult.value, prefabPlaceholder, result);
         }
     }
 
     private bool SpawnChildPlaceholderSync(PrefabPlaceholder prefabPlaceholder, PrefabPlaceholderEntity entity, TaskResult<Optional<GameObject>> result, out IEnumerator asyncInstructions)
     {
-        if (!DefaultWorldEntitySpawner.TryCreateGameObjectSync(TechType.None, prefabPlaceholder.prefabClassId, out GameObject gameObject))
+        if (!DefaultWorldEntitySpawner.TryCreateGameObjectSync(TechType.None, prefabPlaceholder.prefabClassId, entity.Id, out GameObject gameObject))
         {
             asyncInstructions = SpawnChildPlaceholderAsync(prefabPlaceholder, entity, result);
             return false;
         }
 
-        SetupPlaceholder(gameObject, prefabPlaceholder, entity, result);
+        SetupPlaceholder(gameObject, prefabPlaceholder, result);
         asyncInstructions = null;
         return true;
     }
 
-    private void SetupPlaceholder(GameObject gameObject, PrefabPlaceholder prefabPlaceholder, PrefabPlaceholderEntity entity, TaskResult<Optional<GameObject>> result)
+    private void SetupPlaceholder(GameObject gameObject, PrefabPlaceholder prefabPlaceholder, TaskResult<Optional<GameObject>> result)
     {
         try
         {
@@ -159,7 +160,6 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             gameObject.transform.localPosition = prefabPlaceholder.transform.localPosition;
             gameObject.transform.localRotation = prefabPlaceholder.transform.localRotation;
 
-            NitroxEntity.SetNewId(gameObject, entity.Id);
             result.Set(gameObject);
         }
         catch (Exception e)

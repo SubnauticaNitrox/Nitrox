@@ -9,10 +9,10 @@
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
                 <Border Padding="10" Background="#000000" design:NitroxAttached.Theme="DARK">
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
                 </Border>
                 <Border Padding="10" Background="#FFFFFF" design:NitroxAttached.Theme="LIGHT">
-                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:ServerGameMode}" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
                 </Border>
             </StackPanel>
         </Panel>

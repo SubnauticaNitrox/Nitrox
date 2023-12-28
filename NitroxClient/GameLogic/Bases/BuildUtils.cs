@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Spawning.Bases;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -236,14 +237,15 @@ public static class BuildUtils
         return new(id, parentId, mapRoomCell.ToDto());
     }
 
-    public static List<GlobalRootEntity> GetGlobalRootChildren(Transform globalRoot)
+    // TODO: Use this for a latter singleplayer save converter
+    public static List<GlobalRootEntity> GetGlobalRootChildren(Transform globalRoot, EntityMetadataManager entityMetadataManager)
     {
         List<GlobalRootEntity> entities = new();
         foreach (Transform child in globalRoot)
         {
             if (child.TryGetComponent(out Base @base))
             {
-                entities.Add(BuildEntitySpawner.From(@base));
+                entities.Add(BuildEntitySpawner.From(@base, entityMetadataManager));
             }
             else if (child.TryGetComponent(out Constructable constructable))
             {
@@ -258,7 +260,7 @@ public static class BuildUtils
         return entities;
     }
 
-    public static List<Entity> GetChildEntities(Base targetBase, NitroxId baseId)
+    public static List<Entity> GetChildEntities(Base targetBase, NitroxId baseId, EntityMetadataManager entityMetadataManager)
     {
         List<Entity> childEntities = new();
         void AddChild(Entity childEntity)
@@ -286,7 +288,7 @@ public static class BuildUtils
                     continue;
                 }
                 MonoBehaviour moduleMB = baseModule as MonoBehaviour;
-                AddChild(InteriorPieceEntitySpawner.From(baseModule));
+                AddChild(InteriorPieceEntitySpawner.From(baseModule, entityMetadataManager));
             }
             else if (transform.TryGetComponent(out Constructable constructable))
             {

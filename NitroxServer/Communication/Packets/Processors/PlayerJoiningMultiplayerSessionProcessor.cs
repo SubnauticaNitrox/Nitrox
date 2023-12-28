@@ -86,7 +86,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 GetOtherPlayers(player),
                 globalRootEntities,
                 simulations,
-                world.GameMode,
+                player.GameMode,
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
                 storyManager.GetTimeData(),
@@ -107,7 +107,7 @@ namespace NitroxServer.Communication.Packets.Processors
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
             PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
-            entityRegistry.AddEntity(playerEntity);
+            entityRegistry.AddOrUpdate(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             playerManager.SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);
         }

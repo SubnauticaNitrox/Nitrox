@@ -248,6 +248,13 @@ public class WorldPersistenceTest
             case SeamothMetadata metadata when entityAfter.Metadata is SeamothMetadata metadataAfter:
                 Assert.AreEqual(metadata.LightsOn, metadataAfter.LightsOn);
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                Assert.AreEqual(metadata.Name, metadataAfter.Name);
+                Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
+                break;
+            case ExosuitMetadata metadata when entityAfter.Metadata is ExosuitMetadata metadataAfter:
+                Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                Assert.AreEqual(metadata.Name, metadataAfter.Name);
+                Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
                 break;
             case SubNameInputMetadata metadata when entityAfter.Metadata is SubNameInputMetadata metadataAfter:
                 Assert.AreEqual(metadata.Name, metadataAfter.Name);
@@ -305,6 +312,14 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.TimeNextBreed, metadataAfter.TimeNextBreed);
                 Assert.AreEqual(metadata.BornInside, metadataAfter.BornInside);
                 break;
+            case FlareMetadata metadata when entityAfter.Metadata is FlareMetadata metadataAfter:
+                Assert.AreEqual(metadata.EnergyLeft, metadataAfter.EnergyLeft);
+                Assert.AreEqual(metadata.HasBeenThrown, metadataAfter.HasBeenThrown);
+                Assert.AreEqual(metadata.FlareActivateTime, metadataAfter.FlareActivateTime);
+                break;
+            case BeaconMetadata metadata when entityAfter.Metadata is BeaconMetadata metadataAfter:
+                Assert.AreEqual(metadata.Label, metadataAfter.Label);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
@@ -331,6 +346,13 @@ public class WorldPersistenceTest
                         case PlaceholderGroupWorldEntity _ when worldEntityAfter is PlaceholderGroupWorldEntity _:
                             break;
                         case CellRootEntity _ when worldEntityAfter is CellRootEntity _:
+                            break;
+                        case PlacedWorldEntity _ when worldEntityAfter is PlacedWorldEntity _:
+                            break;
+                        case OxygenPipeEntity oxygenPipeEntity when worldEntityAfter is OxygenPipeEntity oxygenPipeEntityAfter:
+                            Assert.AreEqual(oxygenPipeEntity.ParentPipeId, oxygenPipeEntityAfter.ParentPipeId);
+                            Assert.AreEqual(oxygenPipeEntity.RootPipeId, oxygenPipeEntityAfter.RootPipeId);
+                            Assert.AreEqual(oxygenPipeEntity.ParentPosition, oxygenPipeEntityAfter.ParentPosition);
                             break;
                         case GlobalRootEntity globalRootEntity when worldEntityAfter is GlobalRootEntity globalRootEntityAfter:
                             if (globalRootEntity.GetType() != typeof(GlobalRootEntity))
