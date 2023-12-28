@@ -248,6 +248,13 @@ public class WorldPersistenceTest
             case SeamothMetadata metadata when entityAfter.Metadata is SeamothMetadata metadataAfter:
                 Assert.AreEqual(metadata.LightsOn, metadataAfter.LightsOn);
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                Assert.AreEqual(metadata.Name, metadataAfter.Name);
+                Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
+                break;
+            case ExosuitMetadata metadata when entityAfter.Metadata is ExosuitMetadata metadataAfter:
+                Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                Assert.AreEqual(metadata.Name, metadataAfter.Name);
+                Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
                 break;
             case SubNameInputMetadata metadata when entityAfter.Metadata is SubNameInputMetadata metadataAfter:
                 Assert.AreEqual(metadata.Name, metadataAfter.Name);

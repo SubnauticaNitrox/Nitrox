@@ -1,6 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
@@ -38,7 +38,7 @@ public sealed partial class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPat
         // Let others know if we have a lock on this entity
         if (__instance.TryGetIdOrWarn(out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id))
         {
-            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(__instance.gameObject);
+            Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(__instance.gameObject);
 
             if (metadata.HasValue)
             {

@@ -251,10 +251,6 @@ namespace NitroxServer.Serialization.World
 
             EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
             entityRegistry.AddEntities(pWorldData.EntityData.Entities);
-            foreach (Entity entity in pWorldData.GlobalRootData.Entities)
-            {
-                Log.Debug($"Adding GlobalRootEntity: {entity.Id} of type: {entity.GetType()}");
-            }
             entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
 
             World world = new()
