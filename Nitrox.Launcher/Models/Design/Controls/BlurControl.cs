@@ -7,38 +7,53 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using SkiaSharp;
-using AControls = Avalonia.Controls.Controls;
 
 namespace Nitrox.Launcher.Models.Design.Controls;
 
 /// <summary>
-/// Draws a blur filter over the already rendered content.
+///     Draws a blur filter over the already rendered content.
 /// </summary>
 /// <remarks>
-/// Based off of GrayscaleControl
+///     Based off of GrayscaleControl
 /// </remarks>
 public class BlurControl : Decorator
 {
+    public static readonly StyledProperty<float> BlurStrengthProperty =
+        AvaloniaProperty.Register<BlurControl, float>(nameof(BlurStrength), 5);
+
+    /// <summary>
+    ///     Sets or gets how strong the blur should be. Defaults to 5.
+    /// </summary>
+    public float BlurStrength
+    {
+        get => GetValue(BlurStrengthProperty);
+        set => SetValue(BlurStrengthProperty, value);
+    }
+
     static BlurControl()
     {
+        ClipToBoundsProperty.OverrideDefaultValue<BlurControl>(true);
         AffectsRender<BlurControl>(OpacityProperty);
+        AffectsRender<BlurControl>(BlurStrengthProperty);
     }
 
     public override void Render(DrawingContext context)
     {
-        context.Custom(new BlurBehindRenderOperation((byte)Math.Round(byte.MaxValue * Opacity), new Rect(default, Bounds.Size)));
+        context.Custom(new BlurBehindRenderOperation((byte)Math.Round(byte.MaxValue * Opacity), BlurStrength, new Rect(default, Bounds.Size)));
     }
 
     private class BlurBehindRenderOperation : ICustomDrawOperation
     {
-        private readonly byte opacity;
         private readonly Rect bounds;
+        private readonly byte opacity;
+        private readonly float strength;
 
         public Rect Bounds => bounds;
 
-        public BlurBehindRenderOperation(byte opacity, Rect bounds)
+        public BlurBehindRenderOperation(byte opacity, float strength, Rect bounds)
         {
             this.opacity = opacity;
+            this.strength = strength;
             this.bounds = bounds;
         }
 
@@ -67,7 +82,7 @@ public class BlurControl : Decorator
 
             using SKImage backgroundSnapshot = skia.SkSurface.Snapshot();
             using SKShader backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, currentInvertedTransform);
-            using SKImageFilter blurFilter = SKImageFilter.CreateBlur(7, 7);
+            using SKImageFilter blurFilter = SKImageFilter.CreateBlur(strength, strength);
             using SKPaint paint = new()
             {
                 Shader = backdropShader,

@@ -150,7 +150,10 @@
         <Setter Property="Background" Value="#00000000" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Setter Property="Padding" Value="34 45" />
+        <!-- Adds default padding to routed content if margin is not set on the view. Use Margin="-1" on a view to force full-size. -->
+        <Style Selector="^ > :is(UserControl)[Margin=0]">
+            <Setter Property="Padding" Value="34 45" />
+        </Style>
     </Style>
 
     <Style Selector="Border.serverEntry">

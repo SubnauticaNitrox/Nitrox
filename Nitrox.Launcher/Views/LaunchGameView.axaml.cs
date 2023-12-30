@@ -13,13 +13,13 @@ using NitroxModel.Helper;
 
 namespace Nitrox.Launcher.Views;
 
-public partial class LaunchGamePage : RoutableViewBase<LaunchGamePageViewModel>
+public partial class LaunchGameView : RoutableViewBase<LaunchGamePageViewModel>
 {
     public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
     public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
     //public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
     
-    public LaunchGamePage()
+    public LaunchGameView()
     {
         InitializeComponent();
     }
