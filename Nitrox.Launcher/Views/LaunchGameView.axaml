@@ -10,8 +10,8 @@
              x:Class="Nitrox.Launcher.Views.LaunchGameView"
              Margin="-1"> <!-- Forces the view router to not add padding; We want the background image to be full-width. -->
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Spacing="20" Margin="20 0">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+        <StackPanel Spacing="20" Margin="20 0 20 20">
             <Panel Height="535" VerticalAlignment="Top" Margin="-20 0">
                 <Image Stretch="UniformToFill" Source="/Assets/Images/PlayGameImage.png" />
                 <Image Stretch="Uniform" Source="/Assets/Images/SubnauticaMain.png" Height="48" VerticalAlignment="Center"

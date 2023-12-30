@@ -48,6 +48,8 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                     btn.SetValue(NitroxAttached.SelectedProperty, true);
                 }
             }));
+
+            ViewModel?.DefaultCommand.Execute(null);
         });
 
         InitializeComponent();

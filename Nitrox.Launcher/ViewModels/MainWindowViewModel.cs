@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Media;
 using HanumanInstitute.MvvmDialogs;
@@ -17,6 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
     public List<INavigationItem> NavigationHeaderItems { get; }
     public List<INavigationItem> NavigationFooterItems { get; }
     public List<TitleBarItem> TitleBarItems { get; }
+    public ICommand DefaultCommand { get; }
 
     public MainWindowViewModel(IDialogService dialogService)
     {
@@ -54,6 +56,7 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             }
         };
 
+        DefaultCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LaunchGamePageViewModel>()));
         NavigationHeaderItems = new List<INavigationItem>
         {
             new NavigationHeader("PLAY"),
@@ -61,7 +64,7 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             {
                 ToolTipText = "Play the game",
                 Icon = "/Assets/Images/material-design-icons/play.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LaunchGamePageViewModel>()))
+                ClickCommand = DefaultCommand
             },
             new NavigationItem("Servers")
             {
