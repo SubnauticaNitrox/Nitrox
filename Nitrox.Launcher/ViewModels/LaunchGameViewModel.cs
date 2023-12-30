@@ -4,9 +4,9 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class LaunchGamePageViewModel : RoutableViewModelBase
+public partial class LaunchGameViewModel : RoutableViewModelBase
 {
-    public LaunchGamePageViewModel(IScreen hostScreen) : base(hostScreen)
+    public LaunchGameViewModel(IScreen hostScreen) : base(hostScreen)
     {
     }
 

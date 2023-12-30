@@ -44,7 +44,7 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
         {
             MainWindowViewModel => typeof(MainWindow),
             ErrorViewModel => typeof(ErrorModal),
-            LaunchGamePageViewModel => typeof(LaunchGameView),
+            LaunchGameViewModel => typeof(LaunchGameView),
             CreateServerViewModel => typeof(CreateServerModal),
             ConfirmationBoxViewModel => typeof(ConfirmationBoxModal),
             PlayViewModel => typeof(PlayView),

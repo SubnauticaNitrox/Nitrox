@@ -5,7 +5,7 @@
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
-             DataContext="{x:Static launcher:DesignData.LaunchGamePageViewModel}"
+             DataContext="{x:Static launcher:DesignData.LaunchGameViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.LaunchGameView"
              Margin="-1"> <!-- Forces the view router to not add padding; We want the background image to be full-width. -->

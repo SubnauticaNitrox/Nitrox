@@ -56,7 +56,7 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             }
         };
 
-        DefaultCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LaunchGamePageViewModel>()));
+        DefaultCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LaunchGameViewModel>()));
         NavigationHeaderItems = new List<INavigationItem>
         {
             new NavigationHeader("PLAY"),
