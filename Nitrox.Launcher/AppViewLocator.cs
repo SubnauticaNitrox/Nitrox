@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -45,6 +44,7 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
         {
             MainWindowViewModel => typeof(MainWindow),
             ErrorViewModel => typeof(ErrorModal),
+            LaunchGamePageViewModel => typeof(LaunchGamePage),
             CreateServerViewModel => typeof(CreateServerModal),
             ConfirmationBoxViewModel => typeof(ConfirmationBoxModal),
             PlayViewModel => typeof(PlayView),

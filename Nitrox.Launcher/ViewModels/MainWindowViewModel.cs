@@ -61,7 +61,7 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             {
                 ToolTipText = "Play the game",
                 Icon = "/Assets/Images/material-design-icons/play.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LaunchGamePageViewModel>()))
             },
             new NavigationItem("Servers")
             {
