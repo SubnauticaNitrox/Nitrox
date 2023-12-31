@@ -1,7 +1,10 @@
 using System;
+using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
+using NitroxModel;
 
 namespace Nitrox.Launcher.Models.Converters;
 
@@ -18,9 +21,9 @@ public class ToStringConverter : Converter<ToStringConverter>, IValueConverter
         {
             return null;
         }
-        if (value?.GetType().IsEnum ?? false)
+        if (value.GetType().IsEnum)
         {
-            value = value.ToString();
+            value = (value as Enum)?.GetAttribute<DescriptionAttribute>().Description ?? value.ToString();
         }
         if (value is not string sourceText || !targetType.IsAssignableTo(typeof(string)))
         {

@@ -47,14 +47,16 @@
             </Border>
 
             <!-- Right side -->
-            <rx:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
-                <rx:RoutedViewHost.DefaultContent>
-                    <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </rx:RoutedViewHost.DefaultContent>
-                <rx:RoutedViewHost.ViewLocator>
-                    <launcher:AppViewLocator />
-                </rx:RoutedViewHost.ViewLocator>
-            </rx:RoutedViewHost>
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                <rx:RoutedViewHost Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
+                    <rx:RoutedViewHost.DefaultContent>
+                        <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </rx:RoutedViewHost.DefaultContent>
+                    <rx:RoutedViewHost.ViewLocator>
+                        <launcher:AppViewLocator />
+                    </rx:RoutedViewHost.ViewLocator>
+                </rx:RoutedViewHost>
+            </ScrollViewer>
         </Grid>
     </Panel>
 </Window>
