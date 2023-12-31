@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
 using Avalonia.Collections;
+using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -24,16 +24,9 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     
     public LaunchGameViewModel(IScreen hostScreen) : base(hostScreen)
     {
-        // Dynamically get the image names contained within the project's "gallery-images" folder
-        foreach (string imageName in Directory.GetFiles($@"{Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)))}\Assets\Images\gallery-images"))
+        foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
         {
-            GalleryImageSources.Add(imageName.Replace(@"D:\Code\Nitrox\Nitrox.Launcher", "")); // HARDCODED VALUE BASED ON MY LOCAL PATH - Needs to be fixed
-        }
-
-        // TEMP
-        foreach (string value in GalleryImageSources)
-        {
-            Console.WriteLine($"Adding image source \"{value}\"");
+            GalleryImageSources.Add(asset.LocalPath);
         }
     }
 

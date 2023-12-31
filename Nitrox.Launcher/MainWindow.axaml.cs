@@ -8,6 +8,7 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
 using ReactiveUI;
+using Serilog;
 
 namespace Nitrox.Launcher;
 
@@ -49,7 +50,14 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 }
             }));
 
-            ViewModel?.DefaultCommand.Execute(null);
+            try
+            {
+                ViewModel?.DefaultView.Execute(null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Failed to execute {nameof(ViewModel.DefaultView)} command");
+            }
         });
 
         InitializeComponent();

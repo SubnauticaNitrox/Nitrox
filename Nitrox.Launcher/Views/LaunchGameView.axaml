@@ -12,7 +12,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
         <StackPanel Spacing="20" Margin="20 0 20 20">
-            <Panel Height="535" VerticalAlignment="Top" Margin="-20 0">
+            <Panel Height="535" Margin="-20 0">
                 <Image Stretch="UniformToFill" Source="/Assets/Images/PlayGameImage.png" />
                 <Image Stretch="Uniform" Source="/Assets/Images/SubnauticaMain.png" Height="48" VerticalAlignment="Center"
                        HorizontalAlignment="Center" />
@@ -52,8 +52,7 @@
 
                 </StackPanel>
             </Grid>
-            <ScrollViewer HorizontalAlignment="Center">
-                <!-- v DOESN'T WORK v -->
+            <ScrollViewer HorizontalAlignment="Center" Height="175">
                 <ItemsControl ItemsSource="{Binding GalleryImageSources}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -63,44 +62,16 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <!-- This below border is temporary, simply to show where the image is supposed to be. When deleting, move the "Height" and "Width" attributes to the nested border -->
-                            <Border Height="175" Width="282" CornerRadius="12" Background="DimGray">
+                            <Border Width="282" CornerRadius="12">
                                 <Border CornerRadius="12">
                                     <Border.Background>
-                                        <ImageBrush Stretch="UniformToFill" Source="{Binding}"/>
+                                        <ImageBrush Stretch="UniformToFill" Source="{Binding Converter={converters:BitmapAssetValueConverter}}"/>
                                     </Border.Background>
                                 </Border>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!-- v Does work, but hardcoding these images into the view is not desirable v -->
-                <!--StackPanel Orientation="Horizontal" Spacing="12">
-                    <Border Height="175" Width="282" CornerRadius="12">
-                        <Border.Background>
-                            <ImageBrush Stretch="UniformToFill" Source="/Assets/Images/gallery-images/gallery-image-1.png"/>
-                        </Border.Background>
-                    </Border>
-                    <Border Height="175" Width="282" CornerRadius="12">
-                        <Border.Background>
-                            <ImageBrush Stretch="UniformToFill" Source="/Assets/Images/gallery-images/gallery-image-2.png"/>
-                        </Border.Background>
-                    </Border>
-                    <Border Height="175" Width="282" CornerRadius="12">
-                        <Border.Background>
-                            <ImageBrush Stretch="UniformToFill" Source="/Assets/Images/gallery-images/gallery-image-3.png"/>
-                        </Border.Background>
-                    </Border>
-                    <Border Height="175" Width="282" CornerRadius="12">
-                        <Border.Background>
-                            <ImageBrush Stretch="UniformToFill" Source="/Assets/Images/gallery-images/gallery-image-4.png"/>
-                        </Border.Background>
-                    </Border>
-                    <Border Height="175" Width="282" CornerRadius="12">
-                        <Border.Background>
-                            <ImageBrush Stretch="UniformToFill" Source="/Assets/Images/gallery-images/gallery-image-5.png"/>
-                        </Border.Background>
-                    </Border>
-                </StackPanel-->
             </ScrollViewer>
             <StackPanel Orientation="Vertical">
                 <TextBlock FontSize="14" Foreground="White" FontWeight="Bold" Margin="0,11,0,12" TextWrapping="Wrap" HorizontalAlignment="Left" Text="Contributors" />

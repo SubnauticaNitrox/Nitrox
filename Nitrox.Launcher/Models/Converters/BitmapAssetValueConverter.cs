@@ -27,16 +27,10 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
         {
             return bitmap;
         }
-
-        Uri uri;
-        // Allow for assembly overrides
-        if (rawUri.StartsWith("avares://"))
+        Uri uri = rawUri.StartsWith("avares://") ? new Uri(rawUri) : new Uri($"avares://{assemblyName}{rawUri}");
+        if (!AssetLoader.Exists(uri))
         {
-            uri = new Uri(rawUri);
-        }
-        else
-        {
-            uri = new Uri($"avares://{assemblyName}{rawUri}");
+            return null;
         }
 
         bitmap = new Bitmap(AssetLoader.Open(uri));
