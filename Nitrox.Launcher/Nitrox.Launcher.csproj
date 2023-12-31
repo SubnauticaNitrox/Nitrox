@@ -43,6 +43,10 @@
     </ItemGroup>
 
 
+    <ItemGroup>
+      <Folder Include="Assets\Images\gallery-images\" />
+    </ItemGroup>
+
     <!-- Ensure server files are available for launcher. -->
     <Target Name="BuildServer" AfterTargets="Build">
         <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
