@@ -76,20 +76,20 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             {
                 ToolTipText = "Configure your setup",
                 Icon = "/Assets/Images/material-design-icons/library.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LibraryViewModel>()))
             },
             new NavigationHeader("EXPLORE"),
             new NavigationItem("Community")
             {
                 ToolTipText = "Join the Nitrox community",
                 Icon = "/Assets/Images/material-design-icons/community.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<CommunityViewModel>()))
             },
             new NavigationItem("Blog")
             {
                 ToolTipText = "Read the latest from the Dev Blog",
                 Icon = "/Assets/Images/material-design-icons/blog.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<BlogViewModel>()))
             }
         };
 
@@ -98,12 +98,12 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             new NavigationItem("Updates")
             {
                 Icon = "/Assets/Images/material-design-icons/download.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<UpdatesViewModel>()))
             },
             new NavigationItem("Options")
             {
                 Icon = "/Assets/Images/material-design-icons/options.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<OptionsViewModel>()))
             }
         };
     }

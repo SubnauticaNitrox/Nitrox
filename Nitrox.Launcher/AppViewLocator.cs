@@ -43,13 +43,17 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
         static Type GetViewType(object viewModel) => viewModel switch
         {
             MainWindowViewModel => typeof(MainWindow),
-            ErrorViewModel => typeof(ErrorModal),
             LaunchGameViewModel => typeof(LaunchGameView),
-            CreateServerViewModel => typeof(CreateServerModal),
-            ConfirmationBoxViewModel => typeof(ConfirmationBoxModal),
-            PlayViewModel => typeof(PlayView),
             ServersViewModel => typeof(ServersView),
             ManageServerViewModel => typeof(ManageServerView),
+            CreateServerViewModel => typeof(CreateServerModal),
+            LibraryViewModel => typeof(LibraryView),
+            CommunityViewModel => typeof(CommunityView),
+            BlogViewModel => typeof(BlogView),
+            UpdatesViewModel => typeof(UpdatesView),
+            OptionsViewModel => typeof(OptionsView),
+            ConfirmationBoxViewModel => typeof(ConfirmationBoxModal),
+            ErrorViewModel => typeof(ErrorModal),
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
         };
 
