@@ -15,20 +15,17 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
 {
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
     private static readonly Dictionary<string, Bitmap> assetCache = new();
+    private static readonly object assetCacheLock = new();
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public static Bitmap GetBitmapFromPath(string rawUri)
     {
-        if (value == null)
+        Bitmap bitmap;
+        lock (assetCacheLock)
         {
-            return null;
-        }
-        if (value is not string rawUri || !targetType.IsAssignableFrom(typeof(Bitmap)))
-        {
-            throw new NotSupportedException();
-        }
-        if (assetCache.TryGetValue(rawUri, out Bitmap bitmap))
-        {
-            return bitmap;
+            if (assetCache.TryGetValue(rawUri, out bitmap))
+            {
+                return bitmap;
+            }
         }
         Uri uri = rawUri.StartsWith("avares://") ? new Uri(rawUri) : new Uri($"avares://{assemblyName}{rawUri}");
         if (!AssetLoader.Exists(uri) && !Avalonia.Controls.Design.IsDesignMode)
@@ -42,13 +39,29 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
         }
 
         bitmap ??= new Bitmap(AssetLoader.Open(uri));
-        assetCache.Add(rawUri, bitmap);
+        lock (assetCacheLock)
+        {
+            assetCache.Add(rawUri, bitmap);
+        }
         return bitmap;
+    }
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+        if (value is not string rawUri || !targetType.IsAssignableFrom(typeof(Bitmap)))
+        {
+            throw new NotSupportedException();
+        }
+        return GetBitmapFromPath(rawUri);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 
-    private Bitmap TryLoadFromLocalFileSystem(string fileUri)
+    private static Bitmap TryLoadFromLocalFileSystem(string fileUri)
     {
         string targetedProject = Path.GetDirectoryName(Environment.GetCommandLineArgs().FirstOrDefault(part => !part.Contains("Designer", StringComparison.Ordinal) && part.EndsWith("dll", StringComparison.OrdinalIgnoreCase) && File.Exists(part)));
         while (targetedProject != null && !Directory.EnumerateFileSystemEntries(targetedProject, "*.csproj", SearchOption.TopDirectoryOnly).Any())
@@ -63,6 +76,6 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
         {
             fileUri = fileUri.Substring(1);
         }
-        return new(Path.Combine(targetedProject, fileUri));
+        return new Bitmap(Path.Combine(targetedProject, fileUri));
     }
 }
