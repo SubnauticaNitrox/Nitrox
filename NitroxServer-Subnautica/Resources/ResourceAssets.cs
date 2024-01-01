@@ -10,7 +10,7 @@ namespace NitroxServer_Subnautica.Resources
     {
         public Dictionary<string, WorldEntityInfo> WorldEntitiesByClassId { get; init; } = new();
         public string LootDistributionsJson { get; init; } = "";
-        public Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholderGroupsByGroupClassId { get; init; } = new();
+        public Dictionary<string, PrefabPlaceholdersGroupAsset> PrefabPlaceholdersGroupsByGroupClassId { get; init; } = new();
         public RandomStartGenerator NitroxRandom { get; init; }
 
         public static void ValidateMembers(ResourceAssets resourceAssets)
@@ -18,7 +18,7 @@ namespace NitroxServer_Subnautica.Resources
             Validate.NotNull(resourceAssets);
             Validate.IsTrue(resourceAssets.WorldEntitiesByClassId.Count > 0);
             Validate.IsTrue(resourceAssets.LootDistributionsJson != "");
-            Validate.IsTrue(resourceAssets.PrefabPlaceholderGroupsByGroupClassId.Count > 0);
+            Validate.IsTrue(resourceAssets.PrefabPlaceholdersGroupsByGroupClassId.Count > 0);
             Validate.NotNull(resourceAssets.NitroxRandom);
         }
     }

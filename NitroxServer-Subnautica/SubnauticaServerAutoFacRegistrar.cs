@@ -42,12 +42,12 @@ namespace NitroxServer_Subnautica
 
             containerBuilder.Register(c => resourceAssets).SingleInstance();
             containerBuilder.Register(c => resourceAssets.WorldEntitiesByClassId).SingleInstance();
-            containerBuilder.Register(c => resourceAssets.PrefabPlaceholderGroupsByGroupClassId).SingleInstance();
+            containerBuilder.Register(c => resourceAssets.PrefabPlaceholdersGroupsByGroupClassId).SingleInstance();
             containerBuilder.Register(c => resourceAssets.NitroxRandom).SingleInstance();
-            containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<UweWorldEntityFactory>().SingleInstance();
+            containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<IUweWorldEntityFactory>().SingleInstance();
 
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
-            containerBuilder.Register(c => prefabFactory).As<UwePrefabFactory>().SingleInstance();
+            containerBuilder.Register(c => prefabFactory).As<IUwePrefabFactory>().SingleInstance();
             containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
             {
                 [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),

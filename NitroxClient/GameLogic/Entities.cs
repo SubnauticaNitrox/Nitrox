@@ -54,9 +54,11 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
             entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
@@ -108,8 +110,18 @@ namespace NitroxClient.GameLogic
 
         private IEnumerator SpawnNewEntities()
         {
-            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
-            spawningEntities = false;
+            bool restarted = false;
+            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(exception =>
+            {
+                Log.Error(exception);
+                if (EntitiesToSpawn.Count > 0)
+                {
+                    restarted = true;
+                    // It's safe to run a new time because the processed entity is removed first so it won't infinitely throw errors
+                    CoroutineHost.StartCoroutine(SpawnNewEntities());
+                }
+            });
+            spawningEntities = restarted;
         }
 
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)

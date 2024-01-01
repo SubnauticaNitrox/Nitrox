@@ -16,6 +16,7 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
+using NitroxServer.Helper;
 using NitroxServer.Resources;
 using NitroxServer.Serialization.Upgrade;
 
@@ -189,6 +190,8 @@ namespace NitroxServer.Serialization.World
                 seed = StringHelper.GenerateRandomString(10);
 #endif
             }
+            // Initialized only once, just like UnityEngine.Random
+            XORRandom.InitSeed(seed.GetHashCode());
 
             Log.Info($"Loading world with seed {seed}");
 
@@ -216,12 +219,13 @@ namespace NitroxServer.Serialization.World
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
-                NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
-                NitroxServiceLocator.LocateService<UwePrefabFactory>(),
+                NitroxServiceLocator.LocateService<IUweWorldEntityFactory>(),
+                NitroxServiceLocator.LocateService<IUwePrefabFactory>(),
                 pWorldData.WorldData.ParsedBatchCells,
                 protoBufSerializer,
                 NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
+                pWorldData.WorldData.GameData.PDAState,
                 world.Seed
             );
 
