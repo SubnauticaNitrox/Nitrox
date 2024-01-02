@@ -15,6 +15,7 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
@@ -134,19 +135,18 @@ namespace NitroxServer.GameLogic
         {
             const int REFRESH_DELAY = 10;
 
-            string GetLogName(NitroxConnection connection) => assetsByConnection.TryGetValue(connection, out ConnectionAssets assets) ? assets.Player.Name : $"at {connection.Endpoint}";
-
             while (true)
             {
                 try
                 {
-                    while (!JoinQueue.Any())
+                    while (JoinQueue.Count == 0)
                     {
                         await Task.Delay(REFRESH_DELAY);
                     }
 
                     (NitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
 
+                    Log.Info($"Starting sync for player {reservations[reservationKey].PlayerName}");
                     SendInitialSync(connection, reservationKey);
 
                     CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
@@ -183,7 +183,7 @@ namespace NitroxServer.GameLogic
 
                         if (task.IsCanceled || !task.Result)
                         {
-                            Log.Info($"Inital sync timed out for player {GetLogName(connection)}");
+                            Log.Info($"Inital sync timed out for player {reservations[reservationKey].PlayerName}");
                             SyncFinishedCallback = null;
 
                             if (connection.State == NitroxConnectionState.Connected)
@@ -194,7 +194,7 @@ namespace NitroxServer.GameLogic
                         }
                         else
                         {
-                            Log.Info($"Player {GetLogName(connection)} joined successfully. Remaining requests: {JoinQueue.Count}");
+                            Log.Info($"Player {assetsByConnection[connection].Player.Name} joined successfully. Remaining requests: {JoinQueue.Count}");
                         }
                     });
                 }
@@ -207,6 +207,7 @@ namespace NitroxServer.GameLogic
 
         public void AddToJoinQueue(NitroxConnection connection, string reservationKey)
         {
+            Log.Info($"Added player {reservations[reservationKey].PlayerName} to queue");
             JoinQueue.Enqueue((connection, reservationKey));
         }
 
@@ -222,10 +223,10 @@ namespace NitroxServer.GameLogic
             {
                 NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-                PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, null, true, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+                PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
                 world.EntityRegistry.AddEntity(playerEntity);
                 world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
-                SendPacketToOtherPlayers(new CellEntities(playerEntity), player);
+                SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);
             }
 
             void RespawnExistingEntity(Player player)
@@ -234,7 +235,7 @@ namespace NitroxServer.GameLogic
 
                 if (playerEntity.HasValue)
                 {
-                    SendPacketToOtherPlayers(new CellEntities(playerEntity.Value, true), player);
+                    SendPacketToOtherPlayers(new SpawnEntities(playerEntity.Value, true), player);
                 }
                 else
                 {
@@ -247,7 +248,7 @@ namespace NitroxServer.GameLogic
 
             if (newlyCreatedEscapePod.HasValue)
             {
-                CellEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
+                SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
                 SendPacketToOtherPlayers(spawnNewEscapePod, player);
             }
 
@@ -278,8 +279,6 @@ namespace NitroxServer.GameLogic
                 wasBrandNewPlayer,
                 assignedEscapePodId,
                 equippedItems,
-                world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
-                world.InventoryManager.GetAllStorageSlotItems(),
                 player.UsedItems,
                 player.QuickSlotsBindingIds,
                 world.GameData.PDAState.GetInitialPDAData(),
@@ -294,7 +293,8 @@ namespace NitroxServer.GameLogic
                 world.GameMode,
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
-                world.StoryManager.GetTimeData()
+                world.StoryManager.GetTimeData(),
+                BuildingManager.GetEntitiesOperations(world.WorldEntityManager.GetGlobalRootEntities(true))
             );
 
             player.SendPacket(initialPlayerSync);
