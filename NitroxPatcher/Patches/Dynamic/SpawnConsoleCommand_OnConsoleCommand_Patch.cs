@@ -1,54 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class SpawnConsoleCommand_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
 {
-    public class SpawnConsoleCommand_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnConsoleCommand t) => t.OnConsoleCommand_spawn(default(NotificationCenter.Notification)));
+
+    private static readonly OpCode INJECTION_CODE = OpCodes.Call;
+    private static readonly object INJECTION_OPERAND = Reflect.Method(() => Utils.CreatePrefab(default(GameObject), default(float), default(bool)));
+
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnConsoleCommand t) => t.OnConsoleCommand_spawn(default(NotificationCenter.Notification)));
+        Validate.NotNull(INJECTION_OPERAND);
 
-        private static readonly OpCode INJECTION_CODE = OpCodes.Call;
-        private static readonly object INJECTION_OPERAND = Reflect.Method(() => Utils.CreatePrefab(default(GameObject), default(float), default(bool)));
-
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+        foreach (CodeInstruction instruction in instructions)
         {
-            Validate.NotNull(INJECTION_OPERAND);
+            yield return instruction;
 
-            foreach (CodeInstruction instruction in instructions)
+            /*
+             * GameObject gameObject = global::Utils.CreatePrefab(prefabForTechType, maxDist, i > 0);
+             * -> SpawnConsoleCommand_OnConsoleCommand_Patch.Callback(gameObject);
+             * LargeWorldEntity.Register(gameObject);
+             * CrafterLogic.NotifyCraftEnd(gameObject, techType);
+             * gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
+             */
+            if (instruction.opcode == INJECTION_CODE && instruction.operand.Equals(INJECTION_OPERAND))
             {
-                yield return instruction;
-
-                /*
-                 * GameObject gameObject = global::Utils.CreatePrefab(prefabForTechType, maxDist, i > 0);
-                 * -> SpawnConsoleCommand_OnConsoleCommand_Patch.Callback(gameObject);
-                 * LargeWorldEntity.Register(gameObject);
-                 * CrafterLogic.NotifyCraftEnd(gameObject, techType);
-                 * gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
-                 */
-                if (instruction.opcode == INJECTION_CODE && instruction.operand.Equals(INJECTION_OPERAND))
-                {
-
-                    yield return new CodeInstruction(OpCodes.Dup);
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(GameObject))));
-                }
-
+                yield return new CodeInstruction(OpCodes.Dup);
+                yield return new CodeInstruction(OpCodes.Call, ((Action<GameObject>)Callback).Method);
             }
-        }
 
-        public static void Callback(GameObject gameObject)
-        {
-            NitroxServiceLocator.LocateService<NitroxConsole>().Spawn(gameObject);
         }
+    }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
-        }
+    public static void Callback(GameObject gameObject)
+    {
+        Resolve<NitroxConsole>().Spawn(gameObject);
     }
 }

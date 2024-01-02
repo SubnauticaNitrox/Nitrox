@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class PDALog_Add_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class PDALog_Add_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDALog.Add(default, default));
     public static List<string> IgnoreKeys = new();
@@ -21,10 +20,5 @@ public class PDALog_Add_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         Resolve<IPacketSender>().Send(new PDALogEntryAdd(key, entry.timestamp));
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }

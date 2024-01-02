@@ -9,7 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable]
 [DataContract]
-public class VehicleWorldEntity : WorldEntity
+public class VehicleWorldEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
     public NitroxId SpawnerId { get; set; }
@@ -23,37 +23,19 @@ public class VehicleWorldEntity : WorldEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public VehicleWorldEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, string classId, bool spawnedByServer,  NitroxId id, NitroxTechType techType, EntityMetadata metadata)
+    public VehicleWorldEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata) :
+        base(transform, 0, classId, spawnedByServer, id, techType, metadata, null, new List<Entity>())
     {
         SpawnerId = spawnerId;
         ConstructionTime = constructionTime;
-        Id = id;
-        TechType = techType;
-        Metadata = metadata;
-        Transform = transform;
-        ChildEntities = new List<Entity>();
-        Level = 0;
-        ClassId = classId;
-        SpawnedByServer = spawnedByServer;
-        ExistsInGlobalRoot = true;
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public VehicleWorldEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public VehicleWorldEntity(NitroxId spawnerId, float constructionTime, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
+        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         SpawnerId = spawnerId;
         ConstructionTime = constructionTime;
-        Id = id;
-        TechType = techType;
-        Metadata = metadata;
-        ParentId = parentId;
-        Transform = transform;
-        ChildEntities = childEntities;
-        Level = level;
-        ClassId = classId;
-        SpawnedByServer = spawnedByServer;
-        WaterParkId = waterParkId;
-        ExistsInGlobalRoot = existsInGlobalRoot;
     }
 
     public override string ToString()

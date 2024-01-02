@@ -10,12 +10,13 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [DataContract]
-    [ProtoInclude(50, typeof(WorldEntity))]
-    [ProtoInclude(60, typeof(PrefabChildEntity))]
-    [ProtoInclude(70, typeof(PrefabPlaceholderEntity))]
-    [ProtoInclude(80, typeof(InventoryEntity))]
-    [ProtoInclude(90, typeof(InventoryItemEntity))]
-    [ProtoInclude(100, typeof(PathBasedChildEntity))]
+    [ProtoInclude(50, typeof(PrefabChildEntity))]
+    [ProtoInclude(51, typeof(InventoryEntity))]
+    [ProtoInclude(52, typeof(InventoryItemEntity))]
+    [ProtoInclude(53, typeof(PathBasedChildEntity))]
+    [ProtoInclude(54, typeof(InstalledBatteryEntity))]
+    [ProtoInclude(55, typeof(InstalledModuleEntity))]
+    [ProtoInclude(56, typeof(WorldEntity))]
     public abstract class Entity
     {
         [DataMember(Order = 1)]

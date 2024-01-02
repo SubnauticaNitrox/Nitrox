@@ -1,11 +1,10 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    internal class CellManager_GetPrefabForSlot_Patch : NitroxPatch, IPersistentPatch
+    internal partial class CellManager_GetPrefabForSlot_Patch : NitroxPatch, IPersistentPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CellManager t) => t.GetPrefabForSlot(default(EntitySlot)));
 
@@ -13,11 +12,6 @@ namespace NitroxPatcher.Patches.Persistent
         {
             __result = default;
             return !Multiplayer.Active;
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

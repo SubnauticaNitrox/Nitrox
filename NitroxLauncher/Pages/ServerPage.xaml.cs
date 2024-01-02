@@ -71,10 +71,10 @@ namespace NitroxLauncher.Pages
             {
                 Config.SaveName = TBWorldName.Text;
                 if (IsNewWorld) { Config.Seed = TBWorldSeed.Text; }
-                if (RBFreedom.IsChecked == true) { Config.GameMode = ServerGameMode.FREEDOM; }
-                else if (RBSurvival.IsChecked == true) { Config.GameMode = ServerGameMode.SURVIVAL; }
-                else if (RBCreative.IsChecked == true) { Config.GameMode = ServerGameMode.CREATIVE; }
-                else if (RBHardcore.IsChecked == true) { Config.GameMode = ServerGameMode.HARDCORE; }
+                if (RBFreedom.IsChecked == true) { Config.GameMode = NitroxGameMode.FREEDOM; }
+                else if (RBSurvival.IsChecked == true) { Config.GameMode = NitroxGameMode.SURVIVAL; }
+                else if (RBCreative.IsChecked == true) { Config.GameMode = NitroxGameMode.CREATIVE; }
+                else if (RBHardcore.IsChecked == true) { Config.GameMode = NitroxGameMode.HARDCORE; }
 
                 Config.DisableConsole = !CBCheats.IsChecked ?? Config.DisableConsole;
                 Config.MaxConnections = Convert.ToInt32(TBMaxPlayerCap.Text);
@@ -109,16 +109,16 @@ namespace NitroxLauncher.Pages
             TBWorldSeed.Text = Config.Seed;
             switch (Config.GameMode)
             {
-                case ServerGameMode.FREEDOM:
+                case NitroxGameMode.FREEDOM:
                     RBFreedom.IsChecked = true;
                     break;
-                case ServerGameMode.SURVIVAL:
+                case NitroxGameMode.SURVIVAL:
                     RBSurvival.IsChecked = true;
                     break;
-                case ServerGameMode.CREATIVE:
+                case NitroxGameMode.CREATIVE:
                     RBCreative.IsChecked = true;
                     break;
-                case ServerGameMode.HARDCORE:
+                case NitroxGameMode.HARDCORE:
                     RBHardcore.IsChecked = true;
                     break;
             }

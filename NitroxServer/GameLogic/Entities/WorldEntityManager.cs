@@ -3,11 +3,11 @@ using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxModel.DataStructures.GameLogic.Entities;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -18,61 +18,81 @@ namespace NitroxServer.GameLogic.Entities
         /// <summary>
         ///     Phasing entities can disappear if you go out of range.
         /// </summary>
-        private readonly Dictionary<AbsoluteEntityCell, List<WorldEntity>> phasingEntitiesByAbsoluteCell;
+        private readonly Dictionary<NitroxInt3, List<WorldEntity>> phasingEntitiesByBatchId;
+
+        private readonly Dictionary<AbsoluteEntityCell, List<WorldEntity>> phasingEntitiesByCellId;
 
         /// <summary>
         ///     Global root entities that are always visible.
         /// </summary>
-        private readonly Dictionary<NitroxId, WorldEntity> globalRootEntitiesById;
+        private readonly Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById;
 
         private readonly BatchEntitySpawner batchEntitySpawner;
+
+        private readonly object worldEntitiesLock;
+        private readonly object globalRootEntitiesLock;
 
         public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner)
         {
             List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
 
-            globalRootEntitiesById = worldEntities.Where(entity => entity.ExistsInGlobalRoot)
-                                                  .ToDictionary(entity => entity.Id);
+            globalRootEntitiesById = entityRegistry.GetEntities<GlobalRootEntity>().ToDictionary(entity => entity.Id);
 
-            phasingEntitiesByAbsoluteCell = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
-                                                         .GroupBy(entity => entity.AbsoluteEntityCell)
-                                                         .ToDictionary(group => group.Key, group => group.ToList());
+            phasingEntitiesByBatchId = worldEntities.Where(entity => entity is not GlobalRootEntity)
+                                                    .GroupBy(entity => entity.AbsoluteEntityCell.BatchId)
+                                                    .ToDictionary(group => group.Key, group => group.ToList());
+
+            phasingEntitiesByCellId = worldEntities.Where(entity => entity is not GlobalRootEntity)
+                                                   .GroupBy(entity => entity.AbsoluteEntityCell)
+                                                   .ToDictionary(group => group.Key, group => group.ToList());
             this.entityRegistry = entityRegistry;
             this.batchEntitySpawner = batchEntitySpawner;
+
+            worldEntitiesLock = new();
+            globalRootEntitiesLock = new();
         }
 
-        public List<WorldEntity> GetVisibleEntities(AbsoluteEntityCell[] cells)
+        public List<GlobalRootEntity> GetGlobalRootEntities(bool rootOnly = false)
         {
-            LoadUnspawnedEntities(cells);
-
-            List<WorldEntity> entities = new List<WorldEntity>();
-
-            foreach (AbsoluteEntityCell cell in cells)
+            if (rootOnly)
             {
-                List<WorldEntity> cellEntities = GetEntities(cell);
-                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));
+                return GetGlobalRootEntities<GlobalRootEntity>().Where(entity => entity.ParentId == null).ToList();
             }
-
-            return entities;
+            return GetGlobalRootEntities<GlobalRootEntity>();
         }
 
-        public List<WorldEntity> GetGlobalRootEntities()
+        public List<T> GetGlobalRootEntities<T>() where T : GlobalRootEntity
         {
-            lock (globalRootEntitiesById)
+            lock (globalRootEntitiesLock)
             {
-                return new List<WorldEntity>(globalRootEntitiesById.Values);
+                return new(globalRootEntitiesById.Values.OfType<T>());
             }
         }
 
-        public List<WorldEntity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
+        public List<WorldEntity> GetEntities(NitroxInt3 batchId)
         {
             List<WorldEntity> result;
 
-            lock (phasingEntitiesByAbsoluteCell)
+            lock (worldEntitiesLock)
             {
-                if (!phasingEntitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result))
+                if (!phasingEntitiesByBatchId.TryGetValue(batchId, out result))
                 {
-                    result = phasingEntitiesByAbsoluteCell[absoluteEntityCell] = new List<WorldEntity>();
+                    result = phasingEntitiesByBatchId[batchId] = new List<WorldEntity>();
+                }
+            }
+
+            return result;
+        }
+
+        public List<WorldEntity> GetEntities(AbsoluteEntityCell cellId)
+        {
+            List<WorldEntity> result;
+
+            lock (worldEntitiesLock)
+            {
+                if (!phasingEntitiesByCellId.TryGetValue(cellId, out result))
+                {
+                    result = phasingEntitiesByCellId[cellId] = new List<WorldEntity>();
                 }
             }
 
@@ -104,29 +124,78 @@ namespace NitroxServer.GameLogic.Entities
             return Optional.Of(newCell);
         }
 
+        public void AddGlobalRootEntity(GlobalRootEntity entity, bool addToRegistry = true)
+        {
+            lock (globalRootEntitiesLock)
+            {
+                if (!globalRootEntitiesById.ContainsKey(entity.Id))
+                {
+                    if (addToRegistry)
+                    {
+                        entityRegistry.AddOrUpdate(entity);
+                    }
+                    globalRootEntitiesById.Add(entity.Id, entity);
+                }
+                else
+                {
+                    Log.Info($"Entity Already Exists for Id: {entity.Id} Item: {entity.TechType}");
+                }
+            }
+        }
+
+        public Optional<Entity> RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
+        {
+            Optional<Entity> removedEntity = Optional.Empty;
+            lock (globalRootEntitiesLock)
+            {
+                if (removeFromRegistry)
+                {
+                    // In case there were player entities under the removed entity, we need to reparent them to the GlobalRoot
+                    // to make sure that they won't be removed
+                    if (entityRegistry.TryGetEntityById(entityId, out GlobalRootEntity globalRootEntity))
+                    {
+                        List<PlayerWorldEntity> playerEntities = new();
+                        FindPlayerEntitiesInChildrenRecursively(globalRootEntity, playerEntities);
+                        foreach (PlayerWorldEntity childPlayerEntity in playerEntities)
+                        {
+                            // Reparent the entity on top of GlobalRoot
+                            globalRootEntity.ChildEntities.Remove(childPlayerEntity);
+                            childPlayerEntity.ParentId = null;
+
+                            // Make sure the PlayerEntity is correctly registered
+                            UpdateGlobalRootEntity(childPlayerEntity);
+                        }
+                    }
+                    removedEntity = entityRegistry.RemoveEntity(entityId);
+                }
+                globalRootEntitiesById.Remove(entityId);
+            }
+            return removedEntity;
+        }
+
         public void TrackEntityInTheWorld(WorldEntity entity)
         {
-            if (entity.ExistsInGlobalRoot)
+            if (entity is GlobalRootEntity globalRootEntity)
             {
-                lock (globalRootEntitiesById)
-                {
-                    if (!globalRootEntitiesById.ContainsKey(entity.Id))
-                    {
-                        globalRootEntitiesById.Add(entity.Id, entity);
-                    }
-                    else
-                    {
-                        Log.Info($"Entity Already Exists for Id: {entity.Id} Item: {entity.TechType}");
-                    }
-                }
+                AddGlobalRootEntity(globalRootEntity, false);
             }
             else
             {
-                lock (phasingEntitiesByAbsoluteCell)
+                lock (worldEntitiesLock)
                 {
-                    if (!phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> phasingEntitiesInCell))
+                    if (!phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> phasingEntitiesInBatch))
                     {
-                        phasingEntitiesInCell = phasingEntitiesByAbsoluteCell[entity.AbsoluteEntityCell] = new List<WorldEntity>();
+                        phasingEntitiesInBatch = phasingEntitiesByBatchId[entity.AbsoluteEntityCell.BatchId] = new List<WorldEntity>();
+                    }
+
+                    phasingEntitiesInBatch.Add(entity);
+                }
+
+                lock (worldEntitiesLock)
+                {
+                    if (!phasingEntitiesByCellId.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> phasingEntitiesInCell))
+                    {
+                        phasingEntitiesInCell = phasingEntitiesByCellId[entity.AbsoluteEntityCell] = new List<WorldEntity>();
                     }
 
                     phasingEntitiesInCell.Add(entity);
@@ -147,7 +216,7 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     for (int z = 0; z < map.DimensionsInBatches.Z; z++)
                     {
-                        int spawned = LoadFromBatch(new(x, y, z), true);
+                        int spawned = LoadUnspawnedEntities(new(x, y, z), true);
 
                         Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
@@ -162,17 +231,12 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
+        public bool IsBatchSpawned(NitroxInt3 batchId)
         {
-            IEnumerable<NitroxInt3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
-
-            foreach (NitroxInt3 batchId in distinctBatchIds)
-            {
-                LoadFromBatch(batchId, false);
-            }
+            return batchEntitySpawner.IsBatchSpawned(batchId);
         }
 
-        private int LoadFromBatch(NitroxInt3 batchId, bool suppressLogs)
+        public int LoadUnspawnedEntities(NitroxInt3 batchId, bool suppressLogs)
         {
             List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, suppressLogs);
 
@@ -195,11 +259,16 @@ namespace NitroxServer.GameLogic.Entities
 
                 cellRoot.ChildEntities = new List<Entity>();
             }
+            // Specific type of entities which is not parented to a CellRootEntity
+            nonCellRootEntities.AddRange(spawnedEntities.OfType<SerializedWorldEntity>());
 
-            entityRegistry.AddEntitiesIgnoringDuplicate(nonCellRootEntities.Cast<Entity>().ToList());
+            entityRegistry.AddEntitiesIgnoringDuplicate(nonCellRootEntities.OfType<Entity>().ToList());
 
             foreach (WorldEntity entity in nonCellRootEntities)
             {
+                List<WorldEntity> entitiesInBatch = GetEntities(entity.AbsoluteEntityCell.BatchId);
+                entitiesInBatch.Add(entity);
+
                 List<WorldEntity> entitiesInCell = GetEntities(entity.AbsoluteEntityCell);
                 entitiesInCell.Add(entity);
             }
@@ -209,12 +278,24 @@ namespace NitroxServer.GameLogic.Entities
 
         private void EntitySwitchedCells(WorldEntity entity, AbsoluteEntityCell oldCell, AbsoluteEntityCell newCell)
         {
-            if (entity.ExistsInGlobalRoot)
+            if (entity is GlobalRootEntity)
             {
                 return; // We don't care what cell a global root entity resides in.  Only phasing entities.
             }
 
-            lock (phasingEntitiesByAbsoluteCell)
+            if (oldCell.BatchId != newCell.BatchId)
+            {
+                lock (worldEntitiesLock)
+                {
+                    List<WorldEntity> oldList = GetEntities(oldCell.BatchId);
+                    oldList.Remove(entity);
+
+                    List<WorldEntity> newList = GetEntities(newCell.BatchId);
+                    newList.Add(entity);
+                }
+            }
+
+            lock (worldEntitiesLock)
             {
                 List<WorldEntity> oldList = GetEntities(oldCell);
                 oldList.Remove(entity);
@@ -226,20 +307,25 @@ namespace NitroxServer.GameLogic.Entities
 
         public void StopTrackingEntity(WorldEntity entity)
         {
-            if (entity.ExistsInGlobalRoot)
+            if (entity is GlobalRootEntity)
             {
-                lock (globalRootEntitiesById)
-                {
-                    globalRootEntitiesById.Remove(entity.Id);
-                }
+                RemoveGlobalRootEntity(entity.Id, false);
             }
             else
             {
-                lock (phasingEntitiesByAbsoluteCell)
+                lock (worldEntitiesLock)
                 {
-                    if (phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> entities))
+                    if (phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> batchEntities))
                     {
-                        entities.Remove(entity);
+                        batchEntities.Remove(entity);
+                    }
+                }
+
+                lock (worldEntitiesLock)
+                {
+                    if (phasingEntitiesByCellId.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> cellEntities))
+                    {
+                        cellEntities.Remove(entity);
                     }
                 }
             }
@@ -260,6 +346,31 @@ namespace NitroxServer.GameLogic.Entities
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// To avoid risking not having the same entity in <see cref="globalRootEntitiesById"/> and in EntityRegistry, we update both at the same time.
+        /// </summary>
+        public void UpdateGlobalRootEntity(GlobalRootEntity entity)
+        {
+            lock (globalRootEntitiesLock)
+            {
+                entityRegistry.AddOrUpdate(entity);
+                globalRootEntitiesById[entity.Id] = entity;
+            }
+        }
+
+        private void FindPlayerEntitiesInChildrenRecursively(Entity parentEntity, List<PlayerWorldEntity> playerEntities)
+        {
+            foreach (Entity childEntity in parentEntity.ChildEntities)
+            {
+                if (childEntity is PlayerWorldEntity playerWorldEntity)
+                {
+                    playerEntities.Add(playerWorldEntity);
+                    continue;
+                }
+                FindPlayerEntitiesInChildrenRecursively(childEntity, playerEntities);
+            }
         }
     }
 }

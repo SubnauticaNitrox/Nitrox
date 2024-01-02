@@ -1,50 +1,50 @@
 ﻿using System.Reflection;
-using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
 {
-    public class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default(float)));
+
+    private static CreatureAction previousAction;
+
+    public static bool Prefix(Creature __instance, ref CreatureAction __result)
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default(float)));
-
-        private static CreatureAction previousAction;
-
-        public static bool Prefix(Creature __instance, ref CreatureAction __result)
+        if (!__instance.TryGetNitroxId(out NitroxId id))
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
-            {
-                previousAction = __instance.prevBestAction;
-                return true;
-            }
-
-            // CreatureActionChangedProcessor.ActionById.TryGetValue(id, out __result);
-
-            return false;
+            Log.WarnOnce($"[Creature_ChooseBestAction_Patch] Couldn't find an id on {__instance.GetFullHierarchyPath()}");
+            return true;
         }
 
-        public static void Postfix(Creature __instance, ref CreatureAction __result)
+        if (Resolve<SimulationOwnership>().HasAnyLockType(id))
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
-            {
-                if (previousAction != __result)
-                {
-                    // Multiplayer.Logic.AI.CreatureActionChanged(id, __result);
-                }
-            }
+            previousAction = __instance.prevBestAction;
+            return true;
         }
 
-        public override void Patch(Harmony harmony)
+        // CreatureActionChangedProcessor.ActionById.TryGetValue(id, out __result);
+
+        return false;
+    }
+
+    // TODO: Postfix disabled for the moment as it has no functionality
+    public static void Postfix_disabled(Creature __instance, ref CreatureAction __result)
+    {
+        if (!__instance.TryGetIdOrWarn(out NitroxId id))
         {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
+            return;
+        }
+
+        if (Resolve<SimulationOwnership>().HasAnyLockType(id))
+        {
+            if (previousAction != __result)
+            {
+                // Multiplayer.Logic.AI.CreatureActionChanged(id, __result);
+            }
         }
     }
 }

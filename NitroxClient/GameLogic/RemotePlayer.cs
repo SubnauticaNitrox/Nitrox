@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.Unity.Helper;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Server;
 using UnityEngine;
 using UWE;
 using Object = UnityEngine.Object;
@@ -18,6 +20,7 @@ namespace NitroxClient.GameLogic
         private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
         private readonly PlayerModelManager playerModelManager;
+        private readonly PlayerVitalsManager playerVitalsManager;
 
         public PlayerContext PlayerContext { get; }
         public GameObject Body { get; private set; }
@@ -28,6 +31,7 @@ namespace NitroxClient.GameLogic
         public AnimationController AnimationController { get; private set; }
         public ItemsContainer Inventory { get; private set; }
         public Transform ItemAttachPoint { get; private set; }
+        public RemotePlayerVitals vitals { get; private set; }
 
         public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -42,10 +46,11 @@ namespace NitroxClient.GameLogic
 
         public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
 
-        public RemotePlayer(PlayerContext playerContext, PlayerModelManager modelManager)
+        public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager)
         {
             PlayerContext = playerContext;
-            playerModelManager = modelManager;       
+            this.playerModelManager = playerModelManager;
+            this.playerVitalsManager = playerVitalsManager;
         }
 
         public void InitializeGameObject(GameObject playerBody)
@@ -82,6 +87,9 @@ namespace NitroxClient.GameLogic
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             SetupBody();
             SetupSkyAppliers();
+
+            vitals = playerVitalsManager.CreateOrFindForPlayer(this);
+            RefreshVitalsVisibility();
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -210,7 +218,7 @@ namespace NitroxClient.GameLogic
 
                     Detach();
                     ArmsController.SetWorldIKTarget(null, null);
-                    
+
                     Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
                 }
 
@@ -243,7 +251,7 @@ namespace NitroxClient.GameLogic
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }
-        
+
         /// <summary>
         /// Drops the remote player, swimming where he is
         /// </summary>
@@ -256,7 +264,8 @@ namespace NitroxClient.GameLogic
 
         public void Destroy()
         {
-            Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName)); 
+            Log.Info($"{PlayerName} left the game");
+            Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName));
             NitroxEntity.RemoveFrom(Body);
             Object.DestroyImmediate(Body);
         }
@@ -292,7 +301,7 @@ namespace NitroxClient.GameLogic
         {
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equippedItems));
         }
-        
+
         /// <summary>
         /// Makes the RemotePlayer recognizable as an obstacle for buildings.
         /// </summary>
@@ -300,13 +309,13 @@ namespace NitroxClient.GameLogic
         {
             RemotePlayerIdentifier identifier = Body.AddComponent<RemotePlayerIdentifier>();
             identifier.RemotePlayer = this;
-            
+
             if (Player.mainCollider is CapsuleCollider refCollider)
             {
                 // This layer lets us have a collider as a trigger without preventing its detection as an obstacle
                 Body.layer = LayerID.Useable;
                 Collider = Body.AddComponent<CapsuleCollider>();
-                
+
                 Collider.center = Vector3.zero;
                 Collider.radius = refCollider.radius;
                 Collider.direction = refCollider.direction;
@@ -330,6 +339,20 @@ namespace NitroxClient.GameLogic
             skyApplier.emissiveFromPower = false;
             skyApplier.dynamic = true;
             skyApplier.renderers = Body.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+        }
+
+        public void SetGameMode(NitroxGameMode gameMode)
+        {
+            PlayerContext.GameMode = gameMode;
+            RefreshVitalsVisibility();
+        }
+
+        private void RefreshVitalsVisibility()
+        {
+            if (vitals)
+            {
+                vitals.gameObject.SetActive(PlayerContext.GameMode != NitroxGameMode.CREATIVE);
+            }
         }
     }
 }

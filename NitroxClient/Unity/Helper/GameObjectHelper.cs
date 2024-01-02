@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Text;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -14,14 +16,14 @@ namespace NitroxClient.Unity.Helper
             return component;
         }
 
-        public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
+        public static bool TryGetComponentInParent<T>(this GameObject go, out T component, bool includeInactive = false) where T : Component
         {
-            component = go.GetComponentInParent<T>();
+            component = go.GetComponentInParent<T>(includeInactive);
             return component;
         }
 
         public static bool TryGetComponentInChildren<T>(this Component co, out T component, bool includeInactive = false) where T : Component => TryGetComponentInChildren(co.gameObject, out component, includeInactive);
-        public static bool TryGetComponentInParent<T>(this Component co, out T component) where T : Component => TryGetComponentInParent(co.gameObject, out component);
+        public static bool TryGetComponentInParent<T>(this Component co, out T component, bool includeInactive = false) where T : Component => TryGetComponentInParent(co.gameObject, out component, includeInactive);
 
         public static T RequireComponent<T>(this GameObject o) where T : Component
         {
@@ -78,23 +80,6 @@ namespace NitroxClient.Unity.Helper
             return go;
         }
 
-        /// <summary>
-        ///     Returns null if Unity has marked this object as dead.
-        /// </summary>
-        /// <param name="obj">Unity <see cref="UnityEngine.Object" /> to check if alive.</param>
-        /// <typeparam name="TObject">Type of Unity object that can be marked as either alive or dead.</typeparam>
-        /// <returns>The <see cref="UnityEngine.Object" /> if alive or null if dead.</returns>
-        public static TObject AliveOrNull<TObject>(this TObject obj) where TObject : Object
-        {
-            // Unity checks if the object is alive like this. Do NOT use == null check.
-            if (obj)
-            {
-                return obj;
-            }
-
-            return null;
-        }
-
         public static string GetFullHierarchyPath(this Component component)
         {
             return component ? $"{component.gameObject.GetFullHierarchyPath()} -> {component.GetType().Name}.cs" : "";
@@ -136,6 +121,48 @@ namespace NitroxClient.Unity.Helper
                 degree--;
             }
             return transform.TryGetComponent(out component);
+        }
+
+        /// <summary>
+        /// Custom wrapper for prefab spawning which ensures a NitroxEntity is present
+        /// on the newly created object before its components are enabled (Awake is not fired).
+        /// </summary>
+        public static GameObject InstantiateInactiveWithId(GameObject original, NitroxId nitroxId, Vector3 position = default, Quaternion rotation = default)
+        {
+            GameObject copy = Object.Instantiate(original, position, rotation, false);
+            NitroxEntity.SetNewId(copy, nitroxId);
+            return copy;
+        }
+
+        /// <inheritdoc cref="InstantiateInactiveWithId(GameObject, NitroxId, Vector3, Quaternion)"/>
+        /// <remarks>
+        /// Sets the GameObject to active after spawning it with a NitroxEntity.
+        /// </remarks>
+        public static GameObject InstantiateWithId(GameObject original, NitroxId nitroxId, Vector3 position = default, Quaternion rotation = default)
+        {
+            GameObject copy = InstantiateInactiveWithId(original, nitroxId, position, rotation);
+            copy.SetActive(true);
+            return copy;
+        }
+
+        /// <summary>
+        /// Override for <see cref="Utils.CreateGenericLoot"/> using our own <see cref="InstantiateWithId"/> wrapper
+        /// </summary>
+        public static GameObject CreateGenericLoot(TechType techType, NitroxId nitroxId)
+        {
+            GameObject gameObject = SpawnFromPrefab(Utils.genericLootPrefab, nitroxId);
+            gameObject.GetComponent<Pickupable>().SetTechTypeOverride(techType, lootCube: true);
+            return gameObject;
+        }
+
+        /// <summary>
+        /// Override for <see cref="Utils.SpawnFromPrefab"/> using our own <see cref="InstantiateWithId"/> wrapper
+        /// </summary>
+        public static GameObject SpawnFromPrefab(GameObject prefab, NitroxId nitroxId, Transform parent = null)
+        {
+            GameObject gameObject = InstantiateWithId(prefab, nitroxId);
+            gameObject.transform.parent = parent;
+            return gameObject;
         }
     }
 }

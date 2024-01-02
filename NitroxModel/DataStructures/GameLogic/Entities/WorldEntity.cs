@@ -1,10 +1,10 @@
 using System;
-using ProtoBufNet;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.Unity;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
 {
@@ -14,14 +14,16 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
      */
     [Serializable]
     [DataContract]
-    [ProtoInclude(51, typeof(PlaceholderGroupWorldEntity))]
-    [ProtoInclude(52, typeof(EscapePodWorldEntity))]
-    [ProtoInclude(53, typeof(PlayerWorldEntity))]
-    [ProtoInclude(54, typeof(VehicleWorldEntity))]
-    [ProtoInclude(55, typeof(CellRootEntity))]
+    [ProtoInclude(50, typeof(PlaceholderGroupWorldEntity))]
+    [ProtoInclude(51, typeof(CellRootEntity))]
+    [ProtoInclude(52, typeof(GlobalRootEntity))]
+    [ProtoInclude(53, typeof(OxygenPipeEntity))]
+    [ProtoInclude(54, typeof(PlacedWorldEntity))]
+    [ProtoInclude(55, typeof(SerializedWorldEntity))]
+    [ProtoInclude(56, typeof(PrefabPlaceholderEntity))]
     public class WorldEntity : Entity
     {
-        public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
+        public virtual AbsoluteEntityCell AbsoluteEntityCell => new(Transform.Position, Level);
 
         [DataMember(Order = 1)]
         public NitroxTransform Transform { get; set; }
@@ -44,12 +46,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         /// </summary>
         [DataMember(Order = 4)]
         public bool SpawnedByServer;
-
-        [DataMember(Order = 5)]
-        public NitroxId WaterParkId { get; set; }
-
-        [DataMember(Order = 6)]
-        public bool ExistsInGlobalRoot { get; set; }
         
         [IgnoreConstructor]
         protected WorldEntity()
@@ -57,7 +53,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public WorldEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, Entity parentEntity, bool existsInGlobalRoot, NitroxId waterParkId)
+        public WorldEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, Entity parentEntity)
         {
             Transform = new NitroxTransform(localPosition, localRotation, scale);
             TechType = techType;
@@ -65,8 +61,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
-            WaterParkId = waterParkId;
-            ExistsInGlobalRoot = existsInGlobalRoot;
 
             if (parentEntity != null)
             {
@@ -80,7 +74,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
         {
             Id = id;
             TechType = techType;
@@ -91,13 +85,11 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
-            WaterParkId = waterParkId;
-            ExistsInGlobalRoot = existsInGlobalRoot;
         }
 
         public override string ToString()
         {
-            return $"[WorldEntity Transform: {Transform} Level: {Level} ClassId: {ClassId} SpawnedByServer: {SpawnedByServer} WaterParkId: {WaterParkId} ExistsInGlobalRoot: {ExistsInGlobalRoot} {base.ToString()}]";
+            return $"[{GetType().Name} Transform: {Transform} Level: {Level} ClassId: {ClassId} SpawnedByServer: {SpawnedByServer} {base.ToString()}]";
         }
     }
 }

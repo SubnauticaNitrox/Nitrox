@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -39,4 +40,63 @@ public static class Extensions
     }
 
     public static int GetIndex<T>(this T[] list, T itemToFind) => Array.IndexOf(list, itemToFind);
+
+    public static string AsByteUnitText(this uint byteSize)
+    {
+        // Uint can't go past 4GiB, so we don't need to worry about overflow.
+        string[] suf = { "B", "KiB", "MiB", "GiB" };
+        if (byteSize == 0)
+        {
+            return $"0{suf[0]}";
+        }
+        int place = Convert.ToInt32(Math.Floor(Math.Log(byteSize, 1024)));
+        double num = Math.Round(byteSize / Math.Pow(1024, place), 1);
+        return num + suf[place];
+    }
+
+    public static string GetFirstNonAggregateMessage(this Exception exception) => exception switch
+    {
+        AggregateException ex => ex.InnerExceptions.FirstOrDefault(e => e is not AggregateException)?.Message ?? ex.Message,
+        _ => exception.Message
+    };
+
+
+    /// <returns>
+    /// <inheritdoc cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource})"/><br />
+    /// <see langword="true" /> if both IEnumerables are null.
+    /// </returns>
+    /// <remarks><see cref="ArgumentNullException"/> can't be thrown because of <paramref name="first"/> or <paramref name="second"/> being null.</remarks>
+    /// <inheritdoc cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource})"/>
+    public static bool SequenceEqualOrBothNull<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second)
+    {
+        if (first != null && second != null)
+        {
+            return first.SequenceEqual(second);
+        }
+        return first == second;
+    }
+
+    public static void RemoveWhere<TKey, TValue, TParameter>(this IDictionary<TKey, TValue> dictionary, TParameter extraParameter, Func<TValue, TParameter, bool> predicate)
+    {
+        int toRemoveIndex = 0;
+        TKey[] toRemove = ArrayPool<TKey>.Shared.Rent(dictionary.Count);
+        try
+        {
+            foreach (KeyValuePair<TKey, TValue> item in dictionary)
+            {
+                if (predicate.Invoke(item.Value, extraParameter))
+                {
+                    toRemove[toRemoveIndex++] = item.Key;
+                }
+            }
+            for (int i = 0; i < toRemoveIndex; i++)
+            {
+                dictionary.Remove(toRemove[i]);
+            }
+        }
+        finally
+        {
+            ArrayPool<TKey>.Shared.Return(toRemove, true);
+        }
+    }
 }

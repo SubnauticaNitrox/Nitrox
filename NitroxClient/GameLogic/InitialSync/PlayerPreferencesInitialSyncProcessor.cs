@@ -3,45 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
 public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
 {
-    private readonly IPacketSender packetSender;
-
-    public PlayerPreferencesInitialSyncProcessor(IPacketSender packetSender)
+    public PlayerPreferencesInitialSyncProcessor()
     {
-        this.packetSender = packetSender;
-
         // list of processors which may cause the spawn of Signal pings
-        DependentProcessors.AddRange(new[]
-        {
-            typeof(PlayerInitialSyncProcessor),
-            typeof(GlobalRootInitialSyncProcessor),
-            typeof(StoryGoalInitialSyncProcessor),
-            typeof(PdaInitialSyncProcessor),
-            typeof(RemotePlayerInitialSyncProcessor),
-            typeof(BuildingInitialSyncProcessor),
-        });
+        AddDependency<PlayerInitialSyncProcessor>();
+        AddDependency<GlobalRootInitialSyncProcessor>();
+        AddDependency<StoryGoalInitialSyncProcessor>();
+        AddDependency<PdaInitialSyncProcessor>();
+        AddDependency<RemotePlayerInitialSyncProcessor>();
     }
 
-    public override List<IEnumerator> GetSteps(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+    public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } = new()
     {
-        return new List<IEnumerator> {
-            UpdatePins(packet),
-            UpdatePingInstancePreferences(packet)
-        };
-    }
+        UpdatePins,
+        UpdatePingInstancePreferences
+    };
 
-    private IEnumerator UpdatePins(InitialPlayerSync packet)
+    private static IEnumerator UpdatePins(InitialPlayerSync packet)
     {
         using (PacketSuppressor<RecipePinned>.Suppress())
         {
@@ -50,7 +38,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
-    private IEnumerator UpdatePingInstancePreferences(InitialPlayerSync packet)
+    private static IEnumerator UpdatePingInstancePreferences(InitialPlayerSync packet)
     {
         Dictionary<string, PingInstancePreference> pingPreferences = packet.Preferences.PingPreferences;
         void UpdateInstance(PingInstance instance)
@@ -60,14 +48,14 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         }
 
         PingManager.onAdd += UpdateInstance;
-        GameObject.FindObjectsOfType<PingInstance>().ForEach(UpdateInstance);
+        UnityEngine.Object.FindObjectsOfType<PingInstance>().ForEach(UpdateInstance);
         yield break;
     }
 
     /// <summary>
     /// Updates the given pingInstance if it has a specified preference
     /// </summary>
-    private void ModifyPingInstanceIfPossible(PingInstance pingInstance, Dictionary<string, PingInstancePreference> preferences, Action callback)
+    private static void ModifyPingInstanceIfPossible(PingInstance pingInstance, Dictionary<string, PingInstancePreference> preferences, Action callback)
     {
         if (!TryGetKeyForPingInstance(pingInstance, out string pingKey, out bool isRemotePlayerPing, callback) ||
             !preferences.TryGetValue(pingKey, out PingInstancePreference preference))
@@ -87,7 +75,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     }
 
     // Right after initial sync modifications, uGUI_PingEntry elements don't show their updated state
-    private void RefreshPingEntryInPDA(PingInstance pingInstance)
+    private static void RefreshPingEntryInPDA(PingInstance pingInstance)
     {
         if (!uGUI_PDA.main || !uGUI_PDA.main.tabs.TryGetValue(PDATab.Ping, out uGUI_PDATab pdaTab))
         {
@@ -149,6 +137,6 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     private static IEnumerator DelayPingKeyDetection(Action delayedAction)
     {
         yield return Yielders.WaitForHalfSecond;
-        delayedAction();
+        delayedAction?.Invoke();
     }
 }

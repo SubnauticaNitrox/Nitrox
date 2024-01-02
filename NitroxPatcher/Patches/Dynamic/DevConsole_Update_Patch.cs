@@ -6,41 +6,29 @@ using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+/// <summary>
+///     Keeps DevConsole disabled when enter is pressed.
+/// </summary>
+public sealed partial class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
 {
-    internal class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
+    private static readonly InstructionsPattern devConsoleSetStateTruePattern = new()
     {
-        /// <summary>
-        ///     Pattern to keep DevConsole disabled when enter is pressed.
-        /// </summary>
-        public static readonly InstructionsPattern DevConsoleSetStateTruePattern = new()
-        {
-            Reflect.Method(() => Input.GetKeyDown(default(string))),
-            Brfalse,
-            Ldarg_0,
-            Ldfld,
-            Brtrue,
-            Ldarg_0,
-            { Ldc_I4_1, "TrueArgument" },
-            Reflect.Method((DevConsole t) => t.SetState(default(bool)))
-        };
+        Reflect.Method(() => Input.GetKeyDown(default(KeyCode))),
+        Brfalse,
+        Ldarg_0,
+        Ldfld,
+        Brtrue,
+        Ldarg_0,
+        { Ldc_I4_1, "ConsoleEnableFlag" },
+        Reflect.Method((DevConsole t) => t.SetState(default(bool)))
+    };
 
-        public static readonly MethodInfo TargetMethod = Reflect.Method((DevConsole t) => t.Update());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((DevConsole t) => t.Update());
 
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) => instructions
-            .Transform(DevConsoleSetStateTruePattern, (label, instruction) =>
-            {
-                switch (label)
-                {
-                    case "TrueArgument":
-                        instruction.opcode = Ldc_I4_0;
-                        break;
-                }
-            });
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TargetMethod);
-        }
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    {
+        return instructions.ChangeAtMarker(devConsoleSetStateTruePattern, "ConsoleEnableFlag", i => i.opcode = Ldc_I4_0);
     }
 }

@@ -1,43 +1,40 @@
-﻿using System.Collections.Generic;
-using NitroxClient.Debuggers;
+﻿using System;
+using System.Collections.Generic;
 using NitroxModel.Packets;
 
-namespace NitroxClient.Communication
+namespace NitroxClient.Communication;
+
+public class PacketReceiver
 {
-    // TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
-    public class PacketReceiver
+    private readonly Queue<Packet> receivedPackets = new(16);
+    private readonly object receivedPacketsLock = new();
+
+    public void Add(Packet packet)
     {
-        private readonly INetworkDebugger networkDebugger;
-        private readonly Queue<Packet> receivedPackets;
-
-        public PacketReceiver(INetworkDebugger networkDebugger = null)
+        lock (receivedPacketsLock)
         {
-            receivedPackets = new Queue<Packet>();
-            this.networkDebugger = networkDebugger;
+            receivedPackets.Enqueue(packet);
         }
+    }
 
-        public void PacketReceived(Packet packet)
+    public Packet GetNextPacket()
+    {
+        lock (receivedPacketsLock)
         {
-            lock (receivedPackets)
-            {
-                networkDebugger?.PacketReceived(packet);
-                receivedPackets.Enqueue(packet);
-            }
+            return receivedPackets.Count == 0 ? null : receivedPackets.Dequeue();
         }
+    }
 
-        public Queue<Packet> GetReceivedPackets()
+    /// <summary>
+    ///     Applies an operation on each packet waiting to be processed and removes it from the queue.
+    /// </summary>
+    public void ConsumePackets<TExtra>(Action<Packet, TExtra> consumer, TExtra extraParameter)
+    {
+        Packet packet = GetNextPacket();
+        while (packet != null)
         {
-            Queue<Packet> packets = new Queue<Packet>();
-
-            lock (receivedPackets)
-            {
-                while (receivedPackets.Count > 0)
-                {
-                    packets.Enqueue(receivedPackets.Dequeue());
-                }
-            }
-
-            return packets;
+            consumer(packet, extraParameter);
+            packet = GetNextPacket();
         }
     }
 }

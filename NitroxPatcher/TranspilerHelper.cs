@@ -33,7 +33,7 @@ namespace NitroxPatcher
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> IsMultiplayer(Label jmpLabel, ILGenerator generator)
         {
-            yield return new CodeInstruction(OpCodes.Callvirt,  Reflect.Property(() => Multiplayer.Active).GetMethod);
+            yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property(() => Multiplayer.Active).GetMethod);
             yield return new CodeInstruction(OpCodes.Brfalse, jmpLabel); // If false jump to the end of the code block
         }
 
@@ -116,6 +116,7 @@ namespace NitroxPatcher
             {
                 return new CodeInstruction(OpCodes.Nop);
             }
+
             return Ldloc(method.GetLocalVariableIndex<T>(i));
         }
     }

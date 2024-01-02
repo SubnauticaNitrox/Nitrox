@@ -22,9 +22,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
-        NitroxId localPlayer = NitroxEntity.GetId(Player.main.gameObject);
-
-        if (localPlayer == entity.Id)
+        if (Player.main.TryGetNitroxId(out NitroxId localPlayerId) && localPlayerId == entity.Id)
         {
             // No special setup for the local player.  Simply return saying it is spawned.
             result.Set(Player.main.gameObject);
@@ -40,7 +38,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
 
             remotePlayer.Value.InitializeGameObject(remotePlayerBody);
-            
+
             if (!IsSwimming(entity.Transform.Position.ToUnity(), parent))
             {
                 remotePlayer.Value.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
@@ -85,7 +83,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
         else
         {
             Log.Error($"Found neither SubRoot component nor EscapePod on {parent.name} for {remotePlayer.PlayerName}.");
-        }        
+        }
     }
 
     private bool IsSwimming(Vector3 playerPosition, Optional<GameObject> parent)
@@ -95,7 +93,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             parent.Value.TryGetComponent<SubRoot>(out SubRoot subroot);
 
             // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
-            // or in a waterpark                            
+            // or in a waterpark
             if (subroot)
             {
                 if (subroot.IsUnderwater(playerPosition))

@@ -1,5 +1,4 @@
 using System;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
@@ -15,18 +14,44 @@ namespace NitroxClient.Communication.Packets.Processors;
 public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
 {
     private readonly Entities entities;
-    private readonly IPacketSender packetSender;
 
-    public EntityReparentedProcessor(Entities entities, IPacketSender packetSender)
+    public EntityReparentedProcessor(Entities entities)
     {
         this.entities = entities;
-        this.packetSender = packetSender;
     }
 
     public override void Process(EntityReparented packet)
     {
-        GameObject entity = NitroxEntity.RequireObjectFrom(packet.Id);
+        Optional<GameObject> entity = NitroxEntity.GetObjectFrom(packet.Id);
+
+        if (!entity.HasValue)
+        {
+            // In some cases, the affected entity may be pending spawning or out of range.
+            // we only require the parent (in this case, the visible entity is undergoing
+            // some change that must be shown, and if not is an error).
+            return;
+        }
+
         GameObject newParent = NitroxEntity.RequireObjectFrom(packet.NewParentId);
+
+        if (entity.Value.TryGetComponent(out Pickupable pickupable))
+        {
+            // If the entity is being parented to a WaterPark
+            if (newParent.TryGetComponent(out WaterPark waterPark))
+            {
+                pickupable.SetVisible(false);
+                pickupable.Activate(false);
+                waterPark.AddItem(pickupable);
+                // The reparenting is automatic here so we don't need to continue
+                return;
+            }
+            // If the entity was parented to a WaterPark but is picked up by someone
+            else if (pickupable.TryGetComponent(out WaterParkItem waterParkItem))
+            {
+                pickupable.Deactivate();
+                waterParkItem.SetWaterPark(null);
+            }
+        }
 
         using (PacketSuppressor<EntityReparented>.Suppress())
         {
@@ -35,11 +60,11 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             // Move this to a resolver if there ends up being a lot of custom reparenting logic
             if (entityType == typeof(InventoryItemEntity))
             {
-                InventoryItemReparented(entity, newParent);
+                InventoryItemReparented(entity.Value, newParent);
             }
             else
             {
-                PerformDefaultReparenting(entity, newParent);
+                PerformDefaultReparenting(entity.Value, newParent);
             }
         }
     }

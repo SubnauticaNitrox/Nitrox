@@ -52,7 +52,7 @@ namespace NitroxTest.Patcher
         public static void TestPattern(MethodInfo targetMethod, InstructionsPattern pattern, out IEnumerable<CodeInstruction> originalIl, out IEnumerable<CodeInstruction> transformedIl)
         {
             bool shouldHappen = false;
-            originalIl = GetInstructionsFromMethod(targetMethod);
+            originalIl = PatchProcessor.GetCurrentInstructions(targetMethod);
             transformedIl = originalIl
                             .Transform(pattern, (_, _) =>
                             {
@@ -61,6 +61,17 @@ namespace NitroxTest.Patcher
                             .ToArray(); // Required, otherwise nothing happens.
 
             shouldHappen.Should().BeTrue();
+        }
+
+        /// <summary>
+        ///     Clones the instructions so that the returned instructions are not the same reference.
+        /// </summary>
+        /// <remarks>
+        ///     Useful for testing code differences before and after a Harmony transpiler.
+        /// </remarks>
+        public static List<CodeInstruction> Clone(this IEnumerable<CodeInstruction> instructions)
+        {
+            return new List<CodeInstruction>(instructions.Select(il => new CodeInstruction(il)));
         }
 
         private static ReadOnlyCollection<CodeInstruction> GetInstructionsFromIL(IEnumerable<KeyValuePair<OpCode, object>> il)

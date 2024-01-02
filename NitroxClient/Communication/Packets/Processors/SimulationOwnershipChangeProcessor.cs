@@ -4,6 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
@@ -46,6 +47,12 @@ public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<Simulati
 
                 simulationOwnershipManager.StopSimulatingEntity(simulatedEntity.Id);
                 EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Id);
+            }
+
+            // Avoid keeping artifacts of the entity's previous ChangesPosition state
+            if (!simulatedEntity.ChangesPosition && NitroxEntity.TryGetComponentFrom(simulatedEntity.Id, out RemotelyControlled remotelyControlled))
+            {
+                Object.Destroy(remotelyControlled);
             }
         }
     }

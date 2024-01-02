@@ -1,5 +1,4 @@
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -7,7 +6,7 @@ using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => GoalManager.main.OnCompleteGoal(default, default));
 
@@ -31,10 +30,5 @@ public class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
         {
             Resolve<IPacketSender>().Send(new GoalCompleted(goalIdentifier, DayNightCycle.main.timePassedAsFloat));
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
     }
 }

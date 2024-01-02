@@ -25,8 +25,8 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
                 result.Set(Optional.Empty);
                 yield break;
             }
-            ReefbackLife life = reefback.Value.GetComponent<ReefbackLife>();
-            if (life == null)
+
+            if (!reefback.Value.TryGetComponent(out ReefbackLife life))
             {
                 result.Set(Optional.Empty);
                 yield break;

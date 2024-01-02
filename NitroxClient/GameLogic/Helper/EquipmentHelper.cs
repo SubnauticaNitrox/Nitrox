@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace NitroxClient.GameLogic.Helper
         private static readonly List<Func<GameObject, Equipment>> equipmentFinders = new()
         {
             o => o.GetComponent<Charger>().AliveOrNull()?.equipment,
-            o => o.GetComponent<BaseNuclearReactor>().AliveOrNull()?._equipment,
+            o => o.GetComponent<BaseNuclearReactor>().AliveOrNull()?.equipment,
             o => o.GetComponent<CyclopsDecoyLoadingTube>().AliveOrNull()?.decoySlots,
             o => o.GetComponent<Exosuit>().AliveOrNull()?.modules,
             o => o.GetComponent<SeaMoth>().AliveOrNull()?.modules,

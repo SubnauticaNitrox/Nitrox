@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Entities
@@ -12,22 +13,35 @@ namespace NitroxServer.GameLogic.Entities
     {
         private readonly ConcurrentDictionary<NitroxId, Entity> entitiesById = new();
 
-        public Optional<Entity> GetEntityById(NitroxId id)
+        public Optional<T> GetEntityById<T>(NitroxId id) where T : Entity
         {
-            entitiesById.TryGetValue(id, out Entity entity);
+            TryGetEntityById(id, out T entity);
 
             return Optional.OfNullable(entity);
         }
 
-        public Optional<T> GetEntityById<T>(NitroxId id) where T : Entity
+        public Optional<Entity> GetEntityById(NitroxId id)
         {
-            entitiesById.TryGetValue(id, out Entity entity);
-            
-            return Optional.OfNullable((T)entity);
+            return GetEntityById<Entity>(id);
         }
 
-        public List<Entity> GetAllEntities()
+        public bool TryGetEntityById<T>(NitroxId id, out T entity) where T : Entity
         {
+            if (entitiesById.TryGetValue(id, out Entity _entity) && _entity is T typedEntity)
+            {
+                entity = typedEntity;
+                return true;
+            }
+            entity = null;
+            return false;
+        }
+
+        public List<Entity> GetAllEntities(bool exceptGlobalRoot = false)
+        {
+            if (exceptGlobalRoot)
+            {
+                return new(entitiesById.Values.Where(entity => entity is not GlobalRootEntity));
+            }
             return new List<Entity>(entitiesById.Values);            
         }
 
@@ -54,6 +68,9 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
+        /// <summary>
+        /// Registers or updates an entity and its children.
+        /// </summary>
         public void AddOrUpdate(Entity entity)
         {
             if (!entitiesById.TryAdd(entity.Id, entity))
@@ -69,12 +86,12 @@ namespace NitroxServer.GameLogic.Entities
             AddEntitiesIgnoringDuplicate(entity.ChildEntities);
         }
 
-        public void AddEntities(List<Entity> entities)
+        public void AddEntities(IEnumerable<Entity> entities)
         {
             foreach(Entity entity in entities)
             {
                 AddEntity(entity);
-            }            
+            }
         }
 
         /// <summary>
@@ -82,11 +99,21 @@ namespace NitroxServer.GameLogic.Entities
         /// example a dropped InventoryEntity turns into a WorldEntity but keeps its 
         /// battery inside (already known). 
         /// </summary>
-        public void AddEntitiesIgnoringDuplicate(List<Entity> entities)
+        /// <remarks>
+        /// Updates entities if they already exist
+        /// </remarks>
+        public void AddEntitiesIgnoringDuplicate(IEnumerable<Entity> entities)
         {
             foreach (Entity entity in entities)
             {
-                entitiesById.TryAdd(entity.Id, entity);
+                if (entitiesById.TryGetValue(entity.Id, out Entity currentEntity))
+                {
+                    entitiesById.TryUpdate(entity.Id, entity, currentEntity);
+                }
+                else
+                {
+                    entitiesById.TryAdd(entity.Id, entity);
+                }
                 AddEntitiesIgnoringDuplicate(entity.ChildEntities);
             }
         }
@@ -121,36 +148,76 @@ namespace NitroxServer.GameLogic.Entities
 
         public void RemoveFromParent(Entity entity)
         {
-            if (entity.ParentId != null)
+            if (entity.ParentId != null && TryGetEntityById(entity.ParentId, out Entity parentEntity))
             {
-                Optional<Entity> parent = GetEntityById(entity.ParentId);
-
-                if (parent.HasValue)
-                {
-                    parent.Value.ChildEntities.Remove(entity);
-                }
-
+                parentEntity.ChildEntities.RemoveAll(childEntity => childEntity.Id.Equals(entity.Id));
                 entity.ParentId = null;
             }
         }
 
         public void ReparentEntity(NitroxId entityId, NitroxId newParentId)
         {
-            Optional<Entity> opEntity = GetEntityById(entityId);
-
-            if (!opEntity.HasValue)
+            if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
             {
                 Log.Error($"Could not find entity to reparent: {entityId}");
                 return;
             }
+            ReparentEntity(entity, newParentId);
+        }
 
-            Entity entity = opEntity.Value;
+        public void ReparentEntity(NitroxId entityId, Entity newParent)
+        {
+            if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
+            {
+                Log.Error($"Could not find entity to reparent: {entityId}");
+                return;
+            }
+            ReparentEntity(entity, newParent);
+        }
 
+        public void ReparentEntity(Entity entity, NitroxId newParentId)
+        {
+            Entity parentEntity = newParentId != null ? GetEntityById(newParentId).Value : null;
+            ReparentEntity(entity, parentEntity);
+        }
+
+        public void ReparentEntity(Entity entity, Entity newParent)
+        {
             RemoveFromParent(entity);
+            if (newParent == null)
+            {
+                return;
+            }
+            entity.ParentId = newParent.Id;
+            newParent.ChildEntities.Add(entity);
+        }
 
-            entity.ParentId = newParentId;
+        public void TransferChildren(NitroxId parentId, NitroxId newParentId, Func<Entity, bool> filter = null)
+        {
+            if (!TryGetEntityById(parentId, out Entity parentEntity))
+            {
+                Log.Error($"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find origin parent entity for {parentId}");
+                return;
+            }
+            if (!TryGetEntityById(newParentId, out Entity newParentEntity))
+            {
+                Log.Error($"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find new parent entity for {newParentId}");
+                return;
+            }
+            TransferChildren(parentEntity, newParentEntity, filter);
+        }
 
-            AddToParent(entity);
+        public void TransferChildren(Entity parent, Entity newParent, Func<Entity, bool> filter = null)
+        {
+            IEnumerable<Entity> childrenToMove = filter != null ?
+                parent.ChildEntities.Where(filter) : parent.ChildEntities;
+
+            foreach (Entity childEntity in childrenToMove)
+            {
+                childEntity.ParentId = newParent.Id;
+                newParent.ChildEntities.Add(childEntity);
+            }
+            parent.ChildEntities.RemoveAll(entity => filter(entity));
         }
     }
 }

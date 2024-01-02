@@ -19,7 +19,7 @@ namespace NitroxServer.Communication
         protected readonly int portNumber;
         protected readonly int maxConnections;
         protected readonly bool useUpnpPortForwarding;
-        protected readonly bool useLANDiscovery;
+        protected readonly bool useLANBroadcast;
 
         protected readonly PacketHandler packetHandler;
         protected readonly EntitySimulation entitySimulation;
@@ -35,7 +35,7 @@ namespace NitroxServer.Communication
             portNumber = serverConfig.ServerPort;
             maxConnections = serverConfig.MaxConnections;
             useUpnpPortForwarding = serverConfig.AutoPortForward;
-            useLANDiscovery = serverConfig.LANDiscoveryEnabled;
+            useLANBroadcast = serverConfig.LANDiscoveryEnabled;
         }
 
         public abstract bool Start();

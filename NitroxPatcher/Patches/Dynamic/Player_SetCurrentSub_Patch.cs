@@ -1,37 +1,27 @@
-﻿using System.Reflection;
-using HarmonyLib;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public sealed partial class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
 {
-    public class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default, default));
+
+    public static void Prefix(Player __instance, SubRoot sub)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default(SubRoot), default(bool)));
-
-        public static void Prefix(Player __instance, SubRoot sub)
+        // We really want to avoid unnecessary packets giving false information
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
         {
-            NitroxId subId = null;
-
-            if (sub != null)
-            {
-                subId = NitroxEntity.GetId(sub.gameObject);
-            }
-            // When in the water of the moonpool, it can happen that you hammer change requests
-            // while the sub is not changed. This will prevent that
-            if (__instance.GetCurrentSub() != sub)
-            {
-                NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(Optional.OfNullable(subId));
-            }
+            return;
         }
 
-        public override void Patch(Harmony harmony)
+        // When in the water of the moonpool, it can happen that you hammer change requests
+        // while the sub is not changed. This will prevent that
+        if (__instance.GetCurrentSub() != sub)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            Resolve<LocalPlayer>().BroadcastSubrootChange(sub.GetId());
         }
     }
 }

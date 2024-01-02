@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -12,7 +10,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ToggleLights t) => t.SetLightsActive(default(bool)));
 
@@ -59,7 +57,10 @@ public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
                 DebugUtils.PrintHierarchy(__instance.gameObject);
             }
 
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            if (!gameObject.TryGetIdOrWarn(out NitroxId id))
+            {
+                return;
+            }
 
             if (type == typeof(SeaMoth))
             {
@@ -74,10 +75,5 @@ public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
                 Resolve<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(id, __instance.lightsActive));
             }
         }
-    }
-
-    public override void Patch(Harmony harmony)
-    {
-        PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
     }
 }

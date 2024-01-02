@@ -49,7 +49,7 @@ public class InstructionsPattern : IEnumerable<InstructionPattern>
         for (int i = 0; i < il.Length; i++)
         {
             // If pattern can't fit in remaining instructions, abort.
-            if (i + pattern.Count >= il.Length)
+            if (i + pattern.Count > il.Length)
             {
                 break;
             }
@@ -83,7 +83,7 @@ public class InstructionsPattern : IEnumerable<InstructionPattern>
                     IEnumerable<CodeInstruction> insertingInstructions = transform(pattern[j].Label, instrAtLabel);
                     if (insertingInstructions != null)
                     {
-                        insertOperations.Add(i, insertingInstructions);
+                        insertOperations.Add(i + j, insertingInstructions);
                     }
                 }
             }
@@ -135,6 +135,3 @@ public class InstructionsPattern : IEnumerable<InstructionPattern>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
-
-
-

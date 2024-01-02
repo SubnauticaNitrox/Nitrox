@@ -1,7 +1,7 @@
+using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Persistent;
 
@@ -22,13 +22,13 @@ internal class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
 
     public static bool Prefix(SentrySdk __instance)
     {
-        Object.Destroy(__instance);
+        UnityEngine.Object.Destroy(__instance);
         return false;
     }
 
     public override void Patch(Harmony harmony)
     {
-        PatchPrefix(harmony, TARGET_METHOD_SDK);
-        PatchPrefix(harmony, TARGET_METHOD_MANAGER);
+        PatchPrefix(harmony, TARGET_METHOD_SDK, ((Func<SentrySdk, bool>)Prefix).Method);
+        PatchPrefix(harmony, TARGET_METHOD_MANAGER, ((Func<SentrySdk, bool>)Prefix).Method);
     }
 }
