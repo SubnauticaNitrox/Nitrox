@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel_Subnautica.DataStructures;
@@ -6,7 +7,7 @@ using static NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetada
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class PlayerMetadataExtractor : GenericEntityMetadataExtractor<Player, PlayerMetadata>
+public class PlayerMetadataExtractor : EntityMetadataExtractor<Player, PlayerMetadata>
 {
     public override PlayerMetadata Extract(Player player)
     {

@@ -17,6 +17,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata.Bases;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.Serialization;
 
@@ -248,6 +249,13 @@ public class WorldPersistenceTest
             case SeamothMetadata metadata when entityAfter.Metadata is SeamothMetadata metadataAfter:
                 Assert.AreEqual(metadata.LightsOn, metadataAfter.LightsOn);
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                Assert.AreEqual(metadata.Name, metadataAfter.Name);
+                Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
+                break;
+            case ExosuitMetadata metadata when entityAfter.Metadata is ExosuitMetadata metadataAfter:
+                Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                Assert.AreEqual(metadata.Name, metadataAfter.Name);
+                Assert.IsTrue(metadata.Colors.SequenceEqual(metadataAfter.Colors));
                 break;
             case SubNameInputMetadata metadata when entityAfter.Metadata is SubNameInputMetadata metadataAfter:
                 Assert.AreEqual(metadata.Name, metadataAfter.Name);
@@ -305,6 +313,14 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.TimeNextBreed, metadataAfter.TimeNextBreed);
                 Assert.AreEqual(metadata.BornInside, metadataAfter.BornInside);
                 break;
+            case FlareMetadata metadata when entityAfter.Metadata is FlareMetadata metadataAfter:
+                Assert.AreEqual(metadata.EnergyLeft, metadataAfter.EnergyLeft);
+                Assert.AreEqual(metadata.HasBeenThrown, metadataAfter.HasBeenThrown);
+                Assert.AreEqual(metadata.FlareActivateTime, metadataAfter.FlareActivateTime);
+                break;
+            case BeaconMetadata metadata when entityAfter.Metadata is BeaconMetadata metadataAfter:
+                Assert.AreEqual(metadata.Label, metadataAfter.Label);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
@@ -328,9 +344,27 @@ public class WorldPersistenceTest
                 {
                     switch (worldEntity)
                     {
-                        case PlaceholderGroupWorldEntity _ when worldEntityAfter is PlaceholderGroupWorldEntity _:
+                        case PlaceholderGroupWorldEntity placeholderGroupWorldEntity when worldEntityAfter is PlaceholderGroupWorldEntity placeholderGroupWorldEntityAfter:
+                            Assert.AreEqual(placeholderGroupWorldEntity.ComponentIndex, placeholderGroupWorldEntityAfter.ComponentIndex);
                             break;
                         case CellRootEntity _ when worldEntityAfter is CellRootEntity _:
+                            break;
+                        case PlacedWorldEntity _ when worldEntityAfter is PlacedWorldEntity _:
+                            break;
+                        case OxygenPipeEntity oxygenPipeEntity when worldEntityAfter is OxygenPipeEntity oxygenPipeEntityAfter:
+                            Assert.AreEqual(oxygenPipeEntity.ParentPipeId, oxygenPipeEntityAfter.ParentPipeId);
+                            Assert.AreEqual(oxygenPipeEntity.RootPipeId, oxygenPipeEntityAfter.RootPipeId);
+                            Assert.AreEqual(oxygenPipeEntity.ParentPosition, oxygenPipeEntityAfter.ParentPosition);
+                            break;
+                        case PrefabPlaceholderEntity prefabPlaceholderEntity when entityAfter is PrefabPlaceholderEntity prefabPlaceholderEntityAfter:
+                            Assert.AreEqual(prefabPlaceholderEntity.ComponentIndex, prefabPlaceholderEntityAfter.ComponentIndex);
+                            break;
+                        case SerializedWorldEntity serializedWorldEntity when entityAfter is SerializedWorldEntity serializedWorldEntityAfter:
+                            Assert.AreEqual(serializedWorldEntity.AbsoluteEntityCell, serializedWorldEntityAfter.AbsoluteEntityCell);
+                            AssertHelper.IsListEqual(serializedWorldEntity.Components.OrderBy(c => c.GetHashCode()), serializedWorldEntityAfter.Components.OrderBy(c => c.GetHashCode()), (SerializedComponent c1, SerializedComponent c2) => c1.Equals(c2));
+                            Assert.AreEqual(serializedWorldEntity.Layer, serializedWorldEntityAfter.Layer);
+                            Assert.AreEqual(serializedWorldEntity.BatchId, serializedWorldEntityAfter.BatchId);
+                            Assert.AreEqual(serializedWorldEntity.CellId, serializedWorldEntityAfter.CellId);
                             break;
                         case GlobalRootEntity globalRootEntity when worldEntityAfter is GlobalRootEntity globalRootEntityAfter:
                             if (globalRootEntity.GetType() != typeof(GlobalRootEntity))
@@ -396,9 +430,6 @@ public class WorldPersistenceTest
             case PrefabChildEntity prefabChildEntity when entityAfter is PrefabChildEntity prefabChildEntityAfter:
                 Assert.AreEqual(prefabChildEntity.ComponentIndex, prefabChildEntityAfter.ComponentIndex);
                 Assert.AreEqual(prefabChildEntity.ClassId, prefabChildEntityAfter.ClassId);
-                break;
-            case PrefabPlaceholderEntity prefabPlaceholderEntity when entityAfter is PrefabPlaceholderEntity prefabPlaceholderEntityAfter:
-                Assert.AreEqual(prefabPlaceholderEntity.ClassId, prefabPlaceholderEntityAfter.ClassId);
                 break;
             case InventoryEntity inventoryEntity when entityAfter is InventoryEntity inventoryEntityAfter:
                 Assert.AreEqual(inventoryEntity.ComponentIndex, inventoryEntityAfter.ComponentIndex);

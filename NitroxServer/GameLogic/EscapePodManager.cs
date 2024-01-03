@@ -63,8 +63,7 @@ namespace NitroxServer.GameLogic
             escapePod.ChildEntities.Add(new PrefabChildEntity(new NitroxId(), "9f16d82b-11f4-4eeb-aedf-f2fa2bfca8e3", new NitroxTechType("Fabricator"), 0, null, escapePod.Id));
             escapePod.ChildEntities.Add(new InventoryEntity(0, new NitroxId(), new NitroxTechType("SmallStorage"), null, escapePod.Id, new List<Entity>()));
 
-            entityRegistry.AddEntity(escapePod);
-            entityRegistry.AddEntities(escapePod.ChildEntities);
+            entityRegistry.AddOrUpdate(escapePod);
 
             return escapePod;
         }

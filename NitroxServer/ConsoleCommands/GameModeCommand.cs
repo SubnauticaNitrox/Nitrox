@@ -32,6 +32,7 @@ internal class GameModeCommand : Command
         // The target player if not set, is the player who sent the command
         targetPlayer ??= args.Sender.Value;
 
+        targetPlayer.GameMode = gameMode;
         playerManager.SendPacketToAllPlayers(GameModeChanged.ForPlayer(targetPlayer.Id, gameMode));
         SendMessage(targetPlayer, $"GameMode changed to {gameMode}");
         if (args.IsConsole)

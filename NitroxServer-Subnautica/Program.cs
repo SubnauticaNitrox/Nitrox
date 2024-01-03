@@ -9,10 +9,11 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -27,9 +28,8 @@ public class Program
 {
     private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new();
     private static Lazy<string> gameInstallDir;
-
-    // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
-    private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
+    private static readonly CircularBuffer<string> inputHistory = new(1000);
+    private static int currentHistoryIndex;
 
     private static async Task Main(string[] args)
     {
@@ -49,18 +49,42 @@ public class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static async Task StartServer(string[] args)
     {
+        Action<string> ConsoleCommandHandler()
+        {
+            ConsoleCommandProcessor commandProcessor = null;
+            return submit =>
+            {
+                try
+                {
+                    commandProcessor ??= NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+                commandProcessor?.ProcessCommand(submit, Optional.Empty, Perms.CONSOLE);
+            };
+        }
+
         // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
         Log.Setup(true, isConsoleApp: true);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
         ConfigureCultureInfo();
+        if (!Console.IsInputRedirected)
+        {
+            Console.TreatControlCAsInput = true;
+        }
         Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
-        AppMutex.Hold(() => { Log.Info("Waiting on other Nitrox servers to initialize before starting.."); }, 120000);
         Server server;
-        Task listenForCommands;
+        Task handleConsoleInputTask;
+        CancellationTokenSource cancellationToken = new();
         try
         {
+            handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
+            AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
+
             Stopwatch watch = Stopwatch.StartNew();
 
             // Allow game path to be given as command argument
@@ -86,10 +110,7 @@ public class Program
             server = NitroxServiceLocator.LocateService<Server>();
 
             await WaitForAvailablePortAsync(server.Port);
-            CatchExitEvent();
-            listenForCommands = ListenForCommandsAsync(server);
 
-            CancellationTokenSource cancellationToken = new();
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
                 throw new Exception("Unable to start server.");
@@ -111,20 +132,183 @@ public class Program
             AppMutex.Release();
         }
 
-        await listenForCommands;
+        await handleConsoleInputTask;
+
+        Console.WriteLine($"{Environment.NewLine}Server is closing..");
     }
 
-    private static async Task ListenForCommandsAsync(Server server)
+    /// <summary>
+    ///     Handles per-key input of the console and passes input submit to <see cref="ConsoleCommandProcessor"/>.
+    /// </summary>
+    private static async Task HandleConsoleInputAsync(Action<string> submitHandler, CancellationTokenSource cancellation = default)
     {
-        while (!server.IsRunning)
+        if (Console.IsInputRedirected)
         {
-            await Task.Delay(100);
+            while (!cancellation?.IsCancellationRequested ?? false)
+            {
+                submitHandler(await Task.Run(Console.ReadLine));
+            }
+            return;
         }
 
-        ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
-        while (server.IsRunning)
+        StringBuilder inputLineBuilder = new();
+
+        void ClearInputLine()
         {
-            cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
+            currentHistoryIndex = 0;
+            inputLineBuilder.Clear();
+            Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r");
+        }
+
+        void RedrawInput(int start = 0, int end = 0)
+        {
+            int lastPosition = Console.CursorLeft;
+            // Expand range to end if end value is -1
+            if (start > -1 && end == -1)
+            {
+                end = Math.Max(inputLineBuilder.Length - start, 0);
+            }
+
+            if (start == 0 && end == 0)
+            {
+                // Redraw entire line
+                Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r{inputLineBuilder}");
+            }
+            else
+            {
+                // Redraw part of line
+                string changedInputSegment = inputLineBuilder.ToString(start, end);
+                Console.CursorVisible = false;
+                Console.Write($"{changedInputSegment}{new string(' ', inputLineBuilder.Length - changedInputSegment.Length - Console.CursorLeft + 1)}");
+                Console.CursorVisible = true;
+            }
+            Console.CursorLeft = lastPosition;
+        }
+
+        while (!cancellation?.IsCancellationRequested ?? false)
+        {
+            if (!Console.KeyAvailable)
+            {
+                await Task.Delay(10, cancellation.Token);
+                continue;
+            }
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            // Handle (ctrl) hotkeys
+            if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
+            {
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.C:
+                        if (inputLineBuilder.Length > 0)
+                        {
+                            ClearInputLine();
+                            continue;
+                        }
+
+                        cancellation.Cancel();
+                        return;
+                    case ConsoleKey.D:
+                        cancellation.Cancel();
+                        return;
+                    default:
+                        // Unhandled modifier key
+                        continue;
+                }
+            }
+
+            if (keyInfo.Modifiers == 0)
+            {
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.LeftArrow when Console.CursorLeft > 0:
+                        Console.CursorLeft--;
+                        continue;
+                    case ConsoleKey.RightArrow when Console.CursorLeft < inputLineBuilder.Length:
+                        Console.CursorLeft++;
+                        continue;
+                    case ConsoleKey.Backspace:
+                        if (inputLineBuilder.Length > Console.CursorLeft - 1 && Console.CursorLeft > 0)
+                        {
+                            inputLineBuilder.Remove(Console.CursorLeft - 1, 1);
+                            Console.CursorLeft--;
+                            Console.Write(' ');
+                            Console.CursorLeft--;
+                            RedrawInput();
+                        }
+                        continue;
+                    case ConsoleKey.Delete:
+                        if (inputLineBuilder.Length > 0 && Console.CursorLeft < inputLineBuilder.Length)
+                        {
+                            inputLineBuilder.Remove(Console.CursorLeft, 1);
+                            RedrawInput(Console.CursorLeft, inputLineBuilder.Length - Console.CursorLeft);
+                        }
+                        continue;
+                    case ConsoleKey.Home:
+                        Console.CursorLeft = 0;
+                        continue;
+                    case ConsoleKey.End:
+                        Console.CursorLeft = inputLineBuilder.Length;
+                        continue;
+                    case ConsoleKey.Escape:
+                        ClearInputLine();
+                        continue;
+                    case ConsoleKey.Tab:
+                        if (Console.CursorLeft + 4 < Console.WindowWidth)
+                        {
+                            inputLineBuilder.Insert(Console.CursorLeft, "    ");
+                            RedrawInput(Console.CursorLeft, -1);
+                            Console.CursorLeft += 4;
+                        }
+                        continue;
+                    case ConsoleKey.UpArrow when inputHistory.Count > 0 && currentHistoryIndex > -inputHistory.Count:
+                        inputLineBuilder.Clear();
+                        inputLineBuilder.Append(inputHistory[--currentHistoryIndex]);
+                        RedrawInput();
+                        Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                        continue;
+                    case ConsoleKey.DownArrow when inputHistory.Count > 0 && currentHistoryIndex < 0:
+                        if (currentHistoryIndex == -1)
+                        {
+                            ClearInputLine();
+                            continue;
+                        }
+                        inputLineBuilder.Clear();
+                        inputLineBuilder.Append(inputHistory[++currentHistoryIndex]);
+                        RedrawInput();
+                        Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                        continue;
+                }
+            }
+            // Handle input submit to submit handler
+            if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                string submit = inputLineBuilder.ToString();
+                if (inputHistory.Count == 0 || inputHistory[inputHistory.LastChangedIndex] != submit)
+                {
+                    inputHistory.Add(submit);
+                }
+                currentHistoryIndex = 0;
+                submitHandler?.Invoke(submit);
+                inputLineBuilder.Clear();
+                Console.WriteLine();
+                continue;
+            }
+
+            // If unhandled key, append as input.
+            if (keyInfo.KeyChar != 0)
+            {
+                Console.Write(keyInfo.KeyChar);
+                if (Console.CursorLeft - 1 < inputLineBuilder.Length)
+                {
+                    inputLineBuilder.Insert(Console.CursorLeft - 1, keyInfo.KeyChar);
+                    RedrawInput(Console.CursorLeft, -1);
+                }
+                else
+                {
+                    inputLineBuilder.Append(keyInfo.KeyChar);
+                }
+            }
         }
     }
 
@@ -253,50 +437,4 @@ public class Program
         CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
         CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
     }
-
-    private static void CatchExitEvent()
-    {
-        // Catch Exit Event
-        PlatformID platid = Environment.OSVersion.Platform;
-
-        // using *nix signal system to catch Ctrl+C
-        if (platid == PlatformID.Unix || platid == PlatformID.MacOSX || platid == PlatformID.Win32NT || (int)platid == 128) // mono = 128
-        {
-            Console.CancelKeyPress += OnCtrlCPressed;
-        }
-
-        // better catch using WinAPI. This will handled process kill
-        if (platid == PlatformID.Win32NT)
-        {
-            SetConsoleCtrlHandler(consoleCtrlCheckDelegate, true);
-        }
-    }
-
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
-
-    private static bool ConsoleEventCallback(int eventType)
-    {
-        if (eventType >= 2) // close, logoff, or shutdown
-        {
-            StopServer();
-        }
-
-        return false;
-    }
-
-    private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
-    {
-        e.Cancel = true; // Prevents process from terminating
-        Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r"); // Clears current line
-    }
-
-    private static void StopServer()
-    {
-        Log.Info("Exiting ...");
-        Server.Instance.Stop();
-    }
-
-    // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler
-    private delegate bool ConsoleEventDelegate(int eventType);
 }

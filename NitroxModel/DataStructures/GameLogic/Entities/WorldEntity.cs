@@ -17,9 +17,13 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     [ProtoInclude(50, typeof(PlaceholderGroupWorldEntity))]
     [ProtoInclude(51, typeof(CellRootEntity))]
     [ProtoInclude(52, typeof(GlobalRootEntity))]
+    [ProtoInclude(53, typeof(OxygenPipeEntity))]
+    [ProtoInclude(54, typeof(PlacedWorldEntity))]
+    [ProtoInclude(55, typeof(SerializedWorldEntity))]
+    [ProtoInclude(56, typeof(PrefabPlaceholderEntity))]
     public class WorldEntity : Entity
     {
-        public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
+        public virtual AbsoluteEntityCell AbsoluteEntityCell => new(Transform.Position, Level);
 
         [DataMember(Order = 1)]
         public NitroxTransform Transform { get; set; }
@@ -85,7 +89,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
 
         public override string ToString()
         {
-            return $"[WorldEntity Transform: {Transform} Level: {Level} ClassId: {ClassId} SpawnedByServer: {SpawnedByServer} {base.ToString()}]";
+            return $"[{GetType().Name} Transform: {Transform} Level: {Level} ClassId: {ClassId} SpawnedByServer: {SpawnedByServer} {base.ToString()}]";
         }
     }
 }
