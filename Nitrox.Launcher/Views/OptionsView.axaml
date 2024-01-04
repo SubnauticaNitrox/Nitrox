@@ -118,7 +118,7 @@
 
             <Border Padding="22 15" CornerRadius="12" Background="#151516">
                 <Grid ColumnDefinitions="*,Auto">
-                    <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="Unknown path" />
+                    <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderdir}" />
                     <Button Grid.Column="1" HorizontalAlignment="Right" Classes="nitrox primary" Command="{Binding ViewFolderCommand}"
                             design:NitroxAttached.Text="Open" ToolTip.Tip="Open saves folder" Width="120" />
                 </Grid>

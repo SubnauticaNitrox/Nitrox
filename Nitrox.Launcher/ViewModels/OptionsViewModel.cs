@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,6 +16,8 @@ public partial class OptionsViewModel : RoutableViewModelBase
 {
     public AvaloniaList<KnownGame> KnownGames { get; init; }
 
+    public static string SavesFolderdir { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"); // Temp
+    
     private static string defaultLaunchArg => "-vrmode none";
 
     // Temp - Meant to represent the value of LauncherLogic.Config.SubnauticaLaunchArguments
@@ -22,11 +27,10 @@ public partial class OptionsViewModel : RoutableViewModelBase
     
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ChangeArgumentsCommand))]
-    [Required]
     private string launchArgs;
     
     [ObservableProperty]
-    private bool showResetArgsBtn; // TODO: Make reset button appear whenever the text in the textblock is different from the default SubnauticaLaunchArguments (not only when it's applied)
+    private bool showResetArgsBtn;
     
     public OptionsViewModel(IScreen hostScreen) : base(hostScreen)
     {
@@ -77,6 +81,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand]
     private void ViewFolder()
     {
+        Process.Start(SavesFolderdir)?.Dispose(); // Doesn't work? (Access denied)
     }
 
     public class KnownGame
