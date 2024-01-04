@@ -17,16 +17,28 @@
                 </StackPanel>
                 <StackPanel>
                     <Border design:NitroxAttached.Theme="LIGHT" HorizontalAlignment="Stretch" Background="White" Padding="10">
-                        <Button Classes="textimage"
-                                design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
-                                design:NitroxAttached.Text="Text Image button"
-                                HorizontalAlignment="Center"/>
+                        <StackPanel HorizontalAlignment="Center" Spacing="20">
+                            <Button Classes="textimage"
+                                    design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
+                                    design:NitroxAttached.Text="Text Image button"/>
+                            <Button Classes="linktext" HorizontalAlignment="Center"
+                                    design:NitroxAttached.Text="Link text button"/>
+                            <Button Classes="image" HorizontalAlignment="Center">
+                                <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="Black" />
+                            </Button>
+                        </StackPanel>
                     </Border>
                     <Border design:NitroxAttached.Theme="DARK" HorizontalAlignment="Stretch" Background="Black" Padding="10">
-                        <Button Classes="textimage"
-                                design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
-                                design:NitroxAttached.Text="Text Image button"
-                                HorizontalAlignment="Center"/>
+                        <StackPanel HorizontalAlignment="Center" Spacing="20">
+                            <Button Classes="textimage"
+                                    design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
+                                    design:NitroxAttached.Text="Text Image button"/>
+                            <Button Classes="linktext" HorizontalAlignment="Center"
+                                    design:NitroxAttached.Text="Link text button"/>
+                            <Button Classes="image" HorizontalAlignment="Center">
+                                <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
+                            </Button>
+                        </StackPanel>
                     </Border>
                 </StackPanel>
             </StackPanel>
@@ -144,6 +156,70 @@
         
         <Style Selector="^:disabled /template/ ContentPresenter">
             <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+    </Style>
+    
+    <Style Selector="Button.linktext">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Template>
+                    <Grid>
+                        <TextBlock x:Name="ButtonText" HorizontalAlignment="Center" VerticalAlignment="Stretch"
+                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                               Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}"/>
+                    </Grid>
+                </Template>
+            </Setter.Value>
+        </Setter>
+
+        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
+            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+        </Style>
+        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
+            <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
+        </Style>
+        
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ ContentPresenter">
+                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+                <Setter Property="Cursor" Value="Hand"/>
+            </Style>
+            
+            <Style Selector="^ TextBlock">
+                <Setter Property="TextDecorations" Value="Underline" />
+            </Style>
+        </Style>
+        
+        <Style Selector="^:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+    </Style>
+    
+    <Style Selector="Button.image">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Template>
+                    <Grid/>
+                </Template>
+            </Setter.Value>
+        </Setter>
+        
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ ContentPresenter">
+                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+                <Setter Property="Opacity" Value="0.6" />
+            </Style>
+        </Style>
+        
+        <Style Selector="^:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Opacity" Value="0.25" />
         </Style>
     </Style>
     

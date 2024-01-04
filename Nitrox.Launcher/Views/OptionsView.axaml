@@ -9,6 +9,19 @@
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.OptionsView">
 
+    <UserControl.Resources>
+        <StackPanel x:Key="InfoIconTooltipText">
+            <TextBlock>
+                Virtual Reality mode (VR) is disabled by default, but you can still edit this line if you want to use it.
+                <LineBreak />
+                <LineBreak />
+                Possible values : oculus, openvr, none
+            </TextBlock>
+            <Border BorderBrush="Silver" BorderThickness="0,1,0,0" Margin="0,8" />
+            <TextBlock FontStyle="Italic">Contact our support for more information.</TextBlock>
+        </StackPanel>
+    </UserControl.Resources>
+    
     <StackPanel Orientation="Vertical" Spacing="22">
         <TextBlock FontSize="32" FontWeight="Bold" Text="Options" />
 
@@ -19,7 +32,7 @@
                 <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Installation" />
                 <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
             </StackPanel>
-            <Border CornerRadius="12" Background="#151516" Padding="20 0">
+            <Border CornerRadius="12" Background="#151516" Padding="20 10">
                 <ItemsControl ItemsSource="{Binding KnownGames}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -40,7 +53,9 @@
                 </ItemsControl>
             </Border>
             <Grid>
-                <TextBlock Text="Manually add game installation" VerticalAlignment="Center" />
+                <Button Classes="linktext" VerticalAlignment="Bottom"
+                        design:NitroxAttached.Text="Manually add game installation"
+                        Command="{Binding AddGameInstallationCommand}"/>
                 <Button Classes="nitrox primary" HorizontalAlignment="Right" Content="Choose destination" />
             </Grid>
         </StackPanel>
@@ -50,68 +65,47 @@
                 <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Launch Arguments" />
                 <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
             </StackPanel>
-            <Border Margin="0,12,0,0" Padding="22" CornerRadius="12" Background="#151516">
-                <Grid ColumnDefinitions="262*,32*,108*">
-                    <Border Grid.Column="0" BorderBrush="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0" Padding="2">
-                        <Grid ColumnDefinitions="*,86">
-                            <TextBox Grid.Column="0"
-                                     Padding="0,5" FontSize="15" MaxLines="1"
+            <Border Margin="0,12,0,0" Padding="22 15" CornerRadius="12" Background="#151516">
+                <Grid ColumnDefinitions="*, Auto, Auto">
+                    
+                    <Border  Background="#333437" CornerRadius="7">
+                        <Grid Grid.ColumnDefinitions="*, Auto">
+                            <TextBox Background="#333437" Height="46"
+                                     Padding="13,5" FontSize="15" MaxLines="1"
                                      Foreground="White" TextAlignment="Left"
-                                     Background="{x:Null}" BorderBrush="{x:Null}"
-                                     Margin="13,7,14,7" SelectionBrush="#FF36383A"
-                                     VerticalAlignment="Center" BorderThickness="0" CaretBrush="White"
+                                     VerticalAlignment="Stretch" VerticalContentAlignment="Center"
                                      Text="{Binding LaunchArgs}" />
-
-                            <Button Grid.Column="1" x:Name="ResetButton" HorizontalAlignment="Right" Classes="nitrox big abort" Command="{Binding ResetArgumentsCommand}"
-                                    Width="72" Height="28" Margin="0,0,10,0" BorderBrush="#66FFFFFF" IsEnabled="False"
-                                    design:NitroxAttached.Text="Reset" ToolTip.Tip="Reset arguments" />
+                            
+                            <Button Grid.Column="1" Classes="nitrox abort" Command="{Binding ResetArgumentsCommand}"
+                                    Width="72" Height="28" HorizontalAlignment="Right" Padding="1" Margin="0 0 12 0" IsVisible="{Binding ShowResetArgsBtn}"
+                                    FontSize="12" design:NitroxAttached.Text="Reset" ToolTip.Tip="Reset arguments" />
                         </Grid>
                     </Border>
 
-                    <Rectangle Grid.Column="1" Width="24" Height="24" Margin="10,0,0,0">
-                        <!--Rectangle.Fill>
-                                <VisualBrush Visual="{StaticResource InformationIcon}" />
-                            </Rectangle.Fill>
+                    <Button Grid.Column="1" Classes="image" Width="24" Height="24" Margin="10,0,60,0" ToolTip.Tip="{StaticResource InfoIconTooltipText}">
+                        <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
+                        
+                        <!--Rectangle.Style> TODO: Figure out how to replicate the original icon DropShadowEffect here on MouseOver
+                            <Style TargetType="Rectangle">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Trigger.Setters>
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect ShadowDepth="0" Color="White" Opacity="1" BlurRadius="20" />
+                                                </Setter.Value>
+                                            </Setter>
 
-                            <Rectangle.Style>
-                                <Style TargetType="Rectangle">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Trigger.Setters>
-                                                <Setter Property="Effect">
-                                                    <Setter.Value>
-                                                        <DropShadowEffect ShadowDepth="0" Color="White" Opacity="1" BlurRadius="20" />
-                                                    </Setter.Value>
-                                                </Setter>
-
-                                                <Setter Property="Cursor" Value="Hand" />
-                                            </Trigger.Setters>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Rectangle.Style>
-
-                            <Rectangle.ToolTip>
-                                <StackPanel>
-
-                                    <TextBlock>
-                                        Virtual Reality mode (VR) is disabled by default,
-                                        <LineBreak />
-                                        you can still edit this line if you want to use it.
-                                        <LineBreak />
-                                        <LineBreak />
-                                        Possible values : oculus, openvr, none
-                                    </TextBlock>
-
-                                    <Border BorderBrush="Silver" BorderThickness="0,1,0,0" Margin="0,8" />
-
-                                    <TextBlock FontStyle="Italic">Contact our support for more information</TextBlock>
-                                </StackPanel>
-                            </Rectangle.ToolTip-->
-                    </Rectangle>
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </Trigger.Setters>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style-->
+                    </Button>
 
                     <Button Grid.Column="2" Classes="nitrox primary" design:NitroxAttached.Text="Apply" ToolTip.Tip="Save launch arguments"
-                            HorizontalAlignment="Right"
+                            Width="120" HorizontalAlignment="Right"
                             Command="{Binding ChangeArgumentsCommand}" />
                 </Grid>
             </Border>
@@ -123,11 +117,10 @@
             <TextBlock FontSize="12" HorizontalAlignment="Left" Text="This is the location where your Nitrox server save files are stored" />
 
             <Border Padding="22 15" CornerRadius="12" Background="#151516">
-                <Grid ColumnDefinitions="262*,108*">
+                <Grid ColumnDefinitions="*,Auto">
                     <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="Unknown path" />
                     <Button Grid.Column="1" HorizontalAlignment="Right" Classes="nitrox primary" Command="{Binding ViewFolderCommand}"
-                            design:NitroxAttached.Text="Open" ToolTip.Tip="Open saves folder"
-                            Margin="15,0,0,0" />
+                            design:NitroxAttached.Text="Open" ToolTip.Tip="Open saves folder" Width="120" />
                 </Grid>
             </Border>
         </StackPanel>

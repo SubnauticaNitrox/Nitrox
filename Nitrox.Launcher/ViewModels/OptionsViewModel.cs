@@ -1,4 +1,6 @@
-﻿using Avalonia.Collections;
+﻿using System.ComponentModel.DataAnnotations;
+using Avalonia.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery;
@@ -10,8 +12,22 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class OptionsViewModel : RoutableViewModelBase
 {
     public AvaloniaList<KnownGame> KnownGames { get; init; }
-    public string LaunchArgs { get; private set; } = "-vrmode none"; //LauncherLogic.Config.SubnauticaLaunchArguments
 
+    private static string defaultLaunchArg => "-vrmode none";
+
+    // Temp - Meant to represent the value of LauncherLogic.Config.SubnauticaLaunchArguments
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangeArgumentsCommand))]
+    private string launcherLogicConfigSubnauticaLaunchArguments = defaultLaunchArg;
+    
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangeArgumentsCommand))]
+    [Required]
+    private string launchArgs;
+    
+    [ObservableProperty]
+    private bool showResetArgsBtn; // TODO: Make reset button appear whenever the text in the textblock is different from the default SubnauticaLaunchArguments (not only when it's applied)
+    
     public OptionsViewModel(IScreen hostScreen) : base(hostScreen)
     {
         KnownGames =
@@ -22,6 +38,8 @@ public partial class OptionsViewModel : RoutableViewModelBase
                 Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE
             }
         ];
+
+        LaunchArgs = LauncherLogicConfigSubnauticaLaunchArguments/*LauncherLogic.Config.SubnauticaLaunchArguments*/;
     }
 
     [RelayCommand]
@@ -30,13 +48,30 @@ public partial class OptionsViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void ResetArguments()
+    private void AddGameInstallation()
     {
     }
 
     [RelayCommand]
+    private void ResetArguments()
+    {
+        LaunchArgs = defaultLaunchArg;
+        ShowResetArgsBtn = false;
+    }
+    
+    [RelayCommand(CanExecute = nameof(CanChangeArguments))]
     private void ChangeArguments()
     {
+        LauncherLogicConfigSubnauticaLaunchArguments/*LauncherLogic.Config.SubnauticaLaunchArguments*/ = LaunchArgs;
+    }
+    private bool CanChangeArguments()
+    {
+        if (LaunchArgs != defaultLaunchArg)
+        {
+            ShowResetArgsBtn = true;
+        }
+
+        return LaunchArgs != LauncherLogicConfigSubnauticaLaunchArguments/*LauncherLogic.Config.SubnauticaLaunchArguments*/;
     }
 
     [RelayCommand]
