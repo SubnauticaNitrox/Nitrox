@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "Isäntä:",
     "Nitrox_AddServer_AddressPlaceholder": "Lisää IP tai serverin osoite",
     "Nitrox_AddServer_Confirm": "Luo palvelin",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Antamasi syöttö on virheellinen. Tarkista, ovatko kaikki tekstikentät täytetty.",
     "Nitrox_AddServer_NameDescription": "Nimi:",
     "Nitrox_AddServer_NamePlaceholder": "Kirjoita palvelimen nimi",
