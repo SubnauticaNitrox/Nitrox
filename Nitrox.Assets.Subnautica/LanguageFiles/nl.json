@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "Host:",
     "Nitrox_AddServer_AddressPlaceholder": "Voer het IP-adres of naam van de server in",
     "Nitrox_AddServer_Confirm": "Server maken",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Uw invoer is ongeldig. Controleer of alle tekstvakken zijn ingevuld.",
     "Nitrox_AddServer_NameDescription": "Naam:",
     "Nitrox_AddServer_NamePlaceholder": "Voer een naam in voor de server",
