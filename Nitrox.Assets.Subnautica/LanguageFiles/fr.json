@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "Hôte :",
     "Nitrox_AddServer_AddressPlaceholder": "Saisir l'IP ou l'adresse du serveur",
     "Nitrox_AddServer_Confirm": "Créer",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Merci de remplir tous les champs.",
     "Nitrox_AddServer_NameDescription": "Nom :",
     "Nitrox_AddServer_NamePlaceholder": "Saisir un nom de serveur",
