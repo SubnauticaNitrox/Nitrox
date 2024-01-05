@@ -1,7 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Nitrox.Launcher.ViewModels;
+﻿using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
 
 namespace Nitrox.Launcher.Views;

@@ -23,7 +23,7 @@
     </UserControl.Resources>
     
     <StackPanel Orientation="Vertical" Spacing="22">
-        <TextBlock FontSize="32" FontWeight="Bold" Text="Options" />
+        <TextBlock Classes="header" Text="Options" />
 
         <TextBlock Foreground="Red" FontSize="22" HorizontalAlignment="Center" Text="TODO: Tab Control + Styling" />
 
