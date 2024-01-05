@@ -19,7 +19,7 @@ public partial class ServersViewModel : RoutableViewModelBase
 {
     public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
 
-    public AvaloniaList<ServerEntry> Servers { get; } = new();
+    public AvaloniaList<ServerEntry> Servers { get; }
 
     public ServersViewModel(IScreen hostScreen) : base(hostScreen)
     {

@@ -1,6 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using System.Diagnostics;
+using Avalonia.Input;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
 
@@ -11,5 +10,10 @@ public partial class BlogView : RoutableViewBase<BlogViewModel>
     public BlogView()
     {
         InitializeComponent();
+    }
+
+    private void NitroxBlogTextBlock_OnPointerPressed(object sender, PointerPressedEventArgs e)
+    {
+        Process.Start(new ProcessStartInfo("https://nitroxblog.rux.gg/") { UseShellExecute = true, Verb = "open" })?.Dispose();
     }
 }

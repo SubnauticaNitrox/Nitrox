@@ -8,5 +8,44 @@
              DataContext="{x:Static launcher:DesignData.BlogViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.BlogView">
-    <TextBlock Text="Blog View"/>
+    
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="23">
+            
+            <StackPanel>
+                <TextBlock Classes="header" Text="Blog"/>
+                <TextBlock>
+                    Read the latest news from the Nitrox team! You can view all our blogs
+                    <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxBlogTextBlock_OnPointerPressed">here</TextBlock>.
+                </TextBlock>
+            </StackPanel>
+            
+            <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemWidth="335" ItemHeight="300" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Classes="image" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
+                            <StackPanel>
+                                <Border CornerRadius="12" Height="200" Width="320">
+                                    <Border.Background>
+                                        <ImageBrush Stretch="UniformToFill" Source="{Binding Image, TargetNullValue='/Assets/Images/blog/vines.png'}" /> <!-- /Assets/Images/blog/vines.png -->
+                                    </Border.Background>
+                                </Border>
+                                <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"
+                                           HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"
+                                           FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+        </StackPanel>
+    </ScrollViewer>
+    
 </UserControl>

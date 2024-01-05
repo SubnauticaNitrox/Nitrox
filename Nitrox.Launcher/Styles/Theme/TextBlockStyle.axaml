@@ -7,6 +7,10 @@
     <Style Selector="TextBlock TextBlock.link">
         <!-- TODO: Wait for Avalonia to fix issue where foreground style is not used <Setter Property="Foreground" Value="#007BFF" /> -->
         <Setter Property="Cursor" Value="Hand" />
+        
+        <Style Selector="^:pointerover">
+            <Setter Property="TextDecorations" Value="Underline" />
+        </Style>
     </Style>
 
     <Style Selector="TextBlock.header">
