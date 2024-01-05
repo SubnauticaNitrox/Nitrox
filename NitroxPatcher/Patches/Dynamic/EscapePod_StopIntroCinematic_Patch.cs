@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using NitroxClient.GameLogic.PlayerLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 
@@ -11,10 +12,16 @@ public sealed partial class EscapePod_StopIntroCinematic_Patch : NitroxPatch, ID
 
     public static void Postfix(bool isInterrupted)
     {
-        if (isInterrupted)
+        if (!isInterrupted) return;
+
+        // This patch should fire before Multiplayer is loaded. To prevent sending as an unauthenticated packet we delay it.
+        if (Multiplayer.Active)
         {
-            //TODO: Currently this is sent as an unauthenticated packet when skipping the intro up front (Configuration=Debug) and is therefore not processed by the server.
             Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
+        }
+        else
+        {
+            Multiplayer.OnLoadingComplete += () => Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
         }
     }
 }

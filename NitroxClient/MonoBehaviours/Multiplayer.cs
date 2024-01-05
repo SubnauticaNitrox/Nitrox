@@ -72,6 +72,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public static event Action OnLoadingComplete;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
 
@@ -90,6 +91,7 @@ namespace NitroxClient.MonoBehaviours
             else
             {
                 SetLoadingComplete();
+                OnLoadingComplete?.Invoke();
             }
         }
 
@@ -111,6 +113,7 @@ namespace NitroxClient.MonoBehaviours
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
 
             SetLoadingComplete();
+            OnLoadingComplete?.Invoke();
         }
 
         public void ProcessPackets()
