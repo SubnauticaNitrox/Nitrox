@@ -28,7 +28,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Classes="image" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
+                        <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
                             <StackPanel>
                                 <Border CornerRadius="12" Height="200" Width="320">
                                     <Border.Background>

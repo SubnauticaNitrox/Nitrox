@@ -18,7 +18,7 @@
                 <Border CornerRadius="12" Background="#151516" Margin="0,0,8,8" Padding="22">
                     <StackPanel Spacing="10">
                         <Grid>
-                            <Button Classes="image" Margin="0" Height="56" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}">
+                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}">
                                 <Image Source="/Assets/Images/social/discordIco.png" Width="56" Height="56" />
                             </Button>
     
@@ -33,7 +33,7 @@
                 <Border Grid.Column="1" CornerRadius="12" Background="#151516" Margin="8,0,0,8" Padding="22">
                     <StackPanel Spacing="10">
                         <Grid>
-                            <Button Classes="image" Margin="0" Height="56" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}">
+                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}">
                                 <Image Source="/Assets/Images/social/twitterIco.png" Width="56" Height="56" />
                             </Button>
     
@@ -48,7 +48,7 @@
                 <Border Grid.Row="1" CornerRadius="12" Background="#151516" Margin="0,8,8,0" Padding="22">
                     <StackPanel Spacing="10">
                         <Grid>
-                            <Button Classes="image" Margin="0" Height="56" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
+                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
                                 <Image Source="/Assets/Images/social/redditIco.png" Width="56" Height="56" />
                             </Button>
     
@@ -63,7 +63,7 @@
                 <Border Grid.Row="1" Grid.Column="1" CornerRadius="12" Background="#151516" Margin="8,8,0,0" Padding="22">
                     <StackPanel Spacing="10">
                         <Grid>
-                            <Button Classes="image" Margin="0" Height="56" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}">
+                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}">
                                 <Image Source="/Assets/Images/social/githubIco.png" Width="56" Height="56" />
                             </Button>
     

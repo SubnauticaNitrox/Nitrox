@@ -23,7 +23,7 @@
                                     design:NitroxAttached.Text="Text Image button"/>
                             <Button Classes="linktext" HorizontalAlignment="Center"
                                     design:NitroxAttached.Text="Link text button"/>
-                            <Button Classes="image" HorizontalAlignment="Center">
+                            <Button Classes="anycontent" HorizontalAlignment="Center">
                                 <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="Black" />
                             </Button>
                         </StackPanel>
@@ -35,7 +35,7 @@
                                     design:NitroxAttached.Text="Text Image button"/>
                             <Button Classes="linktext" HorizontalAlignment="Center"
                                     design:NitroxAttached.Text="Link text button"/>
-                            <Button Classes="image" HorizontalAlignment="Center">
+                            <Button Classes="anycontent" HorizontalAlignment="Center">
                                 <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
                             </Button>
                         </StackPanel>
@@ -198,7 +198,7 @@
         </Style>
     </Style>
     
-    <Style Selector="Button.image">
+    <Style Selector="Button.anycontent">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="CornerRadius" Value="4" />

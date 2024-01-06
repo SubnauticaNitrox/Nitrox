@@ -48,21 +48,21 @@
             <ItemsControl ItemsSource="{Binding NitroxChangelogs}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Spacing="22" />
+                        <StackPanel Spacing="18" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
+                        <StackPanel Spacing="5">
                             <Grid>
                                 <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, TargetNullValue='Unknown'}"/>
                                 <TextBlock FontSize="12" FontWeight="Light" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown', TargetNullValue='Unknown'}"/>
                             </Grid>
-                            <Expander Header="View changelogs">
-                                <TextBlock FontSize="14" TextWrapping="Wrap" Margin="0,8,0,0" FontWeight="Normal" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
+                            <Expander Classes="changelog" Header="View changelog">
+                                <TextBlock FontSize="14" TextWrapping="Wrap" FontWeight="Normal" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
                             </Expander>
-                            <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" Margin="0,20,0,22" />
+                            <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" />
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

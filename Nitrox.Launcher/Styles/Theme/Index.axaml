@@ -191,4 +191,5 @@
     <StyleInclude Source="/Styles/Theme/RadioButtonGroupStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/RadioButtonStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/ScrollViewerStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/ExpanderStyle.axaml" />
 </Styles>
