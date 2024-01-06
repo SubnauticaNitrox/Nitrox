@@ -13,7 +13,7 @@
         
         <StackPanel>
             <TextBlock Classes="header" Text="Blog"/>
-            <TextBlock>
+            <TextBlock Margin="0 16 0 0">
                 Read the latest news from the Nitrox team! You can view all our blogs
                 <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxBlogTextBlock_OnPointerPressed">here</TextBlock>.
             </TextBlock>
@@ -31,7 +31,7 @@
                         <StackPanel>
                             <Border CornerRadius="12" Height="200" Width="320">
                                 <Border.Background>
-                                    <ImageBrush Stretch="UniformToFill" Source="{Binding Image, TargetNullValue='/Assets/Images/blog/vines.png'}" /> <!-- /Assets/Images/blog/vines.png -->
+                                    <ImageBrush Stretch="UniformToFill" Source="{Binding Image, TargetNullValue='/Assets/Images/blog/vines.png'}" />
                                 </Border.Background>
                             </Border>
                             <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"

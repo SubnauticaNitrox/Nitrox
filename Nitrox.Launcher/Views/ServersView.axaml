@@ -23,7 +23,7 @@
         <Grid RowDefinitions="Auto,Auto,*,Auto" IsVisible="{Binding Servers.Count}">
             <TextBlock Grid.Row="0" Classes="header" Text="Servers" />
             <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
-            <TextBlock Grid.Row="1">
+            <TextBlock Grid.Row="1" Margin="0 16 0 0">
                 Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server, refer to the
                 <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.
             </TextBlock>
