@@ -47,10 +47,6 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
-            List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
-
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes);
-            playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             // Make players on localhost admin by default.
             if (connection.Endpoint.Address.IsLocalhost())
@@ -61,14 +57,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
             List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
-            if (wasBrandNewPlayer)
-            {
-                SetupPlayerEntity(player);
-            }
-            else
-            {
-                RespawnExistingEntity(player);
-            }
+            player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player); ;
+
             List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
             bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
 
@@ -104,29 +94,24 @@ namespace NitroxServer.Communication.Packets.Processors
                                                       .Select(p => p.PlayerContext);
         }
 
-        private void SetupPlayerEntity(Player player)
+        private PlayerWorldEntity SetupPlayerEntity(Player player)
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
             PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddOrUpdate(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
-            playerManager.SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);
+            return playerEntity;
         }
 
-        private void RespawnExistingEntity(Player player)
+        private PlayerWorldEntity RespawnExistingEntity(Player player)
         {
-            Optional<Entity> playerEntity = entityRegistry.GetEntityById(player.PlayerContext.PlayerNitroxId);
-
-            if (playerEntity.HasValue)
+            if (entityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerWorldEntity playerWorldEntity))
             {
-                playerManager.SendPacketToOtherPlayers(new SpawnEntities(playerEntity.Value, true), player);
+                return playerWorldEntity;
             }
-            else
-            {
-                Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
-                SetupPlayerEntity(player);
-            }
+            Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
+            return SetupPlayerEntity(player);
         }
     }
 }
