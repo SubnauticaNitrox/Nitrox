@@ -233,9 +233,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public IEnumerator SpawnEntityAsync(Entity entity, bool forceRespawn = false)
+        public IEnumerator SpawnEntityAsync(Entity entity, bool forceRespawn = false, bool skipFrames = false)
         {
-            return SpawnBatchAsync(new() { entity }, forceRespawn, skipFrames: false);
+            return SpawnBatchAsync(new() { entity }, forceRespawn, skipFrames);
         }
 
         public void CleanupExistingEntities(List<Entity> dirtyEntities)
