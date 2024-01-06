@@ -7,76 +7,74 @@
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.CommunityView">
     
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Spacing="23">
-            
-            <TextBlock Classes="header" Text="Community" />
-            
-            <Image Source="/Assets/Images/communityHeader.png"/>
-            
-            <Grid RowDefinitions="*,*" ColumnDefinitions="*,*" HorizontalAlignment="Stretch">
-                <Border CornerRadius="12" Background="#151516" Margin="0,0,8,8" Padding="22">
-                    <StackPanel Spacing="10">
-                        <Grid>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}">
-                                <Image Source="/Assets/Images/social/discordIco.png" Width="56" Height="56" />
-                            </Button>
+    <StackPanel Spacing="23">
+        
+        <TextBlock Classes="header" Text="Community" />
+        
+        <Image Source="/Assets/Images/communityHeader.png"/>
+        
+        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*" HorizontalAlignment="Stretch">
+            <Border CornerRadius="12" Background="#151516" Margin="0,0,8,8" Padding="22">
+                <StackPanel Spacing="10">
+                    <Grid>
+                        <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}">
+                            <Image Source="/Assets/Images/social/discordIco.png" Width="56" Height="56" />
+                        </Button>
     
-                            <Button Classes="nitrox" Height="34" Content="Join Discord" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}"
-                                    HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
-                        </Grid>
-                        <TextBlock FontSize="16" FontWeight="Bold" Text="Discord"/>
-                        <TextBlock FontSize="14" TextWrapping="Wrap" Text="Join our active Discord server to find servers to play on, get help from the support team and much more."/>
-                    </StackPanel>
-                </Border>
-                
-                <Border Grid.Column="1" CornerRadius="12" Background="#151516" Margin="8,0,0,8" Padding="22">
-                    <StackPanel Spacing="10">
-                        <Grid>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}">
-                                <Image Source="/Assets/Images/social/twitterIco.png" Width="56" Height="56" />
-                            </Button>
-    
-                            <Button Classes="nitrox" Height="34" Content="Follow" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}"
-                                    HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
-                        </Grid>
-                        <TextBlock FontSize="16" FontWeight="Bold" Text="Twitter"/>
-                        <TextBlock FontSize="14" TextWrapping="Wrap" Text="Follow the Nitrox Twitter account to always be up to date on latest developments, events, and releases."/>
-                    </StackPanel>
-                </Border>
-                
-                <Border Grid.Row="1" CornerRadius="12" Background="#151516" Margin="0,8,8,0" Padding="22">
-                    <StackPanel Spacing="10">
-                        <Grid>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
-                                <Image Source="/Assets/Images/social/redditIco.png" Width="56" Height="56" />
-                            </Button>
-    
-                            <Button Classes="nitrox" Height="34" Content="Join Subreddit" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}"
-                                    HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
-                        </Grid>
-                        <TextBlock FontSize="16" FontWeight="Bold" Text="Reddit"/>
-                        <TextBlock FontSize="14" TextWrapping="Wrap" Text="Join the Nitrox Subreddit to stay informed about latest releases and post your own Nitrox content."/>
-                    </StackPanel>
-                </Border>
-                
-                <Border Grid.Row="1" Grid.Column="1" CornerRadius="12" Background="#151516" Margin="8,8,0,0" Padding="22">
-                    <StackPanel Spacing="10">
-                        <Grid>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}">
-                                <Image Source="/Assets/Images/social/githubIco.png" Width="56" Height="56" />
-                            </Button>
-    
-                            <Button Classes="nitrox" Height="34" Content="Contribute" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}"
-                                    HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
-                        </Grid>
-                        <TextBlock FontSize="16" FontWeight="Bold" Text="GitHub"/>
-                        <TextBlock FontSize="14" TextWrapping="Wrap" Text="Want to be part of the team? Contribute from code to translations to the Nitrox project on GitHub."/>
-                    </StackPanel>
-                </Border>
-            </Grid>
+                        <Button Classes="nitrox" Height="34" Content="Join Discord" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}"
+                                HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
+                    </Grid>
+                    <TextBlock FontSize="16" FontWeight="Bold" Text="Discord"/>
+                    <TextBlock FontSize="14" TextWrapping="Wrap" Text="Join our active Discord server to find servers to play on, get help from the support team and much more."/>
+                </StackPanel>
+            </Border>
             
-        </StackPanel>
-    </ScrollViewer>
+            <Border Grid.Column="1" CornerRadius="12" Background="#151516" Margin="8,0,0,8" Padding="22">
+                <StackPanel Spacing="10">
+                    <Grid>
+                        <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}">
+                            <Image Source="/Assets/Images/social/twitterIco.png" Width="56" Height="56" />
+                        </Button>
+    
+                        <Button Classes="nitrox" Height="34" Content="Follow" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}"
+                                HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
+                    </Grid>
+                    <TextBlock FontSize="16" FontWeight="Bold" Text="Twitter"/>
+                    <TextBlock FontSize="14" TextWrapping="Wrap" Text="Follow the Nitrox Twitter account to always be up to date on latest developments, events, and releases."/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Row="1" CornerRadius="12" Background="#151516" Margin="0,8,8,0" Padding="22">
+                <StackPanel Spacing="10">
+                    <Grid>
+                        <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
+                            <Image Source="/Assets/Images/social/redditIco.png" Width="56" Height="56" />
+                        </Button>
+    
+                        <Button Classes="nitrox" Height="34" Content="Join Subreddit" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}"
+                                HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
+                    </Grid>
+                    <TextBlock FontSize="16" FontWeight="Bold" Text="Reddit"/>
+                    <TextBlock FontSize="14" TextWrapping="Wrap" Text="Join the Nitrox Subreddit to stay informed about latest releases and post your own Nitrox content."/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Row="1" Grid.Column="1" CornerRadius="12" Background="#151516" Margin="8,8,0,0" Padding="22">
+                <StackPanel Spacing="10">
+                    <Grid>
+                        <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}">
+                            <Image Source="/Assets/Images/social/githubIco.png" Width="56" Height="56" />
+                        </Button>
+    
+                        <Button Classes="nitrox" Height="34" Content="Contribute" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}"
+                                HorizontalAlignment="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Padding="16 0"/>
+                    </Grid>
+                    <TextBlock FontSize="16" FontWeight="Bold" Text="GitHub"/>
+                    <TextBlock FontSize="14" TextWrapping="Wrap" Text="Want to be part of the team? Contribute from code to translations to the Nitrox project on GitHub."/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        
+    </StackPanel>
     
 </UserControl>

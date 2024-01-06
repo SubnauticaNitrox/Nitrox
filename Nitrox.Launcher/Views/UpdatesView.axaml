@@ -9,66 +9,64 @@
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.UpdatesView">
     
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Spacing="23">
-            
-            <TextBlock Classes="header" Text="Updates"/>
-            
-            <Border CornerRadius="12" Background="#151516" Padding="22">
-                <StackPanel Spacing="10">
-                    <Image Source="/Assets/Images/nitroxIco.png" ToolTip.Tip="You are the best captain on the planet, I'm not even squiddin'" Width="56" Height="56" HorizontalAlignment="Center" />
-                    
-                    <!-- "No Update Available" text -->
-                    <StackPanel Spacing="5" IsVisible="{Binding !NewUpdateAvailable}">
-                        <TextBlock Text="No Update Available" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>
-    
-                        <TextBlock FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center">
-                            You are already using the latest version of Nitrox
-                            <Run Text="{Binding Version, FallbackValue='.'}"/>
-                        </TextBlock>
-                        
-                        <TextBlock Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."
-                                   FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Margin="0 9 0 0"/>
-                    </StackPanel>
-    
-                    <!-- "New Nitrox Update Available" text -->
-                    <StackPanel Spacing="6" IsVisible="{Binding NewUpdateAvailable}">
-                        <TextBlock Text="New Nitrox Update Available" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>
-    
-                        <TextBlock Text="Time for an update! A new version of Nitrox is now available to download. Back up your content and get the latest version to start using all the latest features and improvements."
-                                   FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center"/>
-                        
-                        <Button Classes="nitrox primary" Content="Download update" ToolTip.Tip="Download the latest version" Command="{Binding DownloadUpdateCommand}"
-                                FontSize="12" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 4 0 0" Padding="20, 8"/>
-                    </StackPanel>
-                    
-                </StackPanel>
-            </Border>
-            
-            <ItemsControl ItemsSource="{Binding NitroxChangelogs}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Spacing="18" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+    <StackPanel Spacing="23">
+        
+        <TextBlock Classes="header" Text="Updates"/>
+        
+        <Border CornerRadius="12" Background="#151516" Padding="22">
+            <StackPanel Spacing="10">
+                <Image Source="/Assets/Images/nitroxIco.png" ToolTip.Tip="You are the best captain on the planet, I'm not even squiddin'" Width="56" Height="56" HorizontalAlignment="Center" />
                 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Spacing="5">
-                            <Grid>
-                                <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, TargetNullValue='Unknown'}"/>
-                                <TextBlock FontSize="12" FontWeight="Light" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown', TargetNullValue='Unknown'}"/>
-                            </Grid>
-                            <Expander Classes="changelog" Header="View changelog">
-                                <TextBlock FontSize="14" TextWrapping="Wrap" FontWeight="Normal" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
-                            </Expander>
-                            <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                <!-- "No Update Available" text -->
+                <StackPanel Spacing="5" IsVisible="{Binding !NewUpdateAvailable}">
+                    <TextBlock Text="No Update Available" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>
+    
+                    <TextBlock FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center">
+                        You are already using the latest version of Nitrox
+                        <Run Text="{Binding Version, FallbackValue='.'}"/>
+                    </TextBlock>
+                    
+                    <TextBlock Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."
+                               FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" Margin="0 9 0 0"/>
+                </StackPanel>
+    
+                <!-- "New Nitrox Update Available" text -->
+                <StackPanel Spacing="6" IsVisible="{Binding NewUpdateAvailable}">
+                    <TextBlock Text="New Nitrox Update Available" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>
+    
+                    <TextBlock Text="Time for an update! A new version of Nitrox is now available to download. Back up your content and get the latest version to start using all the latest features and improvements."
+                               FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center"/>
+                    
+                    <Button Classes="nitrox primary" Content="Download update" ToolTip.Tip="Download the latest version" Command="{Binding DownloadUpdateCommand}"
+                            FontSize="12" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 4 0 0" Padding="20, 8"/>
+                </StackPanel>
+                
+            </StackPanel>
+        </Border>
+        
+        <ItemsControl ItemsSource="{Binding NitroxChangelogs}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="18" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
             
-        </StackPanel>
-    </ScrollViewer>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Spacing="5">
+                        <Grid>
+                            <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, TargetNullValue='Unknown'}"/>
+                            <TextBlock FontSize="12" FontWeight="Light" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown', TargetNullValue='Unknown'}"/>
+                        </Grid>
+                        <Expander Classes="changelog" Header="View changelog">
+                            <TextBlock FontSize="14" TextWrapping="Wrap" FontWeight="Normal" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
+                        </Expander>
+                        <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+    </StackPanel>
     
 </UserControl>
