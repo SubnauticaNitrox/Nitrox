@@ -1,21 +1,20 @@
 ﻿using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours.Gui.HUD
-{
-    public class DenyOwnershipHand : MonoBehaviour
-    {
-        void Start()
-        {
-            // Force the message to go away after a few seconds.
-            Destroy(this, 2);
-        }
+namespace NitroxClient.MonoBehaviours.Gui.HUD;
 
-        void Update()
-        {
-            //TODO: Check if this should be Hand
-            HandReticle.main.SetText(HandReticle.TextType.Hand, "Another player is interacting with that object.", false, GameInput.Button.None);
-            HandReticle.main.SetText(HandReticle.TextType.HandSubscript, string.Empty, false, GameInput.Button.None);
-            HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
-        }
+public class DenyOwnershipHand : MonoBehaviour
+{
+    private void Start()
+    {
+        // Forces the message to go away after a few seconds.
+        Destroy(this, 2);
+    }
+
+    private void Update()
+    {
+        //TODO: Check if this should be Hand
+        HandReticle.main.SetText(HandReticle.TextType.Hand, "Nitrox_DenyOwnershipHand", true);
+        HandReticle.main.SetText(HandReticle.TextType.HandSubscript, string.Empty, false);
+        HandReticle.main.SetIcon(HandReticle.IconType.HandDeny);
     }
 }
