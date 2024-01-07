@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NitroxClient.GameLogic.HUD.Components
+namespace NitroxClient.MonoBehaviours.Gui.HUD
 {
     public class DenyOwnershipHand : MonoBehaviour
     {

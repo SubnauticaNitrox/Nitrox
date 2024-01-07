@@ -1,4 +1,4 @@
-﻿namespace NitroxClient.MonoBehaviours.Gui.InGame;
+﻿namespace NitroxClient.MonoBehaviours.Gui.Modals;
 
 /// <summary>
 ///     Extends the IngameMenu with a disconnect popup.
