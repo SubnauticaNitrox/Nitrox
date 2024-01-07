@@ -7,64 +7,44 @@ namespace Nitrox.Launcher.Models.Converters;
 /// <summary>
 ///     Formats the bound value as a relative date string from a DateTime value.
 /// </summary>
-public partial class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter>, IValueConverter
+public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter>, IValueConverter
 {
-    private const int SECOND = 1;
-    private const int MINUTE = 60 * SECOND;
-    private const int HOUR = 60 * MINUTE;
-    private const int DAY = 24 * HOUR;
-    private const int MONTH = 30 * DAY;
+    private const float DAYS_IN_YEAR = 365.2425f;
+    private const float MEAN_DAYS_IN_MONTH = DAYS_IN_YEAR / 12f;
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is not DateTime date)
+        DateTimeOffset date;
+        switch (value)
         {
-            return string.Empty;
-        }
-
-        TimeSpan ts = new(DateTime.UtcNow.Ticks - date.Ticks);
-        double delta = Math.Abs(ts.TotalSeconds);
-
-        switch (delta)
-        {
-            case < 1 * MINUTE:
-                return ts.Seconds == 1 ? "one second ago" : $"{ts.Seconds} seconds ago";
-
-            case < 2 * MINUTE:
-                return "a minute ago";
-
-            case < 45 * MINUTE:
-                return $"{ts.Minutes} minutes ago";
-
-            case < 90 * MINUTE:
-                return "an hour ago";
-
-            case < 24 * HOUR:
-                return $"{ts.Hours} hours ago";
-
-            case < 48 * HOUR:
-                return "yesterday";
-
-            case < 30 * DAY:
-                return $"{ts.Days} days ago";
-
-            case < 12 * MONTH:
-            {
-                int months = System.Convert.ToInt32(Math.Floor((double)ts.Days / 30));
-                return months <= 1 ? "one month ago" : $"{months} months ago";
-            }
-
+            case DateTime dateTime:
+                date = new DateTimeOffset(dateTime);
+                break;
+            case DateTimeOffset dateTimeOffset:
+                date = dateTimeOffset;
+                break;
             default:
-            {
-                int years = System.Convert.ToInt32(Math.Floor((double)ts.Days / 365));
-                return years <= 1 ? "one year ago" : $"{years} years ago";
-            }
-
+                throw new ArgumentException(nameof(value), $"Value must be a {nameof(DateTime)} or {nameof(DateTimeOffset)}");
         }
+
+        TimeSpan delta = DateTimeOffset.UtcNow - date;
+        return delta switch
+        {
+            { TotalSeconds: < 1 } => "just now",
+            { TotalSeconds: < 2 } => "a second ago",
+            { TotalMinutes: < 1 } => $"{(int)delta.TotalSeconds} seconds ago",
+            { TotalMinutes: < 2 } => "a minute ago",
+            { TotalMinutes: < 45 } => $"{(int)delta.TotalMinutes} minutes ago",
+            { TotalHours: < 1.5 } => "an hour ago",
+            { TotalDays: < 1 } => $"{(int)delta.TotalHours} hours ago",
+            { TotalDays: < 2 } => "yesterday",
+            { TotalDays: < MEAN_DAYS_IN_MONTH } => $"{(int)delta.TotalDays} days ago",
+            { TotalDays: < MEAN_DAYS_IN_MONTH * 2 } => "a month ago",
+            { TotalDays: < MEAN_DAYS_IN_MONTH * 12 } => $"{(int)(delta.TotalDays / MEAN_DAYS_IN_MONTH)} months ago",
+            { TotalDays: < MEAN_DAYS_IN_MONTH * 24 } => "a year ago",
+            _ => $"{(int)(delta.TotalDays / DAYS_IN_YEAR)} years ago"
+        };
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 }
