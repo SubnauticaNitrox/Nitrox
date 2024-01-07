@@ -32,8 +32,8 @@ public class SetIntroCinematicModeProcessor : AuthenticatedPacketProcessor<SetIn
             Log.Info($"Starting IntroCinematic for {allWaitingPlayers[0].PlayerContext.PlayerName} and {allWaitingPlayers[1].PlayerContext.PlayerName}");
 
             allWaitingPlayers[0].PlayerContext.IntroCinematicMode = allWaitingPlayers[1].PlayerContext.IntroCinematicMode = IntroCinematicMode.START;
-            allWaitingPlayers[0].SendPacket(new SetIntroCinematicMode(allWaitingPlayers[1].Id, IntroCinematicMode.START));
-            allWaitingPlayers[1].SendPacket(new SetIntroCinematicMode(allWaitingPlayers[0].Id, IntroCinematicMode.START));
+            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[0].Id, IntroCinematicMode.START));
+            playerManager.SendPacketToAllPlayers(new SetIntroCinematicMode(allWaitingPlayers[1].Id, IntroCinematicMode.START));
         }
     }
 }
