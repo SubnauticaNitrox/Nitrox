@@ -93,6 +93,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     private static bool IsRemoteCinematicReady(uGUI_SceneIntro uGuiSceneIntro)
     {
         if (callbackRun) return true;
+        if (GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative)) uGuiSceneIntro.Stop(true); // Stopping intro if Creative like in normal SN
 
         if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
         {
@@ -120,6 +121,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         {
             partner = firstWaitingRemotePlayer;
             EnqueueStartCinematic(uGuiSceneIntro);
+            Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.PLAYING);
         }
 
         return false;
