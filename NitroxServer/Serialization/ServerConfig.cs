@@ -117,5 +117,8 @@ namespace NitroxServer.Serialization
 
         [PropertyDescription("When true, will reject any build actions detected as desynced")]
         public bool SafeBuilding { get; set; } = true;
+
+        [PropertyDescription("Activates/Deactivates Player versus Player damage/interactions")]
+        public bool PvPEnabled { get; set; } = true;
     }
 }
