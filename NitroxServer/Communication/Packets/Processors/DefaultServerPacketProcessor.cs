@@ -22,6 +22,9 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(FMODCustomLoopingEmitterPacket),
         typeof(FMODStudioEmitterPacket),
         typeof(PlayerCinematicControllerCall),
+        typeof(CreatureActionChanged),
+        typeof(AggressiveWhenSeeTargetChanged),
+        typeof(AttackCyclopsTargetChanged)
     };
 
     /// <summary>
