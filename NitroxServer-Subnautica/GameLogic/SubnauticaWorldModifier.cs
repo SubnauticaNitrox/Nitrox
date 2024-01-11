@@ -15,7 +15,7 @@ public class SubnauticaWorldModifier : IWorldModifier
         for (int i = 0; i < TOTAL_LEAKS; i++)
         {
             RadiationLeakEntity leakEntity = new(new(), i, new(0));
-            world.WorldEntityManager.AddGlobalRootEntity(leakEntity);
+            world.WorldEntityManager.AddOrUpdateGlobalRootEntity(leakEntity);
         }
     }
 }

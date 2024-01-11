@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic
 
                 if (HasExclusiveLock(simulatedEntity.Id))
                 {
-                    Log.Warn($"The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: {simulatedEntity.Id}");
+                    Log.Warn($"The server has forcibly revoked an exclusive lock - this may cause undefined behaviour.  GUID: {simulatedEntity.Id}");
                 }
 
                 StopSimulatingEntity(simulatedEntity.Id);

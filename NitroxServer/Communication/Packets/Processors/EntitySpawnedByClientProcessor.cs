@@ -41,12 +41,13 @@ namespace NitroxServer.Communication.Packets.Processors
                 playerManager.SendPacketToAllPlayers(ownershipChangePacket);
             }
 
+            SpawnEntities spawnEntities = new(entity, packet.RequireRespawn);
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = player != playerWhoSpawned;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
-                    player.SendPacket(new SpawnEntities(entity, packet.RequireRespawn));
+                    player.SendPacket(spawnEntities);
                 }
             }
         }

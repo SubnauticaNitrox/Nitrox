@@ -16,7 +16,7 @@ public class CrashHomeMetadataProcessor : EntityMetadataProcessor<CrashHomeMetad
         }
         else
         {
-            Log.Error($"[{nameof(CrashHomeMetadataProcessor)}] Couldn't find {nameof(CrashHome)} on {gameObject}");
+            Log.Error($"[{nameof(CrashHomeMetadataProcessor)}] Could not find {nameof(CrashHome)} on {gameObject}");
         }
     }
 }
