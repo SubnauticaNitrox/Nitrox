@@ -27,19 +27,9 @@ public class EntitySimulation
         this.simulationWhitelist = simulationWhitelist;
     }
 
-    public void BroadcastSimulationChangesForCellUpdates(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+    public List<SimulatedEntity> GetSimulationChangesForCell(Player player, AbsoluteEntityCell cell)
     {
-        List<SimulatedEntity> ownershipChanges = new();
-
-        AddCells(player, added, ownershipChanges);
-        RemoveCells(player, removed, ownershipChanges);
-
-        BroadcastSimulationChanges(ownershipChanges);
-    }
-
-    public void BroadcastSimulationChangesForBatchAddition(Player player, NitroxInt3 batchId)
-    {
-        List<WorldEntity> entities = worldEntityManager.GetEntities(batchId);
+        List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
         List<WorldEntity> addedEntities = FilterSimulatableEntities(player, entities);
 
         List<SimulatedEntity> ownershipChanges = new();
@@ -50,40 +40,21 @@ public class EntitySimulation
             ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
         }
 
-        BroadcastSimulationChanges(ownershipChanges);
+        return ownershipChanges;
     }
 
-    private void RemoveCells(Player player, AbsoluteEntityCell[] removed, List<SimulatedEntity> ownershipChanges)
+    public void FillWithRemovedCells(Player player, AbsoluteEntityCell removedCell, List<SimulatedEntity> ownershipChanges)
     {
-        foreach (AbsoluteEntityCell cell in removed)
-        {
-            List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
-            IEnumerable<WorldEntity> revokedEntities = entities.Where(entity => !player.CanSee(entity) && simulationOwnershipData.RevokeIfOwner(entity.Id, player));
-            AssignEntitiesToOtherPlayers(player, revokedEntities, ownershipChanges);
-        }
+        List<WorldEntity> entities = worldEntityManager.GetEntities(removedCell);
+        IEnumerable<WorldEntity> revokedEntities = entities.Where(entity => !player.CanSee(entity) && simulationOwnershipData.RevokeIfOwner(entity.Id, player));
+        AssignEntitiesToOtherPlayers(player, revokedEntities, ownershipChanges);
     }
 
-    private void AddCells(Player player, AbsoluteEntityCell[] added, List<SimulatedEntity> ownershipChanges)
-    {
-        foreach (AbsoluteEntityCell cell in added)
-        {
-            List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
-            List<WorldEntity> addedEntities = FilterSimulatableEntities(player, entities);
-
-            foreach (WorldEntity entity in addedEntities)
-            {
-                bool doesEntityMove = ShouldSimulateEntityMovement(entity);
-                ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
-            }
-        }
-    }
-
-    private void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
+    public void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
     {
         if (ownershipChanges.Count > 0)
         {
-            // TODO: This should be moved to `SimulationOwnership`
-            SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
+            SimulationOwnershipChange ownershipChange = new(ownershipChanges);
             playerManager.SendPacketToAllPlayers(ownershipChange);
         }
     }
