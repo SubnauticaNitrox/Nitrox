@@ -1,4 +1,4 @@
-﻿namespace NitroxClient.MonoBehaviours.Gui.InGame;
+﻿namespace NitroxClient.MonoBehaviours.Gui.Modals;
 
 public class ServerStoppedModal : Modal
 {
