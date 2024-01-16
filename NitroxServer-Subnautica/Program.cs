@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -113,6 +113,7 @@ public class Program
 
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
+                Log.Error("Status code = 1");
                 throw new Exception("Unable to start server.");
             }
             else if (cancellationToken.IsCancellationRequested)
@@ -124,6 +125,8 @@ public class Program
                 watch.Stop();
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
+                // Log status codes that can be googled by the user to troubleshoot on their own, hopefully
+                Log.Info("Status code = 0");
             }
         }
         finally
