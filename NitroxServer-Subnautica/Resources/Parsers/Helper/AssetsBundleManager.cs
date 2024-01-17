@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 
@@ -97,14 +98,14 @@ public class AssetsBundleManager : AssetsManager
         return monoBehaviourInf;
     }
 
-    public AssetTypeValueField GetTransformComponent(AssetsFileInstance assetFileInst, AssetTypeValueField rootGameObject)
+    public NitroxTransform GetTransformFromGameObject(AssetsFileInstance assetFileInst, AssetTypeValueField rootGameObject)
     {
         AssetTypeValueField componentArray = rootGameObject["m_Component"]["Array"];
 
         AssetTypeValueField transformRef = componentArray[0]["component"];
-        AssetExternal transformExt = GetExtAsset(assetFileInst, transformRef);
+        AssetTypeValueField transformField = GetExtAsset(assetFileInst, transformRef).baseField;
 
-        return transformExt.baseField;
+        return new(transformField["m_LocalPosition"].ToNitroxVector3(), transformField["m_LocalRotation"].ToNitroxQuaternion(), transformField["m_LocalScale"].ToNitroxVector3());
     }
 
     public new void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)

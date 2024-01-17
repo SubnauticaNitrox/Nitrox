@@ -1,7 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Overrides;
+using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -11,6 +11,13 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
 {
     public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
     {
+        private EntityMetadataManager entityMetadataManager;
+
+        public EscapePodWorldEntitySpawner(EntityMetadataManager entityMetadataManager)
+        {
+            this.entityMetadataManager = entityMetadataManager;
+        }
+
         /*
          * When creating additional escape pods (multiple users with multiple pods)
          * we want to supress the escape pod's awake method so it doesn't override
@@ -36,7 +43,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             result.Set(Optional.Of(escapePod));
         }
 
-        private static GameObject CreateNewEscapePod(EscapePodWorldEntity escapePodEntity)
+        private GameObject CreateNewEscapePod(EscapePodWorldEntity escapePodEntity)
         {
             // TODO: When we want to implement multiple escape pods, instantiate the prefab. Backlog task: #1945
             //       This will require some work as instantiating the prefab as-is will not make it visible.
@@ -46,7 +53,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             UnityEngine.Component.DestroyImmediate(escapePod.GetComponent<NitroxEntity>()); // if template has a pre-existing NitroxEntity, remove.
             NitroxEntity.SetNewId(escapePod, escapePodEntity.Id);
 
-            EntityMetadataProcessor.ApplyMetadata(escapePod, escapePodEntity.Metadata);
+            entityMetadataManager.ApplyMetadata(escapePod, escapePodEntity.Metadata);
 
             Rigidbody rigidbody = escapePod.GetComponent<Rigidbody>();
             if (rigidbody != null)

@@ -1,6 +1,6 @@
 using System.Collections;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Overrides;
+using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
