@@ -10,9 +10,9 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Replaces local use of <see cref="Time.deltaTime"/> by <see cref="TimeManager.DeltaTime"/>
 /// </summary>
-public sealed partial class Flare_Update_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class StasisSphere_LateUpdate_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Flare t) => t.Update());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((StasisSphere t) => t.LateUpdate());
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
