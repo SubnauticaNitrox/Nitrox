@@ -163,5 +163,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     private void SetTimeData(InitialPlayerSync packet)
     {
         timeManager.ProcessUpdate(packet.TimeData.TimePacket);
+        timeManager.InitRealTimeElapsed(packet.TimeData.TimePacket.RealTimeElapsed, packet.TimeData.TimePacket.UpdateTime, packet.IsFirstPlayer);
+        timeManager.AuroraRealExplosionTime = packet.TimeData.AuroraEventData.AuroraRealExplosionTime;
     }
 }

@@ -132,8 +132,7 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     if (addToRegistry)
                     {
-                        entityRegistry.AddEntity(entity);
-                        entityRegistry.AddEntitiesIgnoringDuplicate(entity.ChildEntities);
+                        entityRegistry.AddOrUpdate(entity);
                     }
                     globalRootEntitiesById.Add(entity.Id, entity);
                 }
@@ -164,8 +163,7 @@ namespace NitroxServer.GameLogic.Entities
                             childPlayerEntity.ParentId = null;
 
                             // Make sure the PlayerEntity is correctly registered
-                            globalRootEntitiesById[childPlayerEntity.Id] = childPlayerEntity;
-                            entityRegistry.AddOrUpdate(childPlayerEntity);
+                            UpdateGlobalRootEntity(childPlayerEntity);
                         }
                     }
                     removedEntity = entityRegistry.RemoveEntity(entityId);
@@ -261,6 +259,8 @@ namespace NitroxServer.GameLogic.Entities
 
                 cellRoot.ChildEntities = new List<Entity>();
             }
+            // Specific type of entities which is not parented to a CellRootEntity
+            nonCellRootEntities.AddRange(spawnedEntities.OfType<SerializedWorldEntity>());
 
             entityRegistry.AddEntitiesIgnoringDuplicate(nonCellRootEntities.OfType<Entity>().ToList());
 

@@ -16,13 +16,21 @@ namespace NitroxServer.GameLogic
         [DataMember(Order = 3)]
         public double? AuroraWarningTime { get; set; }
 
+        [DataMember(Order = 4)]
+        public double RealTimeElapsed { get; set; }
+
+        [DataMember(Order = 5)]
+        public double? AuroraRealExplosionTime { get; set; }
+
         public static StoryTimingData From(StoryManager storyManager, TimeKeeper timeKeeper)
         {
             return new StoryTimingData
             {
                 ElapsedSeconds = timeKeeper.ElapsedSeconds,
                 AuroraCountdownTime = storyManager.AuroraCountdownTimeMs,
-                AuroraWarningTime = storyManager.AuroraWarningTimeMs
+                AuroraWarningTime = storyManager.AuroraWarningTimeMs,
+                RealTimeElapsed = timeKeeper.RealTimeElapsed,
+                AuroraRealExplosionTime = storyManager.AuroraRealExplosionTime
             };
         }
     }

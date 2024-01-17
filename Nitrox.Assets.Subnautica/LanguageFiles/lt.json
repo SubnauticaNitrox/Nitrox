@@ -40,6 +40,8 @@
     "Nitrox_MuteQuestion": "Užtildyti {PLAYER}?",
     "Nitrox_MutedPlayer": "Užtildytas {PLAYER}",
     "Nitrox_PlayerColor": "Žaidėjo spalva",
+    "Nitrox_PlayerDied": "{PLAYER} Mirė",
+    "Nitrox_PlayerDisconnected": "{PLAYER} Atsijungė",
     "Nitrox_PlayerJoined": "{PLAYER} prisijungė į žaidimą.",
     "Nitrox_PlayerKicked": "Jūs buvote išmestas iš serverio",
     "Nitrox_PlayerLeft": "{PLAYER} atsijungė iš žaidimo.",

@@ -4,7 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours.Overrides;
+namespace NitroxClient.MonoBehaviours.CinematicController;
 
 public class MultiplayerCinematicReference : MonoBehaviour
 {
@@ -59,7 +59,7 @@ public class MultiplayerCinematicReference : MonoBehaviour
         {
             return;
         }
-        
+
         MultiplayerCinematicController controller = MultiplayerCinematicController.Initialize(playerController);
         controller.AddOtherControllers(allControllers);
         allControllers.ForEach(x => x.AddOtherControllers(new[] { controller }));
