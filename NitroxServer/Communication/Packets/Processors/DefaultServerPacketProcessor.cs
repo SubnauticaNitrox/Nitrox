@@ -25,7 +25,12 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(PlayerCinematicControllerCall),
         typeof(CreatureActionChanged),
         typeof(AggressiveWhenSeeTargetChanged),
-        typeof(AttackCyclopsTargetChanged)
+        typeof(AttackCyclopsTargetChanged),
+        typeof(TorpedoShot),
+        typeof(TorpedoHit),
+        typeof(TorpedoTargetAcquired),
+        typeof(StasisSphereShot),
+        typeof(StasisSphereHit),
     };
 
     /// <summary>

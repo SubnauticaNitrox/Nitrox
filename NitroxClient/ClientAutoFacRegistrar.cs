@@ -135,6 +135,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<BulletManager>().InstancePerLifetimeScope();
         }
 
         private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)

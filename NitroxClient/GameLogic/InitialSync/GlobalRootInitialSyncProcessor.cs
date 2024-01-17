@@ -16,10 +16,12 @@ namespace NitroxClient.GameLogic.InitialSync;
 public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly Entities entities;
+    private readonly BulletManager bulletManager;
 
-    public GlobalRootInitialSyncProcessor(Entities entities)
+    public GlobalRootInitialSyncProcessor(Entities entities, BulletManager bulletManager)
     {
         this.entities = entities;
+        this.bulletManager = bulletManager;
 
         // As we migrate systems over to entities, we want to ensure the required components are in place to spawn these entities.
         // For example, migrating inventories to the entity system requires players are spawned in the world before we try to add
@@ -36,6 +38,7 @@ public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
         yield return Base.InitializeAsync();
         yield return BaseGhost.InitializeAsync();
         yield return BaseDeconstructable.InitializeAsync();
+        yield return bulletManager.Initialize();
 
         BuildingHandler.Main.InitializeOperations(packet.BuildOperationIds);
 
