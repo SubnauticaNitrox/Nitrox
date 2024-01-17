@@ -32,6 +32,7 @@ namespace NitroxModel.Packets
         public Perms Permissions { get; }
         public SubnauticaPlayerPreferences Preferences { get; }
         public TimeData TimeData { get; }
+        public bool IsFirstPlayer { get; }
         public Dictionary<NitroxId, int> BuildOperationIds { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
@@ -53,6 +54,7 @@ namespace NitroxModel.Packets
             Perms perms,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,
+            bool isFirstPlayer,
             Dictionary<NitroxId, int> buildOperationIds)
         {
             AssignedEscapePodId = assignedEscapePodId;
@@ -74,6 +76,7 @@ namespace NitroxModel.Packets
             Permissions = perms;
             Preferences = preferences;
             TimeData = timeData;
+            IsFirstPlayer = isFirstPlayer;
             BuildOperationIds = buildOperationIds;
         }
 
@@ -98,6 +101,7 @@ namespace NitroxModel.Packets
             Perms permissions,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,
+            bool isFirstPlayer,
             Dictionary<NitroxId, int> buildOperationIds)
         {
             AssignedEscapePodId = assignedEscapePodId;
@@ -119,6 +123,7 @@ namespace NitroxModel.Packets
             Permissions = permissions;
             Preferences = preferences;
             TimeData = timeData;
+            IsFirstPlayer = isFirstPlayer;
             BuildOperationIds = buildOperationIds;
         }
     }

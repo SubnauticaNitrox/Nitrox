@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
         public List<Entity> EntitiesToSpawn { get; private init; }
         private bool spawningEntities;
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, TimeManager timeManager)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
@@ -54,10 +54,13 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(entityMetadataManager, playerManager, localPlayer, this);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(PrefabPlaceholderEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
+            entitySpawnersByType[typeof(RadiationLeakEntity)] = new RadiationLeakEntitySpawner(timeManager);
             entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
@@ -108,8 +111,18 @@ namespace NitroxClient.GameLogic
 
         private IEnumerator SpawnNewEntities()
         {
-            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(Log.Error);
-            spawningEntities = false;
+            bool restarted = false;
+            yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(exception =>
+            {
+                Log.Error(exception);
+                if (EntitiesToSpawn.Count > 0)
+                {
+                    restarted = true;
+                    // It's safe to run a new time because the processed entity is removed first so it won't infinitely throw errors
+                    CoroutineHost.StartCoroutine(SpawnNewEntities());
+                }
+            });
+            spawningEntities = restarted;
         }
 
         public void EnqueueEntitiesToSpawn(List<Entity> entitiesToEnqueue)

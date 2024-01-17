@@ -17,6 +17,7 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
+using NitroxServer.Helper;
 using NitroxServer.Resources;
 using NitroxServer.Serialization.Upgrade;
 
@@ -31,14 +32,16 @@ namespace NitroxServer.Serialization.World
         private readonly ServerJsonSerializer jsonSerializer;
         private readonly SubnauticaServerConfig config;
         private readonly RandomStartGenerator randomStart;
+        private readonly IWorldModifier worldModifier;
         private readonly SaveDataUpgrade[] upgrades;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
             this.config = config;
             this.randomStart = randomStart;
+            this.worldModifier = worldModifier;
             this.upgrades = upgrades;
 
             UpdateSerializer(config.SerializerMode);
@@ -176,7 +179,10 @@ namespace NitroxServer.Serialization.World
                 GlobalRootData = new()
             };
 
-            return CreateWorld(pWorldData, config.GameMode);
+            World newWorld = CreateWorld(pWorldData, config.GameMode);
+            worldModifier.ModifyWorld(newWorld);
+
+            return newWorld;
         }
 
         public World CreateWorld(PersistedWorldData pWorldData, NitroxGameMode gameMode)
@@ -190,6 +196,8 @@ namespace NitroxServer.Serialization.World
                 seed = StringHelper.GenerateRandomString(10);
 #endif
             }
+            // Initialized only once, just like UnityEngine.Random
+            XORRandom.InitSeed(seed.GetHashCode());
 
             Log.Info($"Loading world with seed {seed}");
 
@@ -211,18 +219,19 @@ namespace NitroxServer.Serialization.World
                 Seed = seed
             };
 
-            world.TimeKeeper = new(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds);
-            world.StoryManager = new(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
+            world.TimeKeeper = new(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
+            world.StoryManager = new(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime, pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime);
             world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, world.PlayerManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
-                NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
-                NitroxServiceLocator.LocateService<UwePrefabFactory>(),
+                NitroxServiceLocator.LocateService<IUweWorldEntityFactory>(),
+                NitroxServiceLocator.LocateService<IUwePrefabFactory>(),
                 pWorldData.WorldData.ParsedBatchCells,
                 protoBufSerializer,
                 NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
+                pWorldData.WorldData.GameData.PDAState,
                 world.Seed
             );
 

@@ -6,7 +6,7 @@ using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxClient.MonoBehaviours.Gui.Modals;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
 

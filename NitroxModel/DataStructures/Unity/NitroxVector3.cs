@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using System.Runtime.Serialization;
 using NitroxModel.Helper;
@@ -18,6 +18,8 @@ namespace NitroxModel.DataStructures.Unity
         [DataMember(Order = 3)]
         public float Z;
 
+        public NitroxVector3 Normalized => Normalize(this);
+
         public NitroxVector3(float x, float y, float z)
         {
             X = x;
@@ -28,7 +30,6 @@ namespace NitroxModel.DataStructures.Unity
         public static NitroxVector3 Zero => new(0, 0, 0);
 
         public static NitroxVector3 One => new(1, 1, 1);
-
 
         public static bool operator ==(NitroxVector3 left, NitroxVector3 right) => left.Equals(right);
 

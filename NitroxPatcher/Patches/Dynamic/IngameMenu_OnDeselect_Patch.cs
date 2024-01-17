@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxClient.MonoBehaviours.Gui.Modals;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
