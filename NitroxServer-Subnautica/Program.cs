@@ -30,7 +30,24 @@ public class Program
     private static Lazy<string> gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
-
+    public enum StatusCode
+    {
+        zero,
+        one,
+        two,
+        three
+    }
+    public static void PrintStatusCode(StatusCode statusCode)
+    {
+        if (statusCode != StatusCode.zero)
+        {
+            Log.Error(string.Concat("Status code = ", ((int)statusCode).ToString(), " <- Look up this code on the nitrox website for more information about this error"));
+        }
+        else
+        {
+            Log.Info(string.Concat("Status code = ", ((int)statusCode).ToString()));
+        }
+    }
     private static async Task Main(string[] args)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
@@ -113,7 +130,7 @@ public class Program
 
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
-                Log.Error("Status code = 1");
+                PrintStatusCode(StatusCode.one);
                 throw new Exception("Unable to start server.");
             }
             else if (cancellationToken.IsCancellationRequested)
@@ -126,7 +143,7 @@ public class Program
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
                 // Log status codes that can be googled by the user to troubleshoot on their own, hopefully
-                Log.Info("Status code = 0");
+                PrintStatusCode(StatusCode.zero);
             }
         }
         finally
@@ -356,6 +373,7 @@ public class Program
         }
         catch (OperationCanceledException ex)
         {
+            PrintStatusCode(StatusCode.two);
             Log.Error(ex, "Port availability timeout reached.");
             throw;
         }
@@ -378,7 +396,7 @@ public class Program
         {
             return;
         }
-
+        PrintStatusCode(StatusCode.three);
         Log.Info("Press L to open log file before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 
