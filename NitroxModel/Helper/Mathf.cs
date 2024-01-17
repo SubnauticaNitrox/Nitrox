@@ -70,5 +70,13 @@ namespace NitroxModel.Helper
         {
             return a + (b - a) * t;
         }
+
+        /// <summary>
+        /// Reciprocal function of <see cref="Lerp"/>. Unlerp(a, b, Lerp(a, b, t)) = t
+        /// </summary>
+        public static float Unlerp(float a, float b, float lerpedResult)
+        {
+            return (lerpedResult - a) / (b - a);
+        }
     }
 }
