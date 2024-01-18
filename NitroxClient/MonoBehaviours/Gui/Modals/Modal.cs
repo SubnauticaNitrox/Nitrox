@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UWE;
 
-namespace NitroxClient.MonoBehaviours.Gui.InGame;
+namespace NitroxClient.MonoBehaviours.Gui.Modals;
 
 /// <summary>
 /// Base class for Modal components, which are dialog boxes that appear in the middle of the screen

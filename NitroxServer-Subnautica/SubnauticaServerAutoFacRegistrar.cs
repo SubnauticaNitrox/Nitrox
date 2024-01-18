@@ -9,9 +9,11 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
+using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
+using NitroxServer_Subnautica.GameLogic;
 using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
@@ -58,6 +60,7 @@ namespace NitroxServer_Subnautica
 
             containerBuilder.RegisterType<SubnauticaMap>().As<IMap>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EntityRegistry>().AsSelf().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SubnauticaWorldModifier>().As<IWorldModifier>().InstancePerLifetimeScope();
             containerBuilder.Register(c => new FMODWhitelist(GameInfo.Subnautica)).InstancePerLifetimeScope();
         }
     }

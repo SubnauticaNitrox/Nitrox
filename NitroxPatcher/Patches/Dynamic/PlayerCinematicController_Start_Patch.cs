@@ -1,6 +1,6 @@
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Overrides;
+using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using NitroxModel_Subnautica.Helper;
 using NitroxModel.Helper;
