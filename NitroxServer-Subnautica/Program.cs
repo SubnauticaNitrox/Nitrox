@@ -41,11 +41,12 @@ public class Program
     {
         if (statusCode != StatusCode.zero)
         {
-            Log.Error(string.Concat("Status code = ", ((int)statusCode).ToString(), " <- Look up this code on the nitrox website for more information about this error"));
+            // ToString("D") prints the integer value of the statusCode enum
+            Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error"));
         }
         else
         {
-            Log.Info(string.Concat("Status code = ", ((int)statusCode).ToString()));
+            Log.Info(string.Concat("Status code = ", statusCode.ToString("D")));
         }
     }
     private static async Task Main(string[] args)
