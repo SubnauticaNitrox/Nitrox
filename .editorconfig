@@ -13,7 +13,7 @@ resharper_braces_redundant = false
 resharper_keep_existing_attribute_arrangement = true
 resharper_wrap_object_and_collection_initializer_style = chop_if_long
 
-[*.{proj,csproj,targets}]
+[*.{proj,csproj,props,targets}]
 indent_size = 4
 insert_final_newline = true
 
@@ -25,9 +25,6 @@ insert_final_newline = true
 indent_size = 4
 insert_final_newline = true
 charset = utf-8
-
-[*.g.cs]
-generated_code = true
 
 # Newlines
 csharp_new_line_before_open_brace = all
@@ -136,3 +133,6 @@ dotnet_naming_rule.public_fields.severity = warning
 dotnet_naming_rule.general_types.symbols = types
 dotnet_naming_rule.general_types.style = pascal_case_style
 dotnet_naming_rule.general_types.severity = warning
+
+[*.g.cs]
+generated_code = true
