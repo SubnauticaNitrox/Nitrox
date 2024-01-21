@@ -1,11 +1,9 @@
 using System;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -27,13 +25,13 @@ namespace NitroxClient.GameLogic
         //List of things that can be spawned : https://subnauticacommands.com/items
         public void Spawn(GameObject gameObject)
         {
-            TechType techType = CraftData.GetTechType(gameObject);
+            TechType techType = GetObjectTechType(gameObject);
 
             try
             {
                 if (VehicleHelper.IsVehicle(techType))
                 {
-                    SpawnVehicle(gameObject);
+                    SpawnVehicle(gameObject, techType);
                 }
                 else
                 {
@@ -48,20 +46,17 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Spawns a Seamoth or an Exosuit
+        /// Spawns Seamoth, Exosuit and Cyclops
         /// </summary>
-        private void SpawnVehicle(GameObject gameObject)
+        private void SpawnVehicle(GameObject gameObject, TechType techType)
         {
-            TechType techType = CraftData.GetTechType(gameObject);
-
             NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
 
-            VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(null, DayNightCycle.main.timePassedAsFloat, gameObject.transform.ToLocalDto(), "", false, id, techType.ToDto(), null);
-            VehicleChildEntityHelper.PopulateChildren(id, gameObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, gameObject);
-
+            VehicleWorldEntity vehicleEntity = Vehicles.MakeVehicleEntity(gameObject, id, techType);
+            
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 
-            Log.Debug($"Spawning vehicle {techType} with id {techType} at {gameObject.transform.position}");
+            Log.Debug($"Spawning vehicle {techType} with id {id} at {gameObject.transform.position}");
         }
 
         /// <summary>
@@ -74,6 +69,23 @@ namespace NitroxClient.GameLogic
                 Log.Debug($"Spawning item {pickupable.GetTechName()} at {gameObject.transform.position}");
                 item.Dropped(gameObject, pickupable.GetTechType());
             }
+        }
+
+        private static TechType GetObjectTechType(GameObject gameObject)
+        {
+            TechType techType = CraftData.GetTechType(gameObject);
+            if (techType != TechType.None)
+            {
+                return techType;
+            }
+
+            // Cyclops' GameObject doesn't have a way to give its a TechType so we detect it differently
+            if (gameObject.TryGetComponent(out SubRoot subRoot) && subRoot.isCyclops)
+            {
+                return TechType.Cyclops;
+            }
+
+            return TechType.None;
         }
     }
 }
