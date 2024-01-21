@@ -53,18 +53,23 @@ public class RemotelyControlled : MonoBehaviour
         smoothRotation.Target = rotation;
     }
 
-    public void UpdateKnownSplineUser(Vector3 currentPosition, Quaternion currentRotation, Vector3 destination, Vector3 desinationDirection, float velocity)
+    public void UpdateKnownSplineUser(Vector3 currentPosition, Quaternion currentRotation, Vector3 destination, Vector3 destinationDirection, float velocity)
     {
         TeleportIfTooFar(currentPosition, currentRotation);
 
         if (swimBehaviour)
         {
-            swimBehaviour.SwimToInternal(destination, desinationDirection, velocity, false);
+            // First lines of SwimBehaviour.SwimToInternal
+            swimBehaviour.originalTargetPosition = destination;
+            swimBehaviour.originalTargetDirection = destinationDirection;
+            swimBehaviour.originalVelocity = velocity;
+            // Only the useful part of the methods called in SwimBehaviour.SwimToInternal
+            swimBehaviour.splineFollowing.GoTo(destination, destinationDirection, velocity);
         }
 
         if (walkBehaviour)
         {
-            walkBehaviour.GoToInternal(destination, desinationDirection, velocity);
+            walkBehaviour.GoToInternal(destination, destinationDirection, velocity);
         }
     }
 
