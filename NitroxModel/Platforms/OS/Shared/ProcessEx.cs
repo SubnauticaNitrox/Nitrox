@@ -170,9 +170,9 @@ namespace NitroxModel.Platforms.OS.Shared
         /// <param name="workingDirectory"></param>
         /// <param name="commandLine">Arguments for the executable.</param>
         /// <returns></returns>
-        public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null)
+        public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
         {
-            return StartInternal(fileName, false, environmentVariables, workingDirectory, commandLine);
+            return StartInternal(fileName, false, environmentVariables, workingDirectory, commandLine, createWindow);
         }
 
         public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer = null)
@@ -408,13 +408,17 @@ namespace NitroxModel.Platforms.OS.Shared
             return encoding.GetString(buffer.ToArray(), 0, unbufferedIndex);
         }
 
-        private static ProcessEx StartInternal(string fileName, bool withDebugger, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null)
+        private static ProcessEx StartInternal(string fileName, bool withDebugger, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
         {
             RuntimeHelpers.PrepareConstrainedRegions();
             ProcessCreationFlags creationFlags = ProcessCreationFlags.CREATE_UNICODE_ENVIRONMENT;
             if (withDebugger)
             {
                 creationFlags |= ProcessCreationFlags.DEBUG_ONLY_THIS_PROCESS;
+            }
+            if (!createWindow)
+            {
+                creationFlags |= ProcessCreationFlags.CREATE_NO_WINDOW;
             }
 
             StartupInfo startupInfo = new() { cb = Marshal.SizeOf<StartupInfo>() };
