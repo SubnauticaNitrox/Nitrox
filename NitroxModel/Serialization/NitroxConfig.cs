@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
+using static NitroxServer.Server;
+// using static NitroxServer.Server;
 namespace NitroxModel.Serialization
 {
     public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
@@ -76,6 +77,7 @@ namespace NitroxModel.Serialization
                     else
                     {
                         Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
+                        PrintStatusCode(StatusCode.four);
                     }
                 }
 
@@ -134,6 +136,7 @@ namespace NitroxModel.Serialization
                 catch (UnauthorizedAccessException)
                 {
                     Log.Error($"Config file {FileName} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
+                    PrintStatusCode(StatusCode.five);
                 }
             }
         }
@@ -167,6 +170,7 @@ namespace NitroxModel.Serialization
                 catch (ArgumentException e)
                 {
                     Log.Error(e, $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
+                    PrintStatusCode(StatusCode.four);
                     throw;
                 }
             }

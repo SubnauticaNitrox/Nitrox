@@ -33,6 +33,9 @@
         <Reference Include="LZ4">
             <HintPath>..\Nitrox.Assets.Subnautica\LZ4.dll</HintPath>
         </Reference>
+        <Reference Include="NitroxServer">
+          <HintPath>..\NitroxServer\bin\Debug\NitroxServer.dll</HintPath>
+        </Reference>
         <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>

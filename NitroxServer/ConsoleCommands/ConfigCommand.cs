@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -8,7 +8,7 @@ using NitroxModel.Platforms.OS.Shared;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
-
+using static NitroxServer.Server;
 namespace NitroxServer.ConsoleCommands
 {
     internal class ConfigCommand : Command
@@ -28,7 +28,6 @@ namespace NitroxServer.ConsoleCommands
                 Log.Warn("Waiting on previous config command to close the configuration file.");
                 return;
             }
-
             // Save config file if it doesn't exist yet.
             string saveDir = Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName);
             string configFile = Path.Combine(saveDir, serverConfig.FileName);
@@ -55,6 +54,7 @@ namespace NitroxServer.ConsoleCommands
 #if DEBUG
                     if (t.Exception != null)
                     {
+                        PrintStatusCode(StatusCode.four);
                         throw t.Exception;
                     }
 #endif
@@ -63,7 +63,7 @@ namespace NitroxServer.ConsoleCommands
 
         private async Task StartWithDefaultProgram(string fileToOpen)
         {
-            using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen);
+            using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen); // SCARY CODE, could be used for RCE or privilege escalation
             process.WaitForExit();
             try
             {

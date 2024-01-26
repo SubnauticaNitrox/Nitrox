@@ -20,6 +20,7 @@ using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
+using static NitroxServer.Server;
 
 namespace NitroxServer_Subnautica;
 
@@ -30,25 +31,6 @@ public class Program
     private static Lazy<string> gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
-    public enum StatusCode
-    {
-        zero,
-        one,
-        two,
-        three
-    }
-    public static void PrintStatusCode(StatusCode statusCode)
-    {
-        if (statusCode != StatusCode.zero)
-        {
-            // ToString("D") prints the integer value of the statusCode enum
-            Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error"));
-        }
-        else
-        {
-            Log.Info(string.Concat("Status code = ", statusCode.ToString("D")));
-        }
-    }
     private static async Task Main(string[] args)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
