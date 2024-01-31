@@ -7,7 +7,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 
 public class CrashHomeBootstrapper : IEntityBootstrapper
 {
-    public void Prepare(WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
+    public void Prepare(ref WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
     {
         // Set 0 for spawnTime so that CrashHome.Update can spawn a Crash if Start() couldn't
         entity.Metadata = new CrashHomeMetadata(0);

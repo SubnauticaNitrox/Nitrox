@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.GameLogic.Spawning.Metadata.Processor;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -76,6 +77,7 @@ public class CrashEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
         crash.transform.SetPositionAndRotation(worldEntity.Transform.Position.ToUnity(), worldEntity.Transform.Rotation.ToUnity());
         crash.transform.localScale = worldEntity.Transform.LocalScale.ToUnity();
         crashHome.crash = crash;
+        CrashHomeMetadataProcessor.UpdateCrashHomeOpen(crashHome);
         LargeWorldStreamer.main.MakeEntityTransient(crash.gameObject);
     }
 }
