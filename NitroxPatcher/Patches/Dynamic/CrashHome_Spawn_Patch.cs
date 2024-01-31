@@ -57,8 +57,7 @@ public sealed partial class CrashHome_Spawn_Patch : NitroxPatch, IDynamicPatch
         LargeWorldEntity largeWorldEntity = crashFishObject.GetComponent<LargeWorldEntity>();
         UniqueIdentifier uniqueIdentifier = crashFishObject.GetComponent<UniqueIdentifier>();
 
-        // Broadcast the CrashHome's new data, spawnTime must be set before extracting metadata
-        crashHome.spawnTime = DayNightCycle.main.timePassedAsFloat + 1200;
+        // Broadcast the new CrashHome's metadata (spawnTime = -1)
         Optional<EntityMetadata> metadata = Resolve<EntityMetadataManager>().Extract(crashHome);
         if (metadata.HasValue)
         {

@@ -15,7 +15,7 @@ public class NitroxGeyser : MonoBehaviour
     private float lastEruptTime;
     private float eruptInterval;
 
-    public void Initialize(GeyserEntity geyserEntity, Geyser geyser)
+    public void Initialize(GeyserWorldEntity geyserEntity, Geyser geyser)
     {
         if (!DayNightCycle.main)
         {

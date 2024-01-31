@@ -8,7 +8,7 @@ using NitroxModel.DataStructures.Unity;
 namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable, DataContract]
-public class GeyserEntity : WorldEntity
+public class GeyserWorldEntity : WorldEntity
 {
     [DataMember(Order = 1)]
     public float RandomIntervalVarianceMultiplier { get; set; }
@@ -17,13 +17,13 @@ public class GeyserEntity : WorldEntity
     public float StartEruptTime { get; set; }
 
     [IgnoreConstructor]
-    protected GeyserEntity()
+    protected GeyserWorldEntity()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public GeyserEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, float randomIntervalVarianceMultiplier, float startEruptTime) :
+    public GeyserWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, float randomIntervalVarianceMultiplier, float startEruptTime) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         RandomIntervalVarianceMultiplier = randomIntervalVarianceMultiplier;
@@ -32,6 +32,6 @@ public class GeyserEntity : WorldEntity
 
     public override string ToString()
     {
-        return $"[{nameof(GeyserEntity)} RandomIntervalVarianceMultiplier: {RandomIntervalVarianceMultiplier}, StartEruptTime: {StartEruptTime} {base.ToString()}]";
+        return $"[{nameof(GeyserWorldEntity)} RandomIntervalVarianceMultiplier: {RandomIntervalVarianceMultiplier}, StartEruptTime: {StartEruptTime} {base.ToString()}]";
     }
 }

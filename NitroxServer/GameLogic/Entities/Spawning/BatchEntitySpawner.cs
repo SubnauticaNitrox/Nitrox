@@ -296,7 +296,7 @@ public class BatchEntitySpawner : IEntitySpawner
             spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
         }
 
-        entityBootstrapperManager.PrepareEntityIfRequired(spawnedEntity, deterministicBatchGenerator);
+        entityBootstrapperManager.PrepareEntityIfRequired(ref spawnedEntity, deterministicBatchGenerator);
 
         yield return spawnedEntity;
 

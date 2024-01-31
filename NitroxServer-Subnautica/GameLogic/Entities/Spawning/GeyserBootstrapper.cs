@@ -6,13 +6,12 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 
 public class GeyserBootstrapper : IEntityBootstrapper
 {
-    public void Prepare(WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
+    public void Prepare(ref WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
     {
-        if (entity is GeyserEntity geyserEntity)
-        {
-            geyserEntity.RandomIntervalVarianceMultiplier = XORRandom.NextFloat();
-            // The value 15 doesn't mean anything in particular, it's just an initial eruption time window so geysers don't all erupt at the same time at first
-            geyserEntity.StartEruptTime = 15 * XORRandom.NextFloat();
-        }
+        entity = new GeyserWorldEntity(entity.Transform, entity.Level, entity.ClassId,
+                                  entity.SpawnedByServer, entity.Id, entity.TechType,
+                                  entity.Metadata, entity.ParentId, entity.ChildEntities,
+                                  XORRandom.NextFloat(), 15 * XORRandom.NextFloat());
+        // The value 15 doesn't mean anything in particular, it's just an initial eruption time window so geysers don't all erupt at the same time at first
     }
 }

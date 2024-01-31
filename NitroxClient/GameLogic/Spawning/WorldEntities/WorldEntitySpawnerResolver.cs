@@ -15,13 +15,15 @@ public class WorldEntitySpawnerResolver
     private readonly PlaceholderGroupWorldEntitySpawner placeholderGroupWorldEntitySpawner;
     private readonly PlayerWorldEntitySpawner playerWorldEntitySpawner;
     private readonly SerializedWorldEntitySpawner serializedWorldEntitySpawner;
+    private readonly GeyserWorldEntitySpawner geyserWorldEntitySpawner;
+    private readonly ReefbackEntitySpawner reefbackEntitySpawner;
+    private readonly ReefbackChildEntitySpawner reefbackChildEntitySpawner;
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
     public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
-        customSpawnersByTechType[TechType.Reefback] = new ReefbackWorldEntitySpawner(defaultEntitySpawner);
         customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(entityMetadataManager);
 
         vehicleWorldEntitySpawner = new(entities);
@@ -29,6 +31,9 @@ public class WorldEntitySpawnerResolver
         placeholderGroupWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(entities, this, defaultEntitySpawner, entityMetadataManager, prefabPlaceholderEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
         serializedWorldEntitySpawner = new SerializedWorldEntitySpawner();
+        geyserWorldEntitySpawner = new(entities);
+        reefbackChildEntitySpawner = new ReefbackChildEntitySpawner();
+        reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner);
     }
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
@@ -45,6 +50,12 @@ public class WorldEntitySpawnerResolver
                 return vehicleWorldEntitySpawner;
             case SerializedWorldEntity:
                 return serializedWorldEntitySpawner;
+            case GeyserWorldEntity:
+                return geyserWorldEntitySpawner;
+            case ReefbackEntity:
+                return reefbackEntitySpawner;
+            case ReefbackChildEntity:
+                return reefbackChildEntitySpawner;
         }
 
         TechType techType = entity.TechType.ToUnity();
