@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
-
+using static NitroxModel.DisplayStatusCodes;
+using static NitroxServer.Server;
 namespace NitroxModel.Helper
 {
     /// <summary>
@@ -34,6 +35,7 @@ namespace NitroxModel.Helper
         {
             if (hasSet)
             {
+                DisplayStatusCode(StatusCode.twelve);
                 throw new Exception("Environment type can only be set once");
             }
 

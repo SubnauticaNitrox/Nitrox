@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-
+using static NitroxModel.DisplayStatusCodes;
+using static NitroxServer.Server;
 namespace NitroxModel.DataStructures.Util
 {
     /// <summary>
@@ -97,6 +98,7 @@ namespace NitroxModel.DataStructures.Util
         {
             if (value == null)
             {
+                DisplayStatusCode(StatusCode.eight);
                 throw new ArgumentNullException(nameof(value), $"Tried to set null on {typeof(Optional<T>)}");
             }
 
