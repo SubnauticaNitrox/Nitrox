@@ -1,6 +1,6 @@
-﻿using System.IO;
+using System.IO;
 using NitroxModel.Platforms.Store.Interfaces;
-
+using static NitroxServer.Server;
 namespace NitroxModel.Platforms.Store
 {
     public static class GamePlatforms
@@ -19,6 +19,9 @@ namespace NitroxModel.Platforms.Store
                 if (platform.OwnsGame(gameDirectory))
                 {
                     return platform;
+                } else
+                {
+                    DisplayStatusCode(StatusCode.nine);
                 }
             }
 

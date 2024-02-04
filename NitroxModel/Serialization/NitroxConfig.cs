@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using static NitroxServer.Server;
+using static NitroxModel.DisplayStatusCodes;
 // using static NitroxServer.Server;
 namespace NitroxModel.Serialization
 {
@@ -58,6 +59,7 @@ namespace NitroxModel.Serialization
                         if (!typeCachedDict.TryGetValue(keyValuePair[0].ToLowerInvariant(), out MemberInfo member))
                         {
                             Log.Warn($"Property or field {keyValuePair[0]} does not exist on type {type.FullName}!");
+                            DisplayStatusCode(StatusCode.six);
                             continue;
                         }
 
@@ -72,12 +74,13 @@ namespace NitroxModel.Serialization
                                 _ => (typeof(string), "")
                             };
                             Log.Warn($@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
+                            DisplayStatusCode(StatusCode.six);
                         }
                     }
                     else
                     {
                         Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
-                        PrintStatusCode(StatusCode.four);
+                        DisplayStatusCode(StatusCode.four);
                     }
                 }
 
@@ -99,6 +102,7 @@ namespace NitroxModel.Serialization
                     });
 
                     Log.Warn($@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
+                    DisplayStatusCode(StatusCode.six);
                 }
             }
         }
@@ -136,7 +140,7 @@ namespace NitroxModel.Serialization
                 catch (UnauthorizedAccessException)
                 {
                     Log.Error($"Config file {FileName} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
-                    PrintStatusCode(StatusCode.five);
+                    DisplayStatusCode(StatusCode.five);
                 }
             }
         }
@@ -170,7 +174,7 @@ namespace NitroxModel.Serialization
                 catch (ArgumentException e)
                 {
                     Log.Error(e, $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
-                    PrintStatusCode(StatusCode.four);
+                    DisplayStatusCode(StatusCode.four);
                     throw;
                 }
             }
