@@ -1,18 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Windows;
 using System.Windows.Forms;
-using static NitroxServer.Server;
+using static NitroxModel.DisplayStatusCodes;
 public class CustomMessageBox : Form
 {
+    
     Label message = new Label();
     Button helpBtn = new Button();
     Button closeBtn = new Button();
-    public CustomMessageBox()
-    {
-
-    }
 
     public CustomMessageBox(StatusCode statusCode)
     {

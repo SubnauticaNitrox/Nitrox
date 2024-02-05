@@ -20,8 +20,7 @@ using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
-using static NitroxServer.Server;
-using static NitroxModel.DisplayStatusCodes;
+using static NitroxServer.DisplayStatusCodeServerConsole;
 namespace NitroxServer_Subnautica;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
@@ -127,7 +126,6 @@ public class Program
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
                 // Log status codes that can be googled by the user to troubleshoot on their own, hopefully
                 PrintStatusCode(StatusCode.zero);
-                DisplayStatusCode(StatusCode.one);
             }
         }
         finally

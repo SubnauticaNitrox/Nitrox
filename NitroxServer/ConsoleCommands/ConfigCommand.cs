@@ -8,7 +8,7 @@ using NitroxModel.Platforms.OS.Shared;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
-using static NitroxServer.Server;
+using static NitroxServer.DisplayStatusCodeServerConsole;
 namespace NitroxServer.ConsoleCommands
 {
     internal class ConfigCommand : Command
