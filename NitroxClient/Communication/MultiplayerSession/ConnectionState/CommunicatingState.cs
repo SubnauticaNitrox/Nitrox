@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
-
+using NitroxModel;
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public abstract class CommunicatingState : IMultiplayerSessionConnectionState
@@ -14,7 +15,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             sessionConnectionContext.ClearSessionState();
             sessionConnectionContext.Client.Stop();
-
+            DisplayStatusCode(StatusCode.eighteen);
             Disconnected newConnectionState = new Disconnected();
             sessionConnectionContext.UpdateConnectionState(newConnectionState);
         }

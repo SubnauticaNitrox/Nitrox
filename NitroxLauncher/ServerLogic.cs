@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NitroxLauncher.Models.Events;
-
+using NitroxModel;
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher
 {
     internal sealed class ServerLogic : IDisposable
@@ -35,6 +36,7 @@ namespace NitroxLauncher
         {
             if (IsServerRunning)
             {
+                DisplayStatusCode(StatusCode.eleven);
                 throw new Exception("An instance of Nitrox Server is already running");
             }
 

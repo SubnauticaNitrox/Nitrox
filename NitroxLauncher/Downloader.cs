@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LitJson;
 using NitroxLauncher.Models;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher
 {
     internal static class Downloader
@@ -35,6 +35,7 @@ namespace NitroxLauncher
 #if DEBUG
                 if (response == null)
                 {
+                    DisplayStatusCode(StatusCode.thirteen);
                     Log.Error($"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
                     LauncherNotifier.Error("Unable to fetch nitrox blogs");
                     return blogs;
@@ -61,6 +62,7 @@ namespace NitroxLauncher
 
                         if (!DateTime.TryParse(released, out DateTime dateTime))
                         {
+                            DisplayStatusCode(StatusCode.thirteen);
                             dateTime = DateTime.UtcNow;
                             Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
                         }
@@ -71,6 +73,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
+                DisplayStatusCode(StatusCode.thirteen);
                 Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
                 LauncherNotifier.Error("Unable to fetch nitrox blogs");
             }
@@ -107,6 +110,7 @@ namespace NitroxLauncher
 
                         if (!DateTime.TryParse(released, out DateTime dateTime))
                         {
+                            DisplayStatusCode(StatusCode.thirteen);
                             dateTime = DateTime.UtcNow;
                             Log.Error($"Error while trying to parse release time ({released}) of nitrox v{version}");
                         }
@@ -123,6 +127,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
+                DisplayStatusCode(StatusCode.thirteen);
                 Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
                 LauncherNotifier.Error("Unable to fetch nitrox changelogs");
             }
@@ -155,6 +160,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
+                DisplayStatusCode(StatusCode.thirteen);
                 Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
                 LauncherNotifier.Error("Unable to check for updates");
             }
@@ -179,6 +185,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
+                DisplayStatusCode(StatusCode.thirteen);
                 Log.Error(ex, $"Error while requesting data from {url}");
             }
 

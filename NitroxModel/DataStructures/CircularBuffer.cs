@@ -36,7 +36,10 @@ public class CircularBuffer<T> : IList<T>
     }
     public CircularBuffer(int maxSize, int initialCapacity = 0)
     {
-        if (maxSize < 0) throw new ArgumentOutOfRangeException(nameof(maxSize), "Max size must be larger than -1");
+        if (maxSize < 0) {
+            DisplayStatusCode(StatusCode.twelve);
+            throw new ArgumentOutOfRangeException(nameof(maxSize), "Max size must be larger than -1"); 
+        }
 
         this.maxSize = maxSize;
         data = new List<T>(Math.Max(0, Math.Min(initialCapacity, maxSize)));

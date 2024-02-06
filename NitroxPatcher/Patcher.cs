@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +14,7 @@ using NitroxModel.Helper;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxPatcher;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
@@ -50,6 +50,7 @@ internal static class Patcher
             }
             catch (HarmonyException e)
             {
+                DisplayStatusCode(StatusCode.fourteen);
                 Exception innerMost = e;
                 while (innerMost.InnerException != null)
                 {
@@ -59,6 +60,7 @@ internal static class Patcher
             }
             catch (Exception e)
             {
+                DisplayStatusCode(StatusCode.fourteen);
                 Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
             }
         }
@@ -96,6 +98,7 @@ internal static class Patcher
 
         if (container != null)
         {
+            DisplayStatusCode(StatusCode.eight);
             throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
         Log.Info("Registering dependencies");
@@ -106,6 +109,7 @@ internal static class Patcher
         }
         catch (ReflectionTypeLoadException ex)
         {
+            DisplayStatusCode(StatusCode.seven);
             Log.Error($"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
             foreach (Exception loaderEx in ex.LoaderExceptions)
             {
@@ -115,6 +119,7 @@ internal static class Patcher
         }
         catch (Exception ex)
         {
+            DisplayStatusCode(StatusCode.seven);
             Log.Error(ex, "Error while initializing and loading dependencies.");
             throw;
         }

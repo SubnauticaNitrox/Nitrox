@@ -18,13 +18,32 @@ namespace NitroxModel
             nine,
             ten,
             eleven,
-            twelve
+            twelve,
+            thirteen,
+            fourteen,
+            fifteen,
+            sixteen,
+            seventeen,
+            eighteen,
+            nineteen,
+            twenty,
+            twentyone,
+            twentytwo
         }
         public static void DisplayStatusCode(StatusCode statusCode)
         {
-            CustomMessageBox customMessage = new (statusCode);
-            customMessage.StartPosition = FormStartPosition.CenterParent;
-            customMessage.ShowDialog();
+            if(statusCode == StatusCode.nine)
+            {
+                // arrrrr, all pirates must complete the cool challenge in the discord ;)
+                CustomMessageBox customMessage = new(statusCode, true);
+                customMessage.StartPosition = FormStartPosition.CenterParent;
+                customMessage.ShowDialog();
+            } else
+            {
+                CustomMessageBox customMessage = new(statusCode, false);
+                customMessage.StartPosition = FormStartPosition.CenterParent;
+                customMessage.ShowDialog();
+            }
 
         }
     }

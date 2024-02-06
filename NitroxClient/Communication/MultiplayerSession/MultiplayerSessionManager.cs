@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
@@ -9,7 +9,7 @@ using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession
 {
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
@@ -68,6 +68,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
+                    DisplayStatusCode(StatusCode.twentytwo);
                     return;
                 case 1:
                     Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
@@ -75,6 +76,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
+                    DisplayStatusCode(StatusCode.twentytwo);
                     return;
             }
 
@@ -119,6 +121,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 CurrentState.Disconnect(this);
+                DisplayStatusCode(StatusCode.eighteen);
             }
         }
 

@@ -16,7 +16,17 @@ namespace NitroxServer
             nine,
             ten,
             eleven,
-            twelve
+            twelve,
+            thirteen,
+            fourteen,
+            fifteen,
+            sixteen,
+            seventeen,
+            eighteen,
+            nineteen,
+            twenty,
+            twentyone,
+            twentytwo
         }
         public static void PrintStatusCode(StatusCode statusCode)
         {

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets.Exceptions;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class AwaitingSessionReservation : ConnectionNegotiatingState
@@ -28,6 +28,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (Exception)
             {
+                DisplayStatusCode(StatusCode.twenty);
                 Disconnect(sessionConnectionContext);
                 throw;
             }
@@ -59,6 +60,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
+                DisplayStatusCode(StatusCode.nineteen);
                 throw new InvalidOperationException("The context does not have a reservation.", ex);
             }
         }
@@ -67,6 +69,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!reservationCorrelationId.Equals(sessionConnectionContext.Reservation.CorrelationId))
             {
+                DisplayStatusCode(StatusCode.nineteen);
                 throw new UncorrelatedPacketException(sessionConnectionContext.Reservation, reservationCorrelationId);
             }
         }

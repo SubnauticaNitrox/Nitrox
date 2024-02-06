@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Abstract;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class SessionReservationRejected : ConnectionNegotiatedState
@@ -9,6 +9,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
+            DisplayStatusCode(StatusCode.twenty);
             throw new InvalidOperationException("The session has rejected the reserveration request.");
         }
     }

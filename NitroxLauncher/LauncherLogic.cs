@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -18,7 +18,7 @@ using System.Windows.Threading;
 using NitroxLauncher.Models.Utils;
 using System.Windows.Controls;
 using System.Diagnostics;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher
 {
     internal class LauncherLogic : IDisposable
@@ -52,6 +52,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
+                DisplayStatusCode(StatusCode.fourteen);
                 Log.Error(ex, "Error while disposing the launcher");
             }
 
@@ -93,6 +94,7 @@ namespace NitroxLauncher
 
             if (task.Exception != null)
             {
+                DisplayStatusCode(StatusCode.fifteen);
                 MessageBox.Show($"An error occurred configuring the firewall: {task.Exception}");
             }
         }
@@ -121,16 +123,17 @@ namespace NitroxLauncher
                     {
                         Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                         {
+                            DisplayStatusCode(StatusCode.five);
                             MessageBox.Show(Application.Current.MainWindow!, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.", "Required file permission error", MessageBoxButton.OK,
                                             MessageBoxImage.Error);
                             Environment.Exit(1);
                         }, DispatcherPriority.ApplicationIdle);
                     }
                 }
-                
+
                 // Save game path as preferred for future sessions.
                 NitroxUser.PreferredGamePath = path;
-                
+
                 if (nitroxEntryPatch?.IsApplied == true)
                 {
                     nitroxEntryPatch.Remove();
@@ -196,6 +199,7 @@ namespace NitroxLauncher
 
             if (PirateDetection.HasTriggered)
             {
+                DisplayStatusCode(StatusCode.nine);
                 throw new Exception("Aarrr! Nitrox walked the plank :(");
             }
 
@@ -218,6 +222,7 @@ namespace NitroxLauncher
             }
             catch (IOException ex)
             {
+                DisplayStatusCode(StatusCode.seven);
                 Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
@@ -228,6 +233,7 @@ namespace NitroxLauncher
             }
             if (nitroxEntryPatch == null)
             {
+                DisplayStatusCode(StatusCode.fourteen);
                 throw new Exception("Nitrox was blocked by another program");
             }
             nitroxEntryPatch.Remove();
@@ -241,7 +247,16 @@ namespace NitroxLauncher
 
             gameProcess = await StartSubnauticaAsync();
         }
-
+        ProcessEx throwUnsupportedInstallException(string subnauticaPath)
+        {
+            DisplayStatusCode(StatusCode.sixteen);
+            throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.");
+        }
+        ProcessEx throwUnableToStartGameException(IGamePlatform platform)
+        {
+            DisplayStatusCode(StatusCode.seventeen);
+            throw new Exception($"Unable to start game through {platform.Name}");
+        }
         private async Task<ProcessEx> StartSubnauticaAsync()
         {
             string subnauticaPath = Config.SubnauticaPath;
@@ -256,10 +271,10 @@ namespace NitroxLauncher
                 EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
                 MSStore m => await m.StartGameAsync(subnauticaExe),
                 DiscordStore d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
-                _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.")
-            };
+                _ => throwUnsupportedInstallException(subnauticaPath)
+            };;
 
-            return game ?? throw new Exception($"Unable to start game through {platform.Name}");
+            return game ?? throwUnableToStartGameException(platform);
         }
 
         private void OnSubnauticaExited(object sender, EventArgs e)
@@ -271,8 +286,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Log.Error(ex);
+                DisplayStatusCode(StatusCode.fourteen);
             }
         }
 
