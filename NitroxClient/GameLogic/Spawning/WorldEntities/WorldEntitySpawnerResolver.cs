@@ -18,10 +18,11 @@ public class WorldEntitySpawnerResolver
     private readonly GeyserWorldEntitySpawner geyserWorldEntitySpawner;
     private readonly ReefbackEntitySpawner reefbackEntitySpawner;
     private readonly ReefbackChildEntitySpawner reefbackChildEntitySpawner;
+    private readonly CreatureRespawnEntitySpawner creatureRespawnEntitySpawner;
 
     private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new();
 
-    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
+    public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(entityMetadataManager);
@@ -34,6 +35,7 @@ public class WorldEntitySpawnerResolver
         geyserWorldEntitySpawner = new(entities);
         reefbackChildEntitySpawner = new ReefbackChildEntitySpawner();
         reefbackEntitySpawner = new ReefbackEntitySpawner(reefbackChildEntitySpawner);
+        creatureRespawnEntitySpawner = new(simulationOwnership);
     }
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
@@ -56,6 +58,8 @@ public class WorldEntitySpawnerResolver
                 return reefbackEntitySpawner;
             case ReefbackChildEntity:
                 return reefbackChildEntitySpawner;
+            case CreatureRespawnEntity:
+                return creatureRespawnEntitySpawner;
         }
 
         TechType techType = entity.TechType.ToUnity();
