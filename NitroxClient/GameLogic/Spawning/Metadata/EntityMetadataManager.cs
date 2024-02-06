@@ -43,7 +43,11 @@ public class EntityMetadataManager
         {
             if (extractors.TryGetValue(component.GetType(), out IEntityMetadataExtractor extractor))
             {
-                return extractor.From(component);
+                Optional<EntityMetadata> metadata = extractor.From(component);
+                if (metadata.HasValue)
+                {
+                    return metadata;
+                }
             }
         }
 

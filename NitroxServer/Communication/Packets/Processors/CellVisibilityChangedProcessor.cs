@@ -39,14 +39,16 @@ public class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellV
             entitySimulation.FillWithRemovedCells(player, removedCell, totalSimulationChanges);
         }
 
+        // Simulation update must be broadcasted before the entities are spawned
+        if (totalSimulationChanges.Count > 0)
+        {
+            entitySimulation.BroadcastSimulationChanges(new(totalSimulationChanges));
+        }
+
         if (totalEntities.Count > 0)
         {
             SpawnEntities batchEntities = new(totalEntities);
             player.SendPacket(batchEntities);
-        }
-        if (totalSimulationChanges.Count > 0)
-        {
-            entitySimulation.BroadcastSimulationChanges(new(totalSimulationChanges));
         }
     }
 }
