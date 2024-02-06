@@ -160,7 +160,7 @@ namespace NitroxClient.GameLogic
 
             TaskResult<Optional<GameObject>> entityResult = new();
             TaskResult<Exception> exception = new();
-            
+
             while (batch.Count > 0)
             {
                 entityResult.Set(Optional.Empty);
@@ -208,9 +208,9 @@ namespace NitroxClient.GameLogic
                     continue;
                 }
 
-                MarkAsSpawned(entity);
-
                 entityMetadataManager.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
+
+                MarkAsSpawned(entity);
 
                 // Finding out about all children (can be hidden in the object's hierarchy or in a pending list)
                 
@@ -264,12 +264,6 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Entity was already spawned but not found(is it in another chunk?) NitroxId: {entity.Id} TechType: {entity.TechType} ClassId: {entity.ClassId} Transform: {entity.Transform}");
 #endif
                 return;
-            }
-            if (entity is WorldEntity worldEntity)
-            {
-                gameObject.transform.position = worldEntity.Transform.Position.ToUnity();
-                gameObject.transform.rotation = worldEntity.Transform.Rotation.ToUnity();
-                gameObject.transform.localScale = worldEntity.Transform.LocalScale.ToUnity();
             }
             entityMetadataManager.ApplyMetadata(gameObject, entity.Metadata);
         }

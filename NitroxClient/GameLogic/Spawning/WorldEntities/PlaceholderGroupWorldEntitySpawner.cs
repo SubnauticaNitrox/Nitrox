@@ -66,6 +66,11 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         };
         while (stack.Count > 0)
         {
+            // It may happen that the chunk is unloaded, and the group along so we just cancel this spawn behaviour
+            if (!groupObject)
+            {
+                yield break;
+            }
             childResult.Set(Optional.Empty);
             Entity current = stack.Pop();
             switch (current)

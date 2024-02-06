@@ -227,8 +227,7 @@ public class WorldEntityManager
 
             if (totalEntites > 0)
             {
-                // TODO: Count
-                Log.Info($"Loading: {(int)((totalEntites/ 504732.0) * 100)}%");
+                Log.Info($"Loading : {(int)((totalEntites/ 709531) * 100)}%");
             }
         }
     }

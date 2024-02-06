@@ -85,7 +85,7 @@ public static class NitroxEntityExtensions
         }
         if (!component.TryGetComponent(out NitroxEntity nitroxEntity))
         {
-            Log.Warn($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {component.GetFullHierarchyPath()}");
+            Log.WarnOnce($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {component.GetFullHierarchyPath()}");
             nitroxId = null;
             return false;
         }
