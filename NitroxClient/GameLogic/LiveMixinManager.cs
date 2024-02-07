@@ -1,4 +1,4 @@
-using NitroxClient.MonoBehaviours;
+using System;
 using NitroxModel.DataStructures;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ public class LiveMixinManager
 {
     private readonly SimulationOwnership simulationOwnership;
 
-    private bool processingRemoteHealthChange = false;
+    public bool IsRemoteHealthChanging { get; private set; }
 
     public LiveMixinManager(SimulationOwnership simulationOwnership)
     {
@@ -32,7 +32,7 @@ public class LiveMixinManager
             return false;
         }
 
-        if (!simulationOwnership.HasAnyLockType(id) && !processingRemoteHealthChange)
+        if (!simulationOwnership.HasAnyLockType(id) && !IsRemoteHealthChanging)
         {
             return false;
         }
@@ -61,7 +61,7 @@ public class LiveMixinManager
         return true;
     }
 
-    public void SyncRemoteHealth(LiveMixin liveMixin, float remoteHealth)
+    public void SyncRemoteHealth(LiveMixin liveMixin, float remoteHealth, Vector3 position = default, DamageType damageType = DamageType.Normal)
     {
         if (liveMixin.health == remoteHealth)
         {
@@ -70,22 +70,28 @@ public class LiveMixinManager
 
         float difference = remoteHealth - liveMixin.health;
 
-        processingRemoteHealthChange = true;
+        IsRemoteHealthChanging = true;
 
-        if (difference < 0)
+        // We catch the exceptions here because we don't want IsRemoteHealthChanging to be stuck to true
+        try
         {
-            liveMixin.TakeDamage(difference);
-        }
-        else
+            if (difference < 0)
+            {
+                liveMixin.TakeDamage(difference, position, damageType);
+            }
+            else
+            {
+                liveMixin.AddHealth(difference);
+            }
+        } catch (Exception e)
         {
-            liveMixin.AddHealth(difference);
+            Log.Error(e, $"Encountered an expcetion while processing health update");
         }
 
-        processingRemoteHealthChange = false;
+        IsRemoteHealthChanging = false;
 
         // We mainly only do the above to trigger damage effects and sounds.  After those, we sync the remote value
         // to ensure that any floating point discrepencies aren't an issue.
         liveMixin.health = remoteHealth;
     }
-
 }

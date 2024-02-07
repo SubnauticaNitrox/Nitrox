@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
         public List<Entity> EntitiesToSpawn { get; private init; }
         private bool spawningEntities;
 
-        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
@@ -60,7 +60,9 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(SerializedWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(GlobalRootEntity)] = new GlobalRootEntitySpawner();
-            entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
+            entitySpawnersByType[typeof(BaseLeakEntity)] = new BaseLeakEntitySpawner(liveMixinManager);
+            entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this, (BaseLeakEntitySpawner)entitySpawnersByType[typeof(BaseLeakEntity)]);
+            entitySpawnersByType[typeof(RadiationLeakEntity)] = new RadiationLeakEntitySpawner(timeManager);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
             entitySpawnersByType[typeof(OxygenPipeEntity)] = new OxygenPipeEntitySpawner(this, (WorldEntitySpawner)entitySpawnersByType[typeof(WorldEntity)]);
@@ -103,9 +105,9 @@ namespace NitroxClient.GameLogic
             throttledPacketSender.SendThrottled(new EntityMetadataUpdate(id, metadata), packet => packet.Id, throttleTime);
         }
 
-        public void BroadcastEntitySpawnedByClient(WorldEntity entity)
+        public void BroadcastEntitySpawnedByClient(Entity entity, bool requireRespawn = false)
         {
-            packetSender.Send(new EntitySpawnedByClient(entity));
+            packetSender.Send(new EntitySpawnedByClient(entity, requireRespawn));
         }
 
         private IEnumerator SpawnNewEntities()
@@ -278,7 +280,7 @@ namespace NitroxClient.GameLogic
         {
             if (spawnedAsType.TryGetValue(entity.Id, out Type type))
             {
-                return (type == entity.GetType());
+                return type == entity.GetType() && NitroxEntity.TryGetObjectFrom(entity.Id, out _);
             }
 
             return false;

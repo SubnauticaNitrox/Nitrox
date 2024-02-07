@@ -13,25 +13,24 @@ public sealed partial class LiveMixin_TakeDamage_Patch : NitroxPatch, IDynamicPa
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((LiveMixin t) => t.TakeDamage(default(float), default(Vector3), default(DamageType), default(GameObject)));
 
-    public static bool Prefix(out float? __state, LiveMixin __instance, GameObject dealer)
+    public static bool Prefix(out float __state, LiveMixin __instance, GameObject dealer)
     {
-        __state = null;
+        // Persist the previous health value
+        __state = __instance.health;
 
         if (!Resolve<LiveMixinManager>().IsWhitelistedUpdateType(__instance))
         {
             return true; // everyone should process this locally
         }
 
-        // Persist the previous health value
-        __state = __instance.health;
-
         return Resolve<LiveMixinManager>().ShouldApplyNextHealthUpdate(__instance, dealer);
     }
 
-    public static void Postfix(float? __state, LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
+    public static void Postfix(float __state, LiveMixin __instance, bool __runOriginal)
     {
         // Did we realize a change in health?
-        if (!__state.HasValue || __state.Value == __instance.health)
+        if (!__runOriginal || __state == __instance.health || Resolve<LiveMixinManager>().IsRemoteHealthChanging ||
+            __instance.GetComponent<BaseCell>())
         {
             return;
         }

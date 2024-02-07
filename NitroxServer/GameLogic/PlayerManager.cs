@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -18,6 +11,13 @@ using NitroxServer.Communication;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NitroxServer.GameLogic
 {
@@ -172,8 +172,8 @@ namespace NitroxServer.GameLogic
                         }
 
                         return false;
-                    
-                    // We use ContinueWith to avoid having to try/catch a TaskCanceledException
+
+                        // We use ContinueWith to avoid having to try/catch a TaskCanceledException
                     }).ContinueWith(task =>
                     {
                         if (task.IsFaulted)
@@ -275,6 +275,8 @@ namespace NitroxServer.GameLogic
                 RespawnExistingEntity(player);
             }
 
+            bool isFirstPlayer = GetConnectedPlayers().Count == 1;
+
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
                 assignedEscapePodId,
@@ -294,7 +296,8 @@ namespace NitroxServer.GameLogic
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
                 world.StoryManager.GetTimeData(),
-                BuildingManager.GetEntitiesOperations(world.WorldEntityManager.GetGlobalRootEntities(true))
+                isFirstPlayer,
+            BuildingManager.GetEntitiesOperations(world.WorldEntityManager.GetGlobalRootEntities(true))
             );
 
             player.SendPacket(initialPlayerSync);

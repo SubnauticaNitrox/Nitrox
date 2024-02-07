@@ -100,11 +100,11 @@ public class EntitySimulation
         return ownershipChanges;
     }
 
-    public SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player)
+    public SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player, bool shouldEntityMove = true)
     {
         if (simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
         {
-            bool doesEntityMove = entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
+            bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
             return new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
         }
 

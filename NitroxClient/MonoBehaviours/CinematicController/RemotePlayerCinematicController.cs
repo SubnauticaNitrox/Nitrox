@@ -3,7 +3,7 @@ using NitroxClient.GameLogic;
 using UnityEngine;
 using static PlayerCinematicController;
 
-namespace NitroxClient.MonoBehaviours.Overrides;
+namespace NitroxClient.MonoBehaviours.CinematicController;
 
 /// <summary>
 /// Override for <see cref="PlayerCinematicController"/>

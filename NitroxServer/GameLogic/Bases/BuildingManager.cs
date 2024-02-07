@@ -56,7 +56,6 @@ public class BuildingManager
             return false;
         }
 
-        parentEntity.ChildEntities.Add(ghostEntity);
         worldEntityManager.AddGlobalRootEntity(ghostEntity);
         return true;
     }
@@ -92,7 +91,6 @@ public class BuildingManager
             return false;
         }
 
-        parentEntity.ChildEntities.Add(moduleEntity);
         worldEntityManager.AddGlobalRootEntity(moduleEntity);
         return true;
     }
@@ -196,7 +194,6 @@ public class BuildingManager
         if (updateBase.BuiltPieceEntity != null && updateBase.BuiltPieceEntity is GlobalRootEntity builtPieceEntity)
         {
             worldEntityManager.AddGlobalRootEntity(builtPieceEntity);
-            buildEntity.ChildEntities.Add(builtPieceEntity);
         }
 
         if (updateBase.ChildrenTransfer.Item1 != null && updateBase.ChildrenTransfer.Item2 != null)
@@ -266,7 +263,6 @@ public class BuildingManager
         GhostEntity ghostEntity = pieceDeconstructed.ReplacerGhost;
         
         worldEntityManager.AddGlobalRootEntity(ghostEntity);
-        buildEntity.ChildEntities.Add(ghostEntity);
         buildEntity.BaseData = pieceDeconstructed.BaseData;
         buildEntity.OperationId++;
         operationId = buildEntity.OperationId;
@@ -287,7 +283,6 @@ public class BuildingManager
         }
         InteriorPieceEntity newPiece = waterParkDeconstructed.NewWaterPark;
         worldEntityManager.AddGlobalRootEntity(newPiece);
-        buildEntity.ChildEntities.Add(newPiece);
 
         foreach (NitroxId childId in waterParkDeconstructed.MovedChildrenIds)
         {
