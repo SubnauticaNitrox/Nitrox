@@ -346,7 +346,7 @@ event:/player/selfScan4;false;false;0
 event:/player/selfScan5;false;false;0
 event:/player/signal_upload;false;false;0
 event:/player/start_freedive;false;false;0
-event:/player/start_freedive_splash;true;false;30
+event:/player/start_freedive_splash;false;false;0
 event:/player/step;true;false;20
 event:/player/stillsuit_equipped;false;false;0
 event:/player/story/Aurora_RingRoom_Terminal2;false;false;0
@@ -814,4 +814,4 @@ event:/tools/transfuser/take_sample;false;false;0
 event:/tools/use_loot;false;false;0
 event:/tools/welder/deploy;false;false;20
 event:/tools/welder/first_use;false;false;20
-event:/tools/welder/weld_loop;true;false;20
+event:/tools/welder/weld_loop;false;false;0
