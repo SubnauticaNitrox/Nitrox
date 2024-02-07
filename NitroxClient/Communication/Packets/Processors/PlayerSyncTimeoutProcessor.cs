@@ -1,22 +1,31 @@
-﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class PlayerSyncTimeoutProcessor : ClientPacketProcessor<PlayerSyncTimeout>
 {
-    public override void Process(PlayerSyncTimeout packet)
+    private readonly IMultiplayerSession session;
+
+    public PlayerSyncTimeoutProcessor(IMultiplayerSession session)
     {
-        Multiplayer.Main.StartCoroutine(TimeoutRoutine());
+        this.session = session;
     }
 
-    private IEnumerator TimeoutRoutine()
+    public override void Process(PlayerSyncTimeout packet)
     {
-        Log.InGame("Error: Initial sync timeout, closing game");
-        yield return new WaitForSecondsRealtime(5);
-        IngameMenu.main.QuitGame(false);
+        // This will finish the loading screen
+        Multiplayer.Main.InsideJoinQueue = false;
+        Multiplayer.Main.InitialSyncCompleted = true;
+
+        session.Disconnect();
+
+        // TODO: make this translatable
+        string message = "Initial sync timed out";
+
+        Modal.Get<KickedModal>().Show(message);
     }
 }
