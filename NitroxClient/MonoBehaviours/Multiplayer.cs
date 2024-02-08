@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
@@ -15,6 +12,9 @@ using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
@@ -32,7 +32,7 @@ namespace NitroxClient.MonoBehaviours
         private GameLogic.Terrain terrain;
 
         public bool InitialSyncCompleted { get; set; }
-        public bool InsideJoinQueue { get; set; }
+        public bool TimedOut { get; set; }
 
         /// <summary>
         ///     True if multiplayer is loaded and client is connected to a server.
@@ -86,6 +86,7 @@ namespace NitroxClient.MonoBehaviours
             if (Active)
             {
                 Main.InitialSyncCompleted = false;
+                Main.TimedOut = false;
                 Main.StartCoroutine(LoadAsync());
             }
             else
@@ -109,12 +110,23 @@ namespace NitroxClient.MonoBehaviours
             yield return Main.StartCoroutine(Main.StartSession());
             WaitScreen.Remove(item);
 
-            WaitScreen.ManualWaitItem joinQueueItem = WaitScreen.Add(Language.main.Get("Nitrox_Waiting"));
-            Main.InsideJoinQueue = true;
-            yield return new WaitUntil(() => !Main.InsideJoinQueue);
-            WaitScreen.Remove(joinQueueItem);
-
+            Log.InGame(Language.main.Get("Nitrox_Waiting"));
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
+
+            if (Main.TimedOut)
+            {
+                int timer = 5;
+
+                while (timer > 0)
+                {
+                    Log.InGame($"Initial sync timed out. Quitting game in {timer} second{(timer > 1 ? "s" : "")}…");
+                    yield return new WaitForSecondsRealtime(1);
+                    timer--;
+                }
+
+                IngameMenu.main.QuitGame(false);
+                yield break;
+            }
 
             SetLoadingComplete();
         }

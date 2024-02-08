@@ -183,7 +183,7 @@ namespace NitroxServer.GameLogic
 
                         if (task.IsCanceled || !task.Result)
                         {
-                            Log.Info($"Inital sync timed out for player {reservations[reservationKey].PlayerName}");
+                            Log.Info($"Initial sync timed out for player {assetsByConnection[connection].Player.Name}");
                             SyncFinishedCallback = null;
 
                             if (connection.State == NitroxConnectionState.Connected)

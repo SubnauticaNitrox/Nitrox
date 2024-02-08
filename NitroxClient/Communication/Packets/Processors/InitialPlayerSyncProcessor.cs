@@ -1,11 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -31,8 +31,12 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(InitialPlayerSync packet)
         {
             this.packet = packet;
-            Multiplayer.Main.InsideJoinQueue = false;
+
             loadingMultiplayerWaitItem = WaitScreen.Add(Language.main.Get("Nitrox_SyncingWorld"));
+
+            // Clarifies the client is out of the queue since WaitScreen doesn't actually do anything
+            Log.InGame(Language.main.Get("Nitrox_SyncingWorld"));
+
             cumulativeProcessorsRan = 0;
             Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
         }

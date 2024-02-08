@@ -1,7 +1,6 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -17,15 +16,10 @@ public class PlayerSyncTimeoutProcessor : ClientPacketProcessor<PlayerSyncTimeou
 
     public override void Process(PlayerSyncTimeout packet)
     {
-        // This will finish the loading screen
-        Multiplayer.Main.InsideJoinQueue = false;
+        // This will advance the coroutine in Multiplayer::LoadAsync() which quits to menu
         Multiplayer.Main.InitialSyncCompleted = true;
+        Multiplayer.Main.TimedOut = true;
 
         session.Disconnect();
-
-        // TODO: make this translatable
-        string message = "Initial sync timed out";
-
-        Modal.Get<KickedModal>().Show(message);
     }
 }
