@@ -145,12 +145,14 @@ namespace NitroxServer.GameLogic
                     }
 
                     (NitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
+                    string name = reservations[reservationKey].PlayerName;
 
-                    Log.Info($"Starting sync for player {reservations[reservationKey].PlayerName}");
+                    Log.Info($"Starting sync for player {name}");
                     SendInitialSync(connection, reservationKey);
 
                     CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
                     bool syncFinished = false;
+                    bool disconnected = false;
 
                     SyncFinishedCallback = () =>
                     {
@@ -164,6 +166,11 @@ namespace NitroxServer.GameLogic
                             if (syncFinished)
                             {
                                 return true;
+                            }
+                            else if (connection.State == NitroxConnectionState.Disconnected)
+                            {
+                                disconnected = true;
+                                return false;
                             }
                             else
                             {
@@ -181,9 +188,15 @@ namespace NitroxServer.GameLogic
                             throw task.Exception;
                         }
 
+                        if (disconnected)
+                        {
+                            Log.Info($"Player {name} disconnected while syncing");
+                            return;
+                        }
+
                         if (task.IsCanceled || !task.Result)
                         {
-                            Log.Info($"Initial sync timed out for player {assetsByConnection[connection].Player.Name}");
+                            Log.Info($"Initial sync timed out for player {name}");
                             SyncFinishedCallback = null;
 
                             if (connection.State == NitroxConnectionState.Connected)
@@ -194,7 +207,7 @@ namespace NitroxServer.GameLogic
                         }
                         else
                         {
-                            Log.Info($"Player {assetsByConnection[connection].Player.Name} joined successfully. Remaining requests: {JoinQueue.Count}");
+                            Log.Info($"Player {name} joined successfully. Remaining requests: {JoinQueue.Count}");
                         }
                     });
                 }
@@ -303,12 +316,6 @@ namespace NitroxServer.GameLogic
             player.SendPacket(initialPlayerSync);
         }
 
-        public void NonPlayerDisconnected(NitroxConnection connection)
-        {
-            // Remove any requests sent by the connection from the join queue
-            JoinQueue = new(JoinQueue.Where(tuple => !Equals(tuple.Item1, connection)));
-        }
-
         public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             PlayerContext playerContext = reservations[reservationKey];
@@ -385,6 +392,12 @@ namespace NitroxServer.GameLogic
                 Server.Instance.PauseServer();
                 Server.Instance.Save();
             }
+        }
+
+        public void NonPlayerDisconnected(NitroxConnection connection)
+        {
+            // They may have been queued, so just erase their entry
+            JoinQueue = new(JoinQueue.Where(tuple => !Equals(tuple.Item1, connection)));
         }
 
         public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
