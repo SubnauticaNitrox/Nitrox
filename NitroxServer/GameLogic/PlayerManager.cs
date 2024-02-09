@@ -32,6 +32,7 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
         private ThreadSafeQueue<(NitroxConnection, string)> JoinQueue { get; set; } = new();
+        private bool queueIdle = false;
         public Action SyncFinishedCallback { get; private set; }
 
         private readonly ServerConfig serverConfig;
@@ -141,11 +142,24 @@ namespace NitroxServer.GameLogic
                 {
                     while (JoinQueue.Count == 0)
                     {
+                        queueIdle = true;
                         await Task.Delay(REFRESH_DELAY);
                     }
 
+                    queueIdle = false;
+
                     (NitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
                     string name = reservations[reservationKey].PlayerName;
+
+                    // Do this after dequeueing because everyone's position shifts forward
+                    {
+                        (NitroxConnection, string)[] array = [.. JoinQueue];
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            (NitroxConnection c, _) = array[i];
+                            c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout, false));
+                        }
+                    }
 
                     Log.Info($"Starting sync for player {name}");
                     SendInitialSync(connection, reservationKey);
@@ -220,6 +234,11 @@ namespace NitroxServer.GameLogic
 
         public void AddToJoinQueue(NitroxConnection connection, string reservationKey)
         {
+            if (!queueIdle)
+            {
+                connection.SendPacket(new JoinQueueInfo(JoinQueue.Count + 1, serverConfig.InitialSyncTimeout, true));
+            }
+
             Log.Info($"Added player {reservations[reservationKey].PlayerName} to queue");
             JoinQueue.Enqueue((connection, reservationKey));
         }
