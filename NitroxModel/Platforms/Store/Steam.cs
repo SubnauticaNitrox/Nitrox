@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -82,12 +82,20 @@ namespace NitroxModel.Platforms.Store
                 throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
             }
 
+#if DEBUG // Needed to start multiple SN instances, but Steam Overlay doesn't work this way so only active for devs
             return ProcessEx.Start(
-                    pathToGameExe,
-                    new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
-                    Path.GetDirectoryName(pathToGameExe),
-                    launchArguments
+                pathToGameExe,
+                new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                Path.GetDirectoryName(pathToGameExe),
+                launchArguments
             );
+#endif
+
+            return new ProcessEx(Process.Start(new ProcessStartInfo
+            {
+                FileName = GetExeFile(),
+                Arguments = $"""-applaunch {steamAppId} -nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
+            }));
         }
     }
 }
