@@ -1,89 +1,165 @@
-﻿using System;
+using NitroxModel.Discovery.InstallationFinders.Core;
+using NitroxModel.Discovery.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using NitroxModel.Platforms.OS.Windows.Internal;
 
-namespace NitroxModel.Discovery.InstallationFinders
+namespace NitroxModel.Discovery.InstallationFinders;
+
+/// <summary>
+/// Trying to find the path in the Steam installation directory by the appid that contains the game installation directory.
+/// By default each game will have a corresponding appmanifest_{appid}.acf file in the steamapps folder.
+/// Except for some games that are installed on a different diskdrive, in those case 'libraryfolders.vdf' will give us the real location of the appid folder.
+/// </summary>
+public sealed class SteamFinder : IGameFinder
 {
-    public class SteamGameRegistryFinder : IFindGameInstallation
+    public GameInstallation FindGame(GameInfo gameInfo, List<string> errors)
     {
-        public string FindGame(IList<string> errors = null)
-        {
-            string steamPath = "";
-            //TODO: handle other OSes
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                // steam is ALWAYS installed to the user's folder on linux
-                string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                if (!string.IsNullOrWhiteSpace(homePath))
-                {
-                    steamPath = Path.Combine(homePath, ".local", "share", "Steam");
-                }
-                else
-                {
-                    errors?.Add("User HOME is not defined.");
-                }
-            }
-            else
-            {
-                steamPath = RegistryEx.Read<string>(@"Software\\Valve\\Steam\SteamPath");
-            }
-            if (string.IsNullOrEmpty(steamPath))
-            {
-                errors?.Add("It appears you don't have Steam installed.");
-                return null;
-            }
-            string appsPath = Path.Combine(steamPath, "steamapps");
-            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{GameInfo.Subnautica.SteamAppId}.acf")))
-            {
-                return Path.Combine(appsPath, "common", GameInfo.Subnautica.Name);
-            }
-            string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), GameInfo.Subnautica.SteamAppId, GameInfo.Subnautica.Name);
-            if (string.IsNullOrEmpty(path))
-            {
-                errors?.Add($"It appears you don't have {GameInfo.Subnautica.Name} installed anywhere. The game files are needed to run the server.");
-            }
-            else
-            {
-                return path;
-            }
+        string steamPath = GetSteamPath();
 
+        if (string.IsNullOrEmpty(steamPath))
+        {
+            errors.Add("Steam isn't installed");
             return null;
         }
 
-        /// <summary>
-        ///     Finds game install directory by iterating through all the steam game libraries configured, matching the given appid.
-        /// </summary>
-        private static string SearchAllInstallations(string libraryFolders, int appid, string gameName)
+        string appsPath = Path.Combine(steamPath, "steamapps");
+        if (File.Exists(Path.Combine(appsPath, $"appmanifest_{gameInfo.SteamAppId}.acf")))
         {
-            if (!File.Exists(libraryFolders))
+            return new()
+            {
+                Path = Path.Combine(appsPath, "common", gameInfo.Name),
+                GameInfo = gameInfo,
+                Origin = GameLibraries.STEAM
+            };
+        }
+
+        string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), gameInfo.SteamAppId, gameInfo.Name);
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            errors?.Add($"It appears you don't have {gameInfo.Name} installed anywhere");
+            return null;
+        }
+
+        return new()
+        {
+            Path = path,
+            GameInfo = gameInfo,
+            Origin = GameLibraries.STEAM
+        };
+    }
+
+    private static string GetSteamPath()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string steamPath = Platforms.OS.Windows.Internal.RegistryEx.Read<string>(@"Software\\Valve\\Steam\SteamPath");
+
+            if (string.IsNullOrWhiteSpace(steamPath))
+            {
+                steamPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "Steam"
+                );
+            }
+
+            return Directory.Exists(steamPath) ? steamPath : null;
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrWhiteSpace(homePath))
+            {
+                homePath = Environment.GetEnvironmentVariable("HOME");
+            }
+
+            if (!Directory.Exists(homePath))
             {
                 return null;
             }
 
-            StreamReader file = new(libraryFolders);
-            char[] trimChars = { ' ', '\t' };
-            while (file.ReadLine() is { } line)
-            {
-                line = Regex.Unescape(line.Trim(trimChars));
-                Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
-                string key = regMatch.Groups[1].Value;
-                // New format (about 2021-07-16) uses "path" key instead of steam-library-index as key. If either, it could be steam game path.
-                if (!key.Equals("path", StringComparison.OrdinalIgnoreCase) && !int.TryParse(key, out _))
-                {
-                    continue;
-                }
-                string value = regMatch.Groups[2].Value;
+            string[] commonSteamPath =
+            [
+                // Default install location
+                // https://github.com/ValveSoftware/steam-for-linux
+                Path.Combine(homePath, ".local", "share", "Steam"),
+                // Those symlinks are often use as a backward-compatibility (Debian, Ubuntu, Fedora, ArchLinux)
+                // https://wiki.archlinux.org/title/steam, https://askubuntu.com/questions/227502/where-are-steam-games-installed
+                Path.Combine(homePath, ".steam", "steam"),
+                Path.Combine(homePath, ".steam", "root"),
+                // Flatpack install
+                // https://github.com/flathub/com.valvesoftware.Steam/wiki, https://flathub.org/apps/com.valvesoftware.Steam
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
+                Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
+            ];
 
-                if (File.Exists(Path.Combine(value, "steamapps", $"appmanifest_{appid}.acf")))
+            foreach (string path in commonSteamPath)
+            {
+                if (Directory.Exists(path))
                 {
-                    return Path.Combine(value, "steamapps", "common", gameName);
+                    return path;
                 }
             }
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrWhiteSpace(homePath))
+            {
+                homePath = Environment.GetEnvironmentVariable("HOME");
+            }
 
+            if (!Directory.Exists(homePath))
+            {
+                return null;
+            }
+
+            // Steam should always be here
+            string steamPath = Path.Combine(homePath, "Library", "Application Support", "Steam");
+            if (Directory.Exists(steamPath))
+            {
+                return steamPath;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Finds game install directory by iterating through all the steam game libraries configured, matching the given appid.
+    /// </summary>
+    private static string SearchAllInstallations(string libraryFolders, int appid, string gameName)
+    {
+        if (!File.Exists(libraryFolders))
+        {
             return null;
         }
+
+        StreamReader file = new(libraryFolders);
+        char[] trimChars = [' ', '\t'];
+
+        while (file.ReadLine() is { } line)
+        {
+            line = Regex.Unescape(line.Trim(trimChars));
+            Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
+            string key = regMatch.Groups[1].Value;
+
+            // New format (about 2021-07-16) uses "path" key instead of steam-library-index as key. If either, it could be steam game path.
+            if (!key.Equals("path", StringComparison.OrdinalIgnoreCase) && !int.TryParse(key, out _))
+            {
+                continue;
+            }
+
+            string value = regMatch.Groups[2].Value;
+
+            if (File.Exists(Path.Combine(value, "steamapps", $"appmanifest_{appid}.acf")))
+            {
+                return Path.Combine(value, "steamapps", "common", gameName);
+            }
+        }
+
+        return null;
     }
 }

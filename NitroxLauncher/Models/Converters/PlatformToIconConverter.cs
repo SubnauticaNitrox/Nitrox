@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 
 namespace NitroxLauncher.Models.Converters
 {
@@ -21,7 +21,6 @@ namespace NitroxLauncher.Models.Converters
                 Platform.EPIC => "pack://application:,,,/Assets/Images/store-icons/epic-2x.png",
                 Platform.STEAM => "pack://application:,,,/Assets/Images/store-icons/steam-2x.png",
                 Platform.MICROSOFT => "pack://application:,,,/Assets/Images/store-icons/xbox-2x.png",
-                Platform.PIRATED => "pack://application:,,,/Assets/Images/store-icons/pirated-2x.png",
                 Platform.DISCORD => "pack://application:,,,/Assets/Images/store-icons/discord-2x.png",
                 _ => "pack://application:,,,/Assets/Images/store-icons/missing-2x.png",
             };

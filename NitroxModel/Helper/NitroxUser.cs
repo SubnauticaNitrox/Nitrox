@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Platforms.OS.Windows.Internal;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
@@ -93,9 +95,16 @@ namespace NitroxModel.Helper
                     return gamePath;
                 }
 
-                List<string> errors = new();
-                string path = GameInstallationFinder.Instance.FindGame(errors);
-                if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
+                List<string> errors = [];
+                string path = null;
+
+                List<GameInstallation> gameInstallationsFromConfig = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica, GameLibraries.ALL, errors).ToList();
+                if (gameInstallationsFromConfig.Count > 0)
+                {
+                    path = gameInstallationsFromConfig[0].Path;
+                }
+
+                if (Directory.Exists(path))
                 {
                     return gamePath = path;
                 }

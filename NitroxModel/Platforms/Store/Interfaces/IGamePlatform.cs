@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Platforms.OS.Shared;
 
 namespace NitroxModel.Platforms.Store.Interfaces

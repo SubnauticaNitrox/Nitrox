@@ -7,8 +7,7 @@ namespace NitroxModel;
 
 public static class Extensions
 {
-    public static TAttribute GetAttribute<TAttribute>(this Enum value)
-        where TAttribute : Attribute
+    public static TAttribute GetAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
     {
         Type type = value.GetType();
         string name = Enum.GetName(type, value);
@@ -17,6 +16,15 @@ public static class Extensions
                    .GetCustomAttributes(false)
                    .OfType<TAttribute>()
                    .SingleOrDefault();
+    }
+
+    public static TEnum[] GetFlags<TEnum>(this Enum value) where TEnum : Enum
+    {
+        Type type = value.GetType();
+        return Enum.GetValues(type)
+                   .Cast<TEnum>()
+                   .Where(e => value.HasFlag(e))
+                   .ToArray();
     }
 
     /// <summary>
