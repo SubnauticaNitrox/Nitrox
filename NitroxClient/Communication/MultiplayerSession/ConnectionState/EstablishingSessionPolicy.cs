@@ -27,7 +27,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (Exception)
             {
-                DisplayStatusCode(StatusCode.nineteen);
                 Disconnect(sessionConnectionContext);
                 throw;
             }
@@ -48,7 +47,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.nineteen);
+                DisplayStatusCode(StatusCode.invalidPacket);
                 throw new InvalidOperationException("The context is missing a session policy.", ex);
             }
         }
@@ -57,7 +56,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!policyRequestCorrelationId.Equals(sessionConnectionContext.SessionPolicy.CorrelationId))
             {
-                DisplayStatusCode(StatusCode.nineteen);
+                DisplayStatusCode(StatusCode.invalidPacket);
                 throw new UncorrelatedPacketException(sessionConnectionContext.SessionPolicy, policyRequestCorrelationId);
             }
         }

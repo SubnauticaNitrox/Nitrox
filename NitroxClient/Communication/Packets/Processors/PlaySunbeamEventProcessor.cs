@@ -2,7 +2,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel;
 using NitroxModel.Packets;
 using Story;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class PlaySunbeamEventProcessor : ClientPacketProcessor<PlaySunbeamEvent>
@@ -13,6 +13,7 @@ public class PlaySunbeamEventProcessor : ClientPacketProcessor<PlaySunbeamEvent>
         int beginIndex = PlaySunbeamEvent.SunbeamGoals.GetIndex(packet.EventKey);
         if (beginIndex == -1)
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             Log.Error($"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {packet.EventKey}");
             return;
         }

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Abstract;
+using NitroxModel;
 using NitroxModel.Packets;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class SessionReserved : ConnectionNegotiatedState
@@ -27,6 +28,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!sessionConnectionContext.Client.IsConnected)
             {
+                DisplayStatusCode(StatusCode.connectionFailClient);
                 throw new InvalidOperationException("The client is not connected.");
             }
         }

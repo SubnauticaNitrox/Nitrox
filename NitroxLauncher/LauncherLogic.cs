@@ -52,7 +52,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.fourteen);
+                DisplayStatusCode(StatusCode.injectionFail);
                 Log.Error(ex, "Error while disposing the launcher");
             }
 
@@ -94,7 +94,7 @@ namespace NitroxLauncher
 
             if (task.Exception != null)
             {
-                DisplayStatusCode(StatusCode.fifteen);
+                DisplayStatusCode(StatusCode.firewallModFail);
                 MessageBox.Show($"An error occurred configuring the firewall: {task.Exception}");
             }
         }
@@ -123,7 +123,7 @@ namespace NitroxLauncher
                     {
                         Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                         {
-                            DisplayStatusCode(StatusCode.five);
+                            DisplayStatusCode(StatusCode.privilegesErr);
                             MessageBox.Show(Application.Current.MainWindow!, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.", "Required file permission error", MessageBoxButton.OK,
                                             MessageBoxImage.Error);
                             Environment.Exit(1);
@@ -199,7 +199,7 @@ namespace NitroxLauncher
 
             if (PirateDetection.HasTriggered)
             {
-                DisplayStatusCode(StatusCode.nine);
+                DisplayStatusCode(StatusCode.deadPiratesTellNoTales);
                 throw new Exception("Aarrr! Nitrox walked the plank :(");
             }
 
@@ -222,7 +222,7 @@ namespace NitroxLauncher
             }
             catch (IOException ex)
             {
-                DisplayStatusCode(StatusCode.seven);
+                DisplayStatusCode(StatusCode.fileSystemErr);
                 Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
@@ -233,7 +233,7 @@ namespace NitroxLauncher
             }
             if (nitroxEntryPatch == null)
             {
-                DisplayStatusCode(StatusCode.fourteen);
+                DisplayStatusCode(StatusCode.injectionFail);
                 throw new Exception("Nitrox was blocked by another program");
             }
             nitroxEntryPatch.Remove();
@@ -249,12 +249,12 @@ namespace NitroxLauncher
         }
         ProcessEx throwUnsupportedInstallException(string subnauticaPath)
         {
-            DisplayStatusCode(StatusCode.sixteen);
+            DisplayStatusCode(StatusCode.invalidInstall);
             throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.");
         }
         ProcessEx throwUnableToStartGameException(IGamePlatform platform)
         {
-            DisplayStatusCode(StatusCode.seventeen);
+            DisplayStatusCode(StatusCode.storeNotRunning);
             throw new Exception($"Unable to start game through {platform.Name}");
         }
         private async Task<ProcessEx> StartSubnauticaAsync()
@@ -286,7 +286,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.fourteen);
+                DisplayStatusCode(StatusCode.injectionFail);
             }
         }
 

@@ -8,7 +8,7 @@ using NitroxModel.Platforms.OS.Shared;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
-using static NitroxServer.DisplayStatusCodeServerConsole;
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.ConsoleCommands
 {
     internal class ConfigCommand : Command
@@ -54,7 +54,7 @@ namespace NitroxServer.ConsoleCommands
 #if DEBUG
                     if (t.Exception != null)
                     {
-                        PrintStatusCode(StatusCode.four);
+                        PrintStatusCode(StatusCode.saveReadErrFatal);
                         throw t.Exception;
                     }
 #endif

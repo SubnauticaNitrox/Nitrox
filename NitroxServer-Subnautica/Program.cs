@@ -20,7 +20,7 @@ using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
-using static NitroxServer.DisplayStatusCodeServerConsole;
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer_Subnautica;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
@@ -112,7 +112,7 @@ public class Program
 
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
-                PrintStatusCode(StatusCode.one);
+                PrintStatusCode(StatusCode.cancelled);
                 throw new Exception("Unable to start server.");
             }
             else if (cancellationToken.IsCancellationRequested)
@@ -125,7 +125,7 @@ public class Program
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
                 // Log status codes that can be googled by the user to troubleshoot on their own, hopefully
-                PrintStatusCode(StatusCode.zero);
+                PrintStatusCode(StatusCode.success);
             }
         }
         finally
@@ -355,7 +355,7 @@ public class Program
         }
         catch (OperationCanceledException ex)
         {
-            PrintStatusCode(StatusCode.two);
+            PrintStatusCode(StatusCode.portNotListening);
             Log.Error(ex, "Port availability timeout reached.");
             throw;
         }
@@ -378,7 +378,7 @@ public class Program
         {
             return;
         }
-        PrintStatusCode(StatusCode.three);
+        PrintStatusCode(StatusCode.miscUnhandledException);
         Log.Info("Press L to open log file before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 

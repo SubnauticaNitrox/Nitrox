@@ -8,12 +8,12 @@ namespace NitroxModel.Platforms.Store.Exceptions
     {
         public PlatformException(IGamePlatform platform, string message) : base($"{platform.GetType().Name}: {message}")
         {
-            DisplayStatusCode(StatusCode.eight);
+            DisplayStatusCode(StatusCode.missingFeature);
         }
 
         public PlatformException(IGamePlatform platform, string message, Exception innerException) : base($"{platform.GetType().Name}: {message}", innerException)
         {
-            DisplayStatusCode(StatusCode.eight);
+            DisplayStatusCode(StatusCode.missingFeature);
         }
     }
 }

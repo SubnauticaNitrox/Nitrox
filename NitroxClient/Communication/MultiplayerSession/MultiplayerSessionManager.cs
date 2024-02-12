@@ -68,7 +68,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
-                    DisplayStatusCode(StatusCode.twentytwo);
+                    DisplayStatusCode(StatusCode.versionMismatch);
                     return;
                 case 1:
                     Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
@@ -76,7 +76,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
-                    DisplayStatusCode(StatusCode.twentytwo);
+                    DisplayStatusCode(StatusCode.versionMismatch);
                     return;
             }
 
@@ -121,7 +121,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 CurrentState.Disconnect(this);
-                DisplayStatusCode(StatusCode.eighteen);
+                DisplayStatusCode(StatusCode.connectionFailClient);
             }
         }
 

@@ -1,10 +1,10 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors
 {
     class WeldActionProcessor : ClientPacketProcessor<WeldAction>
@@ -24,6 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (!simulationOwnership.HasAnyLockType(packet.Id))
             {
+                DisplayStatusCode(StatusCode.lockErr);
                 Log.Error($"Got WeldAction packet for {packet.Id} but did not find the lock corresponding to it");
                 return;
             }
@@ -31,6 +32,7 @@ namespace NitroxClient.Communication.Packets.Processors
             LiveMixin liveMixin = gameObject.GetComponent<LiveMixin>();
             if (!liveMixin)
             {
+                DisplayStatusCode(StatusCode.invalidVariableVal);
                 Log.Error($"Did not find LiveMixin for GameObject {packet.Id} even though it was welded.");
                 return;
             }

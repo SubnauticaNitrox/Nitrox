@@ -89,7 +89,7 @@ namespace NitroxModel.Platforms.OS.Windows
             }
             catch (UnauthorizedAccessException)
             {
-                DisplayStatusCode(StatusCode.five);
+                DisplayStatusCode(StatusCode.privilegesErr);
                 return false;
             }
         }

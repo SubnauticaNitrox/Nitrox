@@ -6,7 +6,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class InitialPlayerSyncProcessor : ClientPacketProcessor<InitialPlayerSync>
@@ -46,6 +46,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 moreProcessorsToRun = alreadyRan.Count < processors.Count;
                 if (moreProcessorsToRun && processorsRanLastCycle == 0)
                 {
+                    DisplayStatusCode(StatusCode.dependencyFail);
                     throw new Exception($"Detected circular dependencies in initial packet sync between: {GetRemainingProcessorsText()}");
                 }
             } while (moreProcessorsToRun);

@@ -50,7 +50,7 @@ internal static class Patcher
             }
             catch (HarmonyException e)
             {
-                DisplayStatusCode(StatusCode.fourteen);
+                DisplayStatusCode(StatusCode.injectionFail);
                 Exception innerMost = e;
                 while (innerMost.InnerException != null)
                 {
@@ -60,7 +60,7 @@ internal static class Patcher
             }
             catch (Exception e)
             {
-                DisplayStatusCode(StatusCode.fourteen);
+                DisplayStatusCode(StatusCode.injectionFail);
                 Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
             }
         }
@@ -98,7 +98,7 @@ internal static class Patcher
 
         if (container != null)
         {
-            DisplayStatusCode(StatusCode.eight);
+            DisplayStatusCode(StatusCode.missingFeature);
             throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
         Log.Info("Registering dependencies");
@@ -109,7 +109,7 @@ internal static class Patcher
         }
         catch (ReflectionTypeLoadException ex)
         {
-            DisplayStatusCode(StatusCode.seven);
+            DisplayStatusCode(StatusCode.fileSystemErr);
             Log.Error($"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
             foreach (Exception loaderEx in ex.LoaderExceptions)
             {
@@ -119,7 +119,7 @@ internal static class Patcher
         }
         catch (Exception ex)
         {
-            DisplayStatusCode(StatusCode.seven);
+            DisplayStatusCode(StatusCode.fileSystemErr);
             Log.Error(ex, "Error while initializing and loading dependencies.");
             throw;
         }

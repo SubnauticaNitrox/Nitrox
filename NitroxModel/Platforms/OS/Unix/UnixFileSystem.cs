@@ -7,7 +7,7 @@ namespace NitroxModel.Platforms.OS.Unix
     public sealed class UnixFileSystem : FileSystem
     {
         bool throwNotImplementedException() {
-            DisplayStatusCode(StatusCode.seven);
+            DisplayStatusCode(StatusCode.missingFeature);
             throw new System.NotImplementedException();
         }
         public override IEnumerable<string> GetDefaultPrograms(string file)
@@ -17,7 +17,7 @@ namespace NitroxModel.Platforms.OS.Unix
 
         public override bool SetFullAccessToCurrentUser(string directory)
         {
-            DisplayStatusCode(StatusCode.eight);
+            DisplayStatusCode(StatusCode.missingFeature);
             throw new System.NotImplementedException();
         }
 

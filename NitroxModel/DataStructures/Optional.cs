@@ -98,7 +98,7 @@ namespace NitroxModel.DataStructures.Util
         {
             if (value == null)
             {
-                DisplayStatusCode(StatusCode.eight);
+                DisplayStatusCode(StatusCode.missingFeature);
                 throw new ArgumentNullException(nameof(value), $"Tried to set null on {typeof(Optional<T>)}");
             }
 

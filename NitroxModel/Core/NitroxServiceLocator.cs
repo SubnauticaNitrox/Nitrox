@@ -40,7 +40,7 @@ public static class NitroxServiceLocator
     {
         if (DependencyContainer == null)
         {
-            DisplayStatusCode(StatusCode.twelve);
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new InvalidOperationException("You must install an Autofac container before initializing a new lifetime scope.");
         }
 
@@ -117,12 +117,12 @@ public static class NitroxServiceLocator
     {
         if (DependencyContainer == null)
         {
-            DisplayStatusCode(StatusCode.twelve);
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new InvalidOperationException("You must install an Autofac container before resolving dependencies.");
         }
         if (CurrentLifetimeScope == null)
         {
-            DisplayStatusCode(StatusCode.twelve);
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new InvalidOperationException("You must begin a new lifetime scope before resolving dependencies.");
         }
     }

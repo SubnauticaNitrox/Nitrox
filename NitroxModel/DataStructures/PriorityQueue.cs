@@ -76,7 +76,7 @@ namespace NitroxModel.DataStructures
             }
             else
             {
-                DisplayStatusCode(StatusCode.twelve);
+                DisplayStatusCode(StatusCode.invalidVariableVal);
                 throw new InvalidOperationException();
             }
         }

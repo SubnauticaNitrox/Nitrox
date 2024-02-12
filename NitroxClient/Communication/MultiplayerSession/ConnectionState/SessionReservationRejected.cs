@@ -9,7 +9,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.twenty);
+            DisplayStatusCode(StatusCode.connectionFailClient);
             throw new InvalidOperationException("The session has rejected the reserveration request.");
         }
     }

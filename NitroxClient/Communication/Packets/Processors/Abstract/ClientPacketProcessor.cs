@@ -1,4 +1,4 @@
-﻿using NitroxModel.Packets;
+using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 
 namespace NitroxClient.Communication.Packets.Processors.Abstract
@@ -7,6 +7,7 @@ namespace NitroxClient.Communication.Packets.Processors.Abstract
     {
         public override void ProcessPacket(Packet packet, IProcessorContext context)
         {
+            // Send the packet to the according processor script
             Process((T)packet);
         }
 

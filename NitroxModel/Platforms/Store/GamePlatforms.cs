@@ -22,7 +22,7 @@ namespace NitroxModel.Platforms.Store
                     return platform;
                 } else
                 {
-                    DisplayStatusCode(StatusCode.nine);
+                    DisplayStatusCode(StatusCode.deadPiratesTellNoTales);
                 }
             }
 

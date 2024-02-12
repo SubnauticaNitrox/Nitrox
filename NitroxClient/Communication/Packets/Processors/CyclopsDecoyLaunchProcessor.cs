@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -12,6 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public CyclopsDecoyLaunchProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
+            // these vars are probably used somewhere else, not showing up in VS as useless I love sphaghetti :)
             this.packetSender = packetSender;
             this.cyclops = cyclops;
         }
