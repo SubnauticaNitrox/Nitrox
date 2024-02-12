@@ -23,7 +23,6 @@ public sealed partial class AggressiveWhenSeeTarget_ScanForAggressionTarget_Patc
             return true;
         }
 
-
         return false;
     }
 
@@ -47,6 +46,11 @@ public sealed partial class AggressiveWhenSeeTarget_ScanForAggressionTarget_Patc
 
     public static void BroadcastTargetChange(AggressiveWhenSeeTarget aggressiveWhenSeeTarget, GameObject aggressionTarget)
     {
+        if (!Resolve<AI>().IsCreatureWhitelisted(aggressiveWhenSeeTarget.creature))
+        {
+            return;
+        }
+
         // If the function was called to this point, either it'll return because it doesn't have an id or it'll be evident that we have ownership over the aggressive creature
         LastTarget lastTarget = aggressiveWhenSeeTarget.lastTarget;
         // If there's already (likely another) locked target, we get its id over aggressionTarget

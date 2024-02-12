@@ -8,6 +8,10 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
+/// <summary>
+/// Registers one stasis sphere per connected remote player, and syncs their behaviour.<br/>
+/// Also syncs remote torpedo (of all types) shots and hits.
+/// </summary>
 public class BulletManager
 {
     private readonly PlayerManager playerManager;
@@ -77,10 +81,7 @@ public class BulletManager
 
     public void ShootStasisSphere(ushort playerId, Vector3 position, Quaternion rotation, float speed, float lifeTime, float chargeNormalized)
     {
-        if (!stasisSpherePerPlayerId.TryGetValue(playerId, out StasisSphere cloneSphere) || !cloneSphere)
-        {
-            cloneSphere = EnsurePlayerHasSphere(playerId);
-        }
+        StasisSphere cloneSphere = EnsurePlayerHasSphere(playerId);
 
         cloneSphere.Shoot(position, rotation, speed, lifeTime, chargeNormalized);
     }
@@ -89,7 +90,7 @@ public class BulletManager
     {
         StasisSphere cloneSphere = EnsurePlayerHasSphere(playerId);
 
-        // Setup the sphere in case it the shot was sent earlier
+        // Setup the sphere in case the shot was sent earlier
         cloneSphere.Shoot(position, rotation, 0, 0, chargeNormalized);
         // We override this field (set by .Shoot) with the right data
         cloneSphere._consumption = consumption;
@@ -97,7 +98,7 @@ public class BulletManager
         // Code from Bullet.Update when finding an object to hit
         cloneSphere._visible = true;
         cloneSphere.OnMadeVisible();
-        cloneSphere.OnHit(default);
+        cloneSphere.EnableField();
         cloneSphere.Deactivate();
     }
 

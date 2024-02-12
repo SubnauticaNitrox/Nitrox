@@ -88,13 +88,13 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
     public static bool IsTargetAValidInhabitedCyclops(GameObject targetObject)
     {
         // Is a Cyclops
-        if (!targetObject.GetComponent<CyclopsNoiseManager>())
+        if (!targetObject.TryGetComponent(out SubRoot subRoot) || !subRoot.isCyclops)
         {
             return false;
         }
 
         // Has the local player inside
-        if (Player.main && Player.main.currentSub && Player.main.currentSub.gameObject == targetObject)
+        if (Player.main && Player.main.currentSub == subRoot)
         {
             return true;
         }

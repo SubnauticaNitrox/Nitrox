@@ -17,6 +17,12 @@ public sealed partial class AttackCyclops_OnCollisionEnter_Patch : NitroxPatch, 
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((AttackCyclops t) => t.OnCollisionEnter(default));
 
+    public static bool Prefix(AttackCyclops __instance)
+    {
+        return !__instance.TryGetNitroxId(out NitroxId creatureId) ||
+               Resolve<SimulationOwnership>().HasAnyLockType(creatureId);
+    }
+
     /*
      * REPLACE:
      * if (Player.main != null && Player.main.currentSub != null && Player.main.currentSub.isCyclops && Player.main.currentSub.gameObject == collision.gameObject)
@@ -40,11 +46,5 @@ public sealed partial class AttackCyclops_OnCollisionEnter_Patch : NitroxPatch, 
     public static bool ShouldCollisionAnnoyCreature(Collision collision)
     {
         return AttackCyclops_UpdateAggression_Patch.IsTargetAValidInhabitedCyclops(collision.gameObject);
-    }
-
-    public static bool Prefix(AttackCyclops __instance)
-    {
-        return !__instance.TryGetNitroxId(out NitroxId creatureId) ||
-               Resolve<SimulationOwnership>().HasAnyLockType(creatureId);
     }
 }
