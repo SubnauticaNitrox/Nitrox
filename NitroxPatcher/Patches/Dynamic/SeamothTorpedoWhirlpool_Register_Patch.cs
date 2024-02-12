@@ -12,7 +12,7 @@ public sealed partial class SeamothTorpedoWhirlpool_Register_Patch : NitroxPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeamothTorpedoWhirlpool t) => t.Register(default, ref Reflect.Ref<Rigidbody>.Field));
 
-    public static bool Prefix(Collider other, ref bool __result)
+    public static bool Prefix(Collider other)
     {
         return !other.GetComponentInParent<RemotePlayerIdentifier>(true);
     }

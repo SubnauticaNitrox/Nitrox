@@ -14,7 +14,6 @@ public sealed partial class Creature_ChooseBestAction_Patch : NitroxPatch, IDyna
     {
         if (!__instance.TryGetIdOrWarn(out __state, true))
         {
-            Log.WarnOnce($"[{nameof(Creature_ChooseBestAction_Patch)}] Couldn't find an id on {__instance.GetFullHierarchyPath()}");
             return true;
         }
         if (Resolve<SimulationOwnership>().HasAnyLockType(__state))

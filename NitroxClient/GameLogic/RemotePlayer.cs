@@ -497,7 +497,7 @@ public class RemotePlayer : INitroxPlayer
     private void SetupMixins()
     {
         InfectedMixin = Body.AddComponent<InfectedMixin>();
-        InfectedMixin.shaderKeyWord = "UWE_PLAYERINFECTION";
+        InfectedMixin.shaderKeyWord = InfectedMixin.uwe_playerinfection;
         Renderer renderer = PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_hands_geo").GetComponent<Renderer>();
         InfectedMixin.renderers = [renderer];
 
@@ -508,7 +508,7 @@ public class RemotePlayer : INitroxPlayer
             broadcastKillOnDeath = false
         };
         LiveMixin.health = 100;
-        // We set the remote player to invincible because we only want this component to detectable but not to work
+        // We set the remote player to invincible because we only want this component to be detectable but not to work
         LiveMixin.invincible = true;
     }
 

@@ -25,6 +25,15 @@ public class AI
         typeof(AttackLastTarget), typeof(AttackCyclops)
     ];
 
+    /// <summary>
+    /// In the future, ensure all creatures are synced. We want each of them to be individually
+    /// checked (that all their actions are synced) before marking them as synced.
+    /// </summary>
+    private readonly HashSet<Type> syncedCreatureWhitelist =
+    [
+        typeof(ReaperLeviathan), typeof(SeaDragon)
+    ];
+
     public AI(IPacketSender packetSender)
     {
         this.packetSender = packetSender;
@@ -36,7 +45,7 @@ public class AI
 
     public void BroadcastNewAction(NitroxId creatureId, Creature creature, CreatureAction newAction)
     {
-        if (creature is not ReaperLeviathan)
+        if (!syncedCreatureWhitelist.Contains(creature.GetType()))
         {
             return;
         }
@@ -118,5 +127,10 @@ public class AI
     public bool IsCreatureActionWhitelisted(CreatureAction creatureAction)
     {
         return creatureActionWhitelist.Contains(creatureAction.GetType());
+    }
+
+    public bool IsCreatureWhitelisted(Creature creature)
+    {
+        return syncedCreatureWhitelist.Contains(creature.GetType());
     }
 }
