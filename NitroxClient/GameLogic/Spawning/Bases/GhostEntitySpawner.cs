@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
@@ -63,6 +64,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(ghostEntity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
+                DisplayStatusCode(StatusCode.subnauticaError);
                 Log.Error($"Couldn't find a prefab for ghost of ClassId {ghostEntity.ClassId}");
                 yield break;
             }

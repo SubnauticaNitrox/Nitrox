@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours.CinematicController;
 
 public class MultiplayerCinematicReference : MonoBehaviour
@@ -14,11 +14,13 @@ public class MultiplayerCinematicReference : MonoBehaviour
     {
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new KeyNotFoundException($"There was no entry for the key {key} at {gameObject.GetFullHierarchyPath()}");
         }
 
         if (!controllers.TryGetValue(identifier, out MultiplayerCinematicController controller))
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new KeyNotFoundException($"There was no entry for the identifier {identifier} at {gameObject.GetFullHierarchyPath()}");
         }
 
@@ -29,11 +31,13 @@ public class MultiplayerCinematicReference : MonoBehaviour
     {
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new KeyNotFoundException($"There was no entry for the key {key} at {gameObject.GetFullHierarchyPath()}");
         }
 
         if (!controllers.TryGetValue(identifier, out MultiplayerCinematicController controller))
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new KeyNotFoundException($"There was no entry for the identifier {identifier} at {gameObject.GetFullHierarchyPath()}");
         }
 

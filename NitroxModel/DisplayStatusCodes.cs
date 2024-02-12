@@ -29,11 +29,12 @@ namespace NitroxModel
             invalidPacket,
             outboundConnectionAlreadyOpen,
             versionMismatch,
-            remotePlayerAuthErr,
+            remotePlayerErr,
             syncFail,
             dependencyFail,
             subnauticaError,
-            lockErr
+            lockErr,
+            invalidFunctionCall
         }
         public static void DisplayStatusCode(StatusCode statusCode)
         {

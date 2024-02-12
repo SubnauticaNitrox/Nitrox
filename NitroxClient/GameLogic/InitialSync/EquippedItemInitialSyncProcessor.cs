@@ -10,7 +10,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.InitialSync;
 
 public class EquippedItemInitialSyncProcessor : InitialSyncProcessor
@@ -64,11 +64,13 @@ public class EquippedItemInitialSyncProcessor : InitialSyncProcessor
                     }
                     else
                     {
+                        DisplayStatusCode(StatusCode.subnauticaError);
                         Log.Info($"Could not find equipment type for {gameObject.name}");
                     }
                 }
                 else
                 {
+                    DisplayStatusCode(StatusCode.subnauticaError);
                     Log.Info($"Could not find Container for {gameObject.name}");
                 }
 

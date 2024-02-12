@@ -1,9 +1,9 @@
-﻿extern alias JB;
+extern alias JB;
 using System;
 using System.Runtime.CompilerServices;
 using JB::JetBrains.Annotations;
 using NitroxModel.DataStructures.Util;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Helper;
 
 public static class Validate
@@ -17,7 +17,7 @@ public static class Validate
         {
             return;
         }
-
+        DisplayStatusCode(StatusCode.invalidVariableVal);
         throw new ArgumentNullException(argumentExpression);
     }
 
@@ -25,6 +25,7 @@ public static class Validate
     {
         if (!b)
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new ArgumentException(argumentExpression);
         }
     }
@@ -33,6 +34,7 @@ public static class Validate
     {
         if (b)
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new ArgumentException(argumentExpression);
         }
     }
@@ -41,6 +43,7 @@ public static class Validate
     {
         if (!opt.HasValue)
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new OptionalEmptyException<T>();
         }
         return opt.Value;
@@ -50,6 +53,7 @@ public static class Validate
     {
         if (!opt.HasValue)
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new OptionalEmptyException<T>(message);
         }
         return opt.Value;

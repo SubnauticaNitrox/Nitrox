@@ -1,6 +1,7 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
@@ -20,11 +21,13 @@ public class FlashlightMetadataProcessor : EntityMetadataProcessor<FlashlightMet
             }
             else
             {
+                DisplayStatusCode(StatusCode.subnauticaError);
                 Log.Error($"Could not find ToggleLights on {flashLight.name}");
             }
         }
         else
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             Log.Error($"Could not find FlashLight on {gameObject.name}");
         }
     }

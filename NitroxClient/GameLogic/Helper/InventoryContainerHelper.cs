@@ -5,7 +5,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Helper
 {
     public class InventoryContainerHelper
@@ -51,6 +51,7 @@ namespace NitroxClient.GameLogic.Helper
             Transform parent = ownerTransform.parent;
             if (!parent)
             {
+                DisplayStatusCode(StatusCode.subnauticaError);
                 Log.Error("Trying to get the ownerId of a storage that doesn't have a parent");
                 ownerId = null;
                 return false;
@@ -72,12 +73,14 @@ namespace NitroxClient.GameLogic.Helper
                 GameObject locker = parent.gameObject.FindChild(lockerName);
                 if (!locker)
                 {
+                    DisplayStatusCode(StatusCode.subnauticaError);
                     Log.Error($"Could not find Locker Object: {lockerName}");
                     ownerId = null;
                     return false;
                 }
                 if (!locker.TryGetComponentInChildren(out StorageContainer storageContainer, true))
                 {
+                    DisplayStatusCode(StatusCode.subnauticaError);
                     Log.Error($"Could not find {nameof(StorageContainer)} From Object: {lockerName}");
                     ownerId = null;
                     return false;

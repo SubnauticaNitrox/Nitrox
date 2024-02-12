@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours.Gui.Modals;
 
 /// <summary>
@@ -50,6 +50,7 @@ public abstract class Modal
         Type type = GetType();
         if (Modals.ContainsKey(type))
         {
+            DisplayStatusCode(StatusCode.invalidVariableVal);
             throw new NotSupportedException($"You cannot set two modals to have the same Type");
         }
 
@@ -114,6 +115,7 @@ public abstract class Modal
     {
         if (!IngameMenu.main)
         {
+            DisplayStatusCode(StatusCode.invalidFunctionCall);
             throw new NotSupportedException($"Cannot show ingame subwindow {SubWindowName} because the ingame window does not exist.");
         }
 

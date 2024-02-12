@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UWE;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMultiplayerPanel : MonoBehaviour
@@ -115,12 +115,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (Main == null)
             {
+                DisplayStatusCode(StatusCode.injectionFail);
                 Log.Error("MainMenuMultiplayerPanel is not instantiated although OpenJoinServerMenu is called.");
                 return;
             }
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
+                DisplayStatusCode(StatusCode.connectionFailClient);
                 Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
                 Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
                 return;
@@ -224,6 +226,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (SocketException ex)
             {
+                DisplayStatusCode(StatusCode.connectionFailClient);
                 Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}:{serverPort}", hostname, serverPort);
                 return null;
             }

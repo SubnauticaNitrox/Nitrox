@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
@@ -89,12 +90,14 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                     break;
 
                 default:
+                    DisplayStatusCode(StatusCode.invalidPacket);
                     Log.Error($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Can't spawn a child entity which is not a WorldEntity: {current}");
                     continue;
             }
 
             if (!childResult.value.HasValue)
             {
+                DisplayStatusCode(StatusCode.subnauticaError);
                 Log.Error($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Spawning of child failed {current}");
                 continue;
             }

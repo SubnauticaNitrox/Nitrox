@@ -4,7 +4,7 @@ using NitroxClient.Unity.Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours.Gui.HUD;
 
 public class RemotePlayerVitals : MonoBehaviour
@@ -43,6 +43,7 @@ public class RemotePlayerVitals : MonoBehaviour
             vitals.CreateStats(vitals.canvas);
         } catch (Exception ex)
         {
+            DisplayStatusCode(StatusCode.miscUnhandledException);
             Log.Error(ex, $"Encountered an error while creating vitals for player {remotePlayer.PlayerId}, destroying them.");
             Destroy(vitals.gameObject);
             return null;
@@ -108,6 +109,7 @@ public class RemotePlayerVitals : MonoBehaviour
         uGUI uGUI = uGUI.main;
         if (!uGUI)
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             throw new NullReferenceException($"[{nameof(RemotePlayerVitals)}] Couldn't find uGUI main instance when creating vitals");
         }
         healthBar = CreateBar(uGUI.GetComponentInChildren<uGUI_HealthBar>(true), canvas);
@@ -267,6 +269,7 @@ public class RemotePlayerVitals : MonoBehaviour
         {
             if (isDisposed)
             {
+                DisplayStatusCode(StatusCode.invalidFunctionCall);
                 throw new ObjectDisposedException("Tried to update visual on a disposed player stat.");
             }
         }

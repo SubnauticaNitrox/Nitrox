@@ -18,7 +18,7 @@ using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
@@ -130,6 +130,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
+                    DisplayStatusCode(StatusCode.missingFeature);
                     Log.Error(ex, $"Failed to find packet processor for packet {packet}");
                 }
 
@@ -144,6 +145,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
+                    DisplayStatusCode(StatusCode.miscUnhandledException);
                     Log.Error(ex, $"Error while processing packet {packet}");
                 }
             }, packetProcessorCache);

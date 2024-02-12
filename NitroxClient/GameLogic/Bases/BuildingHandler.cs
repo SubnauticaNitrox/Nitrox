@@ -16,7 +16,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Bases;
 
 public partial class BuildingHandler : MonoBehaviour
@@ -43,6 +43,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (Main)
         {
+            DisplayStatusCode(StatusCode.processAlreadyRunning);
             Log.Error($"Another instance of {nameof(BuildingHandler)} is already running. Deleting the current one.");
             Destroy(this);
             return;
@@ -68,7 +69,9 @@ public partial class BuildingHandler : MonoBehaviour
     private IEnumerator SafelyTreatNextBuildCommand()
     {
         Packet packet = BuildQueue.Dequeue();
-        yield return TreatBuildCommand(packet).OnYieldError(exception => Log.Error(exception, $"An error happened when processing build command {packet}"));
+        yield return TreatBuildCommand(packet).OnYieldError((exception) => { Log.Error(exception, $"An error happened when processing build command {packet}");
+            DisplayStatusCode(StatusCode.miscUnhandledException);
+        });
         working = false;
     }
 
@@ -99,6 +102,7 @@ public partial class BuildingHandler : MonoBehaviour
                 yield return DeconstructPiece(pieceDeconstructed);
                 break;
             default:
+                DisplayStatusCode(StatusCode.miscUnhandledException);
                 Log.Error($"Found an unhandled build command packet: {buildCommand}");
                 break;
         }
@@ -180,6 +184,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (!NitroxEntity.TryGetComponentFrom<Base>(updateBase.BaseId, out _))
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             Log.Error($"Couldn't find base with id: {updateBase.BaseId} when processing packet: {updateBase}");
             FailedOperations++;
             yield break;
@@ -190,6 +195,7 @@ public partial class BuildingHandler : MonoBehaviour
 
         if (!NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             tracker.FailedOperations++;
             Log.Error($"Couldn't find ghost with id: {updateBase.FormerGhostId} when processing packet: {updateBase}");
             yield break;
@@ -210,6 +216,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (!NitroxEntity.TryGetObjectFrom(baseDeconstructed.FormerBaseId, out GameObject baseObject))
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             FailedOperations++;
             Log.Error($"Couldn't find base with id: {baseDeconstructed.FormerBaseId} when processing packet: {baseDeconstructed}");
             yield break;
@@ -226,6 +233,7 @@ public partial class BuildingHandler : MonoBehaviour
             BasesCooldown[baseDeconstructed.FormerBaseId] = DateTimeOffset.UtcNow;
             yield break;
         }
+        DisplayStatusCode(StatusCode.subnauticaError);
         Log.Error($"Found multiple {nameof(BaseDeconstructable)} under base {baseObject} while there should be only one");
         EnsureTracker(baseDeconstructed.FormerBaseId).FailedOperations++;
     }
@@ -234,6 +242,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (!NitroxEntity.TryGetComponentFrom(pieceDeconstructed.BaseId, out Base @base))
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             FailedOperations++;
             Log.Error($"Couldn't find base with id: {pieceDeconstructed.BaseId} when processing packet: {pieceDeconstructed}");
             yield break;
@@ -245,6 +254,7 @@ public partial class BuildingHandler : MonoBehaviour
         Transform cellObject = @base.GetCellObject(pieceIdentifier.BaseCell.ToUnity());
         if (!cellObject)
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             Log.Error($"Couldn't find cell object {pieceIdentifier.BaseCell} when destructing piece {pieceDeconstructed}");
             yield break;
         }
@@ -266,6 +276,7 @@ public partial class BuildingHandler : MonoBehaviour
             BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.UtcNow;
             yield break;
         }
+        DisplayStatusCode(StatusCode.subnauticaError);
         Log.Error($"Couldn't find the right BaseDeconstructable to be destructed under {pieceDeconstructed.BaseId}");
         tracker.FailedOperations++;
     }

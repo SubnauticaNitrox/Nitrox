@@ -3,6 +3,7 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic
 {
@@ -30,6 +31,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
+                DisplayStatusCode(StatusCode.invalidVariableVal);
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
@@ -64,6 +66,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
+                DisplayStatusCode(StatusCode.invalidVariableVal);
                 Log.Error($"Drill arm got an arm action he should not get: {armAction}");
             }
         }
@@ -110,6 +113,7 @@ namespace NitroxClient.GameLogic
 
                 if (!opHitVector.HasValue)
                 {
+                    DisplayStatusCode(StatusCode.invalidVariableVal);
                     Log.Error("No vector given that contains the hook direction");
                     return;
                 }
@@ -120,6 +124,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
+                DisplayStatusCode(StatusCode.invalidVariableVal);
                 Log.Error($"Grappling arm got an arm action he should not get: {armAction}");
             }
         }
@@ -130,6 +135,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!opVector.HasValue || !opRotation.HasValue)
                 {
+                    DisplayStatusCode(StatusCode.invalidVariableVal);
                     Log.Error("Torpedo arm action shoot: no vector or rotation present");
                     return;
                 }
@@ -180,6 +186,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
+                DisplayStatusCode(StatusCode.invalidVariableVal);
                 Log.Error($"Torpedo arm got an arm action he should not get: {armAction}");
             }
         }

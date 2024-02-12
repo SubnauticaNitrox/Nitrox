@@ -6,7 +6,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Debuggers
 {
     [ExcludeFromCodeCoverage]
@@ -186,6 +186,7 @@ namespace NitroxClient.Debuggers
             if (SkinCreationOptions == GUISkinCreationOptions.DEFAULT)
             {
                 Enabled = false;
+                DisplayStatusCode(StatusCode.invalidVariableVal);
                 throw new NotSupportedException($"Cannot change {nameof(GUISkin)} for {GetType().FullName} when accessing the default skin. Change {nameof(SkinCreationOptions)} to something else than {nameof(GUISkinCreationOptions.DEFAULT)}.");
             }
 

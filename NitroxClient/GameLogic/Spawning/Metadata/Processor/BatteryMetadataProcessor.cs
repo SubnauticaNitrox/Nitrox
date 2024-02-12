@@ -1,7 +1,7 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class BatteryMetadataProcessor : EntityMetadataProcessor<BatteryMetadata>
@@ -16,6 +16,7 @@ public class BatteryMetadataProcessor : EntityMetadataProcessor<BatteryMetadata>
         }
         else
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             Log.Error($"Could not find Battery on {gameObject.name}");
         }
     }

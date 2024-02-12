@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities
 {
@@ -30,6 +31,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             if (entity is not EscapePodWorldEntity escapePodEntity)
             {
                 result.Set(Optional.Empty);
+                DisplayStatusCode(StatusCode.invalidPacket);
                 Log.Error($"Received incorrect entity type: {entity.GetType()}");
                 yield break;
             }
@@ -62,6 +64,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             }
             else
             {
+                DisplayStatusCode(StatusCode.subnauticaError);
                 Log.Error("Escape pod did not have a rigid body!");
             }
 

@@ -5,6 +5,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning;
 
@@ -29,6 +30,7 @@ public class InventoryEntitySpawner : SyncEntitySpawner<InventoryEntity>
         }
         else
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             Log.Error($"Unable to find {nameof(StorageContainer)} for: {entity}");
             result.Set(Optional.Empty);
         }

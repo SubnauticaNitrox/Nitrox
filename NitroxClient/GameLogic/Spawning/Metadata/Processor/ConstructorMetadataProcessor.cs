@@ -1,6 +1,7 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
@@ -16,6 +17,7 @@ public class ConstructorMetadataProcessor : EntityMetadataProcessor<ConstructorM
         }
         else
         {
+            DisplayStatusCode(StatusCode.subnauticaError);
             Log.Error($"Could not find constructor on {gameObject.name}");
         }
     }
