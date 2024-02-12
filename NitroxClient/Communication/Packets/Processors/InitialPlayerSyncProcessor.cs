@@ -1,11 +1,11 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly HashSet<IInitialSyncProcessor> processors;
-        private readonly HashSet<Type> alreadyRan = new();
+        private readonly HashSet<Type> alreadyRan = [];
         private InitialPlayerSync packet;
 
         private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
@@ -33,8 +33,6 @@ namespace NitroxClient.Communication.Packets.Processors
             this.packet = packet;
 
             loadingMultiplayerWaitItem = WaitScreen.Add(Language.main.Get("Nitrox_SyncingWorld"));
-
-            // Clarifies the client is out of the queue since WaitScreen doesn't actually do anything
             Log.InGame(Language.main.Get("Nitrox_SyncingWorld"));
 
             cumulativeProcessorsRan = 0;

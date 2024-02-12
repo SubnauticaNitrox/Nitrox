@@ -1,3 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -11,13 +18,6 @@ using NitroxServer.Communication;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace NitroxServer.GameLogic
 {
@@ -27,8 +27,8 @@ namespace NitroxServer.GameLogic
         private readonly World world;
 
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
-        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new();
-        private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
+        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = [];
+        private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
         private ThreadSafeQueue<(NitroxConnection, string)> JoinQueue { get; set; } = new();
@@ -255,7 +255,7 @@ namespace NitroxServer.GameLogic
             {
                 NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-                PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+                PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, []);
                 world.EntityRegistry.AddEntity(playerEntity);
                 world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
                 SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);
