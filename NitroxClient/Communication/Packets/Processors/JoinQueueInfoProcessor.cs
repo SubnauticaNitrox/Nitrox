@@ -12,7 +12,6 @@ public class JoinQueueInfoProcessor : ClientPacketProcessor<JoinQueueInfo>
 
         if (packet.ShowMaximumWait)
         {
-            Log.InGame($"You could have to wait up to {MillisToMinutes(packet.Position * packet.Timeout)} minutes, but that is very unlikely.");
             Log.InGame($"The maximum wait time per person is {MillisToMinutes(packet.Timeout)} minutes.");
         }
     }
