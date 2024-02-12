@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using ProtoBufNet;
 
@@ -17,6 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoInclude(54, typeof(InstalledBatteryEntity))]
     [ProtoInclude(55, typeof(InstalledModuleEntity))]
     [ProtoInclude(56, typeof(WorldEntity))]
+    [ProtoInclude(57, typeof(BaseLeakEntity))]
     public abstract class Entity
     {
         [DataMember(Order = 1)]
