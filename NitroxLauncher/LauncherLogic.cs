@@ -19,6 +19,9 @@ using NitroxLauncher.Models.Utils;
 using System.Windows.Controls;
 using System.Diagnostics;
 using static NitroxModel.DisplayStatusCodes;
+using OneDriveLib;
+using Oculus.Platform;
+using System.Linq;
 namespace NitroxLauncher
 {
     internal class LauncherLogic : IDisposable
@@ -60,7 +63,38 @@ namespace NitroxLauncher
             Server?.Dispose();
             LauncherNotifier.Shutdown();
         }
-
+        public void CheckNitroxPath()
+        {
+            try {
+                if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveConsumer")))
+                {
+                    DisplayStatusCode(StatusCode.onedriveFolderDetected);
+                }
+                else
+            {
+                return;
+            }
+            }
+            catch
+            {
+                // Ignore, probably a NullReferenceException from the oneDrive path being null due to it not existing
+            }
+            try
+            {
+                if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveCommerical")))
+                {
+                    DisplayStatusCode(StatusCode.onedriveFolderDetected);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch
+            {
+                // Ignore, probably a NullReferenceException from the oneDrive path being null due to it not existing
+            }
+        }
         [Conditional("RELEASE")]
         public async void CheckNitroxVersion()
         {

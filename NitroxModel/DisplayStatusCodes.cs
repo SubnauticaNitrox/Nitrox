@@ -34,7 +34,8 @@ namespace NitroxModel
             dependencyFail,
             subnauticaError,
             lockErr,
-            invalidFunctionCall
+            invalidFunctionCall,
+            onedriveFolderDetected
         }
         public static void DisplayStatusCode(StatusCode statusCode)
         {
