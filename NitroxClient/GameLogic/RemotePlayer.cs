@@ -17,6 +17,12 @@ namespace NitroxClient.GameLogic;
 
 public class RemotePlayer : INitroxPlayer
 {
+    /// <summary>
+    /// Marks <see cref="Player.mainObject"/> and every <see cref="Body"/> so they can be precisely queried (e.g. by sea dragons).
+    /// The value (5050) is determined arbitrarily and should not be used already.
+    /// </summary>
+    public const EcoTargetType PLAYER_ECO_TARGET_TYPE = (EcoTargetType)5050;
+
     private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
     private readonly PlayerModelManager playerModelManager;
@@ -317,8 +323,14 @@ public class RemotePlayer : INitroxPlayer
     private void SetupBody()
     {
         // set as a target for reapers
-        EcoTarget ecoTarget = Body.AddComponent<EcoTarget>();
-        ecoTarget.SetTargetType(EcoTargetType.Shark);
+        EcoTarget sharkEcoTarget = Body.AddComponent<EcoTarget>();
+        sharkEcoTarget.SetTargetType(EcoTargetType.Shark);
+
+        EcoTarget playerEcoTarget = Body.AddComponent<EcoTarget>();
+        playerEcoTarget.SetTargetType(PLAYER_ECO_TARGET_TYPE);
+
+        TechTag techTag = Body.AddComponent<TechTag>();
+        techTag.type = TechType.Player;
 
         RemotePlayerIdentifier identifier = Body.AddComponent<RemotePlayerIdentifier>();
         identifier.RemotePlayer = this;
@@ -463,5 +475,14 @@ public class RemotePlayer : INitroxPlayer
             bool visible = PlayerContext.GameMode != NitroxGameMode.CREATIVE;
             vitals.SetStatsVisible(visible);
         }
+    }
+
+    /// <summary>
+    /// Adaptation of <see cref="Player.CanBeAttacked"/> for remote players.
+    /// NB: This doesn't check for other player's use of 'invisible' command
+    /// </summary>
+    public bool CanBeAttacked()
+    {
+        return !SubRoot && !EscapePod && PlayerContext.GameMode != NitroxGameMode.CREATIVE;
     }
 }
