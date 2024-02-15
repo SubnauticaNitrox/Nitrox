@@ -1,22 +1,21 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// For players without lock: apply remote creature actions and prevent the original call.
+/// For players with lock: broadcast new creature actions
+/// </summary>
 public sealed partial class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default));
 
     public static bool Prefix(Creature __instance, out NitroxId __state, ref CreatureAction __result)
     {
-        if (!__instance.TryGetIdOrWarn(out __state, true))
-        {
-            return true;
-        }
-        if (Resolve<SimulationOwnership>().HasAnyLockType(__state))
+        if (!__instance.TryGetIdOrWarn(out __state) || Resolve<SimulationOwnership>().HasAnyLockType(__state))
         {
             return true;
         }

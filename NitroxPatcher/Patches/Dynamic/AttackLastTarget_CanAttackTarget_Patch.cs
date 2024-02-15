@@ -7,11 +7,11 @@ using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Allow creatures to chose remote players as targets only if they can be attacked (<see cref="RemotePlayer.CanBeAttacked"/>)
+/// Allows creatures to chose remote players as targets only if they can be attacked (<see cref="RemotePlayer.CanBeAttacked"/>)
 /// </summary>
-public sealed partial class AggressiveWhenSeeTarget_IsTargetValid_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class AttackLastTarget_CanAttackTarget_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((AggressiveWhenSeeTarget t) => t.IsTargetValid(default(GameObject)));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((AttackLastTarget t) => t.CanAttackTarget(default));
 
     public static bool Prefix(GameObject target, ref bool __result)
     {

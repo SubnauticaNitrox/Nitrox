@@ -7,6 +7,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
+using static NitroxModel.Packets.RangedAttackLastTargetUpdate;
 
 namespace NitroxClient.GameLogic;
 
@@ -22,7 +23,7 @@ public class AI
     /// </summary>
     private readonly HashSet<Type> creatureActionWhitelist =
     [
-        typeof(AttackLastTarget), typeof(AttackCyclops)
+        typeof(AttackLastTarget), typeof(RangedAttackLastTarget), typeof(AttackCyclops)
     ];
 
     /// <summary>
@@ -50,7 +51,7 @@ public class AI
             return;
         }
 
-        ErrorMessage.AddMessage($"[SEND] reaper action: {newAction.GetType().FullName}");
+        ErrorMessage.AddMessage($"[SEND] synced action: {newAction.GetType().FullName}");
         packetSender.Send(new CreatureActionChanged(creatureId, newAction.GetType().FullName));
     }
 
@@ -115,6 +116,31 @@ public class AI
         // Force currentTarget to null to ensure SetCurrentTarget detects a change
         attackCyclops.currentTarget = null;
         attackCyclops.SetCurrentTarget(targetObject, targetObject.GetComponent<CyclopsDecoy>());
+    }
+
+    public static void RangedAttackLastTargetUpdate(NitroxId creatureId, NitroxId targetId, int attackTypeIndex, ActionState state)
+    {
+        if (!NitroxEntity.TryGetComponentFrom(creatureId, out RangedAttackLastTarget rangedAttackLastTarget) ||
+            !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject))
+        {
+            return;
+        }
+
+        RangedAttackLastTarget.RangedAttackType attackType = rangedAttackLastTarget.attackTypes[attackTypeIndex];
+        rangedAttackLastTarget.currentAttack = attackType;
+        rangedAttackLastTarget.currentTarget = targetObject;
+
+        switch (state)
+        {
+            case ActionState.CHARGING:
+                rangedAttackLastTarget.StartCharging(attackType);
+                ErrorMessage.AddMessage($"[GET] {rangedAttackLastTarget.name} charges against {targetObject.name}");
+                break;
+            case ActionState.CASTING:
+                rangedAttackLastTarget.StartCasting(attackType);
+                ErrorMessage.AddMessage($"[GET] {rangedAttackLastTarget.name} casts against {targetObject.name}");
+                break;
+        }
     }
 
     public bool TryGetActionForCreature(Creature creature, out CreatureAction action)
