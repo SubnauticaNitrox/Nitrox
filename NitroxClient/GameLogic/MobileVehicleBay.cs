@@ -40,7 +40,7 @@ public class MobileVehicleBay
 
         NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
-        VehicleWorldEntity vehicleEntity = Vehicles.MakeVehicleEntity(constructedObject, constructedObjectId, techType, constructorId);
+        VehicleWorldEntity vehicleEntity = Vehicles.BuildVehicleWorldEntity(constructedObject, constructedObjectId, techType, constructorId);
 
         packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 

@@ -1,39 +1,24 @@
-using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
-using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// Prevents local player from using "spawn" command without at least the <see cref="Perms.MODERATOR"/> permissions.
+/// </summary>
 public sealed partial class SpawnConsoleCommand_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((SpawnConsoleCommand t) => t.SpawnAsync(default)));
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnConsoleCommand t) => t.OnConsoleCommand_spawn(default));
 
-    /*
-     * GameObject gameObject = global::Utils.CreatePrefab(prefabForTechType, maxDist, i > 0);
-     * -> SpawnConsoleCommand_OnConsoleCommand_Patch.Callback(gameObject);
-     * LargeWorldEntity.Register(gameObject);
-     * CrafterLogic.NotifyCraftEnd(gameObject, techType);
-     * gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
-     */
-    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static bool Prefix(NotificationCenter.Notification n)
     {
-        return new CodeMatcher(instructions).MatchStartForward([
-                                                new CodeMatch(OpCodes.Call, Reflect.Method(() => Utils.CreatePrefab(default, default, default)))
-                                            ])
-                                            .Advance(1)
-                                            .Insert([
-                                                new CodeInstruction(OpCodes.Dup),
-                                                new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default)))
-                                            ])
-                                            .InstructionEnumeration();
-    }
-
-    public static void Callback(GameObject gameObject)
-    {
-        Resolve<NitroxConsole>().Spawn(gameObject);
+        if (Resolve<LocalPlayer>().Permissions < Perms.MODERATOR)
+        {
+            Log.InGame(Language.main.Get("Nitrox_MissingPermission").Replace("{PERMISSION}", Perms.MODERATOR.ToString()));
+            return false;
+        }
+        return true;
     }
 }
