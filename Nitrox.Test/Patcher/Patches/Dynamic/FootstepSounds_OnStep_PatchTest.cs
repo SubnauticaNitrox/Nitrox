@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Helper;
 using NitroxTest.Patcher;
 
 namespace NitroxPatcher.Patches.Dynamic;
