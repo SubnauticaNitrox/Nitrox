@@ -15,7 +15,7 @@ public abstract class AssetParser
     {
         rootPath = ResourceAssetsParser.FindDirectoryContainingResourceAssets();
         assetsManager = new AssetsManager();
-        assetsManager.LoadClassPackage("classdata.tpk");
+        assetsManager.LoadClassPackage(Path.Combine("Resources", "classdata.tpk"));
         assetsManager.LoadClassDatabaseFromPackage("2019.4.36f1");
         assetsManager.SetMonoTempGenerator(monoGen = new ThreadSafeMonoCecilTempGenerator(Path.Combine(rootPath, "Managed")));
     }

@@ -1,5 +1,5 @@
 #List of every sound and if it should be synced;;;
-#Eventpath;Should be syned;Should ignore subroot;Sound radius
+#Eventpath;Should be synced;Should ignore subroot;Sound radius
 ;;;
 event:/creature/bird_small/flap;false;false;0
 event:/creature/bird_small/idle;false;false;0
@@ -265,10 +265,10 @@ event:/player/adviseSelfScan;false;false;0
 event:/player/aurora_warning_1;false;false;0
 event:/player/aurora_warning_2;false;false;0
 event:/player/aurora_warning_3;false;false;0
-event:/player/breathing;false;false;20
-event:/player/bubbles;false;false;20
+event:/player/breathing;true;false;20
+event:/player/bubbles;true;false;20
 event:/player/cold_damage;true;false;20
-event:/player/coughing;true;false;20
+event:/player/coughing;false;false;0
 event:/player/cube terminal_close;false;false;0
 event:/player/cube terminal_open;false;false;0
 event:/player/cube terminal_use;false;false;0
@@ -281,9 +281,9 @@ event:/player/enzyme_cure;false;false;0
 event:/player/food_critical;false;false;0
 event:/player/food_low;false;false;0
 event:/player/food_very_low;false;false;0
-event:/player/footstep_dirt;true;false;20
-event:/player/footstep_metal;true;false;20
-event:/player/footstep_precursor_base;true;false;20
+event:/player/footstep_dirt;false;false;0
+event:/player/footstep_metal;false;false;0
+event:/player/footstep_precursor_base;false;false;0
 event:/player/goal_airsack;false;false;0
 event:/player/goal_BiomeKelpForest;false;false;0
 event:/player/goal_BiomePrecursorGunUpper;false;false;0
@@ -322,10 +322,10 @@ event:/player/key_terminal_use;false;false;0
 event:/player/new_creature;false;false;0
 event:/player/oxygen_10_sec;false;false;0
 event:/player/oxygen_30_sec;false;false;0
-event:/player/Pain;true;false;20
-event:/player/Pain_no_tank;true;false;20
-event:/player/pain_no_tank_light;true;false;20
-event:/player/Pain_surface;true;false;20
+event:/player/Pain;false;false;0
+event:/player/Pain_no_tank;false;false;0
+event:/player/pain_no_tank_light;false;false;0
+event:/player/Pain_surface;false;false;0
 event:/player/Precursor_Gun_ControlRoom;false;false;0
 event:/player/Precursor_Gun_DisableDenied;false;false;0
 event:/player/Precursor_Gun_LostRiverHint;false;false;0
@@ -346,7 +346,7 @@ event:/player/selfScan4;false;false;0
 event:/player/selfScan5;false;false;0
 event:/player/signal_upload;false;false;0
 event:/player/start_freedive;false;false;0
-event:/player/start_freedive_splash;true;false;30
+event:/player/start_freedive_splash;false;false;0
 event:/player/step;true;false;20
 event:/player/stillsuit_equipped;false;false;0
 event:/player/story/Aurora_RingRoom_Terminal2;false;false;0
@@ -604,24 +604,24 @@ event:/sub/drone/connected;false;false;0
 event:/sub/drone/connecting_loop;false;false;0
 event:/sub/drone/idle;false;false;0
 event:/sub/drone/motor_loop;false;false;0
-event:/sub/exo/claw_hit_fish;true;true;20
-event:/sub/exo/claw_hit_terain;true;true;20
-event:/sub/exo/claw_pickup;true;true;20
-event:/sub/exo/claw_punch;true;true;20
+event:/sub/exo/claw_hit_fish;true;true;40
+event:/sub/exo/claw_hit_terain;true;true;40
+event:/sub/exo/claw_pickup;true;true;40
+event:/sub/exo/claw_punch;true;true;40
 event:/sub/exo/dock_exo_cyclops;false;false;0
 event:/sub/exo/dock_exo_moonpool;false;false;0
-event:/sub/exo/drill_hit_loop;true;true;20
-event:/sub/exo/drill_loop;true;true;20
+event:/sub/exo/drill_hit_loop;true;true;50
+event:/sub/exo/drill_loop;true;true;50
 event:/sub/exo/enter_exo;false;false;0
-event:/sub/exo/hook_hit;true;true;20
-event:/sub/exo/hook_loop;true;true;20
-event:/sub/exo/hook_shoot;true;true;20
+event:/sub/exo/hook_hit;true;true;50
+event:/sub/exo/hook_loop;true;true;50
+event:/sub/exo/hook_shoot;true;true;50
 event:/sub/exo/interior_loop;false;false;0
-event:/sub/exo/jets_empty;false;false;0
-event:/sub/exo/jets_loop;true;true;50
-event:/sub/exo/jump;true;true;50
-event:/sub/exo/land;true;true;50
-event:/sub/exo/step;true;true;50
+event:/sub/exo/jets_empty;false;false;100
+event:/sub/exo/jets_loop;false;false;100
+event:/sub/exo/jump;true;true;90
+event:/sub/exo/land;true;true;90
+event:/sub/exo/step;false;false;90
 event:/sub/exo/undock_exo_cyclops;false;false;0
 event:/sub/exo/undock_exo_moonpool;false;false;0
 event:/sub/exo/welcome;false;false;0
@@ -686,12 +686,12 @@ event:/sub/seamoth/interior_loop;false;false;0
 event:/sub/seamoth/pulse;false;false;0
 event:/sub/seamoth/pulse_charge_loop;false;false;0
 event:/sub/seamoth/seaglide_equip;true;true;10
-event:/sub/seamoth/seaglide_light_off;true;true;7
-event:/sub/seamoth/seaglide_light_on;true;true;7
+event:/sub/seamoth/seaglide_light_off;true;true;30
+event:/sub/seamoth/seaglide_light_on;true;true;30
 event:/sub/seamoth/seaglide_loop_rpm;false;false;60
 event:/sub/seamoth/seaglide_rev_up;false;false;60
-event:/sub/seamoth/seamoth_light_off;true;true;10
-event:/sub/seamoth/seamoth_light_on;true;true;10
+event:/sub/seamoth/seamoth_light_off;false;false;30
+event:/sub/seamoth/seamoth_light_on;false;false;30
 event:/sub/seamoth/seamoth_loop_rpm;false;false;90
 event:/sub/seamoth/seamoth_rev_up;false;false;75
 event:/sub/seamoth/seamoth_stop;false;false;0
@@ -752,8 +752,8 @@ event:/tools/flare/on_loop;false;false;20
 event:/tools/flare/throw;false;false;20
 event:/tools/flashlight/deploy;false;false;20
 event:/tools/flashlight/fist_use;false;false;20
-event:/tools/flashlight/turn_off;false;false;20
-event:/tools/flashlight/turn_on;false;false;20
+event:/tools/flashlight/turn_off;false;false;30
+event:/tools/flashlight/turn_on;false;false;30
 event:/tools/floating_locker/close;false;false;20
 event:/tools/floating_locker/deploy;false;false;20
 event:/tools/floating_locker/open;false;false;20
@@ -814,4 +814,4 @@ event:/tools/transfuser/take_sample;false;false;0
 event:/tools/use_loot;false;false;0
 event:/tools/welder/deploy;false;false;20
 event:/tools/welder/first_use;false;false;20
-event:/tools/welder/weld_loop;true;false;20
+event:/tools/welder/weld_loop;false;false;0

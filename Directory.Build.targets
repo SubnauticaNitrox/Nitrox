@@ -4,6 +4,10 @@
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
             <!-- UnityEngine libraries to include -->
             <ItemGroup>
+                <Reference Include="FMODUnity">
+                    <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
                 <Reference Include="Newtonsoft.Json">
                     <HintPath>$(GameManagedDir)\Newtonsoft.Json.dll</HintPath>
                     <Private>$(TestLibrary)</Private>

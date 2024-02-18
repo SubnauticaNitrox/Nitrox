@@ -18,10 +18,10 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(ItemPosition),
         typeof(PlayerStats),
         typeof(StoryGoalExecuted),
-        typeof(PlayFMODAsset),
-        typeof(PlayFMODCustomEmitter),
-        typeof(PlayFMODCustomLoopingEmitter),
-        typeof(PlayFMODStudioEmitter),
+        typeof(FMODAssetPacket),
+        typeof(FMODCustomEmitterPacket),
+        typeof(FMODCustomLoopingEmitterPacket),
+        typeof(FMODStudioEmitterPacket),
         typeof(PlayerCinematicControllerCall)
     };
 
