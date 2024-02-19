@@ -22,8 +22,6 @@ public class WorldEntityManager
     /// <summary>
     ///     World entities can disappear if you go out of range.
     /// </summary>
-    private readonly Dictionary<NitroxInt3, Dictionary<NitroxId, WorldEntity>> worldEntitiesByBatchId;
-
     private readonly Dictionary<AbsoluteEntityCell, Dictionary<NitroxId, WorldEntity>> worldEntitiesByCell;
 
     /// <summary>
@@ -41,10 +39,6 @@ public class WorldEntityManager
         List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
 
         globalRootEntitiesById = entityRegistry.GetEntities<GlobalRootEntity>().ToDictionary(entity => entity.Id);
-
-        worldEntitiesByBatchId = worldEntities.Where(entity => entity is not GlobalRootEntity)
-                                                .GroupBy(entity => entity.AbsoluteEntityCell.BatchId)
-                                                .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
 
         worldEntitiesByCell = worldEntities.Where(entity => entity is not GlobalRootEntity)
                                                .GroupBy(entity => entity.AbsoluteEntityCell)
@@ -166,12 +160,6 @@ public class WorldEntityManager
     {
         lock (worldEntitiesLock)
         {
-            if (!worldEntitiesByBatchId.TryGetValue(cell.BatchId, out Dictionary<NitroxId, WorldEntity> worldEntitiesInBatch))
-            {
-                worldEntitiesInBatch = worldEntitiesByBatchId[cell.BatchId] = [];
-            }
-            worldEntitiesInBatch[entity.Id] = entity;
-
             if (!worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> worldEntitiesInCell))
             {
                 worldEntitiesInCell = worldEntitiesByCell[cell] = [];
@@ -192,11 +180,6 @@ public class WorldEntityManager
     {
         lock (worldEntitiesLock)
         {
-            if (worldEntitiesByBatchId.TryGetValue(cell.BatchId, out Dictionary<NitroxId, WorldEntity> worldEntitiesInBatch))
-            {
-                worldEntitiesInBatch.Remove(entityId);
-            }
-
             if (worldEntitiesByCell.TryGetValue(cell, out Dictionary<NitroxId, WorldEntity> worldEntitiesInCell))
             {
                 worldEntitiesInCell.Remove(entityId);
@@ -333,6 +316,9 @@ public class WorldEntityManager
         }
     }
 
+    /// <summary>
+    /// Iterative breadth-first search which gets all children player entities in <paramref name="parentEntity"/>'s hierarchy.
+    /// </summary>
     private List<PlayerWorldEntity> FindPlayerEntitiesInChildren(Entity parentEntity)
     {
         List<PlayerWorldEntity> playerWorldEntities = [];
@@ -349,7 +335,7 @@ public class WorldEntityManager
             }
             else
             {
-                entitiesToSearch.AddRange(currentEntity.ChildEntities);
+                entitiesToSearch.InsertRange(0, currentEntity.ChildEntities);
             }
         }
         return playerWorldEntities;

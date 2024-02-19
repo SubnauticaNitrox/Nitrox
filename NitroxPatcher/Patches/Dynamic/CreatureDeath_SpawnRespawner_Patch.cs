@@ -44,8 +44,7 @@ public sealed partial class CreatureDeath_SpawnRespawner_Patch : NitroxPatch, ID
     {
         int cellLevel = respawn.TryGetComponent(out LargeWorldEntity largeWorldEntity) ? (int)largeWorldEntity.cellLevel : 0;
         string classId = respawn.GetComponent<UniqueIdentifier>().ClassId;
-        NitroxId respawnId = new();
-        NitroxEntity.SetNewId(respawn.gameObject, respawnId);
+        NitroxId respawnId = NitroxEntity.GenerateNewId(respawn.gameObject);
 
         NitroxId parentId = null;
         if (respawn.transform.parent)

@@ -52,8 +52,7 @@ public sealed partial class CrashHome_Spawn_Patch : NitroxPatch, IDynamicPatch
         {
             return;
         }
-        NitroxId crashFishId = new();
-        NitroxEntity.SetNewId(crashFishObject, crashFishId);
+        NitroxId crashFishId = NitroxEntity.GenerateNewId(crashFishObject);
         LargeWorldEntity largeWorldEntity = crashFishObject.GetComponent<LargeWorldEntity>();
         UniqueIdentifier uniqueIdentifier = crashFishObject.GetComponent<UniqueIdentifier>();
 

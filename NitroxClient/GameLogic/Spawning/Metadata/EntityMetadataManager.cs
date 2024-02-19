@@ -71,6 +71,7 @@ public class EntityMetadataManager
             newerMetadataById.TryGetValue(objectId, out EntityMetadata newMetadata))
         {
             metadata = newMetadata;
+            newerMetadataById.Remove(objectId);
         }
         Optional<IEntityMetadataProcessor> metadataProcessor = FromMetaData(metadata);
 
