@@ -87,6 +87,10 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
         pickupable.Initialize();
 
+        // Items eventually get "secured" once a player gets into a SubRoot (or for other reasons) so we need to force this state by default
+        // so that player don't risk their whole inventory if they reconnect in the water.
+        pickupable.destroyOnDeath = false;
+
         using (PacketSuppressor<EntityReparented>.Suppress())
         using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         {

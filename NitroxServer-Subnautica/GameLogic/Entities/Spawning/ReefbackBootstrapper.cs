@@ -33,7 +33,7 @@ public class ReefbackBootstrapper : IEntityBootstrapper
             return;
         }
 
-        // In case the grassIndex will is chosen randomly
+        // In case the grassIndex is chosen randomly
         int grassIndex = XORRandom.NextIntRange(1, GRASS_VARIANTS_COUNT);
 
         entity = new ReefbackEntity(entity.Transform, entity.Level, entity.ClassId,

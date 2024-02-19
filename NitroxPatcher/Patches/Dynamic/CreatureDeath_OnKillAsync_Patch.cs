@@ -31,15 +31,15 @@ public sealed partial class CreatureDeath_OnKillAsync_Patch : NitroxPatch, IDyna
      * gameObject.GetComponent<Rigidbody>().angularDrag = base.gameObject.GetComponent<Rigidbody>().angularDrag * 3f;
      * UnityEngine.Object.Destroy(base.gameObject);
      * result = null;
-     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this, gameObject, cookedData);
+     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this, gameObject, cookedData); <---- INSERTED LINE
      * 
      * 2nd injection:
      * base.Invoke("RemoveCorpse", this.removeCorpseAfterSeconds);
-     * CreatureDeath_OnKillAsync_Patch.
+     * CreatureDeath_OnKillAsync_Patch.BroadcastRemoveCorpse(this); <---- INSERTED LINE
      * 
      * 3rd injection:
      * this.eatable.SetDecomposes(true);
-     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this.eatable);
+     * CreatureDeath_OnKillAsync_Patch.BroadcastCookedSpawned(this.eatable); <---- INSERTED LINE
      */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {

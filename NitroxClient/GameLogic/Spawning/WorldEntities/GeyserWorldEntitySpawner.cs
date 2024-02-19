@@ -9,9 +9,14 @@ using UWE;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-public class GeyserWorldEntitySpawner(Entities entities) : IWorldEntitySpawner, IWorldEntitySyncSpawner
+public class GeyserWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
 {
-    private readonly Entities entities = entities;
+    private readonly Entities entities;
+
+    public GeyserWorldEntitySpawner(Entities entities)
+    {
+        this.entities = entities;
+    }
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {

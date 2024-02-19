@@ -83,32 +83,30 @@ public class ReefbackEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawne
         return false;
     }
 
-    private static void SetupObject(ReefbackEntity entity, GameObject gameObject, EntityCell cellRoot, ReefbackLife reefbackLife)
+    private static void SetupObject(ReefbackEntity entity, GameObject gameObject, EntityCell entityCell, ReefbackLife reefbackLife)
     {
         Transform transform = gameObject.transform;
         transform.localPosition = entity.Transform.Position.ToUnity();
         transform.localRotation = entity.Transform.Rotation.ToUnity();
         transform.localScale = entity.Transform.LocalScale.ToUnity();
-        transform.SetParent(cellRoot.liveRoot.transform);
+        entityCell.EnsureRoot();
+        transform.SetParent(entityCell.liveRoot.transform);
 
         // Replicate only the useful parts of ReefbackLife.Initialize
         reefbackLife.initialized = true;
         reefbackLife.needToRemovePlantPhysics = false;
         reefbackLife.hasCorals = gameObject.transform.localScale.x > 0.8f;
 
-        if (reefbackLife.hasCorals)
+        if (reefbackLife.hasCorals && LargeWorld.main)
         {
-            if (LargeWorld.main)
+            string biome = LargeWorld.main.GetBiome(entity.OriginalPosition.ToUnity());
+            if (!string.IsNullOrEmpty(biome) && biome.StartsWith("grassyplateaus", StringComparison.OrdinalIgnoreCase))
             {
-                string biome = LargeWorld.main.GetBiome(entity.OriginalPosition.ToUnity());
-                if (!string.IsNullOrEmpty(biome) && biome.StartsWith("grassyplateaus", StringComparison.OrdinalIgnoreCase))
-                {
-                    reefbackLife.grassIndex = 0;
-                }
-                else
-                {
-                    reefbackLife.grassIndex = entity.GrassIndex;
-                }
+                reefbackLife.grassIndex = 0;
+            }
+            else
+            {
+                reefbackLife.grassIndex = entity.GrassIndex;
             }
         }
 
