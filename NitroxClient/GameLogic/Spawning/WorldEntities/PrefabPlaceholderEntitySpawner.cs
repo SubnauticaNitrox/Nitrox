@@ -3,6 +3,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
@@ -57,8 +58,7 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             placeholder = group.prefabPlaceholders[prefabEntity.ComponentIndex];
             return true;
         }
-
-        Log.Error($"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
+        DisplayStatusCode(StatusCode.subnauticaError, false, $"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
         placeholder = null;
         return false;
     }

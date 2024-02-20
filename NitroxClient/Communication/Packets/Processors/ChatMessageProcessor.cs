@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
@@ -9,7 +9,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors
 {
     class ChatMessageProcessor : ClientPacketProcessor<ChatMessage>
@@ -29,6 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ChatMessage message)
         {
+            // If the message is sent by the server, add the server chat flair to it
             if (message.PlayerId != ChatMessage.SERVER_ID)
             {
                 LogClientMessage(message);
@@ -55,8 +56,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 if (!remotePlayer.HasValue)
                 {
                     string playerTableFormatted = string.Join("\n", remotePlayerManager.GetAll().Select(ply => $"Name: '{ply.PlayerName}', Id: {ply.PlayerId}"));
-                    Log.Error($"Tried to add chat message for remote player that could not be found with id '${message.PlayerId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
-                    throw new Exception($"Tried to add chat message for remote player that could not be found with id '${message.PlayerId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
+                    DisplayStatusCode(StatusCode.remotePlayerErr, true, $"Tried to add chat message for remote player that could not be found with id '${message.PlayerId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
                 }
 
                 playerName = remotePlayer.Value.PlayerName;

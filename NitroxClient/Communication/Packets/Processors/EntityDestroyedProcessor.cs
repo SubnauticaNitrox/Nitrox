@@ -4,7 +4,7 @@ using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
@@ -23,7 +23,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         entities.RemoveEntity(packet.Id);
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
         {
-            Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
+            DisplayStatusCode(StatusCode.invalidPacket, false, $"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
             return;
         }
 

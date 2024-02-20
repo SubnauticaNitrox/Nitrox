@@ -10,6 +10,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning;
 
@@ -62,6 +63,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         {
             parentObject = null;
             container = null;
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Unable to find inventory container with id {entity.Id} for {entity}");
             errorLog = $"Unable to find inventory container with id {entity.Id} for {entity}";
             return false;
         }
@@ -72,6 +74,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         {
             parentObject = null;
             container = null;
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find container field on GameObject {parentObject.AliveOrNull()?.GetFullHierarchyPath()}");
             errorLog = $"Could not find container field on GameObject {parentObject.AliveOrNull()?.GetFullHierarchyPath()}";
             return false;
         }

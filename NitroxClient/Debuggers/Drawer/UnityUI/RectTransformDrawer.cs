@@ -1,7 +1,7 @@
 using System;
 using NitroxClient.Debuggers.Drawer.Unity;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
 public class RectTransformDrawer : IDrawer
@@ -187,7 +187,11 @@ public class RectTransformDrawer : IDrawer
         return AnchorMode.NONE;
     }
 #pragma warning restore IDE0011 // ReSharper restore EnforceIfStatementBraces
-
+    private static Vector2[] throwArgOutOfRangeException()
+    {
+        DisplayStatusCode(StatusCode.invalidVariableVal, false, "A value was out of an acceptable range");
+        throw new ArgumentOutOfRangeException();
+    }
     private static Vector2[] AnchorModeToVector(AnchorMode anchorMode)
     {
         return anchorMode switch
@@ -208,8 +212,8 @@ public class RectTransformDrawer : IDrawer
             AnchorMode.STRETCH_CENTER => new[] { new Vector2(0.5f, 0), new Vector2(0.5f, 1) },
             AnchorMode.STRETCH_RIGHT => new[] { new Vector2(1, 0), new Vector2(1, 1) },
             AnchorMode.STRETCH_STRETCH => new[] { new Vector2(0, 0), new Vector2(1, 1) },
-            AnchorMode.NONE => throw new ArgumentOutOfRangeException(),
-            _ => throw new ArgumentOutOfRangeException()
+            AnchorMode.NONE => throwArgOutOfRangeException(),
+            _ => throwArgOutOfRangeException()
         };
     }
 }

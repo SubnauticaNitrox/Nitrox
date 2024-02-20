@@ -22,7 +22,7 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic
 {
     public class Entities
@@ -296,8 +296,8 @@ namespace NitroxClient.GameLogic
             {
                 return type;
             }
-
-            throw new InvalidOperationException($"Did not have a type for {id}");
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Did not have a type for {id}");
+            return type;
         }
 
         public bool IsParentReady(NitroxId id)

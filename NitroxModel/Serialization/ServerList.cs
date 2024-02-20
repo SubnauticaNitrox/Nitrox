@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
-
+using static NitroxServer.Server;
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Serialization
 {
     public class ServerList
@@ -153,7 +154,8 @@ namespace NitroxModel.Serialization
                         }
                         break;
                     default:
-                        throw new Exception($"Expected server entry to have 2 or 3 parts: {line}");
+                        DisplayStatusCode(StatusCode.invalidIP, false, $"Expected server entry to have 2 or 3 parts: {line}");
+                        throw new Exception();
                 }
 
                 string name = parts[0].Trim();

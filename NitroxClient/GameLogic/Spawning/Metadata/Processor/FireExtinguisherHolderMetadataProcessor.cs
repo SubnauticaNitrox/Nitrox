@@ -1,6 +1,7 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
@@ -18,7 +19,7 @@ public class FireExtinguisherHolderMetadataProcessor : EntityMetadataProcessor<F
         }
         else
         {
-            Log.Error($"Could not find FireExtinguisherHolder on {gameObject.name}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find FireExtinguisherHolder on {gameObject.name}");
         }
     }
 }

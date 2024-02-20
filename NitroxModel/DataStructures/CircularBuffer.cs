@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.DataStructures;
 
 /// <summary>
@@ -24,15 +24,20 @@ public class CircularBuffer<T> : IList<T>
     {
         // Proper modulus operator which C# doesn't have. % = remainder operator and doesn't work in reverse for negative numbers.
         get => data[Math.Abs((index % data.Count + data.Count) % data.Count)];
-        set => throw new NotSupportedException();
+        set => throwNotSupportedException();
     }
 
     public int Count => data.Count;
     public bool IsReadOnly => false;
-
+    private void throwNotSupportedException()
+    {
+        DisplayStatusCode(StatusCode.missingFeature, true, "In CircularBuffer.cs: this value cannot be set(read-only)");
+    }
     public CircularBuffer(int maxSize, int initialCapacity = 0)
     {
-        if (maxSize < 0) throw new ArgumentOutOfRangeException(nameof(maxSize), "Max size must be larger than -1");
+        if (maxSize < 0) {
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, nameof(maxSize) + "Max size must be larger than -1");
+        }
 
         this.maxSize = maxSize;
         data = new List<T>(Math.Max(0, Math.Min(initialCapacity, maxSize)));
@@ -45,7 +50,7 @@ public class CircularBuffer<T> : IList<T>
 
     public void Insert(int index, T item)
     {
-        throw new NotImplementedException();
+        throwNotSupportedException();
     }
 
     public void RemoveAt(int index)

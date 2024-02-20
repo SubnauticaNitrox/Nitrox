@@ -5,7 +5,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<SimulationOwnershipChange>
@@ -42,9 +42,8 @@ public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<Simulati
 
                 if (simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Id))
                 {
-                    Log.Warn($"The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: {simulatedEntity.Id}");
+                    DisplayStatusCode(StatusCode.lockErr, false, $"The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: {simulatedEntity.Id}");
                 }
-
                 simulationOwnershipManager.StopSimulatingEntity(simulatedEntity.Id);
                 EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Id);
             }

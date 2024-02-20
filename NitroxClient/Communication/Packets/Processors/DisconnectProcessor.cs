@@ -1,9 +1,8 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
-
 namespace NitroxClient.Communication.Packets.Processors
 {
     class DisconnectProcessor : ClientPacketProcessor<Disconnect>
@@ -22,8 +21,9 @@ namespace NitroxClient.Communication.Packets.Processors
             // TODO: don't remove right away... maybe grey out and start
             //      a coroutine to finally remove.
             vitalsManager.RemoveForPlayer(disconnect.PlayerId);
-
+            // Get the player that needs to be removed from the client
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.PlayerId);
+            // If it still exists, remove the player
             if (remotePlayer.HasValue)
             {
                 remotePlayerManager.RemovePlayer(disconnect.PlayerId);

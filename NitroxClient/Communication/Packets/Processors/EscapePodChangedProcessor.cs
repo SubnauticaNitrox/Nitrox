@@ -1,10 +1,10 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class EscapePodChangedProcessor : ClientPacketProcessor<EscapePodChanged>
@@ -28,6 +28,9 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     GameObject sub = NitroxEntity.RequireObjectFrom(packet.EscapePodId.Value);
                     escapePod = sub.GetComponent<EscapePod>();
+                } else
+                {
+                    DisplayStatusCode(StatusCode.invalidPacket, false, "EscapePodId was null");
                 }
 
                 remotePlayer.Value.SetEscapePod(escapePod);

@@ -6,6 +6,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Packets;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 using static Rocket;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
@@ -29,7 +30,7 @@ public class RocketMetadataProcessor : EntityMetadataProcessor<RocketMetadata>
 
         if (!rocket)
         {
-            Log.Error($"Could not find Rocket on {gameObject.name}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find Rocket on {gameObject.name}");
             return;
         }
 

@@ -1,7 +1,7 @@
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours;
 
 public class PlayerStatsBroadcaster : MonoBehaviour
@@ -17,7 +17,7 @@ public class PlayerStatsBroadcaster : MonoBehaviour
         survival = Player.main.AliveOrNull()?.GetComponent<Survival>();
         if (!survival)
         {
-            Log.Error($"Couldn't find the {nameof(Survival)} instance on the main {nameof(Player)} instance. Destroying {nameof(PlayerStatsBroadcaster)}");
+            DisplayStatusCode(StatusCode.remotePlayerErr, true, $"Couldn't find the {nameof(Survival)} instance on the main {nameof(Player)} instance. Destroying {nameof(PlayerStatsBroadcaster)}");
             Destroy(this);
         }
     }

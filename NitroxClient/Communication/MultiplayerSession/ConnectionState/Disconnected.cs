@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class Disconnected : IMultiplayerSessionConnectionState
@@ -32,7 +32,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                throw new InvalidOperationException("The context is missing an IP address.", ex);
+                DisplayStatusCode(StatusCode.connectionFailClient, false, "The context is missing an IP address." + ex.ToString());
             }
         }
 
@@ -44,7 +44,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                throw new InvalidOperationException("The client must be set on the connection context before trying to negotiate a session reservation.", ex);
+                DisplayStatusCode(StatusCode.connectionFailClient, false, "The client must be set on the connection context before trying to negotiate a session reservation." + ex.ToString());
             }
         }
 
@@ -56,7 +56,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
                 if (!client.IsConnected)
                 {
-                    throw new ClientConnectionFailedException("The client failed to connect without providing a reason why.");
+                    DisplayStatusCode(StatusCode.connectionFailClient, false, "The client failed to connect without providing a reason why.");
                 }
             }
         }
@@ -74,12 +74,12 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            throw new InvalidOperationException("Cannot join a session until a reservation has been negotiated with the server.");
+            DisplayStatusCode(StatusCode.connectionFailClient, false, "Cannot join a session until a reservation has been negotiated with the server.");
         }
 
         public void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            throw new InvalidOperationException("Not connected to a multiplayer server.");
+            DisplayStatusCode(StatusCode.connectionFailClient, false, "Not connected to a multiplayer server.");
         }
     }
 }

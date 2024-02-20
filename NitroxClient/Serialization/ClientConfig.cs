@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Serialization;
 
 /// <summary>
@@ -50,7 +50,7 @@ public class ClientConfig : NitroxConfig<ClientConfig>
         }
         catch (Exception ex)
         {
-            Log.Error($"Unable to load client config: {ex.Message}");
+            DisplayStatusCode(StatusCode.miscUnhandledException, true, $"Unable to load client config: {ex.Message}");
         }
 
         return cfg;

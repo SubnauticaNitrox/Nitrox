@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Helper
 {
     /**
@@ -47,7 +47,7 @@ namespace NitroxClient.GameLogic.Helper
         {
             if (!localObjectsById.TryGetValue(key, out object obj))
             {
-                throw new Exception($"Did not have an entry for key: {key}");
+                DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Did not have an entry for key: {key}");
             }
 
             return (T)obj;

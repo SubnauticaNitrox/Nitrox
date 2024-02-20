@@ -3,6 +3,7 @@ using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Packets;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
@@ -14,12 +15,12 @@ public class ExosuitMetadataProcessor : VehicleMetadataProcessor<ExosuitMetadata
     {
         if (!gameObject.TryGetComponent(out Exosuit exosuit))
         {
-            Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(Exosuit)} on {gameObject}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(Exosuit)} on {gameObject}");
             return;
         }
         if (!gameObject.TryGetComponent(out SubName subName))
         {
-            Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
             return;
         }
 

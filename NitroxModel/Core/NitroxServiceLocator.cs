@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using Autofac;
 using Autofac.Builder;
 using NitroxModel.DataStructures.Util;
-
+using static NitroxModel.DisplayStatusCodes;
+using static NitroxServer.Server;
 namespace NitroxModel.Core;
 
 /// <summary>
@@ -39,7 +40,7 @@ public static class NitroxServiceLocator
     {
         if (DependencyContainer == null)
         {
-            throw new InvalidOperationException("You must install an Autofac container before initializing a new lifetime scope.");
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, "You must install an Autofac container before initializing a new lifetime scope.");
         }
 
         CurrentLifetimeScope?.Dispose();
@@ -115,11 +116,11 @@ public static class NitroxServiceLocator
     {
         if (DependencyContainer == null)
         {
-            throw new InvalidOperationException("You must install an Autofac container before resolving dependencies.");
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, "You must install an Autofac container before resolving dependencies.");
         }
         if (CurrentLifetimeScope == null)
         {
-            throw new InvalidOperationException("You must begin a new lifetime scope before resolving dependencies.");
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, "You must begin a new lifetime scope before resolving dependencies.");
         }
     }
 

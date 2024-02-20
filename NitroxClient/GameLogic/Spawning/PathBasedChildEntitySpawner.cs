@@ -4,6 +4,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning;
 
@@ -21,7 +22,7 @@ public class PathBasedChildEntitySpawner : SyncEntitySpawner<PathBasedChildEntit
 
         if (!owner.HasValue)
         {
-            Log.Error($"Unable to find parent entity: {entity}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Unable to find parent entity: {entity}");
             result.Set(Optional.Empty);
             return true;
         }
@@ -30,7 +31,7 @@ public class PathBasedChildEntitySpawner : SyncEntitySpawner<PathBasedChildEntit
 
         if (!child)
         {
-            Log.Error($"Could not locate child at path {entity.Path} in {owner.Value.name}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not locate child at path {entity.Path} in {owner.Value.name}");
             result.Set(Optional.Empty);
             return true;
         }

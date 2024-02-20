@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
-
+using static NitroxModel.DisplayStatusCodes;
+using static NitroxServer.Server;
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
@@ -85,6 +86,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 case 3:
                     return 5;
                 default:
+                    DisplayStatusCode(StatusCode.saveReadErrFatal, true, $"Given level '{level}' does not have any defined cells.");
                     throw new Exception($"Given level '{level}' does not have any defined cells.");
             }
         }

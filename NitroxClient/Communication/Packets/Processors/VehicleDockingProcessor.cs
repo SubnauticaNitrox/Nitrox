@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
@@ -7,7 +7,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
@@ -49,7 +49,7 @@ namespace NitroxClient.Communication.Packets.Processors
             vehicles.SetOnPilotMode(vehicleId, playerId, false);
             if (!vehicle.docked)
             {
-                Log.Error($"Vehicle {vehicleId} not docked after docking process");
+                DisplayStatusCode(StatusCode.syncFail, false, $"Vehicle {vehicleId} not docked after docking process");
             }
         }
     }

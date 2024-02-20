@@ -8,7 +8,7 @@ using NitroxModel.Core;
 using NitroxModel.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours.Discord;
 
 public class DiscordClient : MonoBehaviour
@@ -26,7 +26,7 @@ public class DiscordClient : MonoBehaviour
     {
         if (main)
         {
-            Log.Error($"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
+            DisplayStatusCode(StatusCode.processAlreadyRunning, false, $"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
             return;
         }
         activity = new();
@@ -55,7 +55,7 @@ public class DiscordClient : MonoBehaviour
         catch (Exception ex)
         {
             DisposeAndScheduleHookRestart();
-            Log.ErrorOnce($"Encountered an error while starting Discord hook, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+            DisplayStatusCode(StatusCode.miscUnhandledException, true, $"Encountered an error while starting Discord hook, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
     }
 
@@ -84,7 +84,7 @@ public class DiscordClient : MonoBehaviour
         {
             // Happens when Discord is closed while Nitrox has its Discord hook running (and for other reason)
             DisposeAndScheduleHookRestart();
-            Log.ErrorOnce($"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+            DisplayStatusCode(StatusCode.miscUnhandledException, false, $"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
     }
 
@@ -181,7 +181,7 @@ public class DiscordClient : MonoBehaviour
             else
             {
                 Log.InGame($"[Discord] {Language.main.Get("Nitrox_Failure")}");
-                Log.Error($"[Discord] {result}: Failed to send join response");
+                DisplayStatusCode(StatusCode.connectionFailClient, false, $"[Discord] {result}: Failed to send join response");
             }
         });
     }

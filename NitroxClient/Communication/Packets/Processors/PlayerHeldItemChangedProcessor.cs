@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -6,7 +6,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldItemChanged>
@@ -113,7 +113,8 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(packet.Type));
+                DisplayStatusCode(StatusCode.invalidPacket, false, nameof(packet.Type) + "A variable was out of an acceptable range");
+                break;
         }
     }
 }

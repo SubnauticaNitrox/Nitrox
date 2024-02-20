@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
 using Terrain = NitroxClient.GameLogic.Terrain;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
@@ -39,8 +40,8 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
             CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
         } catch (Exception e)
         {
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Something wrong happened while waiting for the terrain to load.\n{e}");
             Player.main.cinematicModeActive = false;
-            Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
         }
     }
 }

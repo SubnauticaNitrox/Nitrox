@@ -1,11 +1,12 @@
 using System;
+using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel_Subnautica.DataStructures
 {
     /// <summary>
@@ -140,7 +141,8 @@ namespace NitroxModel_Subnautica.DataStructures
                 Story.GoalType.Radio => StoryGoalExecuted.EventType.RADIO,
                 Story.GoalType.Encyclopedia => StoryGoalExecuted.EventType.ENCYCLOPEDIA,
                 Story.GoalType.Story => StoryGoalExecuted.EventType.STORY,
-                _ => throw new ArgumentException("The provided Story.GoalType doesn't correspond to a StoryEventSend.EventType"),
+                _ =>
+                    throw new ArgumentException("The provided Story.GoalType doesn't correspond to a StoryEventSend.EventType"),
             };
         }
 

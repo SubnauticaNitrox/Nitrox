@@ -1,6 +1,7 @@
-﻿using System.IO;
+using System.IO;
 using NitroxModel.Platforms.Store.Interfaces;
-
+using static NitroxServer.Server;
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Platforms.Store
 {
     public static class GamePlatforms
@@ -19,6 +20,9 @@ namespace NitroxModel.Platforms.Store
                 if (platform.OwnsGame(gameDirectory))
                 {
                     return platform;
+                } else
+                {
+                    DisplayStatusCode(StatusCode.deadPiratesTellNoTales, true, "Please ask for support in the nitrox discord using the join button.A member of the support team would be glad to assist you if you provide them with this status code.");
                 }
             }
 

@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -12,6 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public CyclopsFireCreatedProcessor(IPacketSender packetSender, Fires fires)
         {
+            // where is this used?
             this.packetSender = packetSender;
             this.fires = fires;
         }

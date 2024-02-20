@@ -6,7 +6,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<PlayerCinematicControllerCall>
@@ -27,7 +27,7 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
 
         if (!entity.TryGetComponent(out MultiplayerCinematicReference reference))
         {
-            Log.Warn($"Couldn't find {nameof(MultiplayerCinematicReference)} on {entity.name}:{packet.ControllerID}");
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Couldn't find {nameof(MultiplayerCinematicReference)} on {entity.name}:{packet.ControllerID}");
             return;
         }
 

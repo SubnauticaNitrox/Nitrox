@@ -7,9 +7,10 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.Modals;
+using NitroxModel;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 
 public class LiteNetLibClient : IClient
@@ -111,6 +112,7 @@ public class LiteNetLibClient : IClient
         if (Multiplayer.Active)
         {
             Modal.Get<LostConnectionModal>()?.Show();
+            DisplayStatusCode(StatusCode.connectionFailClient, false, "The client was disconnected from the server");
         }
 
         IsConnected = false;

@@ -17,6 +17,7 @@ event:/creature/bloodcrawler/idle;false;false;0
 event:/creature/boneshark/bite;false;false;0
 event:/creature/boneshark/idle;false;false;0
 event:/creature/boneshark/roar;false;false;0
+# Crabsnake is the best mod :]
 event:/creature/crabsnake/alert;false;false;0
 event:/creature/crabsnake/attack;false;false;0
 event:/creature/crabsnake/attack_cine;false;false;0

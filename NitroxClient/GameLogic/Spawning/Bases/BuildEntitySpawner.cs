@@ -15,7 +15,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
 public class BuildEntitySpawner : EntitySpawner<BuildEntity>
@@ -31,7 +31,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
     {
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
-            Log.Error("Trying to respawn an already spawned Base without a proper resync process.");
+            DisplayStatusCode(StatusCode.invalidFunctionCall, true, "Trying to respawn an already spawned Base without a proper resync process.");
             yield break;
         }
 

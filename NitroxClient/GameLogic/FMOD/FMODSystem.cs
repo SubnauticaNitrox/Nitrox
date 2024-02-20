@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Properties;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.FMOD
 {
     public class FMODSystem
@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.FMOD
             string soundsWhitelist = Resources.soundsWhitelist;
             if (string.IsNullOrWhiteSpace(soundsWhitelist))
             {
-                Log.Error("[FMODSystem]: soundsWhitelist.csv is null or whitespace");
+                DisplayStatusCode(StatusCode.fileSystemErr, true, "[FMODSystem]: soundsWhitelist.csv is null or whitespace");
             }
 
             foreach (string entry in soundsWhitelist.Split('\n'))
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic.FMOD
                 }
                 else
                 {
-                    Log.Error($"[FMODSystem]: Error while parsing soundsWhitelist.csv: {entry}");
+                    DisplayStatusCode(StatusCode.fileSystemErr, true, $"[FMODSystem]: Error while parsing soundsWhitelist.csv: {entry}");
                 }
             }
         }
