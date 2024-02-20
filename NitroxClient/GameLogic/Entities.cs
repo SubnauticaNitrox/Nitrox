@@ -296,8 +296,8 @@ namespace NitroxClient.GameLogic
             {
                 return type;
             }
-            DisplayStatusCode(StatusCode.invalidVariableVal, false);
-            throw new InvalidOperationException($"Did not have a type for {id}");
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Did not have a type for {id}");
+            return type;
         }
 
         public bool IsParentReady(NitroxId id)

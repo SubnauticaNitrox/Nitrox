@@ -44,8 +44,7 @@ namespace NitroxClient.GameLogic
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.miscUnhandledException, true);
-                Log.Error(ex, $"Error while trying to spawn {techType} from devconsole");
+                DisplayStatusCode(StatusCode.miscUnhandledException, true, ex.ToString() + $"Error while trying to spawn {techType} from devconsole");
             }
         }
 

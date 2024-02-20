@@ -40,9 +40,8 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
             CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
         } catch (Exception e)
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false);
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Something wrong happened while waiting for the terrain to load.\n{e}");
             Player.main.cinematicModeActive = false;
-            Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
         }
     }
 }

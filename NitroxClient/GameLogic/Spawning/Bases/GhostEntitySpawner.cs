@@ -64,8 +64,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(ghostEntity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false);
-                Log.Error($"Couldn't find a prefab for ghost of ClassId {ghostEntity.ClassId}");
+                DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find a prefab for ghost of ClassId {ghostEntity.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();

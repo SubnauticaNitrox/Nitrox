@@ -59,8 +59,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false);
-                throw new InvalidOperationException("The context does not have a reservation.", ex);
+                DisplayStatusCode(StatusCode.invalidPacket, false, "The context does not have a reservation." + ex.ToString());
             }
         }
 
@@ -68,7 +67,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!reservationCorrelationId.Equals(sessionConnectionContext.Reservation.CorrelationId))
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false);
+                DisplayStatusCode(StatusCode.invalidPacket, false, sessionConnectionContext.Reservation.ToString() + reservationCorrelationId.ToString());
                 throw new UncorrelatedPacketException(sessionConnectionContext.Reservation, reservationCorrelationId);
             }
         }

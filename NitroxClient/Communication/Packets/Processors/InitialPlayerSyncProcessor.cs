@@ -46,8 +46,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 moreProcessorsToRun = alreadyRan.Count < processors.Count;
                 if (moreProcessorsToRun && processorsRanLastCycle == 0)
                 {
-                    DisplayStatusCode(StatusCode.dependencyFail, true);
-                    throw new Exception($"Detected circular dependencies in initial packet sync between: {GetRemainingProcessorsText()}");
+                    DisplayStatusCode(StatusCode.dependencyFail, true, $"Detected circular dependencies in initial packet sync between: {GetRemainingProcessorsText()}");
                 }
             } while (moreProcessorsToRun);
 

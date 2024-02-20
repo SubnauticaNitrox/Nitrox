@@ -43,8 +43,7 @@ public class RemotePlayerVitals : MonoBehaviour
             vitals.CreateStats(vitals.canvas);
         } catch (Exception ex)
         {
-            DisplayStatusCode(StatusCode.miscUnhandledException, true);
-            Log.Error(ex, $"Encountered an error while creating vitals for player {remotePlayer.PlayerId}, destroying them.");
+            DisplayStatusCode(StatusCode.miscUnhandledException, true, ex.ToString() + $"Encountered an error while creating vitals for player {remotePlayer.PlayerId}, destroying them.");
             Destroy(vitals.gameObject);
             return null;
         }
@@ -109,8 +108,7 @@ public class RemotePlayerVitals : MonoBehaviour
         uGUI uGUI = uGUI.main;
         if (!uGUI)
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false);
-            throw new NullReferenceException($"[{nameof(RemotePlayerVitals)}] Couldn't find uGUI main instance when creating vitals");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"[{nameof(RemotePlayerVitals)}] Couldn't find uGUI main instance when creating vitals");
         }
         healthBar = CreateBar(uGUI.GetComponentInChildren<uGUI_HealthBar>(true), canvas);
         oxygenBar = CreateBar(uGUI.GetComponentInChildren<uGUI_OxygenBar>(true), canvas);
@@ -269,8 +267,7 @@ public class RemotePlayerVitals : MonoBehaviour
         {
             if (isDisposed)
             {
-                DisplayStatusCode(StatusCode.invalidFunctionCall, true);
-                throw new ObjectDisposedException("Tried to update visual on a disposed player stat.");
+                DisplayStatusCode(StatusCode.invalidFunctionCall, true, "Tried to update visual on a disposed player stat.");
             }
         }
     }

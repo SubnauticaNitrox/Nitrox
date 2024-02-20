@@ -113,8 +113,8 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
                 break;
 
             default:
-                DisplayStatusCode(StatusCode.invalidPacket, false);
-                throw new ArgumentOutOfRangeException(nameof(packet.Type));
+                DisplayStatusCode(StatusCode.invalidPacket, false, nameof(packet.Type) + "A variable was out of an acceptable range");
+                break;
         }
     }
 }

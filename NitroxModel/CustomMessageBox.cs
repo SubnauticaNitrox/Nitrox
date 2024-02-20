@@ -10,7 +10,7 @@ public class CustomMessageBox : Form
     Button helpBtn = new();
     Button closeBtn = new();
 
-    public CustomMessageBox(StatusCode statusCode, bool isPirate)
+    public CustomMessageBox(StatusCode statusCode, bool isPirate, string exception)
     {
         if (!isPirate)
         {
@@ -32,7 +32,7 @@ public class CustomMessageBox : Form
             message.Location = new Point(10, 10);
             message.Text = "Nitrox has run into an error with the status code " + statusCode.ToString("D") + "! " + Environment.NewLine +
                 "Look up this status code on the nitrox website(https://www.nitrox.rux.gg/) using the help button below for more information. " + Environment.NewLine +
-                "Nitrox may still be running and it is possible that Nitrox has recovered from this error. ";
+                "Nitrox may still be running and it is possible that Nitrox has recovered from this error. " + Environment.NewLine + exception;
             message.Font = Control.DefaultFont;
             message.AutoSize = true;
 
@@ -41,30 +41,7 @@ public class CustomMessageBox : Form
             Controls.Add(helpBtn);
             Controls.Add(closeBtn);
             Controls.Add(message);
-        }
-        else
-        {
-            // Get the pirate to report themselves in the discord to be banned
-            ClientSize = new System.Drawing.Size(900, 150);
-            Text = "Nitrox has encountered an error!";
-
-            helpBtn.Location = new Point(0, 112);
-            helpBtn.Size = new Size(125, 23);
-            helpBtn.Text = "Join discord";
-            helpBtn.BackColor = Control.DefaultBackColor;
-            helpBtn.Click += HelpButtonOnClickPirate;
-
-            message.Location = new Point(10, 10);
-            message.Text = "Nitrox has run into an error with the status code " + statusCode.ToString("D") + "! " + Environment.NewLine +
-                "Please ask for support in the nitrox discord using the join button. A member of the support team would be glad to assist you if you provide them with this status code.";
-            message.Font = Control.DefaultFont;
-            message.AutoSize = true;
-
-            BackColor = Color.White;
-            ShowIcon = false;
-            Controls.Add(helpBtn);
-            Controls.Add(message);
-        }
+        } 
     }
 
     private void HelpButtonOnClick(object sender, EventArgs e)

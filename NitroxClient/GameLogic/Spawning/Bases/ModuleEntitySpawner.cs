@@ -30,8 +30,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
     {
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
-            DisplayStatusCode(StatusCode.invalidFunctionCall, true);
-            Log.Error("Trying to respawn an already spawned module without a proper resync process.");
+            DisplayStatusCode(StatusCode.invalidFunctionCall, true, "Trying to respawn an already spawned module without a proper resync process.");
             yield break;
         }
         Transform parent = BuildingHandler.GetParentOrGlobalRoot(entity.ParentId);
@@ -40,8 +39,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
 
         if (!result.Get().HasValue)
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false);
-            Log.Error($"Module couldn't be spawned {entity}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Module couldn't be spawned {entity}");
             yield break;
         }
         GameObject moduleObject = result.Get().Value;
@@ -70,8 +68,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(moduleEntity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false);
-                Log.Error($"Couldn't find a prefab for module of ClassId {moduleEntity.ClassId}");
+                DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find a prefab for module of ClassId {moduleEntity.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();

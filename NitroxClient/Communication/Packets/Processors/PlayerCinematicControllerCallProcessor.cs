@@ -27,8 +27,7 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
 
         if (!entity.TryGetComponent(out MultiplayerCinematicReference reference))
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false);
-            Log.Warn($"Couldn't find {nameof(MultiplayerCinematicReference)} on {entity.name}:{packet.ControllerID}");
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Couldn't find {nameof(MultiplayerCinematicReference)} on {entity.name}:{packet.ControllerID}");
             return;
         }
 

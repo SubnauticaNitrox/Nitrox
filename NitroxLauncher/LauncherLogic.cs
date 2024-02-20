@@ -55,8 +55,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.injectionFail, true);
-                Log.Error(ex, "Error while disposing the launcher");
+                DisplayStatusCode(StatusCode.injectionFail, true, ex.ToString() + "Error while disposing the launcher");
             }
 
             gameProcess?.Dispose();
@@ -68,7 +67,7 @@ namespace NitroxLauncher
             try {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveConsumer")))
                 {
-                    DisplayStatusCode(StatusCode.onedriveFolderDetected, false);
+                    DisplayStatusCode(StatusCode.onedriveFolderDetected, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
             {
@@ -83,7 +82,7 @@ namespace NitroxLauncher
             {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveCommerical")))
                 {
-                    DisplayStatusCode(StatusCode.onedriveFolderDetected, false);
+                    DisplayStatusCode(StatusCode.onedriveFolderDetected, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
                 {
@@ -128,8 +127,7 @@ namespace NitroxLauncher
 
             if (task.Exception != null)
             {
-                DisplayStatusCode(StatusCode.firewallModFail, false);
-                MessageBox.Show($"An error occurred configuring the firewall: {task.Exception}");
+                DisplayStatusCode(StatusCode.firewallModFail, false, $"An error occurred configuring the firewall: {task.Exception}");
             }
         }
 
@@ -157,9 +155,7 @@ namespace NitroxLauncher
                     {
                         Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                         {
-                            DisplayStatusCode(StatusCode.privilegesErr, true);
-                            MessageBox.Show(Application.Current.MainWindow!, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.", "Required file permission error", MessageBoxButton.OK,
-                                            MessageBoxImage.Error);
+                            DisplayStatusCode(StatusCode.privilegesErr, true, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message." + "Required file permission error");
                             Environment.Exit(1);
                         }, DispatcherPriority.ApplicationIdle);
                     }
@@ -233,7 +229,7 @@ namespace NitroxLauncher
 
             if (PirateDetection.HasTriggered)
             {
-                DisplayStatusCode(StatusCode.deadPiratesTellNoTales, true);
+                DisplayStatusCode(StatusCode.deadPiratesTellNoTales, true, "Please ask for support in the nitrox discord using the join button.A member of the support team would be glad to assist you if you provide them with this status code.");
                 throw new Exception("Aarrr! Nitrox walked the plank :(");
             }
 
@@ -256,8 +252,7 @@ namespace NitroxLauncher
             }
             catch (IOException ex)
             {
-                DisplayStatusCode(StatusCode.fileSystemErr, true);
-                Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
+                DisplayStatusCode(StatusCode.fileSystemErr, true, ex.ToString() + "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
             // Try inject Nitrox into Subnautica code.
@@ -267,14 +262,14 @@ namespace NitroxLauncher
             }
             if (nitroxEntryPatch == null)
             {
-                DisplayStatusCode(StatusCode.injectionFail, true);
-                throw new Exception("Nitrox was blocked by another program");
+                DisplayStatusCode(StatusCode.injectionFail, true, "Nitrox was blocked by another program");
             }
             nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
 
             if (QModHelper.IsQModInstalled(Config.SubnauticaPath))
             {
+                DisplayStatusCode(StatusCode.injectionFail, false, "Seems like QModManager is Installed, other mods are usually not compatible with Nitrox and are likely to cause major issues");
                 Log.Warn("Seems like QModManager is Installed");
                 LauncherNotifier.Info("Detected QModManager in the game folder");
             }
@@ -283,13 +278,13 @@ namespace NitroxLauncher
         }
         ProcessEx throwUnsupportedInstallException(string subnauticaPath)
         {
-            DisplayStatusCode(StatusCode.invalidInstall, true);
-            throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.");
+            DisplayStatusCode(StatusCode.invalidInstall, true, $"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.");
+            throw new Exception();
         }
         ProcessEx throwUnableToStartGameException(IGamePlatform platform)
         {
-            DisplayStatusCode(StatusCode.storeNotRunning, true);
-            throw new Exception($"Unable to start game through {platform.Name}");
+            DisplayStatusCode(StatusCode.storeNotRunning, true, $"Unable to start game through {platform.Name}");
+            throw new Exception();
         }
         private async Task<ProcessEx> StartSubnauticaAsync()
         {
@@ -320,7 +315,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.injectionFail, true);
+                DisplayStatusCode(StatusCode.injectionFail, true, "Unhandled exception while trying to inject Nitrox: " + ex.ToString());
             }
         }
 

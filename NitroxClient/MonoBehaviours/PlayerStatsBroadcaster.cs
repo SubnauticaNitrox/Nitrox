@@ -17,8 +17,7 @@ public class PlayerStatsBroadcaster : MonoBehaviour
         survival = Player.main.AliveOrNull()?.GetComponent<Survival>();
         if (!survival)
         {
-            Log.Error($"Couldn't find the {nameof(Survival)} instance on the main {nameof(Player)} instance. Destroying {nameof(PlayerStatsBroadcaster)}");
-            DisplayStatusCode(StatusCode.remotePlayerErr, true);
+            DisplayStatusCode(StatusCode.remotePlayerErr, true, $"Couldn't find the {nameof(Survival)} instance on the main {nameof(Player)} instance. Destroying {nameof(PlayerStatsBroadcaster)}");
             Destroy(this);
         }
     }

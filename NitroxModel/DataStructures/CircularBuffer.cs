@@ -31,14 +31,12 @@ public class CircularBuffer<T> : IList<T>
     public bool IsReadOnly => false;
     private void throwNotSupportedException()
     {
-        DisplayStatusCode(StatusCode.missingFeature, true);
-        throw new NotSupportedException();
+        DisplayStatusCode(StatusCode.missingFeature, true, "In CircularBuffer.cs: this value cannot be set(read-only)");
     }
     public CircularBuffer(int maxSize, int initialCapacity = 0)
     {
         if (maxSize < 0) {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false);
-            throw new ArgumentOutOfRangeException(nameof(maxSize), "Max size must be larger than -1"); 
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, nameof(maxSize) + "Max size must be larger than -1");
         }
 
         this.maxSize = maxSize;

@@ -19,8 +19,7 @@ namespace NitroxClient.GameLogic.FMOD
             string soundsWhitelist = Resources.soundsWhitelist;
             if (string.IsNullOrWhiteSpace(soundsWhitelist))
             {
-                DisplayStatusCode(StatusCode.fileSystemErr, true);
-                Log.Error("[FMODSystem]: soundsWhitelist.csv is null or whitespace");
+                DisplayStatusCode(StatusCode.fileSystemErr, true, "[FMODSystem]: soundsWhitelist.csv is null or whitespace");
             }
 
             foreach (string entry in soundsWhitelist.Split('\n'))
@@ -39,8 +38,7 @@ namespace NitroxClient.GameLogic.FMOD
                 }
                 else
                 {
-                    DisplayStatusCode(StatusCode.fileSystemErr, true);
-                    Log.Error($"[FMODSystem]: Error while parsing soundsWhitelist.csv: {entry}");
+                    DisplayStatusCode(StatusCode.fileSystemErr, true, $"[FMODSystem]: Error while parsing soundsWhitelist.csv: {entry}");
                 }
             }
         }

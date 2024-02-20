@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             sessionConnectionContext.ClearSessionState();
             sessionConnectionContext.Client.Stop();
-            DisplayStatusCode(StatusCode.connectionFailClient, false);
+            DisplayStatusCode(StatusCode.connectionFailClient, false, "Client was disconnected.");
             Disconnected newConnectionState = new Disconnected();
             sessionConnectionContext.UpdateConnectionState(newConnectionState);
         }

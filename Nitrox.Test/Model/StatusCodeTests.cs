@@ -12,7 +12,7 @@ public class StatusCodeTests
         // Display one of every status code once non-fatally, should display all of them once
         for (int i = 0; i < Enum.GetNames(typeof(StatusCode)).Length; i++)
         {
-            DisplayStatusCode((StatusCode)i, false);
+            DisplayStatusCode((StatusCode)i, false, "Testing exception");
         }
     }
     [TestMethod]
@@ -21,7 +21,7 @@ public class StatusCodeTests
         // Display one of every status code once fatally, should only display the first one
         for (int i = 0; i < Enum.GetNames(typeof(StatusCode)).Length; i++)
         {
-            DisplayStatusCode((StatusCode)i, true);
+            DisplayStatusCode((StatusCode)i, true, "Testing exception");
         }
     }
 }

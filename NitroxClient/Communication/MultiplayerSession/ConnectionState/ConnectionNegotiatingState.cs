@@ -7,8 +7,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
     {
         public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient, false);
-            throw new InvalidOperationException("Cannot join a session until a reservation has been negotiated with the server.");
+            DisplayStatusCode(StatusCode.connectionFailClient, false, "Cannot join a session until a reservation has been negotiated with the server.");
         }
     }
 }

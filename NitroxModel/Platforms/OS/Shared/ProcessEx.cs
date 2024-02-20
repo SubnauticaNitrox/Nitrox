@@ -144,7 +144,7 @@ namespace NitroxModel.Platforms.OS.Shared
                 string fileName = MainModuleFileName;
                 if (fileName == null)
                 {
-                    DisplayStatusCode(StatusCode.fileSystemErr, true);
+                    DisplayStatusCode(StatusCode.fileSystemErr, true, "Invalid file name");
                     return null;
                 }
                 return Path.GetDirectoryName(MainModuleFileName);

@@ -57,15 +57,13 @@ namespace NitroxClient.GameLogic
             Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
             if (!owner.HasValue)
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false);
-                Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
+                DisplayStatusCode(StatusCode.subnauticaError, false, $"Unable to find inventory container with id {containerId} for {item.name}");
                 return;
             }
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
             if (!opContainer.HasValue)
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false);
-                Log.Error($"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
+                DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
                 return;
             }
 

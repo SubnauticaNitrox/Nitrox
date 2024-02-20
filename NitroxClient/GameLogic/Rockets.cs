@@ -31,8 +31,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false);
-                Log.Error($"{nameof(Rockets.RequestRocketLaunch)}: Can't find a NitroxEntity attached to the Rocket: {rocket.name}");
+                DisplayStatusCode(StatusCode.subnauticaError, false, $"{nameof(Rockets.RequestRocketLaunch)}: Can't find a NitroxEntity attached to the Rocket: {rocket.name}");
             }
         }
 

@@ -56,8 +56,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!sessionConnectionContext.Client.IsConnected)
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false);
-                throw new InvalidOperationException("The client is not connected.");
+                DisplayStatusCode(StatusCode.invalidPacket, false, "The client is not connected.");
             }
         }
 
@@ -69,8 +68,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false);
-                throw new InvalidOperationException("The context does not contain player settings.", ex);
+                DisplayStatusCode(StatusCode.invalidPacket, false, "The context does not contain player settings." + ex);
             }
         }
 
@@ -82,8 +80,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false);
-                throw new InvalidOperationException("The context does not contain an authentication context.", ex);
+                DisplayStatusCode(StatusCode.invalidPacket, false, "The context does not contain an authentication context." + ex);
             }
         }
     }

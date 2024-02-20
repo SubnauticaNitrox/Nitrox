@@ -64,14 +64,12 @@ public class EquippedItemInitialSyncProcessor : InitialSyncProcessor
                     }
                     else
                     {
-                        DisplayStatusCode(StatusCode.subnauticaError, false);
-                        Log.Info($"Could not find equipment type for {gameObject.name}");
+                        DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find equipment type for {gameObject.name}");
                     }
                 }
                 else
                 {
-                    DisplayStatusCode(StatusCode.subnauticaError, false);
-                    Log.Info($"Could not find Container for {gameObject.name}");
+                    DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find Container for {gameObject.name}");
                 }
 
                 totalEquippedItemsDone++;

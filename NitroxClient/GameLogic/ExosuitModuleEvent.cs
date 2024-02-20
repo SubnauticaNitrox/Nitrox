@@ -31,8 +31,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal, false);
-                Log.Error("Cooldown time does not match pickup or punch time");
+                DisplayStatusCode(StatusCode.invalidVariableVal, false, "Cooldown time does not match pickup or punch time");
                 return;
             }
 
@@ -66,8 +65,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal, false);
-                Log.Error($"Drill arm got an arm action he should not get: {armAction}");
+                DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Drill arm got an arm action he should not get: {armAction}");
             }
         }
 
@@ -113,8 +111,7 @@ namespace NitroxClient.GameLogic
 
                 if (!opHitVector.HasValue)
                 {
-                    DisplayStatusCode(StatusCode.invalidVariableVal, false);
-                    Log.Error("No vector given that contains the hook direction");
+                    DisplayStatusCode(StatusCode.invalidVariableVal, false, "No vector given that contains the hook direction");
                     return;
                 }
 
@@ -124,8 +121,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal, false);
-                Log.Error($"Grappling arm got an arm action he should not get: {armAction}");
+                DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Grappling arm got an arm action he should not get: {armAction}");
             }
         }
 
@@ -135,8 +131,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!opVector.HasValue || !opRotation.HasValue)
                 {
-                    DisplayStatusCode(StatusCode.invalidVariableVal, false);
-                    Log.Error("Torpedo arm action shoot: no vector or rotation present");
+                    DisplayStatusCode(StatusCode.invalidVariableVal, false, "Torpedo arm action shoot: no vector or rotation present");
                     return;
                 }
 
@@ -186,8 +181,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal, false);
-                Log.Error($"Torpedo arm got an arm action he should not get: {armAction}");
+                DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Torpedo arm got an arm action he should not get: {armAction}");
             }
         }
     }

@@ -154,8 +154,8 @@ namespace NitroxModel.Serialization
                         }
                         break;
                     default:
-                        DisplayStatusCode(StatusCode.invalidIP, false);
-                        throw new Exception($"Expected server entry to have 2 or 3 parts: {line}");
+                        DisplayStatusCode(StatusCode.invalidIP, false, $"Expected server entry to have 2 or 3 parts: {line}");
+                        throw new Exception();
                 }
 
                 string name = parts[0].Trim();

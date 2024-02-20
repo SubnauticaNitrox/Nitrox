@@ -19,8 +19,7 @@ public class FireExtinguisherHolderMetadataProcessor : EntityMetadataProcessor<F
         }
         else
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false);
-            Log.Error($"Could not find FireExtinguisherHolder on {gameObject.name}");
+            DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find FireExtinguisherHolder on {gameObject.name}");
         }
     }
 }

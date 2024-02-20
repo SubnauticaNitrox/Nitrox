@@ -50,18 +50,16 @@ internal static class Patcher
             }
             catch (HarmonyException e)
             {
-                DisplayStatusCode(StatusCode.injectionFail, true);
+                DisplayStatusCode(StatusCode.injectionFail, true, $"Error patching {patch.GetType().Name}{Environment.NewLine}" + e.ToString());
                 Exception innerMost = e;
                 while (innerMost.InnerException != null)
                 {
                     innerMost = innerMost.InnerException;
                 }
-                Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{innerMost}");
             }
             catch (Exception e)
             {
-                DisplayStatusCode(StatusCode.injectionFail, true);
-                Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
+                DisplayStatusCode(StatusCode.injectionFail, true, $"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
             }
         }
 
@@ -98,8 +96,7 @@ internal static class Patcher
 
         if (container != null)
         {
-            DisplayStatusCode(StatusCode.missingFeature, true);
-            throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
+            DisplayStatusCode(StatusCode.missingFeature, true, $"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
         Log.Info("Registering dependencies");
         container = CreatePatchingContainer();
@@ -109,8 +106,7 @@ internal static class Patcher
         }
         catch (ReflectionTypeLoadException ex)
         {
-            DisplayStatusCode(StatusCode.fileSystemErr, true);
-            Log.Error($"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
+            DisplayStatusCode(StatusCode.fileSystemErr, true, $"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
             foreach (Exception loaderEx in ex.LoaderExceptions)
             {
                 Log.Error(loaderEx);
@@ -119,8 +115,7 @@ internal static class Patcher
         }
         catch (Exception ex)
         {
-            DisplayStatusCode(StatusCode.fileSystemErr, true);
-            Log.Error(ex, "Error while initializing and loading dependencies.");
+            DisplayStatusCode(StatusCode.fileSystemErr, true, ex.ToString() + "Error while initializing and loading dependencies.");
             throw;
         }
 

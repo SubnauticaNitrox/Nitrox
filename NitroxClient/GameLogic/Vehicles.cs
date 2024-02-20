@@ -68,8 +68,7 @@ public class Vehicles
                         }
                         else
                         {
-                                DisplayStatusCode(StatusCode.subnauticaError, false);
-                                Log.Error($"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
+                                DisplayStatusCode(StatusCode.subnauticaError, false, $"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
                         }
 
                         break;

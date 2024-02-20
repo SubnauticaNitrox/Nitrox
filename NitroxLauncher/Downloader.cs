@@ -35,8 +35,7 @@ namespace NitroxLauncher
 #if DEBUG
                 if (response == null)
                 {
-                    DisplayStatusCode(StatusCode.internetConnectFailLauncher, false);
-                    Log.Error($"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
+                    DisplayStatusCode(StatusCode.internetConnectFailLauncher, false, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
                     LauncherNotifier.Error("Unable to fetch nitrox blogs");
                     return blogs;
                 }
@@ -62,9 +61,8 @@ namespace NitroxLauncher
 
                         if (!DateTime.TryParse(released, out DateTime dateTime))
                         {
-                            DisplayStatusCode(StatusCode.internetConnectFailLauncher, false);
+                            DisplayStatusCode(StatusCode.internetConnectFailLauncher, false, $"Error while trying to parse release time ({released}) of blog {url}");
                             dateTime = DateTime.UtcNow;
-                            Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
                         }
 
                         blogs.Add(new NitroxBlog(title, dateTime, url, image));
@@ -73,8 +71,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false);
-                Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
+                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
                 LauncherNotifier.Error("Unable to fetch nitrox blogs");
             }
 
@@ -110,9 +107,8 @@ namespace NitroxLauncher
 
                         if (!DateTime.TryParse(released, out DateTime dateTime))
                         {
-                            DisplayStatusCode(StatusCode.internetConnectFailLauncher, false);
+                            DisplayStatusCode(StatusCode.internetConnectFailLauncher, false, $"Error while trying to parse release time ({released}) of nitrox v{version}");
                             dateTime = DateTime.UtcNow;
-                            Log.Error($"Error while trying to parse release time ({released}) of nitrox v{version}");
                         }
 
                         builder.Clear();
@@ -127,8 +123,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false);
-                Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
+                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
                 LauncherNotifier.Error("Unable to fetch nitrox changelogs");
             }
 
@@ -160,8 +155,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false);
-                Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
+                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
                 LauncherNotifier.Error("Unable to check for updates");
             }
 
@@ -185,8 +179,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false);
-                Log.Error(ex, $"Error while requesting data from {url}");
+                DisplayStatusCode(StatusCode.internetConnectFailLauncher, false, ex.ToString() + $"Error while requesting data from {url}");
             }
 
             return null;

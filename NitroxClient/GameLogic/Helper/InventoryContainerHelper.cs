@@ -51,8 +51,7 @@ namespace NitroxClient.GameLogic.Helper
             Transform parent = ownerTransform.parent;
             if (!parent)
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false);
-                Log.Error("Trying to get the ownerId of a storage that doesn't have a parent");
+                DisplayStatusCode(StatusCode.subnauticaError, false, "Trying to get the ownerId of a storage that doesn't have a parent");
                 ownerId = null;
                 return false;
             }
@@ -73,15 +72,13 @@ namespace NitroxClient.GameLogic.Helper
                 GameObject locker = parent.gameObject.FindChild(lockerName);
                 if (!locker)
                 {
-                    DisplayStatusCode(StatusCode.subnauticaError, false);
-                    Log.Error($"Could not find Locker Object: {lockerName}");
+                    DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find Locker Object: {lockerName}");
                     ownerId = null;
                     return false;
                 }
                 if (!locker.TryGetComponentInChildren(out StorageContainer storageContainer, true))
                 {
-                    DisplayStatusCode(StatusCode.subnauticaError, false);
-                    Log.Error($"Could not find {nameof(StorageContainer)} From Object: {lockerName}");
+                    DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find {nameof(StorageContainer)} From Object: {lockerName}");
                     ownerId = null;
                     return false;
                 }

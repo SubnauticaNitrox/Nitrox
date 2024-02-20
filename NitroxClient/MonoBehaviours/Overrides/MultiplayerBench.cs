@@ -63,8 +63,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
         }
         private Vector3 throwInvalidVariableException()
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false);
-            throw new ArgumentOutOfRangeException();
+            DisplayStatusCode(StatusCode.invalidVariableVal, false, "A variable had an invalid value");
+            return new Vector3();
         }
         public enum Side
         {

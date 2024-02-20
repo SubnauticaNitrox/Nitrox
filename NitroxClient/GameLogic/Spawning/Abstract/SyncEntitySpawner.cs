@@ -28,7 +28,7 @@ public abstract class SyncEntitySpawner<T> : EntitySpawner<T>, ISyncEntitySpawne
         catch (Exception e)
         {
             exception.Set(e);
-            DisplayStatusCode(StatusCode.miscUnhandledException, true);
+            DisplayStatusCode(StatusCode.miscUnhandledException, true, "Misc unhandled exception in SyncEntitySpawner.cs");
             return true;
         }
         exception.Set(null);

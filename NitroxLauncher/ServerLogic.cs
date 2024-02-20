@@ -36,8 +36,7 @@ namespace NitroxLauncher
         {
             if (IsServerRunning)
             {
-                DisplayStatusCode(StatusCode.processAlreadyRunning, false);
-                throw new Exception("An instance of Nitrox Server is already running");
+                DisplayStatusCode(StatusCode.processAlreadyRunning, false, "An instance of Nitrox Server is already running");
             }
 
             string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);

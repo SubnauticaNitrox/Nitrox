@@ -6,12 +6,12 @@ namespace NitroxClient.Communication.Exceptions
     {
         public ClientConnectionFailedException(string message) : base(message)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient, false);
+            DisplayStatusCode(StatusCode.connectionFailClient, false, "Client failed to connect to the server and has been disconnected" + message);
         }
 
         public ClientConnectionFailedException(string message, Exception innerException) : base(message, innerException)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient, false);
+            DisplayStatusCode(StatusCode.connectionFailClient, false, "Client failed to connect to the server and has been disconnected" + message);
         }
     }
 }

@@ -1,5 +1,5 @@
 using System.Windows.Forms;
-using static NitroxModel.DisplayStatusCodes;
+using System;
 namespace NitroxModel
 {
     public class DisplayStatusCodes
@@ -37,26 +37,18 @@ namespace NitroxModel
             invalidFunctionCall,
             onedriveFolderDetected
         }
-        public static bool DisplayStatusCode(StatusCode statusCode, bool fatal)
+        public static bool DisplayStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
             // If statusCode reported is the crash code for piracy,
-            if(statusCode == StatusCode.deadPiratesTellNoTales)
-            {
-                // arrrrr, all pirates must complete the cool challenge in the discord(aka get banned) ;)
-                CustomMessageBox customMessage = new(statusCode, true);
-                customMessage.StartPosition = FormStartPosition.CenterParent;
-                customMessage.ShowDialog();
-            // if it's any other status code
-            } else
-            {
-                // Display a popup message box using CustomMessageBox.cs which has most of the buttons and strings filled in with a placeholder for the statusCode
-                CustomMessageBox customMessage = new(statusCode, false);
-                customMessage.StartPosition = FormStartPosition.CenterParent;
-                customMessage.ShowDialog();
-            }
+
+            // Display a popup message box using CustomMessageBox.cs which has most of the buttons and strings filled in with a placeholder for the statusCode
+            CustomMessageBox customMessage = new(statusCode, false, exception);
+            customMessage.StartPosition = FormStartPosition.CenterParent;
+            customMessage.ShowDialog();
+
             if (fatal)
             {
-                Application.Exit();
+                Environment.Exit(1);
             }
             return true;
         }
