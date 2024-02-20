@@ -53,12 +53,12 @@ namespace NitroxModel
             return true;
         }
         // Print the statusCode to the server console(only for statusCodes that are due to a server-side crash)
-        public static bool PrintStatusCode(StatusCode statusCode, bool fatal)
+        public static bool PrintStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
             if (statusCode != StatusCode.success)
             {
                 // ToString("D") prints the integer value of the statusCode enum
-                Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error"));
+                Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error." + "Exception message: " + exception));
             }
             else
             {
@@ -66,7 +66,7 @@ namespace NitroxModel
             }
             if (fatal)
             {
-                Application.Exit();
+                Environment.Exit(1);
             }
             return true;
         }

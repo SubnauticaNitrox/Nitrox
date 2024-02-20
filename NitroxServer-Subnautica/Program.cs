@@ -112,8 +112,7 @@ public class Program
 
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
-                PrintStatusCode(StatusCode.cancelled, false);
-                throw new Exception("Unable to start server.");
+                PrintStatusCode(StatusCode.cancelled, false, "Unable to start server.");
             }
             else if (cancellationToken.IsCancellationRequested)
             {
@@ -125,7 +124,7 @@ public class Program
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
                 // Log status codes that can be googled by the user to troubleshoot on their own, hopefully
-                PrintStatusCode(StatusCode.success, false);
+                PrintStatusCode(StatusCode.success, false, "Server started successfully!");
             }
         }
         finally
@@ -355,8 +354,7 @@ public class Program
         }
         catch (OperationCanceledException ex)
         {
-            PrintStatusCode(StatusCode.portNotListening, true);
-            Log.Error(ex, "Port availability timeout reached.");
+            PrintStatusCode(StatusCode.portNotListening, true, "Port availability timeout reached." + ex.ToString());
             throw;
         }
     }
@@ -365,7 +363,7 @@ public class Program
     {
         if (e.ExceptionObject is Exception ex)
         {
-            Log.Error(ex);
+            PrintStatusCode(StatusCode.miscUnhandledException, true, ex.ToString());
         }
 
         if (!Environment.UserInteractive || Console.In == StreamReader.Null)
@@ -378,7 +376,7 @@ public class Program
         {
             return;
         }
-        PrintStatusCode(StatusCode.miscUnhandledException, true);
+        PrintStatusCode(StatusCode.miscUnhandledException, true, e.ToString());
         Log.Info("Press L to open log file before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 
