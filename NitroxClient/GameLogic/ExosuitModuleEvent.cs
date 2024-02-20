@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal);
+                DisplayStatusCode(StatusCode.invalidVariableVal, false);
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal);
+                DisplayStatusCode(StatusCode.invalidVariableVal, false);
                 Log.Error($"Drill arm got an arm action he should not get: {armAction}");
             }
         }
@@ -113,7 +113,7 @@ namespace NitroxClient.GameLogic
 
                 if (!opHitVector.HasValue)
                 {
-                    DisplayStatusCode(StatusCode.invalidVariableVal);
+                    DisplayStatusCode(StatusCode.invalidVariableVal, false);
                     Log.Error("No vector given that contains the hook direction");
                     return;
                 }
@@ -124,7 +124,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal);
+                DisplayStatusCode(StatusCode.invalidVariableVal, false);
                 Log.Error($"Grappling arm got an arm action he should not get: {armAction}");
             }
         }
@@ -135,7 +135,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!opVector.HasValue || !opRotation.HasValue)
                 {
-                    DisplayStatusCode(StatusCode.invalidVariableVal);
+                    DisplayStatusCode(StatusCode.invalidVariableVal, false);
                     Log.Error("Torpedo arm action shoot: no vector or rotation present");
                     return;
                 }
@@ -186,7 +186,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal);
+                DisplayStatusCode(StatusCode.invalidVariableVal, false);
                 Log.Error($"Torpedo arm got an arm action he should not get: {armAction}");
             }
         }

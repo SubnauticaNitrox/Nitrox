@@ -26,7 +26,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(entity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"Couldn't find a prefab for {nameof(OxygenPipeEntity)} of ClassId {entity.ClassId}");
                 yield break;
             }
@@ -85,7 +85,7 @@ public class PlacedWorldEntitySpawner : SyncEntitySpawner<PlacedWorldEntity>
         {
             return true;
         }
-        DisplayStatusCode(StatusCode.subnauticaError);
+        DisplayStatusCode(StatusCode.subnauticaError, false);
         Log.Error($"Couldn't find component {nameof(PlaceTool)} on prefab with ClassId: {entity.ClassId}");
         return false;
     }

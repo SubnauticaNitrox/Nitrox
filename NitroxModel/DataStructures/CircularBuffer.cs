@@ -31,13 +31,13 @@ public class CircularBuffer<T> : IList<T>
     public bool IsReadOnly => false;
     private void throwNotSupportedException()
     {
-        DisplayStatusCode(StatusCode.missingFeature);
+        DisplayStatusCode(StatusCode.missingFeature, true);
         throw new NotSupportedException();
     }
     public CircularBuffer(int maxSize, int initialCapacity = 0)
     {
         if (maxSize < 0) {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             throw new ArgumentOutOfRangeException(nameof(maxSize), "Max size must be larger than -1"); 
         }
 

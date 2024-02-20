@@ -57,7 +57,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     string playerTableFormatted = string.Join("\n", remotePlayerManager.GetAll().Select(ply => $"Name: '{ply.PlayerName}', Id: {ply.PlayerId}"));
                     Log.Error($"Tried to add chat message for remote player that could not be found with id '${message.PlayerId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
-                    DisplayStatusCode(StatusCode.remotePlayerErr);
+                    DisplayStatusCode(StatusCode.remotePlayerErr, true);
                     throw new Exception($"Tried to add chat message for remote player that could not be found with id '${message.PlayerId}' and message: '{message.Text}'.\nAll remote players right now:\n{playerTableFormatted}");
                 }
 

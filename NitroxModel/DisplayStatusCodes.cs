@@ -37,7 +37,7 @@ namespace NitroxModel
             invalidFunctionCall,
             onedriveFolderDetected
         }
-        public static void DisplayStatusCode(StatusCode statusCode)
+        public static bool DisplayStatusCode(StatusCode statusCode, bool fatal)
         {
             // If statusCode reported is the crash code for piracy,
             if(statusCode == StatusCode.deadPiratesTellNoTales)
@@ -54,10 +54,14 @@ namespace NitroxModel
                 customMessage.StartPosition = FormStartPosition.CenterParent;
                 customMessage.ShowDialog();
             }
-
+            if (fatal)
+            {
+                Application.Exit();
+            }
+            return true;
         }
         // Print the statusCode to the server console(only for statusCodes that are due to a server-side crash)
-        public static void PrintStatusCode(StatusCode statusCode)
+        public static bool PrintStatusCode(StatusCode statusCode, bool fatal)
         {
             if (statusCode != StatusCode.success)
             {
@@ -68,6 +72,11 @@ namespace NitroxModel
             {
                 Log.Info(string.Concat("Status code = ", statusCode.ToString("D")));
             }
+            if (fatal)
+            {
+                Application.Exit();
+            }
+            return true;
         }
     }
 }

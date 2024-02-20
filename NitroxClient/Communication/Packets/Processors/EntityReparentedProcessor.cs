@@ -30,7 +30,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             // In some cases, the affected entity may be pending spawning or out of range.
             // we only require the parent (in this case, the visible entity is undergoing
             // some change that must be shown, and if not is an error).
-            DisplayStatusCode(StatusCode.invalidPacket);
+            DisplayStatusCode(StatusCode.invalidPacket, false);
             return;
         }
         // Get the soon-to-be new parent of the gameObject from the packet
@@ -79,7 +79,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
 
         if (!opContainer.HasValue)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             Log.Error($"Could not find container field on GameObject {newParent.GetFullHierarchyPath()}");
             return;
         }

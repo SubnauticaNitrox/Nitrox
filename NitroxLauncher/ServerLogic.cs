@@ -36,7 +36,7 @@ namespace NitroxLauncher
         {
             if (IsServerRunning)
             {
-                DisplayStatusCode(StatusCode.processAlreadyRunning);
+                DisplayStatusCode(StatusCode.processAlreadyRunning, false);
                 throw new Exception("An instance of Nitrox Server is already running");
             }
 

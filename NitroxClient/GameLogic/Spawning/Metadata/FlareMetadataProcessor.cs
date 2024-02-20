@@ -11,7 +11,7 @@ public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
     {
         if (!gameObject.TryGetComponent(out Flare flare))
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"[{nameof(FlareMetadataProcessor)}] Can't apply metadata to {gameObject} because it doesn't have a {nameof(Flare)} component");
             return;
         }

@@ -32,14 +32,14 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
     {
         if (entity.ParentId == null || !NitroxEntity.TryGetComponentFrom(entity.ParentId, out Base @base))
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Couldn't find a Base component on the parent object of InteriorPieceEntity {entity.Id}");
             yield break;
         }
         yield return RestoreInteriorPiece(entity, @base, result);
         if (!result.Get().HasValue)
         {
-            DisplayStatusCode(StatusCode.syncFail);
+            DisplayStatusCode(StatusCode.syncFail, false);
             Log.Error($"Restoring interior piece failed: {entity}");
             yield break;
         }
@@ -99,7 +99,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(interiorPiece.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
                 yield break;
             }
@@ -128,7 +128,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         }
         else
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Warn($"Couldn't find an identifier for the interior piece {module.GetType()}");
         }
 
@@ -176,7 +176,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
         if (!mapRoomFunctionality)
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
             yield break;
         }

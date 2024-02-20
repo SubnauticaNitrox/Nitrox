@@ -17,7 +17,7 @@ public static class Validate
         {
             return;
         }
-        DisplayStatusCode(StatusCode.invalidVariableVal);
+        DisplayStatusCode(StatusCode.invalidVariableVal, false);
         throw new ArgumentNullException(argumentExpression);
     }
 
@@ -25,7 +25,7 @@ public static class Validate
     {
         if (!b)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             throw new ArgumentException(argumentExpression);
         }
     }
@@ -34,7 +34,7 @@ public static class Validate
     {
         if (b)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             throw new ArgumentException(argumentExpression);
         }
     }
@@ -43,7 +43,7 @@ public static class Validate
     {
         if (!opt.HasValue)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             throw new OptionalEmptyException<T>();
         }
         return opt.Value;
@@ -53,7 +53,7 @@ public static class Validate
     {
         if (!opt.HasValue)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             throw new OptionalEmptyException<T>(message);
         }
         return opt.Value;

@@ -61,7 +61,7 @@ public static class NitroxEntityExtensions
         }
         if (!gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             Log.Warn($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {gameObject.GetFullHierarchyPath()}");
             nitroxId = null;
             return false;
@@ -86,7 +86,7 @@ public static class NitroxEntityExtensions
         }
         if (!component.TryGetComponent(out NitroxEntity nitroxEntity))
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal);
+            DisplayStatusCode(StatusCode.invalidVariableVal, false);
             Log.Warn($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {component.GetFullHierarchyPath()}");
             nitroxId = null;
             return false;

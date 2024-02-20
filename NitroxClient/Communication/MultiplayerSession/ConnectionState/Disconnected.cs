@@ -32,7 +32,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.connectionFailClient);
+                DisplayStatusCode(StatusCode.connectionFailClient, false);
                 throw new InvalidOperationException("The context is missing an IP address.", ex);
             }
         }
@@ -45,7 +45,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.connectionFailClient);
+                DisplayStatusCode(StatusCode.connectionFailClient, false);
                 throw new InvalidOperationException("The client must be set on the connection context before trying to negotiate a session reservation.", ex);
             }
         }
@@ -58,7 +58,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
                 if (!client.IsConnected)
                 {
-                    DisplayStatusCode(StatusCode.connectionFailClient);
+                    DisplayStatusCode(StatusCode.connectionFailClient, false);
                     throw new ClientConnectionFailedException("The client failed to connect without providing a reason why.");
                 }
             }
@@ -77,13 +77,13 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient);
+            DisplayStatusCode(StatusCode.connectionFailClient, false);
             throw new InvalidOperationException("Cannot join a session until a reservation has been negotiated with the server.");
         }
 
         public void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient);
+            DisplayStatusCode(StatusCode.connectionFailClient, false);
             throw new InvalidOperationException("Not connected to a multiplayer server.");
         }
     }

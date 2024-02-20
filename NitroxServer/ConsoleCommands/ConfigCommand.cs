@@ -54,7 +54,7 @@ namespace NitroxServer.ConsoleCommands
 #if DEBUG
                     if (t.Exception != null)
                     {
-                        PrintStatusCode(StatusCode.saveReadErrFatal);
+                        PrintStatusCode(StatusCode.saveReadErrFatal, true);
                         throw t.Exception;
                     }
 #endif

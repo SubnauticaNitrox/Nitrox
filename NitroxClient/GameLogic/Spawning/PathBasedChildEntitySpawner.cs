@@ -22,7 +22,7 @@ public class PathBasedChildEntitySpawner : SyncEntitySpawner<PathBasedChildEntit
 
         if (!owner.HasValue)
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Unable to find parent entity: {entity}");
             result.Set(Optional.Empty);
             return true;
@@ -32,7 +32,7 @@ public class PathBasedChildEntitySpawner : SyncEntitySpawner<PathBasedChildEntit
 
         if (!child)
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Could not locate child at path {entity.Path} in {owner.Value.name}");
             result.Set(Optional.Empty);
             return true;

@@ -18,7 +18,7 @@ public class PlayerStatsBroadcaster : MonoBehaviour
         if (!survival)
         {
             Log.Error($"Couldn't find the {nameof(Survival)} instance on the main {nameof(Player)} instance. Destroying {nameof(PlayerStatsBroadcaster)}");
-            DisplayStatusCode(StatusCode.remotePlayerErr);
+            DisplayStatusCode(StatusCode.remotePlayerErr, true);
             Destroy(this);
         }
     }

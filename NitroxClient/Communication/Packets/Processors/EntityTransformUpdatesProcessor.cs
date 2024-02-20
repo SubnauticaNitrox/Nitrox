@@ -22,7 +22,7 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
                 continue;
             } else
             {
-                DisplayStatusCode(StatusCode.invalidPacket);
+                DisplayStatusCode(StatusCode.invalidPacket, false);
             }
 
             RemotelyControlled remotelyControlled = opGameObject.Value.GetComponent<RemotelyControlled>();

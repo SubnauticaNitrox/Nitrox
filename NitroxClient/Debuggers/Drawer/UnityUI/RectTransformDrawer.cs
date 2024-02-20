@@ -189,7 +189,7 @@ public class RectTransformDrawer : IDrawer
 #pragma warning restore IDE0011 // ReSharper restore EnforceIfStatementBraces
     private static Vector2[] throwArgOutOfRangeException()
     {
-        DisplayStatusCode(StatusCode.invalidVariableVal);
+        DisplayStatusCode(StatusCode.invalidVariableVal, false);
         throw new ArgumentOutOfRangeException();
     }
     private static Vector2[] AnchorModeToVector(AnchorMode anchorMode)

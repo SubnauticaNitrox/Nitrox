@@ -49,7 +49,7 @@ namespace NitroxClient.Communication.Packets.Processors
             vehicles.SetOnPilotMode(vehicleId, playerId, false);
             if (!vehicle.docked)
             {
-                DisplayStatusCode(StatusCode.syncFail);
+                DisplayStatusCode(StatusCode.syncFail, false);
                 Log.Error($"Vehicle {vehicleId} not docked after docking process");
             }
         }

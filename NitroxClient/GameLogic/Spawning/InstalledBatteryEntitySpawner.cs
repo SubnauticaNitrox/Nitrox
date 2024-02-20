@@ -61,7 +61,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
         if (!NitroxEntity.TryGetObjectFrom(entity.ParentId, out GameObject parentObject))
         {
             energyMixin = null;
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             errorLog = $"Unable to find parent to install battery {entity}";
             return false;
         }
@@ -70,7 +70,7 @@ public class InstalledBatteryEntitySpawner : SyncEntitySpawner<InstalledBatteryE
 
         if (!energyMixin)
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             errorLog = $"Unable to find EnergyMixin on parent to install battery {entity}";
             return false;
         }

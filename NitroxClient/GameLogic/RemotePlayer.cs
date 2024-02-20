@@ -144,7 +144,7 @@ namespace NitroxClient.GameLogic
                 // For unexpected and expected cases, for example when a player is driving a cyclops but the cyclops is destroyed
                 if (!SubRoot)
                 {
-                    DisplayStatusCode(StatusCode.invalidVariableVal);
+                    DisplayStatusCode(StatusCode.invalidVariableVal, false);
                     Log.Error("Player changed PilotingChair but is not in SubRoot!");
                 }
                 else
@@ -326,7 +326,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Warn("The main collider of the main Player couldn't be found or is not a CapsuleCollider. Collisions for the RemotePlayer won't be created");
             }
         }

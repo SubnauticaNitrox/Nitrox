@@ -24,7 +24,7 @@ public static class GhostMetadataApplier
     {
         if (entityMetadata is not GhostMetadata ghostMetadata)
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Trying to apply metadata to a ghost that is not of type {nameof(GhostMetadata)} : [{entityMetadata.GetType()}]");
             return null;
         }
@@ -60,7 +60,7 @@ public static class GhostMetadataApplier
                 ghostMetadata.ApplyBasicMetadataTo(baseGhost);
                 return null;
         }
-        DisplayStatusCode(StatusCode.subnauticaError);
+        DisplayStatusCode(StatusCode.subnauticaError, false);
         Log.Error($"[{nameof(GhostMetadataApplier)}] Metadata of type {entityMetadata.GetType()} can't be applied to ghost of type {baseGhost.GetType()}");
         return null;
     }
@@ -105,7 +105,7 @@ public static class GhostMetadataApplier
         {
             if (!baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase, true))
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"Couldn't find an interior piece's parent ConstructableBase to apply a {nameof(BaseDeconstructableGhostMetadata)} to.");
                 yield break;
             }
@@ -117,7 +117,7 @@ public static class GhostMetadataApplier
             if (!request.TryGetPrefab(out GameObject prefab))
             {
                 // Without its module, the ghost will be useless, so we delete it (like in base game)
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Object.Destroy(constructableBase.gameObject);
                 Log.Error($"Couldn't find a prefab for module of interior piece of ClassId: {ghostMetadata.ClassId}");
                 yield break;
@@ -133,7 +133,7 @@ public static class GhostMetadataApplier
             GameObject moduleObject = baseGhost.targetBase.SpawnModule(prefab, face);
             if (!moduleObject)
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Object.Destroy(constructableBase.gameObject);
                 Log.Error("Module couldn't be spawned for interior piece");
                 yield break;

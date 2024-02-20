@@ -47,7 +47,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.invalidPacket);
+                DisplayStatusCode(StatusCode.invalidPacket, false);
                 throw new InvalidOperationException("The context is missing a session policy.", ex);
             }
         }
@@ -56,7 +56,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!policyRequestCorrelationId.Equals(sessionConnectionContext.SessionPolicy.CorrelationId))
             {
-                DisplayStatusCode(StatusCode.invalidPacket);
+                DisplayStatusCode(StatusCode.invalidPacket, false);
                 throw new UncorrelatedPacketException(sessionConnectionContext.SessionPolicy, policyRequestCorrelationId);
             }
         }

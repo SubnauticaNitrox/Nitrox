@@ -17,7 +17,7 @@ public class SubNameInputMetadataProcessor : EntityMetadataProcessor<SubNameInpu
     {
         if (!gameObject.TryGetComponent(out SubNameInput subNameInput))
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.ErrorOnce($"[{nameof(SubNameInputMetadataProcessor)}] Could not find {nameof(SubNameInput)} on {gameObject}");
             return;
         }
@@ -25,7 +25,7 @@ public class SubNameInputMetadataProcessor : EntityMetadataProcessor<SubNameInpu
         SubName subName = subNameInput.target;
         if (!subName && !subNameInput.TryGetComponent(out subName))
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.ErrorOnce($"[{nameof(SubNameInputMetadataProcessor)}] {gameObject}'s {nameof(subNameInput)} doesn't have a target.");
             return;
         }

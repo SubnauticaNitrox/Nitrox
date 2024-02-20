@@ -30,7 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     escapePod = sub.GetComponent<EscapePod>();
                 } else
                 {
-                    DisplayStatusCode(StatusCode.invalidPacket);
+                    DisplayStatusCode(StatusCode.invalidPacket, false);
                 }
 
                 remotePlayer.Value.SetEscapePod(escapePod);

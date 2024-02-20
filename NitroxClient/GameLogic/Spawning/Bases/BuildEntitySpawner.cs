@@ -31,7 +31,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
     {
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
-            DisplayStatusCode(StatusCode.invalidFunctionCall);
+            DisplayStatusCode(StatusCode.invalidFunctionCall, true);
             Log.Error("Trying to respawn an already spawned Base without a proper resync process.");
             yield break;
         }

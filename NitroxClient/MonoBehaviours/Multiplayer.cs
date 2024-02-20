@@ -130,7 +130,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    DisplayStatusCode(StatusCode.missingFeature);
+                    DisplayStatusCode(StatusCode.missingFeature, true);
                     Log.Error(ex, $"Failed to find packet processor for packet {packet}");
                 }
 
@@ -145,7 +145,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    DisplayStatusCode(StatusCode.miscUnhandledException);
+                    DisplayStatusCode(StatusCode.miscUnhandledException, true);
                     Log.Error(ex, $"Error while processing packet {packet}");
                 }
             }, packetProcessorCache);

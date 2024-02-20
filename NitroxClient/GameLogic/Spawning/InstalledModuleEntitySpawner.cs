@@ -59,7 +59,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         if (!NitroxEntity.TryGetObjectFrom(entity.ParentId, out parentObject))
         {
             equipment = null;
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             errorLog = $"Unable to find inventory container with id {entity.Id} for {entity}";
             return false;
         }
@@ -68,7 +68,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         if (!opEquipment.HasValue)
         {
             equipment = null;
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             errorLog = $"Unable to find equipment container inside {parentObject}";
             return false;
         }

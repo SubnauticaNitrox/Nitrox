@@ -9,7 +9,7 @@ namespace NitroxModel.Platforms.OS.MacOS
     {
         private bool throwNotImplementedException()
         {
-            DisplayStatusCode(StatusCode.missingFeature);
+            DisplayStatusCode(StatusCode.missingFeature, true);
             throw new System.NotImplementedException();
         }
         public override IEnumerable<string> GetDefaultPrograms(string file)
@@ -19,7 +19,7 @@ namespace NitroxModel.Platforms.OS.MacOS
 
         public override bool SetFullAccessToCurrentUser(string directory)
         {
-            DisplayStatusCode(StatusCode.missingFeature);
+            DisplayStatusCode(StatusCode.missingFeature, true);
             throw new System.NotImplementedException();
         }
 

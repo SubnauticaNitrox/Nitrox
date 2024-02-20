@@ -106,7 +106,7 @@ public static class BuildUtils
             }
             else
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"Couldn't find the module spawned by {baseGhost}");
                 moduleObject = null;
                 return false;
@@ -153,7 +153,7 @@ public static class BuildUtils
         {
             if (constructableBase.techType != TechType.BaseWaterPark)
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"No face could be found for ghost {baseGhost}");
             }
             moduleObject = null;
@@ -178,7 +178,7 @@ public static class BuildUtils
                 moduleObject = mapRoomFunctionality.gameObject;
                 return true;
             }
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
             moduleObject = null;
             return false;
@@ -202,7 +202,7 @@ public static class BuildUtils
         // When a WaterPark is merged with another one, we won't find its module but we don't care about that
         if (!isWaterPark)
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error("Couldn't find the module's GameObject of built interior piece when transferring its NitroxEntity to the module.");
         }
 

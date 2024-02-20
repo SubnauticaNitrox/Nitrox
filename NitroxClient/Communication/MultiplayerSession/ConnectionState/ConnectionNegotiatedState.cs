@@ -8,7 +8,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
     {
         public override Task NegotiateReservationAsync(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient);
+            DisplayStatusCode(StatusCode.connectionFailClient, false);
             throw new InvalidOperationException("Unable to negotiate a session connection in the current state.");
         }
     }

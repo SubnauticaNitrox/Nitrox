@@ -39,7 +39,7 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrWhiteSpace(file))
             {
-                DisplayStatusCode(StatusCode.fileSystemErr);
+                DisplayStatusCode(StatusCode.fileSystemErr, true);
                 throw new ArgumentException("File path must not be null or empty.", nameof(file));
             }
 
@@ -99,12 +99,12 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrEmpty(fromPath))
             {
-                DisplayStatusCode(StatusCode.fileSystemErr);
+                DisplayStatusCode(StatusCode.fileSystemErr, true);
                 throw new ArgumentNullException(nameof(fromPath));
             }
             if (string.IsNullOrEmpty(toPath))
             {
-                DisplayStatusCode(StatusCode.fileSystemErr);
+                DisplayStatusCode(StatusCode.fileSystemErr, true);
                 throw new ArgumentNullException(nameof(toPath));
             }
             // Ensure postfix so that result becomes relative to entire "from" path.
@@ -142,13 +142,13 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrWhiteSpace(dir))
             {
-                DisplayStatusCode(StatusCode.fileSystemErr);
+                DisplayStatusCode(StatusCode.fileSystemErr, true);
                 throw new ArgumentException("Directory must not be null or empty", nameof(dir));
             }
             dir = Path.GetFullPath(dir);
             if (!Directory.Exists(dir))
             {
-                DisplayStatusCode(StatusCode.fileSystemErr);
+                DisplayStatusCode(StatusCode.fileSystemErr, true);
                 throw new ArgumentException("Path is not a directory", nameof(dir));
             }
             // Figure out relative path of output OR use <basename>.zip of directory.
@@ -162,7 +162,7 @@ namespace NitroxModel.Platforms.OS.Shared
             string outZipFullName = Path.Combine(outZipDir, outZipName);
             if (!replaceFile && File.Exists(outZipFullName))
             {
-                DisplayStatusCode(StatusCode.fileSystemErr);
+                DisplayStatusCode(StatusCode.fileSystemErr, true);
                 throw new IOException($"The file '{outZipFullName}' already exists");
             }
             string[] files = Directory.GetFiles(dir, fileSearchPattern, SearchOption.AllDirectories);
@@ -235,20 +235,20 @@ namespace NitroxModel.Platforms.OS.Shared
                             catch (Exception)
                             {
                                 // ignored
-                                DisplayStatusCode(StatusCode.fileSystemErr);
+                                DisplayStatusCode(StatusCode.fileSystemErr, true);
                             }
                         }
                         catch (Exception ex2)
                         {
                             Log.Error(ex2, $"Failed to replace file '{source}' with '{target}' which is on another drive");
-                            DisplayStatusCode(StatusCode.fileSystemErr);
+                            DisplayStatusCode(StatusCode.fileSystemErr, true);
                             return false;
                         }
                         break;
                     default:
                         // No special handling implemented for error, abort.
                         Log.Warn($"Unhandled file replace of '{source}' with '{target}' with HRESULT: 0x{ex.HResult:X}");
-                        DisplayStatusCode(StatusCode.fileSystemErr);
+                        DisplayStatusCode(StatusCode.fileSystemErr, true);
                         return false;
                 }
             }

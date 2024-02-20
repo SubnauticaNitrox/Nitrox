@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             {
                 if (texturePixelIndexes.ContainsKey(indexKey))
                 {
-                    DisplayStatusCode(StatusCode.invalidVariableVal);
+                    DisplayStatusCode(StatusCode.invalidVariableVal, false);
                     throw new ArgumentException($"Texture index key {indexKey} already exists.");
                 }
 
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         {
             if (taskCount >= 0)
             {
-                DisplayStatusCode(StatusCode.processAlreadyRunning);
+                DisplayStatusCode(StatusCode.processAlreadyRunning, false);
                 throw new InvalidOperationException("This operation has already been started.");
             }
 
@@ -63,7 +63,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         {
             if (taskCount != 0)
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal);
+                DisplayStatusCode(StatusCode.invalidVariableVal, false);
                 throw new InvalidOperationException("Colors must be swapped before the changes can be applied to the player model.");
             }
 
@@ -75,7 +75,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             if (state is not Action<ColorSwapAsyncOperation> task)
             {
                 //TODO: We need to handle job cancellation during stabilization to ensure that the client shuts down gracefully.
-                DisplayStatusCode(StatusCode.cancelled);
+                DisplayStatusCode(StatusCode.cancelled, false);
                 throw new ArgumentException("Cannot execute a null task.", nameof(state));
             }
 

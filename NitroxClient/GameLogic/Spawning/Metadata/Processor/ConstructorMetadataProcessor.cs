@@ -17,7 +17,7 @@ public class ConstructorMetadataProcessor : EntityMetadataProcessor<ConstructorM
         }
         else
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Could not find constructor on {gameObject.name}");
         }
     }

@@ -63,7 +63,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         {
             parentObject = null;
             container = null;
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             errorLog = $"Unable to find inventory container with id {entity.Id} for {entity}";
             return false;
         }
@@ -74,7 +74,7 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         {
             parentObject = null;
             container = null;
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             errorLog = $"Could not find container field on GameObject {parentObject.AliveOrNull()?.GetFullHierarchyPath()}";
             return false;
         }

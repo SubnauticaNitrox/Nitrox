@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.Containers
             Plantable plant = item.GetComponent<Plantable>();
             if (!plant)
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"FixPlantGrowth: Item for Plantable {plantableData.ItemId} is not a Plantable!");
                 return;
             }
@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic.Containers
             GrowingPlant grower = GetGrowingPlant(plant);
             if (!grower)
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"FixPlantGrowth: Could not find GrowingPlant for Plantable {plantableData.ItemId}!");
                 return;
             }
@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic.Containers
             Planter planter = plantable.currentPlanter;
             if (!planter)
             {
-                DisplayStatusCode(StatusCode.subnauticaError);
+                DisplayStatusCode(StatusCode.subnauticaError, false);
                 Log.Error($"GetGrowingPlant: plant not inside a Planter!");
                 return null;
             }

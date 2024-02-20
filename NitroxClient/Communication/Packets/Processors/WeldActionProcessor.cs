@@ -24,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (!simulationOwnership.HasAnyLockType(packet.Id))
             {
-                DisplayStatusCode(StatusCode.lockErr);
+                DisplayStatusCode(StatusCode.lockErr, false);
                 Log.Error($"Got WeldAction packet for {packet.Id} but did not find the lock corresponding to it");
                 return;
             }
@@ -32,7 +32,7 @@ namespace NitroxClient.Communication.Packets.Processors
             LiveMixin liveMixin = gameObject.GetComponent<LiveMixin>();
             if (!liveMixin)
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal);
+                DisplayStatusCode(StatusCode.invalidVariableVal, false);
                 Log.Error($"Did not find LiveMixin for GameObject {packet.Id} even though it was welded.");
                 return;
             }

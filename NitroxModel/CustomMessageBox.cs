@@ -45,7 +45,7 @@ public class CustomMessageBox : Form
         else
         {
             // Get the pirate to report themselves in the discord to be banned
-            ClientSize = new System.Drawing.Size(690, 150);
+            ClientSize = new System.Drawing.Size(900, 150);
             Text = "Nitrox has encountered an error!";
 
             helpBtn.Location = new Point(0, 112);

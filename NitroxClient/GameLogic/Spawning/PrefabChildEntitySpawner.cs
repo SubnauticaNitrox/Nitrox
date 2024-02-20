@@ -32,7 +32,7 @@ public class PrefabChildEntitySpawner : SyncEntitySpawner<PrefabChildEntity>
         }
         else
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Unable to find prefab for: {entity}");
             result.Set(Optional.Empty);
         }

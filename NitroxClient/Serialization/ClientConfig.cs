@@ -50,7 +50,7 @@ public class ClientConfig : NitroxConfig<ClientConfig>
         }
         catch (Exception ex)
         {
-            DisplayStatusCode(StatusCode.miscUnhandledException);
+            DisplayStatusCode(StatusCode.miscUnhandledException, true);
             Log.Error($"Unable to load client config: {ex.Message}");
         }
 

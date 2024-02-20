@@ -6,12 +6,12 @@ namespace NitroxClient.Communication.Exceptions
     {
         public ClientConnectionFailedException(string message) : base(message)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient);
+            DisplayStatusCode(StatusCode.connectionFailClient, false);
         }
 
         public ClientConnectionFailedException(string message, Exception innerException) : base(message, innerException)
         {
-            DisplayStatusCode(StatusCode.connectionFailClient);
+            DisplayStatusCode(StatusCode.connectionFailClient, false);
         }
     }
 }

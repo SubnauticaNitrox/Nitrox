@@ -24,7 +24,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
         {
             Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
-            DisplayStatusCode(StatusCode.invalidPacket);
+            DisplayStatusCode(StatusCode.invalidPacket, false);
             return;
         }
 

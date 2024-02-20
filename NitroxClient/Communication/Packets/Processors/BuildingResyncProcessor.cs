@@ -46,12 +46,12 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         Stopwatch stopwatch = Stopwatch.StartNew();
         BuildingHandler.Main.StartResync(buildEntities);
         yield return UpdateEntities<Base, BuildEntity>(buildEntities.Keys.ToList(), OverwriteBase, IsInCloseProximity).OnYieldError((exception) => { Log.Error(exception, $"Encountered an exception while resyncing BuildEntities");
-            DisplayStatusCode(StatusCode.syncFail);
+            DisplayStatusCode(StatusCode.syncFail, false);
         });
 
         BuildingHandler.Main.StartResync(moduleEntities);
         yield return UpdateEntities<Constructable, ModuleEntity>(moduleEntities.Keys.ToList(), OverwriteModule, IsInCloseProximity).OnYieldError( (exception)=> { Log.Error(exception, $"Encountered an exception while resyncing ModuleEntities");
-            DisplayStatusCode(StatusCode.syncFail);
+            DisplayStatusCode(StatusCode.syncFail, false);
         });
         BuildingHandler.Main.StopResync();
 
@@ -120,7 +120,7 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
             Log.Info($"[{typeof(E)} RESYNC] spawning entity {entity.Id}");
             yield return entities.SpawnEntityAsync(entity).OnYieldError((ex) => {
                 Log.Error(ex);
-                DisplayStatusCode(StatusCode.syncFail);
+                DisplayStatusCode(StatusCode.syncFail, false);
             }
             );
         }

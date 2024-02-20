@@ -30,7 +30,7 @@ public class InventoryEntitySpawner : SyncEntitySpawner<InventoryEntity>
         }
         else
         {
-            DisplayStatusCode(StatusCode.subnauticaError);
+            DisplayStatusCode(StatusCode.subnauticaError, false);
             Log.Error($"Unable to find {nameof(StorageContainer)} for: {entity}");
             result.Set(Optional.Empty);
         }
