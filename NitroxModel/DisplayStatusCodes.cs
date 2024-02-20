@@ -42,7 +42,7 @@ namespace NitroxModel
             // If statusCode reported is the crash code for piracy,
 
             // Display a popup message box using CustomMessageBox.cs which has most of the buttons and strings filled in with a placeholder for the statusCode
-            CustomMessageBox customMessage = new(statusCode, false, exception);
+            CustomMessageBox customMessage = new(statusCode, exception);
             customMessage.StartPosition = FormStartPosition.CenterParent;
             customMessage.ShowDialog();
 

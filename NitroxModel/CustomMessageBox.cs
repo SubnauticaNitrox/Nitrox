@@ -10,10 +10,8 @@ public class CustomMessageBox : Form
     Button helpBtn = new();
     Button closeBtn = new();
 
-    public CustomMessageBox(StatusCode statusCode, bool isPirate, string exception)
+    public CustomMessageBox(StatusCode statusCode, string exception)
     {
-        if (!isPirate)
-        {
             ClientSize = new Size(690, 150);
             Text = "Nitrox has encountered an error!";
 
@@ -41,7 +39,6 @@ public class CustomMessageBox : Form
             Controls.Add(helpBtn);
             Controls.Add(closeBtn);
             Controls.Add(message);
-        } 
     }
 
     private void HelpButtonOnClick(object sender, EventArgs e)
