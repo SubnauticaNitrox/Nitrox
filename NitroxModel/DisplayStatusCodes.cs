@@ -39,13 +39,11 @@ namespace NitroxModel
         }
         public static bool DisplayStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
-            // If statusCode reported is the crash code for piracy,
-
             // Display a popup message box using CustomMessageBox.cs which has most of the buttons and strings filled in with a placeholder for the statusCode
             CustomMessageBox customMessage = new(statusCode, exception);
             customMessage.StartPosition = FormStartPosition.CenterParent;
             customMessage.ShowDialog();
-
+            // If the error is fatal, exit nitrox
             if (fatal)
             {
                 Environment.Exit(1);
@@ -55,15 +53,9 @@ namespace NitroxModel
         // Print the statusCode to the server console(only for statusCodes that are due to a server-side crash)
         public static bool PrintStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
-            if (statusCode != StatusCode.success)
-            {
-                // ToString("D") prints the integer value of the statusCode enum
-                Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error." + "Exception message: " + exception));
-            }
-            else
-            {
-                Log.Info(string.Concat("Status code = ", statusCode.ToString("D")));
-            }
+            // ToString("D") prints the integer value of the statusCode enum
+            Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error." + "Exception message: " + exception));
+            // If the error is fatal, exit nitrox
             if (fatal)
             {
                 Environment.Exit(1);

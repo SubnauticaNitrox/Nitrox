@@ -124,7 +124,6 @@ public class Program
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
                 // Log status codes that can be googled by the user to troubleshoot on their own, hopefully
-                PrintStatusCode(StatusCode.success, false, "Server started successfully!");
             }
         }
         finally
