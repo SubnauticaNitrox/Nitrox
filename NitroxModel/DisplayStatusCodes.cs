@@ -25,11 +25,11 @@ namespace NitroxModel
             OUTBOUND_CONNECTION_ALREADY_OPEN = 429,
             VERSION_MISMATCH = 426,
             REMOTE_PLAYER_ERR = 401,
-            SYNC_FAIL = 500,
+            SYNC_FAIL = 503,
             DEPENDENCY_FAIL = 424,
             SUBNAUTICA_ERROR = 410,
             LOCK_ERR = 503,
-            INVALID_FUNCTION_CALL = 405,
+            INVALID_FUNCTION_CALL = 405
         }
         public static bool DisplayStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
