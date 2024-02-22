@@ -29,7 +29,7 @@ public class StatusCodeTests
     public void ThrowStatusCodesLongException()
     {
         // Test if the text will wrap or if the messageBox will expand to accomodate for a long exception message
-        DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, false, "This is a testing exception that is super long to test if text will wrap to fit the message box space, or potentially expand the message box as needed. Did you know that you are wasting your time reading this? Like actually there is nothing here you can stop reading, just run the test and you will see this text there. Alright this is probably long enough hopefully it works :) and btw Crabsnake is the best mod.");
+        DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, "This is a testing exception that is super long to test if text will wrap to fit the message box space, or potentially expand the message box as needed. Did you know that you are wasting your time reading this? Like actually there is nothing here you can stop reading, just run the test and you will see this text there. Alright this is probably long enough hopefully it works :) and btw Crabsnake is the best mod.");
     }
 
 }

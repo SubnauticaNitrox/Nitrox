@@ -106,7 +106,7 @@ internal static class Patcher
         }
         catch (ReflectionTypeLoadException ex)
         {
-            DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, true, $"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
             foreach (Exception loaderEx in ex.LoaderExceptions)
             {
                 Log.Error(loaderEx);
@@ -115,7 +115,7 @@ internal static class Patcher
         }
         catch (Exception ex)
         {
-            DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, true, ex.ToString() + "Error while initializing and loading dependencies.");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, ex.ToString() + "Error while initializing and loading dependencies.");
             throw;
         }
 

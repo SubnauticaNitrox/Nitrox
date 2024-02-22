@@ -67,7 +67,7 @@ namespace NitroxLauncher
             try {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveConsumer")))
                 {
-                    DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
+                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
             {
@@ -82,7 +82,7 @@ namespace NitroxLauncher
             {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveCommerical")))
                 {
-                    DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
+                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
                 {
@@ -252,7 +252,7 @@ namespace NitroxLauncher
             }
             catch (IOException ex)
             {
-                DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, true, ex.ToString() + "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, ex.ToString() + "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
             // Try inject Nitrox into Subnautica code.

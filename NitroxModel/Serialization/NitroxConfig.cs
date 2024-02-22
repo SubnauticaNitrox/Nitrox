@@ -58,7 +58,7 @@ namespace NitroxModel.Serialization
                         // Ignore case for property names in file.
                         if (!typeCachedDict.TryGetValue(keyValuePair[0].ToLowerInvariant(), out MemberInfo member))
                         {
-                            DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, false, $"Property or field {keyValuePair[0]} does not exist on type {type.FullName}!");
+                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, $"Property or field {keyValuePair[0]} does not exist on type {type.FullName}!");
                             continue;
                         }
 
@@ -72,12 +72,12 @@ namespace NitroxModel.Serialization
                                 PropertyInfo prop => (prop.PropertyType, prop.GetValue(this)),
                                 _ => (typeof(string), "")
                             };
-                            DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, false, $@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
+                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, $@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
                         }
                     }
                     else
                     {
-                        DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, true, $"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
+                        DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
                     }
                 }
 
@@ -98,7 +98,7 @@ namespace NitroxModel.Serialization
                         return $" - {m.Name}: {value}";
                     });
 
-                    DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, false, $@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
+                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, $@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
                 }
             }
         }

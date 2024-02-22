@@ -141,7 +141,7 @@ public static class Main
 
         if (!File.Exists(dllPath))
         {
-            DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, true, $"Nitrox dll missing: {dllPath}");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Nitrox dll missing: {dllPath}");
         }
         return Assembly.LoadFile(dllPath);
     }
