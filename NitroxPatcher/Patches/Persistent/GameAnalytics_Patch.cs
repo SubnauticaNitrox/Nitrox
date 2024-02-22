@@ -22,6 +22,7 @@ internal class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
     ///     instance).
     /// </summary>
     private static readonly MethodInfo TARGET_METHOD_MANAGER = Reflect.Method((SentrySdkManager t) => t.Awake());
+    private static readonly MethodInfo TARGET_METHOD_MANAGER_ONENABLE = Reflect.Method((SentrySdkManager t) => t.OnEnable());
 
     private static readonly MethodInfo TARGET_METHOD_TELEMETRY = Reflect.Method((Telemetry t) => t.Awake());
     private static readonly MethodInfo TARGET_METHOD_TELEMETRY_QUIT = Reflect.Method(() => Telemetry.SendGameQuit(default));
@@ -57,6 +58,7 @@ internal class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
     {
         PatchPrefix(harmony, TARGET_METHOD_SDK, ((Func<SentrySdk, bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_MANAGER, ((Func<bool>)Prefix).Method);
+        PatchPrefix(harmony, TARGET_METHOD_MANAGER_ONENABLE, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_TELEMETRY, ((Func<Telemetry, bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_TELEMETRY_QUIT, ((Func<bool>)Prefix).Method);
         PatchPrefix(harmony, TARGET_METHOD_GAMEANALYTICS_SEND_EVENT, ((Func<bool>)Prefix).Method);
