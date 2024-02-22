@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -106,6 +106,19 @@ namespace NitroxClient.Unity.Helper
             }
 
             return sb.ToString();
+        }
+
+        public static Transform GetRootParent(this Component co) => co.transform.GetRootParent();
+        public static Transform GetRootParent(this GameObject go) => go.transform.GetRootParent();
+
+        public static Transform GetRootParent(this Transform root)
+        {
+            while (root.parent)
+            {
+                root = root.parent;
+            }
+
+            return root;
         }
 
         public static bool TryGetComponentInAscendance<T>(this Transform transform, int degree, out T component)

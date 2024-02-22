@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
@@ -10,8 +10,8 @@
         <PackageReference Include="Bogus" Version="34.0.2" />
         <PackageReference Include="CompareNETObjects" Version="4.78.0" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
-        <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="MSTest" Version="3.0.2" />
+        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="MSTest" Version="3.2.0" />
         <PackageReference Include="NSubstitute" Version="4.2.2" />
     </ItemGroup>
 
@@ -30,15 +30,15 @@
             <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
         </ItemGroup>
         <ItemGroup>
-            <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
+            <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
         </ItemGroup>
         <ItemGroup>
-            <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
+            <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
         </ItemGroup>
         <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
         <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" />
-        <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
         <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\LanguageFiles\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
-    
+
 </Project>

@@ -33,7 +33,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
         // The server may send us a player entity but they are not guarenteed to be actively connected at the moment - don't spawn them.  In the
         // future, we could make this configurable to be able to spawn disconnected players in the world.
-        if (remotePlayer.HasValue)
+        if (remotePlayer.HasValue && !remotePlayer.Value.Body)
         {
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
 

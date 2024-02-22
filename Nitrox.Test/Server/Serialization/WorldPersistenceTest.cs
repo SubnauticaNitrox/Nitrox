@@ -452,6 +452,10 @@ public class WorldPersistenceTest
                 Assert.AreEqual(installedModuleEntity.Slot, installedModuleEntityAfter.Slot);
                 Assert.AreEqual(installedModuleEntity.ClassId, installedModuleEntityAfter.ClassId);
                 break;
+            case BaseLeakEntity baseLeakEntity when entityAfter is BaseLeakEntity baseLeakEntityAfter:
+                Assert.AreEqual(baseLeakEntity.Health, baseLeakEntityAfter.Health);
+                Assert.AreEqual(baseLeakEntity.RelativeCell, baseLeakEntityAfter.RelativeCell);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)} is not equal: {entity.GetType().Name} - {entityAfter.GetType().Name}");
                 break;

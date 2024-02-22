@@ -1,4 +1,3 @@
-﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
@@ -10,13 +9,6 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabinetClicked>
 {
-    private readonly IPacketSender packetSender;
-
-    public MedicalCabinetClickedProcessor(IPacketSender packetSender)
-    {
-        this.packetSender = packetSender;
-    }
-
     public override void Process(MedicalCabinetClicked packet)
     {
         GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
@@ -28,8 +20,8 @@ public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabin
         cabinet.hasMedKit = packet.HasMedKit;
         cabinet.timeSpawnMedKit = packet.NextSpawnTime;
 
-        using (PacketSuppressor<PlayFMODCustomEmitter>.Suppress())
-        using (FMODSystem.SuppressSounds())
+        using (PacketSuppressor<FMODCustomEmitterPacket>.Suppress())
+        using (FMODSystem.SuppressSubnauticaSounds())
         {
             if (doorChangedState)
             {

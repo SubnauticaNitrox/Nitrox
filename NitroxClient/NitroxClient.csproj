@@ -10,10 +10,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="FMODUnity">
-            <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
         <Reference Include="LitJson">
             <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
             <Private>false</Private>

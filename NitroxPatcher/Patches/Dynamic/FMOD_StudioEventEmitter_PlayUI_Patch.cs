@@ -1,9 +1,9 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -13,20 +13,27 @@ public sealed partial class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, 
 
     public static bool Prefix()
     {
-        return !FMODSuppressor.SuppressFMODEvents;
+        return !FMODSoundSuppressor.SuppressFMODEvents;
     }
 
-    public static void Postfix(FMOD_StudioEventEmitter __instance, float ____lastTimePlayed)
+    public static void Postfix(FMOD_StudioEventEmitter __instance, bool __result)
     {
-        if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path))
+        if (!__result) // Only run if evt was started in original method
         {
-            if (____lastTimePlayed == 0.0 || Time.time > ____lastTimePlayed + __instance.minInterval)
-            {
-                if (__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity))
-                {
-                    Resolve<FMODSystem>().PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, true, false);
-                }
-            }
+            return;
         }
+
+        if (!Resolve<FMODWhitelist>().IsWhitelisted(__instance.asset.path))
+        {
+            return;
+        }
+
+        if (!__instance.TryGetComponentInParent(out NitroxEntity nitroxEntity, true))
+        {
+            Log.Warn($"[{nameof(FMOD_StudioEventEmitter_PlayUI_Patch)}] - No NitroxEntity found for {__instance.asset.path} at {__instance.GetFullHierarchyPath()}");
+            return;
+        }
+
+        Resolve<FMODSystem>().SendStudioEmitterPlay(nitroxEntity.Id, __instance.asset.path, false);
     }
 }
