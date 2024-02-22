@@ -67,7 +67,7 @@ namespace NitroxLauncher
             try {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveConsumer")))
                 {
-                    DisplayStatusCode(StatusCode.onedriveFolderDetected, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
+                    DisplayStatusCode(StatusCode.fileSystemErr, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
             {
@@ -82,7 +82,7 @@ namespace NitroxLauncher
             {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveCommerical")))
                 {
-                    DisplayStatusCode(StatusCode.onedriveFolderDetected, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
+                    DisplayStatusCode(StatusCode.fileSystemErr, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
                 {

@@ -26,7 +26,7 @@ public class DiscordClient : MonoBehaviour
     {
         if (main)
         {
-            DisplayStatusCode(StatusCode.processAlreadyRunning, false, $"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
+            DisplayStatusCode(StatusCode.invalidFunctionCall, false, $"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
             return;
         }
         activity = new();

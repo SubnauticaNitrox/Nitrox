@@ -112,7 +112,7 @@ public class Program
 
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
-                PrintStatusCode(StatusCode.cancelled, false, "Unable to start server.");
+                PrintStatusCode(StatusCode.miscUnhandledException, false, "Unable to start server.");
             }
             else if (cancellationToken.IsCancellationRequested)
             {

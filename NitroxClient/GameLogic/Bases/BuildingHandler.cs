@@ -43,7 +43,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (Main)
         {
-            DisplayStatusCode(StatusCode.processAlreadyRunning, false, $"Another instance of {nameof(BuildingHandler)} is already running. Deleting the current one.");
+            DisplayStatusCode(StatusCode.invalidFunctionCall, false, $"Another instance of {nameof(BuildingHandler)} is already running. Deleting the current one.");
             Destroy(this);
             return;
         }
