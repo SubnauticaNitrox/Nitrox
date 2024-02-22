@@ -154,7 +154,7 @@ namespace NitroxModel.Serialization
                         }
                         break;
                     default:
-                        DisplayStatusCode(StatusCode.connectionFailClient, false, $"Expected server entry to have 2 or 3 parts: {line}");
+                        DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, $"Expected server entry to have 2 or 3 parts: {line}");
                         throw new Exception();
                 }
 

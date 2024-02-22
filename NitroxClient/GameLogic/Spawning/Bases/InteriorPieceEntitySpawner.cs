@@ -32,13 +32,13 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
     {
         if (entity.ParentId == null || !NitroxEntity.TryGetComponentFrom(entity.ParentId, out Base @base))
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find a Base component on the parent object of InteriorPieceEntity {entity.Id}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find a Base component on the parent object of InteriorPieceEntity {entity.Id}");
             yield break;
         }
         yield return RestoreInteriorPiece(entity, @base, result);
         if (!result.Get().HasValue)
         {
-            DisplayStatusCode(StatusCode.syncFail, false, $"Restoring interior piece failed: {entity}");
+            DisplayStatusCode(StatusCode.SYNC_FAIL, false, $"Restoring interior piece failed: {entity}");
             yield break;
         }
         bool isWaterPark = entity.IsWaterPark;
@@ -97,7 +97,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(interiorPiece.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();
@@ -125,7 +125,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         }
         else
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find an identifier for the interior piece {module.GetType()}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find an identifier for the interior piece {module.GetType()}");
         }
 
         if (gameObject.TryGetIdOrWarn(out NitroxId entityId))
@@ -172,7 +172,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
         if (!mapRoomFunctionality)
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
             yield break;
         }
         NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);

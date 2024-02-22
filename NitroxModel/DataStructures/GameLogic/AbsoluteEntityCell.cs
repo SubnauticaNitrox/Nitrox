@@ -86,7 +86,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 case 3:
                     return 5;
                 default:
-                    DisplayStatusCode(StatusCode.fileSystemErr, true, $"Given level '{level}' does not have any defined cells.");
+                    DisplayStatusCode(StatusCoe.FILE_SYSTEM_ERR, true, $"Given level '{level}' does not have any defined cells.");
                     throw new Exception($"Given level '{level}' does not have any defined cells.");
             }
         }

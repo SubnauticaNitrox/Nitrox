@@ -83,7 +83,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
         }
         else
         {
-            DisplayStatusCode(StatusCode.remotePlayerErr, true, $"Found neither SubRoot component nor EscapePod on {parent.name} for {remotePlayer.PlayerName}.");
+            DisplayStatusCode(StatusCode.REMOTE_PLAYER_ERR, true, $"Found neither SubRoot component nor EscapePod on {parent.name} for {remotePlayer.PlayerName}.");
         }
     }
 

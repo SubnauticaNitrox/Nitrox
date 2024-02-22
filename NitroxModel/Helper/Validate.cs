@@ -17,14 +17,14 @@ public static class Validate
         {
             return;
         }
-        DisplayStatusCode(StatusCode.invalidVariableVal, false, "Value was found to be null: " + argumentExpression);
+        DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Value was found to be null: " + argumentExpression);
     }
 
     public static void IsTrue(bool b, [CallerArgumentExpression("b")] string argumentExpression = null)
     {
         if (!b)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false, "Incorrect value was found" + argumentExpression);
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Incorrect value was found" + argumentExpression);
         }
     }
 
@@ -32,7 +32,7 @@ public static class Validate
     {
         if (b)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false, "Incorrect value was found" + argumentExpression);
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Incorrect value was found" + argumentExpression);
             throw new ArgumentException(argumentExpression);
         }
     }
@@ -41,7 +41,7 @@ public static class Validate
     {
         if (!opt.HasValue)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false, "A variable was missing");
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "A variable was missing");
         }
         return opt.Value;
     }
@@ -50,7 +50,7 @@ public static class Validate
     {
         if (!opt.HasValue)
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false, "A variable was missing, " + message);
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "A variable was missing, " + message);
         }
         return opt.Value;
     }

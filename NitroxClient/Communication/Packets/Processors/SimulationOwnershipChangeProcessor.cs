@@ -42,7 +42,7 @@ public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<Simulati
 
                 if (simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Id))
                 {
-                    DisplayStatusCode(StatusCode.lockErr, false, $"The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: {simulatedEntity.Id}");
+                    DisplayStatusCode(StatusCode.LOCK_ERR, false, $"The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: {simulatedEntity.Id}");
                 }
                 simulationOwnershipManager.StopSimulatingEntity(simulatedEntity.Id);
                 EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Id);

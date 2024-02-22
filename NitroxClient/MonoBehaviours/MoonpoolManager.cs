@@ -34,7 +34,7 @@ public class MoonpoolManager : MonoBehaviour
 
         if (!TryGetComponent(out @base))
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Tried adding a {nameof(MoonpoolManager)} to a GameObject that isn't a base, deleting it.");
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"Tried adding a {nameof(MoonpoolManager)} to a GameObject that isn't a base, deleting it.");
             Destroy(this);
             return;
         }

@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic.Settings
                     case int defaultInt:
                         return (T)Convert.ChangeType(PlayerPrefs.GetInt(Key, defaultInt), typeof(T));
                     default:
-                        DisplayStatusCode(StatusCode.invalidVariableVal, false, "Variaible had an invalid value");
+                        DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Variaible had an invalid value");
                         throw new ArgumentOutOfRangeException();
                 }
             }
@@ -57,7 +57,7 @@ namespace NitroxClient.GameLogic.Settings
                         PlayerPrefs.SetInt(Key, intValue);
                         break;
                     default:
-                        DisplayStatusCode(StatusCode.invalidVariableVal, false, "Variable had an invalid value");
+                        DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Variable had an invalid value");
                         throw new ArgumentOutOfRangeException();
                 }
                 PlayerPrefs.Save();

@@ -22,7 +22,7 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
                 continue;
             } else
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false, "GameObject provided to the packet processor was null");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, false, "GameObject provided to the packet processor was null");
             }
 
             RemotelyControlled remotelyControlled = opGameObject.Value.GetComponent<RemotelyControlled>();

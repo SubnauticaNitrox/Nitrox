@@ -26,7 +26,7 @@ public class DiscordClient : MonoBehaviour
     {
         if (main)
         {
-            DisplayStatusCode(StatusCode.invalidFunctionCall, false, $"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, false, $"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
             return;
         }
         activity = new();
@@ -55,7 +55,7 @@ public class DiscordClient : MonoBehaviour
         catch (Exception ex)
         {
             DisposeAndScheduleHookRestart();
-            DisplayStatusCode(StatusCode.miscUnhandledException, true, $"Encountered an error while starting Discord hook, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+            DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, $"Encountered an error while starting Discord hook, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
     }
 
@@ -84,7 +84,7 @@ public class DiscordClient : MonoBehaviour
         {
             // Happens when Discord is closed while Nitrox has its Discord hook running (and for other reason)
             DisposeAndScheduleHookRestart();
-            DisplayStatusCode(StatusCode.miscUnhandledException, false, $"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+            DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, false, $"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
     }
 
@@ -181,7 +181,7 @@ public class DiscordClient : MonoBehaviour
             else
             {
                 Log.InGame($"[Discord] {Language.main.Get("Nitrox_Failure")}");
-                DisplayStatusCode(StatusCode.connectionFailClient, false, $"[Discord] {result}: Failed to send join response");
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, $"[Discord] {result}: Failed to send join response");
             }
         });
     }

@@ -130,7 +130,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    DisplayStatusCode(StatusCode.missingFeature, true, ex.ToString() + $"Failed to find packet processor for packet {packet}");
+                    DisplayStatusCode(StatusCode.MISSING_FEATURE, true, ex.ToString() + $"Failed to find packet processor for packet {packet}");
                 }
 
                 return null;
@@ -144,7 +144,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    DisplayStatusCode(StatusCode.miscUnhandledException, true, ex.ToString() + $"Error while processing packet {packet}");
+                    DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, ex.ToString() + $"Error while processing packet {packet}");
                 }
             }, packetProcessorCache);
         }
