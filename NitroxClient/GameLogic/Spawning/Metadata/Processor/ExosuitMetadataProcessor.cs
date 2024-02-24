@@ -15,12 +15,12 @@ public class ExosuitMetadataProcessor : VehicleMetadataProcessor<ExosuitMetadata
     {
         if (!gameObject.TryGetComponent(out Exosuit exosuit))
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(Exosuit)} on {gameObject}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(Exosuit)} on {gameObject}");
             return;
         }
         if (!gameObject.TryGetComponent(out SubName subName))
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
             return;
         }
 

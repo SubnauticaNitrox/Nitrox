@@ -65,7 +65,7 @@ public static class Main
 
         if (nitroxLauncherDir.Value == null)
         {
-            DisplayStatusCode(StatusCode.invalidInstall, true, "Nitrox will not load because launcher path was not provided.");
+            DisplayStatusCode(StatusCode.INVALID_INSTALL, true, "Nitrox will not load because launcher path was not provided.");
             return;
         }
 
@@ -114,7 +114,7 @@ public static class Main
         }
         catch (Exception ex)
         {
-            DisplayStatusCode(StatusCode.injectionFail, true, ex.ToString() + "Unhandled exception occurred while initializing Nitrox");
+            DisplayStatusCode(StatusCode.INJECTION_FAIL, true, ex.ToString() + "Unhandled exception occurred while initializing Nitrox");
             Log.Error(ex, "Unhandled exception occurred while initializing Nitrox:");
         }
     }
@@ -141,7 +141,7 @@ public static class Main
 
         if (!File.Exists(dllPath))
         {
-            DisplayStatusCode(StatusCode.fileSystemErr, true, $"Nitrox dll missing: {dllPath}");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Nitrox dll missing: {dllPath}");
         }
         return Assembly.LoadFile(dllPath);
     }

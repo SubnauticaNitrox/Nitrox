@@ -89,7 +89,7 @@ namespace NitroxModel.Platforms.OS.Windows
             }
             catch (UnauthorizedAccessException)
             {
-                DisplayStatusCode(StatusCode.privilegesErr, true, "Nitrox does not have permissions to access the specified file/directory");
+                DisplayStatusCode(StatusCode.PRIVILEGES_ERR, true, "Nitrox does not have permissions to access the specified file/directory");
                 return false;
             }
         }

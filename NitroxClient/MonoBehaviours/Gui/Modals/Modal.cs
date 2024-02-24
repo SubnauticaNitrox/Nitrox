@@ -50,7 +50,7 @@ public abstract class Modal
         Type type = GetType();
         if (Modals.ContainsKey(type))
         {
-            DisplayStatusCode(StatusCode.invalidVariableVal, false, $"You cannot set two modals to have the same Type");
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"You cannot set two modals to have the same Type");
             throw new NotSupportedException($"You cannot set two modals to have the same Type");
         }
 
@@ -115,7 +115,7 @@ public abstract class Modal
     {
         if (!IngameMenu.main)
         {
-            DisplayStatusCode(StatusCode.invalidFunctionCall, true, $"Cannot show ingame subwindow {SubWindowName} because the ingame window does not exist.");
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, true, $"Cannot show ingame subwindow {SubWindowName} because the ingame window does not exist.");
         }
 
         if (!modalSubWindow)

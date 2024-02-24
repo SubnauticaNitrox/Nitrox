@@ -7,7 +7,7 @@ namespace NitroxModel.Platforms.OS.Unix
     public sealed class UnixFileSystem : FileSystem
     {
         bool throwNotImplementedException() {
-            DisplayStatusCode(StatusCode.missingFeature, true, "Tried to access a feature that has not yet been implemented");
+            DisplayStatusCode(StatusCode.MISSING_FEATURE, true, "Tried to access a feature that has not yet been implemented");
             return false;
         }
         public override IEnumerable<string> GetDefaultPrograms(string file)
@@ -17,7 +17,7 @@ namespace NitroxModel.Platforms.OS.Unix
 
         public override bool SetFullAccessToCurrentUser(string directory)
         {
-            DisplayStatusCode(StatusCode.missingFeature, true, "Tried to access a feature that has not yet been implemented");
+            DisplayStatusCode(StatusCode.MISSING_FEATURE, true, "Tried to access a feature that has not yet been implemented");
             return false;
         }
 

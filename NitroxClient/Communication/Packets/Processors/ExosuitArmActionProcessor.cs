@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(packet.ArmId);
             if (!opGameObject.HasValue)
             {
-                DisplayStatusCode(StatusCode.syncFail, false, "Could not find exosuit arm");
+                DisplayStatusCode(StatusCode.SYNC_FAIL, false, "Could not find exosuit arm");
                 return;
             }
             GameObject gameObject = opGameObject.Value;
@@ -46,7 +46,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector?.ToUnity(), packet.OpRotation?.ToUnity());
                     break;
                 default:
-                    DisplayStatusCode(StatusCode.syncFail, false, $"Got an arm tech that is not handled: {packet.TechType} with action: {packet.ArmAction} for id {packet.ArmId}");
+                    DisplayStatusCode(StatusCode.SYNC_FAIL, false, $"Got an arm tech that is not handled: {packet.TechType} with action: {packet.ArmAction} for id {packet.ArmId}");
                     break;
             }
 

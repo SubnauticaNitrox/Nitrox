@@ -76,7 +76,7 @@ public class SerializedWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyn
             Type cachedType = ProtobufSerializer.GetCachedType(typeName);
             if (!typesWhitelist.Contains(cachedType))
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false, $"Server asked to instantiate a non-whitelisted type {typeName}.");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Server asked to instantiate a non-whitelisted type {typeName}.");
                 return true;
             }
 
@@ -89,7 +89,7 @@ public class SerializedWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyn
             }
             else
             {
-                DisplayStatusCode(StatusCode.invalidPacket, false, $"Deserializing component {typeName} into {gameObject} failed");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Deserializing component {typeName} into {gameObject} failed");
             }
             ProtobufSerializer.SetIsEnabled(orAddComponent, serializedComponent.IsEnabled);
         }

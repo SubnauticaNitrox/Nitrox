@@ -115,13 +115,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (Main == null)
             {
-                DisplayStatusCode(StatusCode.injectionFail, true, "MainMenuMultiplayerPanel is not instantiated although OpenJoinServerMenu is called.");
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, "MainMenuMultiplayerPanel is not instantiated although OpenJoinServerMenu is called.");
                 return;
             }
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
-                DisplayStatusCode(StatusCode.connectionFailClient, false, "Unable to contact the remote server at: {ip}:{port}" + serverIp + serverPort);
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "Unable to contact the remote server at: {ip}:{port}" + serverIp + serverPort);
                 Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
                 return;
             }
@@ -224,7 +224,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (SocketException ex)
             {
-                DisplayStatusCode(StatusCode.connectionFailClient, false, ex.ToString() + "Unable to resolve the address {hostname}:{serverPort}" + hostname.ToString() + serverPort.ToString());
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, ex.ToString() + "Unable to resolve the address {hostname}:{serverPort}" + hostname.ToString() + serverPort.ToString());
                 Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}:{serverPort}", hostname, serverPort);
                 return null;
             }

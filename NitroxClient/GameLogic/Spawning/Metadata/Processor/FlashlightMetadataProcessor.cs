@@ -21,12 +21,12 @@ public class FlashlightMetadataProcessor : EntityMetadataProcessor<FlashlightMet
             }
             else
             {
-                DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find ToggleLights on {flashLight.name}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find ToggleLights on {flashLight.name}");
             }
         }
         else
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Could not find FlashLight on {gameObject.name}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find FlashLight on {gameObject.name}");
         }
     }
 }

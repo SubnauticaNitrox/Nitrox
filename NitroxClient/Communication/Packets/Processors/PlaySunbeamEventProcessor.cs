@@ -13,7 +13,7 @@ public class PlaySunbeamEventProcessor : ClientPacketProcessor<PlaySunbeamEvent>
         int beginIndex = PlaySunbeamEvent.SunbeamGoals.GetIndex(packet.EventKey);
         if (beginIndex == -1)
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {packet.EventKey}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {packet.EventKey}");
             return;
         }
         for (int i = beginIndex; i < PlaySunbeamEvent.SunbeamGoals.Length; i++)

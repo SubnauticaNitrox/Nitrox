@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             {
                 if (texturePixelIndexes.ContainsKey(indexKey))
                 {
-                    DisplayStatusCode(StatusCode.invalidVariableVal, false, $"Texture index key {indexKey} already exists.");
+                    DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"Texture index key {indexKey} already exists.");
                 }
 
                 texturePixelIndexes.Add(indexKey, pixels);
@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         {
             if (taskCount >= 0)
             {
-                DisplayStatusCode(StatusCode.processAlreadyRunning, false, "This operation has already been started.");
+                DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, false, "This operation has already been started.");
             }
 
             List<Action<ColorSwapAsyncOperation>> tasks = colorSwapManagers
@@ -61,7 +61,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
         {
             if (taskCount != 0)
             {
-                DisplayStatusCode(StatusCode.invalidVariableVal, false, "Colors must be swapped before the changes can be applied to the player model.");
+                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Colors must be swapped before the changes can be applied to the player model.");
                 throw new InvalidOperationException("Colors must be swapped before the changes can be applied to the player model.");
             }
 
@@ -73,7 +73,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             if (state is not Action<ColorSwapAsyncOperation> task)
             {
                 //TODO: We need to handle job cancellation during stabilization to ensure that the client shuts down gracefully.
-                DisplayStatusCode(StatusCode.cancelled, false, "Cannot execute a null task." + nameof(state));
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, false, "Cannot execute a null task." + nameof(state));
                 throw new ArgumentException();
             }
 

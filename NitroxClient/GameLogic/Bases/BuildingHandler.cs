@@ -43,7 +43,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (Main)
         {
-            DisplayStatusCode(StatusCode.processAlreadyRunning, false, $"Another instance of {nameof(BuildingHandler)} is already running. Deleting the current one.");
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, false, $"Another instance of {nameof(BuildingHandler)} is already running. Deleting the current one.");
             Destroy(this);
             return;
         }
@@ -69,7 +69,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         Packet packet = BuildQueue.Dequeue();
         yield return TreatBuildCommand(packet).OnYieldError((exception) => {
-            DisplayStatusCode(StatusCode.miscUnhandledException, true, exception.ToString() + $"An error happened when processing build command {packet}");
+            DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, exception.ToString() + $"An error happened when processing build command {packet}");
         });
         working = false;
     }
@@ -101,7 +101,7 @@ public partial class BuildingHandler : MonoBehaviour
                 yield return DeconstructPiece(pieceDeconstructed);
                 break;
             default:
-                DisplayStatusCode(StatusCode.miscUnhandledException, true, $"Found an unhandled build command packet: {buildCommand}");
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, $"Found an unhandled build command packet: {buildCommand}");
                 break;
         }
     }
@@ -182,7 +182,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (!NitroxEntity.TryGetComponentFrom<Base>(updateBase.BaseId, out _))
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find base with id: {updateBase.BaseId} when processing packet: {updateBase}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find base with id: {updateBase.BaseId} when processing packet: {updateBase}");
             FailedOperations++;
             yield break;
         }
@@ -192,7 +192,7 @@ public partial class BuildingHandler : MonoBehaviour
 
         if (!NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find ghost with id: {updateBase.FormerGhostId} when processing packet: {updateBase}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find ghost with id: {updateBase.FormerGhostId} when processing packet: {updateBase}");
             tracker.FailedOperations++;
             yield break;
         }
@@ -212,7 +212,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (!NitroxEntity.TryGetObjectFrom(baseDeconstructed.FormerBaseId, out GameObject baseObject))
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find base with id: {baseDeconstructed.FormerBaseId} when processing packet: {baseDeconstructed}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find base with id: {baseDeconstructed.FormerBaseId} when processing packet: {baseDeconstructed}");
             FailedOperations++;
             yield break;
         }
@@ -228,7 +228,7 @@ public partial class BuildingHandler : MonoBehaviour
             BasesCooldown[baseDeconstructed.FormerBaseId] = DateTimeOffset.UtcNow;
             yield break;
         }
-        DisplayStatusCode(StatusCode.subnauticaError, false, $"Found multiple {nameof(BaseDeconstructable)} under base {baseObject} while there should be only one");
+        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Found multiple {nameof(BaseDeconstructable)} under base {baseObject} while there should be only one");
         EnsureTracker(baseDeconstructed.FormerBaseId).FailedOperations++;
     }
 
@@ -236,7 +236,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (!NitroxEntity.TryGetComponentFrom(pieceDeconstructed.BaseId, out Base @base))
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find base with id: {pieceDeconstructed.BaseId} when processing packet: {pieceDeconstructed}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find base with id: {pieceDeconstructed.BaseId} when processing packet: {pieceDeconstructed}");
             FailedOperations++;
             yield break;
         }
@@ -247,7 +247,7 @@ public partial class BuildingHandler : MonoBehaviour
         Transform cellObject = @base.GetCellObject(pieceIdentifier.BaseCell.ToUnity());
         if (!cellObject)
         {
-            DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find cell object {pieceIdentifier.BaseCell} when destructing piece {pieceDeconstructed}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find cell object {pieceIdentifier.BaseCell} when destructing piece {pieceDeconstructed}");
             yield break;
         }
         BaseDeconstructable[] deconstructableChildren = cellObject.GetComponentsInChildren<BaseDeconstructable>(true);
@@ -268,7 +268,7 @@ public partial class BuildingHandler : MonoBehaviour
             BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.UtcNow;
             yield break;
         }
-        DisplayStatusCode(StatusCode.subnauticaError, false, $"Couldn't find the right BaseDeconstructable to be destructed under {pieceDeconstructed.BaseId}");
+        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find the right BaseDeconstructable to be destructed under {pieceDeconstructed.BaseId}");
         tracker.FailedOperations++;
     }
 
