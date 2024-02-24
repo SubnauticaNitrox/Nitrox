@@ -39,7 +39,7 @@ namespace NitroxModel
         public static void DisplayStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
             // If the statusCode is the same as the last one we displayed, increase the repeated codes counter
-            if (statusCode == lastCodeDisplay)
+            if (statusCode == lastCodeDisplay && statusCode != StatusCode.CONNECTION_FAIL_CLIENT)
             {
                 repeatCodeCountDisplay++;
             }
@@ -71,7 +71,7 @@ namespace NitroxModel
         public static void PrintStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
             // If the statusCode is the same as the last one we printed, increase the repeated codes counter
-            if(statusCode == lastCodePrint)
+            if(statusCode == lastCodePrint && statusCode != StatusCode.CONNECTION_FAIL_CLIENT)
             {
                 repeatCodeCountPrint++;
             }

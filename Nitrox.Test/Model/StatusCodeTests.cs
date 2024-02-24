@@ -16,7 +16,7 @@ public class StatusCodeTests
     public static bool TestFatalDisplayStatusCode(StatusCode statusCode, bool fatal, string exception)
     {
         // If the statusCode is the same as the last one, increase the repeat code count
-        if (statusCode == lastCodeDisplay)
+        if (statusCode == lastCodeDisplay && statusCode != StatusCode.CONNECTION_FAIL_CLIENT)
         {
             repeatCodeCountDisplay++;
         }
@@ -49,7 +49,7 @@ public class StatusCodeTests
     public static bool TestFatalPrintStatusCode(StatusCode statusCode, bool fatal, string exception)
     {
         // If the code is the same as the one we last printed, increment the repeated codes counter
-        if (statusCode == lastCodePrint)
+        if (statusCode == lastCodePrint && statusCode != StatusCode.CONNECTION_FAIL_CLIENT)
         {
             repeatCodeCountPrint++;
         }
