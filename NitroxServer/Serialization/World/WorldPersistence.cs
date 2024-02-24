@@ -88,17 +88,19 @@ namespace NitroxServer.Serialization.World
 
         public bool BackUp(string saveDir)
         {
-            string backupDir = Path.Combine(saveDir, "Backups");
-            if (!Directory.Exists(backupDir))
+            if(config.MaxBackups == 0)
             {
-                Directory.CreateDirectory(backupDir);
+                Log.Info("No backup was made (\"MaxBackups\" is equal to 0)");
+                return false;
             }
 
+            string backupDir = Path.Combine(saveDir, "Backups");
             string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now:yyyyMMddHHmmss}");
 
             try
             {
                 // Back up the save files
+                Directory.CreateDirectory(backupDir);
                 Directory.CreateDirectory(outZip);
 
                 foreach (string file in Directory.GetFiles(saveDir))
@@ -110,7 +112,7 @@ namespace NitroxServer.Serialization.World
                 Directory.Delete(outZip, true);
 
                 // Check for total number of backups and prune as necessary
-                List<string> backups = new();
+                List<string> backups = [];
                 foreach (string file in Directory.EnumerateFiles(backupDir))
                 {
                     FileInfo fileInfo = new(file);
@@ -136,7 +138,7 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Could not back up world :");
+                Log.Error(ex, $"Could not back up world.");
                 if (Directory.Exists(outZip))
                 {
                     Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left 

@@ -41,17 +41,13 @@ namespace NitroxServer.Serialization
             }
         }
 
-        [PropertyDescription("Leave blank for no backup limit")]
         public int MaxBackups
         {
             get => maxBackupsSetting;
 
             set
             {
-                if (!string.IsNullOrEmpty(value.ToString()))
-                {
-                    Validate.IsTrue(value > 0, "MaxBackups must be greater than 0");
-                }
+                Validate.IsTrue(value >= 0, "MaxBackups must be greater than or equal to 0");
                 maxBackupsSetting = value;
             }
         }
