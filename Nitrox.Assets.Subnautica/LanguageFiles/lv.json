@@ -1,5 +1,15 @@
 {
     "Nitrox_AddServer": "Pievienot Serveri",
     "Nitrox_AddServerAdd": "Pievienot",
-    "Nitrox_Cancel": "Atcelt"
+    "Nitrox_AddServerName": "Vārds:",
+    "Nitrox_BuildingSettings": "Bāzes būvēšana",
+    "Nitrox_Cancel": "Atcelt",
+    "Nitrox_CommandNotAvailable": "Šī komanda nav pieejama uz Nitrox",
+    "Nitrox_ConnectTo": "Savienoties ar",
+    "Nitrox_DisconnectedSession": "Atvienots no servera",
+    "Nitrox_DiscordAccept": "Pieņemt",
+    "Nitrox_DiscordDecline": "Atteikt",
+    "Nitrox_DiscordInGame": "Spēlē kā {PLAYER}",
+    "Nitrox_DiscordInGameState": "Ņurko iekšā bezdibenī",
+    "Nitrox_DiscordPressToFocus": "Uzspied lai atslēgtu"
 }
