@@ -6,7 +6,7 @@ namespace NitroxModel.Helper;
 public static class LinqExtensions
 {
     /// <summary>
-    ///     Returns the items until the predicate stops matching, then returns the next non-null result as well.
+    ///     Returns the items until the predicate stops matching, then includes the next non-matching result as well.
     /// </summary>
     /// <param name="source">Input enumerable.</param>
     /// <param name="predicate">Predicate to match against the items in the enumerable.</param>
@@ -16,11 +16,6 @@ public static class LinqExtensions
     {
         foreach (T item in source)
         {
-            if (item == null)
-            {
-                yield break;
-            }
-
             if (predicate(item))
             {
                 yield return item;

@@ -38,6 +38,6 @@ public sealed class DiscordFinder : IGameFinder
             });
         }
 
-        return null;
+        return NotFound();
     }
 }

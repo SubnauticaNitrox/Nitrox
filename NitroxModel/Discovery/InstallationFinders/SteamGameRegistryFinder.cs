@@ -38,7 +38,7 @@ public sealed class SteamFinder : IGameFinder
         string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), gameInfo.SteamAppId, gameInfo.Name);
         if (string.IsNullOrWhiteSpace(path))
         {
-            return Error($"It appears you don't have {gameInfo.Name} installed anywhere");
+            return NotFound();
         }
 
         return Ok(new GameInstallation

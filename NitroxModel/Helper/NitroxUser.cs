@@ -96,7 +96,7 @@ namespace NitroxModel.Helper
                 }
 
                 string path = null;
-                List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r.IsOk == false).ToList();
+                List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
                 GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
                 if (potentiallyValidResult?.IsOk == true)
                 {

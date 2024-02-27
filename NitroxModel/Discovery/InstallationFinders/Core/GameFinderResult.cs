@@ -1,10 +1,13 @@
+extern alias JB;
 using System;
 using System.Runtime.CompilerServices;
+using JB::JetBrains.Annotations;
 using NitroxModel.Discovery.Models;
+using NitroxModel.Helper;
 
 namespace NitroxModel.Discovery.InstallationFinders.Core;
 
-public sealed class GameFinderResult
+public sealed record GameFinderResult
 {
     public GameInstallation Installation { get; init; }
     public string ErrorMessage { get; init; }
@@ -29,8 +32,20 @@ public sealed class GameFinderResult
         };
     }
 
-    public static GameFinderResult Ok(GameInstallation installation, [CallerFilePath] string callerCodeFile = "")
+    /// <summary>
+    ///     Returned when game libraries were found but the game appears to not be installed.
+    /// </summary>
+    public static GameFinderResult NotFound([CallerFilePath] string callerCodeFile = "")
     {
+        return new GameFinderResult
+        {
+            FinderName = callerCodeFile[(callerCodeFile.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^3]
+        };
+    }
+
+    public static GameFinderResult Ok([NotNull] GameInstallation installation, [CallerFilePath] string callerCodeFile = "")
+    {
+        Validate.NotNull(installation);
         return new GameFinderResult
         {
             FinderName = callerCodeFile[(callerCodeFile.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^3],

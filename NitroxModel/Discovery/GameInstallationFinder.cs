@@ -44,7 +44,12 @@ public sealed class GameInstallationFinder
                 continue;
             }
 
-            yield return finder.FindGame(gameInfo);
+            GameFinderResult result = finder.FindGame(gameInfo);
+            if (!result.IsOk && string.IsNullOrWhiteSpace(result.ErrorMessage))
+            {
+                result = result with { ErrorMessage = $"It appears you don't have {gameInfo.Name} installed" };
+            }
+            yield return result;
         }
     }
 }
