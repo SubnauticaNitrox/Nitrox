@@ -3,7 +3,6 @@ using NitroxModel.Discovery.InstallationFinders.Core;
 using NitroxModel.Discovery.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NitroxModel.Discovery;
 
@@ -26,14 +25,13 @@ public sealed class GameInstallationFinder
     };
 
     /// <summary>
-    ///     Searches for <see cref="Game"/> directory.
+    ///     Searches for the game install directory given its <see cref="GameInfo"/>.
     /// </summary>
-    /// <param name="errors">Error messages that can be set if it failed to find the game.</param>
-    /// <returns>Nullable path to the Subnautica installation path.</returns>
-    public IEnumerable<GameInstallation> FindGame(GameInfo gameInfo, GameLibraries gameLibraries, List<string> errors)
+    /// <param name="gameInfo">Info object of a game.</param>
+    /// <param name="gameLibraries">Known game libraries to search through</param>
+    /// <returns>Positive and negative results from the search</returns>
+    public IEnumerable<GameFinderResult> FindGame(GameInfo gameInfo, GameLibraries gameLibraries = GameLibraries.ALL)
     {
-        errors ??= [];
-
         if (gameInfo is null || !Enum.IsDefined(typeof(GameLibraries), gameLibraries))
         {
             yield break;
@@ -43,20 +41,10 @@ public sealed class GameInstallationFinder
         {
             if (!finders.TryGetValue(wantedFinder, out IGameFinder finder))
             {
-                errors.Add($"Could not find game finder for configuration : '{wantedFinder}'");
                 continue;
             }
 
-            GameInstallation finderResult = finder.FindGame(gameInfo, errors);
-            if (finderResult is not null)
-            {
-                yield return finderResult;
-            }
+            yield return finder.FindGame(gameInfo);
         }
-    }
-
-    public static bool HasGameExecutable(string path, GameInfo gameInfo)
-    {
-        return File.Exists(Path.Combine(path, gameInfo.ExeName));
     }
 }

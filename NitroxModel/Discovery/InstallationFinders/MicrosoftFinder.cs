@@ -1,7 +1,7 @@
 using NitroxModel.Discovery.InstallationFinders.Core;
 using NitroxModel.Discovery.Models;
-using System.Collections.Generic;
 using System.IO;
+using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace NitroxModel.Discovery.InstallationFinders;
 
@@ -11,20 +11,19 @@ namespace NitroxModel.Discovery.InstallationFinders;
 /// </summary>
 public sealed class MicrosoftFinder : IGameFinder
 {
-    public GameInstallation FindGame(GameInfo gameInfo, List<string> errors)
+    public GameFinderResult FindGame(GameInfo gameInfo)
     {
         string path = Path.Combine("C:", "XboxGames", gameInfo.Name, "Content");
         if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo))
         {
-            errors.Add($"Game installation directory '{path}' is invalid. Please enter the path to the '{gameInfo.Name}' installation");
-            return null;
+            return Error($"Game installation directory '{path}' is invalid. Please enter the path to the '{gameInfo.Name}' installation");
         }
 
-        return new()
+        return Ok(new GameInstallation
         {
             Path = path,
             GameInfo = gameInfo,
             Origin = GameLibraries.MICROSOFT
-        };
+        });
     }
 }

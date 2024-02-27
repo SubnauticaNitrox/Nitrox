@@ -1,10 +1,10 @@
 using NitroxModel.Discovery.InstallationFinders.Core;
 using NitroxModel.Discovery.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace NitroxModel.Discovery.InstallationFinders;
 
@@ -15,40 +15,38 @@ namespace NitroxModel.Discovery.InstallationFinders;
 /// </summary>
 public sealed class SteamFinder : IGameFinder
 {
-    public GameInstallation FindGame(GameInfo gameInfo, List<string> errors)
+    public GameFinderResult FindGame(GameInfo gameInfo)
     {
         string steamPath = GetSteamPath();
 
         if (string.IsNullOrEmpty(steamPath))
         {
-            errors.Add("Steam isn't installed");
-            return null;
+            return Error("Steam isn't installed");
         }
 
         string appsPath = Path.Combine(steamPath, "steamapps");
         if (File.Exists(Path.Combine(appsPath, $"appmanifest_{gameInfo.SteamAppId}.acf")))
         {
-            return new()
+            return Ok(new GameInstallation
             {
                 Path = Path.Combine(appsPath, "common", gameInfo.Name),
                 GameInfo = gameInfo,
                 Origin = GameLibraries.STEAM
-            };
+            });
         }
 
         string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), gameInfo.SteamAppId, gameInfo.Name);
         if (string.IsNullOrWhiteSpace(path))
         {
-            errors?.Add($"It appears you don't have {gameInfo.Name} installed anywhere");
-            return null;
+            return Error($"It appears you don't have {gameInfo.Name} installed anywhere");
         }
 
-        return new()
+        return Ok(new GameInstallation
         {
             Path = path,
             GameInfo = gameInfo,
             Origin = GameLibraries.STEAM
-        };
+        });
     }
 
     private static string GetSteamPath()
