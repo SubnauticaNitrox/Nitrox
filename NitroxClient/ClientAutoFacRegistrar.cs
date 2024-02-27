@@ -25,7 +25,9 @@ using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxClient.Map;
+using NitroxModel;
 using NitroxModel.Core;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Helper;
 
@@ -110,12 +112,13 @@ namespace NitroxClient
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MedkitFabricator>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Items>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EquipmentSlots>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ItemContainers>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Cyclops>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Rockets>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();
@@ -125,8 +128,8 @@ namespace NitroxClient
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
+            containerBuilder.Register(_ => new FMODWhitelist(GameInfo.Subnautica)).InstancePerLifetimeScope();
             containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ThrottledPacketSender>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();

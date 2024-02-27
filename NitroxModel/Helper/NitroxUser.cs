@@ -27,6 +27,22 @@ namespace NitroxModel.Helper
                 {
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
+
+                Assembly execAsm = Assembly.GetExecutingAssembly();
+                DirectoryInfo execParentDir = Directory.GetParent(execAsm.Location);
+
+                // When running tests LanguageFiles is in same directory
+                if (execParentDir != null && Directory.Exists(Path.Combine(execParentDir.FullName, "LanguageFiles")))
+                {
+                    return execParentDir.FullName;
+                }
+
+                // NitroxModel, NitroxServer and other assemblies are stored in NitroxLauncher/lib
+                if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "LanguageFiles")))
+                {
+                    return execParentDir.Parent.FullName;
+                }
+
                 return null;
             }
         };

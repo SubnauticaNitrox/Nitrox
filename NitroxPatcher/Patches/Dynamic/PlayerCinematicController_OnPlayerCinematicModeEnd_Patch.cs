@@ -21,7 +21,7 @@ public sealed partial class PlayerCinematicController_OnPlayerCinematicModeEnd_P
 
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
-            Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
+            Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
             return;
         }
 

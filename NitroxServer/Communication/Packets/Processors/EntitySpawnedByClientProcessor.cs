@@ -35,18 +35,22 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 worldEntityManager.TrackEntityInTheWorld(worldEntity);
 
-                SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
+                if (packet.RequireSimulation)
+                {
+                    SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
 
-                SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
-                playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+                    SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
+                    playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+                }
             }
 
+            SpawnEntities spawnEntities = new(entity, packet.RequireRespawn);
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = player != playerWhoSpawned;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
-                    player.SendPacket(new SpawnEntities(entity, packet.RequireRespawn));
+                    player.SendPacket(spawnEntities);
                 }
             }
         }

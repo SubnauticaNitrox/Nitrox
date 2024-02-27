@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using HarmonyLib;
@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             IEnumerable<CodeInstruction> result = ConstructorInput_OnCraftingBegin_Patch.Transpiler(null, instructions);
 
-            Assert.AreEqual(instructions.Count + 3, result.Count());
+            Assert.AreEqual(instructions.Count + 7, result.Count());
         }
 
         [TestMethod]

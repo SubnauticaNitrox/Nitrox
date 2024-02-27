@@ -36,6 +36,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
     {
         if (entity is not PlaceholderGroupWorldEntity placeholderGroupEntity)
         {
+            Log.Error($"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Can't spawn {entity.Id} of type {entity.GetType()} because it is not a {nameof(PlaceholderGroupWorldEntity)}");
             yield break;
         }
 
@@ -66,6 +67,11 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         };
         while (stack.Count > 0)
         {
+            // It may happen that the chunk is unloaded, and the group along so we just cancel this spawn behaviour
+            if (!groupObject)
+            {
+                yield break;
+            }
             childResult.Set(Optional.Empty);
             Entity current = stack.Pop();
             switch (current)

@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxServer.Communication;
 using NitroxModel.Server;
+using NitroxServer.Communication;
 
 namespace NitroxServer
 {
@@ -39,6 +39,8 @@ namespace NitroxServer
         public ThreadSafeDictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; }
         public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
         public ThreadSafeList<int> PinnedRecipePreferences { get; set; }
+
+        public PlayerWorldEntity Entity { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,

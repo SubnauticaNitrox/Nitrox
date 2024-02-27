@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -173,7 +173,7 @@ namespace NitroxServer.Serialization
 
                 gameObject.AddComponent(component, type);
                 // SerializedComponents only matter if this is an "Empty" GameObject
-                if (gameObject.CreateEmptyObject && !type.Name.Equals("NitroxTransform") && !type.Name.Equals("LargeWorldEntity"))
+                if (gameObject.CreateEmptyObject && !type.Name.Equals(nameof(NitroxTransform)) && !type.Name.Equals("LargeWorldEntity"))
                 {
                     int length = (int)(stream.Position - startPosition);
                     byte[] data = new byte[length];

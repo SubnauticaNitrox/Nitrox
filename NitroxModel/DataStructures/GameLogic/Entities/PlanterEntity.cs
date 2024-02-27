@@ -22,9 +22,12 @@ public class PlanterEntity : GlobalRootEntity
         ParentId = parentId;
     }
 
-    /// <remarks>Used for deserialization</remarks>
+    /// <remarks>
+    /// Used for deserialization.
+    /// <see cref="WorldEntity.SpawnedByServer"/> is set to true because this entity is meant to receive simulation locks
+    /// </remarks>
     public PlanterEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities) :
-        base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities) {}
+        base(transform, level, classId, true, id, techType, metadata, parentId, childEntities) {}
 
     public override string ToString()
     {

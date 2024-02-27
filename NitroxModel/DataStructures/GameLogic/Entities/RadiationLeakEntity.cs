@@ -24,6 +24,7 @@ public class RadiationLeakEntity : GlobalRootEntity
         Id = id;
         ObjectIndex = objectIndex;
         Metadata = metadata;
+        Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>

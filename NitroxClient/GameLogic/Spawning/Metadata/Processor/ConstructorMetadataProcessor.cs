@@ -1,5 +1,7 @@
+using NitroxClient.Communication;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Packets;
 using UnityEngine;
 using static NitroxModel.DisplayStatusCodes;
 
@@ -9,11 +11,12 @@ public class ConstructorMetadataProcessor : EntityMetadataProcessor<ConstructorM
 {
     public override void ProcessMetadata(GameObject gameObject, ConstructorMetadata metadata)
     {
-        Constructor constructor = gameObject.GetComponent<Constructor>();
-
-        if (constructor)
+        if (gameObject.TryGetComponent(out Constructor constructor))
         {
-            constructor.Deploy(metadata.Deployed);
+            using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
+            {
+                constructor.Deploy(metadata.Deployed);
+            }
         }
         else
         {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -63,7 +62,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             switch (nitroxVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
                 case -1:
-                    Log.Error($"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
                     Log.InGame(Language.main.Get("Nitrox_OutOfDateClient")
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
@@ -71,7 +69,6 @@ namespace NitroxClient.Communication.MultiplayerSession
                     DisplayStatusCode(StatusCode.VERSION_MISMATCH, false, $"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
                     return;
                 case 1:
-                    Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
                     Log.InGame(Language.main.Get("Nitrox_OutOfDateServer")
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
