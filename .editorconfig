@@ -13,7 +13,7 @@ resharper_braces_redundant = false
 resharper_keep_existing_attribute_arrangement = true
 resharper_wrap_object_and_collection_initializer_style = chop_if_long
 
-[*.{proj, csproj, targets}]
+[*.{proj,csproj,props,targets}]
 indent_size = 4
 insert_final_newline = true
 tab_width = 4
