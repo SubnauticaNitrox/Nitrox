@@ -7,7 +7,7 @@ using NitroxModel.Discovery.Models;
 namespace NitroxModel.Discovery;
 
 /// <summary>
-/// Main game installation finder that will use all available methods of detection to find the Subnautica installation directory
+/// Main game installation finder that will use all available methods of detection to find the game installation directory
 /// </summary>
 public sealed class GameInstallationFinder
 {
