@@ -41,6 +41,11 @@ public sealed class SteamFinder : IGameFinder
             return NotFound();
         }
 
+        if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo))
+        {
+            return Error($"Path '{path}' known by Steam for '{gameInfo.FullName}' does not point to a valid game file structure");
+        }
+
         return Ok(new GameInstallation
         {
             Path = path,
