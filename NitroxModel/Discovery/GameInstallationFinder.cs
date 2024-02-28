@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
 using NitroxModel.Discovery.InstallationFinders;
 using NitroxModel.Discovery.InstallationFinders.Core;
 using NitroxModel.Discovery.Models;
-using System;
-using System.Collections.Generic;
 
 namespace NitroxModel.Discovery;
 

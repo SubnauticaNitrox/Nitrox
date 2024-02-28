@@ -1,9 +1,9 @@
-using NitroxModel.Helper;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using NitroxModel.Helper;
 
 namespace NitroxModel.Discovery
 {
