@@ -18,27 +18,24 @@ public sealed class SteamFinder : IGameFinder
     public GameFinderResult FindGame(GameInfo gameInfo)
     {
         string steamPath = GetSteamPath();
-
         if (string.IsNullOrEmpty(steamPath))
         {
             return Error("Steam isn't installed");
         }
 
+        string path;
         string appsPath = Path.Combine(steamPath, "steamapps");
         if (File.Exists(Path.Combine(appsPath, $"appmanifest_{gameInfo.SteamAppId}.acf")))
         {
-            return Ok(new GameInstallation
-            {
-                Path = Path.Combine(appsPath, "common", gameInfo.Name),
-                GameInfo = gameInfo,
-                Origin = GameLibraries.STEAM
-            });
+            path = Path.Combine(appsPath, "common", gameInfo.Name);
         }
-
-        string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), gameInfo.SteamAppId, gameInfo.Name);
-        if (string.IsNullOrWhiteSpace(path))
+        else
         {
-            return NotFound();
+            path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), gameInfo.SteamAppId, gameInfo.Name);
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return NotFound();
+            }
         }
 
         if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo))
