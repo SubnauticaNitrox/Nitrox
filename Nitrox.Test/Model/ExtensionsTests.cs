@@ -73,6 +73,7 @@ public class ExtensionsTest
         TestEnumFlags.ALL.GetUniqueNonCombinatoryFlags().Should().BeEquivalentTo([TestEnumFlags.A, TestEnumFlags.B, TestEnumFlags.C, TestEnumFlags.D, TestEnumFlags.E, TestEnumFlags.F]);
         TestEnumFlags.CDEF.GetUniqueNonCombinatoryFlags().Should().BeEquivalentTo([TestEnumFlags.C, TestEnumFlags.D, TestEnumFlags.E, TestEnumFlags.F]);
         TestEnumFlags.E.GetUniqueNonCombinatoryFlags().Should().BeEquivalentTo([TestEnumFlags.E]);
+        TestEnumFlags.NONE.GetUniqueNonCombinatoryFlags().Should().BeEmpty();
     }
 
     [TestMethod]
