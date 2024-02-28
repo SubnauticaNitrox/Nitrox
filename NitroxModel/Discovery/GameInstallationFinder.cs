@@ -32,12 +32,12 @@ public sealed class GameInstallationFinder
     /// <returns>Positive and negative results from the search</returns>
     public IEnumerable<GameFinderResult> FindGame(GameInfo gameInfo, GameLibraries gameLibraries = GameLibraries.ALL)
     {
-        if (gameInfo is null || !Enum.IsDefined(typeof(GameLibraries), gameLibraries))
+        if (gameInfo is null || !gameLibraries.IsDefined())
         {
             yield break;
         }
 
-        foreach (GameLibraries wantedFinder in gameLibraries.GetFlags<GameLibraries>())
+        foreach (GameLibraries wantedFinder in gameLibraries.GetUniqueNonCombinatoryFlags())
         {
             if (!finders.TryGetValue(wantedFinder, out IGameFinder finder))
             {
