@@ -53,7 +53,7 @@ public sealed class SteamFinder : IGameFinder
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            string steamPath = Platforms.OS.Windows.Internal.RegistryEx.Read<string>(@"Software\\Valve\\Steam\SteamPath");
+            string steamPath = Platforms.OS.Windows.Internal.RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
 
             if (string.IsNullOrWhiteSpace(steamPath))
             {
