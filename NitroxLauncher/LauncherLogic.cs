@@ -46,13 +46,16 @@ namespace NitroxLauncher
         {
             Application.Current.MainWindow?.Hide();
 
-            try
+            if (nitroxEntryPatch?.IsApplied == true)
             {
-                nitroxEntryPatch.Remove();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while disposing the launcher");
+                try
+                {
+                    nitroxEntryPatch.Remove();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error while disposing the launcher");
+                }
             }
 
             gameProcess?.Dispose();
