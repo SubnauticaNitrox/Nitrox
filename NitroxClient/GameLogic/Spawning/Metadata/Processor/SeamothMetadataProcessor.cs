@@ -36,7 +36,7 @@ public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata
 
     private void SetLights(SeaMoth seamoth, bool lightsOn)
     {
-        using (FMODSystem.SuppressSounds())
+        using (FMODSystem.SuppressSendingSounds())
         {
             seamoth.toggleLights.SetLightsActive(lightsOn);
         }

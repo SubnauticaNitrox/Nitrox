@@ -20,11 +20,11 @@ namespace NitroxServer.GameLogic
     public class PlayerManager
     {
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
-        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new();
+        private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = new();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-        private ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
+        private ThreadSafeQueue<KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
         private bool PlayerCurrentlyJoining { get; set; }
 
         private Timer initialSyncTimer;
@@ -56,7 +56,7 @@ namespace NitroxServer.GameLogic
         }
 
         public MultiplayerSessionReservation ReservePlayerContext(
-            NitroxConnection connection,
+            INitroxConnection connection,
             PlayerSettings playerSettings,
             AuthenticationContext authenticationContext,
             string correlationId)
@@ -88,7 +88,7 @@ namespace NitroxServer.GameLogic
                     return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
                 }
 
-                JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
+                JoinQueue.Enqueue(new KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest>(
                                       connection,
                                       new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
 
@@ -175,13 +175,13 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void NonPlayerDisconnected(NitroxConnection connection)
+        public void NonPlayerDisconnected(INitroxConnection connection)
         {
             // Remove any requests sent by the connection from the join queue
             JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
         }
 
-        public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+        public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             PlayerContext playerContext = reservations[reservationKey];
             Validate.NotNull(playerContext);
@@ -229,7 +229,7 @@ namespace NitroxServer.GameLogic
             return player;
         }
 
-        public void PlayerDisconnected(NitroxConnection connection)
+        public void PlayerDisconnected(INitroxConnection connection)
         {
             assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
@@ -263,14 +263,18 @@ namespace NitroxServer.GameLogic
         {
             initialSyncTimer.Dispose();
             PlayerCurrentlyJoining = false;
+            if (player != null)
+            {
+                BroadcastPlayerJoined(player);
+            }
 
             Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
 
             // Tell next client that it can start joining.
             if (JoinQueue.Count > 0)
             {
-                KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
-                NitroxConnection requestConnection = keyValuePair.Key;
+                KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
+                INitroxConnection requestConnection = keyValuePair.Key;
                 MultiplayerSessionReservationRequest reservationRequest = keyValuePair.Value;
 
                 MultiplayerSessionReservation reservation = ReservePlayerContext(requestConnection,
@@ -297,7 +301,7 @@ namespace NitroxServer.GameLogic
             return false;
         }
 
-        public Player GetPlayer(NitroxConnection connection)
+        public Player GetPlayer(INitroxConnection connection)
         {
             if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
             {
@@ -336,6 +340,12 @@ namespace NitroxServer.GameLogic
             return assetsByConnection.Values
                 .Where(assetPackage => assetPackage.Player != null)
                 .Select(assetPackage => assetPackage.Player);
+        }
+        
+        public void BroadcastPlayerJoined(Player player)
+        {
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
+            SendPacketToOtherPlayers(playerJoinedPacket, player);
         }
     }
 }

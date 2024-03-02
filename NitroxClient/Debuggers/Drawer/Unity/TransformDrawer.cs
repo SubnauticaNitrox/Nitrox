@@ -99,6 +99,10 @@ public class TransformDrawer : IDrawer
                     Player.main.SetCurrentSub(subRoot, true);
                     Player.main.SetPosition(transform.position);
                 }
+                if (GUILayout.Button($"Set {(transform.gameObject.activeSelf ? "inactive" : "active")}", GUILayout.MaxWidth(125)))
+                {
+                    transform.gameObject.SetActive(!transform.gameObject.activeSelf);
+                }
             }
         }
     }

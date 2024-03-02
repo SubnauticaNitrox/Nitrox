@@ -15,10 +15,10 @@ public class BatchEntitySpawner : IEntitySpawner
 {
     private readonly BatchCellsParser batchCellsParser;
 
-    private readonly Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType;
     private readonly HashSet<NitroxInt3> emptyBatches = new();
     private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId;
     private readonly IUwePrefabFactory prefabFactory;
+    private readonly IEntityBootstrapperManager entityBootstrapperManager;
     private readonly PDAStateData pdaStateData;
 
     private readonly string seed;
@@ -60,16 +60,16 @@ public class BatchEntitySpawner : IEntitySpawner
     private static readonly NitroxQuaternion prefabZUpRotation = NitroxQuaternion.FromEuler(new(-90f, 0f, 0f));
 
     public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, IUweWorldEntityFactory worldEntityFactory, IUwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
-                              Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId, PDAStateData pdaStateData, string seed)
+                              IEntityBootstrapperManager entityBootstrapperManager, Dictionary<string, PrefabPlaceholdersGroupAsset> placeholdersGroupsByClassId, PDAStateData pdaStateData, string seed)
     {
         parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);
         this.worldEntityFactory = worldEntityFactory;
         this.prefabFactory = prefabFactory;
-        this.customBootstrappersByTechType = customBootstrappersByTechType;
+        this.entityBootstrapperManager = entityBootstrapperManager;
         this.placeholdersGroupsByClassId = placeholdersGroupsByClassId;
-        this.seed = seed;
         this.pdaStateData = pdaStateData;
         batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
+        this.seed = seed;
     }
 
     public bool IsBatchSpawned(NitroxInt3 batchId)
@@ -296,10 +296,7 @@ public class BatchEntitySpawner : IEntitySpawner
             spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
         }
 
-        if (customBootstrappersByTechType.TryGetValue(techType, out IEntityBootstrapper bootstrapper))
-        {
-            bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
-        }
+        entityBootstrapperManager.PrepareEntityIfRequired(ref spawnedEntity, deterministicBatchGenerator);
 
         yield return spawnedEntity;
 

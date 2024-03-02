@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
 using NitroxModel.Core;
@@ -324,6 +318,12 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
                 Assert.AreEqual(metadata.FixRealTime, metadataAfter.FixRealTime);
                 break;
+            case CrashHomeMetadata metadata when entityAfter.Metadata is CrashHomeMetadata metadataAfter:
+                Assert.AreEqual(metadata.SpawnTime, metadataAfter.SpawnTime);
+                break;
+            case EatableMetadata metadata when entityAfter.Metadata is EatableMetadata metadataAfter:
+                Assert.AreEqual(metadata.TimeDecayStart, metadataAfter.TimeDecayStart);
+                break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal: {entity.Metadata?.GetType().Name} - {entityAfter.Metadata?.GetType().Name}");
                 break;
@@ -368,6 +368,22 @@ public class WorldPersistenceTest
                             Assert.AreEqual(serializedWorldEntity.Layer, serializedWorldEntityAfter.Layer);
                             Assert.AreEqual(serializedWorldEntity.BatchId, serializedWorldEntityAfter.BatchId);
                             Assert.AreEqual(serializedWorldEntity.CellId, serializedWorldEntityAfter.CellId);
+                            break;
+                        case GeyserWorldEntity geyserEntity when entityAfter is GeyserWorldEntity geyserEntityAfter:
+                            Assert.AreEqual(geyserEntity.RandomIntervalVarianceMultiplier, geyserEntityAfter.RandomIntervalVarianceMultiplier);
+                            Assert.AreEqual(geyserEntity.StartEruptTime, geyserEntityAfter.StartEruptTime);
+                            break;
+                        case ReefbackEntity reefbackEntity when entityAfter is ReefbackEntity reefbackEntityAfter:
+                            Assert.AreEqual(reefbackEntity.GrassIndex, reefbackEntityAfter.GrassIndex);
+                            Assert.AreEqual(reefbackEntity.OriginalPosition, reefbackEntityAfter.OriginalPosition);
+                            break;
+                        case ReefbackChildEntity reefbackChildEntity when entityAfter is ReefbackChildEntity reefbackChildEntityAfter:
+                            Assert.AreEqual(reefbackChildEntity.Type, reefbackChildEntityAfter.Type);
+                            break;
+                        case CreatureRespawnEntity creatureRespawnEntity when entityAfter is CreatureRespawnEntity creatureRespawnEntityAfter:
+                            Assert.AreEqual(creatureRespawnEntity.SpawnTime, creatureRespawnEntityAfter.SpawnTime);
+                            Assert.AreEqual(creatureRespawnEntity.RespawnTechType, creatureRespawnEntityAfter.RespawnTechType);
+                            Assert.IsTrue(creatureRespawnEntity.AddComponents.SequenceEqual(creatureRespawnEntityAfter.AddComponents));
                             break;
                         case GlobalRootEntity globalRootEntity when worldEntityAfter is GlobalRootEntity globalRootEntityAfter:
                             if (globalRootEntity.GetType() != typeof(GlobalRootEntity))

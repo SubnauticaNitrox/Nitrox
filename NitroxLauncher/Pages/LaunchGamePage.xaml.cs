@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using NitroxLauncher.Models;
 using NitroxModel;
-using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 
 namespace NitroxLauncher.Pages
