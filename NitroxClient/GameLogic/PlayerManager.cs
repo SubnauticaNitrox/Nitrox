@@ -18,8 +18,8 @@ public class PlayerManager
     private readonly FMODWhitelist fmodWhitelist;
     private readonly Dictionary<ushort, RemotePlayer> playersById = new();
 
-    public OnCreate onCreate;
-    public OnRemove onRemove;
+    public OnCreateDelegate OnCreate;
+    public OnRemoveDelegate OnRemove;
 
     public PlayerManager(PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
     {
@@ -42,7 +42,7 @@ public class PlayerManager
         return Optional.OfNullable(remotePlayer);
     }
 
-    internal IEnumerable<RemotePlayer> GetAll()
+    public IEnumerable<RemotePlayer> GetAll()
     {
         return playersById.Values;
     }
@@ -55,7 +55,7 @@ public class PlayerManager
         RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
 
         playersById.Add(remotePlayer.PlayerId, remotePlayer);
-        onCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
+        OnCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
 
         DiscordClient.UpdatePartySize(GetTotalPlayerCount());
 
@@ -64,21 +64,18 @@ public class PlayerManager
 
     public void RemovePlayer(ushort playerId)
     {
-        Optional<RemotePlayer> opPlayer = Find(playerId);
-        if (opPlayer.HasValue)
+        if (playersById.TryGetValue(playerId, out RemotePlayer player))
         {
-            opPlayer.Value.Destroy();
+            player.Destroy();
             playersById.Remove(playerId);
-            onRemove(playerId.ToString(), opPlayer.Value);
+            OnRemove(playerId.ToString(), player);
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
         }
     }
 
-    public int GetTotalPlayerCount()
-    {
-        return playersById.Count + 1; //Multiplayer-player(s) + you
-    }
+    /// <returns>Remote players + You => X + 1</returns>
+    public int GetTotalPlayerCount() => playersById.Count + 1;
 
-    public delegate void OnCreate(string playerId, RemotePlayer remotePlayer);
-    public delegate void OnRemove(string playerId, RemotePlayer remotePlayer);
+    public delegate void OnCreateDelegate(string playerId, RemotePlayer remotePlayer);
+    public delegate void OnRemoveDelegate(string playerId, RemotePlayer remotePlayer);
 }
