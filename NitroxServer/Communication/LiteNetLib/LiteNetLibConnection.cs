@@ -7,12 +7,12 @@ using NitroxModel.Packets;
 
 namespace NitroxServer.Communication.LiteNetLib;
 
-public class LiteNetLibConnection : NitroxConnection, IEquatable<LiteNetLibConnection>
+public class LiteNetLibConnection : INitroxConnection, IEquatable<LiteNetLibConnection>
 {
     private readonly NetDataWriter dataWriter = new();
     private readonly NetPeer peer;
 
-    public IPEndPoint Endpoint => peer.EndPoint;
+    public IPEndPoint Endpoint => peer;
     public NitroxConnectionState State => peer.ConnectionState.ToNitrox();
 
     public LiteNetLibConnection(NetPeer peer)
@@ -33,7 +33,7 @@ public class LiteNetLibConnection : NitroxConnection, IEquatable<LiteNetLibConne
         }
         else
         {
-            Log.Warn($"Cannot send packet {packet?.GetType()} to a closed connection {peer.EndPoint}");
+            Log.Warn($"Cannot send packet {packet?.GetType()} to a closed connection {peer as IPEndPoint}");
         }
     }
 
@@ -49,7 +49,7 @@ public class LiteNetLibConnection : NitroxConnection, IEquatable<LiteNetLibConne
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (obj is null)
         {
             return false;
         }
