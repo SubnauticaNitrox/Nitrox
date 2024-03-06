@@ -1,3 +1,4 @@
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 
@@ -12,5 +13,10 @@ public abstract class EntityMetadataExtractor<I, O> : IEntityMetadataExtractor w
         EntityMetadata result = Extract((I)o);
 
         return Optional.OfNullable(result);
+    }
+
+    protected T Resolve<T>() where T : class
+    {
+        return NitroxServiceLocator.Cache<T>.Value;
     }
 }

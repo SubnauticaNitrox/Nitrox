@@ -124,10 +124,19 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         ClearBaseChildren(@base);
         yield return BuildEntitySpawner.SetupBase(buildEntity, @base, entities);
         yield return MoonpoolManager.RestoreMoonpools(buildEntity.ChildEntities.OfType<MoonpoolEntity>(), @base);
-        yield return entities.SpawnBatchAsync(buildEntity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>(), true, false);
-        foreach (MapRoomEntity mapRoomEntity in buildEntity.ChildEntities.OfType<MapRoomEntity>())
+        yield return entities.SpawnBatchAsync(buildEntity.ChildEntities.OfType<PlayerWorldEntity>().ToList<Entity>(), false, false);
+
+        foreach (Entity childEntity in buildEntity.ChildEntities)
         {
-            yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+            switch (childEntity)
+            {
+                case MapRoomEntity mapRoomEntity:
+                    yield return InteriorPieceEntitySpawner.RestoreMapRoom(@base, mapRoomEntity);
+                    break;
+                case BaseLeakEntity baseLeakEntity:
+                    yield return entities.SpawnEntityAsync(baseLeakEntity, true);
+                    break;
+            }
         }
     }
 

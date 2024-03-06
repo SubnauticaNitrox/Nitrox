@@ -3,7 +3,7 @@
     <PropertyGroup>
         <LangVersion>$(LangVersion)</LangVersion>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>

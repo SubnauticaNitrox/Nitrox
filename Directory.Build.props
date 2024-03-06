@@ -20,6 +20,7 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <PolySharpUsePublicAccessibilityForGeneratedTypes>false</PolySharpUsePublicAccessibilityForGeneratedTypes>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
@@ -39,13 +40,17 @@
     <Choose>
         <When Condition="'$(NitroxProject)' == 'true'">
             <ItemGroup>
-                <PackageReference Include="JetBrains.Annotations" Version="2022.3.1">
+                <PackageReference Include="JetBrains.Annotations" Version="2023.3.0">
                     <Aliases>JB</Aliases>
                 </PackageReference>
-                <PackageReference Include="IsExternalInit" Version="1.0.3">
-                    <PrivateAssets>all</PrivateAssets>
-                    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-                </PackageReference>
+
+              <PackageReference Include="PolySharp" Version="1.14.1">
+                <PrivateAssets>all</PrivateAssets>
+                <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+              </PackageReference>
+
+              <PackageReference Include="System.Memory" Version="4.5.5" />
+              <PackageReference Include="System.ValueTuple" Version="4.5.0" />
             </ItemGroup>
         </When>
     </Choose>
@@ -58,6 +63,7 @@
                 <ProjectReference Include="$(NitroxRootDir)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
                     <Name>Nitrox.BuildTool</Name>
                     <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+                    <SetTargetFramework>TargetFramework=netstandard2.0</SetTargetFramework>
                 </ProjectReference>
                 <ProjectReference Include="$(NitroxRootDir)NitroxModel\NitroxModel.csproj">
                     <Name>NitroxModel</Name>

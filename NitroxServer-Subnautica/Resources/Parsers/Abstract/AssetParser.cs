@@ -16,7 +16,7 @@ public abstract class AssetParser
     {
         rootPath = ResourceAssetsParser.FindDirectoryContainingResourceAssets();
         assetsManager = new AssetsManager();
-        assetsManager.LoadClassPackage(Path.Combine(NitroxUser.LauncherPath ?? NitroxUser.CurrentExecutablePath, "classdata.tpk"));
+        assetsManager.LoadClassPackage(Path.Combine(NitroxUser.LauncherPath ?? NitroxUser.CurrentExecutablePath, "Resources", "classdata.tpk"));
         assetsManager.LoadClassDatabaseFromPackage("2019.4.36f1");
         assetsManager.SetMonoTempGenerator(monoGen = new ThreadSafeMonoCecilTempGenerator(Path.Combine(rootPath, "Managed")));
     }

@@ -2,7 +2,7 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Overrides;
+using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 
@@ -21,7 +21,7 @@ public sealed partial class PlayerCinematicController_OnPlayerCinematicModeEnd_P
 
         if (!__instance.TryGetComponentInParent(out NitroxEntity entity, true))
         {
-            Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
+            Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.gameObject.GetFullHierarchyPath()}\" found!");
             return;
         }
 

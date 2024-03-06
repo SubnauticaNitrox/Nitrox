@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
+using NitroxModel;
 using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxServer.Serialization.World;
 
@@ -60,7 +62,7 @@ namespace NitroxLauncher.Pages
                 selectedDirectory = Path.GetFullPath(dialog.FileName);
             }
 
-            if (!GameInstallationFinder.IsSubnauticaDirectory(selectedDirectory))
+            if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
             {
                 LauncherNotifier.Error("Invalid subnautica directory");
                 return;

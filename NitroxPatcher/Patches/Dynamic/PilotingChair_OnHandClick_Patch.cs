@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
+using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 

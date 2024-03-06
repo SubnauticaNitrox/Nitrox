@@ -19,9 +19,15 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     [ProtoInclude(52, typeof(GlobalRootEntity))]
     [ProtoInclude(53, typeof(OxygenPipeEntity))]
     [ProtoInclude(54, typeof(PlacedWorldEntity))]
+    [ProtoInclude(55, typeof(SerializedWorldEntity))]
+    [ProtoInclude(56, typeof(PrefabPlaceholderEntity))]
+    [ProtoInclude(57, typeof(GeyserWorldEntity))]
+    [ProtoInclude(58, typeof(ReefbackEntity))]
+    [ProtoInclude(59, typeof(ReefbackChildEntity))]
+    [ProtoInclude(60, typeof(CreatureRespawnEntity))]
     public class WorldEntity : Entity
     {
-        public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
+        public virtual AbsoluteEntityCell AbsoluteEntityCell => new(Transform.Position, Level);
 
         [DataMember(Order = 1)]
         public NitroxTransform Transform { get; set; }

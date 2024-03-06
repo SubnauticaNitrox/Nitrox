@@ -1,7 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Overrides;
+using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;

@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using Autofac;
+using NitroxModel;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
+using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
+using NitroxServer_Subnautica.GameLogic;
 using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
@@ -24,7 +28,9 @@ namespace NitroxServer_Subnautica
         {
             base.RegisterDependencies(containerBuilder);
 
-            containerBuilder.Register(c => SimulationWhitelist.ForServerSpawned).SingleInstance();
+            containerBuilder.RegisterType<SimulationWhitelist>()
+                            .As<ISimulationWhitelist>()
+                            .SingleInstance();
             containerBuilder.Register(c => new SubnauticaServerProtoBufSerializer(
                                           "Assembly-CSharp",
                                           "Assembly-CSharp-firstpass",
@@ -42,20 +48,20 @@ namespace NitroxServer_Subnautica
 
             containerBuilder.Register(c => resourceAssets).SingleInstance();
             containerBuilder.Register(c => resourceAssets.WorldEntitiesByClassId).SingleInstance();
-            containerBuilder.Register(c => resourceAssets.PrefabPlaceholderGroupsByGroupClassId).SingleInstance();
+            containerBuilder.Register(c => resourceAssets.PrefabPlaceholdersGroupsByGroupClassId).SingleInstance();
             containerBuilder.Register(c => resourceAssets.NitroxRandom).SingleInstance();
-            containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<UweWorldEntityFactory>().SingleInstance();
+            containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<IUweWorldEntityFactory>().SingleInstance();
 
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
-            containerBuilder.Register(c => prefabFactory).As<UwePrefabFactory>().SingleInstance();
-            containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
-            {
-                [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),
-                [TechType.Reefback.ToDto()] = new ReefbackBootstrapper()
-            }).SingleInstance();
+            containerBuilder.Register(c => prefabFactory).As<IUwePrefabFactory>().SingleInstance();
+            containerBuilder.RegisterType<SubnauticaEntityBootstrapperManager>()
+                            .As<IEntityBootstrapperManager>()
+                            .SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaMap>().As<IMap>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EntityRegistry>().AsSelf().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SubnauticaWorldModifier>().As<IWorldModifier>().InstancePerLifetimeScope();
+            containerBuilder.Register(c => new FMODWhitelist(GameInfo.Subnautica)).InstancePerLifetimeScope();
         }
     }
 }

@@ -93,6 +93,16 @@ public class TransformDrawer : IDrawer
                         GameObject.Destroy(transform.gameObject);
                     }
                 }
+                if (GUILayout.Button("Goto", GUILayout.MaxWidth(75)) && Player.main)
+                {
+                    SubRoot subRoot = transform.GetComponentInParent<SubRoot>(true);
+                    Player.main.SetCurrentSub(subRoot, true);
+                    Player.main.SetPosition(transform.position);
+                }
+                if (GUILayout.Button($"Set {(transform.gameObject.activeSelf ? "inactive" : "active")}", GUILayout.MaxWidth(125)))
+                {
+                    transform.gameObject.SetActive(!transform.gameObject.activeSelf);
+                }
             }
         }
     }
