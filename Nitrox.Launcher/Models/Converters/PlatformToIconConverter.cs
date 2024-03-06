@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using NitroxModel.Discovery;
 using Avalonia.Data.Converters;
+using NitroxModel.Discovery.Models;
 
 namespace Nitrox.Launcher.Models.Converters;
 
@@ -24,7 +24,6 @@ internal class PlatformToIconConverter : Converter<PlatformToIconConverter>, IVa
             Platform.EPIC => "/Assets/Images/store-icons/epic-2x.png",
             Platform.STEAM => "/Assets/Images/store-icons/steam-2x.png",
             Platform.MICROSOFT => "/Assets/Images/store-icons/xbox-2x.png",
-            Platform.PIRATED => "/Assets/Images/store-icons/pirated-2x.png",
             Platform.DISCORD => "/Assets/Images/store-icons/discord-2x.png",
             _ => "/Assets/Images/store-icons/missing-2x.png",
         };

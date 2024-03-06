@@ -1,5 +1,5 @@
 using Nitrox.Launcher.ViewModels;
-using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Server;
 
 namespace Nitrox.Launcher;

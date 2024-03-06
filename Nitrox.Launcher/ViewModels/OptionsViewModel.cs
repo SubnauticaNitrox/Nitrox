@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using ReactiveUI;
 
