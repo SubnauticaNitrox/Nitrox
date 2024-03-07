@@ -32,15 +32,10 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Update="JetBrains.Annotations" Version="2023.3.0" />
     </ItemGroup>
 
     <!-- Ensure server files are available for launcher. -->
