@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery.Models;
+using NitroxModel.Helper;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -36,8 +37,8 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         SelectedGame = new()
         {
-            PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
-            Platform = Platform.STEAM
+            PathToGame = NitroxUser.GamePath,
+            Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE
         };
         //KnownGames =
         //[
