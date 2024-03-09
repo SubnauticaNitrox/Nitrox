@@ -25,15 +25,29 @@
     <StackPanel Orientation="Vertical" Spacing="22">
         <TextBlock Classes="header" Text="Options" />
 
-        <TextBlock Foreground="Red" FontSize="22" HorizontalAlignment="Center" Text="TODO: Tab Control + Styling" />
+        <!--TextBlock Foreground="Red" FontSize="22" HorizontalAlignment="Center" Text="TODO: Tab Control + Styling" /-->
 
+        <!-- Subnautica Runtime Selection -->
         <StackPanel Spacing="12">
             <StackPanel Spacing="8">
                 <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Installation" />
                 <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
             </StackPanel>
-            <Border CornerRadius="12" Background="#151516" Padding="20 10">
-                <ItemsControl ItemsSource="{Binding KnownGames}">
+            <Border Padding="22 15" CornerRadius="12" Background="#151516">
+                <Grid ColumnDefinitions=" Auto, *, Auto">
+                    <Image Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
+                           ToolTip.Tip="Welcome aboard, Captain!"
+                           Stretch="Uniform" Margin="0 0 22 0"
+                           Height="36" Width="36" />
+                    <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
+                        <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
+                    </StackPanel>
+                    <Button Grid.Column="2" Classes="nitrox primary" design:NitroxAttached.Text="Change" ToolTip.Tip="Direct the launcher to your game's install location"
+                            Width="120" HorizontalAlignment="Right" Margin="22 0 0 0"
+                            Command="{Binding ChangePathCommand}" />
+                </Grid>
+                <!--ItemsControl ItemsSource="{Binding KnownGames}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Spacing="16" Height="52">
@@ -50,22 +64,23 @@
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                </ItemsControl-->
             </Border>
-            <Grid>
+            <!--Grid>
                 <Button Classes="linktext" VerticalAlignment="Bottom"
                         design:NitroxAttached.Text="Manually add game installation"
                         Command="{Binding AddGameInstallationCommand}"/>
                 <Button Classes="nitrox primary" HorizontalAlignment="Right" Content="Choose destination" />
-            </Grid>
+            </Grid-->
         </StackPanel>
 
+        <!-- Launch Arguments -->
         <StackPanel Spacing="12">
             <StackPanel Spacing="8">
                 <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Launch Arguments" />
                 <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
             </StackPanel>
-            <Border Margin="0,12,0,0" Padding="22 15" CornerRadius="12" Background="#151516">
+            <Border Padding="22 15" CornerRadius="12" Background="#151516">
                 <Grid ColumnDefinitions="*, Auto, Auto">
                     
                     <Border  Background="#333437" CornerRadius="7">
@@ -112,6 +127,7 @@
 
         </StackPanel>
 
+        <!-- Saves Folder Location -->
         <StackPanel Spacing="12">
             <TextBlock FontSize="20" FontWeight="Bold" Text="Save File Location" />
             <TextBlock FontSize="12" HorizontalAlignment="Left" Text="This is the location where your Nitrox server save files are stored" />
@@ -120,7 +136,8 @@
                 <Grid ColumnDefinitions="*,Auto">
                     <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderdir}" />
                     <Button Grid.Column="1" HorizontalAlignment="Right" Classes="nitrox primary" Command="{Binding ViewFolderCommand}"
-                            design:NitroxAttached.Text="Open" ToolTip.Tip="Open saves folder" Width="120" />
+                            design:NitroxAttached.Text="Open" ToolTip.Tip="Open saves folder"
+                            Width="120" Margin="22 0 0 0"/>
                 </Grid>
             </Border>
         </StackPanel>

@@ -72,12 +72,13 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
                 Icon = "/Assets/Images/material-design-icons/server.png",
                 ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<ServersViewModel>()))
             },
-            new NavigationItem("Library")
-            {
-                ToolTipText = "Configure your setup",
-                Icon = "/Assets/Images/material-design-icons/library.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LibraryViewModel>()))
-            },
+            // TODO
+            //new NavigationItem("Library")
+            //{
+            //    ToolTipText = "Configure your setup",
+            //    Icon = "/Assets/Images/material-design-icons/library.png",
+            //    ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LibraryViewModel>()))
+            //},
             new NavigationHeader("EXPLORE"),
             new NavigationItem("Community")
             {

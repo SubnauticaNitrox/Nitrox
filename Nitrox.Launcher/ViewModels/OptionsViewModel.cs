@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery.Models;
-using NitroxModel.Helper;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
 public partial class OptionsViewModel : RoutableViewModelBase
 {
-    public AvaloniaList<KnownGame> KnownGames { get; init; }
+    //public AvaloniaList<KnownGame> KnownGames { get; init; }
 
     public static string SavesFolderdir { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"); // Temp
     
     private static string defaultLaunchArg => "-vrmode none";
+    
+    [ObservableProperty]
+    private KnownGame selectedGame;
 
     // Temp - Meant to represent the value of LauncherLogic.Config.SubnauticaLaunchArguments
     [ObservableProperty]
@@ -33,14 +34,19 @@ public partial class OptionsViewModel : RoutableViewModelBase
     
     public OptionsViewModel(IScreen hostScreen) : base(hostScreen)
     {
-        KnownGames =
-        [
-            new()
-            {
-                PathToGame = NitroxUser.GamePath,
-                Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE
-            }
-        ];
+        SelectedGame = new()
+        {
+            PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
+            Platform = Platform.STEAM
+        };
+        //KnownGames =
+        //[
+        //    new()
+        //    {
+        //        PathToGame = NitroxUser.GamePath,
+        //        Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE
+        //    }
+        //];
 
         LaunchArgs = LauncherLogicConfigSubnauticaLaunchArguments/*LauncherLogic.Config.SubnauticaLaunchArguments*/;
     }
@@ -50,10 +56,10 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
     }
 
-    [RelayCommand]
-    private void AddGameInstallation()
-    {
-    }
+    //[RelayCommand]
+    //private void AddGameInstallation()
+    //{
+    //}
 
     [RelayCommand]
     private void ResetArguments()

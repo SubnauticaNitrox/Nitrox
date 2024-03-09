@@ -20,29 +20,35 @@ public static class DesignData
 
     public static OptionsViewModel OptionsViewModel { get; } = new(null)
     {
-        KnownGames =
-        [
-            new OptionsViewModel.KnownGame
-            {
-                PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
-                Platform = Platform.STEAM
-            },
-            new OptionsViewModel.KnownGame
-            {
-                PathToGame = @"C:\Games\Epic\Subnautica",
-                Platform = Platform.EPIC
-            },
-            new OptionsViewModel.KnownGame
-            {
-                PathToGame = @"C:\Games\Discord\Subnautica",
-                Platform = Platform.DISCORD
-            },
-            new OptionsViewModel.KnownGame
-            {
-                PathToGame = @"C:\Gamepass\Subnautica",
-                Platform = Platform.MICROSOFT
-            }
-        ]
+        SelectedGame = new()
+        {
+            PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
+            Platform = Platform.STEAM
+        }
+        
+        //KnownGames =
+        //[
+        //    new OptionsViewModel.KnownGame
+        //    {
+        //        PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
+        //        Platform = Platform.STEAM
+        //    },
+        //    new OptionsViewModel.KnownGame
+        //    {
+        //        PathToGame = @"C:\Games\Epic\Subnautica",
+        //        Platform = Platform.EPIC
+        //    },
+        //    new OptionsViewModel.KnownGame
+        //    {
+        //        PathToGame = @"C:\Games\Discord\Subnautica",
+        //        Platform = Platform.DISCORD
+        //    },
+        //    new OptionsViewModel.KnownGame
+        //    {
+        //        PathToGame = @"C:\Gamepass\Subnautica",
+        //        Platform = Platform.MICROSOFT
+        //    }
+        //]
     };
 
     public static ConfirmationBoxViewModel ConfirmationBoxViewModel { get; } = new() { ConfirmationText = "Confirmation Text" };
