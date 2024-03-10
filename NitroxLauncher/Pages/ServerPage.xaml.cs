@@ -11,15 +11,15 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Microsoft.VisualBasic.FileIO;
+using NitroxModel.Serialization;
 
 namespace NitroxLauncher.Pages
 {
     public partial class ServerPage : PageBase
     {
-        public ServerConfig Config;
+        public SubnauticaServerConfig Config;
 
         public bool IsNewWorld { get; private set; }
         private bool IsInSettings { get; set; }
@@ -28,7 +28,7 @@ namespace NitroxLauncher.Pages
         private string ImportedWorldName { get; set; }
         private string SelectedWorldImportDirectory { get; set; }
         private string SelectedServerCfgImportDirectory { get; set; }
-        private WorldManager.Listing SelectedListing { get; set; }
+        private OldWorldManager.Listing SelectedListing { get; set; }
 
         public ServerPage()
         {
@@ -46,12 +46,12 @@ namespace NitroxLauncher.Pages
 
         public void InitializeWorldListing()
         {
-            WorldManager.Refresh();
+            OldWorldManager.Refresh();
 
-            NoWorldsBackground.Opacity = WorldManager.GetSaves().Any() ? 0 : 1;
+            NoWorldsBackground.Opacity = OldWorldManager.GetSaves().Any() ? 0 : 1;
 
             WorldListingContainer.ItemsSource = null;
-            WorldListingContainer.ItemsSource = WorldManager.GetSaves();
+            WorldListingContainer.ItemsSource = OldWorldManager.GetSaves();
         }
 
         // File Management
@@ -66,7 +66,7 @@ namespace NitroxLauncher.Pages
                 SelectedWorldDirectory = dest;
             }
 
-            Config = ServerConfig.Load(SelectedWorldDirectory);
+            Config = SubnauticaServerConfig.Load(SelectedWorldDirectory);
             using (Config.Update(SelectedWorldDirectory))
             {
                 Config.SaveName = TBWorldName.Text;
@@ -102,7 +102,7 @@ namespace NitroxLauncher.Pages
 
         public void UpdateVisualWorldSettings()
         {
-            Config = ServerConfig.Load(SelectedWorldDirectory);
+            Config = SubnauticaServerConfig.Load(SelectedWorldDirectory);
 
             // Set the world settings values to the server.cfg values
             TBWorldName.Text = Path.GetFileName(SelectedWorldDirectory);
@@ -160,7 +160,7 @@ namespace NitroxLauncher.Pages
             ImportSaveBtnBorder.Opacity = 1;
             ImportSaveBtn.IsEnabled = true;
 
-            SelectedWorldDirectory = WorldManager.CreateEmptySave("My World");
+            SelectedWorldDirectory = OldWorldManager.CreateEmptySave("My World");
             UpdateVisualWorldSettings();
 
             Storyboard worldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
@@ -175,7 +175,7 @@ namespace NitroxLauncher.Pages
         
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            WorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
+            OldWorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
             if (!IsNewWorld)
             {
                 SelectedWorldDirectory = selectedWorld.WorldSaveDir;
@@ -219,7 +219,7 @@ namespace NitroxLauncher.Pages
 
         private void SelectedWorldSettings_Click(object sender, RoutedEventArgs e)
         {
-            WorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
+            OldWorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
             if (LauncherLogic.Server.IsServerRunning && WorldDirCurrentlyUsed == selectedWorld.WorldSaveDir)
             {
                 LauncherNotifier.Error("This world is currently being used. Stop the server to edit the settings of this world");
@@ -255,7 +255,7 @@ namespace NitroxLauncher.Pages
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
-            WorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
+            OldWorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
             if (!IsNewWorld)
             {
                 SelectedWorldDirectory = selectedWorld.WorldSaveDir;
@@ -279,7 +279,7 @@ namespace NitroxLauncher.Pages
 
         private void YesConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
-            WorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
+            OldWorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
             if (!IsNewWorld)
             {
                 SelectedWorldDirectory = selectedWorld.WorldSaveDir ?? "";
@@ -355,7 +355,7 @@ namespace NitroxLauncher.Pages
             string newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), TBWorldName.Text);
             if (!newSelectedWorldDirectory.Equals(SelectedWorldDirectory, StringComparison.OrdinalIgnoreCase) && Directory.Exists(newSelectedWorldDirectory))
             {
-                if (WorldManager.ValidateSave(newSelectedWorldDirectory))
+                if (OldWorldManager.ValidateSave(newSelectedWorldDirectory))
                 {
                     LauncherNotifier.Error($"World name \"{TBWorldName.Text}\" already exists.");
                 }
@@ -576,10 +576,10 @@ namespace NitroxLauncher.Pages
                 }
 
                 // Check that name is not a duplicate if it was changed
-                string newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, TBImportedWorldName.Text);
+                string newSelectedWorldDirectory = Path.Combine(OldWorldManager.SavesFolderDir, TBImportedWorldName.Text);
                 if (!TBImportedWorldName.Text.Equals(ImportedWorldName, StringComparison.OrdinalIgnoreCase) && Directory.Exists(newSelectedWorldDirectory))
                 {
-                    if (WorldManager.ValidateSave(newSelectedWorldDirectory))
+                    if (OldWorldManager.ValidateSave(newSelectedWorldDirectory))
                     {
                         LauncherNotifier.Error($"World name \"{TBImportedWorldName.Text}\" already exists.");
                     }
@@ -593,14 +593,14 @@ namespace NitroxLauncher.Pages
                     if (!rx.IsMatch(TBImportedWorldName.Text))
                     {
                         ImportedWorldName = $"{TBImportedWorldName.Text} ({i})";
-                        newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
+                        newSelectedWorldDirectory = Path.Combine(OldWorldManager.SavesFolderDir, ImportedWorldName);
                     }
 
                     // If save name still exists, increment the number to the end of the name until it reaches an available filename
                     while (Directory.Exists(newSelectedWorldDirectory))
                     {
                         ImportedWorldName = rx.Replace(ImportedWorldName, $"({i})", 1);
-                        newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
+                        newSelectedWorldDirectory = Path.Combine(OldWorldManager.SavesFolderDir, ImportedWorldName);
                         i++;
                     }
 
@@ -641,12 +641,12 @@ namespace NitroxLauncher.Pages
                 }
                 SelectedWorldImportDirectory = Path.GetFullPath(dialog.FileName);
             }
-            if (Convert.ToString(Directory.GetParent(SelectedWorldImportDirectory)) == WorldManager.SavesFolderDir)
+            if (Convert.ToString(Directory.GetParent(SelectedWorldImportDirectory)) == OldWorldManager.SavesFolderDir)
             {
                 LauncherNotifier.Error("There is no point in importing a save file you already have in the saves directory. Please select a different save file to import.");
                 return;
             }
-            if (!WorldManager.ValidateSave(SelectedWorldImportDirectory))
+            if (!OldWorldManager.ValidateSave(SelectedWorldImportDirectory))
             {
                 // Give special warning if game save file is selected
                 if (File.Exists(Path.Combine(SelectedWorldImportDirectory, "gameinfo.json")) && File.Exists(Path.Combine(SelectedWorldImportDirectory, "global-objects.bin")) && File.Exists(Path.Combine(SelectedWorldImportDirectory, "scene-objects.bin")))
@@ -736,7 +736,7 @@ namespace NitroxLauncher.Pages
                     Log.Error($"Could not move save \"{Path.GetFileName(SelectedWorldDirectory)}\" to the recycling bin : {ex.GetType()} {ex.Message}");
                 }
             }
-            SelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
+            SelectedWorldDirectory = Path.Combine(OldWorldManager.SavesFolderDir, ImportedWorldName);
 
             try
             {
@@ -745,7 +745,7 @@ namespace NitroxLauncher.Pages
 
                 // Copy over targeted server.cfg file and ensure its serializer is set to JSON to prevent future errors
                 FileSystem.CopyFile(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"));
-                ServerConfig importedServerConfig = ServerConfig.Load(Path.Combine(SelectedWorldDirectory));
+                SubnauticaServerConfig importedServerConfig = SubnauticaServerConfig.Load(Path.Combine(SelectedWorldDirectory));
                 if (importedServerConfig.SerializerMode != ServerSerializerMode.JSON)
                 {
                     using (importedServerConfig.Update(SelectedWorldDirectory))
@@ -795,7 +795,7 @@ namespace NitroxLauncher.Pages
         // Start Server button
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            WorldManager.Listing listing = GetWorldListingFromSenderControl(sender);
+            OldWorldManager.Listing listing = GetWorldListingFromSenderControl(sender);
             try
             {
                 SelectedWorldDirectory = listing.WorldSaveDir ?? "";
@@ -844,10 +844,10 @@ namespace NitroxLauncher.Pages
             InitializeWorldListing();
         }
 
-        private WorldManager.Listing GetWorldListingFromSenderControl(object sender)
+        private OldWorldManager.Listing GetWorldListingFromSenderControl(object sender)
         {
             Control control = (Control)sender;
-            return SelectedListing = control.DataContext as WorldManager.Listing ?? control.FindDataContextInAncestors<WorldManager.Listing>() ?? SelectedListing;
+            return SelectedListing = control.DataContext as OldWorldManager.Listing ?? control.FindDataContextInAncestors<OldWorldManager.Listing>() ?? SelectedListing;
         }
     }
 

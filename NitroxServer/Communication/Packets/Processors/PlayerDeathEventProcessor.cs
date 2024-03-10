@@ -1,17 +1,17 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     class PlayerDeathEventProcessor : AuthenticatedPacketProcessor<PlayerDeathEvent>
     {
         private readonly PlayerManager playerManager;
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
 
-        public PlayerDeathEventProcessor(PlayerManager playerManager, ServerConfig config)
+        public PlayerDeathEventProcessor(PlayerManager playerManager, SubnauticaServerConfig config)
         {
             this.playerManager = playerManager;
             this.serverConfig = config;

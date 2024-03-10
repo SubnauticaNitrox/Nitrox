@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <LangVersion>$(LangVersion)</LangVersion>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="Roots.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.4" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.0.0" />
+        <PackageReference Include="ReactiveUI.Validation" Version="3.1.7" />
+        <PackageReference Include="Splat.DependencyInjection.SourceGenerator" Version="1.1.93">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+    </ItemGroup>
+
+
+    <!-- Ensure server files are available for launcher. -->
+    <Target Name="BuildServer" AfterTargets="Build">
+        <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj"
+                 Targets="Build"
+                 Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
+    </Target>
+</Project>

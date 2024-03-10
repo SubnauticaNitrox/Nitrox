@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:rx="http://reactiveui.net"
+        xmlns:launcher="clr-namespace:Nitrox.Launcher"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static launcher:DesignData.MainWindowViewModel}"
+        x:Class="Nitrox.Launcher.MainWindow"
+        Title="Nitrox Launcher"
+        FontFamily="/Assets/Fonts/Inter-Black.ttf"
+        design:NitroxAttached.Theme="DARK"
+        WindowStartupLocation="CenterScreen"
+        Width="1000" Height="600"
+        MinWidth="800" MinHeight="600">
+    <Panel>
+        <!-- Title bar -->
+        <Panel Classes="titleBar" PointerPressed="TitleBar_OnPointerPressed">
+            <ItemsControl ItemsSource="{Binding TitleBarItems}" />
+        </Panel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="274" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Left side -->
+            <Border Grid.Column="0" Classes="nav">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- The "NITROX" header. -->
+                    <Image Grid.Row="0" Classes="header" />
+                    <!-- Navigation items -->
+                    <Panel Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding NavigationHeaderItems}" />
+                        <ItemsControl ItemsSource="{Binding NavigationFooterItems}" VerticalAlignment="Bottom" Margin="0 0 0 20" />
+                    </Panel>
+                </Grid>
+            </Border>
+
+            <!-- Right side -->
+            <rx:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
+                <rx:RoutedViewHost.DefaultContent>
+                    <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </rx:RoutedViewHost.DefaultContent>
+                <rx:RoutedViewHost.ViewLocator>
+                    <launcher:AppViewLocator />
+                </rx:RoutedViewHost.ViewLocator>
+            </rx:RoutedViewHost>
+        </Grid>
+    </Panel>
+</Window>

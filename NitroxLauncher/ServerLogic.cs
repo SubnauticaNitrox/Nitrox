@@ -39,7 +39,7 @@ namespace NitroxLauncher
             }
 
             string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            string serverPath = Path.Combine(launcherDir, SERVER_EXECUTABLE);
+            string serverPath = Path.Combine(launcherDir, "Server", SERVER_EXECUTABLE);
             ProcessStartInfo startInfo = new(serverPath);
             startInfo.WorkingDirectory = launcherDir;
 
@@ -49,6 +49,10 @@ namespace NitroxLauncher
                 startInfo.RedirectStandardOutput = true;
                 startInfo.RedirectStandardInput = true;
                 startInfo.CreateNoWindow = true;
+            }
+            else
+            {
+                startInfo.Verb = "open";
             }
 
             startInfo.Arguments = $@"""{saveDir}""";

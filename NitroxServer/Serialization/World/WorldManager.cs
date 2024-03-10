@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NitroxModel.Helper;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World;
@@ -9,11 +10,10 @@ namespace NitroxServer.Serialization.World;
 public static class WorldManager
 {
     public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
-
-    private static readonly List<Listing> savesCache = new();
-
     static WorldManager()
     {
+        if (Directory.Exists(SavesFolderDir)) return;
+        
         try
         {
             Directory.CreateDirectory(SavesFolderDir);
@@ -24,14 +24,10 @@ public static class WorldManager
             throw new Exception(ex.ToString());
         }
     }
-
-    public static IEnumerable<Listing> GetSaves()
+    
+    public static List<Listing> GetSaves()
     {
-        if (savesCache.Count != 0)
-        {
-            return savesCache;
-        }
-
+        List<Listing> savesList = new();
         foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
         {
             try
@@ -41,46 +37,34 @@ public static class WorldManager
                 {
                     continue;
                 }
-
+                
                 Version version;
-                ServerConfig serverConfig = ServerConfig.Load(folder);
-
+                SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(folder);
+                
                 string fileEnding = "json";
                 if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
                 {
                     fileEnding = "nitrox";
                 }
-
+                
                 using (FileStream stream = new(Path.Combine(folder, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
                 }
+                
+                DateTime fileLastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}")) ?
+                                                                      // This file is affected by server saving
+                                                                      Path.Combine(folder, $"WorldData.{fileEnding}") :
+                                                                      // If the above file doesn't exist (server was never ran), use the Version file instead
+                                                                      Path.Combine(folder, $"Version.{fileEnding}"));
 
-                DateTime fileLastAccessedTime;
-                if (File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}")))
+                savesList.Add(new Listing
                 {
-                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"WorldData.{fileEnding}"));
-                }
-                else
-                {
-                    fileLastAccessedTime =
-                        File.GetLastWriteTime(
-                            Path.Combine(folder, $"Version.{fileEnding}")); // This file was created when the save was created, so it can be used as the backup to get this write time if this is a new save (the WorldData file wouldn't exist)
-                }
-
-                // Change the paramaters here to define what save file versions are eligible for use/upgrade
-                bool isValidVersion = version >= new Version(1, 7, 0, 0) && version <= NitroxEnvironment.Version;
-
-                savesCache.Add(new Listing
-                {
-                    WorldName = Path.GetFileName(folder),
-                    WorldGamemode = Convert.ToString(serverConfig.GameMode),
-                    WorldVersion = $"v{version}",
-                    WorldSaveDir = folder,
-                    IsValidSave = isValidVersion,
+                    Name = Path.GetFileName(folder),
+                    Version = version,
                     FileLastAccessed = fileLastAccessedTime
                 });
-
+                
                 // Set the server.cfg name value to the folder name
                 if (Path.GetFileName(folder) != serverConfig.SaveName)
                 {
@@ -89,87 +73,57 @@ public static class WorldManager
                         serverConfig.SaveName = Path.GetFileName(folder);
                     }
                 }
+                
             }
             catch
             {
                 Log.Error($"World \"{folder}\" could not be processed");
             }
         }
+        
         // Order listing based on FileLastAccessed time
-        savesCache.Sort((x, y) => y.FileLastAccessed.CompareTo(x.FileLastAccessed));
-
-        return savesCache;
+        savesList.Sort((x, y) => y.FileLastAccessed.CompareTo(x.FileLastAccessed));
+        
+        return savesList;
     }
-
-    public static void Refresh()
+    
+    public static void CreateEmptySave(string saveFileDirectory)
     {
-        savesCache.Clear();
-        GetSaves();
-    }
-
-    public static string CreateEmptySave(string name)
-    {
-        string saveDir = Path.Combine(SavesFolderDir, name);
-
-        // Check save path for other "My World" files and increment the end value if there is, so as to prevent duplication
-        if (Directory.Exists(saveDir))
-        {
-            int i = 1;
-            string newSelectedWorldName = name;
-            while (Directory.Exists(saveDir))
-            {
-                // Add a number to the end of the name
-                newSelectedWorldName = $"{name} ({i})";
-                saveDir = Path.Combine(SavesFolderDir, newSelectedWorldName);
-                i++;
-            }
-            name = newSelectedWorldName;
-        }
-
-        Directory.CreateDirectory(saveDir);
-
-        ServerConfig serverConfig = ServerConfig.Load(saveDir);
-
+        Directory.CreateDirectory(saveFileDirectory);
+        
+        SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(saveFileDirectory);
+        
         string fileEnding = "json";
         if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
         {
             fileEnding = "nitrox";
         }
-        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).Close();
-
-        serverConfig.SaveName = name;
-
-        return saveDir;
+        File.Create(Path.Combine(saveFileDirectory, $"Version.{fileEnding}")).Close();
     }
-
-    public static bool ValidateSave(string saveFileDirectory, bool isImporting = false)
+    
+    public static bool ValidateSave(string saveFileDirectory)
     {
-        if (!Directory.Exists(saveFileDirectory))
-        {
-            return false;
-        }
-
-        // A save file is valid when it has a server.cfg file in it (if not importing a file) and if it has at least a Version.(ext) save file in it
-        if (isImporting && !File.Exists(Path.Combine(saveFileDirectory, "server.cfg")))
-        {
-            return false;
-        }
-
-        if (!File.Exists(Path.Combine(saveFileDirectory, "Version.json")))
-        {
-            return false;
-        }
-
-        return true;
+        return Directory.Exists(saveFileDirectory) || !File.Exists(Path.Combine(saveFileDirectory, "server.cfg")) || File.Exists(Path.Combine(saveFileDirectory, "Version.json"));
     }
-
+    
+    public static void DeleteSave(string saveFileDirectory)
+    {
+        try
+        {
+            //FileSystem.DeleteDirectory(saveFileDirectory, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            Log.Info($"Moving world \"{Path.GetFileName(saveFileDirectory)}\" to the recycling bin.");
+            //LauncherNotifier.Success($"Successfully moved save \"{Path.GetFileName(saveFileDirectory)}\" to the recycling bin");
+        }
+        catch (Exception ex)
+        {
+            //LauncherNotifier.Error("Error: Could not move the selected save to the recycling bin. Try deleting any remaining files manually.");
+            Log.Error($"Could not move save \"{Path.GetFileName(saveFileDirectory)}\" to the recycling bin : {ex.GetType()} {ex.Message}");
+        }
+    }
     public class Listing
     {
-        public string WorldName { get; set; }
-        public string WorldGamemode { get; set; }
-        public string WorldVersion { get; set; }
-        public string WorldSaveDir { get; set; }
-        public bool IsValidSave { get; set; }
+        public string Name { get; set; }
+        public Version Version { get; set; }
         public DateTime FileLastAccessed { get; set; }
     }
 }

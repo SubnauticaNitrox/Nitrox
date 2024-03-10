@@ -14,10 +14,11 @@ namespace NitroxModel.Helper
     public static class NitroxUser
     {
         public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
-        private const string PREFERRED_GAMEPATH_REGKEY = @"SOFTWARE\Nitrox\PreferredGamePath";
+        private const string PREFERRED_GAMEPATH_KEY = "PreferredGamePath";
         private static string appDataPath;
         private static string launcherPath;
         private static string gamePath;
+        private static string currentExecutablePath;
 
         private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
         {
@@ -80,8 +81,8 @@ namespace NitroxModel.Helper
 
         public static string PreferredGamePath
         {
-            get => RegistryEx.Read<string>(PREFERRED_GAMEPATH_REGKEY);
-            set => RegistryEx.Write(PREFERRED_GAMEPATH_REGKEY, value);
+            get => KeyValueStore.Instance.GetValue<string>(PREFERRED_GAMEPATH_KEY);
+            set => KeyValueStore.Instance.SetValue(PREFERRED_GAMEPATH_KEY, value);
         }
 
         public static IGamePlatform GamePlatform { get; private set; }
@@ -120,6 +121,19 @@ namespace NitroxModel.Helper
                 // Ensures the path looks alright (no mixed / and \ path separators)
                 gamePath = Path.GetFullPath(value);
                 GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
+            }
+        }
+
+        public static string CurrentExecutablePath
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(currentExecutablePath))
+                {
+                    return currentExecutablePath;
+                }
+
+                return currentExecutablePath = new Uri(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
             }
         }
     }

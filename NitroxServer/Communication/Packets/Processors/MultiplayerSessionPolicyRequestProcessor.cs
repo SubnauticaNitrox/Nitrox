@@ -1,14 +1,14 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class MultiplayerSessionPolicyRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionPolicyRequest>
     {
-        private readonly ServerConfig config;
+        private readonly SubnauticaServerConfig config;
 
-        public MultiplayerSessionPolicyRequestProcessor(ServerConfig config)
+        public MultiplayerSessionPolicyRequestProcessor(SubnauticaServerConfig config)
         {
             this.config = config;
         }

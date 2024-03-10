@@ -9,6 +9,7 @@ using System.Threading;
 using LiteNetLib;
 using NitroxModel.Helper;
 using Serilog;
+using Serilog.Configuration;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Events;
@@ -31,11 +32,11 @@ namespace NitroxModel.Logger
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
 
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true)
         {
             if (isSetup)
             {
-                Log.Warn($"{nameof(Log)} setup should only be executed once.");
+                Warn($"{nameof(Log)} setup should only be executed once.");
                 return;
             }
 
@@ -43,44 +44,18 @@ namespace NitroxModel.Logger
             NetDebug.Logger = new LiteNetLibLogger();
 
             PlayerName = "";
-            logger = new LoggerConfiguration()
-                     .MinimumLevel.Debug()
-                     .WriteTo.Logger(cnf =>
-                     {
-                         if (!useConsoleLogging)
-                         {
-                             return;
-                         }
 
-                         string consoleTemplate = isConsoleApp switch
-                         {
-                             false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
-                             _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
-                         };
-
-                         if (asyncConsoleWriter)
-                         {
-                             cnf.WriteTo.Async(a => a.ColoredConsole(outputTemplate: consoleTemplate));
-                         }
-                         else
-                         {
-                             cnf.WriteTo.ColoredConsole(outputTemplate: consoleTemplate);
-                         }
-                     })
-                     .WriteTo.Logger(cnf => cnf
-                                            .Enrich.FromLogContext()
-                                            .WriteTo
-#if DEBUG
-                                            .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
-#else
-                                            .Async((a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
-#endif
-                                                                                                                            outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
-                                                                                                                            rollingInterval: RollingInterval.Day,
-                                                                                                                            retainedFileCountLimit: 10,
-                                                                                                                            fileSizeLimitBytes: 200000000, // 200MB
-                                                                                                                            shared: true))))
-                     .CreateLogger();
+            // Configure logger and create an instance of it.
+            LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug();
+            if (useConsoleLogging)
+            {
+                loggerConfig = loggerConfig.WriteTo.AppendConsoleSink(asyncConsoleWriter, isConsoleApp);
+            }
+            if (useFileLogging)
+            {
+                loggerConfig = loggerConfig.WriteTo.AppendFileSink();
+            }
+            logger = loggerConfig.CreateLogger();
 
             if (gameLogger != null)
             {
@@ -89,6 +64,45 @@ namespace NitroxModel.Logger
                                .CreateLogger();
             }
         }
+
+        private static LoggerConfiguration AppendFileSink(this LoggerSinkConfiguration sinkConfig) => sinkConfig.Logger(cnf =>
+        {
+            static void AppendFileWriteFormat(string filePath, LoggerSinkConfiguration config)
+            {
+                config.File(filePath,
+                            outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
+                            rollingInterval: RollingInterval.Day,
+                            retainedFileCountLimit: 10,
+                            fileSizeLimitBytes: 200000000, // 200MB
+                            shared: true);
+            }
+
+            cnf.Enrich.FromLogContext()
+               .WriteTo
+#if DEBUG
+               .Map(nameof(PlayerName), "", (playerName, sinkCnf) => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"), sinkCnf));
+#else
+               .Async(a => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"), a));
+#endif
+        });
+
+        private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate) => sinkConfig.Logger(cnf =>
+        {
+            string consoleTemplate = useShorterTemplate switch
+            {
+                false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
+                _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
+            };
+
+            if (makeAsync)
+            {
+                cnf.WriteTo.Async(a => a.ColoredConsole(outputTemplate: consoleTemplate));
+            }
+            else
+            {
+                cnf.WriteTo.ColoredConsole(outputTemplate: consoleTemplate);
+            }
+        });
 
         [Conditional("DEBUG")]
         public static void Debug(string message)

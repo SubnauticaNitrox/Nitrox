@@ -70,7 +70,7 @@ public class Program
         Log.Setup(true, isConsoleApp: true);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
-        ConfigureCultureInfo();
+        CultureManager.ConfigureCultureInfo();
         if (!Console.IsInputRedirected)
         {
             Console.TreatControlCAsInput = true;

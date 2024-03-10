@@ -21,7 +21,7 @@ namespace NitroxLauncher.Pages
         public OptionPage()
         {
             InitializeComponent();
-            SaveFileLocationTextblock.Text = WorldManager.SavesFolderDir;
+            SaveFileLocationTextblock.Text = OldWorldManager.SavesFolderDir;
 
             ArgumentsTextbox.Text = SubnauticaLaunchArguments;
             if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
@@ -106,7 +106,7 @@ namespace NitroxLauncher.Pages
 
         private void OnViewFolder_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(WorldManager.SavesFolderDir)?.Dispose();
+            Process.Start(OldWorldManager.SavesFolderDir)?.Dispose();
         }
     }
 }
