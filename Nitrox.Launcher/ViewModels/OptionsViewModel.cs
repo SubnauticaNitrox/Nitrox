@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel;
+using NitroxModel.Discovery;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using ReactiveUI;
@@ -53,8 +56,35 @@ public partial class OptionsViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void ChangePath()
+    private async void ChangePath()
     {
+        // TODO: Maybe use Window.StorageProvider API instead of OpenFileDialog
+        OpenFolderDialog dialog = new()
+        {
+            Title = "Select Subnautica installation directory",
+            Directory = new(SelectedGame.PathToGame)
+        };
+        string selectedDirectory = await dialog.ShowAsync(MainWindow) ?? "";
+        
+        if (selectedDirectory == "")
+        {
+            LaunchArgs = "Cancelled";    //TEMP
+            return;
+        }
+        
+        if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
+        {
+            //LauncherNotifier.Error("Invalid subnautica directory");
+            LaunchArgs = "Invalid subnautica directory";    //TEMP
+            return;
+        }
+        
+        if (selectedDirectory != SelectedGame.PathToGame)
+        {
+            //await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
+            //LauncherNotifier.Success("Applied changes");
+            LaunchArgs = "Applied changes";    //TEMP
+        }
     }
 
     //[RelayCommand]
@@ -87,7 +117,12 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand]
     private void ViewFolder()
     {
-        Process.Start(SavesFolderdir)?.Dispose(); // Doesn't work? (Access denied)
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = SavesFolderdir,
+            Verb = "open",
+            UseShellExecute = true
+        })?.Dispose();
     }
 
     public class KnownGame

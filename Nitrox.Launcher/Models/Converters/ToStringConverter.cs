@@ -23,7 +23,7 @@ public class ToStringConverter : Converter<ToStringConverter>, IValueConverter
         }
         if (value.GetType().IsEnum)
         {
-            value = (value as Enum)?.GetAttribute<DescriptionAttribute>().Description ?? value.ToString();
+            value = (value as Enum)?.GetAttribute<DescriptionAttribute>()?.Description ?? value.ToString();
         }
         if (value is not string sourceText || !targetType.IsAssignableTo(typeof(string)))
         {

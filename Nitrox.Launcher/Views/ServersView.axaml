@@ -40,6 +40,7 @@
                                 <DockPanel VerticalAlignment="Center">
                                     <Border CornerRadius="12" ClipToBounds="True">
                                         <Grid>
+                                            <!-- Future TODO: Add customizable server icon -->
                                             <Image DockPanel.Dock="Left" Source="/Assets/Images/SubnauticaIcon.png" />
                                             <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
                                                 <controls:GrayscaleControl.Transitions>
