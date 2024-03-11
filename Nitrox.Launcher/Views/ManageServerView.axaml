@@ -21,12 +21,10 @@
                         <Button Classes="anycontent" Command="{Binding ChangeServerIconCommand}"
                                 IsHitTestVisible="{Binding !ServerIsOnline}">
                             <Grid>
-                                <!-- Delete the line below once the below TO-DO is completed -->
-                                <Image Source="/Assets/Images/SubnauticaIcon.png" />
+                                <Image Source="/Assets/Images/SubnauticaIcon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
                                 <Border Height="70" Width="70" CornerRadius="12">
                                     <Border.Background>
-                                        <!-- TODO: Get TargetNullValue working -->
-                                        <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon, TargetNullValue='/Assets/Images/SubnauticaIcon.png'}" />
+                                        <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon}" />
                                     </Border.Background>
                                 </Border>
                             </Grid>
