@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -30,6 +31,8 @@ public partial class ServerEntry : ObservableObject
     private bool isOnline;
     [ObservableProperty]
     private string name;
+    [ObservableProperty]
+    private Bitmap serverIcon;
     [ObservableProperty]
     private string password;
     [ObservableProperty]

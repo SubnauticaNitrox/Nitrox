@@ -15,59 +15,91 @@
             <Button Background="Transparent" Command="{Binding BackCommand}">
                 <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
             </Button>
-
-            <StackPanel Width="223" Orientation="Horizontal" HorizontalAlignment="Left" Classes="description" Margin="0 0 0 10">
-                <StackPanel.Styles>
-                    <Style Selector="StackPanel.description > :is(Control)">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="Margin" Value="6 0" />
-                    </Style>
-                    <Style Selector="StackPanel.description > :is(Control):nth-child(1)">
-                        <Setter Property="Margin" Value="0 0 6 0" />
-                    </Style>
-                    <Style Selector="StackPanel.description > :is(Control):nth-last-child(1)">
-                        <Setter Property="Margin" Value="6 0 0 0" />
-                    </Style>
-                    <Style Selector="Ellipse">
-                        <Setter Property="Height" Value="6" />
-                        <Setter Property="Width" Value="6" />
-                    </Style>
-                    <Style Selector="TextBlock">
-                        <Setter Property="Opacity" Value="0.5" />
-                    </Style>
-                </StackPanel.Styles>
-                <Panel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding ServerIsOnline}">
-                        <Ellipse Margin="0 0 6 0" Fill="#38C149" />
-                        <TextBlock IsVisible="{Binding ServerIsOnline}" Text="Online" />
+            <Grid ColumnDefinitions="Auto,*">
+                <Border CornerRadius="12" ClipToBounds="True" Height="72" Margin="0 0 20 0">
+                    <Grid>
+                        <Button Classes="anycontent" Command="{Binding ChangeServerIconCommand}"
+                                IsHitTestVisible="{Binding !ServerIsOnline}">
+                            <Grid>
+                                <!-- Delete the line below once the below TO-DO is completed -->
+                                <Image Source="/Assets/Images/SubnauticaIcon.png" />
+                                <Border Height="70" Width="70" CornerRadius="12">
+                                    <Border.Background>
+                                        <!-- TODO: Get TargetNullValue working -->
+                                        <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon, TargetNullValue='/Assets/Images/SubnauticaIcon.png'}" />
+                                    </Border.Background>
+                                </Border>
+                            </Grid>
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
+                        <controls:GrayscaleControl Opacity="{Binding !ServerIsOnline}" IsHitTestVisible="False">
+                            <controls:GrayscaleControl.Transitions>
+                                <Transitions>
+                                    <DoubleTransition Property="Opacity" Duration="0:0:0.10" />
+                                </Transitions>
+                            </controls:GrayscaleControl.Transitions>
+                        </controls:GrayscaleControl>
+                    </Grid>
+                </Border>
+                
+                <StackPanel Grid.Column="1">
+                    <StackPanel Width="223" Orientation="Horizontal" HorizontalAlignment="Left" Classes="description" Margin="0 0 0 10">
+                        <StackPanel.Styles>
+                            <Style Selector="StackPanel.description > :is(Control)">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="Margin" Value="6 0" />
+                            </Style>
+                            <Style Selector="StackPanel.description > :is(Control):nth-child(1)">
+                                <Setter Property="Margin" Value="0 0 6 0" />
+                            </Style>
+                            <Style Selector="StackPanel.description > :is(Control):nth-last-child(1)">
+                                <Setter Property="Margin" Value="6 0 0 0" />
+                            </Style>
+                            <Style Selector="Ellipse">
+                                <Setter Property="Height" Value="6" />
+                                <Setter Property="Width" Value="6" />
+                            </Style>
+                            <Style Selector="TextBlock">
+                                <Setter Property="Opacity" Value="0.5" />
+                            </Style>
+                        </StackPanel.Styles>
+                        <Panel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding ServerIsOnline}">
+                                <Ellipse Margin="0 0 6 0" Fill="#38C149" />
+                                <TextBlock IsVisible="{Binding ServerIsOnline}" Text="Online" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding !ServerIsOnline}">
+                                <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
+                                <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
+                            </StackPanel>
+                        </Panel>
+                        <TextBlock Text="{Binding ServerGameMode, Converter={converters:ToStringConverter}}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ServerPlayers}" />
+                            <TextBlock Text="/" />
+                            <TextBlock Text="{Binding ServerMaxPlayers}" />
+                            <TextBlock Margin="6 0 0 0" Text="playing" />
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !ServerIsOnline}">
-                        <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
-                        <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
-                    </StackPanel>
-                </Panel>
-                <TextBlock Text="{Binding ServerGameMode, Converter={converters:ToStringConverter}}" />
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding ServerPlayers}" />
-                    <TextBlock Text="/" />
-                    <TextBlock Text="{Binding ServerMaxPlayers}" />
-                    <TextBlock Margin="6 0 0 0" Text="playing" />
+        
+                    <Grid ColumnDefinitions="*,100,100">
+                        <ScrollViewer Margin="0 0 10 0" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
+                            <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
+                        </ScrollViewer>
+        
+                        <Button Grid.Column="1" Classes="nitrox big abort"
+                                Height="40" Margin="0 0 5 0" Padding="5" HorizontalAlignment="Stretch"
+                                design:NitroxAttached.Text="UNDO" Command="{Binding UndoCommand}" />
+                        <Button Grid.Column="2" Classes="nitrox big primary"
+                                Height="40" Margin="5 0 0 0" Padding="5" HorizontalAlignment="Stretch"
+                                design:NitroxAttached.Text="SAVE" Command="{Binding SaveCommand}" />
+                    </Grid>
                 </StackPanel>
-            </StackPanel>
-
-            <Grid ColumnDefinitions="*,100,100">
-                <ScrollViewer Margin="0 0 10 0" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
-                    <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
-                </ScrollViewer>
-
-                <Button Grid.Column="1" Classes="nitrox big abort"
-                        Height="40" Margin="0 0 5 0" Padding="5" HorizontalAlignment="Stretch"
-                        design:NitroxAttached.Text="UNDO" Command="{Binding UndoCommand}" />
-                <Button Grid.Column="2" Classes="nitrox big primary"
-                        Height="40" Margin="5 0 0 0" Padding="5" HorizontalAlignment="Stretch"
-                        design:NitroxAttached.Text="SAVE" Command="{Binding SaveCommand}" />
             </Grid>
-
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">

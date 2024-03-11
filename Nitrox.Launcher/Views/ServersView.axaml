@@ -38,10 +38,16 @@
                         <DataTemplate>
                             <Border Classes="serverEntry">
                                 <DockPanel VerticalAlignment="Center">
-                                    <Border CornerRadius="12" ClipToBounds="True">
+                                    <Border DockPanel.Dock="Left" CornerRadius="12" ClipToBounds="True">
                                         <Grid>
-                                            <!-- Future TODO: Add customizable server icon -->
-                                            <Image DockPanel.Dock="Left" Source="/Assets/Images/SubnauticaIcon.png" />
+                                            <!-- Delete the line below once the below TO-DO is completed -->
+                                            <Image Source="/Assets/Images/SubnauticaIcon.png" />
+                                            <Border Height="56" Width="56">
+                                                <Border.Background>
+                                                    <!-- TODO: Get TargetNullValue working -->
+                                                    <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon, TargetNullValue='/Assets/Images/SubnauticaIcon.png'}" />
+                                                </Border.Background>
+                                            </Border>
                                             <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
                                                 <controls:GrayscaleControl.Transitions>
                                                     <Transitions>

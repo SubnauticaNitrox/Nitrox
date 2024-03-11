@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -13,6 +17,7 @@ using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 using ReactiveUI;
@@ -23,6 +28,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 {
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string OriginalServerName => Server?.Name;
+    private string serverIconDir;
+    private string serverIconDestinationDir;
 
     private ServerEntry server;
     /// <summary>
@@ -53,6 +60,10 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [NitroxUniqueSaveName(true, nameof(OriginalServerName))]
     private string serverName;
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private Bitmap serverIcon;
+    
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private string serverPassword;
@@ -110,6 +121,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private string WorldFolderDirectory => Path.Combine(ServersViewModel.SavesFolderDir, Server.Name);
 
     private bool HasChanges() => ServerName != Server.Name ||
+                                 ServerIcon != Server.ServerIcon ||
                                  ServerPassword != Server.Password ||
                                  ServerGameMode != Server.GameMode ||
                                  ServerSeed != Server.Seed ||
@@ -165,8 +177,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             Directory.Move(WorldFolderDirectory, temp.FullName);
             Directory.Move(temp.FullName, newDir);
         }
+        
+        // Update the servericon.png file if needed
+        if (Server.ServerIcon != ServerIcon && serverIconDir != null && serverIconDestinationDir != null)
+        {
+            File.Copy(serverIconDir, serverIconDestinationDir, true);
+        }
 
         Server.Name = ServerName;
+        Server.ServerIcon = ServerIcon;
         Server.Password = ServerPassword;
         Server.GameMode = ServerGameMode;
         Server.Seed = ServerSeed;
@@ -209,6 +228,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void Undo()
     {
         ServerName = Server.Name;
+        ServerIcon = Server.ServerIcon;
         ServerPassword = Server.Password;
         ServerGameMode = Server.GameMode;
         ServerSeed = Server.Seed;
@@ -224,6 +244,29 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private bool CanUndo() => !ServerIsOnline && HasChanges();
 
+    [RelayCommand]
+    private async void ChangeServerIcon()
+    {
+        try
+        {
+            IReadOnlyList<IStorageFile> files = await MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Select an image",
+                AllowMultiple = false,
+                FileTypeFilter = new[] { FilePickerFileTypes.ImagePng, FilePickerFileTypes.ImageJpg }
+            });
+
+            serverIconDir = files[0].TryGetLocalPath();
+            serverIconDestinationDir = Path.Combine(WorldFolderDirectory, "servericon.png");
+        
+            ServerIcon = new(serverIconDir);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+        }
+    }
+    
     [RelayCommand]
     private void OpenAdvancedSettings()
     {
@@ -271,6 +314,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server = serverEntry;
 
         ServerName = Server.Name;
+        ServerIcon = Server.ServerIcon;
         ServerPassword = Server.Password;
         ServerGameMode = Server.GameMode;
         ServerSeed = Server.Seed;

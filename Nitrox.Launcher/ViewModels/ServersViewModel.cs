@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Collections;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
@@ -88,12 +90,21 @@ public partial class ServersViewModel : RoutableViewModelBase
 
             string saveName = Path.GetFileName(folder);
             string saveDir = Path.Combine(SavesFolderDir, saveName);
+            
+            Bitmap serverIcon = null;
+            string serverIconPath = Path.Combine(saveDir, "servericon.png");
+            if (File.Exists(serverIconPath))
+            {
+                serverIcon = new(Path.Combine(saveDir, "servericon.png"));
+            }
+            
             SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
             string fileEnding = "json";
             if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
             yield return new ServerEntry
             {
                 Name = saveName,
+                ServerIcon = serverIcon,
                 Password = server.ServerPassword,
                 Seed = server.Seed,
                 GameMode = server.GameMode,
