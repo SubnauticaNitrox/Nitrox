@@ -9,139 +9,132 @@ using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Patching;
 
-public sealed class NitroxEntryPatch
+public static class NitroxEntryPatch
+{
+    public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
+    public const string NITROX_ASSEMBLY_NAME = "NitroxPatcher.dll";
+    public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
+
+    private const string NITROX_ENTRY_TYPE_NAME = "Main";
+    private const string NITROX_ENTRY_METHOD_NAME = "Execute";
+
+    private const string GAME_INPUT_TYPE_NAME = "GameInput";
+    private const string GAME_INPUT_METHOD_NAME = "Awake";
+
+    private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
+
+    public static void Apply(string subnauticaBasePath)
     {
-        public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
-        public const string NITROX_ASSEMBLY_NAME = "NitroxPatcher.dll";
-        public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+        string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
+        string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
+        string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
-        private const string NITROX_ENTRY_TYPE_NAME = "Main";
-        private const string NITROX_ENTRY_METHOD_NAME = "Execute";
-
-        private const string GAME_INPUT_TYPE_NAME = "GameInput";
-        private const string GAME_INPUT_METHOD_NAME = "Awake";
-
-        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
-
-        private readonly Func<string> subnauticaBasePathFunc;
-        private string subnauticaManagedPath => Path.Combine(subnauticaBasePathFunc(), "Subnautica_Data", "Managed");
-
-        public bool IsApplied => IsPatchApplied();
-
-        public NitroxEntryPatch(Func<string> subnauticaBasePathFunc)
+        if (File.Exists(modifiedAssemblyCSharp))
         {
-            this.subnauticaBasePathFunc = subnauticaBasePathFunc;
+            File.Delete(modifiedAssemblyCSharp);
         }
 
-        public void Apply()
+        using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
+        using (ModuleDefMD nitroxPatcherAssembly = ModuleDefMD.Load(nitroxPatcherPath))
         {
-            string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
-            string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+            TypeDef nitroxMainDefinition = nitroxPatcherAssembly.GetTypes().FirstOrDefault(x => x.Name == NITROX_ENTRY_TYPE_NAME);
+            MethodDef executeMethodDefinition = nitroxMainDefinition.Methods.FirstOrDefault(x => x.Name == NITROX_ENTRY_METHOD_NAME);
 
-            if (File.Exists(modifiedAssemblyCSharp))
-            {
-                File.Delete(modifiedAssemblyCSharp);
-            }
+            MemberRef executeMethodReference = module.Import(executeMethodDefinition);
 
-            using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
-            using (ModuleDefMD nitroxPatcherAssembly = ModuleDefMD.Load(nitroxPatcherPath))
-            {
-                TypeDef nitroxMainDefinition = nitroxPatcherAssembly.GetTypes().FirstOrDefault(x => x.Name == NITROX_ENTRY_TYPE_NAME);
-                MethodDef executeMethodDefinition = nitroxMainDefinition.Methods.FirstOrDefault(x => x.Name == NITROX_ENTRY_METHOD_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
 
-                MemberRef executeMethodReference = module.Import(executeMethodDefinition);
+            Instruction callNitroxExecuteInstruction = OpCodes.Call.ToInstruction(executeMethodReference);
 
-                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
-
-                Instruction callNitroxExecuteInstruction = OpCodes.Call.ToInstruction(executeMethodReference);
-
-                awakeMethod.Body.Instructions.Insert(0, callNitroxExecuteInstruction);
-                module.Write(modifiedAssemblyCSharp);
-            }
-
-            // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
-            Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
-            if (error != null)
-            {
-                throw error;
-            }
-            FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
+            awakeMethod.Body.Instructions.Insert(0, callNitroxExecuteInstruction);
+            module.Write(modifiedAssemblyCSharp);
         }
 
-        private Exception RetryWait(Action action, int interval, int retries = 0)
+        // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
+        Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
+        if (error != null)
         {
-            Exception lastException = null;
-            while (retries >= 0)
+            throw error;
+        }
+        FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
+    }
+
+    public static void Remove(string subnauticaBasePath)
+    {
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+        string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
+        string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+
+        using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
+        {
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+
+            IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
+            int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
+
+            if (nitroxExecuteInstructionIndex == -1)
             {
-                try
-                {
-                    retries--;
-                    action();
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    lastException = ex;
-                    Task.Delay(interval).Wait();
-                }
+                return;
             }
-            return lastException;
+
+            methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
+            module.Write(modifiedAssemblyCSharp);
+
+            File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
         }
 
-        public void Remove()
+        FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
+    }
+
+    private static int FindNitroxExecuteInstructionIndex(IList<Instruction> methodInstructions)
+    {
+        for (int instructionIndex = 0; instructionIndex < methodInstructions.Count; instructionIndex++)
         {
-            string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+            string instruction = methodInstructions[instructionIndex].Operand?.ToString();
 
-            using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
+            if (instruction == NITROX_EXECUTE_INSTRUCTION)
             {
-                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
-
-                IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
-                int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
-
-                if (nitroxExecuteInstructionIndex == -1)
-                {
-                    return;
-                }
-
-                methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
-                module.Write(modifiedAssemblyCSharp);
-
-                File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
+                return instructionIndex;
             }
-
-            FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         }
 
-        private static int FindNitroxExecuteInstructionIndex(IList<Instruction> methodInstructions)
+        return -1;
+    }
+
+    private static Exception RetryWait(Action action, int interval, int retries = 0)
+    {
+        Exception lastException = null;
+        while (retries >= 0)
         {
-            for (int instructionIndex = 0; instructionIndex < methodInstructions.Count; instructionIndex++)
+            try
             {
-                string instruction = methodInstructions[instructionIndex].Operand?.ToString();
-
-                if (instruction == NITROX_EXECUTE_INSTRUCTION)
-                {
-                    return instructionIndex;
-                }
+                retries--;
+                action();
+                return null;
             }
-
-            return -1;
+            catch (Exception ex)
+            {
+                lastException = ex;
+                Task.Delay(interval).Wait();
+            }
         }
+        return lastException;
+    }
 
-        private bool IsPatchApplied()
+    public static bool IsPatchApplied(string subnauticaBasePath)
+    {
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+        string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
+
+        using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
         {
-            string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
+            TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
+            MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
 
-            using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
-            {
-                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
-
-                return awakeMethod.Body.Instructions.Any(instruction => instruction.Operand?.ToString() == NITROX_EXECUTE_INSTRUCTION);
-            }
+            return awakeMethod.Body.Instructions.Any(instruction => instruction.Operand?.ToString() == NITROX_EXECUTE_INSTRUCTION);
         }
     }
+}

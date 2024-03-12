@@ -129,11 +129,10 @@ public partial class OptionsViewModel : RoutableViewModelBase
             // Save game path as preferred for future sessions.
             NitroxUser.PreferredGamePath = path;
             
-            if (LaunchGameViewModel.NitroxEntryPatch?.IsApplied == true)
+            if (NitroxEntryPatch.IsPatchApplied(SubnauticaPath))
             {
-                LaunchGameViewModel.NitroxEntryPatch.Remove();
+                NitroxEntryPatch.Remove(SubnauticaPath);
             }
-            LaunchGameViewModel.NitroxEntryPatch = new NitroxEntryPatch(() => SubnauticaPath);
 
             //if (Path.GetFullPath(path).StartsWith(WindowsHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
             //{
