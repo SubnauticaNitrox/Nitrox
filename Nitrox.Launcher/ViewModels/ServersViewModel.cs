@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 using ReactiveUI;
@@ -18,7 +19,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class ServersViewModel : RoutableViewModelBase
 {
-    public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
+    public static readonly string SavesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
 
     public AvaloniaList<ServerEntry> Servers { get; }
 

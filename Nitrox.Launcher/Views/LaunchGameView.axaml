@@ -39,13 +39,13 @@
                                 <Image HorizontalAlignment="Right" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}}" ToolTip.Tip="{Binding PlatformToolTip}" Width="19"
                                        Height="19" Margin="3 0" />
                             </Grid>
-                            <Button Classes="nitrox big primary" Command="{Binding StartSingleplayerCommand}" ToolTip.Tip="Launch Subnautica with multiplayer enabled" HorizontalAlignment="Stretch">
+                            <Button Classes="nitrox big primary" Command="{Binding StartMultiplayerCommand}" ToolTip.Tip="Launch Subnautica with multiplayer enabled" HorizontalAlignment="Stretch">
                                 <StackPanel>
                                     <TextBlock Text="PLAY" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="White" />
                                     <TextBlock Text="MULTIPLAYER" HorizontalAlignment="Center" FontSize="10" />
                                 </StackPanel>
                             </Button>
-                            <Button Classes="nitrox big" Command="{Binding StartMultiplayerCommand}" ToolTip.Tip="Launch Subnautica" HorizontalAlignment="Stretch" Height="48">
+                            <Button Classes="nitrox big" Command="{Binding StartSingleplayerCommand}" ToolTip.Tip="Launch Subnautica" HorizontalAlignment="Stretch" Height="48">
                                 <TextBlock Text="SINGLEPLAYER" Padding="0,4,0,0" Foreground="White" Margin="0,-4,0,0" HorizontalAlignment="Center" FontSize="14" />
                             </Button>
                         </StackPanel>

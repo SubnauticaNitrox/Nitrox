@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nitrox.Launcher.Models.Patching;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel;
 using NitroxModel.Discovery;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
+using NitroxModel.Platforms.OS.Shared;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -17,17 +22,15 @@ public partial class OptionsViewModel : RoutableViewModelBase
 {
     //public AvaloniaList<KnownGame> KnownGames { get; init; }
 
-    public static string SavesFolderdir { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"); // Temp
+    private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
     
     private static string defaultLaunchArg => "-vrmode none";
     
+    public string SubnauticaPath => KeyValueStore.Instance.GetValue<string>("SubnauticaPath");
+    public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", "-vrmode none");
+    
     [ObservableProperty]
     private KnownGame selectedGame;
-
-    // Temp - Meant to represent the value of LauncherLogic.Config.SubnauticaLaunchArguments
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ChangeArgumentsCommand))]
-    private string launcherLogicConfigSubnauticaLaunchArguments = defaultLaunchArg;
     
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ChangeArgumentsCommand))]
@@ -52,7 +55,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         //    }
         //];
 
-        LaunchArgs = LauncherLogicConfigSubnauticaLaunchArguments/*LauncherLogic.Config.SubnauticaLaunchArguments*/;
+        LaunchArgs = KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", defaultLaunchArg);
     }
 
     [RelayCommand]
@@ -81,7 +84,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         
         if (selectedDirectory != SelectedGame.PathToGame)
         {
-            //await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
+            await SetTargetedSubnauticaPath(selectedDirectory);
             //LauncherNotifier.Success("Applied changes");
             LaunchArgs = "Applied changes";    //TEMP
         }
@@ -92,6 +95,57 @@ public partial class OptionsViewModel : RoutableViewModelBase
     //{
     //}
 
+    public async Task<string> SetTargetedSubnauticaPath(string path)
+    {
+        if ((string.IsNullOrWhiteSpace(SubnauticaPath) && SubnauticaPath == path) || !Directory.Exists(path))
+        {
+            return null;
+        }
+
+        KeyValueStore.Instance.SetValue("SubnauticaPath", path);
+        if (LaunchGameViewModel.LastFindSubnauticaTask != null)
+        {
+            await LaunchGameViewModel.LastFindSubnauticaTask;
+        }
+
+        LaunchGameViewModel.LastFindSubnauticaTask = Task.Factory.StartNew(() =>
+        {
+            PirateDetection.TriggerOnDirectory(path);
+
+            if (!FileSystem.Instance.IsWritable(Directory.GetCurrentDirectory()) || !FileSystem.Instance.IsWritable(path))
+            {
+                // TODO: Move this check to another place where Nitrox installation can be verified. (i.e: another page on the launcher in order to check permissions, network setup, ...)
+                if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
+                {
+                    Dispatcher.UIThread.Invoke(() =>
+                    {
+                        //MessageBox.Show(Application.Current.MainWindow!, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.", "Required file permission error", MessageBoxButton.OK,
+                        //                MessageBoxImage.Error);
+                        Environment.Exit(1);
+                    }, DispatcherPriority.ApplicationIdle);
+                }
+            }
+            
+            // Save game path as preferred for future sessions.
+            NitroxUser.PreferredGamePath = path;
+            
+            if (LaunchGameViewModel.NitroxEntryPatch?.IsApplied == true)
+            {
+                LaunchGameViewModel.NitroxEntryPatch.Remove();
+            }
+            LaunchGameViewModel.NitroxEntryPatch = new NitroxEntryPatch(() => SubnauticaPath);
+
+            //if (Path.GetFullPath(path).StartsWith(WindowsHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
+            //{
+            //    WindowsHelper.RestartAsAdmin();
+            //}
+
+            return path;
+        }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+
+        return await LaunchGameViewModel.LastFindSubnauticaTask;
+    }
+    
     [RelayCommand]
     private void ResetArguments()
     {
@@ -102,7 +156,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanChangeArguments))]
     private void ChangeArguments()
     {
-        LauncherLogicConfigSubnauticaLaunchArguments/*LauncherLogic.Config.SubnauticaLaunchArguments*/ = LaunchArgs;
+        KeyValueStore.Instance.SetValue("SubnauticaLaunchArguments", LaunchArgs);
     }
     private bool CanChangeArguments()
     {
@@ -111,7 +165,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
             ShowResetArgsBtn = true;
         }
 
-        return LaunchArgs != LauncherLogicConfigSubnauticaLaunchArguments/*LauncherLogic.Config.SubnauticaLaunchArguments*/;
+        return LaunchArgs != KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", defaultLaunchArg);
     }
 
     [RelayCommand]
@@ -119,12 +173,12 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = SavesFolderdir,
+            FileName = savesFolderDir,
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
     }
-
+    
     public class KnownGame
     {
         public string PathToGame { get; init; }

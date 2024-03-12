@@ -16,6 +16,7 @@ using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -27,6 +28,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 {
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string OriginalServerName => Server?.Name;
+    private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
     private string serverIconDir;
     private string serverIconDestinationDir;
 
@@ -117,7 +119,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private bool ServerIsOnline => Server.IsOnline;
 
-    private string WorldFolderDirectory => Path.Combine(ServersViewModel.SavesFolderDir, Server.Name);
+    private string WorldFolderDirectory => Path.Combine(savesFolderDir, Server.Name);
 
     private bool HasChanges() => ServerName != Server.Name ||
                                  ServerIcon != Server.ServerIcon ||
@@ -167,7 +169,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void Save()
     {
         // If world name was changed, rename save folder to match it
-        string newDir = Path.Combine(ServersViewModel.SavesFolderDir, ServerName);
+        string newDir = Path.Combine(savesFolderDir, ServerName);
         if (WorldFolderDirectory != newDir)
         {
             // Windows, by default, ignores case when renaming folders. We circumvent this by changing the name to a random one, and then to the desired name.
