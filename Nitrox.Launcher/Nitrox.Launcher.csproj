@@ -38,6 +38,7 @@
     <ItemGroup>
       <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
       <ProjectReference SetTargetFramework="TargetFramework=net472" Include="..\NitroxPatcher\NitroxPatcher.csproj" />
+      <ProjectReference SetTargetFramework="TargetFramework=net472" Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
     </ItemGroup>
 
     <!-- Ensure server files are available for launcher. -->

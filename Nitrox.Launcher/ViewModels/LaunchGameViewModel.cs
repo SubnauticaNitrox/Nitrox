@@ -32,7 +32,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
     public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
-    public string SubnauticaPath => NitroxUser.GamePath;
     public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", "-vrmode none");
 
     public LaunchGameViewModel(IScreen hostScreen) : base(hostScreen)
@@ -48,7 +47,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(SubnauticaPath) || !Directory.Exists(SubnauticaPath))
+            if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
             {
                 Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<OptionsViewModel>());
                 throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
@@ -60,7 +59,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 throw new Exception("An instance of Subnautica is already running");
             }
 #endif
-            NitroxEntryPatch.Remove(SubnauticaPath);
+            NitroxEntryPatch.Remove(NitroxUser.GamePath);
             gameProcess = await StartSubnauticaAsync();
         }
         catch (Exception ex)
@@ -73,7 +72,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async void StartMultiplayer()
     {
-        if (string.IsNullOrWhiteSpace(SubnauticaPath) || !Directory.Exists(SubnauticaPath))
+        if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
         {
             Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<OptionsViewModel>());
             throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
@@ -97,7 +96,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         {
             File.Copy(
                 Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", initDllName),
-                Path.Combine(SubnauticaPath, "Subnautica_Data", "Managed", initDllName),
+                Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", initDllName),
                 true
             );
         }
@@ -111,10 +110,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         {
             await LastFindSubnauticaTask;
         }
-        NitroxEntryPatch.Remove(SubnauticaPath);
-        NitroxEntryPatch.Apply(SubnauticaPath);
+        NitroxEntryPatch.Remove(NitroxUser.GamePath);
+        NitroxEntryPatch.Apply(NitroxUser.GamePath);
 
-        if (QModHelper.IsQModInstalled(SubnauticaPath))
+        if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
         {
             Log.Warn("Seems like QModManager is Installed");
             //LauncherNotifier.Info("Detected QModManager in the game folder");
@@ -125,7 +124,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 
     private async Task<ProcessEx> StartSubnauticaAsync()
     {
-        string subnauticaPath = SubnauticaPath;
+        string subnauticaPath = NitroxUser.GamePath;
         string subnauticaLaunchArguments = SubnauticaLaunchArguments;
         string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);

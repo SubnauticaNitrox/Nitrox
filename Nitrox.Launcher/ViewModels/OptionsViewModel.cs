@@ -22,12 +22,12 @@ public partial class OptionsViewModel : RoutableViewModelBase
 {
     //public AvaloniaList<KnownGame> KnownGames { get; init; }
 
-    private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+    [ObservableProperty]
+    private string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
     
     private static string defaultLaunchArg => "-vrmode none";
     
-    public string SubnauticaPath => KeyValueStore.Instance.GetValue<string>("SubnauticaPath");
-    public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", "-vrmode none");
+    public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", defaultLaunchArg);
     
     [ObservableProperty]
     private KnownGame selectedGame;
@@ -97,12 +97,12 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
     public async Task<string> SetTargetedSubnauticaPath(string path)
     {
-        if ((string.IsNullOrWhiteSpace(SubnauticaPath) && SubnauticaPath == path) || !Directory.Exists(path))
+        if ((string.IsNullOrWhiteSpace(NitroxUser.GamePath) && NitroxUser.GamePath == path) || !Directory.Exists(path))
         {
             return null;
         }
 
-        KeyValueStore.Instance.SetValue("SubnauticaPath", path);
+        NitroxUser.GamePath = path;
         if (LaunchGameViewModel.LastFindSubnauticaTask != null)
         {
             await LaunchGameViewModel.LastFindSubnauticaTask;
@@ -129,9 +129,9 @@ public partial class OptionsViewModel : RoutableViewModelBase
             // Save game path as preferred for future sessions.
             NitroxUser.PreferredGamePath = path;
             
-            if (NitroxEntryPatch.IsPatchApplied(SubnauticaPath))
+            if (NitroxEntryPatch.IsPatchApplied(NitroxUser.GamePath))
             {
-                NitroxEntryPatch.Remove(SubnauticaPath);
+                NitroxEntryPatch.Remove(NitroxUser.GamePath);
             }
 
             //if (Path.GetFullPath(path).StartsWith(WindowsHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
