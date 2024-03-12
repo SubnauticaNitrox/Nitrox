@@ -26,7 +26,7 @@ namespace NitroxModel.Helper
             () =>
             {
                 Assembly currentAsm = Assembly.GetEntryAssembly();
-                if (currentAsm?.GetName().Name.Equals("NitroxLauncher") ?? false)
+                if (currentAsm?.GetName().Name.Equals("Nitrox.Launcher") ?? false)
                 {
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
@@ -40,7 +40,7 @@ namespace NitroxModel.Helper
                     return execParentDir.FullName;
                 }
 
-                // NitroxModel, NitroxServer and other assemblies are stored in NitroxLauncher/lib
+                // NitroxModel, NitroxServer and other assemblies are stored in Nitrox.Launcher/lib
                 if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "LanguageFiles")))
                 {
                     return execParentDir.Parent.FullName;
