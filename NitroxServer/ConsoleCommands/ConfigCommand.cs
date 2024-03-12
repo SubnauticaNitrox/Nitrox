@@ -62,7 +62,7 @@ namespace NitroxServer.ConsoleCommands
 
         private async Task StartWithDefaultProgram(string fileToOpen)
         {
-            using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen); // SCARY CODE, could be used for RCE or privilege escalation
+            using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen);
             process.WaitForExit();
             try
             {

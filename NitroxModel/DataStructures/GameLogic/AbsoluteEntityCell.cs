@@ -5,7 +5,6 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
 using static NitroxModel.DisplayStatusCodes;
-using static NitroxServer.Server;
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]

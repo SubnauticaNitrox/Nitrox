@@ -96,7 +96,7 @@ internal static class Patcher
 
         if (container != null)
         {
-            DisplayStatusCode(StatusCode.MISSING_FEATURE, true, $"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, true, $"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
         Log.Info("Registering dependencies");
         container = CreatePatchingContainer();
@@ -107,10 +107,6 @@ internal static class Patcher
         catch (ReflectionTypeLoadException ex)
         {
             DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
-            foreach (Exception loaderEx in ex.LoaderExceptions)
-            {
-                Log.Error(loaderEx);
-            }
             throw;
         }
         catch (Exception ex)

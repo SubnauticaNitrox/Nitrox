@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using static NitroxServer.Server;
 using static NitroxModel.DisplayStatusCodes;
 // using static NitroxServer.Server;
 namespace NitroxModel.Serialization

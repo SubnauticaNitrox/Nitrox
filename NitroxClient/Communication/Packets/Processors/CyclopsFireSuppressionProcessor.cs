@@ -18,7 +18,6 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsFireSuppression fireSuppressionPacket)
         {
-            // Start a fire in the cyclops on the local client
             cyclops.StartFireSuppression(fireSuppressionPacket.Id);
         }
     }

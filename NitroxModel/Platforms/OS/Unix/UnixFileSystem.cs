@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NitroxModel.Platforms.OS.Shared;
-using static NitroxServer.Server;
 using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Platforms.OS.Unix
 {

@@ -12,7 +12,6 @@ public class EntityTransformUpdatesProcessor : ClientPacketProcessor<EntityTrans
 {
     public override void Process(EntityTransformUpdates packet)
     {
-        // Get position updates and enact the changes on client-side
         foreach (EntityTransformUpdate update in packet.Updates)
         {
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(update.Id);

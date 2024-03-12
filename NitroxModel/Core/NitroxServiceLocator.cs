@@ -3,7 +3,6 @@ using Autofac;
 using Autofac.Builder;
 using NitroxModel.DataStructures.Util;
 using static NitroxModel.DisplayStatusCodes;
-using static NitroxServer.Server;
 namespace NitroxModel.Core;
 
 /// <summary>

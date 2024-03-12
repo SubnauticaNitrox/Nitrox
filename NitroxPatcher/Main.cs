@@ -103,7 +103,8 @@ public static class Main
                     // These logs from Unity spam too much uninteresting stuff
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    DisplayStatusCode(StatusCode.INJECTION_FAIL, true, stackTrace.ToString() + condition.ToString());
+                    break;
             }
         };
 
@@ -115,7 +116,6 @@ public static class Main
         catch (Exception ex)
         {
             DisplayStatusCode(StatusCode.INJECTION_FAIL, true, ex.ToString() + "Unhandled exception occurred while initializing Nitrox");
-            Log.Error(ex, "Unhandled exception occurred while initializing Nitrox:");
         }
     }
 

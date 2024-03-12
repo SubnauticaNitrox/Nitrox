@@ -12,7 +12,6 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public CyclopsFireCreatedProcessor(IPacketSender packetSender, Fires fires)
         {
-            // where is this used?
             this.packetSender = packetSender;
             this.fires = fires;
         }

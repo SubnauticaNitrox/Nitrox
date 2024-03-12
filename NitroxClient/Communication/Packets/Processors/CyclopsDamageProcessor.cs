@@ -141,7 +141,6 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
-            // If we can't find the id,
             if (!subRoot.TryGetIdOrWarn(out NitroxId subRootId))
             {
                 return;

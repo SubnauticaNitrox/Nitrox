@@ -22,7 +22,6 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
 
     public override void Process(EntityReparented packet)
     {
-        // Get the object that we are reparenting from the packet
         Optional<GameObject> entity = NitroxEntity.GetObjectFrom(packet.Id);
 
         if (!entity.HasValue)
@@ -33,9 +32,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             DisplayStatusCode(StatusCode.INVALID_PACKET, false, "The entity this process was trying to process was null");
             return;
         }
-        // Get the soon-to-be new parent of the gameObject from the packet
         GameObject newParent = NitroxEntity.RequireObjectFrom(packet.NewParentId);
-        // If the entity is able to be picked up(is it an inventory item?)
         if (entity.Value.TryGetComponent(out Pickupable pickupable))
         {
             // If the entity is being parented to a WaterPark
@@ -57,11 +54,9 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
         
         using (PacketSuppressor<EntityReparented>.Suppress())
         {
-            // Get the type of the gameObject that we are reparenting
             Type entityType = entities.RequireEntityType(packet.Id);
 
             // Move this to a resolver if there ends up being a lot of custom reparenting logic
-            // Use the appropriate method based on whether the entity is an inventoryItem or not
             if (entityType == typeof(InventoryItemEntity))
             {
                 InventoryItemReparented(entity.Value, newParent);
@@ -72,7 +67,6 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             }
         }
     }
-    // Move the item that the player picked up into their gameObject to make it theirs and add it to the inventory
     private void InventoryItemReparented(GameObject entity, GameObject newParent)
     {
         Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(newParent);
@@ -88,7 +82,6 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
         ItemsContainer container = opContainer.Value;
         container.UnsafeAdd(new InventoryItem(pickupable));
     }
-    // Reparent without adding it to the inventory
     private void PerformDefaultReparenting(GameObject entity, GameObject newParent)
     {
         entity.transform.SetParent(newParent.transform, false);

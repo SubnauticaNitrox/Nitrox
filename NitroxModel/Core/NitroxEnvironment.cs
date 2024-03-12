@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using static NitroxModel.DisplayStatusCodes;
-using static NitroxServer.Server;
 namespace NitroxModel.Helper
 {
     /// <summary>

@@ -21,9 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
             // TODO: don't remove right away... maybe grey out and start
             //      a coroutine to finally remove.
             vitalsManager.RemoveForPlayer(disconnect.PlayerId);
-            // Get the player that needs to be removed from the client
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.PlayerId);
-            // If it still exists, remove the player
             if (remotePlayer.HasValue)
             {
                 remotePlayerManager.RemovePlayer(disconnect.PlayerId);

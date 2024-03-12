@@ -10,7 +10,6 @@ using NitroxModel.Platforms.OS.MacOS;
 using NitroxModel.Platforms.OS.Unix;
 using NitroxModel.Platforms.OS.Windows;
 using static NitroxModel.DisplayStatusCodes;
-using static NitroxServer.Server;
 namespace NitroxModel.Platforms.OS.Shared
 {
     public abstract class FileSystem

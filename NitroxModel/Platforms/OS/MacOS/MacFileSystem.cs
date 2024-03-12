@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
 using NitroxModel.Platforms.OS.Shared;
-using static NitroxServer.Server;
 using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Platforms.OS.MacOS
 {

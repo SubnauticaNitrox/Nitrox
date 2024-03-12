@@ -1,6 +1,5 @@
 using System.IO;
 using NitroxModel.Platforms.Store.Interfaces;
-using static NitroxServer.Server;
 using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Platforms.Store
 {

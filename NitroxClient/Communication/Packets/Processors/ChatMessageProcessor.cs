@@ -29,7 +29,6 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ChatMessage message)
         {
-            // If the message is sent by the server, add the server chat flair to it
             if (message.PlayerId != ChatMessage.SERVER_ID)
             {
                 LogClientMessage(message);

@@ -7,7 +7,6 @@ using System.Security.Principal;
 using Microsoft.Win32;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.OS.Windows.Internal;
-using static NitroxServer.Server;
 using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Platforms.OS.Windows
 {

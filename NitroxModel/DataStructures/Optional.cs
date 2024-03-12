@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using static NitroxModel.DisplayStatusCodes;
-using static NitroxServer.Server;
 namespace NitroxModel.DataStructures.Util
 {
     /// <summary>
