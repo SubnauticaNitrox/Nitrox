@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;

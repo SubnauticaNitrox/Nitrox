@@ -1,4 +1,6 @@
 ﻿using NitroxClient.MonoBehaviours.Discord;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxClient.Unity.Helper;
 using TMPro;
 using UnityEngine;
@@ -11,15 +13,9 @@ public class NitroxMainMenuModifications : MonoBehaviour
 {
     private MainMenuRightSide rightSide;
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-    }
+    private void OnEnable() => SceneManager.sceneLoaded += SceneManager_sceneLoaded;
 
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-    }
+    private void OnDisable() => SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
 
     private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
@@ -63,20 +59,27 @@ public class NitroxMainMenuModifications : MonoBehaviour
             return menuPanel;
         }
 
-        GameObject serverList = CloneMainMenuLoadPanel("MultiplayerServerList", "Nitrox_Multiplayer");
+        GameObject serverJoinNotification = CloneMainMenuLoadPanel(MainMenuNotificationPanel.NAME, string.Empty);
+        serverJoinNotification.AddComponent<MainMenuNotificationPanel>().Setup(savedGamesRef);
+
+        GameObject serverJoin = CloneMainMenuLoadPanel(MainMenuJoinServerPanel.NAME, "Nitrox_JoinServer");
+        serverJoin.AddComponent<MainMenuJoinServerPanel>().Setup(savedGamesRef);
+
+        GameObject serverList = CloneMainMenuLoadPanel(MainMenuServerListPanel.NAME, "Nitrox_Multiplayer");
         serverList.AddComponent<MainMenuServerListPanel>().Setup(savedGamesRef);
 
-        GameObject serverCreate = CloneMainMenuLoadPanel("MultiplayerCreateServer", "Nitrox_AddServer");
+        GameObject serverCreate = CloneMainMenuLoadPanel(MainMenuCreateServerPanel.NAME, "Nitrox_AddServer");
         serverCreate.AddComponent<MainMenuCreateServerPanel>().Setup(savedGamesRef);
 
 #if RELEASE
-            // Remove singleplayer button because SP is broken when Nitrox is injected. TODO: Allow SP to work and co-exist with Nitrox MP in the future
+            // Remove singleplayer button because SP is broken when Nitrox is injected.
+            // TODO: Allow SP to work and co-exist with Nitrox MP in the future
             startButton.SetActive(false);
 #endif
     }
 
     private void ShowMultiplayerServerList()
     {
-        rightSide.OpenGroup("MultiplayerServerList");
+        rightSide.OpenGroup(MainMenuServerListPanel.NAME);
     }
 }

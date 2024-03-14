@@ -1,13 +1,14 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
+namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 
 public class MainMenuServerButton : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class MainMenuServerButton : MonoBehaviour
         Destroy(tmp.GetComponent<TranslationLiveUpdate>());
 
         Button multiplayerJoinButton = newGameButtonTransform.GetComponent<Button>();
-        multiplayerJoinButton.onClick = new Button.ButtonClickedEvent();
+        multiplayerJoinButton.onClick.RemoveAllListeners();
         multiplayerJoinButton.onClick.AddListener(OnJoinButtonClicked);
 
         gameObject.AddComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = confirmButtonLegendData;
@@ -45,7 +46,7 @@ public class MainMenuServerButton : MonoBehaviour
         {
             GameObject delete = Instantiate(deleteButtonRef, transform, false);
             Button deleteButtonButton = delete.GetComponent<Button>();
-            deleteButtonButton.onClick = new Button.ButtonClickedEvent();
+            deleteButtonButton.onClick.RemoveAllListeners();
             deleteButtonButton.onClick.AddListener(RequestDelete);
         }
     }
@@ -68,8 +69,7 @@ public class MainMenuServerButton : MonoBehaviour
     {
         if (MainMenuServerListPanel.Main.IsJoining)
         {
-            // Do not attempt to join multiple servers.
-            return;
+            return; // Do not attempt to join multiple servers.
         }
 
         MainMenuServerListPanel.Main.IsJoining = true;
@@ -92,25 +92,12 @@ public class MainMenuServerButton : MonoBehaviour
             return;
         }
 
-        await MainMenuServerListPanel.Main.JoinServer.ShowAsync(endpoint.Address.ToString(), endpoint.Port);
+        MainMenuNotificationPanel.ShowLoading();
+        await JoinServerBackend.Instance.ShowAsync(endpoint.Address.ToString(), endpoint.Port);
     }
 
     private static IPEndPoint ResolveIPEndPoint(string serverIp, int serverPort)
     {
-        static IPAddress ResolveHostName(string hostname, int serverPort)
-        {
-            try
-            {
-                IPHostEntry hostEntry = Dns.GetHostEntry(hostname);
-                return hostEntry.AddressList[0];
-            }
-            catch (SocketException ex)
-            {
-                Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}:{serverPort}", hostname, serverPort);
-                return null;
-            }
-        }
-
         UriHostNameType hostType = Uri.CheckHostName(serverIp);
         IPAddress address;
         switch (hostType)
@@ -126,11 +113,20 @@ public class MainMenuServerButton : MonoBehaviour
                 return null;
         }
 
-        if (address == null)
-        {
-            return null;
-        }
+        return address != null ? new IPEndPoint(address, serverPort) : null;
 
-        return new IPEndPoint(address, serverPort);
+        static IPAddress ResolveHostName(string hostname, int serverPort)
+        {
+            try
+            {
+                IPHostEntry hostEntry = Dns.GetHostEntry(hostname);
+                return hostEntry.AddressList[0];
+            }
+            catch (SocketException ex)
+            {
+                Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}:{serverPort}", hostname, serverPort);
+                return null;
+            }
+        }
     }
 }

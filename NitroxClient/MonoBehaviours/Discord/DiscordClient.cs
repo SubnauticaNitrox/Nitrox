@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using DiscordGameSDKWrapper;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxModel;
 using NitroxModel.Core;
 using NitroxModel.Packets;

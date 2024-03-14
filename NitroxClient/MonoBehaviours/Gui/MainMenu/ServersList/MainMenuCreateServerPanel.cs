@@ -8,10 +8,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
+namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 
 public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver
 {
+    public const string NAME = "MultiplayerCreateServer";
+
     private TMP_InputField serverNameInput, serverAddressInput, serverPortInput;
     private mGUI_Change_Legend_On_Select legendChange;
 
@@ -63,18 +65,18 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         confirmButton.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(200, 40);
         confirmButton.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_AddServer_Confirm");
         Button confirmButtonButton = confirmButton.RequireTransform("NewGameButton").GetComponent<Button>();
-        confirmButtonButton.onClick = new Button.ButtonClickedEvent();
+        confirmButtonButton.onClick.RemoveAllListeners();
         confirmButtonButton.onClick.AddListener(SaveServer);
 
         GameObject backButton = Instantiate(multiplayerButtonRef, transform, false);
         backButton.transform.localPosition = new Vector3(-200, 40, 0);
         backButton.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(200, 40);
-        backButton.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_AddServer_Back");
+        backButton.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Cancel");
         Button backButtonButton = backButton.RequireTransform("NewGameButton").GetComponent<Button>();
-        backButtonButton.onClick = new Button.ButtonClickedEvent();
+        backButtonButton.onClick.RemoveAllListeners();
         backButtonButton.onClick.AddListener(OnBack);
 
-        selectableItems = new[] { serverName, serverAddress, serverPort, confirmButton, backButton };
+        selectableItems = [serverName, serverAddress, serverPort, confirmButton, backButton];
         Destroy(inputFieldBlueprint);
         Destroy(transform.Find("Scroll View").gameObject);
 
@@ -124,12 +126,12 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         serverAddressInput.text = string.Empty;
         serverPortInput.text = string.Empty;
         DeselectAllItems();
-        MainMenuRightSide.main.OpenGroup("MultiplayerServerList");
+        MainMenuRightSide.main.OpenGroup(MainMenuServerListPanel.NAME);
     }
 
     public void OnConfirm()
     {
-        if (selectedItem.TryGetComponentInChildren(out InputField inputField))
+        if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
         {
             inputField.Select();
         }
@@ -156,6 +158,11 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         selectedItem = item as GameObject;
 
         legendChange.SyncLegendBarToGUISelection();
+
+        if (!selectedItem)
+        {
+            return;
+        }
 
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {

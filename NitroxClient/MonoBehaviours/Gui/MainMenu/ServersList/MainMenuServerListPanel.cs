@@ -8,10 +8,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
+namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 
 public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver
 {
+    public const string NAME = "MultiplayerServerList";
+
     public static MainMenuServerListPanel Main;
     public static Sprite NormalSprite;
     public static Sprite SelectedSprite;
@@ -21,17 +23,11 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     private Transform serverAreaContent;
     private GameObject selectedServerItem;
 
-    public JoinServer JoinServer { get; private set; }
     public bool IsJoining { get; set; }
 
     public void Setup(GameObject savedGamesRef)
     {
         Main = this;
-
-        //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
-        //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standards are concerned.
-        JoinServer = new GameObject("NitroxJoinServer").AddComponent<JoinServer>();
-        JoinServer.Setup(savedGamesRef);
 
         MainMenuLoadMenu loadMenu = savedGamesRef.GetComponentInChildren<MainMenuLoadMenu>();
         NormalSprite = loadMenu.normalSprite;
@@ -92,7 +88,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         if (selectedServerItem.gameObject.name == "NewServer")
         {
             DeselectAllItems();
-            MainMenuRightSide.main.OpenGroup("MultiplayerCreateServer");
+            MainMenuRightSide.main.OpenGroup(MainMenuCreateServerPanel.NAME);
         }
         else if (selectedServerItem.TryGetComponent(out MainMenuServerButton serverButton))
         {
@@ -114,6 +110,11 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     {
         DeselectItem();
         selectedServerItem = item as GameObject;
+
+        if (!selectedServerItem)
+        {
+            return;
+        }
 
         if (selectedServerItem.TryGetComponentInChildren(out mGUI_Change_Legend_On_Select componentInChildren))
         {
@@ -247,14 +248,14 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         txt.GetComponent<TextMeshProUGUI>().text = "Nitrox_AddServer";
 
         Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
-        multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
+        multiplayerButtonButton.onClick.RemoveAllListeners();
         multiplayerButtonButton.onClick.AddListener(OpenAddServerGroup);
     }
 
     public void OpenAddServerGroup()
     {
         DeselectAllItems();
-        MainMenuRightSide.main.OpenGroup("MultiplayerCreateServer");
+        MainMenuRightSide.main.OpenGroup(MainMenuCreateServerPanel.NAME);
     }
 
     public void RefreshServerEntries()
