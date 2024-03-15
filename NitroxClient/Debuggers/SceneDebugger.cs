@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -329,6 +330,16 @@ public class SceneDebugger : BaseDebugger
                 else if (structDebuggerDrawers.TryGetValue(field.FieldType, out IStructDrawer structDrawer))
                 {
                     field.SetValue(target, structDrawer.Draw(fieldValue));
+                }
+                else if(fieldValue != null && (field.FieldType.IsArray || typeof(IList).IsAssignableFrom(field.FieldType)))
+                {
+                    IList list = (IList)field.GetValue(target);
+                    GUILayout.Box($"Length: {list.Count}" , GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+                }
+                else if(fieldValue != null && (typeof(IDictionary).IsAssignableFrom(field.FieldType)))
+                {
+                    IDictionary dict = (IDictionary)field.GetValue(target);
+                    GUILayout.Box($"Length: {dict.Count}" , GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
                 }
                 else
                 {

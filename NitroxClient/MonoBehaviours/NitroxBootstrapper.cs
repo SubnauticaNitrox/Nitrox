@@ -12,7 +12,7 @@ public class NitroxBootstrapper : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Instance = this;
         gameObject.AddComponent<SceneCleanerPreserve>();
-        gameObject.AddComponent<MainMenuMods>();
+        gameObject.AddComponent<NitroxMainMenuModifications>();
         gameObject.AddComponent<DiscordClient>();
 
 #if DEBUG
