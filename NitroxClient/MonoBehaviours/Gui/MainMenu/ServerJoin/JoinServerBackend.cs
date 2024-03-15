@@ -38,22 +38,16 @@ public class JoinServerBackend : MonoBehaviour
     private string serverIp;
     private int serverPort;
 
-    private MainMenuEnterPasswordPanel passwordPanel;
-
     public async Task ShowAsync(string ip, int port)
     {
-        passwordPanel = gameObject.AddComponent<MainMenuEnterPasswordPanel>(); //TODO: Move somewhere else
-
         serverIp = ip;
         serverPort = port;
-        Log.Info("JoinServer.ShowAsync()");
         NitroxServiceLocator.BeginNewLifetimeScope();
 
         preferencesManager = NitroxServiceLocator.LocateService<PlayerPreferenceManager>();
         activePlayerPreference = preferencesManager.GetPreference(serverIp);
 
         multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
-        passwordPanel.Setup(multiplayerSession);
 
         gameObject.SetActive(true);
         await StartMultiplayerClientAsync();
@@ -103,7 +97,7 @@ public class JoinServerBackend : MonoBehaviour
     {
         preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, playerColor));
 
-        Optional<string> opPassword = passwordPanel.passwordEntered ? Optional.Of(passwordPanel.serverPassword) : Optional.Empty;
+        Optional<string> opPassword = MainMenuEnterPasswordPanel.LastEnteredPassword;
         AuthenticationContext authenticationContext = new(playerName, opPassword);
 
         multiplayerSession.RequestSessionReservation(new PlayerSettings(playerColor.ToDto()), authenticationContext);
@@ -119,18 +113,20 @@ public class JoinServerBackend : MonoBehaviour
                 break;
 
             case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
+                Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out float saturation, out float brightness); // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
+                MainMenuJoinServerPanel.Instance.UpdatePanelValues(serverIp, activePlayerPreference.PlayerName, new Vector3(hue, saturation, brightness));
+
                 if (multiplayerSession.SessionPolicy.RequiresServerPassword)
                 {
                     Log.Info("Waiting for server password input");
                     Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
-                    passwordPanel.showingPasswordWindow = true;
-                    passwordPanel.shouldFocus = true;
+                    MainMenuEnterPasswordPanel.ResetLastEnteredPassword();
+                    MainMenuRightSide.main.OpenGroup(MainMenuEnterPasswordPanel.NAME);
+                    break;
                 }
 
                 Log.Info("Waiting for user input");
                 Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
-                Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out float saturation, out float brightness); // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
-                MainMenuJoinServerPanel.Instance.UpdatePanelValues(serverIp, activePlayerPreference.PlayerName, new Vector3(hue, saturation, brightness));
                 MainMenuRightSide.main.OpenGroup(MainMenuJoinServerPanel.NAME);
                 break;
 

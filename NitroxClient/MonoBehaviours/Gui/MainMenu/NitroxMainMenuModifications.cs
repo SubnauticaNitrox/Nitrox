@@ -1,4 +1,4 @@
-using NitroxClient.MonoBehaviours.Discord;
+﻿using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxClient.Unity.Helper;
@@ -64,6 +64,9 @@ public class NitroxMainMenuModifications : MonoBehaviour
 
         GameObject serverJoin = CloneMainMenuLoadPanel(MainMenuJoinServerPanel.NAME, "Nitrox_JoinServer");
         serverJoin.AddComponent<MainMenuJoinServerPanel>().Setup(savedGamesRef);
+
+        GameObject serverPasswordEnter = CloneMainMenuLoadPanel(MainMenuEnterPasswordPanel.NAME, "Nitrox_JoinServerPasswordHeader");
+        serverPasswordEnter.AddComponent<MainMenuEnterPasswordPanel>().Setup(savedGamesRef);
 
         GameObject serverList = CloneMainMenuLoadPanel(MainMenuServerListPanel.NAME, "Nitrox_Multiplayer");
         serverList.AddComponent<MainMenuServerListPanel>().Setup(savedGamesRef);
