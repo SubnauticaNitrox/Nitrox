@@ -84,14 +84,14 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         buttonLeft.transform.localPosition = new Vector3(-285, 40, 0);
         buttonLeft.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Cancel");
         Button cancelButton = buttonLeft.GetComponent<Button>();
-        cancelButton.onClick.RemoveAllListeners();
+        cancelButton.onClick = new Button.ButtonClickedEvent();
         cancelButton.onClick.AddListener(OnCancelClick);
 
         //Prepares join button
         buttonRight.transform.localPosition = new Vector3(-115, 40, 0);
         buttonRight.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Join");
         Button joinButton = buttonRight.GetComponent<Button>();
-        joinButton.onClick.RemoveAllListeners();
+        joinButton.onClick = new Button.ButtonClickedEvent();
         joinButton.onClick.AddListener(OnJoinClick);
 
         selectableItems = [inputField, colorPicker.gameObject, saturationSlider.gameObject, buttonLeft, buttonRight];

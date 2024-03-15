@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using FMODUnity;
 using NitroxClient.Unity.Helper;
@@ -27,13 +27,12 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
 
         GameObject inputFieldRef = GameObject.Find("/Menu canvas/Panel/MainMenu/RightSide/Home/EmailBox/InputField");
         GameObject inputFieldBlueprint = Instantiate(inputFieldRef, transform, false);
+
         inputFieldBlueprint.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 40);
         TMP_InputField inputFieldBlueprintInput = inputFieldBlueprint.GetComponent<TMP_InputField>();
         inputFieldBlueprintInput.characterValidation = TMP_InputField.CharacterValidation.None;
-        inputFieldBlueprintInput.onEndEdit = new TMP_InputField.SubmitEvent();
         inputFieldBlueprintInput.onSubmit = new TMP_InputField.SubmitEvent();
         inputFieldBlueprintInput.onSubmit.AddListener(_ => { SelectItemInDirection(0, 1); });
-        inputFieldBlueprintInput.onValueChanged = new TMP_InputField.OnChangeEvent();
 
         GameObject serverName = Instantiate(inputFieldBlueprint, transform, false);
         serverName.transform.localPosition = new Vector3(-160, 300, 0);
@@ -65,7 +64,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         confirmButton.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(200, 40);
         confirmButton.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_AddServer_Confirm");
         Button confirmButtonButton = confirmButton.RequireTransform("NewGameButton").GetComponent<Button>();
-        confirmButtonButton.onClick.RemoveAllListeners();
+        confirmButtonButton.onClick = new Button.ButtonClickedEvent();
         confirmButtonButton.onClick.AddListener(SaveServer);
 
         GameObject backButton = Instantiate(multiplayerButtonRef, transform, false);
@@ -73,7 +72,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         backButton.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(200, 40);
         backButton.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Cancel");
         Button backButtonButton = backButton.RequireTransform("NewGameButton").GetComponent<Button>();
-        backButtonButton.onClick.RemoveAllListeners();
+        backButtonButton.onClick = new Button.ButtonClickedEvent();
         backButtonButton.onClick.AddListener(OnBack);
 
         selectableItems = [serverName, serverAddress, serverPort, confirmButton, backButton];

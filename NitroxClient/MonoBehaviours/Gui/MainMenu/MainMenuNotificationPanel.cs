@@ -76,7 +76,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         confirmObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(200, 40);
         confirmObject.GetComponentInChildren<TextMeshProUGUI>().text = Language.main.Get("Nitrox_OK");
         confirmButton = confirmObject.RequireTransform("NewGameButton").GetComponent<Button>();
-        confirmButton.onClick.RemoveAllListeners();
+        confirmButton.onClick = new Button.ButtonClickedEvent();
         confirmButton.onClick.AddListener(() =>
         {
             continuationAction?.Invoke();

@@ -248,7 +248,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         txt.GetComponent<TextMeshProUGUI>().text = "Nitrox_AddServer";
 
         Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
-        multiplayerButtonButton.onClick.RemoveAllListeners();
+        multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
         multiplayerButtonButton.onClick.AddListener(OpenAddServerGroup);
     }
 

@@ -36,7 +36,7 @@ public class MainMenuServerButton : MonoBehaviour
         Destroy(tmp.GetComponent<TranslationLiveUpdate>());
 
         Button multiplayerJoinButton = newGameButtonTransform.GetComponent<Button>();
-        multiplayerJoinButton.onClick.RemoveAllListeners();
+        multiplayerJoinButton.onClick = new Button.ButtonClickedEvent();
         multiplayerJoinButton.onClick.AddListener(OnJoinButtonClicked);
 
         gameObject.AddComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = confirmButtonLegendData;
@@ -46,7 +46,7 @@ public class MainMenuServerButton : MonoBehaviour
         {
             GameObject delete = Instantiate(deleteButtonRef, transform, false);
             Button deleteButtonButton = delete.GetComponent<Button>();
-            deleteButtonButton.onClick.RemoveAllListeners();
+            deleteButtonButton.onClick = new Button.ButtonClickedEvent();
             deleteButtonButton.onClick.AddListener(RequestDelete);
         }
     }

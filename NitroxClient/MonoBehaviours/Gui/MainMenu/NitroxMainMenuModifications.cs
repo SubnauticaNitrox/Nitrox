@@ -1,4 +1,4 @@
-﻿using NitroxClient.MonoBehaviours.Discord;
+using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxClient.Unity.Helper;
@@ -39,7 +39,7 @@ public class NitroxMainMenuModifications : MonoBehaviour
         buttonText.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
 
         Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
-        showLoadedMultiplayerButton.onClick.RemoveAllListeners();
+        showLoadedMultiplayerButton.onClick = new Button.ButtonClickedEvent();
         showLoadedMultiplayerButton.onClick.AddListener(ShowMultiplayerServerList);
 
         GameObject savedGamesRef = rightSide.gameObject.RequireGameObject("SavedGames");
