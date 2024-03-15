@@ -74,7 +74,7 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
 
     private static void OnCancelClick()
     {
-        JoinServerBackend.Instance.StopMultiplayerClient();
+        JoinServerBackend.StopMultiplayerClient();
         MainMenuRightSide.main.OpenGroup(MainMenuServerListPanel.NAME);
     }
 

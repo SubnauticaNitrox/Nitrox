@@ -109,12 +109,12 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             return;
         }
 
-        JoinServerBackend.Instance.RequestSessionReservation(playerName, colorPicker.currentColor);
+        JoinServerBackend.RequestSessionReservation(playerName, colorPicker.currentColor);
     }
 
     private static void OnCancelClick()
     {
-        JoinServerBackend.Instance.StopMultiplayerClient();
+        JoinServerBackend.StopMultiplayerClient();
         MainMenuRightSide.main.OpenGroup(MainMenuServerListPanel.NAME);
     }
 

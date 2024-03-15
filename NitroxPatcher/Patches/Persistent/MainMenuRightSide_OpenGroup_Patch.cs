@@ -14,7 +14,7 @@ public partial class MainMenuRightSide_OpenGroup_Patch : NitroxPatch, IPersisten
         // Stopping the client if we leave the joining process
         if (target is not (MainMenuJoinServerPanel.NAME or MainMenuEnterPasswordPanel.NAME or MainMenuNotificationPanel.NAME))
         {
-            JoinServerBackend.Instance.StopMultiplayerClient();
+            JoinServerBackend.StopMultiplayerClient();
         }
     }
 }

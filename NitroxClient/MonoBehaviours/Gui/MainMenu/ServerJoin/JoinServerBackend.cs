@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
@@ -14,86 +15,18 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 
-public class JoinServerBackend : MonoBehaviour
+public static class JoinServerBackend
 {
-    private static JoinServerBackend instance;
+    private static PlayerPreferenceManager preferencesManager;
+    private static PlayerPreference activePlayerPreference;
+    private static IMultiplayerSession multiplayerSession;
 
-    public static JoinServerBackend Instance
-    {
-        get
-        {
-            if (!instance)
-            {
-                GameObject persistentGameobject = GameObject.Find("Nitrox");
-                instance = persistentGameobject.EnsureComponent<JoinServerBackend>();
-            }
-            return instance;
-        }
-    }
+    private static GameObject multiplayerClient;
 
-    private PlayerPreferenceManager preferencesManager;
-    private PlayerPreference activePlayerPreference;
-    private IMultiplayerSession multiplayerSession;
+    private static string serverIp;
+    private static int serverPort;
 
-    private string serverIp;
-    private int serverPort;
-
-    public async Task ShowAsync(string ip, int port)
-    {
-        serverIp = ip;
-        serverPort = port;
-        NitroxServiceLocator.BeginNewLifetimeScope();
-
-        preferencesManager = NitroxServiceLocator.LocateService<PlayerPreferenceManager>();
-        activePlayerPreference = preferencesManager.GetPreference(serverIp);
-
-        multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
-
-        gameObject.SetActive(true);
-        await StartMultiplayerClientAsync();
-    }
-
-    private GameObject multiplayerClient;
-
-    private async Task StartMultiplayerClientAsync()
-    {
-        if (!multiplayerClient)
-        {
-            multiplayerClient = new GameObject("Multiplayer Client");
-            multiplayerClient.AddComponent<Multiplayer>();
-            multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
-        }
-
-        try
-        {
-            await multiplayerSession.ConnectAsync(serverIp, serverPort);
-        }
-        catch (ClientConnectionFailedException ex)
-        {
-            Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
-            string msg = $"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}";
-
-            if (serverIp.Equals("127.0.0.1"))
-            {
-                if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
-                {
-                    Log.Error("No server process was found while address was 127.0.0.1");
-                    msg += $"\n{Language.main.Get("Nitrox_StartServer")}";
-                }
-                else
-                {
-                    Log.Error(ex);
-                    msg += $"\n{Language.main.Get("Nitrox_FirewallInterfering")}";
-                }
-            }
-
-            Log.InGame(msg);
-            StopMultiplayerClient(msg);
-            MainMenuNotificationPanel.ShowMessage(msg, MainMenuServerListPanel.NAME);
-        }
-    }
-
-    public void RequestSessionReservation(string playerName, Color playerColor)
+    public static void RequestSessionReservation(string playerName, Color playerColor)
     {
         preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, playerColor));
 
@@ -103,7 +36,7 @@ public class JoinServerBackend : MonoBehaviour
         multiplayerSession.RequestSessionReservation(new PlayerSettings(playerColor.ToDto()), authenticationContext);
     }
 
-    private void SessionConnectionStateChangedHandler(IMultiplayerSessionConnectionState state)
+    private static void SessionConnectionStateChangedHandler(IMultiplayerSessionConnectionState state)
     {
         switch (state.CurrentStage)
         {
@@ -140,7 +73,7 @@ public class JoinServerBackend : MonoBehaviour
                 Multiplayer.SubnauticaLoadingStarted();
                 IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
-                StartCoroutine(startNewGame);
+                UWE.CoroutineHost.StartCoroutine(startNewGame);
                 LoadingScreenVersionText.Initialize();
 
                 break;
@@ -167,26 +100,71 @@ public class JoinServerBackend : MonoBehaviour
         }
     }
 
-    // TODO: Maybe move to MainMenuServerListPanel OnEnabled
-    /// <param name="error"> If set to something it will display the message with <see cref="MainMenuNotificationPanel"/> after stopping the client</param>
-    public void StopMultiplayerClient(string error = null)
+    [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
+    public static async Task StartMultiplayerClientAsync(string ip, int port)
+    {
+        serverIp = ip;
+        serverPort = port;
+        NitroxServiceLocator.BeginNewLifetimeScope();
+
+        preferencesManager = NitroxServiceLocator.LocateService<PlayerPreferenceManager>();
+        activePlayerPreference = preferencesManager.GetPreference(serverIp);
+        multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+
+        if (!multiplayerClient)
+        {
+            multiplayerClient = new GameObject("Nitrox Multiplayer Client");
+            multiplayerClient.AddComponent<Multiplayer>();
+            multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
+        }
+
+        try
+        {
+            await multiplayerSession.ConnectAsync(serverIp, serverPort);
+        }
+        catch (ClientConnectionFailedException ex)
+        {
+            Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
+            string msg = $"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}";
+
+            if (serverIp.Equals("127.0.0.1"))
+            {
+                if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
+                {
+                    Log.Error("No server process was found while address was 127.0.0.1");
+                    msg += $"\n{Language.main.Get("Nitrox_StartServer")}";
+                }
+                else
+                {
+                    Log.Error(ex);
+                    msg += $"\n{Language.main.Get("Nitrox_FirewallInterfering")}";
+                }
+            }
+
+            Log.InGame(msg);
+            StopMultiplayerClient();
+            MainMenuNotificationPanel.ShowMessage(msg, MainMenuServerListPanel.NAME);
+        }
+    }
+
+    [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
+    public static void StopMultiplayerClient()
     {
         if (!multiplayerClient || !Multiplayer.Main)
         {
             return;
         }
 
-        Multiplayer.Main.StopCurrentSession();
-        Destroy(multiplayerClient);
-        multiplayerClient = null;
-        if (multiplayerSession != null)
+        if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
         {
-            multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
+            multiplayerSession.Disconnect();
         }
+        multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
 
-        if (error != null)
-        {
-            MainMenuNotificationPanel.ShowMessage($"Connection broke\n+{error}", MainMenuServerListPanel.NAME);
-        }
+        Multiplayer.Main.StopCurrentSession();
+        NitroxServiceLocator.EndCurrentLifetimeScope(); //Always do this last.
+
+        Object.Destroy(multiplayerClient);
+        multiplayerClient = null;
     }
 }

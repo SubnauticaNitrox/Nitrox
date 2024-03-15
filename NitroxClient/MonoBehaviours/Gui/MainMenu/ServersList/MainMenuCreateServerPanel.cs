@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using FMODUnity;
 using NitroxClient.Unity.Helper;
@@ -132,7 +132,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
     {
         if (selectedItem.TryGetComponentInChildren(out TMP_InputField inputField))
         {
-            inputField.Select();
+            inputField.ActivateInputField();
         }
 
         if (selectedItem.TryGetComponentInChildren(out Button button))
@@ -172,6 +172,11 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
             selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuServerListPanel.SelectedSprite;
         }
 
+        if (!EventSystem.current.alreadySelecting)
+        {
+            EventSystem.current.SetSelectedGameObject(selectedItem);
+        }
+
         selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.black);
         RuntimeManager.PlayOneShot(MainMenuServerListPanel.HoverSound.path);
     }
@@ -185,12 +190,17 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
 
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {
+            selectedInputField.DeactivateInputField();
             selectedInputField.ReleaseSelection();
-            EventSystem.current.SetSelectedGameObject(null);
         }
         else
         {
             selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuServerListPanel.NormalSprite;
+        }
+
+        if (!EventSystem.current.alreadySelecting)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.white);
