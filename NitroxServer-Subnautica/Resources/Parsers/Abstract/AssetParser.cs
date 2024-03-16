@@ -1,28 +1,45 @@
-﻿using System.IO;
+using System;
+using System.IO;
 using AssetsTools.NET.Extra;
+using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
-public abstract class AssetParser
+public abstract class AssetParser : IDisposable
 {
-    protected static readonly string rootPath;
-    protected static readonly AssetsManager assetsManager;
+    protected AssetsManager assetsManager;
+    protected string rootPath;
 
-    private static readonly ThreadSafeMonoCecilTempGenerator monoGen;
-
-    static AssetParser()
+    protected AssetParser()
     {
         rootPath = ResourceAssetsParser.FindDirectoryContainingResourceAssets();
-        assetsManager = new AssetsManager();
-        assetsManager.LoadClassPackage(Path.Combine("Resources", "classdata.tpk"));
+        ThreadSafeMonoCecilTempGenerator monoGen = new(Path.Combine(rootPath, "Managed"));
+        assetsManager = new AssetsManager()
+        {
+            MonoTempGenerator = monoGen
+        };
+
+        string classDataPath = Path.Combine(NitroxUser.LauncherPath ?? ".", "Resources", "classdata.tpk");
+
+        assetsManager.LoadClassPackage(classDataPath);
         assetsManager.LoadClassDatabaseFromPackage("2019.4.36f1");
-        assetsManager.SetMonoTempGenerator(monoGen = new ThreadSafeMonoCecilTempGenerator(Path.Combine(rootPath, "Managed")));
     }
 
-    public static void Dispose()
+    protected AssetParser(AssetsManager assetsManager)
     {
-        assetsManager.UnloadAll(true);
-        monoGen.Dispose();
+        Validate.NotNull(assetsManager);
+        this.assetsManager = assetsManager;
+    }
+
+    protected virtual void Clear()
+    {
+        assetsManager.UnloadAll(unloadClassData: false);
+    }
+
+    public virtual void Dispose()
+    {
+        assetsManager.UnloadAll(unloadClassData: true);
+        assetsManager = null;
     }
 }

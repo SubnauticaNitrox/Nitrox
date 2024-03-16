@@ -11,12 +11,14 @@ public class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, World
 {
     public override Dictionary<string, WorldEntityInfo> ParseFile()
     {
-        Dictionary<string, WorldEntityInfo> worldEntitiesByClassId = new();
+        Dictionary<string, WorldEntityInfo> worldEntitiesByClassId = [];
 
         AssetFileInfo assetFileInfo = resourceFile.GetAssetInfo(assetsManager, "WorldEntityData", AssetClassID.MonoBehaviour);
         AssetTypeValueField assetValue = assetsManager.GetBaseField(resourceInst, assetFileInfo);
 
-        foreach (AssetTypeValueField info in assetValue["infos"])
+        AssetTypeValueField worldEntityArray = assetValue["infos"]["Array"];
+
+        foreach (AssetTypeValueField info in worldEntityArray)
         {
             WorldEntityInfo entityData = new()
             {
@@ -31,7 +33,6 @@ public class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, World
             worldEntitiesByClassId.Add(entityData.classId, entityData);
         }
 
-        assetsManager.UnloadAll();
         return worldEntitiesByClassId;
     }
 }
