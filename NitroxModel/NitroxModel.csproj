@@ -1,19 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
-    <!-- .NET Framework polyfills for modern C# lang support -->
-    <ItemGroup>
-        <PackageReference Include="IndexRange" Version="1.0.2" />
-        <PackageReference Include="System.Memory" Version="4.5.5" />
-    </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.9.4" />
-        <PackageReference Include="LiteNetLib" Version="1.0.1.1" />
+        <PackageReference Include="LiteNetLib" Version="1.2.0" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
         <PackageReference Include="Mono.Nat" Version="3.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

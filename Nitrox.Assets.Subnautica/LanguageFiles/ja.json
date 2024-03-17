@@ -43,7 +43,7 @@
     "Nitrox_Mute": "{PLAYER}をミュートにする",
     "Nitrox_MuteQuestion": "{PLAYER}をミュートにしますか？",
     "Nitrox_MutedPlayer": "{PLAYER}ミュート状態",
-    "Nitrox_OutOfDateClient": "現在あなたがインストールしているNitroxバージョンが古いようです。サーバーのバージョン:{serverVersion},あなたがインストールしているバージョン:{localVersion}",
+    "Nitrox_OutOfDateClient": "現在あなたがインストールしているNitroxバージョンが古いようです。サーバーのバージョン:{serverVersion},あなたがインストールしているバージョン:{localVersion}。",
     "Nitrox_OutOfDateServer": "サーバーのNitroxバージョンが古いようです。サーバー管理者にサーバーのアップグレードを要求するか、Nitroxのバージョンをダウングレードしてください。サーバーのバージョン:{severVersion},あなたがインストールしているバージョン:{localVersion}",
     "Nitrox_PlayerColor": "プレイヤーの色",
     "Nitrox_PlayerDied": "{PLAYER}は死亡した",

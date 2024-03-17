@@ -126,15 +126,16 @@ public class TimeKeeper
         switch (type)
         {
             case TimeModification.DAY:
-                skipAmount = ElapsedSeconds + 1200 - ElapsedSeconds % 1200 + 600;
+                skipAmount = 1200 - (ElapsedSeconds % 1200) + 600;
                 break;
             case TimeModification.NIGHT:
-                skipAmount = ElapsedSeconds + 1200 - ElapsedSeconds % 1200;
+                skipAmount = 1200 - (ElapsedSeconds % 1200);
                 break;
             case TimeModification.SKIP:
-                skipAmount = ElapsedSeconds + 600 - ElapsedSeconds % 600;
+                skipAmount = 600 - (ElapsedSeconds % 600);
                 break;
         }
+        
         if (skipAmount > 0)
         {
             ElapsedSeconds += skipAmount;

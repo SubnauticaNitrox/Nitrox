@@ -1,14 +1,16 @@
 using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -231,5 +233,12 @@ public class Vehicles
             nitroxEntity.Remove();
             UnityEngine.Object.DestroyImmediate(nitroxEntity);
         }
+    }
+
+    public static VehicleWorldEntity BuildVehicleWorldEntity(GameObject constructedObject, NitroxId constructedObjectId, TechType techType, NitroxId constructorId = null)
+    {
+        VehicleWorldEntity vehicleEntity = new(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), string.Empty, false, constructedObjectId, techType.ToDto(), null);
+        VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
+        return vehicleEntity;
     }
 }

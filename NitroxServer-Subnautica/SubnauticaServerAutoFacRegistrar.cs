@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Autofac;
+using NitroxModel;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
@@ -26,7 +28,9 @@ namespace NitroxServer_Subnautica
         {
             base.RegisterDependencies(containerBuilder);
 
-            containerBuilder.Register(c => SimulationWhitelist.ForServerSpawned).SingleInstance();
+            containerBuilder.RegisterType<SimulationWhitelist>()
+                            .As<ISimulationWhitelist>()
+                            .SingleInstance();
             containerBuilder.Register(c => new SubnauticaServerProtoBufSerializer(
                                           "Assembly-CSharp",
                                           "Assembly-CSharp-firstpass",
@@ -50,15 +54,14 @@ namespace NitroxServer_Subnautica
 
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
             containerBuilder.Register(c => prefabFactory).As<IUwePrefabFactory>().SingleInstance();
-            containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
-            {
-                [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),
-                [TechType.Reefback.ToDto()] = new ReefbackBootstrapper()
-            }).SingleInstance();
+            containerBuilder.RegisterType<SubnauticaEntityBootstrapperManager>()
+                            .As<IEntityBootstrapperManager>()
+                            .SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaMap>().As<IMap>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EntityRegistry>().AsSelf().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SubnauticaWorldModifier>().As<IWorldModifier>().InstancePerLifetimeScope();
+            containerBuilder.Register(c => new FMODWhitelist(GameInfo.Subnautica)).InstancePerLifetimeScope();
         }
     }
 }
