@@ -1,8 +1,8 @@
 ﻿using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.Packets;
 using UnityEngine;
 using UWE;
 using Terrain = NitroxClient.GameLogic.Terrain;
@@ -21,7 +21,7 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
             if (subRoot.isCyclops)
             {
                 // Reversing calculations from PlayerMovementBroadcaster.Update()
-                Vector3 position = (subRoot.transform.rotation * packet.DestinationTo.ToUnity()) + subRoot.transform.position;
+                Vector3 position = subRoot.transform.rotation * packet.DestinationTo.ToUnity() + subRoot.transform.position;
 
                 Player.main.SetPosition(position);
                 Player.main.SetCurrentSub(subRoot);
@@ -30,17 +30,28 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
 
             Player.main.SetCurrentSub(subRoot);
         }
-        
-        Player.main.SetPosition(packet.DestinationTo.ToUnity());
-        // Freeze the player while he's loading its new position
-        Player.main.cinematicModeActive = true;
-        try
+
+        Vehicle currentVehicle = Player.main.currentMountedVehicle;
+        // Check to make sure the player is in a vehicle
+        if (currentVehicle != null)
         {
-            CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
-        } catch (Exception e)
+            currentVehicle.TeleportVehicle(packet.DestinationTo.ToUnity(), currentVehicle.transform.rotation);
+        }
+        else
         {
-            Player.main.cinematicModeActive = false;
-            Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
+            Player.main.SetPosition(packet.DestinationTo.ToUnity());
+            // Freeze the player while he's loading its new position
+            Player.main.cinematicModeActive = true;
+            try
+            {
+                CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
+            }
+            catch (Exception e)
+            {
+                // Freeze the player while he's loading its new position
+                Player.main.cinematicModeActive = false;
+                Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
+            }
         }
     }
 }
