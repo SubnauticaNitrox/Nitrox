@@ -1,9 +1,11 @@
 using System.Windows.Forms;
 using System;
+using System.Diagnostics;
 namespace NitroxModel
 {
     public class DisplayStatusCodes
     {
+        
         // Counter variables to check if the same code is happening over and over again to mark it as fatal
         private static int repeatCodeCountDisplay = 0;
         private static StatusCode lastCodeDisplay = StatusCode.SUCCESS;
@@ -38,33 +40,33 @@ namespace NitroxModel
         }
         public static void DisplayStatusCode(StatusCode statusCode, bool fatal, string exception)
         {
-            // If the statusCode is the same as the last one we displayed, increase the repeated codes counter
-            if (statusCode == lastCodeDisplay && statusCode != StatusCode.CONNECTION_FAIL_CLIENT)
-            {
-                repeatCodeCountDisplay++;
-            }
-            // If the statusCode is not the same, reset the repeated codes counter
-            else
-            {
-                repeatCodeCountDisplay = 0;
-            }
-            // If the same code is repeated 3 times in a row(including this code), then the error is fatal
-            if (repeatCodeCountDisplay == 2)
-            {
-                fatal = true;
-            }
-            // Set the last statusCode variable for the next time the function runs
-            lastCodeDisplay = statusCode;
-            // Display a popup message box using CustomMessageBox.cs which has most of the buttons and strings filled in with a placeholder for the statusCode
-            CustomMessageBox customMessage = new(statusCode, exception);
-            customMessage.StartPosition = FormStartPosition.CenterParent;
-            customMessage.ShowDialog();
-            // If the error is fatal, exit nitrox
-            if (fatal)
-            {
-                Environment.Exit(1);
-            }
-            // If the error is not fatal, continue running
+                // If the statusCode is the same as the last one we displayed, increase the repeated codes counter
+                if (statusCode == lastCodeDisplay && statusCode != StatusCode.CONNECTION_FAIL_CLIENT)
+                {
+                    repeatCodeCountDisplay++;
+                }
+                // If the statusCode is not the same, reset the repeated codes counter
+                else
+                {
+                    repeatCodeCountDisplay = 0;
+                }
+                // If the same code is repeated 3 times in a row(including this code), then the error is fatal
+                if (repeatCodeCountDisplay == 2)
+                {
+                    fatal = true;
+                }
+                // Set the last statusCode variable for the next time the function runs
+                lastCodeDisplay = statusCode;
+                // Display a popup message box using CustomMessageBox.cs which has most of the buttons and strings filled in with a placeholder for the statusCode
+                CustomMessageBox customMessage = new(statusCode, exception);
+                customMessage.StartPosition = FormStartPosition.CenterParent;
+                customMessage.ShowDialog();
+                // If the error is fatal, exit nitrox
+                if (fatal)
+                {
+                    // Environment.Exit(1);
+                }
+                // If the error is not fatal, continue running
         }
 
         // Print the statusCode to the server console(only for statusCodes that are due to a server-side crash)

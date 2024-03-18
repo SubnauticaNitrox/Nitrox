@@ -65,12 +65,10 @@ public static class Main
 
         if (nitroxLauncherDir.Value == null)
         {
-            DisplayStatusCode(StatusCode.INVALID_INSTALL, true, "Nitrox will not load because launcher path was not provided.");
+            Console.WriteLine("Nitrox will not load due to the nitrox launcher path not being set");
             return;
         }
-
         Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
-
         Init();
     }
 
@@ -141,7 +139,8 @@ public static class Main
 
         if (!File.Exists(dllPath))
         {
-            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Nitrox dll missing: {dllPath}");
+            // Cannot use DisplayStatusCode since the assembly has not yet been loaded
+            Console.WriteLine($"Nitrox dll missing: {dllPath}");
         }
         return Assembly.LoadFile(dllPath);
     }

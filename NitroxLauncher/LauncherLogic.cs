@@ -19,7 +19,6 @@ using NitroxLauncher.Models.Utils;
 using System.Windows.Controls;
 using System.Diagnostics;
 using static NitroxModel.DisplayStatusCodes;
-using OneDriveLib;
 using Oculus.Platform;
 using System.Linq;
 namespace NitroxLauncher
@@ -49,13 +48,16 @@ namespace NitroxLauncher
         {
             Application.Current.MainWindow?.Hide();
 
-            try
+            if (nitroxEntryPatch?.IsApplied == true)
             {
-                nitroxEntryPatch.Remove();
-            }
-            catch (Exception ex)
-            {
-                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, ex.ToString() + "Error while disposing the launcher");
+                try
+                {
+                    nitroxEntryPatch.Remove();
+                }
+                catch (Exception ex)
+                {
+                    DisplayStatusCode(StatusCode.INJECTION_FAIL, true, ex.ToString() + "Unable to remove the Nitrox DLL injection");
+                }
             }
 
             gameProcess?.Dispose();
@@ -206,13 +208,13 @@ namespace NitroxLauncher
             if (string.IsNullOrWhiteSpace(Config.SubnauticaPath) || !Directory.Exists(Config.SubnauticaPath))
             {
                 NavigateTo<OptionPage>();
-                throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, "Location of Subnautica is unknown. Set the path to it in settings.");
             }
 
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
-                throw new Exception("An instance of Subnautica is already running");
+                DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, false, "An instance of Subnautica is already running");
             }
 #endif
             nitroxEntryPatch.Remove();
