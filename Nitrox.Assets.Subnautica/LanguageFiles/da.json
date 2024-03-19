@@ -29,7 +29,7 @@
     "Nitrox_JoinServerPassword": "Adgangskode:",
     "Nitrox_JoinServerPasswordHeader": "Server adgangskode påkrævet",
     "Nitrox_JoiningSession": "Deltager i spil",
-    "Nitrox_Kick": "Smid {SPILLER} ud",
+    "Nitrox_Kick": "Smid {PLAYER} ud",
     "Nitrox_KickQuestion": "Smid {PLAYER} ud?",
     "Nitrox_LaunchGame": "Starter spil…",
     "Nitrox_LoadingScreenWarn": "Forvent spil-ødelæggene fejl",

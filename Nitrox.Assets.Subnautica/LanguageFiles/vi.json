@@ -26,7 +26,7 @@
     "Nitrox_FirewallInterfering": "Tường lửa của bạn có thể đang can thiệp",
     "Nitrox_HideIp": "Ẩn địa chỉ IP",
     "Nitrox_HidePing": "Ẩn ping",
-    "Nitrox_IntroWaitingPartner": "Đang đợi người tham gia\\n\\nNhấn {0} để bỏ qua thời gian đợi",
+    "Nitrox_IntroWaitingPartner": "Đang đợi người tham gia\n\nNhấn {0} để bỏ qua thời gian đợi",
     "Nitrox_InvalidUserName": "Hãy nhập tên hợp lệ\n\nTên người chơi không thể chứa khoảng cách hoặc ký tự không rõ\nCác ký tự cho phép: A-Z a-z 0-9 _.-\nĐộ dài: [3, 25]",
     "Nitrox_Join": "Gia nhập",
     "Nitrox_JoinServerFailed": "Không thể kết nối tới máy chủ",

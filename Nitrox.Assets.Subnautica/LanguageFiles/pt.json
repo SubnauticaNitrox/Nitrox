@@ -26,7 +26,7 @@
     "Nitrox_FirewallInterfering": "Parece que as configurações da tua firewall estão interferindo",
     "Nitrox_HideIp": "Ocultar endereços IP",
     "Nitrox_HidePing": "Ocultar Marcação",
-    "Nitrox_IntroWaitingPartner": "Aguardando um parceiro entrar\\n\\nPressione {0} para pular espera",
+    "Nitrox_IntroWaitingPartner": "Aguardando um parceiro entrar\n\nPressione {0} para pular espera",
     "Nitrox_InvalidUserName": "Por favor insira um nome de jogador válido.\n\nNão pode conter nenhum espaço ou caracteres duvidosos\nCaracteres permitidos: A-Z a-z 0-9 _ . -\nComprimento: [3, 25]",
     "Nitrox_Join": "Entrar",
     "Nitrox_JoinServerFailed": "Não foi possível entrar no servidor",
