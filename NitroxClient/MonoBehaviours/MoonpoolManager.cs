@@ -10,7 +10,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours;
 
 /// <summary>
@@ -34,7 +34,7 @@ public class MoonpoolManager : MonoBehaviour
 
         if (!TryGetComponent(out @base))
         {
-            Log.Error($"Tried adding a {nameof(MoonpoolManager)} to a GameObject that isn't a bases, deleting it.");
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"Tried adding a {nameof(MoonpoolManager)} to a GameObject that isn't a base, deleting it.");
             Destroy(this);
             return;
         }

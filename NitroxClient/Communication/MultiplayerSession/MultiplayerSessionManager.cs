@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -8,7 +8,7 @@ using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession
 {
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
@@ -62,18 +62,18 @@ namespace NitroxClient.Communication.MultiplayerSession
             switch (nitroxVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
                 case -1:
-                    Log.Error($"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
                     Log.InGame(Language.main.Get("Nitrox_OutOfDateClient")
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
+                    DisplayStatusCode(StatusCode.VERSION_MISMATCH, false, $"Client is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
                     return;
                 case 1:
-                    Log.Error($"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
                     Log.InGame(Language.main.Get("Nitrox_OutOfDateServer")
                                            .Replace("{serverVersion}", SessionPolicy.NitroxVersionAllowed.ToString())
                                            .Replace("{localVersion}", localVersion.ToString()));
                     CurrentState.Disconnect(this);
+                    DisplayStatusCode(StatusCode.VERSION_MISMATCH, false, $"Server is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Client: {localVersion}");
                     return;
             }
 
@@ -118,6 +118,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 CurrentState.Disconnect(this);
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "Client has been disconnected");
             }
         }
 

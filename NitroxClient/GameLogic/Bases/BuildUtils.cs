@@ -11,7 +11,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Bases;
 
 public static class BuildUtils
@@ -106,7 +106,7 @@ public static class BuildUtils
             }
             else
             {
-                Log.Error($"Couldn't find the module spawned by {baseGhost}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find the module spawned by {baseGhost}");
                 moduleObject = null;
                 return false;
             }
@@ -152,7 +152,7 @@ public static class BuildUtils
         {
             if (constructableBase.techType != TechType.BaseWaterPark)
             {
-                Log.Error($"No face could be found for ghost {baseGhost}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"No face could be found for ghost {baseGhost}");
             }
             moduleObject = null;
             return false;
@@ -176,7 +176,7 @@ public static class BuildUtils
                 moduleObject = mapRoomFunctionality.gameObject;
                 return true;
             }
-            Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
             moduleObject = null;
             return false;
         }
@@ -199,6 +199,7 @@ public static class BuildUtils
         // When a WaterPark is merged with another one, we won't find its module but we don't care about that
         if (!isWaterPark)
         {
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, "Couldn't find the module's GameObject of built interior piece when transferring its NitroxEntity to the module.");
             Log.Error("Couldn't find the module's GameObject of built interior piece when transferring its NitroxEntity to the module.");
         }
 

@@ -4,7 +4,7 @@ using NitroxClient.Unity.Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours.Gui.HUD;
 
 public class RemotePlayerVitals : MonoBehaviour
@@ -43,7 +43,7 @@ public class RemotePlayerVitals : MonoBehaviour
             vitals.CreateStats(vitals.canvas);
         } catch (Exception ex)
         {
-            Log.Error(ex, $"Encountered an error while creating vitals for player {remotePlayer.PlayerId}, destroying them.");
+            DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, ex.ToString() + $"Encountered an error while creating vitals for player {remotePlayer.PlayerId}, destroying them.");
             Destroy(vitals.gameObject);
             return null;
         }
@@ -108,7 +108,7 @@ public class RemotePlayerVitals : MonoBehaviour
         uGUI uGUI = uGUI.main;
         if (!uGUI)
         {
-            throw new NullReferenceException($"[{nameof(RemotePlayerVitals)}] Couldn't find uGUI main instance when creating vitals");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(RemotePlayerVitals)}] Couldn't find uGUI main instance when creating vitals");
         }
         healthBar = CreateBar(uGUI.GetComponentInChildren<uGUI_HealthBar>(true), canvas);
         oxygenBar = CreateBar(uGUI.GetComponentInChildren<uGUI_OxygenBar>(true), canvas);
@@ -267,7 +267,7 @@ public class RemotePlayerVitals : MonoBehaviour
         {
             if (isDisposed)
             {
-                throw new ObjectDisposedException("Tried to update visual on a disposed player stat.");
+                DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, true, "Tried to update visual on a disposed player stat.");
             }
         }
     }

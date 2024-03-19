@@ -12,6 +12,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic
 {
@@ -56,13 +57,13 @@ namespace NitroxClient.GameLogic
             Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
             if (!owner.HasValue)
             {
-                Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Unable to find inventory container with id {containerId} for {item.name}");
                 return;
             }
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
             if (!opContainer.HasValue)
             {
-                Log.Error($"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
                 return;
             }
 

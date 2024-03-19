@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.IO;
 using NitroxModel.Helper;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Unity.Helper;
 
 public static class AssetBundleLoader
@@ -30,7 +30,7 @@ public static class AssetBundleLoader
             
             if (assetRequest == null)
             {
-                Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
                 yield break;
             }
 
@@ -50,7 +50,7 @@ public static class AssetBundleLoader
 
         if (loadRequest.allAssets == null || loadRequest.allAssets.Length == 0)
         {
-            Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}. It contained no assets");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}. It contained no assets");
             yield break;
         }
 
@@ -68,7 +68,7 @@ public static class AssetBundleLoader
 
         if (!asset)
         {
-            Log.Error($"Instantiated assetBundle ({nitroxAssetBundle.BundleName}) but GameObject is null.");
+            DisplayStatusCode(StatusCode.INJECTION_FAIL, true, $"Instantiated assetBundle ({nitroxAssetBundle.BundleName}) but GameObject is null.");
             yield break;
         }
 

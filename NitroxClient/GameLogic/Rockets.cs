@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic
 {
@@ -30,7 +31,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error($"{nameof(Rockets.RequestRocketLaunch)}: Can't find a NitroxEntity attached to the Rocket: {rocket.name}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"{nameof(Rockets.RequestRocketLaunch)}: Can't find a NitroxEntity attached to the Rocket: {rocket.name}");
             }
         }
 

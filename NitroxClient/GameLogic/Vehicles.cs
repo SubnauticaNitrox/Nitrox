@@ -12,6 +12,7 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic;
 
@@ -69,7 +70,7 @@ public class Vehicles
                         }
                         else
                         {
-                            Log.Error($"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
+                                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
                         }
 
                         break;

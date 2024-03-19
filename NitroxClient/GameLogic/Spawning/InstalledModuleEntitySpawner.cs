@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning;
 
@@ -58,6 +59,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         if (!NitroxEntity.TryGetObjectFrom(entity.ParentId, out parentObject))
         {
             equipment = null;
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Unable to find inventory container with id {entity.Id} for {entity}");
             errorLog = $"Unable to find inventory container with id {entity.Id} for {entity}";
             return false;
         }
@@ -66,6 +68,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         if (!opEquipment.HasValue)
         {
             equipment = null;
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Unable to find equipment container inside {parentObject}");
             errorLog = $"Unable to find equipment container inside {parentObject}";
             return false;
         }

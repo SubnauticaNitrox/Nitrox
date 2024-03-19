@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
@@ -10,7 +10,7 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors
 {
     /// <summary>
@@ -112,7 +112,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 // Looks like the list came in unordered. I've uttered "That shouldn't happen" enough to do sanity checks for what should be impossible.
                 if (packetDamagePointsIndex < damagePointIndexes.Length)
                 {
-                    Log.Error($"[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: {damagePointIndexes[packetDamagePointsIndex]} had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
+                    DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: {damagePointIndexes[packetDamagePointsIndex]} had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
                 }
             }
             else
@@ -141,7 +141,6 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
-
             if (!subRoot.TryGetIdOrWarn(out NitroxId subRootId))
             {
                 return;

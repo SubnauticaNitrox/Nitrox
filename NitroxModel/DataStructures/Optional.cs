@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.DataStructures.Util
 {
     /// <summary>
@@ -97,7 +97,7 @@ namespace NitroxModel.DataStructures.Util
         {
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value), $"Tried to set null on {typeof(Optional<T>)}");
+                DisplayStatusCode(StatusCode.MISSING_FEATURE, true, nameof(value) + $"Tried to set null on {typeof(Optional<T>)}");
             }
 
             return new Optional<T>(value);

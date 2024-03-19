@@ -37,6 +37,9 @@
 
     <ItemGroup>
       <Reference Include="Microsoft.VisualBasic" />
+      <Reference Include="OneDriveLib">
+        <HintPath>..\..\..\Downloads\ODSyncService-master\ODSyncService-master\Binaries\PowerShell\OneDriveLib.dll</HintPath>
+      </Reference>
       <Reference Include="PresentationFramework.Aero2" />
     </ItemGroup>
 

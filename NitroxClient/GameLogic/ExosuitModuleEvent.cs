@@ -3,6 +3,7 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic;
 
@@ -33,7 +34,7 @@ public class ExosuitModuleEvent
         }
         else
         {
-            Log.Error("Cooldown time does not match pickup or punch time");
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Cooldown time does not match pickup or punch time");
             return;
         }
 
@@ -67,7 +68,7 @@ public class ExosuitModuleEvent
                 drillArm.StopEffects();
                 break;
             default:
-                Log.Error($"Drill arm got an arm action he should not get: {armAction}");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Drill arm got an arm action he should not get: {armAction}");
                 break;
         }
     }
@@ -115,7 +116,7 @@ public class ExosuitModuleEvent
 
                 if (!opHitVector.HasValue)
                 {
-                    Log.Error("No vector given that contains the hook direction");
+                    DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "No vector given that contains the hook direction");
                     return;
                 }
 
@@ -125,7 +126,7 @@ public class ExosuitModuleEvent
                 break;
             }
             default:
-                Log.Error($"Grappling arm got an arm action he should not get: {armAction}");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Drill arm got an arm action he should not get: {armAction}");
                 break;
         }
     }
@@ -139,7 +140,7 @@ public class ExosuitModuleEvent
             {
                 if (!opVector.HasValue || !opRotation.HasValue)
                 {
-                    Log.Error("Torpedo arm action shoot: no vector or rotation present");
+                    DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Torpedo arm action shoot: no vector or rotation present");
                     return;
                 }
 
@@ -180,7 +181,7 @@ public class ExosuitModuleEvent
                 torpedoArm.animator.SetBool(useToolAnimation, false);
                 break;
             default:
-                Log.Error($"Torpedo arm got an arm action he should not get: {armAction}");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Torpedo arm got an arm action he should not get: {armAction}");
                 break;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -7,7 +7,7 @@ using System.Security.Principal;
 using Microsoft.Win32;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.OS.Windows.Internal;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Platforms.OS.Windows
 {
     internal class WinFileSystem : FileSystem
@@ -88,6 +88,7 @@ namespace NitroxModel.Platforms.OS.Windows
             }
             catch (UnauthorizedAccessException)
             {
+                DisplayStatusCode(StatusCode.PRIVILEGES_ERR, true, "Nitrox does not have permissions to access the specified file/directory");
                 return false;
             }
         }

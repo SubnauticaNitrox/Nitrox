@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using NitroxModel.Platforms.OS.MacOS;
 using NitroxModel.Platforms.OS.Unix;
 using NitroxModel.Platforms.OS.Windows;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Platforms.OS.Shared
 {
     public abstract class FileSystem
@@ -21,7 +22,7 @@ namespace NitroxModel.Platforms.OS.Shared
                                                                 },
                                                                 LazyThreadSafetyMode.ExecutionAndPublication);
 
-        public virtual IEnumerable<string> ExecutableFileExtensions => throw new NotSupportedException();
+        public virtual IEnumerable<string> ExecutableFileExtensions => throw new NotSupportedException(); 
         public static FileSystem Instance => instance.Value;
         public virtual string TextEditor => throw new NotSupportedException();
 
@@ -37,7 +38,7 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrWhiteSpace(file))
             {
-                throw new ArgumentException("File path must not be null or empty.", nameof(file));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "Missing file path: " + nameof(file));
             }
 
             string editorProgram = GetDefaultPrograms(file).FirstOrDefault() ?? TextEditor;
@@ -96,11 +97,11 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrEmpty(fromPath))
             {
-                throw new ArgumentNullException(nameof(fromPath));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "A path to a file was missing" + nameof(fromPath));
             }
             if (string.IsNullOrEmpty(toPath))
             {
-                throw new ArgumentNullException(nameof(toPath));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "A path to a file was missing" + nameof(toPath));
             }
             // Ensure postfix so that result becomes relative to entire "from" path.
             fromPath = fromPath[fromPath.Length - 1] == Path.DirectorySeparatorChar ? fromPath : fromPath + Path.DirectorySeparatorChar;
@@ -137,12 +138,12 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrWhiteSpace(dir))
             {
-                throw new ArgumentException("Directory must not be null or empty", nameof(dir));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "Invalid directory path" + nameof(dir));
             }
             dir = Path.GetFullPath(dir);
             if (!Directory.Exists(dir))
             {
-                throw new ArgumentException("Path is not a directory", nameof(dir));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "Invalid directory" + nameof(dir));
             }
             // Figure out relative path of output OR use <basename>.zip of directory.
             outputPath = Path.GetFullPath(outputPath ?? dir);
@@ -155,7 +156,7 @@ namespace NitroxModel.Platforms.OS.Shared
             string outZipFullName = Path.Combine(outZipDir, outZipName);
             if (!replaceFile && File.Exists(outZipFullName))
             {
-                throw new IOException($"The file '{outZipFullName}' already exists");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"The file '{outZipFullName}' already exists");
             }
             string[] files = Directory.GetFiles(dir, fileSearchPattern, SearchOption.AllDirectories);
             if (files.Length < 1)
@@ -227,17 +228,18 @@ namespace NitroxModel.Platforms.OS.Shared
                             catch (Exception)
                             {
                                 // ignored
+                                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "An error occured while modifying files");
                             }
                         }
                         catch (Exception ex2)
                         {
-                            Log.Error(ex2, $"Failed to replace file '{source}' with '{target}' which is on another drive");
+                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, ex2 + $"Failed to replace file '{source}' with '{target}' which is on another drive");
                             return false;
                         }
                         break;
                     default:
                         // No special handling implemented for error, abort.
-                        Log.Warn($"Unhandled file replace of '{source}' with '{target}' with HRESULT: 0x{ex.HResult:X}");
+                        DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Unhandled file replace of '{source}' with '{target}' with HRESULT: 0x{ex.HResult:X}");
                         return false;
                 }
             }

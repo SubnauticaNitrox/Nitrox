@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.DataStructures
 {
     public class PriorityQueue<T>
@@ -75,6 +75,7 @@ namespace NitroxModel.DataStructures
             }
             else
             {
+                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "In PriorityQueue.cs: An operation was triggered on a varaible that cold not support it");
                 throw new InvalidOperationException();
             }
         }

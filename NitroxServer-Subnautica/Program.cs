@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,7 +20,7 @@ using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer_Subnautica;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
@@ -30,7 +30,6 @@ public class Program
     private static Lazy<string> gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
-
     private static async Task Main(string[] args)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
@@ -113,7 +112,7 @@ public class Program
 
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
-                throw new Exception("Unable to start server.");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, false, "Unable to start server.");
             }
             else if (cancellationToken.IsCancellationRequested)
             {
@@ -124,6 +123,7 @@ public class Program
                 watch.Stop();
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
+                // Log status codes that can be googled by the user to troubleshoot on their own, hopefully
             }
         }
         finally
@@ -353,7 +353,7 @@ public class Program
         }
         catch (OperationCanceledException ex)
         {
-            Log.Error(ex, "Port availability timeout reached.");
+            PrintStatusCode(StatusCode.PORT_NOT_LISTENING, true, "Port availability timeout reached." + ex.ToString());
             throw;
         }
     }
@@ -362,7 +362,7 @@ public class Program
     {
         if (e.ExceptionObject is Exception ex)
         {
-            Log.Error(ex);
+            PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, ex.ToString());
         }
 
         if (!Environment.UserInteractive || Console.In == StreamReader.Null)
@@ -375,7 +375,7 @@ public class Program
         {
             return;
         }
-
+        PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, e.ToString());
         Log.Info("Press L to open log file before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 

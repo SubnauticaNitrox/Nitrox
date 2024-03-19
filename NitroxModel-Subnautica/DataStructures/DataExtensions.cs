@@ -1,11 +1,12 @@
 using System;
+using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Bases;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel_Subnautica.DataStructures;
 
 /// <summary>
@@ -134,6 +135,7 @@ public static class DataExtensions
 
     public static StoryGoalExecuted.EventType ToDto(this Story.GoalType goalType)
     {
+        try {
         return goalType switch
         {
             Story.GoalType.PDA => StoryGoalExecuted.EventType.PDA,
@@ -142,10 +144,16 @@ public static class DataExtensions
             Story.GoalType.Story => StoryGoalExecuted.EventType.STORY,
             _ => throw new ArgumentException("The provided Story.GoalType doesn't correspond to a StoryEventSend.EventType"),
         };
+        }
+        catch(Exception ex){
+            DisplayStatusCode(StatusCode.INVALID_PACKET, false, ex.ToString());
+            throw;
+        }
     }
 
     public static Story.GoalType ToUnity(this StoryGoalExecuted.EventType eventType)
     {
+        try{
         return eventType switch
         {
             StoryGoalExecuted.EventType.PDA => Story.GoalType.PDA,
@@ -154,6 +162,11 @@ public static class DataExtensions
             StoryGoalExecuted.EventType.STORY => Story.GoalType.Story,
             _ => throw new ArgumentException("The provided StoryEventSend.EventType doesn't correspond to a Story.GoalType")
         };
+        }
+        catch(Exception ex){
+            DisplayStatusCode(StatusCode.INVALID_PACKET, false, ex.ToString());
+            throw;
+        }
     }
 
     public static PDAEntry ToDto(this PDAScanner.Entry entry)

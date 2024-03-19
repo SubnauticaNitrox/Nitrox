@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic
 {
@@ -40,7 +41,7 @@ namespace NitroxClient.GameLogic
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Error while trying to spawn {techType} from devconsole");
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, ex.ToString() + $"Error while trying to spawn {techType} from devconsole");
             }
         }
 

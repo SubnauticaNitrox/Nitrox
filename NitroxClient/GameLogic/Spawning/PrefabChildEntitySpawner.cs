@@ -5,6 +5,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using static NitroxModel.DisplayStatusCodes;
 
 namespace NitroxClient.GameLogic.Spawning;
 
@@ -31,7 +32,7 @@ public class PrefabChildEntitySpawner : SyncEntitySpawner<PrefabChildEntity>
         }
         else
         {
-            Log.Error($"Unable to find prefab for: {entity}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Unable to find prefab for: {entity}");
             result.Set(Optional.Empty);
         }
         return true;

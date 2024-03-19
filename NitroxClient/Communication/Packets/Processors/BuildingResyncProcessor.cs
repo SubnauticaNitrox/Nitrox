@@ -17,7 +17,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
@@ -45,10 +45,14 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
         BuildingHandler.Main.StartResync(buildEntities);
-        yield return UpdateEntities<Base, BuildEntity>(buildEntities.Keys.ToList(), OverwriteBase, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing BuildEntities"));
+        yield return UpdateEntities<Base, BuildEntity>(buildEntities.Keys.ToList(), OverwriteBase, IsInCloseProximity).OnYieldError((exception) => {
+            DisplayStatusCode(StatusCode.SYNC_FAIL, false, exception.ToString() + $"Encountered an exception while resyncing BuildEntities");
+        });
 
         BuildingHandler.Main.StartResync(moduleEntities);
-        yield return UpdateEntities<Constructable, ModuleEntity>(moduleEntities.Keys.ToList(), OverwriteModule, IsInCloseProximity).OnYieldError(exception => Log.Error(exception, $"Encountered an exception while resyncing ModuleEntities"));
+        yield return UpdateEntities<Constructable, ModuleEntity>(moduleEntities.Keys.ToList(), OverwriteModule, IsInCloseProximity).OnYieldError( (exception)=> {
+            DisplayStatusCode(StatusCode.SYNC_FAIL, false, exception.ToString() + $"Encountered an exception while resyncing ModuleEntities");
+        });
         BuildingHandler.Main.StopResync();
 
         stopwatch.Stop();
@@ -114,7 +118,11 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         foreach (E entity in entitiesToUpdate)
         {
             Log.Info($"[{typeof(E)} RESYNC] spawning entity {entity.Id}");
-            yield return entities.SpawnEntityAsync(entity).OnYieldError(Log.Error);
+            yield return entities.SpawnEntityAsync(entity).OnYieldError((ex) => {
+                Log.Error(ex);
+                DisplayStatusCode(StatusCode.SYNC_FAIL, false, "Error while trying to sync: " + ex.ToString());
+            }
+            );
         }
     }
 

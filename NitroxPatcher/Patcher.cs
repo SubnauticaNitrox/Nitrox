@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +14,7 @@ using NitroxModel.Helper;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxPatcher;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
@@ -50,16 +50,16 @@ internal static class Patcher
             }
             catch (HarmonyException e)
             {
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, $"Error patching {patch.GetType().Name}{Environment.NewLine}" + e.ToString());
                 Exception innerMost = e;
                 while (innerMost.InnerException != null)
                 {
                     innerMost = innerMost.InnerException;
                 }
-                Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{innerMost}");
             }
             catch (Exception e)
             {
-                Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, $"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
             }
         }
 
@@ -96,7 +96,7 @@ internal static class Patcher
 
         if (container != null)
         {
-            throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, true, $"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
         Log.Info("Registering dependencies");
         container = CreatePatchingContainer();
@@ -106,16 +106,12 @@ internal static class Patcher
         }
         catch (ReflectionTypeLoadException ex)
         {
-            Log.Error($"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
-            foreach (Exception loaderEx in ex.LoaderExceptions)
-            {
-                Log.Error(loaderEx);
-            }
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
             throw;
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error while initializing and loading dependencies.");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, ex.ToString() + "Error while initializing and loading dependencies.");
             throw;
         }
 

@@ -8,7 +8,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
@@ -29,11 +29,10 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             // In some cases, the affected entity may be pending spawning or out of range.
             // we only require the parent (in this case, the visible entity is undergoing
             // some change that must be shown, and if not is an error).
+            DisplayStatusCode(StatusCode.INVALID_PACKET, false, "The entity this process was trying to process was null");
             return;
         }
-
         GameObject newParent = NitroxEntity.RequireObjectFrom(packet.NewParentId);
-
         if (entity.Value.TryGetComponent(out Pickupable pickupable))
         {
             // If the entity is being parented to a WaterPark
@@ -52,7 +51,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
                 waterParkItem.SetWaterPark(null);
             }
         }
-
+        
         using (PacketSuppressor<EntityReparented>.Suppress())
         {
             Type entityType = entities.RequireEntityType(packet.Id);
@@ -68,14 +67,13 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             }
         }
     }
-
     private void InventoryItemReparented(GameObject entity, GameObject newParent)
     {
         Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(newParent);
 
         if (!opContainer.HasValue)
         {
-            Log.Error($"Could not find container field on GameObject {newParent.GetFullHierarchyPath()}");
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"Could not find container field on GameObject {newParent.GetFullHierarchyPath()}");
             return;
         }
 
@@ -84,7 +82,6 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
         ItemsContainer container = opContainer.Value;
         container.UnsafeAdd(new InventoryItem(pickupable));
     }
-
     private void PerformDefaultReparenting(GameObject entity, GameObject newParent)
     {
         entity.transform.SetParent(newParent.transform, false);

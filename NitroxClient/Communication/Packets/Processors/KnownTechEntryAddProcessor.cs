@@ -3,7 +3,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAdd>
@@ -29,7 +29,7 @@ public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAd
                     break;
                 default:
                     string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
-                    Log.Error($"Received an unknown category type for {nameof(KnownTechEntryAdd)} packet: {categoryName}");
+                    DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Received an unknown category type for {nameof(KnownTechEntryAdd)} packet: {categoryName}");
                     break;
             }
         }
