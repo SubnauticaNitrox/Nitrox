@@ -5,7 +5,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
+public class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly SimulationOwnership simulationOwnership;
 
@@ -18,20 +18,18 @@ class SimulationOwnershipInitialSyncProcessor : InitialSyncProcessor
 
     public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
     {
-        int idsSynced = 0;
-        foreach (NitroxId entityId in packet.InitialSimulationOwnerships)
+        int entitiesSynced = 0;
+        foreach (SimulatedEntity simulatedEntity in packet.InitialSimulationOwnerships)
         {
-            // Initial locks are transient
-            simulationOwnership.SimulateEntity(entityId, SimulationLockType.TRANSIENT);
-            Log.Debug($"Transient simulation ownership for {entityId} from initial sync");
+            simulationOwnership.TreatSimulatedEntity(simulatedEntity);
 
-            if (idsSynced++ % 5 == 0)
+            if (entitiesSynced++ % 5 == 0)
             {
-                waitScreenItem.SetProgress(idsSynced, packet.InitialSimulationOwnerships.Count);
+                waitScreenItem.SetProgress(entitiesSynced, packet.InitialSimulationOwnerships.Count);
                 yield return null;
             }
         }
 
-        yield return null;
+        yield break;
     }
 }

@@ -27,11 +27,11 @@ namespace NitroxServer.GameLogic
         private readonly World world;
 
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
-        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = [];
+        private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = [];
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-        private ThreadSafeQueue<(NitroxConnection, string)> JoinQueue { get; set; } = new();
+        private ThreadSafeQueue<(INitroxConnection, string)> JoinQueue { get; set; } = new();
         private bool queueIdle = false;
         public Action SyncFinishedCallback { get; private set; }
 
@@ -64,13 +64,13 @@ namespace NitroxServer.GameLogic
             return allPlayersByName.Values;
         }
 
-        public IEnumerable<NitroxConnection> GetQueuedPlayers()
+        public IEnumerable<INitroxConnection> GetQueuedPlayers()
         {
             return JoinQueue.Select(tuple => tuple.Item1);
         }
 
         public MultiplayerSessionReservation ReservePlayerContext(
-            NitroxConnection connection,
+            INitroxConnection connection,
             PlayerSettings playerSettings,
             AuthenticationContext authenticationContext,
             string correlationId)
@@ -148,15 +148,15 @@ namespace NitroxServer.GameLogic
 
                     queueIdle = false;
 
-                    (NitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
+                    (INitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
                     string name = reservations[reservationKey].PlayerName;
 
                     // Do this after dequeueing because everyone's position shifts forward
                     {
-                        (NitroxConnection, string)[] array = [.. JoinQueue];
+                        (INitroxConnection, string)[] array = [.. JoinQueue];
                         for (int i = 0; i < array.Length; i++)
                         {
-                            (NitroxConnection c, _) = array[i];
+                            (INitroxConnection c, _) = array[i];
                             c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout, false));
                         }
                     }
@@ -222,6 +222,7 @@ namespace NitroxServer.GameLogic
                         else
                         {
                             Log.Info($"Player {name} joined successfully. Remaining requests: {JoinQueue.Count}");
+                            BroadcastPlayerJoined(assetsByConnection[connection].Player);
                         }
                     });
                 }
@@ -232,7 +233,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void AddToJoinQueue(NitroxConnection connection, string reservationKey)
+        public void AddToJoinQueue(INitroxConnection connection, string reservationKey)
         {
             if (!queueIdle)
             {
@@ -243,7 +244,7 @@ namespace NitroxServer.GameLogic
             JoinQueue.Enqueue((connection, reservationKey));
         }
 
-        private void SendInitialSync(NitroxConnection connection, string reservationKey)
+        private void SendInitialSync(INitroxConnection connection, string reservationKey)
         {
             IEnumerable<PlayerContext> GetOtherPlayers(Player player)
             {
@@ -251,28 +252,26 @@ namespace NitroxServer.GameLogic
                                                           .Select(p => p.PlayerContext);
             }
 
-            void SetupPlayerEntity(Player player)
+            PlayerWorldEntity SetupPlayerEntity(Player player)
             {
                 NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
                 PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, []);
                 world.EntityRegistry.AddEntity(playerEntity);
                 world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
-                SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);
+                return playerEntity;
             }
 
-            void RespawnExistingEntity(Player player)
+            PlayerWorldEntity RespawnExistingEntity(Player player)
             {
-                Optional<Entity> playerEntity = world.EntityRegistry.GetEntityById(player.PlayerContext.PlayerNitroxId);
+                if (world.EntityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId,
+                    out PlayerWorldEntity playerWorldEntity))
+                {
+                    return playerWorldEntity;
+                }
 
-                if (playerEntity.HasValue)
-                {
-                    SendPacketToOtherPlayers(new SpawnEntities(playerEntity.Value, true), player);
-                }
-                else
-                {
-                    Log.Error($"Unable to find player entity for {player.Name}");
-                }
+                Log.Error($"Unable to find player entity for {player.Name}");
+                return SetupPlayerEntity(player);
             }
 
             Player player = PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
@@ -285,10 +284,6 @@ namespace NitroxServer.GameLogic
             }
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
-            List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
-
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes);
-            SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             // Make players on localhost admin by default.
             if (IPAddress.IsLoopback(connection.Endpoint.Address))
@@ -296,16 +291,9 @@ namespace NitroxServer.GameLogic
                 player.Permissions = Perms.ADMIN;
             }
 
-            List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
+            List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
-            if (wasBrandNewPlayer)
-            {
-                SetupPlayerEntity(player);
-            }
-            else
-            {
-                RespawnExistingEntity(player);
-            }
+            player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player);
 
             bool isFirstPlayer = GetConnectedPlayers().Count == 1;
 
@@ -335,7 +323,7 @@ namespace NitroxServer.GameLogic
             player.SendPacket(initialPlayerSync);
         }
 
-        public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+        public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             PlayerContext playerContext = reservations[reservationKey];
             Validate.NotNull(playerContext);
@@ -383,7 +371,7 @@ namespace NitroxServer.GameLogic
             return player;
         }
 
-        public void PlayerDisconnected(NitroxConnection connection)
+        public void PlayerDisconnected(INitroxConnection connection)
         {
             assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
@@ -413,7 +401,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void NonPlayerDisconnected(NitroxConnection connection)
+        public void NonPlayerDisconnected(INitroxConnection connection)
         {
             // They may have been queued, so just erase their entry
             JoinQueue = new(JoinQueue.Where(tuple => !Equals(tuple.Item1, connection)));
@@ -434,7 +422,7 @@ namespace NitroxServer.GameLogic
             return false;
         }
 
-        public Player GetPlayer(NitroxConnection connection)
+        public Player GetPlayer(INitroxConnection connection)
         {
             if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
             {
@@ -473,6 +461,12 @@ namespace NitroxServer.GameLogic
             return assetsByConnection.Values
                 .Where(assetPackage => assetPackage.Player != null)
                 .Select(assetPackage => assetPackage.Player);
+        }
+
+        public void BroadcastPlayerJoined(Player player)
+        {
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
+            SendPacketToOtherPlayers(playerJoinedPacket, player);
         }
     }
 }

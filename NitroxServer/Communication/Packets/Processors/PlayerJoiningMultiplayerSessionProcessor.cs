@@ -13,7 +13,7 @@ namespace NitroxServer.Communication.Packets.Processors
             this.playerManager = playerManager;
         }
 
-        public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
+        public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
         {
             playerManager.AddToJoinQueue(connection, packet.ReservationKey);
         }

@@ -101,4 +101,13 @@ public class EntityPositionBroadcaster : MonoBehaviour
             splineUpdatesById[id] = new(id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), targetPos.ToDto(), targetDir.ToDto(), velocity);
         }
     }
+
+    public static void RemoveEntityMovementControl(GameObject gameObject, NitroxId entityId)
+    {
+        if (gameObject.TryGetComponent(out RemotelyControlled remotelyControlled))
+        {
+            Destroy(remotelyControlled);
+        }
+        StopWatchingEntity(entityId);
+    }
 }

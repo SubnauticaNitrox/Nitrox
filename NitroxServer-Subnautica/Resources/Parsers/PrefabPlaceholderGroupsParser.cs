@@ -38,7 +38,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
         am = new AssetsBundleManager(aaRootPath);
         // ReSharper disable once StringLiteralTypo
-        am.LoadClassPackage("classdata.tpk");
+        am.LoadClassPackage(Path.Combine("Resources", "classdata.tpk"));
         am.LoadClassDatabaseFromPackage("2019.4.36f1");
         am.SetMonoTempGenerator(monoGen = new(managedPath));
     }

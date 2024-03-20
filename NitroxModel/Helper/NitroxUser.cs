@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using NitroxModel.Discovery;
+using NitroxModel.Discovery.InstallationFinders.Core;
 using NitroxModel.Platforms.OS.Windows.Internal;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
@@ -27,6 +29,22 @@ namespace NitroxModel.Helper
                 {
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
+
+                Assembly execAsm = Assembly.GetExecutingAssembly();
+                DirectoryInfo execParentDir = Directory.GetParent(execAsm.Location);
+
+                // When running tests LanguageFiles is in same directory
+                if (execParentDir != null && Directory.Exists(Path.Combine(execParentDir.FullName, "LanguageFiles")))
+                {
+                    return execParentDir.FullName;
+                }
+
+                // NitroxModel, NitroxServer and other assemblies are stored in NitroxLauncher/lib
+                if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "LanguageFiles")))
+                {
+                    return execParentDir.Parent.FullName;
+                }
+
                 return null;
             }
         };
@@ -77,14 +95,15 @@ namespace NitroxModel.Helper
                     return gamePath;
                 }
 
-                List<string> errors = new();
-                string path = GameInstallationFinder.Instance.FindGame(errors);
-                if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
+                List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
+                GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
+                if (potentiallyValidResult?.IsOk == true)
                 {
-                    return gamePath = path;
+                    Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Installation.Path}'");
+                    return gamePath = potentiallyValidResult.Installation.Path;
                 }
 
-                Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
                 return string.Empty;
             }
             set
