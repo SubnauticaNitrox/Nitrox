@@ -48,7 +48,7 @@ namespace NitroxModel
             else if (NitroxEnvironment.ReleasePhase == "InDev")
             {
                 // Only log on in game on InDev sessions, average player cannot interpret the message and it would simply be extra clutter
-                Log.InGame("Error " + statusCode.ToString("D") + ": " + exception);
+                Log.InGame("Error " + statusCode.ToString("D") + "(" + statusCode.ToString() + ")" + ": " + exception);
             }
         }
 
