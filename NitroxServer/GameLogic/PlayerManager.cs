@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -12,32 +15,38 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.GameLogic
 {
     // TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
     public class PlayerManager
     {
+        private readonly World world;
+
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
-        private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = new();
-        private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
+        private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = [];
+        private readonly ThreadSafeDictionary<string, PlayerContext> reservations = [];
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-        private ThreadSafeQueue<KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
-        private bool PlayerCurrentlyJoining { get; set; }
-
-        private Timer initialSyncTimer;
+        private ThreadSafeQueue<(INitroxConnection, string)> JoinQueue { get; set; } = new();
+        private bool queueIdle = false;
+        public Action SyncFinishedCallback { get; private set; }
 
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
 
-        public PlayerManager(List<Player> players, ServerConfig serverConfig)
+        public PlayerManager(List<Player> players, World world, ServerConfig serverConfig)
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
 
+            this.world = world;
             this.serverConfig = serverConfig;
+
+            _ = JoinQueueLoop();
         }
 
         public List<Player> GetConnectedPlayers()
@@ -53,6 +62,11 @@ namespace NitroxServer.GameLogic
         public IEnumerable<Player> GetAllPlayers()
         {
             return allPlayersByName.Values;
+        }
+
+        public IEnumerable<INitroxConnection> GetQueuedPlayers()
+        {
+            return JoinQueue.Select(tuple => tuple.Item1);
         }
 
         public MultiplayerSessionReservation ReservePlayerContext(
@@ -78,21 +92,6 @@ namespace NitroxServer.GameLogic
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
-            }
-
-            if (PlayerCurrentlyJoining)
-            {
-                if (JoinQueue.Any(pair => ReferenceEquals(pair.Key, connection)))
-                {
-                    // Don't enqueue the request if there is already another enqueued request by the same user
-                    return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
-                }
-
-                JoinQueue.Enqueue(new KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest>(
-                                      connection,
-                                      new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
-
-                return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
             }
 
             string playerName = authenticationContext.Username;
@@ -130,55 +129,198 @@ namespace NitroxServer.GameLogic
             reservations.Add(reservationKey, playerContext);
             assetPackage.ReservationKey = reservationKey;
 
-            PlayerCurrentlyJoining = true;
-
-            InitialSyncTimerData timerData = new InitialSyncTimerData(connection, authenticationContext, serverConfig.InitialSyncTimeout);
-            initialSyncTimer = new Timer(InitialSyncTimerElapsed, timerData, 0, 200);
-
-
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
 
-        private void InitialSyncTimerElapsed(object state)
+        private async Task JoinQueueLoop()
         {
-            if (state is InitialSyncTimerData timerData && !timerData.Disposing)
+            const int REFRESH_DELAY = 10;
+
+            while (true)
             {
-                allPlayersByName.TryGetValue(timerData.Context.Username, out Player player);
-
-                if (timerData.Connection.State < NitroxConnectionState.Connected)
+                try
                 {
-                    if (player == null) // player can cancel the joining process before this timer elapses
+                    while (JoinQueue.Count == 0)
                     {
-                        Log.Error("Player was nulled while joining");
-                        PlayerDisconnected(timerData.Connection);
+                        queueIdle = true;
+                        await Task.Delay(REFRESH_DELAY);
                     }
-                    else
-                    {
-                        player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
-                        PlayerDisconnected(player.Connection);
-                        SendPacketToOtherPlayers(new Disconnect(player.Id), player);
-                    }
-                    timerData.Disposing = true;
-                    FinishProcessingReservation();
-                }
 
-                if (timerData.Counter >= timerData.MaxCounter)
+                    queueIdle = false;
+
+                    (INitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
+                    string name = reservations[reservationKey].PlayerName;
+
+                    // Do this after dequeueing because everyone's position shifts forward
+                    {
+                        (INitroxConnection, string)[] array = [.. JoinQueue];
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            (INitroxConnection c, _) = array[i];
+                            c.SendPacket(new JoinQueueInfo(i + 1, serverConfig.InitialSyncTimeout, false));
+                        }
+                    }
+
+                    Log.Info($"Starting sync for player {name}");
+                    SendInitialSync(connection, reservationKey);
+
+                    CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
+                    bool syncFinished = false;
+                    bool disconnected = false;
+
+                    SyncFinishedCallback = () =>
+                    {
+                        syncFinished = true;
+                    };
+
+                    await Task.Run(() =>
+                    {
+                        while (!source.IsCancellationRequested)
+                        {
+                            if (syncFinished)
+                            {
+                                return true;
+                            }
+                            else if (connection.State == NitroxConnectionState.Disconnected)
+                            {
+                                disconnected = true;
+                                return false;
+                            }
+                            else
+                            {
+                                Task.Delay(REFRESH_DELAY).Wait();
+                            }
+                        }
+
+                        return false;
+
+                        // We use ContinueWith to avoid having to try/catch a TaskCanceledException
+                    }).ContinueWith(task =>
+                    {
+                        if (task.IsFaulted)
+                        {
+                            throw task.Exception;
+                        }
+
+                        if (disconnected)
+                        {
+                            Log.Info($"Player {name} disconnected while syncing");
+                            return;
+                        }
+
+                        if (task.IsCanceled || !task.Result)
+                        {
+                            Log.Info($"Initial sync timed out for player {name}");
+                            SyncFinishedCallback = null;
+
+                            if (connection.State == NitroxConnectionState.Connected)
+                            {
+                                connection.SendPacket(new PlayerSyncTimeout());
+                            }
+                            PlayerDisconnected(connection);
+                        }
+                        else
+                        {
+                            Log.Info($"Player {name} joined successfully. Remaining requests: {JoinQueue.Count}");
+                            BroadcastPlayerJoined(assetsByConnection[connection].Player);
+                        }
+                    });
+                }
+                catch (Exception e)
                 {
-                    Log.Error("An unexpected Error occured during InitialSync");
-                    PlayerDisconnected(timerData.Connection);
-
-                    timerData.Disposing = true;
-                    initialSyncTimer.Dispose(); // Looped long enough to require an override
+                    Log.Error($"Unexpected error during player connection: {e}");
                 }
-
-                timerData.Counter++;
             }
         }
 
-        public void NonPlayerDisconnected(INitroxConnection connection)
+        public void AddToJoinQueue(INitroxConnection connection, string reservationKey)
         {
-            // Remove any requests sent by the connection from the join queue
-            JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
+            if (!queueIdle)
+            {
+                connection.SendPacket(new JoinQueueInfo(JoinQueue.Count + 1, serverConfig.InitialSyncTimeout, true));
+            }
+
+            Log.Info($"Added player {reservations[reservationKey].PlayerName} to queue");
+            JoinQueue.Enqueue((connection, reservationKey));
+        }
+
+        private void SendInitialSync(INitroxConnection connection, string reservationKey)
+        {
+            IEnumerable<PlayerContext> GetOtherPlayers(Player player)
+            {
+                return GetConnectedPlayers().Where(p => p != player)
+                                                          .Select(p => p.PlayerContext);
+            }
+
+            PlayerWorldEntity SetupPlayerEntity(Player player)
+            {
+                NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
+
+                PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, []);
+                world.EntityRegistry.AddEntity(playerEntity);
+                world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
+                return playerEntity;
+            }
+
+            PlayerWorldEntity RespawnExistingEntity(Player player)
+            {
+                if (world.EntityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId,
+                    out PlayerWorldEntity playerWorldEntity))
+                {
+                    return playerWorldEntity;
+                }
+
+                Log.Error($"Unable to find player entity for {player.Name}");
+                return SetupPlayerEntity(player);
+            }
+
+            Player player = PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
+
+            if (newlyCreatedEscapePod.HasValue)
+            {
+                SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
+                SendPacketToOtherPlayers(spawnNewEscapePod, player);
+            }
+
+            List<EquippedItemData> equippedItems = player.GetEquipment();
+
+            // Make players on localhost admin by default.
+            if (IPAddress.IsLoopback(connection.Endpoint.Address))
+            {
+                player.Permissions = Perms.ADMIN;
+            }
+
+            List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
+
+            player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player);
+
+            bool isFirstPlayer = GetConnectedPlayers().Count == 1;
+
+            InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
+                wasBrandNewPlayer,
+                assignedEscapePodId,
+                equippedItems,
+                player.UsedItems,
+                player.QuickSlotsBindingIds,
+                world.GameData.PDAState.GetInitialPDAData(),
+                world.GameData.StoryGoals.GetInitialStoryGoalData(world.ScheduleKeeper, player),
+                player.Position,
+                player.Rotation,
+                player.SubRootId,
+                player.Stats,
+                GetOtherPlayers(player),
+                world.WorldEntityManager.GetGlobalRootEntities(),
+                simulations,
+                world.GameMode,
+                player.Permissions,
+                new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
+                world.StoryManager.GetTimeData(),
+                isFirstPlayer,
+            BuildingManager.GetEntitiesOperations(world.WorldEntityManager.GetGlobalRootEntities(true))
+            );
+
+            player.SendPacket(initialPlayerSync);
         }
 
         public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
@@ -259,31 +401,10 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void FinishProcessingReservation(Player player = null)
+        public void NonPlayerDisconnected(INitroxConnection connection)
         {
-            initialSyncTimer.Dispose();
-            PlayerCurrentlyJoining = false;
-            if (player != null)
-            {
-                BroadcastPlayerJoined(player);
-            }
-
-            Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
-
-            // Tell next client that it can start joining.
-            if (JoinQueue.Count > 0)
-            {
-                KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
-                INitroxConnection requestConnection = keyValuePair.Key;
-                MultiplayerSessionReservationRequest reservationRequest = keyValuePair.Value;
-
-                MultiplayerSessionReservation reservation = ReservePlayerContext(requestConnection,
-                reservationRequest.PlayerSettings,
-                reservationRequest.AuthenticationContext,
-                reservationRequest.CorrelationId);
-
-                requestConnection.SendPacket(reservation);
-            }
+            // They may have been queued, so just erase their entry
+            JoinQueue = new(JoinQueue.Where(tuple => !Equals(tuple.Item1, connection)));
         }
 
         public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
@@ -341,7 +462,7 @@ namespace NitroxServer.GameLogic
                 .Where(assetPackage => assetPackage.Player != null)
                 .Select(assetPackage => assetPackage.Player);
         }
-        
+
         public void BroadcastPlayerJoined(Player player)
         {
             PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
