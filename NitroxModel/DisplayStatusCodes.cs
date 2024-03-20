@@ -1,6 +1,8 @@
 using System.Windows.Forms;
 using System;
 using System.Diagnostics;
+using NitroxModel.Helper;
+using System.Diagnostics.Eventing.Reader;
 namespace NitroxModel
 {
     public class DisplayStatusCodes
@@ -35,17 +37,34 @@ namespace NitroxModel
         // Display a statusCode to the user(should be for statusCodes that are due to an error from the client)
         public static void DisplayStatusCode(StatusCode statusCode, string exception)
         {
-                // Display a popup message box using CustomMessageBox.cs which has most of the buttons and strings filled in with a placeholder for the statusCode
+            // Only make a popup message if the code is important, and most likely standalone
+            if (statusCode == StatusCode.PORT_NOT_LISTENING || statusCode == StatusCode.PRIVILEGES_ERR || statusCode == StatusCode.FILE_SYSTEM_ERR || statusCode == StatusCode.DEAD_PIRATES_TELL_NO_TALES || statusCode == StatusCode.DEPENDENCY_FAIL
+                || statusCode == StatusCode.VERSION_MISMATCH || statusCode == StatusCode.INVALID_INSTALL || statusCode == StatusCode.STORE_NOT_RUNNING || statusCode == StatusCode.FIREWALL_MOD_FAIL || statusCode == StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER)
+            {
                 CustomMessageBox customMessage = new(statusCode, exception);
                 customMessage.StartPosition = FormStartPosition.CenterParent;
                 customMessage.ShowDialog();
+            }
+            else if (NitroxEnvironment.ReleasePhase == "InDev")
+            {
+                // Only log on in game on InDev sessions, average player cannot interpret the message and it would simply be extra clutter
+                Log.InGame("Error " + statusCode.ToString("D") + ": " + exception);
+            }
         }
 
         // Print the statusCode to the server console(only for statusCodes that are due to an error from the server)
         public static void PrintStatusCode(StatusCode statusCode, string exception)
         {
-            // Log the status code to server console along with the exception message
-            Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error." + "Exception message: " + exception));
+            // If the status code is important, log it in the server console
+            if (statusCode == StatusCode.PORT_NOT_LISTENING || statusCode == StatusCode.PRIVILEGES_ERR || statusCode == StatusCode.FILE_SYSTEM_ERR || statusCode == StatusCode.DEAD_PIRATES_TELL_NO_TALES || statusCode == StatusCode.DEPENDENCY_FAIL
+    || statusCode == StatusCode.VERSION_MISMATCH || statusCode == StatusCode.INVALID_INSTALL || statusCode == StatusCode.STORE_NOT_RUNNING || statusCode == StatusCode.FIREWALL_MOD_FAIL || statusCode == StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER)
+            {
+                Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error." + "Exception message: " + exception));
+            }
+            else if (NitroxEnvironment.ReleasePhase == "InDev")
+            {
+                Log.Error(string.Concat("Status code = ", statusCode.ToString("D"), " <- Look up this code on the nitrox website for more information about this error." + "Exception message: " + exception));
+            }
         }
     }
 }
