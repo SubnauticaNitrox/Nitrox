@@ -214,7 +214,7 @@ namespace NitroxLauncher
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
-                DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, false, "An instance of Subnautica is already running");
+                DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, "An instance of Subnautica is already running");
             }
 #endif
             nitroxEntryPatch.Remove();
