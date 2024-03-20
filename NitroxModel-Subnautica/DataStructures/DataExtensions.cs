@@ -146,7 +146,7 @@ public static class DataExtensions
         };
         }
         catch(Exception ex){
-            DisplayStatusCode(StatusCode.INVALID_PACKET, false, ex.ToString());
+            DisplayStatusCode(StatusCode.INVALID_PACKET, ex.ToString());
             throw;
         }
     }
@@ -164,7 +164,7 @@ public static class DataExtensions
         };
         }
         catch(Exception ex){
-            DisplayStatusCode(StatusCode.INVALID_PACKET, false, ex.ToString());
+            DisplayStatusCode(StatusCode.INVALID_PACKET, ex.ToString());
             throw;
         }
     }

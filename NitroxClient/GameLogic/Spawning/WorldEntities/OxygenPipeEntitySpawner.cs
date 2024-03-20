@@ -33,7 +33,7 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
             yield return DefaultWorldEntitySpawner.RequestPrefab(entity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find a prefab for {nameof(OxygenPipeEntity)} of ClassId {entity.ClassId}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find a prefab for {nameof(OxygenPipeEntity)} of ClassId {entity.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();
@@ -79,7 +79,7 @@ public class OxygenPipeEntitySpawner : SyncEntitySpawner<OxygenPipeEntity>
         {
             return true;
         }
-        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find component {nameof(OxygenPipe)} on prefab with ClassId: {entity.ClassId}");
+        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find component {nameof(OxygenPipe)} on prefab with ClassId: {entity.ClassId}");
         return false;
     }
 

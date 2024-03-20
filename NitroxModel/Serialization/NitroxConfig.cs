@@ -57,7 +57,7 @@ namespace NitroxModel.Serialization
                         // Ignore case for property names in file.
                         if (!typeCachedDict.TryGetValue(keyValuePair[0].ToLowerInvariant(), out MemberInfo member))
                         {
-                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, $"Property or field {keyValuePair[0]} does not exist on type {type.FullName}!");
+                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Property or field {keyValuePair[0]} does not exist on type {type.FullName}!");
                             continue;
                         }
 
@@ -71,12 +71,12 @@ namespace NitroxModel.Serialization
                                 PropertyInfo prop => (prop.PropertyType, prop.GetValue(this)),
                                 _ => (typeof(string), "")
                             };
-                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, $@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
+                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
                         }
                     }
                     else
                     {
-                        DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
+                        DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
                     }
                 }
 
@@ -97,7 +97,7 @@ namespace NitroxModel.Serialization
                         return $" - {m.Name}: {value}";
                     });
 
-                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, $@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
+                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace NitroxModel.Serialization
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    DisplayStatusCode(StatusCode.PRIVILEGES_ERR, true, $"Config file {FileName} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
+                    DisplayStatusCode(StatusCode.PRIVILEGES_ERR, $"Config file {FileName} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace NitroxModel.Serialization
                 }
                 catch (ArgumentException e)
                 {
-                    DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, e + $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
+                    DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, e + $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
                 }
             }
 

@@ -112,7 +112,7 @@ public class Program
 
             if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
             {
-                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, false, "Unable to start server.");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, "Unable to start server.");
             }
             else if (cancellationToken.IsCancellationRequested)
             {
@@ -353,7 +353,7 @@ public class Program
         }
         catch (OperationCanceledException ex)
         {
-            PrintStatusCode(StatusCode.PORT_NOT_LISTENING, true, "Port availability timeout reached." + ex.ToString());
+            PrintStatusCode(StatusCode.PORT_NOT_LISTENING, "Port availability timeout reached." + ex.ToString());
             throw;
         }
     }
@@ -362,7 +362,7 @@ public class Program
     {
         if (e.ExceptionObject is Exception ex)
         {
-            PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, ex.ToString());
+            PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.ToString());
         }
 
         if (!Environment.UserInteractive || Console.In == StreamReader.Null)
@@ -375,7 +375,7 @@ public class Program
         {
             return;
         }
-        PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, e.ToString());
+        PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, e.ToString());
         Log.Info("Press L to open log file before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 

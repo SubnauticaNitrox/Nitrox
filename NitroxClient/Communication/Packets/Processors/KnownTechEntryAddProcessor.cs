@@ -29,7 +29,7 @@ public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAd
                     break;
                 default:
                     string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
-                    DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Received an unknown category type for {nameof(KnownTechEntryAdd)} packet: {categoryName}");
+                    DisplayStatusCode(StatusCode.INVALID_PACKET, $"Received an unknown category type for {nameof(KnownTechEntryAdd)} packet: {categoryName}");
                     break;
             }
         }

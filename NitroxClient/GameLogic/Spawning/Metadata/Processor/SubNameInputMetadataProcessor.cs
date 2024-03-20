@@ -17,14 +17,14 @@ public class SubNameInputMetadataProcessor : EntityMetadataProcessor<SubNameInpu
     {
         if (!gameObject.TryGetComponent(out SubNameInput subNameInput))
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(SubNameInputMetadataProcessor)}] Could not find {nameof(SubNameInput)} on {gameObject}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(SubNameInputMetadataProcessor)}] Could not find {nameof(SubNameInput)} on {gameObject}");
             return;
         }
 
         SubName subName = subNameInput.target;
         if (!subName && !subNameInput.TryGetComponent(out subName))
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(SubNameInputMetadataProcessor)}] {gameObject}'s {nameof(subNameInput)} doesn't have a target.");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(SubNameInputMetadataProcessor)}] {gameObject}'s {nameof(subNameInput)} doesn't have a target.");
             return;
         }
 

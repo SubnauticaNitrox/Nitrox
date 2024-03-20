@@ -38,7 +38,7 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrWhiteSpace(file))
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "Missing file path: " + nameof(file));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Missing file path: " + nameof(file));
             }
 
             string editorProgram = GetDefaultPrograms(file).FirstOrDefault() ?? TextEditor;
@@ -97,11 +97,11 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrEmpty(fromPath))
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "A path to a file was missing" + nameof(fromPath));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "A path to a file was missing" + nameof(fromPath));
             }
             if (string.IsNullOrEmpty(toPath))
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "A path to a file was missing" + nameof(toPath));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "A path to a file was missing" + nameof(toPath));
             }
             // Ensure postfix so that result becomes relative to entire "from" path.
             fromPath = fromPath[fromPath.Length - 1] == Path.DirectorySeparatorChar ? fromPath : fromPath + Path.DirectorySeparatorChar;
@@ -138,12 +138,12 @@ namespace NitroxModel.Platforms.OS.Shared
         {
             if (string.IsNullOrWhiteSpace(dir))
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "Invalid directory path" + nameof(dir));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Invalid directory path" + nameof(dir));
             }
             dir = Path.GetFullPath(dir);
             if (!Directory.Exists(dir))
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "Invalid directory" + nameof(dir));
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Invalid directory" + nameof(dir));
             }
             // Figure out relative path of output OR use <basename>.zip of directory.
             outputPath = Path.GetFullPath(outputPath ?? dir);
@@ -156,7 +156,7 @@ namespace NitroxModel.Platforms.OS.Shared
             string outZipFullName = Path.Combine(outZipDir, outZipName);
             if (!replaceFile && File.Exists(outZipFullName))
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"The file '{outZipFullName}' already exists");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $"The file '{outZipFullName}' already exists");
             }
             string[] files = Directory.GetFiles(dir, fileSearchPattern, SearchOption.AllDirectories);
             if (files.Length < 1)
@@ -228,18 +228,18 @@ namespace NitroxModel.Platforms.OS.Shared
                             catch (Exception)
                             {
                                 // ignored
-                                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, "An error occured while modifying files");
+                                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "An error occured while modifying files");
                             }
                         }
                         catch (Exception ex2)
                         {
-                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, ex2 + $"Failed to replace file '{source}' with '{target}' which is on another drive");
+                            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, ex2 + $"Failed to replace file '{source}' with '{target}' which is on another drive");
                             return false;
                         }
                         break;
                     default:
                         // No special handling implemented for error, abort.
-                        DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Unhandled file replace of '{source}' with '{target}' with HRESULT: 0x{ex.HResult:X}");
+                        DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Unhandled file replace of '{source}' with '{target}' with HRESULT: 0x{ex.HResult:X}");
                         return false;
                 }
             }

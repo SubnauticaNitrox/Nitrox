@@ -186,7 +186,7 @@ namespace NitroxClient.Debuggers
             if (SkinCreationOptions == GUISkinCreationOptions.DEFAULT)
             {
                 Enabled = false;
-                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"Cannot change {nameof(GUISkin)} for {GetType().FullName} when accessing the default skin. Change {nameof(SkinCreationOptions)} to something else than {nameof(GUISkinCreationOptions.DEFAULT)}.");
+                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"Cannot change {nameof(GUISkin)} for {GetType().FullName} when accessing the default skin. Change {nameof(SkinCreationOptions)} to something else than {nameof(GUISkinCreationOptions.DEFAULT)}.");
             }
 
             OnSetSkin(skin);

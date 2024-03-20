@@ -56,7 +56,7 @@ namespace NitroxLauncher
                 }
                 catch (Exception ex)
                 {
-                    DisplayStatusCode(StatusCode.INJECTION_FAIL, true, ex.ToString() + "Unable to remove the Nitrox DLL injection");
+                    DisplayStatusCode(StatusCode.INJECTION_FAIL, ex.ToString() + "Unable to remove the Nitrox DLL injection");
                 }
             }
 
@@ -69,7 +69,7 @@ namespace NitroxLauncher
             try {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveConsumer")))
                 {
-                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
+                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
             {
@@ -84,7 +84,7 @@ namespace NitroxLauncher
             {
                 if (Assembly.GetEntryAssembly().Location.Contains(Environment.GetEnvironmentVariable("OneDriveCommerical")))
                 {
-                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
+                    DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Nitrox is located in a folder synced by OneDrive. Please move Nitrox to a folder that is not synced.");
                 }
                 else
                 {
@@ -129,7 +129,7 @@ namespace NitroxLauncher
 
             if (task.Exception != null)
             {
-                DisplayStatusCode(StatusCode.FIREWALL_MOD_FAIL, false, $"An error occurred configuring the firewall: {task.Exception}");
+                DisplayStatusCode(StatusCode.FIREWALL_MOD_FAIL, $"An error occurred configuring the firewall: {task.Exception}");
             }
         }
 
@@ -157,7 +157,7 @@ namespace NitroxLauncher
                     {
                         Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                         {
-                            DisplayStatusCode(StatusCode.PRIVILEGES_ERR, true, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message." + "Required file permission error");
+                            DisplayStatusCode(StatusCode.PRIVILEGES_ERR, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message." + "Required file permission error");
                             Environment.Exit(1);
                         }, DispatcherPriority.ApplicationIdle);
                     }
@@ -208,7 +208,7 @@ namespace NitroxLauncher
             if (string.IsNullOrWhiteSpace(Config.SubnauticaPath) || !Directory.Exists(Config.SubnauticaPath))
             {
                 NavigateTo<OptionPage>();
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, false, "Location of Subnautica is unknown. Set the path to it in settings.");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Location of Subnautica is unknown. Set the path to it in settings.");
             }
 
 #if RELEASE
@@ -231,7 +231,7 @@ namespace NitroxLauncher
 
             if (PirateDetection.HasTriggered)
             {
-                DisplayStatusCode(StatusCode.DEAD_PIRATES_TELL_NO_TALES, true, "Please ask for support in the nitrox discord using the join button.A member of the support team would be glad to assist you if you provide them with this status code.");
+                DisplayStatusCode(StatusCode.DEAD_PIRATES_TELL_NO_TALES, "Please ask for support in the nitrox discord using the join button.A member of the support team would be glad to assist you if you provide them with this status code.");
                 throw new Exception("Aarrr! Nitrox walked the plank :(");
             }
 
@@ -254,7 +254,7 @@ namespace NitroxLauncher
             }
             catch (IOException ex)
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, ex.ToString() + "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, ex.ToString() + "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
             // Try inject Nitrox into Subnautica code.
@@ -264,14 +264,14 @@ namespace NitroxLauncher
             }
             if (nitroxEntryPatch == null)
             {
-                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, "Nitrox was blocked by another program");
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, "Nitrox was blocked by another program");
             }
             nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
 
             if (QModHelper.IsQModInstalled(Config.SubnauticaPath))
             {
-                DisplayStatusCode(StatusCode.INJECTION_FAIL, false, "Seems like QModManager is Installed, other mods are usually not compatible with Nitrox and are likely to cause major issues");
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, "Seems like QModManager is Installed, other mods are usually not compatible with Nitrox and are likely to cause major issues");
                 Log.Warn("Seems like QModManager is Installed");
                 LauncherNotifier.Info("Detected QModManager in the game folder");
             }
@@ -280,12 +280,12 @@ namespace NitroxLauncher
         }
         ProcessEx throwUnsupportedInstallException(string subnauticaPath)
         {
-            DisplayStatusCode(StatusCode.INVALID_INSTALL, true, $"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.");
+            DisplayStatusCode(StatusCode.INVALID_INSTALL, $"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.");
             throw new Exception();
         }
         ProcessEx throwUnableToStartGameException(IGamePlatform platform)
         {
-            DisplayStatusCode(StatusCode.STORE_NOT_RUNNING, true, $"Unable to start game through {platform.Name}");
+            DisplayStatusCode(StatusCode.STORE_NOT_RUNNING, $"Unable to start game through {platform.Name}");
             throw new Exception();
         }
         private async Task<ProcessEx> StartSubnauticaAsync()
@@ -317,7 +317,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, "Unhandled exception while trying to inject Nitrox: " + ex.ToString());
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, "Unhandled exception while trying to inject Nitrox: " + ex.ToString());
             }
         }
 

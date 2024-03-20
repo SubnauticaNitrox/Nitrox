@@ -20,7 +20,7 @@ public class ConstructorMetadataProcessor : EntityMetadataProcessor<ConstructorM
         }
         else
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find constructor on {gameObject.name}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Could not find constructor on {gameObject.name}");
         }
     }
 }

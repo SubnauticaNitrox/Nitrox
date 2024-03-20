@@ -29,7 +29,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             // In some cases, the affected entity may be pending spawning or out of range.
             // we only require the parent (in this case, the visible entity is undergoing
             // some change that must be shown, and if not is an error).
-            DisplayStatusCode(StatusCode.INVALID_PACKET, false, "The entity this process was trying to process was null");
+            DisplayStatusCode(StatusCode.INVALID_PACKET, "The entity this process was trying to process was null");
             return;
         }
         GameObject newParent = NitroxEntity.RequireObjectFrom(packet.NewParentId);
@@ -73,7 +73,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
 
         if (!opContainer.HasValue)
         {
-            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"Could not find container field on GameObject {newParent.GetFullHierarchyPath()}");
+            DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"Could not find container field on GameObject {newParent.GetFullHierarchyPath()}");
             return;
         }
 

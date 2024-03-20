@@ -64,12 +64,12 @@ public class EquippedItemInitialSyncProcessor : InitialSyncProcessor
                     }
                     else
                     {
-                        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find equipment type for {gameObject.name}");
+                        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Could not find equipment type for {gameObject.name}");
                     }
                 }
                 else
                 {
-                    DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find Container for {gameObject.name}");
+                    DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Could not find Container for {gameObject.name}");
                 }
 
                 totalEquippedItemsDone++;

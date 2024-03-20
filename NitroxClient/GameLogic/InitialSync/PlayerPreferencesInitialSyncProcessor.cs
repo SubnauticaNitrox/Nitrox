@@ -128,7 +128,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             pingKey = string.Empty;
             return false;
         }
-        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find PingInstance identifier for {pingInstance.name} under {pingInstance.transform.parent}");
+        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find PingInstance identifier for {pingInstance.name} under {pingInstance.transform.parent}");
         pingKey = string.Empty;
         return false;
     }

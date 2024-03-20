@@ -30,7 +30,7 @@ public class RocketMetadataProcessor : EntityMetadataProcessor<RocketMetadata>
 
         if (!rocket)
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find Rocket on {gameObject.name}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Could not find Rocket on {gameObject.name}");
             return;
         }
 

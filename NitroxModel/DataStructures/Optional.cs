@@ -97,7 +97,7 @@ namespace NitroxModel.DataStructures.Util
         {
             if (value == null)
             {
-                DisplayStatusCode(StatusCode.MISSING_FEATURE, true, nameof(value) + $"Tried to set null on {typeof(Optional<T>)}");
+                DisplayStatusCode(StatusCode.MISSING_FEATURE, nameof(value) + $"Tried to set null on {typeof(Optional<T>)}");
             }
 
             return new Optional<T>(value);

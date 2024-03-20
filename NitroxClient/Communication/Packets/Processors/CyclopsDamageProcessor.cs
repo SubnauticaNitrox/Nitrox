@@ -112,7 +112,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 // Looks like the list came in unordered. I've uttered "That shouldn't happen" enough to do sanity checks for what should be impossible.
                 if (packetDamagePointsIndex < damagePointIndexes.Length)
                 {
-                    DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, $"[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: {damagePointIndexes[packetDamagePointsIndex]} had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
+                    DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: {damagePointIndexes[packetDamagePointsIndex]} had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
                 }
             }
             else

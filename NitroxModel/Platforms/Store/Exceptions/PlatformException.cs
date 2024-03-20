@@ -7,12 +7,12 @@ namespace NitroxModel.Platforms.Store.Exceptions
     {
         public PlatformException(IGamePlatform platform, string message) : base($"{platform.GetType().Name}: {message}")
         {
-            DisplayStatusCode(StatusCode.MISSING_FEATURE, true, "Tried to access a feature that does not exist yet");
+            DisplayStatusCode(StatusCode.MISSING_FEATURE, "Tried to access a feature that does not exist yet");
         }
 
         public PlatformException(IGamePlatform platform, string message, Exception innerException) : base($"{platform.GetType().Name}: {message}", innerException)
         {
-            DisplayStatusCode(StatusCode.MISSING_FEATURE, true, "Tried to access a feature that does not exist yet");
+            DisplayStatusCode(StatusCode.MISSING_FEATURE, "Tried to access a feature that does not exist yet");
         }
     }
 }

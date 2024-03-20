@@ -35,7 +35,7 @@ namespace NitroxLauncher
 #if DEBUG
                 if (response == null)
                 {
-                    DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, false, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
+                    DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
                     LauncherNotifier.Error("Unable to fetch nitrox blogs");
                     return blogs;
                 }
@@ -61,7 +61,7 @@ namespace NitroxLauncher
 
                         if (!DateTime.TryParse(released, out DateTime dateTime))
                         {
-                            DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, false, $"Error while trying to parse release time ({released}) of blog {url}");
+                            DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, $"Error while trying to parse release time ({released}) of blog {url}");
                             dateTime = DateTime.UtcNow;
                         }
 
@@ -71,7 +71,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, false, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
+                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
                 LauncherNotifier.Error("Unable to fetch nitrox blogs");
             }
 
@@ -107,7 +107,7 @@ namespace NitroxLauncher
 
                         if (!DateTime.TryParse(released, out DateTime dateTime))
                         {
-                            DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, false, $"Error while trying to parse release time ({released}) of nitrox v{version}");
+                            DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, $"Error while trying to parse release time ({released}) of nitrox v{version}");
                             dateTime = DateTime.UtcNow;
                         }
 
@@ -123,7 +123,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, false, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
+                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
                 LauncherNotifier.Error("Unable to fetch nitrox changelogs");
             }
 
@@ -155,7 +155,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, false, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
+                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, ex.ToString() + $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
                 LauncherNotifier.Error("Unable to check for updates");
             }
 
@@ -179,7 +179,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, false, ex.ToString() + $"Error while requesting data from {url}");
+                DisplayStatusCode(StatusCode.INTERNET_CONNECTION_FAIL_LAUNCHER, ex.ToString() + $"Error while requesting data from {url}");
             }
 
             return null;

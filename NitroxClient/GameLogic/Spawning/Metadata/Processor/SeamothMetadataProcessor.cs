@@ -17,13 +17,13 @@ public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata
     {
         if (!gameObject.TryGetComponent(out SeaMoth seamoth))
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(SeamothMetadataProcessor)}] Could not find {nameof(SeaMoth)} on {gameObject}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(SeamothMetadataProcessor)}] Could not find {nameof(SeaMoth)} on {gameObject}");
             return;
         }
 
         if (!gameObject.TryGetComponent(out SubName subName))
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(SeamothMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(SeamothMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
             return;
         }
 

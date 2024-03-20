@@ -75,7 +75,7 @@ namespace NitroxModel.DataStructures
             }
             else
             {
-                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "In PriorityQueue.cs: An operation was triggered on a varaible that cold not support it");
+                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, "In PriorityQueue.cs: An operation was triggered on a varaible that cold not support it");
                 throw new InvalidOperationException();
             }
         }

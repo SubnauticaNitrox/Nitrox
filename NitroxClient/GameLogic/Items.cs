@@ -99,14 +99,14 @@ public class Items
             if (parentConnection == null || !parentConnection.GetGameObject() ||
                 !parentConnection.GetGameObject().TryGetNitroxId(out NitroxId parentPipeId))
             {
-                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find a valid reference to the OxygenPipe's parent pipe");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find a valid reference to the OxygenPipe's parent pipe");
                 return;
             }
             IPipeConnection rootConnection = parentConnection.GetRoot();
             if (rootConnection == null || !rootConnection.GetGameObject() ||
                 !rootConnection.GetGameObject().TryGetNitroxId(out NitroxId rootPipeId))
             {
-                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Couldn't find a valid reference to the OxygenPipe's root pipe");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find a valid reference to the OxygenPipe's root pipe");
                 return;
             }
 
@@ -215,7 +215,7 @@ public class Items
         // Newly created objects are always placed into the player's inventory.
         if (!Player.main.TryGetNitroxId(out NitroxId ownerId))
         {
-            DisplayStatusCode(StatusCode.REMOTE_PLAYER_ERR, true, "[Items] Player has no id! Couldn't parent InventoryItem.");
+            DisplayStatusCode(StatusCode.REMOTE_PLAYER_ERR, "[Items] Player has no id! Couldn't parent InventoryItem.");
         }
 
         InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);

@@ -30,7 +30,7 @@ public static class AssetBundleLoader
             
             if (assetRequest == null)
             {
-                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
                 yield break;
             }
 
@@ -50,7 +50,7 @@ public static class AssetBundleLoader
 
         if (loadRequest.allAssets == null || loadRequest.allAssets.Length == 0)
         {
-            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}. It contained no assets");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}. It contained no assets");
             yield break;
         }
 
@@ -68,7 +68,7 @@ public static class AssetBundleLoader
 
         if (!asset)
         {
-            DisplayStatusCode(StatusCode.INJECTION_FAIL, true, $"Instantiated assetBundle ({nitroxAssetBundle.BundleName}) but GameObject is null.");
+            DisplayStatusCode(StatusCode.INJECTION_FAIL, $"Instantiated assetBundle ({nitroxAssetBundle.BundleName}) but GameObject is null.");
             yield break;
         }
 

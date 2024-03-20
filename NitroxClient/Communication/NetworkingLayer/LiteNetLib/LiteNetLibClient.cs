@@ -110,7 +110,7 @@ public class LiteNetLibClient : IClient
         if (Multiplayer.Active)
         {
             Modal.Get<LostConnectionModal>()?.Show();
-            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "The client was disconnected from the server");
+            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "The client was disconnected from the server");
         }
 
         IsConnected = false;

@@ -137,19 +137,19 @@ public class JoinServer : MonoBehaviour
         }
         catch (ClientConnectionFailedException ex)
         {
-            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "Unable to contact the remote server at: {ip}:{port}" + serverIp + serverPort);
+            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "Unable to contact the remote server at: {ip}:{port}" + serverIp + serverPort);
             Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
 
             if (serverIp.Equals("127.0.0.1"))
             {
                 if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
                 {
-                    DisplayStatusCode(StatusCode.PORT_NOT_LISTENING, true, "No server process was found while address was 127.0.0.1");
+                    DisplayStatusCode(StatusCode.PORT_NOT_LISTENING, "No server process was found while address was 127.0.0.1");
                     Log.InGame(Language.main.Get("Nitrox_StartServer"));
                 }
                 else
                 {
-                    DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, true, ex.ToString());
+                    DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.ToString());
                     Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
                 }
             }
@@ -229,7 +229,7 @@ public class JoinServer : MonoBehaviour
             case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
                 Log.Info("Reservation rejected");
                 Log.InGame(Language.main.Get("Nitrox_RejectedSessionPolicy"));
-                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "Reservation rejected");
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "Reservation rejected");
 
                 MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 
@@ -245,7 +245,7 @@ public class JoinServer : MonoBehaviour
                 break;
 
             case MultiplayerSessionConnectionStage.DISCONNECTED:
-                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, Language.main.Get("Nitrox_DisconnectedSession"));
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, Language.main.Get("Nitrox_DisconnectedSession"));
                 Log.Info(Language.main.Get("Nitrox_DisconnectedSession"));
                 break;
         }

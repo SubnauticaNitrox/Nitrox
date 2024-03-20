@@ -32,7 +32,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "The context is missing an IP address." + ex.ToString());
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "The context is missing an IP address." + ex.ToString());
             }
         }
 
@@ -44,7 +44,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "The client must be set on the connection context before trying to negotiate a session reservation." + ex.ToString());
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "The client must be set on the connection context before trying to negotiate a session reservation." + ex.ToString());
             }
         }
 
@@ -56,7 +56,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
                 if (!client.IsConnected)
                 {
-                    DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "The client failed to connect without providing a reason why.");
+                    DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "The client failed to connect without providing a reason why.");
                 }
             }
         }
@@ -74,12 +74,12 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "Cannot join a session until a reservation has been negotiated with the server.");
+            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "Cannot join a session until a reservation has been negotiated with the server.");
         }
 
         public void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, false, "Not connected to a multiplayer server.");
+            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "Not connected to a multiplayer server.");
         }
     }
 }

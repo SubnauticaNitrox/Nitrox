@@ -96,13 +96,13 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                     break;
 
                 default:
-                    DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Can't spawn a child entity which is not a WorldEntity: {current}");
+                    DisplayStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Can't spawn a child entity which is not a WorldEntity: {current}");
                     continue;
             }
 
             if (!childResult.value.HasValue)
             {
-                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Spawning of child failed {current}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(PlaceholderGroupWorldEntitySpawner)}] Spawning of child failed {current}");
                 continue;
             }
 

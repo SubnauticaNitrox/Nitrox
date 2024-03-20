@@ -13,7 +13,7 @@ public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionP
     {
         if (!NitroxEntity.TryGetObjectFrom(packet.ArmId, out GameObject gameObject))
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, "Could not find ExosuitArm");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, "Could not find ExosuitArm");
             return;
         }
 
@@ -32,7 +32,7 @@ public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionP
                 ExosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector?.ToUnity(), packet.OpRotation?.ToUnity());
                 break;
             default:
-                DisplayStatusCode(StatusCode.INVALID_PACKET, false, $"Got an arm tech that is not handled: {packet.TechType} with action: {packet.ArmAction} for id {packet.ArmId}");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, $"Got an arm tech that is not handled: {packet.TechType} with action: {packet.ArmAction} for id {packet.ArmId}");
                 break;
         }
     }

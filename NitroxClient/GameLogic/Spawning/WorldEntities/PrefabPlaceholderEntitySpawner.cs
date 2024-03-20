@@ -58,7 +58,7 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             placeholder = group.prefabPlaceholders[prefabEntity.ComponentIndex];
             return true;
         }
-        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
+        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
         placeholder = null;
         return false;
     }

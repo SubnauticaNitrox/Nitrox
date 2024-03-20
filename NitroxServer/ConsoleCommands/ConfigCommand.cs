@@ -54,7 +54,7 @@ namespace NitroxServer.ConsoleCommands
 #if DEBUG
                     if (t.Exception != null)
                     {
-                        PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, true, t.Exception.ToString());
+                        PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, t.Exception.ToString());
                     }
 #endif
                 });

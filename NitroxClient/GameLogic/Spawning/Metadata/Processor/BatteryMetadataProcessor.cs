@@ -16,7 +16,7 @@ public class BatteryMetadataProcessor : EntityMetadataProcessor<BatteryMetadata>
         }
         else
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"Could not find Battery on {gameObject.name}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Could not find Battery on {gameObject.name}");
         }
     }
 }

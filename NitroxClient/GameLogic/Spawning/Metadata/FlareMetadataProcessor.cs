@@ -11,7 +11,7 @@ public class FlareMetadataProcessor : EntityMetadataProcessor<FlareMetadata>
     {
         if (!gameObject.TryGetComponent(out Flare flare))
         {
-            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, false, $"[{nameof(FlareMetadataProcessor)}] Can't apply metadata to {gameObject} because it doesn't have a {nameof(Flare)} component");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(FlareMetadataProcessor)}] Can't apply metadata to {gameObject} because it doesn't have a {nameof(Flare)} component");
             return;
         }
         flare.energyLeft = metadata.EnergyLeft;

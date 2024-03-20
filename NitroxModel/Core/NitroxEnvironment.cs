@@ -34,7 +34,7 @@ namespace NitroxModel.Helper
         {
             if (hasSet)
             {
-                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, false, "Environment type can only be set once");
+                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, "Environment type can only be set once");
             }
 
             Type = value;

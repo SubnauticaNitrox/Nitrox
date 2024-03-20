@@ -101,7 +101,7 @@ public static class Main
                     // These logs from Unity spam too much uninteresting stuff
                     break;
                 default:
-                    DisplayStatusCode(StatusCode.INJECTION_FAIL, true, stackTrace.ToString() + condition.ToString());
+                    DisplayStatusCode(StatusCode.INJECTION_FAIL, stackTrace.ToString() + condition.ToString());
                     break;
             }
         };
@@ -113,7 +113,7 @@ public static class Main
         }
         catch (Exception ex)
         {
-            DisplayStatusCode(StatusCode.INJECTION_FAIL, true, ex.ToString() + "Unhandled exception occurred while initializing Nitrox");
+            DisplayStatusCode(StatusCode.INJECTION_FAIL, ex.ToString() + "Unhandled exception occurred while initializing Nitrox");
         }
     }
 

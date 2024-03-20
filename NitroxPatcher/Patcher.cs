@@ -50,7 +50,7 @@ internal static class Patcher
             }
             catch (HarmonyException e)
             {
-                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, $"Error patching {patch.GetType().Name}{Environment.NewLine}" + e.ToString());
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, $"Error patching {patch.GetType().Name}{Environment.NewLine}" + e.ToString());
                 Exception innerMost = e;
                 while (innerMost.InnerException != null)
                 {
@@ -59,7 +59,7 @@ internal static class Patcher
             }
             catch (Exception e)
             {
-                DisplayStatusCode(StatusCode.INJECTION_FAIL, true, $"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, $"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
             }
         }
 
@@ -96,7 +96,7 @@ internal static class Patcher
 
         if (container != null)
         {
-            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, true, $"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
         }
         Log.Info("Registering dependencies");
         container = CreatePatchingContainer();
@@ -106,12 +106,12 @@ internal static class Patcher
         }
         catch (ReflectionTypeLoadException ex)
         {
-            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, $"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
             throw;
         }
         catch (Exception ex)
         {
-            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, true, ex.ToString() + "Error while initializing and loading dependencies.");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, ex.ToString() + "Error while initializing and loading dependencies.");
             throw;
         }
 

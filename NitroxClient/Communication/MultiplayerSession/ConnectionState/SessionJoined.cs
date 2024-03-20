@@ -9,7 +9,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            DisplayStatusCode(StatusCode.OUTBOUND_CONNECTION_ALREADY_OPEN, false, "The session is already in progress.");
+            DisplayStatusCode(StatusCode.OUTBOUND_CONNECTION_ALREADY_OPEN, "The session is already in progress.");
         }
     }
 }
