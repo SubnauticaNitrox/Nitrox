@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
 using HarmonyLib;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxTest.Patcher;
 
 namespace NitroxPatcher.Patches.Dynamic;

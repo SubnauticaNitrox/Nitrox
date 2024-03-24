@@ -28,6 +28,7 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(TorpedoTargetAcquired),
         typeof(StasisSphereShot),
         typeof(StasisSphereHit),
+        typeof(SeaTreaderChunkPickedUp)
     };
 
     /// <summary>
