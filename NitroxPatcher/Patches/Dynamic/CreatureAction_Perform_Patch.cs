@@ -19,7 +19,7 @@ public sealed partial class CreatureAction_Perform_Patch : NitroxPatch, IDynamic
             return true;
         }
 
-        // Perform should never be done on non-executing clients because it usually only calls swim behaviours
+        // Perform is too specific for each action so it should always be synced case by case (and never run directly on remote players)
         return false;
     }
 }

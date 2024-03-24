@@ -23,7 +23,7 @@ public class AI
     /// </summary>
     private readonly HashSet<Type> creatureActionWhitelist =
     [
-        typeof(AttackLastTarget), typeof(RangedAttackLastTarget), typeof(AttackCyclops)
+        typeof(AttackLastTarget), typeof(RangedAttackLastTarget), typeof(AttackCyclops), typeof(Poop)
     ];
 
     /// <summary>
@@ -32,7 +32,7 @@ public class AI
     /// </summary>
     private readonly HashSet<Type> syncedCreatureWhitelist =
     [
-        typeof(ReaperLeviathan), typeof(SeaDragon)
+        typeof(ReaperLeviathan), typeof(SeaDragon), typeof(SeaTreader), typeof(GhostLeviathan)
     ];
 
     public AI(IPacketSender packetSender)
@@ -140,6 +140,16 @@ public class AI
                 rangedAttackLastTarget.StartCasting(attackType);
                 ErrorMessage.AddMessage($"[GET] {rangedAttackLastTarget.name} casts against {targetObject.name}");
                 break;
+        }
+    }
+
+    public static void CreaturePoopPerformed(NitroxId creatureId)
+    {
+        if (NitroxEntity.TryGetComponentFrom(creatureId, out Poop poop))
+        {
+            // Code from Poop.Perform
+            SafeAnimator.SetBool(poop.creature.GetAnimator(), poop.animationParameterName, false);
+            poop.recourceSpawned = true;
         }
     }
 
