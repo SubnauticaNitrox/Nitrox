@@ -135,11 +135,9 @@ public class JoinServer : MonoBehaviour
         {
             await multiplayerSession.ConnectAsync(serverIp, serverPort);
         }
-        catch (ClientConnectionFailedException ex)
+        catch (ClientConnectionFailedException ex) 
         {
-            DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "Unable to contact the remote server at: {ip}:{port}" + serverIp + serverPort);
             Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
-
             if (serverIp.Equals("127.0.0.1"))
             {
                 if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
@@ -149,7 +147,7 @@ public class JoinServer : MonoBehaviour
                 }
                 else
                 {
-                    DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.ToString());
+                    DisplayStatusCode(StatusCode.FIREWALL_MOD_FAIL, ex.ToString());
                     Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
                 }
             }

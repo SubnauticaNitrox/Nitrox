@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -13,7 +13,7 @@ using WindowsFirewallHelper.Addresses;
 using WindowsFirewallHelper.FirewallRules;
 using NitroxModel;
 using NitroxModel.Helper;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher.Models.Utils
 {
     internal static class WindowsHelper
@@ -58,7 +58,7 @@ namespace NitroxLauncher.Models.Utils
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "Error while trying to instance an admin processus of the launcher, aborting");
+                        DisplayStatusCode(StatusCode.PRIVILEGES_ERR, "Error while trying to instantiate an admin process of the launcher, aborting");
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace NitroxLauncher.Models.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("Try restarting the launcher as administrator or manually adding firewall rules for Nitrox programs. This warning won't be shown again.", "Error adding Windows Firewall rules", MessageBoxButton.OK, MessageBoxImage.Warning);
+                DisplayStatusCode(StatusCode.FIREWALL_MOD_FAIL, "Try restarting the launcher as administrator or manually adding firewall rules for Nitrox programs. This warning won't be shown again.");
             }
         }
 
@@ -155,7 +155,7 @@ namespace NitroxLauncher.Models.Utils
         {
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("Unable to add firewall rule to non-existent program", filePath);
+                DisplayStatusCode(StatusCode.FIREWALL_MOD_FAIL, "Unable to add firewall rule to non-existent program" + filePath);
             }
             if (!FirewallRuleExists(name, filePath, direction))
             {

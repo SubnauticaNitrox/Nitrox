@@ -200,7 +200,6 @@ public static class BuildUtils
         if (!isWaterPark)
         {
             DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, "Couldn't find the module's GameObject of built interior piece when transferring its NitroxEntity to the module.");
-            Log.Error("Couldn't find the module's GameObject of built interior piece when transferring its NitroxEntity to the module.");
         }
 
         moduleObject = null;

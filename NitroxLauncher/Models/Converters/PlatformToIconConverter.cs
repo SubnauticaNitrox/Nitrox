@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 using NitroxModel.Discovery.Models;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher.Models.Converters
 {
     [ValueConversion(typeof(Platform), typeof(string))]
@@ -28,7 +28,8 @@ namespace NitroxLauncher.Models.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotSupportedException();
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, "Operation not supported");
+            return null;
         }
 
         // We're inhereting from MarkupExtensions to avoid declaring this converter inside the ressources of a window

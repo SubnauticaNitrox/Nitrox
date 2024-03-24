@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using NitroxModel.Platforms.OS.Shared;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Serialization;
 
 public class ServerProtoBufSerializer : IServerSerializer
@@ -79,7 +79,7 @@ public class ServerProtoBufSerializer : IServerSerializer
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}" + ex.Message);
             }
         }
     }

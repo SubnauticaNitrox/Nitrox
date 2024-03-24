@@ -29,7 +29,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             catch (Exception)
             {
                 Disconnect(sessionConnectionContext);
-                throw;
             }
             return Task.CompletedTask;
         }
@@ -68,7 +67,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             if (!reservationCorrelationId.Equals(sessionConnectionContext.Reservation.CorrelationId))
             {
                 DisplayStatusCode(StatusCode.INVALID_PACKET, sessionConnectionContext.Reservation.ToString() + reservationCorrelationId.ToString());
-                throw new UncorrelatedPacketException(sessionConnectionContext.Reservation, reservationCorrelationId);
             }
         }
     }

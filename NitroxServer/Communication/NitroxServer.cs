@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
@@ -6,7 +6,7 @@ using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication
 {
     public abstract class NitroxServer
@@ -75,7 +75,7 @@ namespace NitroxServer.Communication
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Exception while processing packet: {packet}");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message + $"Exception while processing packet: {packet}");
             }
         }
     }

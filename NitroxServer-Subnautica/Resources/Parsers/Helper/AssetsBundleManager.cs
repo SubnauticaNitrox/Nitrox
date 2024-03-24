@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxModel.DataStructures.Unity;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 public class AssetsBundleManager : AssetsManager
@@ -48,8 +48,8 @@ public class AssetsBundleManager : AssetsManager
                 // ignored
             }
         }
-
-        throw new InvalidOperationException("Could find AssetTypeValueField in given dependencies");
+        PrintStatusCode(StatusCode.DEPENDENCY_FAIL, "Could find AssetTypeValueField in given dependencies");
+        throw new Exception();
     }
 
     /// <summary>

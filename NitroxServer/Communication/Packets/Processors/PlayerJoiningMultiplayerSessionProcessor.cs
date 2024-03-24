@@ -13,7 +13,7 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.World;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
@@ -110,7 +110,7 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 return playerWorldEntity;
             }
-            Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");
+            PrintStatusCode(StatusCode.REMOTE_PLAYER_ERR, $"Unable to find player entity for {player.Name}. Re-creating one");
             return SetupPlayerEntity(player);
         }
     }

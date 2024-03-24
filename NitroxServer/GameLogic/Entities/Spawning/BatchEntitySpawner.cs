@@ -8,7 +8,7 @@ using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Helper;
 using NitroxServer.Resources;
 using NitroxServer.Serialization;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.GameLogic.Entities.Spawning;
 
 public class BatchEntitySpawner : IEntitySpawner
@@ -114,7 +114,7 @@ public class BatchEntitySpawner : IEntitySpawner
             {
                 if (entities[x] == entities[y] && x != y)
                 {
-                    Log.Error($"Duplicate Entity detected! {entities[x]}");
+                    PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Duplicate Entity detected! {entities[x]}");
                 }
             }
         }

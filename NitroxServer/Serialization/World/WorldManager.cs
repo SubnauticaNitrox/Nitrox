@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxModel.Helper;
 using NitroxModel.Server;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Serialization.World;
 
 public static class WorldManager
@@ -20,7 +20,7 @@ public static class WorldManager
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Couldn't create \"saves\" folder");
+            DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Couldn't create \"saves\" folder" + ex.Message);
             throw new Exception(ex.ToString());
         }
     }
@@ -92,7 +92,7 @@ public static class WorldManager
             }
             catch
             {
-                Log.Error($"World \"{folder}\" could not be processed");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"World \"{folder}\" could not be processed");
             }
         }
         // Order listing based on FileLastAccessed time

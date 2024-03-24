@@ -1,6 +1,6 @@
 using NitroxModel.DataStructures.GameLogic.Entities;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours;
 
 /// <summary>
@@ -19,7 +19,7 @@ public class NitroxGeyser : MonoBehaviour
     {
         if (!DayNightCycle.main)
         {
-            Log.Error($"Can't initialize {nameof(NitroxGeyser)} without {nameof(DayNightCycle)} being initialized");
+            DisplayStatusCode(StatusCode.SYNC_FAIL, $"Can't initialize {nameof(NitroxGeyser)} without {nameof(DayNightCycle)} being initialized");
             Destroy(this);
             return;
         }

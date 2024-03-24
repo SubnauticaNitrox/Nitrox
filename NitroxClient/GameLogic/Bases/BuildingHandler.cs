@@ -169,6 +169,7 @@ public partial class BuildingHandler : MonoBehaviour
     {
         if (!NitroxEntity.TryGetComponentFrom(placeBase.FormerGhostId, out ConstructableBase constructableBase))
         {
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find ghost with id: {placeBase.FormerGhostId} when building {placeBase}");
             FailedOperations++;
             yield break;
         }

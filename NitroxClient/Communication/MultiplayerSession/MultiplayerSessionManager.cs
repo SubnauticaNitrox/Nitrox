@@ -118,7 +118,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 CurrentState.Disconnect(this);
-                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "Client has been disconnected");
             }
         }
 

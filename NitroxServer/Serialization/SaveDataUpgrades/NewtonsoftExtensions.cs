@@ -1,7 +1,7 @@
-﻿#nullable enable
+#nullable enable
 using System;
 using Newtonsoft.Json.Linq;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Serialization.SaveDataUpgrades
 {
     public static class NewtonsoftExtensions
@@ -10,7 +10,7 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
         {
             if (token == null)
             {
-                throw new ArgumentNullException("token", "Cannot rename a null token");
+                PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, "token" + "Cannot rename a null token");
             }
 
             JProperty property;
@@ -19,7 +19,7 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
             {
                 if (token.Parent == null)
                 {
-                    throw new InvalidOperationException("Cannot rename a property with no parent");
+                    PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, "Cannot rename a property with no parent");
                 }
 
                 property = (JProperty)token;
@@ -28,7 +28,7 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
             {
                 if (token.Parent == null || token.Parent.Type != JTokenType.Property)
                 {
-                    throw new InvalidOperationException("This token's parent is not a JProperty; cannot rename");
+                    PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, "This token's parent is not a JProperty; cannot rename");
                 }
 
                 property = (JProperty)token.Parent;

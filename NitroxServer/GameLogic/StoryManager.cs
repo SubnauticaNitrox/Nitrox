@@ -5,7 +5,7 @@ using NitroxServer.Helper;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxModel.Helper;
 using NitroxModel;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.GameLogic;
 
 /// <summary>
@@ -138,7 +138,7 @@ public class StoryManager : IDisposable
         int beginIndex = PlaySunbeamEvent.SunbeamGoals.GetIndex(sunbeamEventKey);
         if (beginIndex == -1)
         {
-            Log.Error($"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {sunbeamEventKey}");
+            PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {sunbeamEventKey}");
             return;
         }
         for (int i = beginIndex; i < PlaySunbeamEvent.SunbeamGoals.Length; i++)

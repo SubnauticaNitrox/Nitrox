@@ -19,7 +19,7 @@ using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Helper;
 using NitroxServer.Resources;
 using NitroxServer.Serialization.Upgrade;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
@@ -84,7 +84,7 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Could not save world :");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"Could not save world :" + ex.Message);
                 return false;
             }
         }
@@ -125,7 +125,7 @@ namespace NitroxServer.Serialization.World
 
                 if (!persistedData.IsValid())
                 {
-                    throw new InvalidDataException("Save files are not valid");
+                    PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, "Save files are not valid");
                 }
 
                 return persistedData;
@@ -135,7 +135,7 @@ namespace NitroxServer.Serialization.World
                 // Check if the world was newly created using the world manager
                 if (new FileInfo(Path.Combine(saveDir, $"Version{FileEnding}")).Length > 0)
                 {
-                    Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+                    PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
 
                     // Backup world if loading fails
                     string outZip = Path.Combine(saveDir, "worldBackup.zip");
@@ -254,7 +254,7 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Error while upgrading save file. \"Version{FileEnding}\" couldn't be read.");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"Error while upgrading save file. \"Version{FileEnding}\" couldn't be read." + ex.Message);
                 return;
             }
 
@@ -281,7 +281,7 @@ namespace NitroxServer.Serialization.World
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "Error while upgrading save file.");
+                    PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, "Error while upgrading save file." + ex.Message);
                     return;
                 }
 

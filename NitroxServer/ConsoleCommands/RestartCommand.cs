@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.ConsoleCommands
 {
     internal class RestartCommand : Command
@@ -17,14 +17,14 @@ namespace NitroxServer.ConsoleCommands
         {
             if (Debugger.IsAttached)
             {
-                Log.Error("Cannot restart server while debugger is attached.");
+                PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, "Cannot restart server while debugger is attached.");
                 return;
             }
 
             string program = Process.GetCurrentProcess().MainModule?.FileName;
             if (program == null)
             {
-                Log.Error("Failed to get location of server.");
+                PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, "Failed to get location of server.");
                 return;
             }
 

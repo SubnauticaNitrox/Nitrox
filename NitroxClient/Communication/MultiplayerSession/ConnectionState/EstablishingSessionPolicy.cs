@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Packets.Exceptions;
+using NitroxModel.Platforms.OS.Windows.Internal;
 using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
@@ -28,7 +29,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             catch (Exception)
             {
                 Disconnect(sessionConnectionContext);
-                throw;
             }
             return Task.CompletedTask;
         }

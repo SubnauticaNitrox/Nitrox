@@ -226,7 +226,7 @@ namespace NitroxLauncher
             if (string.IsNullOrWhiteSpace(Config.SubnauticaPath) || !Directory.Exists(Config.SubnauticaPath))
             {
                 NavigateTo<OptionPage>();
-                throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
+                DisplayStatusCode(StatusCode.FILE_SYSTEM_ERR, "Location of Subnautica is unknown. Set the path to it in settings.");
             }
 
             if (PirateDetection.HasTriggered)
@@ -238,7 +238,7 @@ namespace NitroxLauncher
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
-                throw new Exception("An instance of Subnautica is already running");
+                DisplayStatusCode(StatusCode.STORE_NOT_RUNNING, "An instance of subnautica is already running");
             }
 #endif
 

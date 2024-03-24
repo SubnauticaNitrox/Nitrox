@@ -165,6 +165,7 @@ public class DiscordClient : MonoBehaviour
             if (result != Result.Ok)
             {
                 Log.Error($"[Discord] {result}: Updating Activity failed");
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"[Discord] {result}: Updating Activity failed");
             }
         });
     }

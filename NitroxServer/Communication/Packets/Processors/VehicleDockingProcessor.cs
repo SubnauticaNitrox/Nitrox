@@ -3,7 +3,7 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors;
 
 public class VehicleDockingProcessor : AuthenticatedPacketProcessor<VehicleDocking>
@@ -21,13 +21,13 @@ public class VehicleDockingProcessor : AuthenticatedPacketProcessor<VehicleDocki
     {
         if (!entityRegistry.TryGetEntityById(packet.VehicleId, out Entity vehicleEntity))
         {
-            Log.Error($"Unable to find vehicle to dock {packet.VehicleId}");
+            PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find vehicle to dock {packet.VehicleId}");
             return;
         }
 
         if (!entityRegistry.TryGetEntityById(packet.DockId, out Entity dockEntity))
         {
-            Log.Error($"Unable to find dock {packet.DockId} for docking vehicle {packet.VehicleId}");
+            PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find dock {packet.DockId} for docking vehicle {packet.VehicleId}");
             return;
         }
 

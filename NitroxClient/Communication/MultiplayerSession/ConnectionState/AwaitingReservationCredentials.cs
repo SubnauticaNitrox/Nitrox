@@ -21,10 +21,9 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
                 RequestSessionReservation(sessionConnectionContext, reservationCorrelationId);
                 AwaitSessionReservation(sessionConnectionContext, reservationCorrelationId);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Disconnect(sessionConnectionContext);
-                throw;
             }
             return Task.CompletedTask;
         }

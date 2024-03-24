@@ -13,7 +13,7 @@ using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication;
 using NitroxServer.Serialization;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.GameLogic
 {
     // TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
@@ -164,7 +164,7 @@ namespace NitroxServer.GameLogic
 
                 if (timerData.Counter >= timerData.MaxCounter)
                 {
-                    Log.Error("An unexpected Error occured during InitialSync");
+                    PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, "An unexpected Error occured during InitialSync");
                     PlayerDisconnected(timerData.Connection);
 
                     timerData.Disposing = true;

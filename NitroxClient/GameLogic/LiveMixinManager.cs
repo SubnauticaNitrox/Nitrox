@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic;
 
 public class LiveMixinManager
@@ -97,7 +97,7 @@ public class LiveMixinManager
             }
         } catch (Exception e)
         {
-            Log.Error(e, $"Encountered an expcetion while processing health update");
+            DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, e.Message + $"Encountered an expcetion while processing health update");
         }
 
         IsRemoteHealthChanging = false;

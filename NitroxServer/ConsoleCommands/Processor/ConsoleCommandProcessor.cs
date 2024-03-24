@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             {
                 if (commands.ContainsKey(cmd.Name))
                 {
-                    throw new DuplicateRegistrationException($"Command {cmd.Name} is registered multiple times.");
+                    PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"Command {cmd.Name} is registered multiple times.");
                 }
 
                 commands[cmd.Name] = cmd;
@@ -27,9 +27,8 @@ namespace NitroxServer.ConsoleCommands.Processor
                 {
                     if (commands.ContainsKey(alias))
                     {
-                        throw new DuplicateRegistrationException($"Command {alias} is registered multiple times.");
+                        PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"Command {alias} is registered multiple times.");
                     }
-
                     commands[alias] = cmd;
                 }
             }
@@ -49,7 +48,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             if (!sender.HasValue && command.Flags.HasFlag(PermsFlag.NO_CONSOLE))
             {
-                Log.Error("This command cannot be used by CONSOLE");
+                DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, "This command cannot be used by CONSOLE");
                 return;
             }
 

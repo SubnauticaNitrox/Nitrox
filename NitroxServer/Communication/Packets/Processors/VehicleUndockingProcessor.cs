@@ -3,7 +3,7 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors;
 
 public class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUndocking>
@@ -23,13 +23,13 @@ public class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUnd
         {
             if (!entityRegistry.TryGetEntityById(packet.VehicleId, out Entity vehicleEntity))
             {
-                Log.Error($"Unable to find vehicle to undock {packet.VehicleId}");
+                PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find vehicle to undock {packet.VehicleId}");
                 return;
             }
 
             if (!entityRegistry.GetEntityById(vehicleEntity.ParentId).HasValue)
             {
-                Log.Error($"Unable to find docked vehicles parent {vehicleEntity.ParentId} to undock from");
+                PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find docked vehicles parent {vehicleEntity.ParentId} to undock from");
                 return;
             }
 

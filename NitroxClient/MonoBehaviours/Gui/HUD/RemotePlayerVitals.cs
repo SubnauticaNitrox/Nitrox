@@ -162,6 +162,7 @@ public class RemotePlayerVitals : MonoBehaviour
                 break;
             default:
                 Log.Info($"Unhandled bar type: {barBehaviour.GetType()}");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, $"Unhandled bar type: {barBehaviour.GetType()}");
                 break;
         }
 

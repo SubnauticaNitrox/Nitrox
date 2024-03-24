@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Text;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 using Object = UnityEngine.Object;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Unity.Helper
 {
     public static class GameObjectHelper
@@ -59,7 +59,7 @@ namespace NitroxClient.Unity.Helper
 
             if (!child)
             {
-                throw new ArgumentNullException($@"{tf} does not contain ""{name}""");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, $@"{tf} does not contain ""{name}""");
             }
 
             return child;

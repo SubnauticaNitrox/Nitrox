@@ -62,7 +62,6 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             if (taskCount != 0)
             {
                 DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, "Colors must be swapped before the changes can be applied to the player model.");
-                throw new InvalidOperationException("Colors must be swapped before the changes can be applied to the player model.");
             }
 
             colorSwapManagers.ForEach(manager => manager.ApplyPlayerColor(texturePixelIndexes, nitroxPlayer));
@@ -74,7 +73,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
             {
                 //TODO: We need to handle job cancellation during stabilization to ensure that the client shuts down gracefully.
                 DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, "Cannot execute a null task." + nameof(state));
-                throw new ArgumentException();
+                return;
             }
 
             task.Invoke(this);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -6,7 +6,7 @@ using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
@@ -81,7 +81,7 @@ namespace NitroxServer.Communication.Packets
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Error in packet processor {processor.GetType()}");
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"Error in packet processor {processor.GetType()}" + ex.Message);
             }
         }
     }

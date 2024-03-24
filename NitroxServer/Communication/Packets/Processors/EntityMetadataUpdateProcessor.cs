@@ -1,10 +1,10 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
@@ -29,7 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
             else
             {
-                Log.Error($"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
+                PrintStatusCode(StatusCode.INVALID_PACKET, $"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
             }
         }
 

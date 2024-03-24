@@ -1,9 +1,9 @@
-﻿using NitroxModel.DataStructures.Unity;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors;
 
 public class FMODEventInstanceProcessor : AuthenticatedPacketProcessor<FMODEventInstancePacket>
@@ -21,7 +21,7 @@ public class FMODEventInstanceProcessor : AuthenticatedPacketProcessor<FMODEvent
     {
         if (!fmodWhitelist.TryGetSoundData(packet.AssetPath, out SoundData soundData))
         {
-            Log.Error($"[{nameof(FMODEventInstanceProcessor)}] Whitelist has no item for {packet.AssetPath}.");
+            PrintStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(FMODEventInstanceProcessor)}] Whitelist has no item for {packet.AssetPath}.");
             return;
         }
 

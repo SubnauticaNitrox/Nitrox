@@ -1,7 +1,7 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class CrashHomeMetadataProcessor : EntityMetadataProcessor<CrashHomeMetadata>
@@ -15,7 +15,7 @@ public class CrashHomeMetadataProcessor : EntityMetadataProcessor<CrashHomeMetad
         }
         else
         {
-            Log.Error($"[{nameof(CrashHomeMetadataProcessor)}] Could not find {nameof(CrashHome)} on {gameObject}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"[{nameof(CrashHomeMetadataProcessor)}] Could not find {nameof(CrashHome)} on {gameObject}");
         }
     }
 

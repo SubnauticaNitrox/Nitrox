@@ -5,7 +5,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class CrashEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
@@ -18,7 +18,7 @@ public class CrashEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
             yield return DefaultWorldEntitySpawner.RequestPrefab(entity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                Log.Error($"Couldn't find a prefab for {nameof(WorldEntity)} of ClassId {entity.ClassId}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find a prefab for {nameof(WorldEntity)} of ClassId {entity.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();
@@ -58,7 +58,7 @@ public class CrashEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
     {
         if (!prefabObject.TryGetComponent(out crash))
         {
-            Log.Error($"Couldn't find component {nameof(Crash)} on prefab with ClassId: {entity.ClassId}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find component {nameof(Crash)} on prefab with ClassId: {entity.ClassId}");
             crashHome = null;
             return false;
         }
@@ -68,7 +68,7 @@ public class CrashEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
         }
 
         crashHome = null;
-        Log.Error($"Couldn't find a valid parent for {entity}");
+        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find a valid parent for {entity}");
         return false;
     }
 

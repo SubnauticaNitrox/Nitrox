@@ -20,7 +20,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             catch (Exception)
             {
                 Disconnect(sessionConnectionContext);
-                throw;
             }
         }
 

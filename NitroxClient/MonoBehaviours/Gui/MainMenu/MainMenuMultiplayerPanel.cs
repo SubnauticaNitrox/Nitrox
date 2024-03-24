@@ -121,7 +121,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
-                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, "Unable to contact the remote server at: {ip}:{port}" + serverIp + serverPort);
                 Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}");
                 return;
             }
@@ -224,7 +223,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (SocketException ex)
             {
-                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, ex.ToString() + "Unable to resolve the address {hostname}:{serverPort}" + hostname.ToString() + serverPort.ToString());
                 Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}:{serverPort}", hostname, serverPort);
                 return null;
             }

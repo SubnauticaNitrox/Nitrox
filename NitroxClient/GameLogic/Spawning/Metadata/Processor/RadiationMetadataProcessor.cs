@@ -3,7 +3,7 @@ using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
 public class RadiationMetadataProcessor : EntityMetadataProcessor<RadiationMetadata>
@@ -12,7 +12,7 @@ public class RadiationMetadataProcessor : EntityMetadataProcessor<RadiationMetad
     {
         if (!gameObject.TryGetComponent(out LiveMixin liveMixin))
         {
-            Log.Error($"[{nameof(RadiationMetadataProcessor)}] Couldn't find LiveMixin on {gameObject}");
+            DisplayStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(RadiationMetadataProcessor)}] Couldn't find LiveMixin on {gameObject}");
             return;
         }
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())

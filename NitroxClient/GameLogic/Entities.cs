@@ -120,7 +120,7 @@ namespace NitroxClient.GameLogic
             bool restarted = false;
             yield return SpawnBatchAsync(EntitiesToSpawn).OnYieldError(exception =>
             {
-                Log.Error(exception);
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, exception.Message);
                 if (EntitiesToSpawn.Count > 0)
                 {
                     restarted = true;
@@ -200,7 +200,7 @@ namespace NitroxClient.GameLogic
                 // Any error in there would make spawning children useless
                 if (exception.Get() != null)
                 {
-                    Log.Error(exception.Get());
+                    DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, exception.Get().Message);
                     continue;
                 }
                 else if (!entityResult.Get().Value)
@@ -261,7 +261,7 @@ namespace NitroxClient.GameLogic
             if (!NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject))
             {
 #if DEBUG && ENTITY_LOG
-                Log.Error($"Entity was already spawned but not found(is it in another chunk?) NitroxId: {entity.Id} TechType: {entity.TechType} ClassId: {entity.ClassId} Transform: {entity.Transform}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Entity was already spawned but not found(is it in another chunk?) NitroxId: {entity.Id} TechType: {entity.TechType} ClassId: {entity.ClassId} Transform: {entity.Transform}");
 #endif
                 return;
             }

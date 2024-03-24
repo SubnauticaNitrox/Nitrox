@@ -5,7 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.GameLogic.Entities;
 
 public class EntitySimulation
@@ -78,8 +78,8 @@ public class EntitySimulation
             bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
             return new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
         }
-
-        throw new Exception($"New entity was already being simulated by someone else: {entity.Id}");
+        PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"New entity was already being simulated by someone else: {entity.Id}");
+        return null;
     }
 
     public List<SimulatedEntity> AssignGlobalRootEntitiesAndGetData(Player player)

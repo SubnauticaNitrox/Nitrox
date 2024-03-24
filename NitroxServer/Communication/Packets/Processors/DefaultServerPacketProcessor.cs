@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors;
 
 public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
@@ -47,7 +47,7 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
 
         if (defaultPacketProcessorBlacklist.Contains(packet.GetType()))
         {
-            Log.ErrorOnce($"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
+            PrintStatusCode(StatusCode.INVALID_PACKET, $"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
             return;
         }
         playerManager.SendPacketToOtherPlayers(packet, player);
