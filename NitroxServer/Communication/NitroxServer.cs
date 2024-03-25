@@ -75,7 +75,7 @@ namespace NitroxServer.Communication
             }
             catch (Exception ex)
             {
-                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message + $"Exception while processing packet: {packet}");
+                //PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message + $"Exception while processing packet: {packet}");
             }
         }
     }

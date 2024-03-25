@@ -32,7 +32,7 @@ public class BuildingManager
         {
             if (entityRegistry.GetEntityById(ghostEntity.Id).HasValue)
             {
-                PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Trying to add a ghost to Global Root but another entity with the same id already exists (GhostId: {ghostEntity.Id})");
+                //PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Trying to add a ghost to Global Root but another entity with the same id already exists (GhostId: {ghostEntity.Id})");
                 return false;
             }
 
@@ -42,17 +42,17 @@ public class BuildingManager
 
         if (!entityRegistry.TryGetEntityById(ghostEntity.ParentId, out Entity parentEntity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a ghost to a build that isn't registered (ParentId: {ghostEntity.ParentId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a ghost to a build that isn't registered (ParentId: {ghostEntity.ParentId})");
             return false;
         }
         if (parentEntity is not BuildEntity)
         {
-            PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Trying to add a ghost to an entity that is not a building (ParentId: {ghostEntity.ParentId})");
+            //PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Trying to add a ghost to an entity that is not a building (ParentId: {ghostEntity.ParentId})");
             return false;
         }
         if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(ghostEntity.Id)))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a ghost to a building but another child with the same id already exists (GhostId: {ghostEntity.Id})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a ghost to a building but another child with the same id already exists (GhostId: {ghostEntity.Id})");
             return false;
         }
 
@@ -67,7 +67,7 @@ public class BuildingManager
         {
             if (entityRegistry.GetEntityById(moduleEntity.Id).HasValue)
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to Global Root but another entity with the same id already exists ({moduleEntity.Id})");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to Global Root but another entity with the same id already exists ({moduleEntity.Id})");
                 return false;
             }
 
@@ -77,17 +77,17 @@ public class BuildingManager
 
         if (!entityRegistry.TryGetEntityById(moduleEntity.ParentId, out Entity parentEntity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to a build that isn't registered (ParentId: {moduleEntity.ParentId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to a build that isn't registered (ParentId: {moduleEntity.ParentId})");
             return false;
         }
         if (parentEntity is not BuildEntity && parentEntity is not VehicleWorldEntity)
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
             return false;
         }
         if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(moduleEntity.Id)))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to a building but another child with the same id already exists (ModuleId: {moduleEntity.Id})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a module to a building but another child with the same id already exists (ModuleId: {moduleEntity.Id})");
             return false;
         }
 
@@ -99,12 +99,12 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(modifyConstructedAmount.GhostId, out Entity entity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to modify the constructed amount of a non-registered object (GhostId: {modifyConstructedAmount.GhostId})");
             return false;
         }
         if (entity is not GhostEntity && entity is not ModuleEntity)
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to modify the constructed amount of an entity that is not a ghost (Id: {modifyConstructedAmount.GhostId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to modify the constructed amount of an entity that is not a ghost (Id: {modifyConstructedAmount.GhostId})");
             return false;
         }
         if (modifyConstructedAmount.ConstructedAmount == 0f)
@@ -129,12 +129,12 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(placeBase.FormerGhostId, out Entity entity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to place a base from a non-registered ghost (Id: {placeBase.FormerGhostId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to place a base from a non-registered ghost (Id: {placeBase.FormerGhostId})");
             return false;
         }
         if (entity is not GhostEntity)
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a new build to Global Root but another build with the same id already exists (GhostId: {placeBase.FormerGhostId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a new build to Global Root but another build with the same id already exists (GhostId: {placeBase.FormerGhostId})");
             return false;
         }
 
@@ -147,13 +147,13 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
             operationId = -1;
             return false;
         }
         if (!entityRegistry.TryGetEntityById(updateBase.BaseId, out BuildEntity buildEntity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
             operationId = -1;
             return false;
         }
@@ -223,7 +223,7 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(baseDeconstructed.FormerBaseId, out BuildEntity _))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to replace a non-registered build (BaseId: {baseDeconstructed.FormerBaseId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to replace a non-registered build (BaseId: {baseDeconstructed.FormerBaseId})");
             return false;
         }
 
@@ -236,14 +236,14 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to replace a non-registered build (BaseId: {pieceDeconstructed.BaseId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to replace a non-registered build (BaseId: {pieceDeconstructed.BaseId})");
             removedEntity = null;
             operationId = -1;
             return false;
         }
         if (entityRegistry.TryGetEntityById(pieceDeconstructed.PieceId, out GhostEntity _))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
             removedEntity = null;
             operationId = -1;
             return false;
@@ -273,12 +273,12 @@ public class BuildingManager
     {
         if (!entityRegistry.TryGetEntityById(waterParkDeconstructed.BaseId, out Entity entity) || entity is not BuildEntity buildEntity)
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to create a WaterPark piece in a non-registered build ({waterParkDeconstructed.BaseId})");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Trying to create a WaterPark piece in a non-registered build ({waterParkDeconstructed.BaseId})");
             return false;
         }
         if (buildEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(waterParkDeconstructed.NewWaterPark.Id)))
         {
-            PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Trying to create a WaterPark piece with an already registered id ({waterParkDeconstructed.NewWaterPark.Id})");
+            //PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Trying to create a WaterPark piece with an already registered id ({waterParkDeconstructed.NewWaterPark.Id})");
             return false;
         }
         InteriorPieceEntity newPiece = waterParkDeconstructed.NewWaterPark;

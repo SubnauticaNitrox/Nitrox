@@ -317,7 +317,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                DisplayStatusCode(StatusCode.INJECTION_FAIL, "Unhandled exception while trying to inject Nitrox: " + ex.ToString());
+                DisplayStatusCode(StatusCode.INJECTION_FAIL, "Unhandled exception while trying to remove the Nitrox patch: " + ex.ToString());
             }
         }
 

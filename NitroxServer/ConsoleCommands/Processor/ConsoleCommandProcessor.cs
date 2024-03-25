@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             {
                 if (commands.ContainsKey(cmd.Name))
                 {
-                    PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"Command {cmd.Name} is registered multiple times.");
+                    //PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"Command {cmd.Name} is registered multiple times.");
                 }
 
                 commands[cmd.Name] = cmd;
@@ -27,7 +27,7 @@ namespace NitroxServer.ConsoleCommands.Processor
                 {
                     if (commands.ContainsKey(alias))
                     {
-                        PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"Command {alias} is registered multiple times.");
+                        //PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"Command {alias} is registered multiple times.");
                     }
                     commands[alias] = cmd;
                 }

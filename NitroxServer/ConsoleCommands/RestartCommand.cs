@@ -17,14 +17,14 @@ namespace NitroxServer.ConsoleCommands
         {
             if (Debugger.IsAttached)
             {
-                PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, "Cannot restart server while debugger is attached.");
+                //PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, "Cannot restart server while debugger is attached.");
                 return;
             }
 
             string program = Process.GetCurrentProcess().MainModule?.FileName;
             if (program == null)
             {
-                PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, "Failed to get location of server.");
+                //PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, "Failed to get location of server.");
                 return;
             }
 

@@ -114,7 +114,7 @@ public class BatchEntitySpawner : IEntitySpawner
             {
                 if (entities[x] == entities[y] && x != y)
                 {
-                    PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Duplicate Entity detected! {entities[x]}");
+                    //PrintStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Duplicate Entity detected! {entities[x]}");
                 }
             }
         }

@@ -92,7 +92,7 @@ public static class WorldManager
             }
             catch
             {
-                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"World \"{folder}\" could not be processed");
+                //PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"World \"{folder}\" could not be processed");
             }
         }
         // Order listing based on FileLastAccessed time

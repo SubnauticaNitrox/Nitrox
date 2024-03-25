@@ -81,7 +81,7 @@ namespace NitroxServer.Communication.Packets
             }
             catch (Exception ex)
             {
-                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"Error in packet processor {processor.GetType()}" + ex.Message);
+                //PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"Error in packet processor {processor.GetType()}" + ex.Message);
             }
         }
     }

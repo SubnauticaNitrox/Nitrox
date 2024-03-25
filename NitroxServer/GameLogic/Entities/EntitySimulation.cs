@@ -78,7 +78,7 @@ public class EntitySimulation
             bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
             return new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
         }
-        PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"New entity was already being simulated by someone else: {entity.Id}");
+        //PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"New entity was already being simulated by someone else: {entity.Id}");
         return null;
     }
 

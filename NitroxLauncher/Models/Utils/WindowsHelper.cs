@@ -58,7 +58,7 @@ namespace NitroxLauncher.Models.Utils
                     }
                     catch (Exception ex)
                     {
-                        DisplayStatusCode(StatusCode.PRIVILEGES_ERR, "Error while trying to instantiate an admin process of the launcher, aborting");
+                        DisplayStatusCode(StatusCode.PRIVILEGES_ERR, "Error while trying to instantiate an admin process of the launcher, aborting. " + ex.Message);
                     }
                 }
             }

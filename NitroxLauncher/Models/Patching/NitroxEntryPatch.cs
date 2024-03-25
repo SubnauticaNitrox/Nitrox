@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +7,7 @@ using dnlib.DotNet;
 using dnlib.DotNet.Emit;
 using NitroxModel.Platforms.OS.Shared;
 using FileAttributes = System.IO.FileAttributes;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher.Models.Patching
 {
     internal sealed class NitroxEntryPatch
@@ -66,7 +66,7 @@ namespace NitroxLauncher.Models.Patching
             Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
             if (error != null)
             {
-                throw error;
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, error.Message);
             }
             FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         }

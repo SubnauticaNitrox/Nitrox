@@ -29,7 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
             else
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
             }
         }
 

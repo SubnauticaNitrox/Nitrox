@@ -164,7 +164,7 @@ namespace NitroxServer.GameLogic
 
                 if (timerData.Counter >= timerData.MaxCounter)
                 {
-                    PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, "An unexpected Error occured during InitialSync");
+                    //PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, "An unexpected Error occured during InitialSync");
                     PlayerDisconnected(timerData.Connection);
 
                     timerData.Disposing = true;

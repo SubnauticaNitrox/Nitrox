@@ -47,7 +47,7 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
 
         if (defaultPacketProcessorBlacklist.Contains(packet.GetType()))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Player {player.Name} [{player.Id}] sent a packet which is blacklisted by the server. It's likely that the said player is using a modified version of Nitrox and action could be taken accordingly.");
             return;
         }
         playerManager.SendPacketToOtherPlayers(packet, player);

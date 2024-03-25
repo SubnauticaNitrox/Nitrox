@@ -23,13 +23,13 @@ public class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUnd
         {
             if (!entityRegistry.TryGetEntityById(packet.VehicleId, out Entity vehicleEntity))
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find vehicle to undock {packet.VehicleId}");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find vehicle to undock {packet.VehicleId}");
                 return;
             }
 
             if (!entityRegistry.GetEntityById(vehicleEntity.ParentId).HasValue)
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find docked vehicles parent {vehicleEntity.ParentId} to undock from");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find docked vehicles parent {vehicleEntity.ParentId} to undock from");
                 return;
             }
 

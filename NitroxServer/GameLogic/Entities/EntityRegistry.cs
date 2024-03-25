@@ -64,7 +64,7 @@ namespace NitroxServer.GameLogic.Entities
             if (!entitiesById.TryAdd(entity.Id, entity))
             {
                 // Log an error to show stack trace but don't halt execution.
-                PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, new InvalidOperationException().Message + $"Trying to add duplicate entity {entity.Id}");
+                //PrintStatusCode(StatusCode.INVALID_FUNCTION_CALL, new InvalidOperationException().Message + $"Trying to add duplicate entity {entity.Id}");
             }
         }
 
@@ -159,7 +159,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"Could not find entity to reparent: {entityId}");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"Could not find entity to reparent: {entityId}");
                 return;
             }
             ReparentEntity(entity, newParentId);
@@ -169,7 +169,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"Could not find entity to reparent: {entityId}");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"Could not find entity to reparent: {entityId}");
                 return;
             }
             ReparentEntity(entity, newParent);
@@ -196,12 +196,12 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (!TryGetEntityById(parentId, out Entity parentEntity))
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find origin parent entity for {parentId}");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find origin parent entity for {parentId}");
                 return;
             }
             if (!TryGetEntityById(newParentId, out Entity newParentEntity))
             {
-                PrintStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find new parent entity for {newParentId}");
+                //PrintStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find new parent entity for {newParentId}");
                 return;
             }
             TransferChildren(parentEntity, newParentEntity, filter);

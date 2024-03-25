@@ -79,7 +79,7 @@ public class ServerProtoBufSerializer : IServerSerializer
             }
             catch (Exception ex)
             {
-                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}" + ex.Message);
+                //PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}" + ex.Message);
             }
         }
     }

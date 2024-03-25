@@ -148,13 +148,13 @@ namespace NitroxServer
                     }
                     else
                     {
-                        PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
+                        //PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
                         Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message + "Post-save command failed");
+                    //PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message + "Post-save command failed");
                 }
             }
             IsSaving = false;

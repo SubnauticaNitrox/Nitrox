@@ -21,13 +21,13 @@ public class VehicleDockingProcessor : AuthenticatedPacketProcessor<VehicleDocki
     {
         if (!entityRegistry.TryGetEntityById(packet.VehicleId, out Entity vehicleEntity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find vehicle to dock {packet.VehicleId}");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find vehicle to dock {packet.VehicleId}");
             return;
         }
 
         if (!entityRegistry.TryGetEntityById(packet.DockId, out Entity dockEntity))
         {
-            PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find dock {packet.DockId} for docking vehicle {packet.VehicleId}");
+            //PrintStatusCode(StatusCode.INVALID_PACKET, $"Unable to find dock {packet.DockId} for docking vehicle {packet.VehicleId}");
             return;
         }
 

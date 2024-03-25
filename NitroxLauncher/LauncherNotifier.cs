@@ -5,7 +5,7 @@ using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using ToastNotifications.Core;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher
 {
     internal static class LauncherNotifier
@@ -45,7 +45,7 @@ namespace NitroxLauncher
             }
             else
             {
-                Log.Error("Notifier is already set up");
+                DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, "Notifier is already set up");
             }
         }
 

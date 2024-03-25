@@ -85,7 +85,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message);
             }
         }
 
