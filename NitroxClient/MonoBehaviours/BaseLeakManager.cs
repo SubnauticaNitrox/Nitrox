@@ -4,7 +4,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours;
 
 public class BaseLeakManager : MonoBehaviour
@@ -18,7 +18,7 @@ public class BaseLeakManager : MonoBehaviour
     {
         if (!TryGetComponent(out baseHullStrength))
         {
-            Log.Error($"Tried adding a {nameof(BaseLeakManager)} to a GameObject that isn't a base, deleting it.");
+            DisplayStatusCode(StatusCode.SYNC_FAIL, $"Tried adding a {nameof(BaseLeakManager)} to a GameObject that isn't a base, deleting it.");
             Destroy(this);
             return;
         }

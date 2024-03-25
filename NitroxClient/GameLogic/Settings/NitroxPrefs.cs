@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Settings
 {
     public class NitroxPrefs
@@ -39,7 +39,8 @@ namespace NitroxClient.GameLogic.Settings
                     case int defaultInt:
                         return (T)Convert.ChangeType(PlayerPrefs.GetInt(Key, defaultInt), typeof(T));
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, "Variable had an invalid value");
+                        throw new ArgumentException();
                 }
             }
             set
@@ -56,7 +57,8 @@ namespace NitroxClient.GameLogic.Settings
                         PlayerPrefs.SetInt(Key, intValue);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, "Variable had an invalid value");
+                        break;
                 }
                 PlayerPrefs.Save();
             }

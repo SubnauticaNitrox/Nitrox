@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxServer.GameLogic;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract partial class Command
@@ -68,7 +68,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Fatal error while trying to execute the command");
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, "Fatal error while trying to execute the command" + ex.Message);
             }
         }
 

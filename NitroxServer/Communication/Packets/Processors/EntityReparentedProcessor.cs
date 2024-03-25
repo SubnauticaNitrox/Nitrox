@@ -3,7 +3,7 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors;
 
 public class EntityReparentedProcessor : AuthenticatedPacketProcessor<EntityReparented>
@@ -21,12 +21,12 @@ public class EntityReparentedProcessor : AuthenticatedPacketProcessor<EntityRepa
     {
         if (!entityRegistry.TryGetEntityById(packet.Id, out Entity entity))
         {
-            Log.Error($"Couldn't find entity for {packet.Id}");
+            DisplayStatusCode(StatusCode.INVALID_PACKET, $"Couldn't find entity for {packet.Id}");
             return;
         }
         if (!entityRegistry.TryGetEntityById(packet.NewParentId, out Entity parentEntity))
         {
-            Log.Error($"Couldn't find parent entity for {packet.NewParentId}");
+            DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find parent entity for {packet.NewParentId}");
             return;
         }
         

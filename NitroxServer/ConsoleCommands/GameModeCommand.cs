@@ -4,7 +4,7 @@ using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.ConsoleCommands;
 
 internal class GameModeCommand : Command
@@ -26,7 +26,7 @@ internal class GameModeCommand : Command
 
         if (args.IsConsole && targetPlayer == null)
         {
-            Log.Error($"Console can't use the gamemode command without providing a player name to it.");
+            PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"Console can't use the gamemode command without providing a player name to it.");
             return;
         }
         // The target player if not set, is the player who sent the command

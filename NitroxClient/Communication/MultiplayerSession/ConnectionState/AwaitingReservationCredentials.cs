@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class AwaitingReservationCredentials : ConnectionNegotiatingState
@@ -21,10 +21,9 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
                 RequestSessionReservation(sessionConnectionContext, reservationCorrelationId);
                 AwaitSessionReservation(sessionConnectionContext, reservationCorrelationId);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Disconnect(sessionConnectionContext);
-                throw;
             }
             return Task.CompletedTask;
         }
@@ -56,7 +55,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             if (!sessionConnectionContext.Client.IsConnected)
             {
-                throw new InvalidOperationException("The client is not connected.");
+                DisplayStatusCode(StatusCode.INVALID_PACKET, "The client is not connected.");
             }
         }
 
@@ -68,7 +67,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                throw new InvalidOperationException("The context does not contain player settings.", ex);
+                DisplayStatusCode(StatusCode.INVALID_PACKET, "The context does not contain player settings." + ex);
             }
         }
 
@@ -80,7 +79,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
             catch (ArgumentNullException ex)
             {
-                throw new InvalidOperationException("The context does not contain an authentication context.", ex);
+                DisplayStatusCode(StatusCode.INVALID_PACKET, "The context does not contain an authentication context." + ex);
             }
         }
     }

@@ -4,7 +4,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
 public static class BuildingPostSpawner
@@ -75,7 +75,7 @@ public static class BuildingPostSpawner
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message);
             }
         }
         yield break;

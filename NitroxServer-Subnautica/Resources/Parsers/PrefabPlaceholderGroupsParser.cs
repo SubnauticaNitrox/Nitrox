@@ -12,7 +12,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Resources;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
 public class PrefabPlaceholderGroupsParser : IDisposable
@@ -108,7 +108,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
                 if (!addressableCatalog.TryAdd(prefabAddressable.Key, resourceLocations.Select(x => x.InternalId).ToArray()))
                 {
-                    throw new InvalidOperationException($"Couldn't add item to {nameof(addressableCatalog)}");
+                    PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"Couldn't add item to {nameof(addressableCatalog)}");
                 }
 
                 break;
@@ -183,7 +183,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
             if (!prefabPlaceholderGroupsByGroupClassId.TryAdd(keyValuePair.Key, prefabPlaceholderGroup))
             {
-                throw new InvalidOperationException($"Couldn't add item to {nameof(prefabPlaceholderGroupsByGroupClassId)}");
+                PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"Couldn't add item to {nameof(prefabPlaceholderGroupsByGroupClassId)}");
             }
         });
         return prefabPlaceholderGroupsByGroupClassId;
@@ -262,7 +262,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         }
         if (!addressableCatalog.TryGetValue(classId, out string[] assetPaths))
         {
-            Log.Error($"Couldn't get PrefabPlaceholder with classId: {classId}");
+            PrintStatusCode(StatusCode.INVALID_VARIABLE_VAL, $"Couldn't get PrefabPlaceholder with classId: {classId}");
             return default;
         }
 

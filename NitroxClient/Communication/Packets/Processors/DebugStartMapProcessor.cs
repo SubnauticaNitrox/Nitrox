@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using UnityEngine;

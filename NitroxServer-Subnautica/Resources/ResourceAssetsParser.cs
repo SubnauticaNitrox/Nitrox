@@ -1,7 +1,7 @@
-﻿using System.IO;
+using System.IO;
 using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer_Subnautica.Resources;
 
 public static class ResourceAssetsParser
@@ -36,9 +36,8 @@ public static class ResourceAssetsParser
         string subnauticaPath = NitroxUser.GamePath;
         if (string.IsNullOrEmpty(subnauticaPath))
         {
-            throw new DirectoryNotFoundException("Could not locate Subnautica installation directory for resource parsing.");
+            PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, "Could not locate Subnautica installation directory for resource parsing.");
         }
-
         if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
         {
             return Path.Combine(subnauticaPath, "Subnautica_Data");
@@ -55,6 +54,7 @@ public static class ResourceAssetsParser
         {
             return Directory.GetCurrentDirectory();
         }
-        throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
+        PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, "Make sure resources.assets is in current or parent directory and readable.");
+        return null;
     }
 }

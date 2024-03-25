@@ -5,7 +5,7 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors
 {
     class ModuleAddedProcessor : AuthenticatedPacketProcessor<ModuleAdded>
@@ -25,7 +25,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (!entity.HasValue)
             {
-                Log.Error($"Could not find entity {packet.Id} module added to a vehicle.");
+                PrintStatusCode(StatusCode.INVALID_PACKET, $"Could not find entity {packet.Id} module added to a vehicle.");
                 return;
             }
 

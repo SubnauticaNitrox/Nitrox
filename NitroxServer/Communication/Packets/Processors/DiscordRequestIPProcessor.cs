@@ -1,10 +1,10 @@
-﻿using System.Net;
+using System.Net;
 using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.Serialization;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer.Communication.Packets.Processors;
 
 public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordRequestIP>
@@ -36,7 +36,7 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
 
         if (await wanIp == null)
         {
-            Log.Error("Couldn't get external Ip for discord request.");
+            PrintStatusCode(StatusCode.FIREWALL_MOD_FAIL, "Couldn't get external Ip for discord request.");
             return;
         }
 

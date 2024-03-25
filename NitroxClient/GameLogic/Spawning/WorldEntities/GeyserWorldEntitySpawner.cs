@@ -6,7 +6,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class GeyserWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpawner
@@ -31,7 +31,7 @@ public class GeyserWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpa
             yield return DefaultWorldEntitySpawner.RequestPrefab(entity.ClassId, prefabResult);
             if (!prefabResult.Get())
             {
-                Log.Error($"Couldn't find a prefab for {nameof(GeyserWorldEntity)} of ClassId {entity.ClassId}");
+                DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Couldn't find a prefab for {nameof(GeyserWorldEntity)} of ClassId {entity.ClassId}");
                 yield break;
             }
             prefab = prefabResult.Get();
@@ -82,7 +82,7 @@ public class GeyserWorldEntitySpawner : IWorldEntitySpawner, IWorldEntitySyncSpa
             return true;
         }
 
-        Log.Error($"Could not find component {nameof(Geyser)} on prefab with ClassId: {geyserEntity.ClassId}");
+        DisplayStatusCode(StatusCode.SUBNAUTICA_ERROR, $"Could not find component {nameof(Geyser)} on prefab with ClassId: {geyserEntity.ClassId}");
         return false;
     }
 

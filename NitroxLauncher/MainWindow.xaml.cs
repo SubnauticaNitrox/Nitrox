@@ -124,7 +124,7 @@ namespace NitroxLauncher
                      {
                          LauncherLogic.Instance.NavigateTo<OptionPage>();
                      }
-
+                     logic.CheckNitroxPath();
                      logic.CheckNitroxVersion();
                      logic.ConfigureFirewall();
                  }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());

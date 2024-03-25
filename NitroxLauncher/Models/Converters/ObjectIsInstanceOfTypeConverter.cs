@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Windows.Data;
 using System.Windows.Markup;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxLauncher.Models.Converters
 {
     [ValueConversion(typeof(Type), typeof(bool))]
@@ -24,7 +24,8 @@ namespace NitroxLauncher.Models.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new InvalidOperationException();
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, "Operation not supported");
+            return null; 
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)

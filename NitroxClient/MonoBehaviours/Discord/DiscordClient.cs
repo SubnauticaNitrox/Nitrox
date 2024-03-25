@@ -8,7 +8,7 @@ using NitroxModel.Core;
 using NitroxModel.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.MonoBehaviours.Discord;
 
 public class DiscordClient : MonoBehaviour
@@ -26,7 +26,7 @@ public class DiscordClient : MonoBehaviour
     {
         if (main)
         {
-            Log.Error($"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
+            DisplayStatusCode(StatusCode.INVALID_FUNCTION_CALL, $"[Discord] Tried to instantiate a second {nameof(DiscordClient)}");
             return;
         }
         activity = new();
@@ -55,7 +55,7 @@ public class DiscordClient : MonoBehaviour
         catch (Exception ex)
         {
             DisposeAndScheduleHookRestart();
-            Log.ErrorOnce($"Encountered an error while starting Discord hook, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+            DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"Encountered an error while starting Discord hook, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
     }
 
@@ -84,7 +84,7 @@ public class DiscordClient : MonoBehaviour
         {
             // Happens when Discord is closed while Nitrox has its Discord hook running (and for other reason)
             DisposeAndScheduleHookRestart();
-            Log.ErrorOnce($"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
+            DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"An error occured while running callbacks for Discord, will retry every {RETRY_INTERVAL} seconds: {ex.Message}");
         }
     }
 
@@ -165,6 +165,7 @@ public class DiscordClient : MonoBehaviour
             if (result != Result.Ok)
             {
                 Log.Error($"[Discord] {result}: Updating Activity failed");
+                DisplayStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, $"[Discord] {result}: Updating Activity failed");
             }
         });
     }
@@ -181,7 +182,7 @@ public class DiscordClient : MonoBehaviour
             else
             {
                 Log.InGame($"[Discord] {Language.main.Get("Nitrox_Failure")}");
-                Log.Error($"[Discord] {result}: Failed to send join response");
+                DisplayStatusCode(StatusCode.CONNECTION_FAIL_CLIENT, $"[Discord] {result}: Failed to send join response");
             }
         });
     }

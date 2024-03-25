@@ -1,8 +1,8 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.Communication.Packets.Processors;
 
 public class FMODCustomEmitterProcessor : ClientPacketProcessor<FMODCustomEmitterPacket>
@@ -12,6 +12,7 @@ public class FMODCustomEmitterProcessor : ClientPacketProcessor<FMODCustomEmitte
         if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject emitterControllerEntity))
         {
             Log.ErrorOnce($"[{nameof(FMODCustomEmitterProcessor)}] Couldn't find entity {packet.Id}");
+            DisplayStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(FMODCustomEmitterProcessor)}] Couldn't find entity {packet.Id}");
             return;
         }
 

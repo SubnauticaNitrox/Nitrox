@@ -14,7 +14,7 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Timer = System.Timers.Timer;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxServer
 {
     public class Server
@@ -35,6 +35,7 @@ namespace NitroxServer
         public bool IsSaving { get; private set; }
 
         public int Port => serverConfig?.ServerPort ?? -1;
+
 
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
         {
@@ -147,12 +148,13 @@ namespace NitroxServer
                     }
                     else
                     {
+                        //PrintStatusCode(StatusCode.FILE_SYSTEM_ERR, $"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
                         Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "Post-save command failed");
+                    //PrintStatusCode(StatusCode.MISC_UNHANDLED_EXCEPTION, ex.Message + "Post-save command failed");
                 }
             }
             IsSaving = false;

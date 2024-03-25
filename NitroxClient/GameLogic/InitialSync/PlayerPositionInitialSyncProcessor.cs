@@ -9,7 +9,7 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using Math = System.Math;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.InitialSync;
 
 public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
@@ -58,7 +58,7 @@ public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subRootId.Value);
         if (!sub.HasValue)
         {
-            Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
+            DisplayStatusCode(StatusCode.SYNC_FAIL, $"Could not spawn player into subroot with id: {subRootId.Value}");
             yield return Terrain.WaitForWorldLoad();
             yield break;
         }

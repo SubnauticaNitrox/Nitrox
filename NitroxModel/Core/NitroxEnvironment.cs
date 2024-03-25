@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxModel.Helper
 {
     /// <summary>
@@ -34,7 +34,7 @@ namespace NitroxModel.Helper
         {
             if (hasSet)
             {
-                throw new Exception("Environment type can only be set once");
+                DisplayStatusCode(StatusCode.INVALID_VARIABLE_VAL, "Environment type can only be set once");
             }
 
             Type = value;

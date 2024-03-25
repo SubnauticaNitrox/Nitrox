@@ -5,7 +5,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-
+using static NitroxModel.DisplayStatusCodes;
 namespace NitroxClient.GameLogic.Spawning.Bases;
 
 public class BaseLeakEntitySpawner : SyncEntitySpawner<BaseLeakEntity>
@@ -29,7 +29,7 @@ public class BaseLeakEntitySpawner : SyncEntitySpawner<BaseLeakEntity>
     {
         if (!NitroxEntity.TryGetComponentFrom(entity.ParentId, out BaseHullStrength baseHullStrength))
         {
-            Log.Error($"[{nameof(BaseLeakEntitySpawner)}] Couldn't find a {nameof(BaseHullStrength)} from id {entity.ParentId}");
+            DisplayStatusCode(StatusCode.INVALID_PACKET, $"[{nameof(BaseLeakEntitySpawner)}] Couldn't find a {nameof(BaseHullStrength)} from id {entity.ParentId}");
             return true;
         }
 

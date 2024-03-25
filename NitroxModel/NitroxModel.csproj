@@ -10,7 +10,7 @@
         <PackageReference Include="LiteNetLib" Version="1.2.0" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
         <PackageReference Include="Mono.Nat" Version="3.0.2" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Nitrox.BinaryPack" Version="2.0.1" />
         <PackageReference Include="Serilog" Version="2.10.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
@@ -27,6 +27,10 @@
         <Reference Include="LZ4">
             <HintPath>..\Nitrox.Assets.Subnautica\LZ4.dll</HintPath>
         </Reference>
+        <Reference Include="NitroxServer">
+          <HintPath>..\NitroxServer\bin\Debug\NitroxServer.dll</HintPath>
+        </Reference>
+        <Reference Include="PresentationCore" />
         <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
@@ -34,5 +38,6 @@
             <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
         </Reference>
         <Reference Include="System.Net.Http" />
+        <Reference Include="System.Windows.Forms" />
     </ItemGroup>
 </Project>
