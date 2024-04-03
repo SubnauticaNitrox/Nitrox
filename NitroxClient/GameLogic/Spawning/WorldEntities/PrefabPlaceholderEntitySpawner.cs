@@ -65,11 +65,11 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
 
     private void SetupObject(WorldEntity entity, GameObject gameObject, GameObject parent)
     {
-        gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
-        gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
-        gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
         if (entity is PrefabPlaceholderEntity prefabEntity && !prefabEntity.IsEntitySlotEntity && parent)
         {
+            gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
+            gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
+            gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
             gameObject.transform.SetParent(parent.transform, false);
         }
     }
