@@ -16,13 +16,16 @@ public class PrefabPlaceholderEntity : WorldEntity
     [DataMember(Order = 1)]
     public int ComponentIndex { get; set; }
 
+    [DataMember(Order = 2)]
+    public bool IsEntitySlotEntity { get; set; }
+
     [IgnoreConstructor]
     protected PrefabPlaceholderEntity()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public PrefabPlaceholderEntity(WorldEntity worldEntity, int componentIndex = 0)
+    public PrefabPlaceholderEntity(WorldEntity worldEntity, bool isEntitySlotEntity, int componentIndex = 0)
     {
         Id = worldEntity.Id;
         TechType = worldEntity.TechType;
@@ -34,14 +37,16 @@ public class PrefabPlaceholderEntity : WorldEntity
         SpawnedByServer = worldEntity.SpawnedByServer;
         ChildEntities = worldEntity.ChildEntities;
         ComponentIndex = componentIndex;
+        IsEntitySlotEntity = isEntitySlotEntity;
     }
 
 
     /// <remarks>Used for deserialization</remarks>
-    public PrefabPlaceholderEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, int componentIndex) :
+    public PrefabPlaceholderEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, bool isEntitySlotEntity, int componentIndex) :
         base(transform, level, classId, spawnedByServer, id, techType, metadata, parentId, childEntities)
     {
         ComponentIndex = componentIndex;
+        IsEntitySlotEntity = isEntitySlotEntity;
     }
 
     public override string ToString()
