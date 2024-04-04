@@ -7,6 +7,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
+        <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <ItemGroup>
@@ -37,12 +38,17 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
-      <ProjectReference SetTargetFramework="TargetFramework=net472" Include="..\NitroxPatcher\NitroxPatcher.csproj" />
-      <ProjectReference SetTargetFramework="TargetFramework=net472" Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+      <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
     </ItemGroup>
 
     <!-- Ensure server files are available for launcher. -->
     <Target Name="BuildServer" AfterTargets="Build">
         <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
+    </Target>
+
+    <!-- Build dependencies that will be loaded by the game, which must be net472 compatible. -->
+    <!-- TODO: Improve build process so it doesn't cause file conflicts (i.e. read/write access) when building in parallel -->
+    <Target Name="BuildNet472BinariesForGame" AfterTargets="Build">
+        <MSBuild Projects="..\NitroxPatcher\NitroxPatcher.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472;OutputPath=$(TargetDir)\bin\net472" />
     </Target>
 </Project>

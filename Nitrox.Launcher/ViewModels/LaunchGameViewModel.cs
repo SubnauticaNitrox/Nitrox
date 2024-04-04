@@ -95,7 +95,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         try
         {
             File.Copy(
-                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", initDllName),
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "bin", "net472", initDllName),
                 Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", initDllName),
                 true
             );
