@@ -150,7 +150,7 @@ public static class NitroxServiceLocator
         /// <summary>
         ///     Invalidates the cache for type <see cref="T" />. The next <see cref="Value" /> access will request from <see cref="NitroxServiceLocator" /> again.
         /// </summary>
-        public static void Invalidate(object _, EventArgs __)
+        private static void Invalidate(object _, EventArgs __)
         {
             value = null;
             LifetimeScopeEnded -= Invalidate;

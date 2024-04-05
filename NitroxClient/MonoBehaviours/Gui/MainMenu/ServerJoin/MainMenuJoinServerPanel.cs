@@ -120,7 +120,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
     public void UpdatePanelValues(string ip, string playerName, Vector3 hsb)
     {
-        header.text = $"    {Language.main.Get("Nitrox_JoinServer")}{ip}";
+        header.text = $"    {Language.main.Get("Nitrox_JoinServer")} {ip}";
         playerNameInputField.text = playerName;
         colorPicker.SetHSB(hsb);
     }
