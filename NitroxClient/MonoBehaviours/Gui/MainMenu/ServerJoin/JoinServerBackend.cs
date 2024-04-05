@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
@@ -100,7 +99,6 @@ public static class JoinServerBackend
         }
     }
 
-    [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
     public static async Task StartMultiplayerClientAsync(string ip, int port)
     {
         serverIp = ip;
@@ -147,7 +145,6 @@ public static class JoinServerBackend
         }
     }
 
-    [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
     public static void StopMultiplayerClient()
     {
         if (!multiplayerClient || !Multiplayer.Main)

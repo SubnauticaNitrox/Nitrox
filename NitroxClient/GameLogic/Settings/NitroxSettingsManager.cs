@@ -48,7 +48,6 @@ public class NitroxSettingsManager
                 BuildingHandler.Main.AskForResync();
             }
         }));
-                MainMenuServerListPanel.Main.RefreshServerEntries();
 
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));

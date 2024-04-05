@@ -43,7 +43,13 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
         CreateAddServerButton();
         LoadSavedServers();
-        _ = FindLANServersAsync();
+        FindLANServersAsync().ContinueWith(t =>
+        {
+            if (t is { IsFaulted: true, Exception: { } ex })
+            {
+                Log.Warn($"Failed to execute FindLANServersAsync: {ex.GetFirstNonAggregateMessage()}");
+            }
+        });
     }
 
     public bool OnButtonDown(GameInput.Button button)
@@ -272,6 +278,12 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
         CreateAddServerButton();
         LoadSavedServers();
-        _ = FindLANServersAsync();
+        FindLANServersAsync().ContinueWith(t =>
+        {
+            if (t is { IsFaulted: true, Exception: { } ex })
+            {
+                Log.Warn($"Failed to execute FindLANServersAsync: {ex.GetFirstNonAggregateMessage()}");
+            }
+        });
     }
 }
