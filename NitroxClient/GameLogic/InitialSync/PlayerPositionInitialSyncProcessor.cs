@@ -67,6 +67,14 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         }
 
         Player.main.SetCurrentSub(subRoot, true);
+        if (subRoot.TryGetComponent(out Base @base))
+        {
+            SetupPlayerIfInWaterPark(@base);
+            // If the player's in a base, we don't need to wait for the world to load
+            Player.main.cinematicModeActive = false;
+            yield break;
+        }
+
         // If the player's in a base/cyclops we don't need to wait for the world to load
         Player.main.UpdateIsUnderwater();
         Player.main.cinematicModeActive = false;
@@ -85,4 +93,27 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
     }
 
+    private static void SetupPlayerIfInWaterPark(Base @base)
+    {
+        foreach (Transform baseChild in @base.transform)
+        {
+            if (baseChild.TryGetComponent(out WaterPark waterPark))
+            {
+                if (waterPark is LargeRoomWaterPark)
+                {
+                    // LargeRoomWaterPark.VerifyPlayerWaterPark sets Player.main.currentWaterPark to the right value
+                    waterPark.VerifyPlayerWaterPark(Player.main);
+                }
+                else if (waterPark.IsPointInside(Player.main.transform.position))
+                {
+                    Player.main.currentWaterPark = waterPark;
+                }
+            }
+
+            if (Player.main.currentWaterPark)
+            {
+                return;
+            }
+        }
+    }
 }
