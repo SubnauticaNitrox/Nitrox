@@ -1,4 +1,5 @@
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
@@ -28,6 +29,20 @@ public class WaterParkCreatureMetadataProcessor : EntityMetadataProcessor<WaterP
 
             waterParkCreature.isMature = waterParkCreature.age == 1f;
             waterParkCreature.bornInside = metadata.BornInside;
+
+            // This field is not serialized but is always the exact same so it's supposedly recomputed but it would break with our system
+            // (calculation from WaterParkCreature.ManagedUpdate)
+            waterParkCreature.breedInterval = waterParkCreature.data.growingPeriod * 0.5f;
+
+            // While being fully loaded, the base is inactive and coroutines shouldn't be started (they'll thrown an exception)
+            // To avoid, that we postpone their execution to 1 more second which is enough because time is frozen during initial sync
+            // This is the mating condition from WaterParkCreature.ManagedUpdate to postpone mating
+            if (Multiplayer.Main && !Multiplayer.Main.InitialSyncCompleted && waterParkCreature.currentWaterPark && waterParkCreature.isMature &&
+                waterParkCreature.GetCanBreed() && DayNightCycle.main.timePassedAsFloat > waterParkCreature.timeNextBreed)
+            {
+                waterParkCreature.timeNextBreed = DayNightCycle.main.timePassedAsFloat + 1;
+            }
+
             waterParkCreature.OnProtoDeserialize(null);
         }
     }
