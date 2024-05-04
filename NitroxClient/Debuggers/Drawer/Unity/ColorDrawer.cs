@@ -1,26 +1,15 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class ColorDrawer : IStructDrawer
+public class ColorDrawer : IEditorDrawer<Color>, IEditorDrawer<Color32>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Color), typeof(Color32) };
-
     private static readonly Texture2D tex = new((int)NitroxGUILayout.VALUE_WIDTH, 25);
     private static Color lastColor;
 
-    public object Draw(object target)
-    {
-        return target switch
-        {
-            Color color => Draw(color),
-            Color32 color32 => (Color32) Draw(color32),
-            _ => null
-        };
-    }
+    public Color32 Draw(Color32 color) => Draw((Color)color);
 
-    public static Color Draw(Color color)
+    public Color Draw(Color color)
     {
         if (color != lastColor)
         {
