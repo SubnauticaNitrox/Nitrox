@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
@@ -57,7 +58,7 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
                 gameObject.transform.SetParent(waterPark.itemsRoot, false);
                 using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
                 {
-                    waterPark.AddItem(gameObject.GetComponent<Pickupable>());
+                    waterPark.AddItem(gameObject.EnsureComponent<Pickupable>());
 
                     // While being fully loaded, the base is inactive so GameObject.SendMessage doesn't work and we need to execute their callbacks manually
                     if (Multiplayer.Main && !Multiplayer.Main.InitialSyncCompleted)
@@ -73,9 +74,28 @@ public class GlobalRootEntitySpawner : SyncEntitySpawner<GlobalRootEntity>
                         }
                         else if (gameObject.TryGetComponent(out CrabSnake crabSnake))
                         {
-                            crabSnake.OnAddToWaterPark();
+                            // This callback interacts with an animator, but this behaviour needs to be initialized (probably during Start) before it can be modified
+                            IEnumerator PostponedCallback()
+                            {
+                                yield return new WaitUntil(() => !crabSnake || crabSnake.animationController.animator.isInitialized);                                
+                                if (crabSnake)
+                                {
+                                    crabSnake.OnAddToWaterPark();
+                                }
+                            }
+                            CoroutineHost.StartCoroutine(PostponedCallback());
                         }
                     }
+                }
+
+                // TODO: When metadata is reworked (it'll be possible to give different metadatas to the same entity)
+                // this will no longer be needed because the entity metadata will set this to false accordingly
+
+                // If fishes are in a WaterPark, it means that they were once picked up
+                if (gameObject.TryGetComponent(out CreatureDeath creatureDeath))
+                {
+                    // This is set to false when picking up a fish or when a fish is born in the WaterPark
+                    creatureDeath.respawn = false;
                 }
             }
             else
