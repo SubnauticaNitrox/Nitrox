@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
-             DataContext="{x:Static launcher:DesignData.UpdatesViewModel}"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             DataContext="{x:Static design:DesignData.UpdatesViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.UpdatesView">
     
@@ -37,7 +37,7 @@
                     <TextBlock Text="Time for an update! A new version of Nitrox is now available to download. Back up your content and get the latest version to start using all the latest features and improvements."
                                FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center"/>
                     
-                    <Button Classes="nitrox primary" Content="Download update" ToolTip.Tip="Download the latest version" Command="{Binding DownloadUpdateCommand}"
+                    <Button Classes="primary" Content="Download update" ToolTip.Tip="Download the latest version" Command="{Binding DownloadUpdateCommand}"
                             FontSize="12" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0 4 0 0" Padding="20, 8"/>
                 </StackPanel>
                 

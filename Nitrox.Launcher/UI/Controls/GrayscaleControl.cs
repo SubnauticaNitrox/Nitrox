@@ -7,9 +7,8 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using SkiaSharp;
-using AControls = Avalonia.Controls.Controls;
 
-namespace Nitrox.Launcher.Models.Design.Controls;
+namespace Nitrox.Launcher.UI.Controls;
 
 /// <summary>
 /// Draws a grayscale filter over the already rendered content.

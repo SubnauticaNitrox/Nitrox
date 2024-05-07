@@ -34,8 +34,6 @@ public partial class ManageServerView : RoutableViewBase<ManageServerViewModel>
                 }
                 break;
         }
-
-        e.Handled = e.Key is < Key.D0 or > Key.D9;
     }
 
     private void ScrollViewer_OnPointerWheelChanged(object sender, PointerWheelEventArgs e)

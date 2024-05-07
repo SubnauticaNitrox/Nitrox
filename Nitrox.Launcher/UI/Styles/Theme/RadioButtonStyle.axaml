@@ -1,11 +1,10 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="15">
                 <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
-                    <Border Background="White" design:NitroxAttached.Theme="LIGHT" Padding="5">
+                    <Border Background="White" Padding="5">
                         <StackPanel Spacing="10">
                             <RadioButton Content="Option 1" IsChecked="True" />
                             <RadioButton Content="Option 2" />
@@ -13,7 +12,7 @@
                             <RadioButton Content="Option 4" />
                         </StackPanel>
                     </Border>
-                    <Border Background="Black" design:NitroxAttached.Theme="DARK" Padding="5">
+                    <Border Background="Black" Padding="5">
                         <StackPanel Spacing="10">
                             <RadioButton Content="Option 1" />
                             <RadioButton Content="Option 2" IsChecked="True" />
@@ -27,13 +26,6 @@
     </Design.PreviewWith>
 
     <Style Selector="RadioButton">
-        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Foreground" Value="#3b3b3b" />
-        </Style>
-        
         <Setter Property="Background" Value="{DynamicResource RadioButtonBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonBorderBrush}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />

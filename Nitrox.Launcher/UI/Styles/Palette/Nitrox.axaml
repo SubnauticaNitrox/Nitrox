@@ -1,0 +1,34 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <!-- Default/Light theme -->
+        <ResourceDictionary x:Key="Default">
+            <!-- Main colors -->
+            <SolidColorBrush Color="#007BFF" x:Key="BrandPrimaryBrush" />
+            <SolidColorBrush Color="#FFFFFF" x:Key="BrandWhiteBrush" />
+            <SolidColorBrush Color="#000000" x:Key="BrandBlackBrush" />
+            <SolidColorBrush Color="#D1D1D1" x:Key="BrandBorderBrush" />
+            <SolidColorBrush Color="#ECECEC" x:Key="BrandControlBackgroundBrush" />
+            <SolidColorBrush Color="#d9d9d9" x:Key="BrandCheckboxBackgroundBrush" />
+            <SolidColorBrush Color="#151516" x:Key="BrandPanelBackgroundBrush" />
+            <SolidColorBrush Color="#000000" x:Key="BrandCaretBrush"/>
+            <SolidColorBrush Color="#40000000" x:Key="BrandFocusBorderBrush"/>
+            <SolidColorBrush Color="#7F000000" x:Key="BrandSubTextBrush"/>
+
+            <!-- Notification colors -->
+            <SolidColorBrush Color="#FF005C" x:Key="BrandAbortBrush" />
+            <SolidColorBrush Color="#FFB3B3" x:Key="BrandAbortBackgroundBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush Color="#000000" x:Key="BrandWhiteBrush" />
+            <SolidColorBrush Color="#FFFFFF" x:Key="BrandBlackBrush" />
+            <SolidColorBrush Color="#323232" x:Key="BrandBorderBrush" />
+            <SolidColorBrush Color="#1DFFFFFF" x:Key="BrandControlBackgroundBrush" />
+            <SolidColorBrush Color="#333333" x:Key="BrandCheckboxBackgroundBrush" />
+            <SolidColorBrush Color="#FFFFFF" x:Key="BrandCaretBrush"/>
+            <SolidColorBrush Color="#40FFFFFF" x:Key="BrandFocusBorderBrush"/>
+            <SolidColorBrush Color="#7FFFFFFF" x:Key="BrandSubTextBrush"/>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

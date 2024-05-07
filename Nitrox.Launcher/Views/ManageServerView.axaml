@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
-             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="400" d:DataContext="{x:Static design:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
     <Grid RowDefinitions="Auto,*,Auto">
 
@@ -43,7 +43,7 @@
                         </controls:GrayscaleControl>
                     </Grid>
                 </Border>
-                
+
                 <StackPanel Grid.Column="1">
                     <StackPanel Width="223" Orientation="Horizontal" HorizontalAlignment="Left" Classes="description" Margin="0 0 0 10">
                         <StackPanel.Styles>
@@ -83,18 +83,16 @@
                             <TextBlock Margin="6 0 0 0" Text="playing" />
                         </StackPanel>
                     </StackPanel>
-        
-                    <Grid ColumnDefinitions="*,100,100">
-                        <ScrollViewer Margin="0 0 10 0" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
+
+                    <Grid ColumnDefinitions="*,200">
+                        <ScrollViewer Grid.Column="0" Margin="0 0 10 0" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
                             <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
                         </ScrollViewer>
-        
-                        <Button Grid.Column="1" Classes="nitrox big abort"
-                                Height="40" Margin="0 0 5 0" Padding="5" HorizontalAlignment="Stretch"
-                                design:NitroxAttached.Text="UNDO" Command="{Binding UndoCommand}" />
-                        <Button Grid.Column="2" Classes="nitrox big primary"
-                                Height="40" Margin="5 0 0 0" Padding="5" HorizontalAlignment="Stretch"
-                                design:NitroxAttached.Text="SAVE" Command="{Binding SaveCommand}" />
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Height="40" Spacing="5" HorizontalAlignment="Right">
+                            <Button Classes="abort" HorizontalAlignment="Stretch" Content="UNDO" Command="{Binding UndoCommand}" />
+                            <Button Classes="primary" Margin="5 0 0 0" HorizontalAlignment="Stretch" Content="SAVE" Command="{Binding SaveCommand}" />
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
             </Grid>
@@ -217,26 +215,30 @@
                             </Style>
                         </StackPanel.Styles>
 
-                        <Button Classes="textimage"
-                                design:NitroxAttached.Image="/Assets/Images/world-manager/cog-2x.png"
-                                design:NitroxAttached.Text="Advanced settings"
-                                Command="{Binding OpenAdvancedSettingsCommand}"/>
-
-                        <Button Classes="textimage"
-                                design:NitroxAttached.Image="/Assets/Images/world-manager/window-external-2x.png"
-                                design:NitroxAttached.Text="Open world folder"
-                                Command="{Binding OpenWorldFolderCommand}"/>
-
-                        <Button Classes="textimage"
-                                design:NitroxAttached.Image="/Assets/Images/world-manager/export-2x.png"
-                                design:NitroxAttached.Text="Restore a backup"
-                                Command="{Binding RestoreBackupCommand}"/>
-
-                        <Button Classes="textimage"
-                                design:NitroxAttached.Image="/Assets/Images/world-manager/delete-2x.png"
-                                design:NitroxAttached.Text="Delete server" Foreground="#ec1c24"
-                                Command="{Binding DeleteServerCommand}"/>
-
+                        <Button Command="{Binding OpenAdvancedSettingsCommand}" Classes="icon">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/cog-2x.png" />
+                                <TextBlock Text="Advanced settings" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding OpenWorldFolderCommand}" Classes="icon">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/window-external-2x.png" />
+                                <TextBlock Text="Open world folder" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding RestoreBackupCommand}" Classes="icon">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/export-2x.png" />
+                                <TextBlock Text="Restore a backup" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding DeleteServerCommand}" Classes="icon" Foreground="#ec1c24">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/delete-2x.png" />
+                                <TextBlock Text="Delete server" />
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </StackPanel>
 
@@ -248,12 +250,16 @@
                             <RadioButton >External console</RadioButton>
                         </StackPanel>
 
-                        <Button Grid.Column="3" Classes="nitrox abort big" IsVisible="{Binding ServerIsOnline}"
+                        <Button Grid.Column="3" Classes="abort big" IsVisible="{Binding ServerIsOnline}"
                                 VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                design:NitroxAttached.Text="STOP SERVER" Command="{Binding StopServerCommand}" />
-                        <Button Grid.Column="3" Classes="nitrox primary big" IsVisible="{Binding !ServerIsOnline}"
-                                VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                design:NitroxAttached.Text="START SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" Command="{Binding StartServerCommand}" />
+                                Content="STOP SERVER" Command="{Binding StopServerCommand}" />
+                        <Button Grid.Column="3" Classes="primary big" IsVisible="{Binding !ServerIsOnline}"
+                                VerticalAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding StartServerCommand}">
+                            <StackPanel>
+                                <TextBlock Text="START SERVER" />
+                                <TextBlock Text="MULTIPLAYER" />
+                            </StackPanel>
+                        </Button>
                     </Grid>
                 </Border>
 

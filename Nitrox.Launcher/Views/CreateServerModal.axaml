@@ -3,17 +3,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
         xmlns:launcher="clr-namespace:Nitrox.Launcher"
         xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static launcher:DesignData.CreateServerViewModel}"
+        xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static design:DesignData.CreateServerViewModel}"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"
-        design:NitroxAttached.Theme="LIGHT"
         SystemDecorations="None"
         SizeToContent="WidthAndHeight"
         CanResize="False"
-        Title="Create a server">
+        Title="Create a server"
+        RequestedThemeVariant="Light">
+
     <StackPanel>
         <StackPanel Classes="form" Margin="24">
             <TextBlock Text="Create a server" Classes="modalHeader" />
@@ -28,8 +29,8 @@
         </StackPanel>
         <ContentControl Classes="footer">
             <Panel>
-                <Button Classes="nitrox" Content="Back" HorizontalAlignment="Left" HotKey="{Binding BackHotkey}" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                <Button Classes="nitrox primary" Content="Create" HorizontalAlignment="Right" HotKey="{Binding CreateHotkey}" Command="{Binding CreateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                <Button Content="Back" FontWeight="Bold" HotKey="{Binding BackHotkey}" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                <Button Classes="primary" Content="Create" HorizontalAlignment="Right" HotKey="{Binding CreateHotkey}" Command="{Binding CreateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
             </Panel>
         </ContentControl>
     </StackPanel>

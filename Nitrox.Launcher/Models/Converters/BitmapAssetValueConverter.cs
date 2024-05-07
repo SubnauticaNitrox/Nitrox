@@ -14,7 +14,7 @@ namespace Nitrox.Launcher.Models.Converters;
 public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, IValueConverter
 {
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
-    private static readonly Dictionary<string, Bitmap> assetCache = new();
+    private static readonly Dictionary<string, Bitmap> assetCache = [];
     private static readonly object assetCacheLock = new();
 
     public static Bitmap GetBitmapFromPath(string rawUri)

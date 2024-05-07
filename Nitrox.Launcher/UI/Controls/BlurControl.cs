@@ -8,7 +8,7 @@ using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using SkiaSharp;
 
-namespace Nitrox.Launcher.Models.Design.Controls;
+namespace Nitrox.Launcher.UI.Controls;
 
 /// <summary>
 ///     Draws a blur filter over the already rendered content.

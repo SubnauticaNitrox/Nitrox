@@ -4,46 +4,45 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
-             DataContext="{x:Static launcher:DesignData.BlogViewModel}"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             DataContext="{x:Static design:DesignData.BlogViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.BlogView">
-    
-    <StackPanel Spacing="23">
-        
-        <StackPanel>
-            <TextBlock Classes="header" Text="Blog"/>
-            <TextBlock Margin="0 16 0 0">
-                Read the latest news from the Nitrox team! You can view all our blogs
-                <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxBlogTextBlock_OnPointerPressed">here</TextBlock>.
-            </TextBlock>
+    <ThemeVariantScope RequestedThemeVariant="Dark">
+        <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
+            <StackPanel>
+                <TextBlock Classes="header" Text="Blog"/>
+                <TextBlock Margin="0 16 0 0">
+                    Read the latest news from the Nitrox team! You can view all our blogs
+                    <TextBlock Classes="link" PointerPressed="NitroxBlogTextBlock_OnPointerPressed">here</TextBlock>.
+                </TextBlock>
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel HorizontalAlignment="Center" ItemWidth="340" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
+                            <StackPanel Orientation="Vertical" Spacing="10">
+                                <Border CornerRadius="12">
+                                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                        <Image IsVisible="{Binding Image, Converter={converters:EqualityConverter}}" Source="/Assets/Images/blog/vines.png" />
+                                        <Image Source="{Binding Image}" />
+                                    </Panel>
+                                </Border>
+                                <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"
+                                           HorizontalAlignment="Left" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrandSubTextBrush}"/>
+                                <TextBlock Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"
+                                           FontSize="16" Margin="0,2,0,4" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
-        
-        <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel ItemWidth="335" ItemHeight="300" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
-                        <StackPanel>
-                            <Border CornerRadius="12" Height="200" Width="320">
-                                <Border.Background>
-                                    <ImageBrush Stretch="UniformToFill" Source="{Binding Image, TargetNullValue='/Assets/Images/blog/vines.png'}" />
-                                </Border.Background>
-                            </Border>
-                            <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"
-                                       HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"
-                                       FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold"/>
-                        </StackPanel>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        
-    </StackPanel>
-    
+    </ThemeVariantScope>
 </UserControl>

@@ -40,8 +40,8 @@ public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter
             { TotalDays: < 2 } => "yesterday",
             { TotalDays: < MEAN_DAYS_IN_MONTH } => $"{(int)delta.TotalDays} days ago",
             { TotalDays: < MEAN_DAYS_IN_MONTH * 2 } => "a month ago",
-            { TotalDays: < MEAN_DAYS_IN_MONTH * 12 } => $"{(int)(delta.TotalDays / MEAN_DAYS_IN_MONTH)} months ago",
-            { TotalDays: < MEAN_DAYS_IN_MONTH * 24 } => "a year ago",
+            { TotalDays: < DAYS_IN_YEAR } => $"{(int)(delta.TotalDays / MEAN_DAYS_IN_MONTH)} months ago",
+            { TotalDays: < DAYS_IN_YEAR * 2 } => "a year ago",
             _ => $"{(int)(delta.TotalDays / DAYS_IN_YEAR)} years ago"
         };
     }

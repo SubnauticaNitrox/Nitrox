@@ -6,24 +6,28 @@
             <StackPanel Margin="10" Spacing="20" Orientation="Horizontal">
                 <StackPanel Spacing="10">
                     <Border Background="White" Padding="10" HorizontalAlignment="Center">
-                        <Border design:NitroxAttached.Theme="LIGHT" Margin="0 0 0 110">
-                            <!-- (TODO) The ComboBox item highlight shows correctly in the Previewer, but not in-app. The foreground also looks wrong, but it shows correctly in-app  -->
-                            <ComboBox PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
-                                <ComboBoxItem Content="Item 1"/>
-                                <ComboBoxItem Content="Item 2"/>
-                                <ComboBoxItem Content="Item 3"/>
-                            </ComboBox>
-                        </Border>
+                        <ThemeVariantScope RequestedThemeVariant="Light">
+                            <Border Margin="0 0 0 110">
+                                <!-- (TODO) The ComboBox item highlight shows correctly in the Previewer, but not in-app. The foreground also looks wrong, but it shows correctly in-app  -->
+                                <ComboBox PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
+                                    <ComboBoxItem Content="Item 1"/>
+                                    <ComboBoxItem Content="Item 2"/>
+                                    <ComboBoxItem Content="Item 3"/>
+                                </ComboBox>
+                            </Border>
+                        </ThemeVariantScope>
                     </Border>
                     <Border Background="Black" Padding="10" HorizontalAlignment="Center">
-                        <Border design:NitroxAttached.Theme="DARK" Margin="0 0 0 110">
-                            <!-- The ComboBox item highlight DOESN'T show correctly in the Previewer, but it DOES in-app -->
-                            <ComboBox PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
-                                <ComboBoxItem Content="Item 1"/>
-                                <ComboBoxItem Content="Item 2"/>
-                                <ComboBoxItem Content="Item 3"/>
-                            </ComboBox>
-                        </Border>
+                        <ThemeVariantScope RequestedThemeVariant="Dark">
+                            <Border Margin="0 0 0 110">
+                                <!-- The ComboBox item highlight DOESN'T show correctly in the Previewer, but it DOES in-app -->
+                                <ComboBox PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
+                                    <ComboBoxItem Content="Item 1"/>
+                                    <ComboBoxItem Content="Item 2"/>
+                                    <ComboBoxItem Content="Item 3"/>
+                                </ComboBox>
+                            </Border>
+                        </ThemeVariantScope>
                     </Border>
                 </StackPanel>
             </StackPanel>
@@ -43,7 +47,23 @@
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="MinWidth" Value="100"/>
         <Setter Property="MinHeight" Value="30"/>
-        
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
+        <Style Selector="^ /template/ ContentPresenter">
+            <Style Selector="^ TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+            </Style>
+            <Style Selector="^ TextBlock#PlaceholderTextBlock">
+                <Setter Property="Foreground" Value="#202225" />
+            </Style>
+            <Style Selector="^ PathIcon">
+                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:pointerover /template/ Border#Background">
+            <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
+        </Style>
+
         <Setter Property="Transitions">
             <Transitions>
                 <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
@@ -123,41 +143,10 @@
             </ControlTemplate>
         </Setter>
         
-        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Background" Value="#1F1F1F" />
-            <Style Selector="^ /template/ TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
-            </Style>
-            <Style Selector="^ /template/ PathIcon">
-                <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
-            </Style>
-            <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
-                <Setter Property="Foreground" Value="#80FFFFFF" />
-            </Style>
-            <Style Selector="^:pointerover /template/ Border#Background">
-                <Setter Property="Background" Value="#1F1F1F" />
-            </Style>
-        </Style>
-        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Background" Value="#ECECEC" />
-            <Style Selector="^ /template/ TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
-            </Style>
-            <Style Selector="^ /template/ PathIcon">
-                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
-            </Style>
-            <Style Selector="^ /template/ TextBlock#PlaceholderTextBlock">
-                <Setter Property="Foreground" Value="#202225" />
-            </Style>
-            <Style Selector="^:pointerover /template/ Border#Background">
-                <Setter Property="Background" Value="#ECECEC" />
-            </Style>
-        </Style>
-        
         <Style Selector="^:pointerover">
             <Setter Property="Opacity" Value=".75" />
         </Style>
-        
+
         <Style Selector="^:pressed">
             <Setter Property="RenderTransform" Value="scale(0.98)" />
         </Style>
@@ -165,7 +154,5 @@
         <Style Selector="^:disabled">
             <Setter Property="Background" Value="{TemplateBinding Background}" />
         </Style>
-        
     </Style>
-    
 </Styles>

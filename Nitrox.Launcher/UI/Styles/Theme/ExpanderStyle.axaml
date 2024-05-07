@@ -4,30 +4,34 @@
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="20" >
-                <Border Background="White" design:NitroxAttached.Theme="LIGHT" Padding="10">
-                    <StackPanel Spacing="10">
-                        <Expander ExpandDirection="Up" Header="Expand Up" HorizontalAlignment="Center">
-                            <StackPanel>
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <Border Background="White" Padding="10">
+                        <StackPanel Spacing="10">
+                            <Expander ExpandDirection="Up" Header="Expand Up" HorizontalAlignment="Center">
+                                <StackPanel>
+                                    <TextBlock>Expanded content</TextBlock>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Classes="changelog" Header="Changelog Expander" HorizontalAlignment="Center">
                                 <TextBlock>Expanded content</TextBlock>
-                            </StackPanel>
-                        </Expander>
-                        <Expander Classes="changelog" Header="Changelog Expander" HorizontalAlignment="Center">
-                            <TextBlock>Expanded content</TextBlock>
-                        </Expander>
-                    </StackPanel>
-                </Border>
-                <Border Background="Black" design:NitroxAttached.Theme="DARK" Padding="10">
-                    <StackPanel Spacing="10">
-                        <Expander ExpandDirection="Up" Header="Expand Up" HorizontalAlignment="Center">
-                            <StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <Border Background="Black" Padding="10">
+                        <StackPanel Spacing="10">
+                            <Expander ExpandDirection="Up" Header="Expand Up" HorizontalAlignment="Center">
+                                <StackPanel>
+                                    <TextBlock>Expanded content</TextBlock>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Classes="changelog" Header="Changelog Expander" HorizontalAlignment="Center">
                                 <TextBlock>Expanded content</TextBlock>
-                            </StackPanel>
-                        </Expander>
-                        <Expander Classes="changelog" Header="Changelog Expander" HorizontalAlignment="Center">
-                            <TextBlock>Expanded content</TextBlock>
-                        </Expander>
-                    </StackPanel>
-                </Border>
+                            </Expander>
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
@@ -62,12 +66,12 @@
             </ControlTemplate>
         </Setter>
     
-        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
-        </Style>
-        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
-        </Style>
+        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]"> -->
+        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" /> -->
+        <!-- </Style> -->
+        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=DARK]"> -->
+        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" /> -->
+        <!-- </Style> -->
     
         <Style Selector="^:pointerover">
             <Setter Property="Cursor" Value="Hand" />
@@ -128,12 +132,12 @@
             </ControlTemplate>
         </Setter>
     
-        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
-        </Style>
-        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
-        </Style>
+        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]"> -->
+        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" /> -->
+        <!-- </Style> -->
+        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=DARK]"> -->
+        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" /> -->
+        <!-- </Style> -->
     
         <Style Selector="^:expanded /template/ ToggleButton">
             <Setter Property="Tag" Value="expanded" />

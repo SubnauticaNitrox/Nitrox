@@ -15,11 +15,15 @@
         </Border>
     </Design.PreviewWith>
 
-    <Style Selector="ToolTip TextBlock">
-        <Setter Property="FontWeight" Value="600" />
-        <Setter Property="FontSize" Value="14" />
-    </Style>
-    <Style Selector="ToolTip Border">
-        <Setter Property="Opacity" Value="0.85" />
+    <Style Selector="ToolTip">
+        <Style Selector="^ Border">
+            <Setter Property="Opacity" Value="0.85" />
+        </Style>
+
+        <Style Selector="^ TextBlock">
+            <Setter Property="FontWeight" Value="600" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+        </Style>
     </Style>
 </Styles>

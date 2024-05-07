@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,7 +16,7 @@ using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 
-namespace Nitrox.Launcher.Models;
+namespace Nitrox.Launcher.Models.Design;
 
 /// <summary>
 ///     Manager object for a server. Used to start/stop a server and change its settings.

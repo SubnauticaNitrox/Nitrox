@@ -5,70 +5,77 @@
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="20">
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Border Background="White" design:NitroxAttached.Theme="LIGHT" Padding="10 10 0 10">
-                        <ScrollViewer Width="200" Height="200">
-                            <StackPanel Spacing="20">
-                                <TextBlock Foreground="Black">Item 1</TextBlock>
-                                <TextBlock Foreground="Black">Item 2</TextBlock>
-                                <TextBlock Foreground="Black">Item 3</TextBlock>
-                                <TextBlock Foreground="Black">Item 4</TextBlock>
-                                <TextBlock Foreground="Black">Item 5</TextBlock>
-                                <TextBlock Foreground="Black">Item 6</TextBlock>
-                                <TextBlock Foreground="Black">Item 7</TextBlock>
-                                <TextBlock Foreground="Black">Item 8</TextBlock>
-                                <TextBlock Foreground="Black">Item 9</TextBlock>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Border>
-                    <Border Background="Black" design:NitroxAttached.Theme="DARK" Padding="10 10 0 10">
-                        <ScrollViewer Width="200" Height="200">
-                            <StackPanel Spacing="20">
-                                <TextBlock>Item 1</TextBlock>
-                                <TextBlock>Item 2</TextBlock>
-                                <TextBlock>Item 3</TextBlock>
-                                <TextBlock>Item 4</TextBlock>
-                                <TextBlock>Item 5</TextBlock>
-                                <TextBlock>Item 6</TextBlock>
-                                <TextBlock>Item 7</TextBlock>
-                                <TextBlock>Item 8</TextBlock>
-                                <TextBlock>Item 9</TextBlock>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Border>
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Border Background="White" Padding="10 10 0 10">
+                            <ScrollViewer Width="200" Height="200">
+                                <StackPanel Spacing="20">
+                                    <TextBlock Foreground="Black">Item 1</TextBlock>
+                                    <TextBlock Foreground="Black">Item 2</TextBlock>
+                                    <TextBlock Foreground="Black">Item 3</TextBlock>
+                                    <TextBlock Foreground="Black">Item 4</TextBlock>
+                                    <TextBlock Foreground="Black">Item 5</TextBlock>
+                                    <TextBlock Foreground="Black">Item 6</TextBlock>
+                                    <TextBlock Foreground="Black">Item 7</TextBlock>
+                                    <TextBlock Foreground="Black">Item 8</TextBlock>
+                                    <TextBlock Foreground="Black">Item 9</TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Border Background="Black" Padding="10 10 0 10">
+                            <ScrollViewer Width="200" Height="200">
+                                <StackPanel Spacing="20">
+                                    <TextBlock>Item 1</TextBlock>
+                                    <TextBlock>Item 2</TextBlock>
+                                    <TextBlock>Item 3</TextBlock>
+                                    <TextBlock>Item 4</TextBlock>
+                                    <TextBlock>Item 5</TextBlock>
+                                    <TextBlock>Item 6</TextBlock>
+                                    <TextBlock>Item 7</TextBlock>
+                                    <TextBlock>Item 8</TextBlock>
+                                    <TextBlock>Item 9</TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </ThemeVariantScope>
                 </StackPanel>
                 <StackPanel Spacing="10">
-                    <Border Background="White" design:NitroxAttached.Theme="LIGHT" Padding="10 10 10 0">
-                        <ScrollViewer Width="410" HorizontalAlignment="Left" HorizontalContentAlignment="Left" HorizontalScrollBarVisibility="Visible">
-                            <StackPanel Orientation="Horizontal" Spacing="20">
-                                <TextBlock Foreground="Black">Item 1</TextBlock>
-                                <TextBlock Foreground="Black">Item 2</TextBlock>
-                                <TextBlock Foreground="Black">Item 3</TextBlock>
-                                <TextBlock Foreground="Black">Item 4</TextBlock>
-                                <TextBlock Foreground="Black">Item 5</TextBlock>
-                                <TextBlock Foreground="Black">Item 6</TextBlock>
-                                <TextBlock Foreground="Black">Item 7</TextBlock>
-                                <TextBlock Foreground="Black">Item 8</TextBlock>
-                                <TextBlock Foreground="Black">Item 9</TextBlock>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Border>
-                    <Border Background="Black" design:NitroxAttached.Theme="DARK" Padding="10 10 10 0">
-                        <ScrollViewer Width="410" HorizontalAlignment="Left" HorizontalContentAlignment="Left" HorizontalScrollBarVisibility="Visible">
-                            <StackPanel Orientation="Horizontal" Spacing="20">
-                                <TextBlock>Item 1</TextBlock>
-                                <TextBlock>Item 2</TextBlock>
-                                <TextBlock>Item 3</TextBlock>
-                                <TextBlock>Item 4</TextBlock>
-                                <TextBlock>Item 5</TextBlock>
-                                <TextBlock>Item 6</TextBlock>
-                                <TextBlock>Item 7</TextBlock>
-                                <TextBlock>Item 8</TextBlock>
-                                <TextBlock>Item 9</TextBlock>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Border>
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Border Background="White" Padding="10 10 10 0">
+                            <ScrollViewer Width="410" HorizontalAlignment="Left" HorizontalContentAlignment="Left" HorizontalScrollBarVisibility="Visible">
+                                <StackPanel Orientation="Horizontal" Spacing="20">
+                                    <TextBlock Foreground="Black">Item 1</TextBlock>
+                                    <TextBlock Foreground="Black">Item 2</TextBlock>
+                                    <TextBlock Foreground="Black">Item 3</TextBlock>
+                                    <TextBlock Foreground="Black">Item 4</TextBlock>
+                                    <TextBlock Foreground="Black">Item 5</TextBlock>
+                                    <TextBlock Foreground="Black">Item 6</TextBlock>
+                                    <TextBlock Foreground="Black">Item 7</TextBlock>
+                                    <TextBlock Foreground="Black">Item 8</TextBlock>
+                                    <TextBlock Foreground="Black">Item 9</TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Border Background="Black" Padding="10 10 10 0">
+                            <ScrollViewer Width="410" HorizontalAlignment="Left" HorizontalContentAlignment="Left" HorizontalScrollBarVisibility="Visible">
+                                <StackPanel Orientation="Horizontal" Spacing="20">
+                                    <TextBlock>Item 1</TextBlock>
+                                    <TextBlock>Item 2</TextBlock>
+                                    <TextBlock>Item 3</TextBlock>
+                                    <TextBlock>Item 4</TextBlock>
+                                    <TextBlock>Item 5</TextBlock>
+                                    <TextBlock>Item 6</TextBlock>
+                                    <TextBlock>Item 7</TextBlock>
+                                    <TextBlock>Item 8</TextBlock>
+                                    <TextBlock>Item 9</TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </ThemeVariantScope>
                 </StackPanel>
-                
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
@@ -208,41 +215,41 @@
         </Style>
     </Style>
     
-    <Style Selector="Thumb">
-        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Border Background="#cccccc"
-                                CornerRadius="4"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style Selector="^:pointerover /template/ Border">
-                <Setter Property="Background" Value="#8f8f8f" />
-            </Style>
-            <Style Selector="^:pressed  /template/ Border">
-                <Setter Property="Background" Value="#3f3f3f" />
-            </Style>
-        </Style>
-        
-        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Border Background="#262626"
-                                CornerRadius="4"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style Selector="^:pointerover /template/ Border">
-                <Setter Property="Background" Value="#3f3f3f" />
-            </Style>
-            <Style Selector="^:pressed  /template/ Border">
-                <Setter Property="Background" Value="#8f8f8f" />
-            </Style>
-        </Style>
-    </Style>
+    <!-- <Style Selector="Thumb"> -->
+    <!--     <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]"> -->
+    <!--         <Setter Property="Template"> -->
+    <!--             <Setter.Value> -->
+    <!--                 <ControlTemplate> -->
+    <!--                     <Border Background="#cccccc" -->
+    <!--                             CornerRadius="4"/> -->
+    <!--                 </ControlTemplate> -->
+    <!--             </Setter.Value> -->
+    <!--         </Setter> -->
+    <!--         <Style Selector="^:pointerover /template/ Border"> -->
+    <!--             <Setter Property="Background" Value="#8f8f8f" /> -->
+    <!--         </Style> -->
+    <!--         <Style Selector="^:pressed  /template/ Border"> -->
+    <!--             <Setter Property="Background" Value="#3f3f3f" /> -->
+    <!--         </Style> -->
+    <!--     </Style> -->
+    <!--      -->
+    <!--     <Style Selector="^[(design|NitroxAttached.Theme)=DARK]"> -->
+    <!--         <Setter Property="Template"> -->
+    <!--             <Setter.Value> -->
+    <!--                 <ControlTemplate> -->
+    <!--                     <Border Background="#262626" -->
+    <!--                             CornerRadius="4"/> -->
+    <!--                 </ControlTemplate> -->
+    <!--             </Setter.Value> -->
+    <!--         </Setter> -->
+    <!--         <Style Selector="^:pointerover /template/ Border"> -->
+    <!--             <Setter Property="Background" Value="#3f3f3f" /> -->
+    <!--         </Style> -->
+    <!--         <Style Selector="^:pressed  /template/ Border"> -->
+    <!--             <Setter Property="Background" Value="#8f8f8f" /> -->
+    <!--         </Style> -->
+    <!--     </Style> -->
+    <!-- </Style> -->
 
     <Style Selector="RepeatButton">
         <Setter Property="Background" Value="Transparent" />

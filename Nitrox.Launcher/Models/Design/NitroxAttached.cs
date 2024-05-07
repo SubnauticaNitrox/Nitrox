@@ -13,49 +13,12 @@ namespace Nitrox.Launcher.Models.Design;
 /// </summary>
 public class NitroxAttached : AvaloniaObject
 {
-    public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Text");
-    public static readonly AttachedProperty<string> SubtextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Subtext");
-    public static readonly AttachedProperty<string> ImageProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Image");
     public static readonly AttachedProperty<object> FocusProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, object>("Focus");
     public static readonly AttachedProperty<bool> SelectedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, bool>("Selected");
-    public static readonly AttachedProperty<ThemeOption> ThemeProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, ThemeOption>("Theme", inherits: true, defaultValue: ThemeOption.DARK);
 
     static NitroxAttached()
     {
     }
-
-    public static void SetText(AvaloniaObject element, string value)
-    {
-        if (element is not Button)
-        {
-            throw new NotSupportedException($@"Attached property ""{nameof(TextProperty)}"" is only supported on buttons.");
-        }
-        element.SetValue(TextProperty, value);
-    }
-
-    public static string GetText(AvaloniaObject element) => element.GetValue(TextProperty);
-
-    public static void SetSubtext(AvaloniaObject element, string value)
-    {
-        if (element is not Button)
-        {
-            throw new NotSupportedException($@"Attached property ""{nameof(SubtextProperty)}"" is only supported on buttons.");
-        }
-        element.SetValue(SubtextProperty, value);
-    }
-
-    public static string GetSubtext(AvaloniaObject element) => element.GetValue(SubtextProperty);
-
-    public static void SetImage(AvaloniaObject element, string value)
-    {
-        if (element is not Button)
-        {
-            throw new NotSupportedException($@"Attached property ""{nameof(ImageProperty)}"" is only supported on buttons.");
-        }
-        element.SetValue(ImageProperty, value);
-    }
-
-    public static string GetImage(AvaloniaObject element) => element.GetValue(ImageProperty);
     
     public static object GetFocus(AvaloniaObject obj) => obj.GetValue(FocusProperty);
 
@@ -74,17 +37,16 @@ public class NitroxAttached : AvaloniaObject
             } while (!btn.IsFocused && retries-- > 0);
         }
 
-        if (obj is Button button)
+        switch (obj)
         {
-            Dispatcher.UIThread.Post(() => TryFocusButton(button));
-        }
-        else if (obj is IInputElement input)
-        {
-            Dispatcher.UIThread.Post(() => input.Focus());
-        }
-        else
-        {
-            throw new NotSupportedException($@"Element {obj} must be a {nameof(Button)} or {nameof(IInputElement)} to support attached property ""{nameof(FocusProperty)}""");
+            case Button button:
+                Dispatcher.UIThread.Post(() => TryFocusButton(button));
+                break;
+            case IInputElement input:
+                Dispatcher.UIThread.Post(() => input.Focus());
+                break;
+            default:
+                throw new NotSupportedException($@"Element {obj} must be a {nameof(Button)} or {nameof(IInputElement)} to support attached property ""{nameof(FocusProperty)}""");
         }
         obj.SetValue(FocusProperty, value);
     }
@@ -92,11 +54,4 @@ public class NitroxAttached : AvaloniaObject
     public static bool GetSelected(AvaloniaObject element) => element.GetValue(SelectedProperty);
 
     public static void SetSelected(AvaloniaObject obj, bool value) => obj.SetValue(SelectedProperty, value);
-
-    public static ThemeOption GetTheme(AvaloniaObject avaloniaObject) => avaloniaObject.GetValue(ThemeProperty);
-
-    /// <summary>
-    ///     Sets the theme of the current visual and its children to the given theme.
-    /// </summary>
-    public static void SetTheme(AvaloniaObject avaloniaObject, ThemeOption value) => avaloniaObject.SetValue(ThemeProperty, value);
 }

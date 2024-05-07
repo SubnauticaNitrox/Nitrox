@@ -4,8 +4,9 @@
         <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="14" />
-        <Setter Property="Background" Value="#ECECEC" />
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
         <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandCaretBrush}" />
         
         <Style Selector="^ /template/ Border">
             <Setter Property="Background" Value="{TemplateBinding Background}" />

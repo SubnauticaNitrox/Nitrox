@@ -5,7 +5,8 @@ using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nitrox.Launcher.Models;
+using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Logger;
 using ReactiveUI;
@@ -16,10 +17,15 @@ public partial class BlogViewModel : RoutableViewModelBase
 {
     [ObservableProperty]
     private AvaloniaList<NitroxBlog> nitroxBlogs = [];
-    
+
+    public BlogViewModel(IScreen hostScreen, NitroxBlog[] blogs) : base(hostScreen)
+    {
+        nitroxBlogs.AddRange(blogs);
+    }
+
     public BlogViewModel(IScreen hostScreen) : base(hostScreen)
     {
-        Dispatcher.UIThread.Invoke(new Action(async () =>
+        Dispatcher.UIThread.Invoke(async () =>
         {
             try
             {
@@ -34,12 +40,18 @@ public partial class BlogViewModel : RoutableViewModelBase
             {
                 Log.Error(ex, "Error while trying to display nitrox blogs");
             }
-        }));
+        });
     }
 
     [RelayCommand]
     private void BlogEntryClick(string blogUrl)
     {
-        Process.Start(new ProcessStartInfo(blogUrl) { UseShellExecute = true, Verb = "open" })?.Dispose();
+        UriBuilder blogUriBuilder = new(blogUrl)
+        {
+            Scheme = Uri.UriSchemeHttps,
+            Port = -1
+        };
+
+        Process.Start(new ProcessStartInfo(blogUriBuilder.Uri.ToString()) { UseShellExecute = true, Verb = "open" })?.Dispose();
     }
 }

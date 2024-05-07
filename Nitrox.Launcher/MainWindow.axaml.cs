@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -14,7 +15,7 @@ namespace Nitrox.Launcher;
 
 public partial class MainWindow : WindowBase<MainWindowViewModel>
 {
-    private readonly HashSet<Exception> handledExceptions = new();
+    private readonly HashSet<Exception> handledExceptions = [];
 
     public MainWindow()
     {
@@ -39,10 +40,10 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         this.WhenActivated(d =>
         {
             // Set clicked nav item as selected (and deselect the others).
-            Button lastClickedNav = null;
+            Button lastClickedNav = OpenLaunchGameViewButton;
             d(Button.ClickEvent.Raised.Subscribe(tuple =>
             {
-                if (tuple.Item2.Source is Button btn && btn.Classes.Contains("nav"))
+                if (tuple.Item2.Source is Button btn && btn.Parent?.Classes.Contains("nav") == true)
                 {
                     lastClickedNav?.SetValue(NitroxAttached.SelectedProperty, false);
                     lastClickedNav = btn;
@@ -52,11 +53,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
             try
             {
-                ViewModel?.DefaultView.Execute(null);
+                ViewModel?.DefaultViewCommand.Execute(null);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Failed to execute {nameof(ViewModel.DefaultView)} command");
+                Log.Error(ex, $"Failed to execute {nameof(ViewModel.DefaultViewCommand)} command");
             }
         });
 
@@ -65,11 +66,15 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
     private async void UnhandledExceptionHandler(Exception ex)
     {
-        if (handledExceptions.Contains(ex))
+        if (!handledExceptions.Add(ex))
         {
             return;
         }
-        handledExceptions.Add(ex);
+        if (Design.IsDesignMode)
+        {
+            Debug.WriteLine(ex);
+            return;
+        }
 
         await ViewModel?.ShowDialogAsync<ErrorViewModel>(vm => vm.Exception = ex)!;
     }

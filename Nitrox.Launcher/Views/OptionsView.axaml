@@ -5,7 +5,7 @@
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             DataContext="{x:Static launcher:DesignData.OptionsViewModel}"
+             DataContext="{x:Static design:DesignData.OptionsViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.OptionsView">
 
@@ -43,8 +43,8 @@
                         <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
                         <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
                     </StackPanel>
-                    <Button Grid.Column="2" Classes="nitrox primary" design:NitroxAttached.Text="Change" ToolTip.Tip="Direct the launcher to your game's install location"
-                            Width="120" HorizontalAlignment="Right" Margin="22 0 0 0"
+                    <Button Grid.Column="2" Classes="primary"  ToolTip.Tip="Direct the launcher to your game's install location"
+                            Width="120" HorizontalAlignment="Right" Margin="22 0 0 0" Content="Change"
                             Command="{Binding ChangePathCommand}" />
                 </Grid>
                 <!--ItemsControl ItemsSource="{Binding KnownGames}">
@@ -66,12 +66,12 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl-->
             </Border>
-            <!--Grid>
-                <Button Classes="linktext" VerticalAlignment="Bottom"
-                        design:NitroxAttached.Text="Manually add game installation"
-                        Command="{Binding AddGameInstallationCommand}"/>
-                <Button Classes="nitrox primary" HorizontalAlignment="Right" Content="Choose destination" />
-            </Grid-->
+            <Grid>
+                <!-- <Button Classes="icon" VerticalAlignment="Bottom" -->
+                <!--         Content="Manually add game installation" -->
+                <!--         Command="{Binding AddGameInstallationCommand}"/> -->
+                <!-- <Button Classes="primary" HorizontalAlignment="Right" Content="Choose destination" /> -->
+            </Grid>
         </StackPanel>
 
         <!-- Launch Arguments -->
@@ -90,10 +90,10 @@
                                      Foreground="White" TextAlignment="Left"
                                      VerticalAlignment="Stretch" VerticalContentAlignment="Center"
                                      Text="{Binding LaunchArgs}" />
-                            
-                            <Button Grid.Column="1" Classes="nitrox abort" Command="{Binding ResetArgumentsCommand}"
+
+                            <Button Grid.Column="1" Classes="abort" Command="{Binding ResetArgumentsCommand}"
                                     Width="72" Height="28" HorizontalAlignment="Right" Padding="1" Margin="0 0 12 0" IsVisible="{Binding ShowResetArgsBtn}"
-                                    FontSize="12" design:NitroxAttached.Text="Reset" ToolTip.Tip="Reset arguments" />
+                                    FontSize="12" ToolTip.Tip="Reset arguments" Content="Reset" />
                         </Grid>
                     </Border>
 
@@ -119,9 +119,8 @@
                         </Rectangle.Style-->
                     </Button>
 
-                    <Button Grid.Column="2" Classes="nitrox primary" design:NitroxAttached.Text="Apply" ToolTip.Tip="Save launch arguments"
-                            Width="120" HorizontalAlignment="Right"
-                            Command="{Binding ChangeArgumentsCommand}" />
+                    <Button Grid.Column="2" Classes="primary" ToolTip.Tip="Save launch arguments" Content="Apply"
+                            Width="120" HorizontalAlignment="Right" Command="{Binding ChangeArgumentsCommand}" />
                 </Grid>
             </Border>
 
@@ -135,8 +134,8 @@
             <Border Padding="22 15" CornerRadius="12" Background="#151516">
                 <Grid ColumnDefinitions="*,Auto">
                     <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderDir}" />
-                    <Button Grid.Column="1" HorizontalAlignment="Right" Classes="nitrox primary" Command="{Binding ViewFolderCommand}"
-                            design:NitroxAttached.Text="Open" ToolTip.Tip="Open saves folder"
+                    <Button Grid.Column="1" HorizontalAlignment="Right" Classes="primary" Command="{Binding ViewFolderCommand}"
+                            ToolTip.Tip="Open saves folder" Content="Open"
                             Width="120" Margin="22 0 0 0"/>
                 </Grid>
             </Border>

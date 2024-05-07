@@ -2,21 +2,88 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:rx="http://reactiveui.net"
         xmlns:launcher="clr-namespace:Nitrox.Launcher"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static launcher:DesignData.MainWindowViewModel}"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static design:DesignData.MainWindowViewModel}"
         x:Class="Nitrox.Launcher.MainWindow"
         Title="Nitrox Launcher"
         FontFamily="/Assets/Fonts/Inter-Black.ttf"
-        design:NitroxAttached.Theme="DARK"
         WindowStartupLocation="CenterScreen"
-        Width="1000" Height="600"
-        MinWidth="800" MinHeight="600">
+        Width="1200" Height="720"
+        MinWidth="800" MinHeight="600"
+        RequestedThemeVariant="Dark"
+        Icon="/Assets/Images/nitroxIco.png">
+
+    <Window.Styles>
+        <Style Selector="Border.nav">
+            <Setter Property="Background" Value="{DynamicResource BrandPanelBackgroundBrush}" />
+
+            <Style Selector="^ Image.header">
+                <Setter Property="Margin" Value="34 0 0 20" />
+            </Style>
+
+            <Style Selector="^ TextBlock.header">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="Margin" Value="34 20 0 10" />
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+
+            <Style Selector="^ Button">
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="34 10 10 10" />
+                <!-- Scale button to max horizontal so user can more easily click the navigation. -->
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Opacity" Value="0.5" />
+                <Setter Property="ToolTip.Placement" Value="Pointer" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+
+                <Style Selector="^ StackPanel">
+                    <Setter Property="Spacing" Value="10" />
+                </Style>
+
+                <Style Selector="^ TextBlock">
+                    <Setter Property="FontSize" Value="16" />
+                </Style>
+
+                <Style Selector="^ Image">
+                    <Setter Property="Width" Value="24" />
+                    <Setter Property="Height" Value="24" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+
+                <Style Selector="^[(design|NitroxAttached.Selected)=True]">
+                    <Setter Property="Opacity" Value="1" />
+                </Style>
+            </Style>
+        </Style>
+    </Window.Styles>
+
     <Panel>
         <!-- Title bar -->
         <Panel Classes="titleBar" PointerPressed="TitleBar_OnPointerPressed">
-            <ItemsControl ItemsSource="{Binding TitleBarItems}" />
+            <StackPanel>
+                <Button Command="{Binding MinimizeCommand}">
+                    <StackPanel>
+                        <Image Source="/Assets/Images/material-design-icons/min-w-10.png" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding MaximizeCommand}">
+                    <StackPanel>
+                        <Image Source="{Binding MaximizeButtonIcon, Converter={converters:BitmapAssetValueConverter}}" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding CloseCommand}">
+                    <StackPanel>
+                        <Image Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Panel>
 
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
@@ -25,11 +92,52 @@
             <Border Grid.Column="0" Classes="nav">
                 <Grid RowDefinitions="80,*">
                     <!-- The "NITROX" header. -->
-                    <Image Grid.Row="0" Classes="header" />
+                    <Image Grid.Row="0" Classes="header" Source="/Assets/Images/nitroxLogo.png" />
                     <!-- Navigation items -->
                     <Panel Grid.Row="1">
-                        <ItemsControl ItemsSource="{Binding NavigationHeaderItems}" />
-                        <ItemsControl ItemsSource="{Binding NavigationFooterItems}" VerticalAlignment="Bottom" Margin="0 0 0 20" />
+                        <StackPanel Classes="nav">
+                            <TextBlock Classes="header">PLAY</TextBlock>
+                            <Button Command="{Binding OpenLaunchGameViewCommand}" ToolTip.Tip="Play the game" design:NitroxAttached.Selected="True" x:Name="OpenLaunchGameViewButton">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/material-design-icons/play.png" />
+                                    <TextBlock Text="Play game" />
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding OpenServersViewCommand}" ToolTip.Tip="Configure and start the server">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/material-design-icons/server.png" />
+                                    <TextBlock Text="Servers" />
+                                </StackPanel>
+                            </Button>
+                            <TextBlock Classes="header">EXPLORE</TextBlock>
+                            <Button Command="{Binding OpenCommunityViewCommand}" ToolTip.Tip="Join the Nitrox community">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/material-design-icons/community.png" />
+                                    <TextBlock Text="Community" />
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding OpenBlogViewCommand}" ToolTip.Tip="Read the latest from the Dev Blog">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/material-design-icons/blog.png" />
+                                    <TextBlock Text="Blog" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <!-- Footer navigation items -->
+                        <StackPanel VerticalAlignment="Bottom" Margin="0 0 0 20">
+                            <Button Command="{Binding OpenUpdatesViewCommand}">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/material-design-icons/download.png" />
+                                    <TextBlock Text="Updates" />
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding OpenOptionsViewCommand}">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/material-design-icons/options.png" />
+                                    <TextBlock Text="Options" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
                     </Panel>
                 </Grid>
             </Border>

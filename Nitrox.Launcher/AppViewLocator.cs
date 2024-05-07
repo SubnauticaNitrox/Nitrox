@@ -16,7 +16,6 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
 {
     private static readonly ConcurrentDictionary<Type, RoutableViewModelBase> viewModelCache = new();
     private static MainWindow mainWindow;
-    private static RoutingState mainRouter;
     public static Lazy<AppViewLocator> Instance { get; } = new(new AppViewLocator());
 
     public static MainWindow MainWindow
@@ -28,15 +27,13 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
                 return mainWindow;
             }
 
-            if (Application.Current?.ApplicationLifetime is not ClassicDesktopStyleApplicationLifetime desktop)
+            if (Application.Current?.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime desktop)
             {
-                throw new NotSupportedException("This Avalonia application is only supported on desktop environments.");
+                return mainWindow = (MainWindow)desktop.MainWindow;
             }
-            return mainWindow = (MainWindow)desktop.MainWindow;
+            throw new NotSupportedException("This Avalonia application is only supported on desktop environments.");
         }
     }
-
-    public static RoutingState MainRouter => mainRouter ??= MainWindow.ViewModel?.Router ?? throw new Exception($"Tried to get {nameof(MainRouter)} before {nameof(Launcher.MainWindow)} was initialized");
 
     public override ViewDefinition Locate(object viewModel)
     {

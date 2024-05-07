@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nitrox.Launcher.Models;
+namespace Nitrox.Launcher.Models.Design;
 
 [Serializable]
 public class NitroxChangelog

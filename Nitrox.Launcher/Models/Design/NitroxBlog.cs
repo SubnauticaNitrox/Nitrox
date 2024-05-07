@@ -2,7 +2,7 @@
 using System.Net;
 using Avalonia.Media.Imaging;
 
-namespace Nitrox.Launcher.Models;
+namespace Nitrox.Launcher.Models.Design;
 
 [Serializable]
 public class NitroxBlog

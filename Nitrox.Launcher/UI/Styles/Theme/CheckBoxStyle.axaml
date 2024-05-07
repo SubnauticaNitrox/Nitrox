@@ -1,39 +1,38 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="15">
                 <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
-                    <Border Background="White" design:NitroxAttached.Theme="LIGHT" Padding="5">
-                        <CheckBox>Light</CheckBox>
-                    </Border>
-                    <Border Background="Black" design:NitroxAttached.Theme="DARK" Padding="5">
-                        <CheckBox IsChecked="True" Foreground="White">Dark</CheckBox>
-                    </Border>
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Border Background="White" Padding="5">
+                            <CheckBox>Light</CheckBox>
+                        </Border>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Border Background="Black" Padding="5">
+                            <CheckBox IsChecked="True" Foreground="White">Dark</CheckBox>
+                        </Border>
+                    </ThemeVariantScope>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
-                    <Border Background="White" design:NitroxAttached.Theme="LIGHT" Padding="5">
-                        <CheckBox Classes="switch" />
-                    </Border>
-                    <Border Background="Black" design:NitroxAttached.Theme="DARK" Padding="5">
-                        <CheckBox Classes="switch" IsChecked="True" Foreground="White" />
-                    </Border>
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Border Background="White" Padding="5">
+                            <CheckBox Classes="switch" />
+                        </Border>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Border Background="Black" Padding="5">
+                            <CheckBox Classes="switch" IsChecked="True" Foreground="White" />
+                        </Border>
+                    </ThemeVariantScope>
                 </StackPanel>
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
 
     <Style Selector="CheckBox.switch">
-
-        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Background" Value="#333333" />
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-        <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Background" Value="#d9d9d9" />
-            <Setter Property="Foreground" Value="#3b3b3b" />
-        </Style>
+        <Setter Property="Background" Value="{DynamicResource BrandCheckboxBackgroundBrush}" />
 
         <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Height" Value="30" />
@@ -95,9 +94,9 @@
         </Style>
 
         <Style Selector="^:checked">
-
             <!-- Checked Normal State -->
             <Setter Property="Background" Value="{TemplateBinding Background}" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandControlBackgroundBrush}" />
 
             <Style Selector="^ /template/ Border#SlidingIcon">
                 <Setter Property="Background" Value="#007BFF" />
@@ -127,9 +126,6 @@
                     <Setter Property="RenderTransform" Value="scale(0.95)" />
                 </Style>
             </Style>
-
         </Style>
-
     </Style>
-
 </Styles>

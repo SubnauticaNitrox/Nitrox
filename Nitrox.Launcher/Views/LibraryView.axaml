@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
-             DataContext="{x:Static launcher:DesignData.LibraryViewModel}"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             DataContext="{x:Static design:DesignData.LibraryViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.LibraryView">
     <TextBlock Text="Library View"/>
