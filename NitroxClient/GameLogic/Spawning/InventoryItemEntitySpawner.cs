@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Helper;
@@ -10,6 +11,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic.Spawning;
 
@@ -87,6 +89,8 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
         pickupable.Initialize();
 
+        InventoryItem inventoryItem = new(pickupable);
+
         // Items eventually get "secured" once a player gets into a SubRoot (or for other reasons) so we need to force this state by default
         // so that player don't risk their whole inventory if they reconnect in the water.
         pickupable.destroyOnDeath = false;
@@ -94,8 +98,41 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         using (PacketSuppressor<EntityReparented>.Suppress())
         using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         {
-            container.UnsafeAdd(new InventoryItem(pickupable));
+            container.UnsafeAdd(inventoryItem);
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {parentObject.GetFullHierarchyPath()}");
+        }
+
+        if (parentObject.TryGetComponent(out Planter planter))
+        {
+            PostponeAddNotification(() => planter.subscribed, () => planter, container, inventoryItem);
+        }
+        else if (parentObject.TryGetComponent(out Trashcan trashcan))
+        {
+            PostponeAddNotification(() => trashcan.subscribed, () => trashcan, container, inventoryItem);
+        }
+    }
+
+    /// <summary>
+    /// If required (<paramref name="subscribed"/> is <see langword="false" />), a coroutine will be started to call <see cref="ItemsContainer.NotifyAddItem"/>
+    /// on <paramref name="container"/> (if <paramref name="instanceValid"/>) once <paramref name="subscribed"/> is <see langword="true"/> (or if the instance is no longer valid, the task is cancelled).
+    /// </summary>
+    private static void PostponeAddNotification(Func<bool> subscribed, Func<bool> instanceValid, ItemsContainer container, InventoryItem inventoryItem)
+    {
+        IEnumerator PostponedAddCallback()
+        {
+            yield return new WaitUntil(() => subscribed() || !instanceValid());
+            if (instanceValid())
+            {
+                using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
+                {
+                    container.NotifyAddItem(inventoryItem);
+                }
+            }
+        }
+
+        if (!subscribed())
+        {
+            CoroutineHost.StartCoroutine(PostponedAddCallback());
         }
     }
 }

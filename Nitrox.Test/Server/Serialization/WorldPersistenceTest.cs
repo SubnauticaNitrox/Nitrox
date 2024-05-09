@@ -71,9 +71,6 @@ public class WorldPersistenceTest
                 Assert.AreEqual(equippedItemData.Slot, equippedItemDataAfter.Slot);
                 Assert.AreEqual(equippedItemData.TechType, equippedItemDataAfter.TechType);
                 break;
-            case PlantableItemData plantableItemData when itemDataAfter is PlantableItemData plantableItemDataAfter:
-                Assert.AreEqual(plantableItemData.PlantedGameTime, plantableItemDataAfter.PlantedGameTime);
-                break;
             default:
                 Assert.Fail($"Runtime types of {nameof(ItemData)} where not equal");
                 break;
@@ -229,7 +226,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.Duration, metadataAfter.Duration);
                 break;
             case PlantableMetadata metadata when entityAfter.Metadata is PlantableMetadata metadataAfter:
-                Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
+                Assert.AreEqual(metadata.TimeStartGrowth, metadataAfter.TimeStartGrowth);
                 break;
             case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
                 Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);
