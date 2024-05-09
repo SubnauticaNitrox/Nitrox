@@ -9,7 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 public class PlantableMetadata : EntityMetadata
 {
     [DataMember(Order = 1)]
-    public float Progress { get; }
+    public float TimeStartGrowth { get; }
 
     [IgnoreConstructor]
     protected PlantableMetadata()
@@ -17,13 +17,13 @@ public class PlantableMetadata : EntityMetadata
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public PlantableMetadata(float progress)
+    public PlantableMetadata(float timeStartGrowth)
     {
-        Progress = progress;
+        TimeStartGrowth = timeStartGrowth;
     }
 
     public override string ToString()
     {
-        return $"[PlantableMetadata Time: {Progress}]";
+        return $"[{nameof(PlantableMetadata)} TimeStartGrowth: {TimeStartGrowth}]";
     }
 }

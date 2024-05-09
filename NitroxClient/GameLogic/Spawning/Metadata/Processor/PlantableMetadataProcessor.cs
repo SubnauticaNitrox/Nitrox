@@ -8,12 +8,21 @@ public class PlantableMetadataProcessor : EntityMetadataProcessor<PlantableMetad
 {
     public override void ProcessMetadata(GameObject gameObject, PlantableMetadata metadata)
     {
-        Plantable plantable = gameObject.GetComponent<Plantable>();
-
-        // Plantable will only have a growing plant when residing in the proper container.
-        if (plantable && plantable.growingPlant)
+        if (gameObject.TryGetComponent(out Plantable plantable))
         {
-            plantable.growingPlant.SetProgress(metadata.Progress);
+            if (plantable.growingPlant)
+            {
+                plantable.growingPlant.timeStartGrowth = metadata.TimeStartGrowth;
+            }
+            else if (plantable.model.TryGetComponent(out GrowingPlant growingPlant))
+            {
+                // Calculation from GrowingPlant.SetProgress (reversed because we're looking for "progress" while we already know timeStartGrowth)
+                plantable.plantAge = (DayNightCycle.main.timePassedAsFloat - metadata.TimeStartGrowth) / growingPlant.GetGrowthDuration();
+            }
+        }
+        else
+        {
+            Log.Error($"[{nameof(PlantableMetadataProcessor)}] Could not find {nameof(Plantable)} on {gameObject.name}");
         }
     }
 }
