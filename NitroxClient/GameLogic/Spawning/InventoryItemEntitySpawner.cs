@@ -7,6 +7,7 @@ using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -95,37 +96,58 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         // so that player don't risk their whole inventory if they reconnect in the water.
         pickupable.destroyOnDeath = false;
 
+        bool isPlanter = parentObject.TryGetComponent(out Planter planter);
+        bool subscribedValue = false;
+        if (isPlanter)
+        {
+            subscribedValue = planter.subscribed;
+            planter.Subscribe(false);
+        }
+
         using (PacketSuppressor<EntityReparented>.Suppress())
         using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             container.UnsafeAdd(inventoryItem);
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {parentObject.GetFullHierarchyPath()}");
         }
 
-        if (parentObject.TryGetComponent(out Planter planter))
+        if (isPlanter)
         {
-            PostponeAddNotification(() => planter.subscribed, () => planter, container, inventoryItem);
+            planter.Subscribe(subscribedValue);
+
+            PostponeAddNotification(() => planter.subscribed, () => planter, true, () =>
+            {
+                if (entity.Metadata is PlantableMetadata metadata)
+                {
+                    // Adapted from Planter.AddItem(InventoryItem) to be able to call directly AddItem(Plantable, slotID) with our parameters
+                    Plantable component = pickupable.GetComponent<Plantable>();
+                    pickupable.SetTechTypeOverride(component.plantTechType, false);
+                    inventoryItem.isEnabled = false;
+                    planter.AddItem(component, metadata.SlotID);
+                }
+            });
         }
         else if (parentObject.TryGetComponent(out Trashcan trashcan))
         {
-            PostponeAddNotification(() => trashcan.subscribed, () => trashcan, container, inventoryItem);
+            PostponeAddNotification(() => trashcan.subscribed, () => trashcan, false, () =>
+            {
+                trashcan.AddItem(inventoryItem);
+            });
         }
     }
 
-    /// <summary>
-    /// If required (<paramref name="subscribed"/> is <see langword="false" />), a coroutine will be started to call <see cref="ItemsContainer.NotifyAddItem"/>
-    /// on <paramref name="container"/> (if <paramref name="instanceValid"/>) once <paramref name="subscribed"/> is <see langword="true"/> (or if the instance is no longer valid, the task is cancelled).
-    /// </summary>
-    private static void PostponeAddNotification(Func<bool> subscribed, Func<bool> instanceValid, ItemsContainer container, InventoryItem inventoryItem)
+    private static void PostponeAddNotification(Func<bool> subscribed, Func<bool> instanceValid, bool callbackIfAlreadySubscribed, Action callback)
     {
         IEnumerator PostponedAddCallback()
         {
             yield return new WaitUntil(() => subscribed() || !instanceValid());
             if (instanceValid())
             {
+                using (PacketSuppressor<EntityReparented>.Suppress())
                 using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
                 {
-                    container.NotifyAddItem(inventoryItem);
+                    callback();
                 }
             }
         }
@@ -133,6 +155,10 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         if (!subscribed())
         {
             CoroutineHost.StartCoroutine(PostponedAddCallback());
+        }
+        else if (callbackIfAlreadySubscribed)
+        {
+            callback();
         }
     }
 }

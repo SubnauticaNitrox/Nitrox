@@ -7,6 +7,6 @@ public class PlantableMetadataExtractor : EntityMetadataExtractor<Plantable, Pla
 {
     public override PlantableMetadata Extract(Plantable plantable)
     {
-        return plantable.growingPlant ? new(plantable.growingPlant.timeStartGrowth) : null;
+        return new(plantable.growingPlant ? plantable.growingPlant.timeStartGrowth : 0, plantable.GetSlotID());
     }
 }
