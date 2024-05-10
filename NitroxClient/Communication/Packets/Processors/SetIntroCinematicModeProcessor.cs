@@ -15,7 +15,7 @@ public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCine
 
     public override void Process(SetIntroCinematicMode packet)
     {
-        if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
+        if (packet.PlayerId.HasValue && playerManager.TryFind(packet.PlayerId.Value, out RemotePlayer remotePlayer))
         {
             remotePlayer.PlayerContext.IntroCinematicMode = packet.Mode;
         }
