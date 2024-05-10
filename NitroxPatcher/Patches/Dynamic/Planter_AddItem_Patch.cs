@@ -19,7 +19,7 @@ public sealed partial class Planter_AddItem_Patch : NitroxPatch, IDynamicPatch
         }
 
         // When the planter accepts the new incoming seed, we want to send out metadata about what time the seed was planted.
-        if (plantable.TryGetIdOrWarn(out NitroxId id))
+        if (plantable.TryGetNitroxId(out NitroxId id))
         {
             Resolve<Entities>().EntityMetadataChanged(plantable, id);
         }
