@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -19,11 +20,11 @@ public class IntroCinematicUpdater : MonoBehaviour
     private Transform[] seatPartsRight;
     private Transform seatArmRestLeft;
     private Transform seatArmRestRight;
-    private SkinnedMeshRenderer[] seatBarRendererRight;
+    private SkinnedMeshRenderer[] seatBarRendererRight = Array.Empty<SkinnedMeshRenderer>();
 
     private SkinnedMeshRenderer remotePlayerHeadRenderer;
     private GameObject remotePlayerCustomHead;
-    private SkinnedMeshRenderer[] remoteRenders;
+    private SkinnedMeshRenderer[] remoteRenders = Array.Empty<SkinnedMeshRenderer>();
 
     public void Awake()
     {
