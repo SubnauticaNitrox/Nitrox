@@ -40,6 +40,12 @@ public class PlayerCinematics
 
     public void SetLocalIntroCinematicMode(IntroCinematicMode introCinematicMode)
     {
+        if (!localPlayer.PlayerId.HasValue)
+        {
+            Log.Error($"PlayerId was null while setting IntroCinematicMode to {introCinematicMode}");
+            return;
+        }
+
         if (localPlayer.IntroCinematicMode != introCinematicMode)
         {
             localPlayer.IntroCinematicMode = introCinematicMode;
