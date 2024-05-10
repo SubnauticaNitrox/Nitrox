@@ -150,8 +150,9 @@ internal static class TranspilerHelper
             {
                 sb.Append('(');
                 sb.Append(FormatOperand(ci.operand));
-                sb.Append(")  ");
+                sb.Append(')');
             }
+            sb.AppendLine();
         }
 
         Log.Info(sb.ToString());
