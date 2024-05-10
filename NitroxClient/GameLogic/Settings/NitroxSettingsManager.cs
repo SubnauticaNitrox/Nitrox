@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using UnityEngine.Events;
 
 namespace NitroxClient.GameLogic.Settings;
@@ -21,9 +21,9 @@ public class NitroxSettingsManager
 
     /// <summary>
     /// Allows to create new settings
-    /// 
+    ///
     /// Available types : TOGGLE, SLIDER, LIST, BUTTON
-    /// 
+    ///
     /// <example>
     /// <para>Examples :</para>
     /// <code>
@@ -38,7 +38,7 @@ public class NitroxSettingsManager
         AddSetting("Nitrox_StreamerSettings", new Setting("Nitrox_HideIp", NitroxPrefs.HideIp, hide =>
         {
             NitroxPrefs.HideIp.Value = hide;
-            MainMenuMultiplayerPanel.Main.RefreshServerEntries();
+            MainMenuServerListPanel.Main.RefreshServerEntries();
         }));
 
         AddSetting("Nitrox_ResyncSettings", new Setting("Nitrox_ResyncBuildings", () =>

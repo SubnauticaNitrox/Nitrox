@@ -186,10 +186,10 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
     private void ClearButtonListeners()
     {
-        GetToggle(MuteObject).onValueChanged.RemoveAllListeners();
-        GetToggle(KickObject).onValueChanged.RemoveAllListeners();
-        GetToggle(TeleportToObject).onValueChanged.RemoveAllListeners();
-        GetToggle(TeleportToMeObject).onValueChanged.RemoveAllListeners();
+        GetToggle(MuteObject).onValueChanged = new Toggle.ToggleEvent();
+        GetToggle(KickObject).onValueChanged = new Toggle.ToggleEvent();
+        GetToggle(TeleportToObject).onValueChanged = new Toggle.ToggleEvent();
+        GetToggle(TeleportToMeObject).onValueChanged = new Toggle.ToggleEvent();
     }
 
     private IEnumerator AssignSprites()
