@@ -93,6 +93,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     private static bool IsRemoteCinematicReady(uGUI_SceneIntro uGuiSceneIntro)
     {
         if (callbackRun) return true;
+
         if (GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative)) uGuiSceneIntro.Stop(true); // Stopping intro if Creative like in normal SN
 
         if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
@@ -101,7 +102,14 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             EndRemoteCinematic();
         }
 
-        if (!uGuiSceneIntro.moveNext) return false;
+        // See NitroxServer.Communication.Packets.Processors.SetIntroCinematicModeProcessor
+        RemotePlayer firstWaitingRemotePlayer = Resolve<PlayerManager>().GetAll().FirstOrDefault(r => r.PlayerContext.IntroCinematicMode is IntroCinematicMode.START);
+        if (firstWaitingRemotePlayer != null)
+        {
+            partner = firstWaitingRemotePlayer;
+            EnqueueStartCinematic(uGuiSceneIntro);
+            Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.PLAYING);
+        }
 
         if (!packetSend)
         {
@@ -112,16 +120,6 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.WAITING);
             packetSend = true;
             IsWaitingForPartner = true;
-            return false;
-        }
-
-        // See NitroxServer.Communication.Packets.Processors.SetIntroCinematicModeProcessor
-        RemotePlayer firstWaitingRemotePlayer = Resolve<PlayerManager>().GetAll().FirstOrDefault(r => r.PlayerContext.IntroCinematicMode is IntroCinematicMode.START);
-        if (firstWaitingRemotePlayer != null)
-        {
-            partner = firstWaitingRemotePlayer;
-            EnqueueStartCinematic(uGuiSceneIntro);
-            Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.PLAYING);
         }
 
         return false;
