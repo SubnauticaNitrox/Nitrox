@@ -1,28 +1,30 @@
-﻿using System;
-using NitroxClient.Debuggers.Drawer.Unity;
-using NitroxModel.Core;
+﻿using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ToggleDrawer : IDrawer
+public class ToggleDrawer : IDrawer<Toggle>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Toggle) };
+    private readonly SceneDebugger sceneDebugger;
+    private readonly SelectableDrawer selectableDrawer;
+    private readonly UnityEventDrawer unityEventDrawer;
 
-    public void Draw(object target)
+    public ToggleDrawer(SceneDebugger sceneDebugger, SelectableDrawer selectableDrawer, UnityEventDrawer unityEventDrawer)
     {
-        switch (target)
-        {
-            case Toggle toggle:
-                DrawToggle(toggle);
-                break;
-        }
+        Validate.NotNull(sceneDebugger);
+        Validate.NotNull(selectableDrawer);
+        Validate.NotNull(unityEventDrawer);
+
+        this.sceneDebugger = sceneDebugger;
+        this.selectableDrawer = selectableDrawer;
+        this.unityEventDrawer = unityEventDrawer;
     }
 
-    private static void DrawToggle(Toggle toggle)
+    public void Draw(Toggle toggle)
     {
-        SelectableDrawer.DrawSelectable(toggle);
+        selectableDrawer.Draw(toggle);
         GUILayout.Space(10);
 
         using (new GUILayout.HorizontalScope())
@@ -45,7 +47,7 @@ public class ToggleDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.UpdateSelectedObject(toggle.graphic.gameObject);
+                sceneDebugger.UpdateSelectedObject(toggle.graphic.gameObject);
             }
         }
 
@@ -55,10 +57,10 @@ public class ToggleDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.UpdateSelectedObject(toggle.group.gameObject);
+                sceneDebugger.UpdateSelectedObject(toggle.group.gameObject);
             }
         }
 
-        UnityEventDrawer.DrawUnityEventBool(toggle.onValueChanged, "OnClick()");
+        unityEventDrawer.Draw(toggle.onValueChanged, new UnityEventDrawer.DrawOptions("OnClick()"));
     }
 }
