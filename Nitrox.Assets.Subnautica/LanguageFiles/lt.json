@@ -1,7 +1,9 @@
 {
     "Nitrox_AddServer": "Pridėti serverį",
+    "Nitrox_AddServer_AddressDescription": "",
     "Nitrox_AddServer_AddressPlaceholder": "Įvesti serverio IP adresą",
     "Nitrox_AddServer_Confirm": "Sukurti serverį",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Jūsų įvestis negalima. Peržiūrėkite ar visi teksto laukeliai užpildyti.",
     "Nitrox_AddServer_NameDescription": "Pavadinimas:",
     "Nitrox_AddServer_NamePlaceholder": "Įvesti serverio pavadinimą",
