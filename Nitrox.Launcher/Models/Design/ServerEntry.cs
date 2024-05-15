@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
-using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.ViewModels;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;

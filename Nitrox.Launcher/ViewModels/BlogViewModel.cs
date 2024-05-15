@@ -29,12 +29,8 @@ public partial class BlogViewModel : RoutableViewModelBase
         {
             try
             {
-                IList<NitroxBlog> blogs = await Downloader.GetBlogs();
-
-                foreach (NitroxBlog blog in blogs)
-                {
-                    nitroxBlogs.Add(blog);
-                }
+                nitroxBlogs.Clear();
+                nitroxBlogs.AddRange(await Downloader.GetBlogs());
             }
             catch (Exception ex)
             {

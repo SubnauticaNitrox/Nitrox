@@ -116,7 +116,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
         {
             Log.Warn("Seems like QModManager is Installed");
-            //LauncherNotifier.Info("Detected QModManager in the game folder");
+            LauncherNotifier.Info("Detected QModManager in the game folder");
         }
 
         gameProcess = await StartSubnauticaAsync();

@@ -12,7 +12,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
-using Nitrox.Launcher.Models.Messages;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;

@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using HanumanInstitute.MvvmDialogs;
+using Nitrox.Launcher.Models;
+using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Logger;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -18,11 +24,31 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
     [ObservableProperty]
     private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
 
-    public MainWindowViewModel(IDialogService dialogService)
+    public AvaloniaList<NotificationItem> Notifications { get; init; }
+
+    public MainWindowViewModel(IDialogService dialogService, IList<NotificationItem> notifications = null)
     {
         this.dialogService = dialogService;
 
         DefaultViewCommand = OpenLaunchGameViewCommand;
+        Notifications = notifications == null ? [] : [..notifications];
+
+        WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
+        {
+            Notifications.Add(message.Item);
+            Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                Notifications.Remove(message.Item);
+            }).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    Log.Error(t.Exception, "Failed to remove notification after a time delay");
+                }
+            });
+        });
+        WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, (_, message) => Notifications.Remove(message.Item));
     }
 
     [RelayCommand]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Cache;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -39,7 +40,7 @@ public class Downloader
             if (response == null)
             {
                 Log.Error($"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
-                //LauncherNotifier.Error("Unable to fetch nitrox blogs");
+                LauncherNotifier.Error("Unable to fetch nitrox blogs");
                 return blogs;
             }
 #endif
@@ -60,19 +61,19 @@ public class Downloader
                 byte[] imageData = await imageResponse.Content.ReadAsByteArrayAsync();
                 Bitmap image = new(new MemoryStream(imageData));
 
-                if (!DateTime.TryParse(released, out DateTime dateTime))
+                if (!DateOnly.TryParse(released, out DateOnly dateTime))
                 {
-                    dateTime = DateTime.UtcNow;
+                    dateTime = DateOnly.FromDateTime(DateTime.UtcNow);
                     Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
                 }
 
-                blogs.Add(new NitroxBlog(title, dateTime, url, image));
+                blogs.Add(new NitroxBlog(WebUtility.HtmlDecode(title), dateTime, url, image));
             }
         }
         catch (Exception ex)
         {
             Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
-            //LauncherNotifier.Error("Unable to fetch nitrox blogs");
+            LauncherNotifier.Error("Unable to fetch nitrox blogs");
         }
 
         return blogs;
@@ -115,7 +116,7 @@ public class Downloader
         catch (Exception ex)
         {
             Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
-            //LauncherNotifier.Error("Unable to fetch nitrox changelogs");
+            LauncherNotifier.Error("Unable to fetch nitrox changelogs");
         }
 
         return changelogs;
@@ -138,7 +139,7 @@ public class Downloader
         catch (Exception ex)
         {
             Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
-            //LauncherNotifier.Error("Unable to check for updates");
+            LauncherNotifier.Error("Unable to check for updates");
         }
 
         return new Version();

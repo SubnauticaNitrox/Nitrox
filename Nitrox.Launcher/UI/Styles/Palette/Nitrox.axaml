@@ -19,6 +19,9 @@
             <!-- Notification colors -->
             <SolidColorBrush Color="#FF005C" x:Key="BrandAbortBrush" />
             <SolidColorBrush Color="#FFB3B3" x:Key="BrandAbortBackgroundBrush" />
+            <SolidColorBrush Color="#75B798" x:Key="BrandSuccessBrush" />
+            <SolidColorBrush Color="#6EDFF7" x:Key="BrandInformationBrush" />
+            <SolidColorBrush Color="#FFDA6A" x:Key="BrandWarningBrush" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <SolidColorBrush Color="#000000" x:Key="BrandWhiteBrush" />

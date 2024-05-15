@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Patching;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel;
 using NitroxModel.Discovery;
@@ -77,7 +78,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         
         if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
         {
-            //LauncherNotifier.Error("Invalid subnautica directory");
+            LauncherNotifier.Error("Invalid subnautica directory");
             LaunchArgs = "Invalid subnautica directory";    //TEMP
             return;
         }
@@ -85,7 +86,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         if (selectedDirectory != SelectedGame.PathToGame)
         {
             await SetTargetedSubnauticaPath(selectedDirectory);
-            //LauncherNotifier.Success("Applied changes");
+            LauncherNotifier.Success("Applied changes");
             LaunchArgs = "Applied changes";    //TEMP
         }
     }
