@@ -72,14 +72,15 @@ public partial class OptionsViewModel : RoutableViewModelBase
         
         if (selectedDirectory == "")
         {
-            LaunchArgs = "Cancelled";    //TEMP
+            //LaunchArgs = "Cancelled";    //TEMP
+            LauncherNotifier.Info("Cancelled");   //TEMP
             return;
         }
         
         if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
         {
             LauncherNotifier.Error("Invalid subnautica directory");
-            LaunchArgs = "Invalid subnautica directory";    //TEMP
+            //LaunchArgs = "Invalid subnautica directory";    //TEMP
             return;
         }
         
@@ -87,7 +88,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         {
             await SetTargetedSubnauticaPath(selectedDirectory);
             LauncherNotifier.Success("Applied changes");
-            LaunchArgs = "Applied changes";    //TEMP
+            //LaunchArgs = "Applied changes";    //TEMP
         }
     }
 
@@ -151,12 +152,14 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         LaunchArgs = defaultLaunchArg;
         ShowResetArgsBtn = false;
+        LauncherNotifier.Success("Launch Arguments reset");   //TEMP
     }
     
     [RelayCommand(CanExecute = nameof(CanChangeArguments))]
     private void ChangeArguments()
     {
         KeyValueStore.Instance.SetValue("SubnauticaLaunchArguments", LaunchArgs);
+        LauncherNotifier.Info("Launch Arguments set");   //TEMP
     }
     private bool CanChangeArguments()
     {

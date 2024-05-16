@@ -163,14 +163,13 @@
                         <!-- TODO: animations (opacity, fly-in/scale-in/scale-out?) -->
                         <Border Margin="5" Padding="5" VerticalAlignment="Bottom" Background="{Binding Type, Converter={converters:NotificationTypeToColorConverter}}">
                             <Grid ColumnDefinitions="40,*,20">
-                                <!-- TODO: binding to map notification type to icon -->
-                                <Image Grid.Column="0" Width="20" VerticalAlignment="Top" Margin="0 5 0 0" Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                                <Image Grid.Column="0" Width="20" VerticalAlignment="Center" Margin="0 5 5 0" Source="{Binding Type, Converter={converters:NotificationTypeToIconConverter}}" />
                                 <StackPanel Grid.Column="1">
                                     <TextBlock Text="{Binding Title}" FontWeight="600" HorizontalAlignment="Left" />
                                     <TextBlock Text="{Binding Description}" />
                                 </StackPanel>
                                 <Button Classes="anycontent" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseCommand}">
-                                    <TextBlock Text="X" FontSize="16" />
+                                    <Image Width="10" VerticalAlignment="Top" Source="/Assets/Images/material-design-icons/close-w-10.png" />
                                 </Button>
                             </Grid>
                         </Border>
