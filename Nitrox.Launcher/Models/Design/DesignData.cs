@@ -11,47 +11,74 @@ namespace Nitrox.Launcher.Models.Design;
 /// </summary>
 public static class DesignData
 {
-    public static MainWindowViewModel MainWindowViewModel { get; } = new(null, notifications: [new NotificationItem("Error", "Something bad happened :(", NotificationType.Error), new NotificationItem("OK", "You're in design mode :)")]);
-    public static LaunchGameViewModel LaunchGameViewModel { get; } = new(null);
-    public static ManageServerViewModel ManageServerViewModel { get; } = new(null) { ServerName = "My fun server" };
-    public static CreateServerViewModel CreateServerViewModel { get; } = new() { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };
-    public static LibraryViewModel LibraryViewModel { get; } = new(null);
-    public static CommunityViewModel CommunityViewModel { get; } = new(null);
-    public static BlogViewModel BlogViewModel { get; } = new(null, [new NitroxBlog("Design blog", DateOnly.FromDateTime(DateTime.UtcNow - TimeSpan.FromDays(5)), "google.com", null)]);
-    public static UpdatesViewModel UpdatesViewModel { get; } = new(null);
-
-    public static OptionsViewModel OptionsViewModel { get; } = new(null)
+    static DesignData()
     {
-        SelectedGame = new()
+        // Skip initialization if not in design mode.
+        if (!Avalonia.Controls.Design.IsDesignMode)
         {
-            PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
-            Platform = Platform.STEAM
+            return;
         }
-        
-        //KnownGames =
-        //[
-        //    new OptionsViewModel.KnownGame
-        //    {
-        //        PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
-        //        Platform = Platform.STEAM
-        //    },
-        //    new OptionsViewModel.KnownGame
-        //    {
-        //        PathToGame = @"C:\Games\Epic\Subnautica",
-        //        Platform = Platform.EPIC
-        //    },
-        //    new OptionsViewModel.KnownGame
-        //    {
-        //        PathToGame = @"C:\Games\Discord\Subnautica",
-        //        Platform = Platform.DISCORD
-        //    },
-        //    new OptionsViewModel.KnownGame
-        //    {
-        //        PathToGame = @"C:\Gamepass\Subnautica",
-        //        Platform = Platform.MICROSOFT
-        //    }
-        //]
-    };
 
-    public static ConfirmationBoxViewModel ConfirmationBoxViewModel { get; } = new() { ConfirmationText = "Confirmation Text" };
+        MainWindowViewModel = new(null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
+        
+        LaunchGameViewModel = new(null);
+        
+        ManageServerViewModel = new(null) { ServerName = "My fun server" };
+        
+        CreateServerViewModel = new() { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };
+        
+        LibraryViewModel = new(null);
+        
+        CommunityViewModel = new(null);
+        
+        BlogViewModel = new(null, [new NitroxBlog("Design blog", DateOnly.FromDateTime(DateTime.UtcNow - TimeSpan.FromDays(5)), "google.com", null)]);
+        
+        UpdatesViewModel = new(null);
+        
+        OptionsViewModel = new(null)
+        {
+            SelectedGame = new()
+            {
+                PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
+                Platform = Platform.STEAM
+            }
+            
+            //KnownGames =
+            //[
+            //    new OptionsViewModel.KnownGame
+            //    {
+            //        PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
+            //        Platform = Platform.STEAM
+            //    },
+            //    new OptionsViewModel.KnownGame
+            //    {
+            //        PathToGame = @"C:\Games\Epic\Subnautica",
+            //        Platform = Platform.EPIC
+            //    },
+            //    new OptionsViewModel.KnownGame
+            //    {
+            //        PathToGame = @"C:\Games\Discord\Subnautica",
+            //        Platform = Platform.DISCORD
+            //    },
+            //    new OptionsViewModel.KnownGame
+            //    {
+            //        PathToGame = @"C:\Gamepass\Subnautica",
+            //        Platform = Platform.MICROSOFT
+            //    }
+            //]
+        };
+        
+        ConfirmationBoxViewModel = new() { ConfirmationText = "Confirmation Text" };
+    }
+    
+    public static MainWindowViewModel MainWindowViewModel { get; }
+    public static LaunchGameViewModel LaunchGameViewModel { get; }
+    public static ManageServerViewModel ManageServerViewModel { get; }
+    public static CreateServerViewModel CreateServerViewModel { get; }
+    public static LibraryViewModel LibraryViewModel { get; }
+    public static CommunityViewModel CommunityViewModel { get; }
+    public static BlogViewModel BlogViewModel { get; }
+    public static UpdatesViewModel UpdatesViewModel { get; }
+    public static OptionsViewModel OptionsViewModel { get; }
+    public static ConfirmationBoxViewModel ConfirmationBoxViewModel { get; }
 }

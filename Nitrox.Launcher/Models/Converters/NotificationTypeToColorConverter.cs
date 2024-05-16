@@ -16,7 +16,7 @@ public class NotificationTypeToColorConverter : Converter<NotificationTypeToColo
         [NotificationType.Success] = Application.Current?.Resources.GetResource("BrandSuccessBrush"),
         [NotificationType.Information] = Application.Current?.Resources.GetResource("BrandInformationBrush"),
         [NotificationType.Warning] = Application.Current?.Resources.GetResource("BrandWarningBrush"),
-        [NotificationType.Error] = Application.Current?.Resources.GetResource("BrandAbortBrush")
+        [NotificationType.Error] = Application.Current?.Resources.GetResource("BrandErrorBrush")
     };
 
     static NotificationTypeToColorConverter()

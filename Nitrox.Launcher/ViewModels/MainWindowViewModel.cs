@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Collections;
@@ -10,7 +11,9 @@ using CommunityToolkit.Mvvm.Messaging;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using ReactiveUI;
 
@@ -49,6 +52,17 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             });
         });
         WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, (_, message) => Notifications.Remove(message.Item));
+        
+        if (!NetworkInterface.GetIsNetworkAvailable())
+        {
+            Log.Warn("Launcher may not be connected to internet");
+            LauncherNotifier.Error("Launcher may not be connected to internet");
+        }
+        
+        if (!NitroxEnvironment.IsReleaseMode)
+        {
+            LauncherNotifier.Warning("You're now using Nitrox DEV build");
+        }
     }
 
     [RelayCommand]

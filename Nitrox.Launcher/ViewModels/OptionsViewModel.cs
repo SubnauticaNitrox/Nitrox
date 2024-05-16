@@ -152,7 +152,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         LaunchArgs = defaultLaunchArg;
         ShowResetArgsBtn = false;
-        LauncherNotifier.Success("Launch Arguments reset");   //TEMP
+        LauncherNotifier.Success("Launch Arguments reset the imposter is sus the imposter is sus the imposter is sus the imposter is sus the imposter is sus the imposter is sus the imposter is sus");   //TEMP
     }
     
     [RelayCommand(CanExecute = nameof(CanChangeArguments))]
