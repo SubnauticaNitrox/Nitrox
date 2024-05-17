@@ -51,6 +51,14 @@ public class RemotePlayerVitals : MonoBehaviour
         return vitals;
     }
 
+    public void SetStatsVisible(bool visible)
+    {
+        oxygenBar.SetVisible(visible);
+        healthBar.SetVisible(visible);
+        foodBar.SetVisible(visible);
+        waterBar.SetVisible(visible);
+    }
+
     public void SetOxygen(float oxygen, float maxOxygen)
     {
         oxygenBar.SetTargetValue(oxygen);
@@ -251,6 +259,11 @@ public class RemotePlayerVitals : MonoBehaviour
             {
                 text.SetText(IntStringCache.GetStringForInt(Mathf.RoundToInt(target)));
             }
+        }
+
+        public void SetVisible(bool visible)
+        {
+            gameObject.SetActive(visible);
         }
 
         public void Dispose()

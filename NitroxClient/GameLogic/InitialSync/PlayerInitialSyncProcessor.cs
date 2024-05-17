@@ -41,6 +41,9 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
 
     private void SetPlayerGameObjectId(NitroxId id)
     {
+        EcoTarget playerEcoTarget = Player.mainObject.AddComponent<EcoTarget>();
+        playerEcoTarget.SetTargetType(RemotePlayer.PLAYER_ECO_TARGET_TYPE);
+
         NitroxEntity.SetNewId(Player.mainObject, id);
         Log.Info($"Received initial sync player GameObject Id: {id}");
     }
