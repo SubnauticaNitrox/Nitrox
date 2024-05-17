@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 Server.Instance.ResumeServer();
             }
 
-            playerManager.FinishProcessingReservation(player);
+            playerManager.SyncFinishedCallback?.Invoke();
         }
     }
 }
