@@ -1,10 +1,11 @@
-﻿using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -14,6 +15,10 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
     private int defaultLayer;
     private int viewModelLayer;
     private readonly PlayerManager playerManager;
+
+    private NitroxId previousItemId;
+    public delegate void HeldItemChanged(Optional<NitroxId> previousId);
+    public static event HeldItemChanged OnHeldItemChanged;
 
     public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
     {
@@ -48,6 +53,9 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
 
         ItemsContainer inventory = opPlayer.Value.Inventory;
         PlayerTool tool = item.GetComponent<PlayerTool>();
+
+        OnHeldItemChanged?.Invoke(Optional.OfNullable(previousItemId));
+        previousItemId = item.GetId().OrNull();
 
         // Copied from QuickSlots
         switch (packet.Type)
