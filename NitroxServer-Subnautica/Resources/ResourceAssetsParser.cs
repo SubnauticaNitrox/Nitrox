@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System.Diagnostics;
+using System.IO;
 using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers;
 
@@ -10,22 +11,44 @@ public static class ResourceAssetsParser
 
     public static ResourceAssets Parse()
     {
-        if (resourceAssets != null)
+        if (resourceAssets is not null)
         {
             return resourceAssets;
         }
 
-        using (PrefabPlaceholderGroupsParser prefabPlaceholderGroupsParser = new())
+        using PrefabPlaceholderGroupsParser prefabPlaceholderGroupsParser = new();
+
+        Stopwatch stopwatch = new();
+
+        Log.Debug("Parsing world entity...");
+        stopwatch.Restart();
+        System.Collections.Generic.Dictionary<string, UWE.WorldEntityInfo> worldEntity = new WorldEntityInfoParser().ParseFile();
+        Log.Debug($"Done in {stopwatch.ElapsedMilliseconds}ms.");
+
+        Log.Debug("Parsing random start generator...");
+        stopwatch.Restart();
+        NitroxModel.DataStructures.GameLogic.RandomStartGenerator random = new RandomStartParser().ParseFile();
+        Log.Debug($"Done in {stopwatch.ElapsedMilliseconds}ms.");
+
+        Log.Debug("Parsing entity distributions...");
+        stopwatch.Restart();
+        string entityDistribution = new EntityDistributionsParser().ParseFile();
+        Log.Debug($"Done in {stopwatch.ElapsedMilliseconds}ms.");
+
+        Log.Debug("Parsing prefab placeholders...");
+        stopwatch.Restart();
+        System.Collections.Generic.Dictionary<string, NitroxServer.Resources.PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupsByGroupClassId = prefabPlaceholderGroupsParser.ParseFile();
+        Log.Debug($"Done in {stopwatch.ElapsedMilliseconds}ms.");
+
+        stopwatch.Reset();
+
+        resourceAssets = new ResourceAssets
         {
-            resourceAssets = new ResourceAssets
-            {
-                WorldEntitiesByClassId = new WorldEntityInfoParser().ParseFile(),
-                LootDistributionsJson = new EntityDistributionsParser().ParseFile(),
-                PrefabPlaceholdersGroupsByGroupClassId = prefabPlaceholderGroupsParser.ParseFile(),
-                NitroxRandom = new RandomStartParser().ParseFile()
-            };
-        }
-        AssetParser.Dispose();
+            WorldEntitiesByClassId = new WorldEntityInfoParser().ParseFile(),
+            LootDistributionsJson = new EntityDistributionsParser().ParseFile(),
+            PrefabPlaceholdersGroupsByGroupClassId = prefabPlaceholderGroupsParser.ParseFile(),
+            NitroxRandom = new RandomStartParser().ParseFile()
+        };
         
         ResourceAssets.ValidateMembers(resourceAssets);
         return resourceAssets;
@@ -36,7 +59,7 @@ public static class ResourceAssetsParser
         string subnauticaPath = NitroxUser.GamePath;
         if (string.IsNullOrEmpty(subnauticaPath))
         {
-            throw new DirectoryNotFoundException("Could not locate Subnautica installation directory for resource parsing.");
+            throw new DirectoryNotFoundException("Could not locate Subnautica installation directory for resource parsing");
         }
 
         if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
