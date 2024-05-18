@@ -161,7 +161,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!-- TODO: animations (opacity, fly-in/scale-in/scale-out?) -->
-                        <Border Margin="5" Padding="5 10 10 10" MinHeight="60" Background="{Binding Type, Converter={converters:NotificationTypeToColorConverter}}">
+                        <Border Margin="5" Padding="5 10 10 10" MinHeight="60" Background="{Binding Type, Converter={converters:NotificationTypeToColorConverter}}"
+                                CornerRadius="5" RenderTransformOrigin="50% 100%">
                             <Grid ColumnDefinitions="50,*,20">
                                 <Image Grid.Column="0" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" Source="{Binding Type, Converter={converters:NotificationTypeToIconConverter}}" />
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Message}" />
@@ -169,9 +170,52 @@
                                     <Image Width="10" VerticalAlignment="Top" Source="/Assets/Images/material-design-icons/close-w-10.png" />
                                 </Button>
                             </Grid>
+                            
+                            <!-- Temp Animation code (still need them to happen when notification flies in/out) -->
+                            <Border.Styles>
+                                <Style Selector="Border">
+                                    <Setter Property="RenderTransform" Value="scale(.1)"/>
+                                    <Setter Property="Transitions">
+                                        <Transitions>
+                                            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.2" />
+                                            <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                                        </Transitions>
+                                    </Setter>
+                                </Style>
+                                <Style Selector="Border:not(:pointerover)">
+                                    <Setter Property="Opacity" Value=".95" />
+                                    <Setter Property="RenderTransform" Value="scale(1)"/>
+                                </Style>
+                                <Style Selector="Border:pointerover">
+                                    <Setter Property="Opacity" Value="0" />
+                                    <Setter Property="RenderTransform" Value="scale(.1)"/>
+                                </Style>
+                            </Border.Styles>
+                            
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+                
+                <!-- Possible Animation Alternative? -->
+                <!--ItemsControl.Styles>
+                    <Style Selector="ItemsControl /template/ ContentPresenter?????????">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.1" />
+                                <DoubleTransition Property="Opacity" Duration="0:0:0.5" />
+                            </Transitions>
+                        </Setter>
+                        
+                        <Style Selector="^">
+                            <Setter Property="Opacity" Value=".5" />
+                            <Setter Property="RenderTransform" Value="scale(1)"/>
+                        </Style>
+                        <Style Selector="^:pointerover">
+                            <Setter Property="Opacity" Value="0" />
+                            <Setter Property="RenderTransform" Value="scale(.01)"/>
+                        </Style>
+                    </Style>
+                </ItemsControl.Styles-->
             </ItemsControl>
         </Grid>
     </Panel>
