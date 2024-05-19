@@ -42,16 +42,15 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             Task.Run(async () =>
             {
                 await Task.Delay(5000);
-                Notifications.Remove(message.Item);
-            }).ContinueWith(t =>
-            {
-                if (t.IsFaulted)
-                {
-                    Log.Error(t.Exception, "Failed to remove notification after a time delay");
-                }
+                WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
             });
         });
-        WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, (_, message) => Notifications.Remove(message.Item));
+        WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, async (_, message) =>
+        {
+            message.Item.Dismissed = true;
+            await Task.Delay(1000); // Wait for animations
+            Notifications.Remove(message.Item);
+        });
         
         if (!NetworkInterface.GetIsNetworkAvailable())
         {
