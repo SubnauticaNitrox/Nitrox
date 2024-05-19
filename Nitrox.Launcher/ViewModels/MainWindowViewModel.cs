@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -26,6 +27,8 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
     public ICommand DefaultViewCommand { get; }
     [ObservableProperty]
     private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
+    [ObservableProperty]
+    private bool updateAvailableOrUnofficial;
 
     public AvaloniaList<NotificationItem> Notifications { get; init; }
 
@@ -52,16 +55,21 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             Notifications.Remove(message.Item);
         });
         
-        if (!NetworkInterface.GetIsNetworkAvailable())
-        {
-            Log.Warn("Launcher may not be connected to internet");
-            LauncherNotifier.Error("Launcher may not be connected to internet");
-        }
-        
         if (!NitroxEnvironment.IsReleaseMode)
         {
-            LauncherNotifier.Warning("You're now using Nitrox DEV build");
+            LauncherNotifier.Info("You're now using Nitrox DEV build");
         }
+        
+        if (!NetworkInterface.GetIsNetworkAvailable()) // TODO: Ensure this works
+        {
+            Log.Warn("Launcher may not be connected to internet");
+            LauncherNotifier.Warning("Launcher may not be connected to internet");
+        }
+        
+        Dispatcher.UIThread.Invoke(new Action(async () =>
+        {
+            UpdateAvailableOrUnofficial = await UpdatesViewModel.CheckForUpdates();
+        }));
     }
 
     [RelayCommand]

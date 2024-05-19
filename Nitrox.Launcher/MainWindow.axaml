@@ -169,7 +169,8 @@
                         <StackPanel VerticalAlignment="Bottom" Margin="0 0 0 20">
                             <Button Command="{Binding OpenUpdatesViewCommand}">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/material-design-icons/download.png" />
+                                    <Image Source="/Assets/Images/material-design-icons/download.png" IsVisible="{Binding !UpdateAvailableOrUnofficial}"/>
+                                    <Image Source="/Assets/Images/material-design-icons/downloadDot.png" IsVisible="{Binding UpdateAvailableOrUnofficial, FallbackValue=false}"/>
                                     <TextBlock Text="Updates" />
                                 </StackPanel>
                             </Button>

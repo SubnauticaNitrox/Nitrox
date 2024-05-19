@@ -39,8 +39,8 @@ public class Downloader
 #if DEBUG
             if (response == null)
             {
-                Log.Error($"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
-                LauncherNotifier.Error("Unable to fetch nitrox blogs");
+                Log.Error($"{nameof(Downloader)} : Error while fetching Nitrox blogs from {BLOGS_URL}");
+                LauncherNotifier.Error("Unable to fetch Nitrox blogs");
                 return blogs;
             }
 #endif
@@ -72,8 +72,8 @@ public class Downloader
         }
         catch (Exception ex)
         {
-            Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
-            LauncherNotifier.Error("Unable to fetch nitrox blogs");
+            Log.Error(ex, $"{nameof(Downloader)} : Error while fetching Nitrox blogs from {BLOGS_URL}");
+            LauncherNotifier.Error("Unable to fetch Nitrox blogs");
         }
 
         return blogs;
@@ -101,7 +101,7 @@ public class Downloader
                 if (!DateTime.TryParse(released, out DateTime dateTime))
                 {
                     dateTime = DateTime.UtcNow;
-                    Log.Error($"Error while trying to parse release time ({released}) of nitrox v{version}");
+                    Log.Error($"Error while trying to parse release time ({released}) of Nitrox v{version}");
                 }
 
                 builder.Clear();
@@ -115,8 +115,8 @@ public class Downloader
         }
         catch (Exception ex)
         {
-            Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
-            LauncherNotifier.Error("Unable to fetch nitrox changelogs");
+            Log.Error(ex, $"{nameof(Downloader)} : Error while fetching Nitrox changelogs from {CHANGELOGS_URL}");
+            LauncherNotifier.Error("Unable to fetch Nitrox changelogs");
         }
 
         return changelogs;
@@ -138,8 +138,9 @@ public class Downloader
         }
         catch (Exception ex)
         {
-            Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
-            LauncherNotifier.Error("Unable to check for updates");
+            Log.Error(ex, $"{nameof(Downloader)} : Error while fetching Nitrox version from {LATEST_VERSION_URL}");
+            LauncherNotifier.Error("Unable to check for Nitrox updates");
+            throw;
         }
 
         return new Version();

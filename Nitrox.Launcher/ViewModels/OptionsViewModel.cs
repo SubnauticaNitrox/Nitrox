@@ -26,9 +26,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [ObservableProperty]
     private string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
     
-    private static string defaultLaunchArg => "-vrmode none";
-    
-    public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", defaultLaunchArg);
+    private static string DefaultLaunchArg => "-vrmode none";
     
     [ObservableProperty]
     private KnownGame selectedGame;
@@ -56,11 +54,11 @@ public partial class OptionsViewModel : RoutableViewModelBase
         //    }
         //];
 
-        LaunchArgs = KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", defaultLaunchArg);
+        LaunchArgs = KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", DefaultLaunchArg);
     }
 
     [RelayCommand]
-    private async void ChangePath()
+    private async Task ChangePath()
     {
         // TODO: Maybe use Window.StorageProvider API instead of OpenFileDialog
         OpenFolderDialog dialog = new()
@@ -72,15 +70,12 @@ public partial class OptionsViewModel : RoutableViewModelBase
         
         if (selectedDirectory == "")
         {
-            //LaunchArgs = "Cancelled";    //TEMP
-            LauncherNotifier.Info("Cancelled");   //TEMP
             return;
         }
         
         if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
         {
             LauncherNotifier.Error("Invalid subnautica directory");
-            //LaunchArgs = "Invalid subnautica directory";    //TEMP
             return;
         }
         
@@ -88,7 +83,6 @@ public partial class OptionsViewModel : RoutableViewModelBase
         {
             await SetTargetedSubnauticaPath(selectedDirectory);
             LauncherNotifier.Success("Applied changes");
-            //LaunchArgs = "Applied changes";    //TEMP
         }
     }
 
@@ -150,25 +144,23 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand]
     private void ResetArguments()
     {
-        LaunchArgs = defaultLaunchArg;
+        LaunchArgs = DefaultLaunchArg;
         ShowResetArgsBtn = false;
-        LauncherNotifier.Success("Launch Arguments reset");   //TEMP
     }
     
     [RelayCommand(CanExecute = nameof(CanChangeArguments))]
     private void ChangeArguments()
     {
         KeyValueStore.Instance.SetValue("SubnauticaLaunchArguments", LaunchArgs);
-        LauncherNotifier.Info("Launch Arguments set");   //TEMP
     }
     private bool CanChangeArguments()
     {
-        if (LaunchArgs != defaultLaunchArg)
+        if (LaunchArgs != DefaultLaunchArg)
         {
             ShowResetArgsBtn = true;
         }
 
-        return LaunchArgs != KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", defaultLaunchArg);
+        return LaunchArgs != KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", DefaultLaunchArg);
     }
 
     [RelayCommand]
@@ -176,7 +168,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = savesFolderDir,
+            FileName = SavesFolderDir,
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
