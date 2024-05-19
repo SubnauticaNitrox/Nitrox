@@ -34,25 +34,20 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     
     public UpdatesViewModel(IScreen hostScreen) : base(hostScreen)
     {
-        Dispatcher.UIThread.Invoke(new Action(async () =>
+        Dispatcher.UIThread.Invoke(async () =>
         {
             try
             {
-                IList<NitroxChangelog> changelogs = await Downloader.GetChangeLogs();
-
-                foreach (NitroxChangelog changelog in changelogs)
-                {
-                    nitroxChangelogs.Add(changelog);
-                }
+                nitroxChangelogs.AddRange(await Downloader.GetChangeLogs());
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error while trying to display Nitrox changelogs");
             }
-        }));
+        });
     }
 
-    public static async Task<bool> CheckForUpdates()
+    public static async Task<bool> IsNitroxUpdateAvailableAsync()
     {
         try
         {

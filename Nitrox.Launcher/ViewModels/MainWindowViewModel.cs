@@ -59,17 +59,18 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
         {
             LauncherNotifier.Info("You're now using Nitrox DEV build");
         }
-        
-        if (!NetworkInterface.GetIsNetworkAvailable()) // TODO: Ensure this works
+
+        Task.Run(async () =>
         {
-            Log.Warn("Launcher may not be connected to internet");
-            LauncherNotifier.Warning("Launcher may not be connected to internet");
-        }
-        
-        Dispatcher.UIThread.Invoke(new Action(async () =>
-        {
-            UpdateAvailableOrUnofficial = await UpdatesViewModel.CheckForUpdates();
-        }));
+            if (!await NetHelper.HasInternetConnectivityAsync())
+            {
+                Log.Warn("Launcher may not be connected to internet");
+                LauncherNotifier.Warning("Launcher may not be connected to internet");
+            }
+#if RELEASE
+            UpdateAvailableOrUnofficial = await UpdatesViewModel.IsNitroxUpdateAvailableAsync();
+#endif
+        });
     }
 
     [RelayCommand]
