@@ -52,7 +52,14 @@ namespace NitroxServer
             saveTimer.AutoReset = true;
             saveTimer.Elapsed += delegate
             {
-                Save();
+                if (!serverConfig.DisableAutoBackup && serverConfig.MaxBackups != 0)
+                {
+                    BackUp();
+                }
+                else
+                {
+                    Save();
+                }
             };
         }
 
@@ -201,6 +208,7 @@ namespace NitroxServer
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
             Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
             Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
+            Log.Info($"Autobackup: {(serverConfig.DisableAutoBackup || serverConfig.MaxBackups == 0 ? "DISABLED" : "ENABLED")} (Max Backups: {serverConfig.MaxBackups})");
             Log.Info($"Loaded save\n{GetSaveSummary()}");
 
             PauseServer();
@@ -226,6 +234,18 @@ namespace NitroxServer
 
             server.Stop();
             Log.Info("Nitrox Server Stopped");
+        }
+
+        public void BackUp()
+        {
+            if (!IsRunning)
+            {
+                return;
+            }
+
+            Save();
+
+            worldPersistence.BackUp(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName));
         }
 
         private async Task LogHowToConnectAsync()
