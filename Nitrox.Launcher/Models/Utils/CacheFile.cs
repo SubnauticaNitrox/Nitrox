@@ -115,6 +115,14 @@ public class CacheFile
             {
                 return InnerRead(this, reader => reader.ReadString(), defaultValue);
             }
+            if (requestedType == typeof(byte[]))
+            {
+                return InnerRead(this, reader =>
+                {
+                    int dataSize = reader.ReadInt32();
+                    return reader.ReadBytes(dataSize);
+                }, defaultValue);
+            }
             throw new NotSupportedException($"Type: '{requestedType}' is not yet supported to be read from cache files");
         }
 

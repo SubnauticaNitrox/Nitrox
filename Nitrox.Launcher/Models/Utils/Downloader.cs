@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using LitJson;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Extensions;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.Utils;
@@ -46,22 +47,35 @@ public partial class Downloader
             {
                 string released = (string)data[i]["date"];
                 string url = (string)data[i]["link"];
-                string title = (string)data[i]["title"]["rendered"];
+                string title = WebUtility.HtmlDecode((string)data[i]["title"]["rendered"]);
                 string imageUrl = (string)data[i]["jetpack_featured_media_url"];
-
-                // Get image bitmap from image URL
-                HttpResponseMessage imageResponse = await new HttpClient().GetAsync(imageUrl);
-                imageResponse.EnsureSuccessStatusCode();
-                byte[] imageData = await imageResponse.Content.ReadAsByteArrayAsync();
-                Bitmap image = new(new MemoryStream(imageData));
-
-                if (!DateOnly.TryParse(released, out DateOnly dateTime))
+                string imageCacheName = $"blogimage_{title.ReplaceInvalidFileNameCharacters().ToLowerInvariant()}";
+                if (!DateTimeOffset.TryParse(released, out DateTimeOffset dateTime))
                 {
-                    dateTime = DateOnly.FromDateTime(DateTime.UtcNow);
+                    dateTime = DateTimeOffset.UtcNow;
                     Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
                 }
+                else
+                {
+                    imageCacheName = $"blogimage_{dateTime.ToUnixTimeSeconds()}";
+                }
+                // Get image bitmap from image URL
+                byte[] imageData = await CacheFile.GetOrRefreshAsync(imageCacheName,
+                                                                     r => r.Read<byte[]>(),
+                                                                     (w, v) =>
+                                                                     {
+                                                                         w.Write(v.Length);
+                                                                         w.Write(v);
+                                                                     },
+                                                                     async () =>
+                                                                     {
+                                                                         HttpResponseMessage imageResponse = await GetResponseFromCache(imageUrl);
+                                                                         return await imageResponse.Content.ReadAsByteArrayAsync();
+                                                                     });
+                using MemoryStream imageMemoryStream = new(imageData);
+                Bitmap image = new(imageMemoryStream);
 
-                blogs.Add(new NitroxBlog(WebUtility.HtmlDecode(title), dateTime, url, image));
+                blogs.Add(new NitroxBlog(title, DateOnly.FromDateTime(dateTime.DateTime), url, image));
             }
         }
         catch (Exception ex)
