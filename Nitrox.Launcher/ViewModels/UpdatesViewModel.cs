@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Collections;
@@ -19,19 +18,19 @@ public partial class UpdatesViewModel : RoutableViewModelBase
 {
     [ObservableProperty]
     private static bool newUpdateAvailable;
-    
+
     [ObservableProperty]
     private static bool usingOfficialVersion;
-    
+
     [ObservableProperty]
     private static string version;
-    
+
     [ObservableProperty]
     private static string officialVersion;
-    
+
     [ObservableProperty]
     private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
-    
+
     public UpdatesViewModel(IScreen hostScreen) : base(hostScreen)
     {
         Dispatcher.UIThread.Invoke(async () =>
@@ -56,12 +55,12 @@ public partial class UpdatesViewModel : RoutableViewModelBase
 
             newUpdateAvailable = latestVersion > currentVersion;
             usingOfficialVersion = latestVersion >= currentVersion;
-            
+
             if (newUpdateAvailable)
             {
-                Log.Info($"A new version of the mod ({latestVersion}) is available.");
-
-                LauncherNotifier.Warning($"A new version of the mod ({latestVersion}) is available."); //, new ToastNotifications.Core.MessageOptions()   // TODO: Implement this?
+                string versionMessage = $"A new version of the mod ({latestVersion}) is available.";
+                Log.Info(versionMessage);
+                LauncherNotifier.Warning(versionMessage); //, new ToastNotifications.Core.MessageOptions()   // TODO: Implement this?
                 //{
                 //    NotificationClickAction = (n) =>
                 //    {
@@ -69,7 +68,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
                 //    },
                 //});
             }
-            
+
             version = currentVersion.ToString();
             officialVersion = latestVersion.ToString();
         }
@@ -78,7 +77,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
             newUpdateAvailable = false;
             usingOfficialVersion = true;
         }
-        
+
         return newUpdateAvailable || !usingOfficialVersion;
     }
 

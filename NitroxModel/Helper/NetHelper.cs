@@ -142,8 +142,9 @@ namespace NitroxModel.Helper
             {
                 return false;
             }
-            PingReply ping = await new Ping().SendPingAsync(new IPAddress([8, 8, 8, 8]),2000);
-            return ping.Status == IPStatus.Success;
+            using Ping ping = new();
+            PingReply reply = await ping.SendPingAsync(new IPAddress([8, 8, 8, 8]),2000);
+            return reply.Status == IPStatus.Success;
         }
 
         /// <summary>

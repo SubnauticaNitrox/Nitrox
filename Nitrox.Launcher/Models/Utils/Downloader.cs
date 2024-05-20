@@ -15,18 +15,15 @@ using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.Utils;
 
-public class Downloader
+public partial class Downloader
 {
     public const string BLOGS_URL = "https://nitroxblog.rux.gg/wp-json/wp/v2/posts?per_page=8&page=1";
     public const string LATEST_VERSION_URL = "https://nitrox.rux.gg/api/version/latest";
     public const string CHANGELOGS_URL = "https://nitrox.rux.gg/api/changelog/releases";
     public const string RELEASES_URL = "https://nitrox.rux.gg/api/version/releases";
 
-    // Create a policy that allows any cache to supply requested resources if the resource on the server is not newer than the cached copy
-    private static readonly HttpRequestCachePolicy cachePolicy = new(
-        HttpCacheAgeControl.MaxAge,
-        TimeSpan.FromDays(1)
-    );
+    [GeneratedRegex(@"""version"":""([^""]*)""")]
+    private static partial Regex JsonVersionFieldRegex();
 
     public static async Task<IList<NitroxBlog>> GetBlogs()
     {
@@ -34,18 +31,19 @@ public class Downloader
 
         try
         {
-            using HttpResponseMessage response = await GetResponseFromCache(BLOGS_URL);
+            string jsonString = await CacheFile.GetOrRefreshAsync("blogs",
+                                                                      r => r.Read(""),
+                                                                      (w, v) =>
+                                                                      {
+                                                                          w.Write(v);
+                                                                      },
+                                                                      async () =>
+                                                                      {
+                                                                          using HttpResponseMessage response = await GetResponseFromCache(BLOGS_URL);
+                                                                          return await response.Content.ReadAsStringAsync();
+                                                                      });
 
-#if DEBUG
-            if (response == null)
-            {
-                Log.Error($"{nameof(Downloader)} : Error while fetching Nitrox blogs from {BLOGS_URL}");
-                LauncherNotifier.Error("Unable to fetch Nitrox blogs");
-                return blogs;
-            }
-#endif
-
-            JsonData data = JsonMapper.ToObject(await response.Content.ReadAsStringAsync());
+            JsonData data = JsonMapper.ToObject(jsonString);
 
             // TODO : Add a json schema validator
             for (int i = 0; i < data.Count; i++)
@@ -86,10 +84,19 @@ public class Downloader
         try
         {
             //https://developer.wordpress.org/rest-api/reference/posts/#arguments
-            using HttpResponseMessage response = await GetResponseFromCache(CHANGELOGS_URL);
-
+            string jsonString = await CacheFile.GetOrRefreshAsync("changelogs",
+                                                                  r => r.Read(""),
+                                                                  (w, v) =>
+                                                                  {
+                                                                      w.Write(v);
+                                                                  },
+                                                                  async () =>
+                                                                  {
+                                                                      using HttpResponseMessage response = await GetResponseFromCache(CHANGELOGS_URL);
+                                                                      return await response.Content.ReadAsStringAsync();
+                                                                  });
             StringBuilder builder = new();
-            JsonData data = JsonMapper.ToObject(await response.Content.ReadAsStringAsync());
+            JsonData data = JsonMapper.ToObject(jsonString);
 
             // TODO : Add a json schema validator
             for (int i = 0; i < data.Count; i++)
@@ -126,11 +133,19 @@ public class Downloader
     {
         try
         {
-            using HttpResponseMessage response = await GetResponseFromCache(LATEST_VERSION_URL);
+            string jsonString = await CacheFile.GetOrRefreshAsync("update",
+                                                                  r => r.Read(""),
+                                                                  (w, v) =>
+                                                                  {
+                                                                      w.Write(v);
+                                                                  },
+                                                                  async () =>
+                                                                  {
+                                                                      using HttpResponseMessage response = await GetResponseFromCache(LATEST_VERSION_URL);
+                                                                      return await response.Content.ReadAsStringAsync();
+                                                                  });
 
-            Regex rx = new(@"""version"":""([^""]*)""");
-            Match match = rx.Match(await response.Content.ReadAsStringAsync());
-
+            Match match = JsonVersionFieldRegex().Match(jsonString);
             if (match.Success && match.Groups.Count > 1)
             {
                 return new Version(match.Groups[1].Value);
