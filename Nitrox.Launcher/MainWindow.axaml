@@ -166,7 +166,7 @@
                             </Button>
                         </StackPanel>
                         <!-- Footer navigation items -->
-                        <StackPanel VerticalAlignment="Bottom" Margin="0 0 0 20">
+                        <StackPanel Classes="nav" VerticalAlignment="Bottom" Margin="0 0 0 20">
                             <Button Command="{Binding OpenUpdatesViewCommand}">
                                 <StackPanel>
                                     <Image Source="/Assets/Images/material-design-icons/download.png" IsVisible="{Binding !UpdateAvailableOrUnofficial}"/>
