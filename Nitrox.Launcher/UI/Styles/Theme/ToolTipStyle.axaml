@@ -16,6 +16,7 @@
     </Design.PreviewWith>
 
     <Style Selector="ToolTip">
+        <Setter Property="IsHitTestVisible" Value="False" />
         <Style Selector="^ Border">
             <Setter Property="Opacity" Value="0.85" />
         </Style>

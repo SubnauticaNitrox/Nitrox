@@ -13,7 +13,7 @@
         <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhiteBrush}">
     
             <StackPanel Classes="form" Margin="0 0 0 26">
-                <Button Background="Transparent" Command="{Binding BackCommand}">
+                <Button Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape">
                     <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
                 </Button>
                 <Grid ColumnDefinitions="Auto,*">
@@ -95,8 +95,8 @@
                             </ScrollViewer>
     
                             <StackPanel Grid.Column="1" Orientation="Horizontal" Height="40" Spacing="5" HorizontalAlignment="Right">
-                                <Button Classes="abort" HorizontalAlignment="Stretch" Content="UNDO" Command="{Binding UndoCommand}" />
-                                <Button Classes="primary" Margin="5 0 0 0" HorizontalAlignment="Stretch" Content="SAVE" Command="{Binding SaveCommand}" />
+                                <Button Classes="abort" HorizontalAlignment="Stretch" Content="UNDO" Command="{Binding UndoCommand}" HotKey="Ctrl+Alt+Z" />
+                                <Button Classes="primary" Margin="5 0 0 0" HorizontalAlignment="Stretch" Content="SAVE" Command="{Binding SaveCommand}" HotKey="Ctrl+S" />
                             </StackPanel>
                         </Grid>
                     </StackPanel>

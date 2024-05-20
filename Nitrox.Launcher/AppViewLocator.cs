@@ -67,7 +67,7 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
             return (TViewModel)vm;
         }
 
-        TViewModel viewModel = (TViewModel)key.GetConstructor(BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, new[] { typeof(IScreen) })!.Invoke(new[] { MainWindow.ViewModel });
+        TViewModel viewModel = (TViewModel)key.GetConstructor(BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, [typeof(IScreen)])!.Invoke([MainWindow.ViewModel]);
         viewModelCache.TryAdd(typeof(TViewModel), viewModel);
         return viewModel;
     }
