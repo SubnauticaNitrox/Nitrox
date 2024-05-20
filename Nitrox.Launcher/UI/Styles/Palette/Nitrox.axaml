@@ -10,11 +10,14 @@
             <SolidColorBrush Color="#000000" x:Key="BrandBlackBrush" />
             <SolidColorBrush Color="#D1D1D1" x:Key="BrandBorderBrush" />
             <SolidColorBrush Color="#ECECEC" x:Key="BrandControlBackgroundBrush" />
-            <SolidColorBrush Color="#d9d9d9" x:Key="BrandCheckboxBackgroundBrush" />
+            <SolidColorBrush Color="#D9D9D9" x:Key="BrandCheckboxBackgroundBrush" />
             <SolidColorBrush Color="#151516" x:Key="BrandPanelBackgroundBrush" />
             <SolidColorBrush Color="#000000" x:Key="BrandCaretBrush"/>
             <SolidColorBrush Color="#40000000" x:Key="BrandFocusBorderBrush"/>
             <SolidColorBrush Color="#7F000000" x:Key="BrandSubTextBrush"/>
+            <SolidColorBrush Color="#CCCCCC" x:Key="BrandScrollThumbBrush"/>
+            <SolidColorBrush Color="#8F8F8F" x:Key="BrandScrollThumbPointerOverBrush"/>
+            <SolidColorBrush Color="#3F3F3F" x:Key="BrandScrollThumbPressedBrush"/>
 
             <!-- Notification colors -->
             <SolidColorBrush Color="#FF005C" x:Key="BrandAbortBrush" />
@@ -28,11 +31,14 @@
             <SolidColorBrush Color="#000000" x:Key="BrandWhiteBrush" />
             <SolidColorBrush Color="#FFFFFF" x:Key="BrandBlackBrush" />
             <SolidColorBrush Color="#323232" x:Key="BrandBorderBrush" />
-            <SolidColorBrush Color="#1DFFFFFF" x:Key="BrandControlBackgroundBrush" />
+            <SolidColorBrush Color="#1D1D1D" x:Key="BrandControlBackgroundBrush" />
             <SolidColorBrush Color="#333333" x:Key="BrandCheckboxBackgroundBrush" />
             <SolidColorBrush Color="#FFFFFF" x:Key="BrandCaretBrush"/>
             <SolidColorBrush Color="#40FFFFFF" x:Key="BrandFocusBorderBrush"/>
             <SolidColorBrush Color="#7FFFFFFF" x:Key="BrandSubTextBrush"/>
+            <SolidColorBrush Color="#262626" x:Key="BrandScrollThumbBrush"/>
+            <SolidColorBrush Color="#3F3F3F" x:Key="BrandScrollThumbPointerOverBrush"/>
+            <SolidColorBrush Color="#8F8F8F" x:Key="BrandScrollThumbPressedBrush"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

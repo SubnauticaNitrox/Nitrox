@@ -8,7 +8,6 @@
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
-                <!-- design:NitroxAttached.Theme="DARK" -->
                 <ThemeVariantScope RequestedThemeVariant="Dark">
                     <Border Padding="10" Background="#000000">
                         <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" />
@@ -36,6 +35,7 @@
             <Setter.Value>
                 <DataTemplate>
                     <Button Name="ItemContainer"
+                            Background="Transparent"
                             CornerRadius="8"
                             BorderThickness="2"
                             BorderBrush="{DynamicResource BrandBorderBrush}"
@@ -55,16 +55,12 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style Selector="ItemsControl.radioGroup Button#ItemContainer /template/ ContentPresenter">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-    </Style>
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover /template/ ContentPresenter">
         <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}" />
     </Style>
     <Style Selector="ItemsControl.radioGroup:disabled">
         <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
         <Style Selector="^ Button#ItemContainer /template/ ContentPresenter">
-            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
             <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}" />
         </Style>
     </Style>

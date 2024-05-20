@@ -215,41 +215,42 @@
         </Style>
     </Style>
     
-    <!-- <Style Selector="Thumb"> -->
-    <!--     <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]"> -->
-    <!--         <Setter Property="Template"> -->
-    <!--             <Setter.Value> -->
-    <!--                 <ControlTemplate> -->
-    <!--                     <Border Background="#cccccc" -->
-    <!--                             CornerRadius="4"/> -->
-    <!--                 </ControlTemplate> -->
-    <!--             </Setter.Value> -->
-    <!--         </Setter> -->
-    <!--         <Style Selector="^:pointerover /template/ Border"> -->
-    <!--             <Setter Property="Background" Value="#8f8f8f" /> -->
-    <!--         </Style> -->
-    <!--         <Style Selector="^:pressed  /template/ Border"> -->
-    <!--             <Setter Property="Background" Value="#3f3f3f" /> -->
-    <!--         </Style> -->
-    <!--     </Style> -->
-    <!--      -->
-    <!--     <Style Selector="^[(design|NitroxAttached.Theme)=DARK]"> -->
-    <!--         <Setter Property="Template"> -->
-    <!--             <Setter.Value> -->
-    <!--                 <ControlTemplate> -->
-    <!--                     <Border Background="#262626" -->
-    <!--                             CornerRadius="4"/> -->
-    <!--                 </ControlTemplate> -->
-    <!--             </Setter.Value> -->
-    <!--         </Setter> -->
-    <!--         <Style Selector="^:pointerover /template/ Border"> -->
-    <!--             <Setter Property="Background" Value="#3f3f3f" /> -->
-    <!--         </Style> -->
-    <!--         <Style Selector="^:pressed  /template/ Border"> -->
-    <!--             <Setter Property="Background" Value="#8f8f8f" /> -->
-    <!--         </Style> -->
-    <!--     </Style> -->
-    <!-- </Style> -->
+    <Style Selector="Thumb">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border Background="{DynamicResource BrandScrollThumbBrush}"
+                            CornerRadius="4"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPointerOverBrush}" />
+        </Style>
+        <Style Selector="^:pressed  /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPressedBrush}" />
+        </Style>
+        
+        <!--<Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
+        </Style>
+    
+        <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border Background="#262626"
+                                CornerRadius="4"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style Selector="^:pointerover /template/ Border">
+                <Setter Property="Background" Value="#3f3f3f" />
+            </Style>
+            <Style Selector="^:pressed  /template/ Border">
+                <Setter Property="Background" Value="#8f8f8f" />
+            </Style>
+        </Style>-->
+    </Style>
 
     <Style Selector="RepeatButton">
         <Setter Property="Background" Value="Transparent" />

@@ -1,5 +1,30 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Panel Background="CornflowerBlue">
+            <StackPanel Margin="10" Spacing="20" Orientation="Horizontal">
+                <StackPanel Spacing="10">
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Border Background="White" Padding="10" HorizontalAlignment="Center">
+                            <StackPanel Spacing="10" Width="200">
+                                <TextBox Text="Light" HorizontalAlignment="Stretch"/>
+                                <TextBox Classes="revealPasswordButton" Text="Light" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </Border>                       
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Border Background="Black" Padding="10" HorizontalAlignment="Center">
+                            <StackPanel Spacing="10" Width="200">
+                                <TextBox Text="Dark" HorizontalAlignment="Stretch"/>
+                                <TextBox Classes="revealPasswordButton" Text="Dark" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </Border>                       
+                    </ThemeVariantScope>
+                </StackPanel>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+    
     <Style Selector="TextBox">
         <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
         <Setter Property="CornerRadius" Value="8" />
@@ -12,6 +37,25 @@
             <Setter Property="Background" Value="{TemplateBinding Background}" />
             <Setter Property="CornerRadius" Value="{TemplateBinding CornerRadius}" />
             <Setter Property="BorderThickness" Value="{TemplateBinding BorderThickness}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+            
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{TemplateBinding Background}" />
+                <Setter Property="Opacity" Value=".75" />
+            </Style>
+            
+            <Style Selector="^:focus">
+                <Setter Property="Background" Value="{TemplateBinding Background}" />
+            </Style>
+            
+        </Style>
+        
+        <Style Selector="^ /template/ Border#PART_BorderElement">
+            <Setter Property="Opacity" Value="0" />
         </Style>
         
         <Style Selector="^:disabled">
@@ -22,6 +66,7 @@
         </Style>
         
         <Style Selector="^.revealPasswordButton[AcceptsReturn=False][IsReadOnly=False]:not(TextBox:empty)">
+            <Setter Property="PasswordChar" Value="●" />
             <Setter Property="InnerRightContent">
                 <Template>
                     <ToggleButton IsChecked="{Binding $parent[TextBox].RevealPassword, Mode=TwoWay}" Focusable="False" Width="35">

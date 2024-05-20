@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Collections;
 using Avalonia.Controls;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -52,7 +50,10 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
         {
             message.Item.Dismissed = true;
             await Task.Delay(1000); // Wait for animations
-            Notifications.Remove(message.Item);
+            if (!Design.IsDesignMode) // Prevent design preview crashes
+            {
+                Notifications.Remove(message.Item);
+            }
         });
         
         if (!NitroxEnvironment.IsReleaseMode)

@@ -33,10 +33,16 @@
 
     <Style Selector="CheckBox.switch">
         <Setter Property="Background" Value="{DynamicResource BrandCheckboxBackgroundBrush}" />
-
         <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Height" Value="30" />
         <Setter Property="Width" Value="54" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
+                <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                <ThicknessTransition Property="Margin" Duration="0:0:0.1" />
+            </Transitions>
+        </Setter>
 
         <Setter Property="Template">
             <ControlTemplate>
@@ -51,7 +57,6 @@
                                         <Setter Property="Transitions">
                                             <Transitions>
                                                 <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
-                                                <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
                                                 <ThicknessTransition Property="Margin" Duration="0:0:0.1" />
                                             </Transitions>
                                         </Setter>
@@ -67,24 +72,19 @@
         <!-- Unchecked PointerOver State -->
         <Style Selector="^:pointerover">
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Opacity" Value=".75" />
 
             <Style Selector="^ /template/ Border#PART_Border">
                 <Setter Property="Background" Value="{TemplateBinding Background}" />
-            </Style>
-
-            <Style Selector="^ /template/ Border#SlidingIcon">
-                <Setter Property="Opacity" Value=".75" />
             </Style>
         </Style>
 
         <!-- Unchecked Pressed State -->
         <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+            
             <Style Selector="^ /template/ Border#PART_Border">
                 <Setter Property="Background" Value="{TemplateBinding Background}" />
-            </Style>
-
-            <Style Selector="^ /template/ Border#SlidingIcon">
-                <Setter Property="RenderTransform" Value="scale(0.95)" />
             </Style>
         </Style>
 
@@ -106,24 +106,19 @@
             <!-- Checked PointerOver State -->
             <Style Selector="^:pointerover">
                 <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Opacity" Value=".75" />
 
                 <Style Selector="^ /template/ Border#PART_Border">
                     <Setter Property="Background" Value="{TemplateBinding Background}" />
-                </Style>
-
-                <Style Selector="^ /template/ Border#SlidingIcon">
-                    <Setter Property="Opacity" Value=".75" />
                 </Style>
             </Style>
 
             <!-- Checked Pressed State -->
             <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.95)" />
+                
                 <Style Selector="^ /template/ Border#PART_Border">
                     <Setter Property="Background" Value="{TemplateBinding Background}" />
-                </Style>
-
-                <Style Selector="^ /template/ Border#SlidingIcon">
-                    <Setter Property="RenderTransform" Value="scale(0.95)" />
                 </Style>
             </Style>
         </Style>
