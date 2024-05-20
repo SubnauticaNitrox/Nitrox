@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
@@ -76,7 +77,10 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
             return;
         }
 
-        await ViewModel?.ShowDialogAsync<ErrorViewModel>(vm => vm.Exception = ex)!;
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+        {
+            await ViewModel?.ShowDialogAsync<ErrorViewModel>(vm => vm.Exception = ex)!;
+        });
     }
 
     private void TitleBar_OnPointerPressed(object sender, PointerPressedEventArgs e) => BeginMoveDrag(e);

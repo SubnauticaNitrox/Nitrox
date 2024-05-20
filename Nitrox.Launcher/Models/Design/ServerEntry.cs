@@ -2,12 +2,17 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
@@ -26,48 +31,58 @@ public partial class ServerEntry : ObservableObject
     private static readonly SubnauticaServerConfig serverDefaults = new();
 
     [ObservableProperty]
-    private bool isOnline;
-    [ObservableProperty]
-    private string name;
-    [ObservableProperty]
-    private Bitmap serverIcon;
-    [ObservableProperty]
-    private string password;
-    [ObservableProperty]
-    private string seed;
-    [ObservableProperty]
-    private NitroxGameMode gameMode = serverDefaults.GameMode;
-    [ObservableProperty]
-    private Perms playerPermissions = serverDefaults.DefaultPlayerPerm;
-    [ObservableProperty]
-    private int autoSaveInterval = serverDefaults.SaveInterval/1000;
-    [ObservableProperty]
-    private int players;
-    [ObservableProperty]
-    private int maxPlayers = serverDefaults.MaxConnections;
-    [ObservableProperty]
-    private int port = serverDefaults.ServerPort;
-    [ObservableProperty]
-    private bool autoPortForward = serverDefaults.AutoPortForward;
+    private bool allowCommands = !serverDefaults.DisableConsole;
+
     [ObservableProperty]
     private bool allowLanDiscovery = serverDefaults.LANDiscoveryEnabled;
+
     [ObservableProperty]
-    private bool allowCommands = !serverDefaults.DisableConsole;
+    private bool autoPortForward = serverDefaults.AutoPortForward;
+
+    [ObservableProperty]
+    private int autoSaveInterval = serverDefaults.SaveInterval / 1000;
+
+    [ObservableProperty]
+    private NitroxGameMode gameMode = serverDefaults.GameMode;
+
     [ObservableProperty]
     private bool isNewServer = true;
+
+    [ObservableProperty]
+    private bool isOnline;
+
     [ObservableProperty]
     private DateTime lastAccessedTime = DateTime.Now;
+
+    [ObservableProperty]
+    private int maxPlayers = serverDefaults.MaxConnections;
+
+    [ObservableProperty]
+    private string name;
+
+    [ObservableProperty]
+    private string password;
+
+    [ObservableProperty]
+    private Perms playerPermissions = serverDefaults.DefaultPlayerPerm;
+
+    [ObservableProperty]
+    private int players;
+
+    [ObservableProperty]
+    private int port = serverDefaults.ServerPort;
+
+    [ObservableProperty]
+    private string seed;
+
+    [ObservableProperty]
+    private Bitmap serverIcon;
 
     private ServerProcess serverProcess;
 
     public ServerEntry()
     {
         PropertyChanged += OnPropertyChanged;
-    }
-
-    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
     }
 
     [RelayCommand]
@@ -80,13 +95,11 @@ public partial class ServerEntry : ObservableObject
                 throw new DuplicateSingularApplicationException("Nitrox Server");
             }
             // Start server and add notify when server closed.
-            serverProcess = ServerProcess.Start(Name, () => Dispatcher.UIThread.InvokeAsync(Stop));
+            serverProcess = ServerProcess.Start(Name, () => Dispatcher.UIThread.InvokeAsync(StopAsync));
         }
         catch (Exception ex)
         {
-            // TODO: Display these errors as warnings in UI:
-            // - "An instance of the Nitrox server is already running, please close it to start another server."
-            // - Any error returned from starting the server.
+            LauncherNotifier.Error(ex.Message);
             Log.Error(ex);
             return;
         }
@@ -96,18 +109,29 @@ public partial class ServerEntry : ObservableObject
     }
 
     [RelayCommand]
-    public void Stop()
+    public async Task<bool> StopAsync()
     {
-        serverProcess?.Close();
-        IsOnline = false;
+        if (serverProcess == null || await serverProcess.CloseAsync())
+        {
+            IsOnline = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
     }
 
     private class ServerProcess : IDisposable
     {
-        public string SaveName { get; init; }
+        private Process serverProcess;
+        private NamedPipeClientStream commandStream;
+        public string SaveName { get; }
         public bool IsRunning => !serverProcess?.HasExited ?? false;
         public string SaveDir => Path.Combine(ServersViewModel.SavesFolderDir, SaveName);
-        private Process serverProcess;
 
         private ServerProcess(string saveName, Action onExited)
         {
@@ -137,21 +161,56 @@ public partial class ServerEntry : ObservableObject
             }
         }
 
-        public void Close()
+        public static ServerProcess Start(string saveName, Action onExited)
         {
-            serverProcess?.CloseMainWindow();
+            return new(saveName, onExited);
+        }
+
+        public async Task<bool> CloseAsync()
+        {
+            // .ContinueWith(t =>
+            // {
+            //     if (t.IsFaulted)
+            //     {
+            //         Log.Error($"Failed to send 'stop' command to server with process id: {serverProcess.Id}");
+            //         LauncherNotifier.Error($"Failed to send 'stop' command to server with process id: {serverProcess.Id}");
+            //     }
+            // })
+            try
+            {
+                // TODO: Fix the server to always handle stop command, even when it's still starting up.
+                await SendCommandAsync("stop");
+            }
+            catch (TimeoutException)
+            {
+                // server could be dead, ignore
+            }
+
             Dispose();
+            return true;
+        }
+
+        public async Task SendCommandAsync(string command)
+        {
+            if (!IsRunning)
+            {
+                return;
+            }
+
+            commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous);
+            if (!commandStream.IsConnected)
+            {
+                await commandStream.ConnectAsync(5000);
+            }
+            byte[] commandBytes = Encoding.UTF8.GetBytes(command);
+            await commandStream.WriteAsync(BitConverter.GetBytes((uint)commandBytes.Length));
+            await commandStream.WriteAsync(commandBytes);
         }
 
         public void Dispose()
         {
             serverProcess?.Dispose();
             serverProcess = null;
-        }
-
-        public static ServerProcess Start(string saveName, Action onExited)
-        {
-            return new(saveName, onExited);
         }
     }
 }

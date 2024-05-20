@@ -157,12 +157,16 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private bool CanGoBackAndStartServer() => !HasChanges();
 
     [RelayCommand]
-    public void StopServer()
+    public async Task<bool> StopServerAsync()
     {
-        Server.Stop();
+        if (!await Server.StopAsync())
+        {
+            return false;
+        }
 
         RestoreBackupCommand.NotifyCanExecuteChanged();
         DeleteServerCommand.NotifyCanExecuteChanged();
+        return true;
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
