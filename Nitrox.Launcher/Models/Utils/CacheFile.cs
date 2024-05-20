@@ -17,11 +17,11 @@ public class CacheFile
             if (creationTime == null && File.Exists(TempFilePath))
             {
                 using FileStream stream = File.OpenRead(TempFilePath);
-                if (stream.Length < 4)
+                if (stream.Length < 8)
                 {
                     return null;
                 }
-                Span<byte> buffer = new(new byte[8]);
+                Span<byte> buffer = stackalloc byte[8];
                 stream.ReadExactly(buffer);
                 creationTime = DateTimeOffset.FromUnixTimeSeconds(BitConverter.ToInt64(buffer));
             }

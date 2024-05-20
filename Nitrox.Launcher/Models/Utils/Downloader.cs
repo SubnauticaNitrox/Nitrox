@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Cache;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -33,10 +32,7 @@ public partial class Downloader
         {
             string jsonString = await CacheFile.GetOrRefreshAsync("blogs",
                                                                       r => r.Read(""),
-                                                                      (w, v) =>
-                                                                      {
-                                                                          w.Write(v);
-                                                                      },
+                                                                      (w, v) => w.Write(v),
                                                                       async () =>
                                                                       {
                                                                           using HttpResponseMessage response = await GetResponseFromCache(BLOGS_URL);
@@ -86,10 +82,7 @@ public partial class Downloader
             //https://developer.wordpress.org/rest-api/reference/posts/#arguments
             string jsonString = await CacheFile.GetOrRefreshAsync("changelogs",
                                                                   r => r.Read(""),
-                                                                  (w, v) =>
-                                                                  {
-                                                                      w.Write(v);
-                                                                  },
+                                                                  (w, v) => w.Write(v),
                                                                   async () =>
                                                                   {
                                                                       using HttpResponseMessage response = await GetResponseFromCache(CHANGELOGS_URL);
@@ -135,10 +128,7 @@ public partial class Downloader
         {
             string jsonString = await CacheFile.GetOrRefreshAsync("update",
                                                                   r => r.Read(""),
-                                                                  (w, v) =>
-                                                                  {
-                                                                      w.Write(v);
-                                                                  },
+                                                                  (w, v) => w.Write(v),
                                                                   async () =>
                                                                   {
                                                                       using HttpResponseMessage response = await GetResponseFromCache(LATEST_VERSION_URL);
