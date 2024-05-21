@@ -13,7 +13,7 @@
         <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhiteBrush}">
     
             <StackPanel Classes="form" Margin="0 0 0 26">
-                <Button Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape">
+                <Button Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">
                     <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
                 </Button>
                 <Grid ColumnDefinitions="Auto,*">
@@ -254,9 +254,9 @@
                     <Border Background="#151516" CornerRadius="12" Height="96" Padding="25 17">
                         <Grid ColumnDefinitions="Auto,*,*,3*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center"
-                                         IsEnabled="{Binding !ServerIsOnline}">
-                                <RadioButton IsChecked="True" >Docked console</RadioButton>
-                                <RadioButton >External console</RadioButton>
+                                         Background="Transparent" ToolTip.Tip="Coming Soon!"> <!-- IsEnabled="{Binding !ServerIsOnline}" -->
+                                <RadioButton IsEnabled="False">Docked console</RadioButton>
+                                <RadioButton IsEnabled="False" IsChecked="True">External console</RadioButton>
                             </StackPanel>
     
                             <Button Grid.Column="3" Classes="abort big" IsVisible="{Binding ServerIsOnline}"

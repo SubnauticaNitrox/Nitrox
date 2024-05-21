@@ -51,13 +51,35 @@
             <Style Selector="^:focus">
                 <Setter Property="Background" Value="{TemplateBinding Background}" />
             </Style>
-            
         </Style>
         
+        <!-- Remove base border (which removes default Avalonia border brush styles) -->
         <Style Selector="^ /template/ Border#PART_BorderElement">
             <Setter Property="Opacity" Value="0" />
         </Style>
         
+        <!-- Watermark foreground dimming -->
+        <Style Selector="^ /template/ TextBlock#PART_Watermark">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <!-- Focus dimming of main text -->
+        <Style Selector="^ /template/ TextPresenter">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:focus /template/ TextPresenter">
+            <Setter Property="Opacity" Value=".7" />
+        </Style>
+        
+        <!-- Disabled Style -->
         <Style Selector="^:disabled">
             <Style Selector="^ /template/ Border">
                 <Setter Property="Background" Value="{TemplateBinding Background}" />
@@ -65,6 +87,7 @@
             <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
         </Style>
         
+        <!-- Reveal Password Button syle -->
         <Style Selector="^.revealPasswordButton[AcceptsReturn=False][IsReadOnly=False]:not(TextBox:empty)">
             <Setter Property="PasswordChar" Value="●" />
             <Setter Property="InnerRightContent">
@@ -105,7 +128,6 @@
                                 <Style Selector="^:disabled /template/ ContentPresenter">
                                     <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
                                     <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-                                    
                                 </Style>
                             </Style>
                         </ToggleButton.Styles>

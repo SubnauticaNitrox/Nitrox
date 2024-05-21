@@ -13,7 +13,8 @@
         SizeToContent="WidthAndHeight"
         CanResize="False"
         Title="Create a server"
-        RequestedThemeVariant="Light">
+        RequestedThemeVariant="Light"
+        PointerPressed="Window_OnPointerPressed" Focusable="True">
 
     <StackPanel>
         <StackPanel Classes="form" Margin="24">

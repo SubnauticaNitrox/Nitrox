@@ -84,4 +84,6 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
     }
 
     private void TitleBar_OnPointerPressed(object sender, PointerPressedEventArgs e) => BeginMoveDrag(e);
+
+    private void Window_OnPointerPressed(object sender, PointerPressedEventArgs e) => Focus(); // Allow for de-focusing textboxes when clicking outside of them.
 }

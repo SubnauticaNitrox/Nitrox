@@ -4,22 +4,26 @@
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="15">
                 <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
-                    <Border Background="White" Padding="5">
-                        <StackPanel Spacing="10">
-                            <RadioButton Content="Option 1" IsChecked="True" />
-                            <RadioButton Content="Option 2" />
-                            <RadioButton Content="Option 3" />
-                            <RadioButton Content="Option 4" />
-                        </StackPanel>
-                    </Border>
-                    <Border Background="Black" Padding="5">
-                        <StackPanel Spacing="10">
-                            <RadioButton Content="Option 1" />
-                            <RadioButton Content="Option 2" IsChecked="True" />
-                            <RadioButton Content="Option 3" />
-                            <RadioButton Content="Option 4" />
-                        </StackPanel>
-                    </Border>
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Border Background="White" Padding="5">
+                            <StackPanel Spacing="10">
+                                <RadioButton Content="Option 1" IsChecked="True" />
+                                <RadioButton Content="Option 2" />
+                                <RadioButton Content="Option 3" />
+                                <RadioButton Content="Option 4" />
+                            </StackPanel>
+                        </Border>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Border Background="Black" Padding="5">
+                            <StackPanel Spacing="10">
+                                <RadioButton Content="Option 1" />
+                                <RadioButton Content="Option 2" IsChecked="True" />
+                                <RadioButton Content="Option 3" />
+                                <RadioButton Content="Option 4" />
+                            </StackPanel>
+                        </Border>
+                    </ThemeVariantScope>
                 </StackPanel>
             </StackPanel>
         </Panel>
@@ -27,6 +31,7 @@
 
     <Style Selector="RadioButton">
         <Setter Property="Background" Value="{DynamicResource RadioButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonBorderBrush}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="Padding" Value="8,0,0,0" />
