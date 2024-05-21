@@ -22,123 +22,126 @@
         </StackPanel>
     </UserControl.Resources>
     
-    <StackPanel Orientation="Vertical" Spacing="22">
-        <TextBlock Classes="header" Text="Options" />
-
-        <!--TextBlock Foreground="Red" FontSize="22" HorizontalAlignment="Center" Text="TODO: Tab Control + Styling" /-->
-
-        <!-- Subnautica Runtime Selection -->
-        <StackPanel Spacing="12">
-            <StackPanel Spacing="8">
-                <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Installation" />
-                <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
-            </StackPanel>
-            <Border Padding="22 15" CornerRadius="12" Background="#151516">
-                <Grid ColumnDefinitions=" Auto, *, Auto">
-                    <Image Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
-                           ToolTip.Tip="Welcome aboard, Captain!"
-                           Stretch="Uniform" Margin="0 0 22 0"
-                           Height="36" Width="36" />
-                    <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
-                        <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
-                    </StackPanel>
-                    <Button Grid.Column="2" Classes="primary"  ToolTip.Tip="Direct the launcher to your game's install location"
-                            Width="120" HorizontalAlignment="Right" Margin="22 0 0 0" Content="Change"
-                            Command="{Binding ChangePathCommand}" />
-                </Grid>
-                <!--ItemsControl ItemsSource="{Binding KnownGames}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="16" Height="52">
-                                <RadioButton Margin="0 0 -5 0" />
-                                <Image Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"
-                                       ToolTip.Tip="Welcome aboard, Captain!"
-                                       Stretch="Uniform"
-                                       Height="36"
-                                       Width="36" />
-                                <StackPanel Spacing="2" VerticalAlignment="Center">
-                                    <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Platform, Converter={converters:ToStringConverter}}" />
-                                    <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding PathToGame, FallbackValue='Unknown path'}" />
+    <ThemeVariantScope RequestedThemeVariant="Dark">
+        <StackPanel Orientation="Vertical" Spacing="22" Background="{DynamicResource BrandWhiteBrush}">
+            <TextBlock Classes="header" Text="Options" />
+    
+            <!--TextBlock Foreground="Red" FontSize="22" HorizontalAlignment="Center" Text="TODO: Tab Control + Styling" /-->
+    
+            <!-- Subnautica Runtime Selection -->
+            <StackPanel Spacing="12">
+                <StackPanel Spacing="8">
+                    <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Installation" />
+                    <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
+                </StackPanel>
+                <Border Padding="22 15" CornerRadius="12" Background="#151516">
+                    <Grid ColumnDefinitions=" Auto, *, Auto">
+                        <Image Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
+                               ToolTip.Tip="Welcome aboard, Captain!"
+                               Stretch="Uniform" Margin="0 0 22 0"
+                               Height="36" Width="36" />
+                        <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
+                            <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
+                        </StackPanel>
+                        <Button Grid.Column="2" Classes="primary"  ToolTip.Tip="Direct the launcher to your game's install location"
+                                Width="120" HorizontalAlignment="Right" Margin="22 0 0 0" Content="Change"
+                                Command="{Binding ChangePathCommand}" />
+                    </Grid>
+                    <!--ItemsControl ItemsSource="{Binding KnownGames}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="16" Height="52">
+                                    <RadioButton Margin="0 0 -5 0" />
+                                    <Image Source="{Binding Platform, Converter={converters:PlatformToIconConverter}}"
+                                           ToolTip.Tip="Welcome aboard, Captain!"
+                                           Stretch="Uniform"
+                                           Height="36"
+                                           Width="36" />
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Platform, Converter={converters:ToStringConverter}}" />
+                                        <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding PathToGame, FallbackValue='Unknown path'}" />
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl-->
-            </Border>
-            <Grid>
-                <!-- <Button Classes="icon" VerticalAlignment="Bottom" -->
-                <!--         Content="Manually add game installation" -->
-                <!--         Command="{Binding AddGameInstallationCommand}"/> -->
-                <!-- <Button Classes="primary" HorizontalAlignment="Right" Content="Choose destination" /> -->
-            </Grid>
-        </StackPanel>
-
-        <!-- Launch Arguments -->
-        <StackPanel Spacing="12">
-            <StackPanel Spacing="8">
-                <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Launch Arguments" />
-                <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl-->
+                </Border>
+                <Grid>
+                    <!-- <Button Classes="icon" VerticalAlignment="Bottom" -->
+                    <!--         Content="Manually add game installation" -->
+                    <!--         Command="{Binding AddGameInstallationCommand}"/> -->
+                    <!-- <Button Classes="primary" HorizontalAlignment="Right" Content="Choose destination" /> -->
+                </Grid>
             </StackPanel>
-            <Border Padding="22 15" CornerRadius="12" Background="#151516">
-                <Grid ColumnDefinitions="*, Auto, Auto">
-                    
-                    <Border  Background="#333437" CornerRadius="7">
-                        <Grid Grid.ColumnDefinitions="*, Auto">
-                            <TextBox Background="#333437" Height="46"
-                                     Padding="13,5" FontSize="15" MaxLines="1"
-                                     Foreground="White" TextAlignment="Left"
-                                     VerticalAlignment="Stretch" VerticalContentAlignment="Center"
-                                     Text="{Binding LaunchArgs}" />
-
-                            <Button Grid.Column="1" Classes="abort" Command="{Binding ResetArgumentsCommand}"
-                                    Width="72" Height="28" HorizontalAlignment="Right" Padding="1" Margin="0 0 12 0" IsVisible="{Binding ShowResetArgsBtn}"
-                                    FontSize="12" ToolTip.Tip="Reset arguments" Content="Reset" />
-                        </Grid>
-                    </Border>
-
-                    <Button Grid.Column="1" Classes="anycontent" Width="24" Height="24" Margin="10,0,60,0" ToolTip.Tip="{StaticResource InfoIconTooltipText}">
-                        <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
+    
+            <!-- Launch Arguments -->
+            <StackPanel Spacing="12">
+                <StackPanel Spacing="8">
+                    <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Launch Arguments" />
+                    <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
+                </StackPanel>
+                <Border Padding="22 15" CornerRadius="12" Background="#151516">
+                    <Grid ColumnDefinitions="*, Auto, Auto">
                         
-                        <!--Rectangle.Style> TODO: Figure out how to replicate the original icon DropShadowEffect here on MouseOver
-                            <Style TargetType="Rectangle">
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Trigger.Setters>
-                                            <Setter Property="Effect">
-                                                <Setter.Value>
-                                                    <DropShadowEffect ShadowDepth="0" Color="White" Opacity="1" BlurRadius="20" />
-                                                </Setter.Value>
-                                            </Setter>
-
-                                            <Setter Property="Cursor" Value="Hand" />
-                                        </Trigger.Setters>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Rectangle.Style-->
-                    </Button>
-
-                    <Button Grid.Column="2" Classes="primary" ToolTip.Tip="Save launch arguments" Content="Apply"
-                            Width="120" HorizontalAlignment="Right" Command="{Binding ChangeArgumentsCommand}" />
-                </Grid>
-            </Border>
-
+                        <Border  Background="#333437" CornerRadius="7">
+                            <Grid Grid.ColumnDefinitions="*, Auto">
+                                <TextBox Background="#333437" Height="46"
+                                         Padding="13,5" FontSize="15" MaxLines="1"
+                                         Foreground="White" TextAlignment="Left"
+                                         VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                                         Text="{Binding LaunchArgs}" />
+    
+                                <Button Grid.Column="1" Classes="abort" Command="{Binding ResetArgumentsCommand}"
+                                        Width="72" Height="28" HorizontalAlignment="Right" Padding="1" Margin="0 0 12 0" IsVisible="{Binding ShowResetArgsBtn}"
+                                        FontSize="12" ToolTip.Tip="Reset arguments" Content="Reset" />
+                            </Grid>
+                        </Border>
+    
+                        <Button Grid.Column="1" Classes="anycontent" Width="24" Height="24" Margin="10,0,60,0" ToolTip.Tip="{StaticResource InfoIconTooltipText}">
+                            <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
+                            
+                            <!--Rectangle.Style> TODO: Figure out how to replicate the original icon DropShadowEffect here on MouseOver
+                                <Style TargetType="Rectangle">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Trigger.Setters>
+                                                <Setter Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect ShadowDepth="0" Color="White" Opacity="1" BlurRadius="20" />
+                                                    </Setter.Value>
+                                                </Setter>
+    
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger.Setters>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Rectangle.Style-->
+                        </Button>
+    
+                        <Button Grid.Column="2" Classes="primary" ToolTip.Tip="Save launch arguments" Content="Apply"
+                                Width="120" HorizontalAlignment="Right" Command="{Binding ChangeArgumentsCommand}" />
+                    </Grid>
+                </Border>
+    
+            </StackPanel>
+    
+            <!-- Saves Folder Location -->
+            <StackPanel Spacing="12">
+                <TextBlock FontSize="20" FontWeight="Bold" Text="Save File Location" />
+                <TextBlock FontSize="12" HorizontalAlignment="Left" Text="This is the location where your Nitrox server save files are stored" />
+    
+                <Border Padding="22 15" CornerRadius="12" Background="#151516">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderDir}" />
+                        <Button Grid.Column="1" HorizontalAlignment="Right" Classes="primary" Command="{Binding ViewFolderCommand}"
+                                ToolTip.Tip="Open saves folder" Content="Open"
+                                Width="120" Margin="22 0 0 0"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
         </StackPanel>
-
-        <!-- Saves Folder Location -->
-        <StackPanel Spacing="12">
-            <TextBlock FontSize="20" FontWeight="Bold" Text="Save File Location" />
-            <TextBlock FontSize="12" HorizontalAlignment="Left" Text="This is the location where your Nitrox server save files are stored" />
-
-            <Border Padding="22 15" CornerRadius="12" Background="#151516">
-                <Grid ColumnDefinitions="*,Auto">
-                    <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderDir}" />
-                    <Button Grid.Column="1" HorizontalAlignment="Right" Classes="primary" Command="{Binding ViewFolderCommand}"
-                            ToolTip.Tip="Open saves folder" Content="Open"
-                            Width="120" Margin="22 0 0 0"/>
-                </Grid>
-            </Border>
-        </StackPanel>
-    </StackPanel>
+    </ThemeVariantScope>
+    
 </UserControl>

@@ -8,7 +8,8 @@
         d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ErrorViewModel}}"
         SizeToContent="WidthAndHeight"
         CanResize="False"
-        Title="{Binding ErrorTitle}">
+        Title="{Binding ErrorTitle}"
+        RequestedThemeVariant="Light">
     <StackPanel>
         <TextBlock Padding="5" Foreground="#ff0011" Text="{Binding ErrorText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Padding="24 20">

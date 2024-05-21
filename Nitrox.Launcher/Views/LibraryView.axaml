@@ -8,5 +8,10 @@
              DataContext="{x:Static design:DesignData.LibraryViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.LibraryView">
-    <TextBlock Text="Library View"/>
+    <!-- WIP -->
+    <ThemeVariantScope RequestedThemeVariant="Dark">
+        <Grid Background="{DynamicResource BrandWhiteBrush}">
+            <TextBlock Text="Library View"/>
+        </Grid>
+    </ThemeVariantScope>
 </UserControl>
