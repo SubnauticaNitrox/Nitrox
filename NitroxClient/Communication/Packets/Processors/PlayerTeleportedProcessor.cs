@@ -32,26 +32,22 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
         }
 
         Vehicle currentVehicle = Player.main.currentMountedVehicle;
-        // Check to make sure the player is in a vehicle
-        if (currentVehicle != null)
+        if (currentVehicle)
         {
             currentVehicle.TeleportVehicle(packet.DestinationTo.ToUnity(), currentVehicle.transform.rotation);
+            return;
         }
-        else
+
+        Player.main.SetPosition(packet.DestinationTo.ToUnity());
+        Player.main.cinematicModeActive = true;
+        try
         {
-            Player.main.SetPosition(packet.DestinationTo.ToUnity());
-            // Freeze the player while he's loading its new position
-            Player.main.cinematicModeActive = true;
-            try
-            {
-                CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
-            }
-            catch (Exception e)
-            {
-                // Freeze the player while he's loading its new position
-                Player.main.cinematicModeActive = false;
-                Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
-            }
+            CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
+        }
+        catch (Exception e)
+        {
+            Player.main.cinematicModeActive = false;
+            Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
         }
     }
 }
