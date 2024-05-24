@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class GoTo_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class GotoConsoleCommand_GotoPosition_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((GotoConsoleCommand t) => t.GotoPosition(default, default));
 
