@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using ProtoBufNet;
@@ -9,7 +9,6 @@ namespace NitroxModel.DataStructures.GameLogic
     [DataContract]
     [ProtoInclude(50, typeof(BasicItemData))]
     [ProtoInclude(51, typeof(EquippedItemData))]
-    [ProtoInclude(52, typeof(PlantableItemData))]
     public abstract class ItemData
     {
         [DataMember(Order = 1)]
