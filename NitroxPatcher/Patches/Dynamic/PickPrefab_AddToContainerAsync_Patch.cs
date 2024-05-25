@@ -34,18 +34,14 @@ public sealed partial class PickPrefab_AddToContainerAsync_Patch : NitroxPatch, 
     {
         // The 2 injections are similar (looking for a destroy instruction and adding our callback after it)
         return new CodeMatcher(instructions).MatchEndForward(new CodeMatch(OpCodes.Call, Reflect.Method(() => Object.Destroy(default))))
-                                            .Advance(1)
-                                            .InsertAndAdvance([
-                                                new CodeInstruction(OpCodes.Ldarg_0),
-                                                new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastDeletion(default)))
-                                            ])
-                                            .MatchEndForward(new CodeMatch(OpCodes.Call, Reflect.Method(() => Object.Destroy(default))))
-                                            .Advance(1)
-                                            .InsertAndAdvance([
-                                                new CodeInstruction(OpCodes.Ldarg_0),
-                                                new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastDeletion(default)))
-                                            ])
-                                            .InstructionEnumeration();
+                                            .Repeat(matcher =>
+                                            {
+                                                matcher.Advance(1)
+                                                       .InsertAndAdvance([
+                                                           new CodeInstruction(OpCodes.Ldarg_0),
+                                                           new CodeInstruction(OpCodes.Call, Reflect.Method(() => BroadcastDeletion(default)))
+                                                       ]);
+                                            }).InstructionEnumeration();
     }
 
     public static void BroadcastDeletion(PickPrefab pickPrefab)

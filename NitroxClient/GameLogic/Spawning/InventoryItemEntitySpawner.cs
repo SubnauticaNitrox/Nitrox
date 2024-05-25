@@ -3,6 +3,7 @@ using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -16,8 +17,10 @@ using UWE;
 
 namespace NitroxClient.GameLogic.Spawning;
 
-public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
+public class InventoryItemEntitySpawner(EntityMetadataManager entityMetadataManager) : SyncEntitySpawner<InventoryItemEntity>
 {
+    private readonly EntityMetadataManager entityMetadataManager = entityMetadataManager;
+
     protected override IEnumerator SpawnAsync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
     {        
         if (!CanSpawn(entity, out GameObject parentObject, out ItemsContainer container, out string errorLog))
@@ -116,17 +119,28 @@ public class InventoryItemEntitySpawner : SyncEntitySpawner<InventoryItemEntity>
         {
             planter.Subscribe(subscribedValue);
 
-            PostponeAddNotification(() => planter.subscribed, () => planter, true, () =>
+            if (entity.Metadata is PlantableMetadata metadata)
             {
-                if (entity.Metadata is PlantableMetadata metadata)
+                PostponeAddNotification(() => planter.subscribed, () => planter, true, () =>
                 {
                     // Adapted from Planter.AddItem(InventoryItem) to be able to call directly AddItem(Plantable, slotID) with our parameters
-                    Plantable component = pickupable.GetComponent<Plantable>();
-                    pickupable.SetTechTypeOverride(component.plantTechType, false);
+                    Plantable plantable = pickupable.GetComponent<Plantable>();
+                    pickupable.SetTechTypeOverride(plantable.plantTechType, false);
                     inventoryItem.isEnabled = false;
-                    planter.AddItem(component, metadata.SlotID);
-                }
-            });
+                    planter.AddItem(plantable, metadata.SlotID);
+
+                    // Reapply the plantable metadata after the GrowingPlant (or the GrownPlant) is spawned
+                    entityMetadataManager.ApplyMetadata(plantable.gameObject, metadata);
+
+                    // Plant spawning occurs in multiple steps over frames:
+                    // spawning the item, adding it to the planter, having the GrowingPlant created, and eventually having it create a GrownPlant (when progress == 1)
+                    // therefore we give the metadata to the object so it can be used when required
+                    if (metadata.FruitPlantMetadata != null && plantable.growingPlant && plantable.growingPlant.GetProgress() == 1f)
+                    {
+                        MetadataHolder.AddMetadata(plantable.growingPlant.gameObject, metadata.FruitPlantMetadata);
+                    }
+                });
+            }
         }
         else if (parentObject.TryGetComponent(out Trashcan trashcan))
         {
