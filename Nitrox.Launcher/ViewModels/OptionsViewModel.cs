@@ -146,19 +146,18 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         LaunchArgs = DefaultLaunchArg;
         ShowResetArgsBtn = false;
+        ChangeArgumentsCommand.NotifyCanExecuteChanged();
     }
     
     [RelayCommand(CanExecute = nameof(CanChangeArguments))]
     private void ChangeArguments()
     {
         KeyValueStore.Instance.SetValue("SubnauticaLaunchArguments", LaunchArgs);
+        ChangeArgumentsCommand.NotifyCanExecuteChanged();
     }
     private bool CanChangeArguments()
     {
-        if (LaunchArgs != DefaultLaunchArg)
-        {
-            ShowResetArgsBtn = true;
-        }
+        ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
         return LaunchArgs != KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", DefaultLaunchArg);
     }
