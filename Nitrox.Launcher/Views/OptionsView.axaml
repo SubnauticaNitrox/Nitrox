@@ -10,9 +10,9 @@
              x:Class="Nitrox.Launcher.Views.OptionsView">
 
     <UserControl.Resources>
-        <StackPanel x:Key="InfoIconTooltipText">
+        <StackPanel x:Key="InfoIconTooltipText" Orientation="Vertical">
             <TextBlock>
-                Virtual Reality mode (VR) is disabled by default, but you can still edit this line if you want to use it.
+                Virtual Reality mode (VR) is disabled by default, but you can edit this line if you want to use it.
                 <LineBreak />
                 <LineBreak />
                 Possible values : oculus, openvr, none
