@@ -8,6 +8,7 @@
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+        <ApplicationIcon>Assets\Images\nitroxIco.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
