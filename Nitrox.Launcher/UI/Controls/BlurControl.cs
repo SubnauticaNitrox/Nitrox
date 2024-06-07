@@ -16,7 +16,7 @@ namespace Nitrox.Launcher.UI.Controls;
 /// <remarks>
 ///     Based off of GrayscaleControl
 /// </remarks>
-public class BlurControl : Decorator
+public sealed class BlurControl : Decorator
 {
     public static readonly StyledProperty<float> BlurStrengthProperty =
         AvaloniaProperty.Register<BlurControl, float>(nameof(BlurStrength), 5);
@@ -42,7 +42,7 @@ public class BlurControl : Decorator
         context.Custom(new BlurBehindRenderOperation((byte)Math.Round(byte.MaxValue * Opacity), BlurStrength, new Rect(default, Bounds.Size)));
     }
 
-    private class BlurBehindRenderOperation : ICustomDrawOperation
+    private sealed record BlurBehindRenderOperation : ICustomDrawOperation
     {
         private readonly Rect bounds;
         private readonly byte opacity;
@@ -92,6 +92,6 @@ public class BlurControl : Decorator
             skia.SkCanvas.DrawRect(0, 0, (float)bounds.Width, (float)bounds.Height, paint);
         }
 
-        public bool Equals(ICustomDrawOperation other) => other is BlurBehindRenderOperation op && op.bounds == bounds;
+        public bool Equals(ICustomDrawOperation other) => Equals(other as BlurBehindRenderOperation);
     }
 }
