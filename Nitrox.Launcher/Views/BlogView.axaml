@@ -21,18 +21,20 @@
             <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel HorizontalAlignment="Center" ItemWidth="340" />
+                        <design:BlogItemsPanel HorizontalAlignment="Center" ItemWidth="340" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
                             <StackPanel Orientation="Vertical" Spacing="10">
-                                <Border CornerRadius="12">
-                                    <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image IsVisible="{Binding Image, Converter={converters:EqualityConverter}}" Source="/Assets/Images/blog/vines.png" />
-                                        <Image Source="{Binding Image}" />
-                                    </Panel>
+                                <Border CornerRadius="12" ClipToBounds="True">
+                                    <Viewbox>
+                                        <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="16" Height="9">
+                                            <Image IsVisible="{Binding Image, Converter={converters:EqualityConverter}}" Source="/Assets/Images/blog/vines.png" Stretch="UniformToFill" />
+                                            <Image Source="{Binding Image}" Stretch="UniformToFill" />
+                                        </Panel>
+                                    </Viewbox>
                                 </Border>
                                 <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"
                                            HorizontalAlignment="Left" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrandSubTextBrush}"/>
