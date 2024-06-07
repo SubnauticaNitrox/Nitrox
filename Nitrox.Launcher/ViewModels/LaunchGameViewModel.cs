@@ -44,7 +44,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private async void StartSingleplayer()
+    private async Task StartSingleplayerAsync()
     {
         try
         {
@@ -71,7 +71,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private async void StartMultiplayer()
+    private async Task StartMultiplayerAsync()
     {
         if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
         {

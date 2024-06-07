@@ -250,7 +250,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private bool CanUndo() => !ServerIsOnline && HasChanges();
 
     [RelayCommand]
-    private async void ChangeServerIcon()
+    private async Task ChangeServerIconAsync()
     {
         try
         {
