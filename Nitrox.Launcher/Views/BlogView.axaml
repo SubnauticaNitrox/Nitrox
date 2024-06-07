@@ -2,8 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              DataContext="{x:Static design:DesignData.BlogViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
@@ -21,7 +21,7 @@
             <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <design:FittingWrapPanel HorizontalAlignment="Center" MaxItemWidth="340" />
+                        <controls:FittingWrapPanel HorizontalAlignment="Center" MaxItemWidth="340" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

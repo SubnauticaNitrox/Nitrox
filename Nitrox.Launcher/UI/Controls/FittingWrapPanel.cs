@@ -5,7 +5,7 @@ using Avalonia.Layout;
 using Avalonia.Utilities;
 using static System.Math;
 
-namespace Nitrox.Launcher.Models.Design;
+namespace Nitrox.Launcher.UI.Controls;
 
 /// <summary>
 ///     Panel that arranges stretchable child controls to fit max width, up to the limit of <see cref="MaxItemWidth" />.
@@ -47,7 +47,6 @@ public class FittingWrapPanel : Panel, INavigableContainer
     protected override Size MeasureOverride(Size constraint)
     {
         Orientation orientation = Orientation;
-        Controls children = Children;
         UVSize curLineSize = new(orientation);
         UVSize panelSize = new(orientation);
         UVSize uvConstraint = new(orientation, constraint.Width, constraint.Height);
@@ -55,9 +54,9 @@ public class FittingWrapPanel : Panel, INavigableContainer
         int itemsPerRow = (int)(constraint.Width / MaxItemWidth);
         double adjustedWidth = constraint.Width / itemsPerRow;
 
-        for (int i = 0, count = children.Count; i < count; i++)
+        for (int i = 0, count = Children.Count; i < count; i++)
         {
-            Control child = children[i];
+            Control child = Children[i];
             child.Measure(new Size(adjustedWidth, constraint.Height));
 
             UVSize sz = new(orientation, adjustedWidth, child.DesiredSize.Height);
@@ -87,20 +86,18 @@ public class FittingWrapPanel : Panel, INavigableContainer
     /// <inheritdoc />
     protected override Size ArrangeOverride(Size finalSize)
     {
-        Orientation orientation = Orientation;
-        Controls children = Children;
         int firstInLine = 0;
         double accumulatedV = 0;
-        UVSize curLineSize = new(orientation);
-        UVSize uvFinalSize = new(orientation, finalSize.Width, finalSize.Height);
+        UVSize curLineSize = new(Orientation);
+        UVSize uvFinalSize = new(Orientation, finalSize.Width, finalSize.Height);
 
         int itemsPerRow = (int)(finalSize.Width / MaxItemWidth);
         double adjustedWidth = finalSize.Width / itemsPerRow;
 
-        for (int i = 0; i < children.Count; i++)
+        for (int i = 0; i < Children.Count; i++)
         {
-            Control child = children[i];
-            UVSize sz = new(orientation, adjustedWidth, child.DesiredSize.Height);
+            Control child = Children[i];
+            UVSize sz = new(Orientation, adjustedWidth, child.DesiredSize.Height);
 
             if (MathUtilities.GreaterThan(curLineSize.U + sz.U, uvFinalSize.U)) // Need to switch to another line
             {
@@ -114,7 +111,7 @@ public class FittingWrapPanel : Panel, INavigableContainer
                     ArrangeLine(accumulatedV, sz.V, i, ++i, adjustedWidth);
 
                     accumulatedV += sz.V;
-                    curLineSize = new UVSize(orientation);
+                    curLineSize = new UVSize(Orientation);
                 }
                 firstInLine = i;
             }
@@ -124,9 +121,9 @@ public class FittingWrapPanel : Panel, INavigableContainer
             }
         }
 
-        if (firstInLine < children.Count)
+        if (firstInLine < Children.Count)
         {
-            ArrangeLine(accumulatedV, curLineSize.V, firstInLine, children.Count, adjustedWidth);
+            ArrangeLine(accumulatedV, curLineSize.V, firstInLine, Children.Count, adjustedWidth);
         }
 
         return finalSize;
@@ -142,7 +139,7 @@ public class FittingWrapPanel : Panel, INavigableContainer
     IInputElement INavigableContainer.GetControl(NavigationDirection direction, IInputElement from, bool wrap)
     {
         Orientation orientation = Orientation;
-        Controls children = Children;
+        Avalonia.Controls.Controls children = Children;
         bool horiz = orientation == Orientation.Horizontal;
         int index = from is not null ? Children.IndexOf((Control)from) : -1;
 
@@ -184,7 +181,7 @@ public class FittingWrapPanel : Panel, INavigableContainer
     private void ArrangeLine(double v, double lineV, int start, int end, double itemU)
     {
         Orientation orientation = Orientation;
-        Controls children = Children;
+        Avalonia.Controls.Controls children = Children;
         double u = 0;
         bool isHorizontal = orientation == Orientation.Horizontal;
 
