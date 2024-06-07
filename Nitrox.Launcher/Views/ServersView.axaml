@@ -64,11 +64,11 @@
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
                                                 <Panel>
                                                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
-                                                        <Ellipse Margin="0 0 6 0" Fill="#38C149" />
+                                                        <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOnColor}" />
                                                         <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
-                                                        <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
+                                                        <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOffColor}" />
                                                         <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
                                                     </StackPanel>
                                                 </Panel>
@@ -92,7 +92,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-                <Border Grid.Row="3" CornerRadius="12" Background="#151516" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                <Border Grid.Row="3" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                     <Button Classes="primary big" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Height="48" Content="CREATE NEW SERVER"
                             Command="{Binding CreateServerCommand}" />
                 </Border>

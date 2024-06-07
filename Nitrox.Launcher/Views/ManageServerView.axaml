@@ -72,11 +72,11 @@
                             </StackPanel.Styles>
                             <Panel>
                                 <StackPanel Orientation="Horizontal" IsVisible="{Binding ServerIsOnline}">
-                                    <Ellipse Margin="0 0 6 0" Fill="#38C149" />
+                                    <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOnColor}" />
                                     <TextBlock IsVisible="{Binding ServerIsOnline}" Text="Online" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" IsVisible="{Binding !ServerIsOnline}">
-                                    <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
+                                    <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOffColor}" />
                                     <TextBlock IsVisible="{Binding !ServerIsOnline}" Text="Offline" />
                                 </StackPanel>
                             </Panel>
@@ -251,7 +251,7 @@
                         </StackPanel>
                     </StackPanel>
     
-                    <Border Background="#151516" CornerRadius="12" Height="96" Padding="25 17">
+                    <Border Background="{DynamicResource BrandPanelBackgroundBrush}" CornerRadius="12" Height="96" Padding="25 17">
                         <Grid ColumnDefinitions="Auto,*,*,3*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center"
                                          Background="Transparent" ToolTip.Tip="Coming Soon!"> <!-- IsEnabled="{Binding !ServerIsOnline}" -->

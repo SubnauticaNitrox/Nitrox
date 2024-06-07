@@ -53,7 +53,7 @@
                 <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
             </Style>
             <Style Selector="^ TextBlock#PlaceholderTextBlock">
-                <Setter Property="Foreground" Value="#202225" />
+                <Setter Property="Foreground" Value="{DynamicResource BrandSubTextBrush}" />
             </Style>
             <Style Selector="^ PathIcon">
                 <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />

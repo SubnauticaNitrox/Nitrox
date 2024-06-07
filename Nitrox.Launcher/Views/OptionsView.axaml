@@ -34,7 +34,7 @@
                     <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Installation" />
                     <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
                 </StackPanel>
-                <Border Padding="22 15" CornerRadius="12" Background="#151516">
+                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
                     <Grid ColumnDefinitions=" Auto, *, Auto">
                         <Image Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
                                ToolTip.Tip="Welcome aboard, Captain!"
@@ -81,12 +81,12 @@
                     <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Launch Arguments" />
                     <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
                 </StackPanel>
-                <Border Padding="22 15" CornerRadius="12" Background="#151516">
+                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
                     <Grid ColumnDefinitions="*, Auto, Auto">
                         
-                        <Border  Background="#333437" CornerRadius="7">
+                        <Border  CornerRadius="7">
                             <Grid Grid.ColumnDefinitions="*, Auto">
-                                <TextBox Background="#333437" Height="46"
+                                <TextBox Height="46"
                                          Padding="13,5" FontSize="15" MaxLines="1"
                                          Foreground="White" TextAlignment="Left"
                                          VerticalAlignment="Stretch" VerticalContentAlignment="Center"
@@ -132,7 +132,7 @@
                 <TextBlock FontSize="20" FontWeight="Bold" Text="Save File Location" />
                 <TextBlock FontSize="12" HorizontalAlignment="Left" Text="This is the location where your Nitrox server save files are stored" />
     
-                <Border Padding="22 15" CornerRadius="12" Background="#151516">
+                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
                     <Grid ColumnDefinitions="*,Auto">
                         <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderDir}" />
                         <Button Grid.Column="1" HorizontalAlignment="Right" Classes="primary" Command="{Binding ViewFolderCommand}"

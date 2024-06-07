@@ -74,9 +74,9 @@
 
     <!-- Events -->
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
-        <Setter Property="BorderBrush" Value="#007BFF" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimaryBrush}" />
     </Style>
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer[(design|NitroxAttached.Selected)=true]">
-        <Setter Property="BorderBrush" Value="#007BFF" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimaryBrush}" />
     </Style>
 </Styles>

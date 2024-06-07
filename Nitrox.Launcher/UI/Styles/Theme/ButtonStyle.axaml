@@ -47,7 +47,7 @@
     </Design.PreviewWith>
 
     <Style Selector="Button">
-        <Setter Property="Background" Value="#1EFFFFFF" />
+        <Setter Property="Background" Value="{DynamicResource BrandBorderBackgroundBrush}" />
         <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />

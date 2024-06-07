@@ -99,7 +99,7 @@
             <Setter Property="Foreground" Value="{DynamicResource BrandControlBackgroundBrush}" />
 
             <Style Selector="^ /template/ Border#SlidingIcon">
-                <Setter Property="Background" Value="#007BFF" />
+                <Setter Property="Background" Value="{DynamicResource BrandPrimaryBrush}" />
                 <Setter Property="Margin" Value="22 0 0 0" />
             </Style>
 

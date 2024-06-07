@@ -34,6 +34,10 @@
         <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
     </Style>
 
+    <Style Selector="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackgroundBrush}" />
+    </Style>
+
     <Style Selector=":is(TemplatedControl).footer">
         <Setter Property="Background" Value="#ECECEC" />
         <Setter Property="Padding" Value="24 20" />
@@ -88,7 +92,7 @@
             <Setter Property="HorizontalAlignment" Value="Right" />
 
             <Style Selector="^ Button">
-                <Setter Property="Background" Value="#000000" />
+                <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
             </Style>
             <Style Selector="^ Button:nth-child(1)">
                 <Setter Property="CornerRadius" Value="0 0 0 8" />
@@ -127,7 +131,7 @@
     </Style>
 
     <Style Selector=":is(ContentControl).content">
-        <Setter Property="Background" Value="#00000000" />
+        <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Style Selector="^ > :is(UserControl)">

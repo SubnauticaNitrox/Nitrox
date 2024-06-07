@@ -13,7 +13,7 @@
             
             <TextBlock Classes="header" Text="Updates"/>
             
-            <Border CornerRadius="12" Background="#151516" Padding="22">
+            <Border CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}" Padding="22">
                 <Grid>
                     <!-- Official Version only text -->
                     <StackPanel Spacing="10" IsVisible="{Binding UsingOfficialVersion}">
@@ -93,7 +93,7 @@
                             <Expander Classes="changelog" Header="View changelog">
                                 <TextBlock FontSize="14" TextWrapping="Wrap" FontWeight="Normal" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
                             </Expander>
-                            <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" />
+                            <Border BorderThickness="0 1 0 0" />
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

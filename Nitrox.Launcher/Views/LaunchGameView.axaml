@@ -24,7 +24,7 @@
                 <!-- Play buttons - Negative offset to add some overlap with the background image -->
                 <StackPanel Grid.Column="1" Margin="0 -110 0 0">
                     <controls:BlurControl BlurStrength="7">
-                        <Border CornerRadius="10" Background="#151516" Opacity=".90">
+                        <Border CornerRadius="10" Background="{DynamicResource BrandPanelBackgroundBrush}" Opacity=".90">
                             <StackPanel Orientation="Vertical" Spacing="9" Margin="24 20">
                                 <Grid Height="26" Margin="0 0 0 9" HorizontalAlignment="Stretch">
                                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
@@ -34,7 +34,7 @@
                                                 <Setter Property="FontSize" Value="10" />
                                             </Style>
                                         </StackPanel.Styles>
-                                        <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" />
+                                        <TextBlock Foreground="{DynamicResource BrandSubTextBrush}" Text="PLAY NITROX" />
                                         <TextBlock Text="{Binding Version, FallbackValue='PHASE x.x.x.x'}" />
                                     </StackPanel>
                                     <Image HorizontalAlignment="Right" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}}" ToolTip.Tip="{Binding PlatformToolTip}" Width="19"
@@ -81,7 +81,7 @@
                     <StackPanel.Styles>
                         <Style Selector="StackPanel > TextBlock:nth-child(2n+1)">
                             <Setter Property="FontSize" Value="10" />
-                            <Setter Property="Foreground" Value="#7FFFFFFF" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrandSubTextBrush}" />
                             <Setter Property="FontWeight" Value="Bold" />
                         </Style>
                         <Style Selector="StackPanel > TextBlock:nth-child(2n)">
