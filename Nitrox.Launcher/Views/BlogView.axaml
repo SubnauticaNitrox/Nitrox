@@ -21,7 +21,7 @@
             <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <design:BlogItemsPanel HorizontalAlignment="Center" ItemWidth="340" />
+                        <design:FittingWrapPanel HorizontalAlignment="Center" MaxItemWidth="340" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
