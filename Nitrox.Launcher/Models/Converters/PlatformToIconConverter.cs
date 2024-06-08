@@ -14,11 +14,6 @@ internal class PlatformToIconConverter : Converter<PlatformToIconConverter>, IVa
 
     private string GetIconPathForPlatform(Platform? platform)
     {
-        if (platform == null)
-        {
-            return "/Assets/Images/store-icons/missing-2x.png";
-        }
-
         return platform switch
         {
             Platform.EPIC => "/Assets/Images/store-icons/epic-2x.png",
