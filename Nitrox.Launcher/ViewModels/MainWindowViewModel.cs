@@ -39,8 +39,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public RoutingState Router => screen.Router;
 
     public MainWindowViewModel(IScreen screen, LaunchGameViewModel launchGameViewModel, ServersViewModel serversViewModel, CommunityViewModel communityViewModel, BlogViewModel blogViewModel, UpdatesViewModel updatesViewModel,
-                               OptionsViewModel optionsViewModel,
-                               IList<NotificationItem> notifications = null)
+                               OptionsViewModel optionsViewModel, IList<NotificationItem> notifications = null)
     {
         this.screen = screen;
         this.launchGameViewModel = launchGameViewModel;

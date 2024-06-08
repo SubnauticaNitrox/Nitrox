@@ -26,10 +26,10 @@ public class App : Application
             }
         }
 
-        ServiceCollection collection = new();
-        collection.AddAppServices();
-        ServiceProvider services = collection.BuildServiceProvider();
-        MainWindow mainWindow = services.GetRequiredService<MainWindow>();
+        MainWindow mainWindow = new ServiceCollection()
+                                .AddAppServices()
+                                .BuildServiceProvider()
+                                .GetRequiredService<MainWindow>();
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:

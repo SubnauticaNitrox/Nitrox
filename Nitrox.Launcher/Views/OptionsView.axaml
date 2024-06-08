@@ -81,46 +81,20 @@
                     <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
                 </StackPanel>
                 <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
-                    <Grid ColumnDefinitions="*, Auto, Auto">
-                        
-                        <Border  CornerRadius="7">
-                            <Grid ColumnDefinitions="*, Auto">
-                                <TextBox Height="46"
-                                         Padding="13,5" FontSize="15" MaxLines="1"
-                                         Foreground="White" TextAlignment="Left"
-                                         VerticalAlignment="Stretch" VerticalContentAlignment="Center"
-                                         Text="{Binding LaunchArgs}" />
-    
-                                <Button Grid.Column="1" Classes="abort" Command="{Binding ResetArgumentsCommand}"
-                                        Width="72" Height="28" HorizontalAlignment="Right" Padding="1" Margin="0 0 12 0" IsVisible="{Binding ShowResetArgsBtn}"
-                                        FontSize="12" ToolTip.Tip="Reset arguments" Content="Reset" />
-                            </Grid>
-                        </Border>
-    
-                        <Button Grid.Column="1" Classes="anycontent" Width="24" Height="24" Margin="10,0,60,0" ToolTip.Tip="{StaticResource InfoIconTooltipText}">
-                            <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
-                            
-                            <!--Rectangle.Style> TODO: Figure out how to replicate the original icon DropShadowEffect here on MouseOver
-                                <Style TargetType="Rectangle">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Trigger.Setters>
-                                                <Setter Property="Effect">
-                                                    <Setter.Value>
-                                                        <DropShadowEffect ShadowDepth="0" Color="White" Opacity="1" BlurRadius="20" />
-                                                    </Setter.Value>
-                                                </Setter>
-    
-                                                <Setter Property="Cursor" Value="Hand" />
-                                            </Trigger.Setters>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Rectangle.Style-->
+                    <Grid ColumnDefinitions="*, Auto, 120">
+                        <Panel>
+                            <TextBox Padding="13,12" FontSize="15" MaxLines="1"
+                                     Text="{Binding LaunchArgs}" />
+                            <Button Classes="abort" Command="{Binding ResetArgumentsCommand}"
+                                    Width="72" Height="28" HorizontalAlignment="Right" Padding="0" Margin="0 0 12 0"
+                                    FontSize="12" ToolTip.Tip="Reset arguments" Content="Reset" IsVisible="{Binding ShowResetArgsBtn}" />
+                        </Panel>
+
+                        <Button Grid.Column="1" Classes="icon" Margin="10 0" ToolTip.Tip="{StaticResource InfoIconTooltipText}">
+                            <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="{DynamicResource BrandBlackBrush}" />
                         </Button>
     
-                        <Button Grid.Column="2" Classes="primary" ToolTip.Tip="Save launch arguments" Content="Apply"
-                                Width="120" HorizontalAlignment="Right" Command="{Binding SetArgumentsCommand}" />
+                        <Button Grid.Column="2" HorizontalAlignment="Stretch" Classes="primary" ToolTip.Tip="Save launch arguments" Content="Apply" Command="{Binding SetArgumentsCommand}" />
                     </Grid>
                 </Border>
     

@@ -17,13 +17,9 @@ public partial class BlogViewModel : RoutableViewModelBase
     [ObservableProperty]
     private AvaloniaList<NitroxBlog> nitroxBlogs = [];
 
-    public BlogViewModel(IScreen screen, NitroxBlog[] blogs) : base(screen)
+    public BlogViewModel(IScreen screen, NitroxBlog[] blogs = null) : base(screen)
     {
-        nitroxBlogs.AddRange(blogs);
-    }
-
-    public BlogViewModel(IScreen screen) : base(screen)
-    {
+        nitroxBlogs.AddRange(blogs ?? []);
         Dispatcher.UIThread.Invoke(async () =>
         {
             try

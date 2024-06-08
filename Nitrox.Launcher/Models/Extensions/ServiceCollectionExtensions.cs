@@ -10,7 +10,7 @@ namespace Nitrox.Launcher.Models.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddAppServices(this IServiceCollection collection)
+    public static IServiceCollection AddAppServices(this IServiceCollection collection)
     {
         // Domain services
         collection.AddSingleton(provider => new AppViewLocator(provider));
@@ -50,5 +50,7 @@ public static class ServiceCollectionExtensions
         collection.AddSingleton<BlogViewModel>();
         collection.AddSingleton<CommunityViewModel>();
         collection.AddSingleton<UpdatesViewModel>();
+
+        return collection;
     }
 }
