@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models;
@@ -21,7 +22,10 @@ public partial class ServersViewModel : RoutableViewModelBase
 {
     public static readonly string SavesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
 
-    public AvaloniaList<ServerEntry> Servers { get; }
+    [ObservableProperty]
+    private AvaloniaList<ServerEntry> servers = [];
+
+    private FileSystemWatcher watcher;
 
     public ServersViewModel(IScreen hostScreen) : base(hostScreen)
     {
@@ -43,7 +47,8 @@ public partial class ServersViewModel : RoutableViewModelBase
             }
         });
 
-        Servers = new AvaloniaList<ServerEntry>(GetSavesOnDisk().OrderByDescending(entry => entry.LastAccessedTime));
+        GetSavesOnDisk();
+        InitializeWatcher();
     }
 
     [RelayCommand]
@@ -76,14 +81,14 @@ public partial class ServersViewModel : RoutableViewModelBase
         });
     }
 
-    public IEnumerable<ServerEntry> GetSavesOnDisk()
+    public void GetSavesOnDisk()
     {
-        static bool ValidateSave(string saveDir) => !File.Exists(Path.Combine(saveDir, "server.cfg")) || File.Exists(Path.Combine(saveDir, "Version.json"));
-
+        List<ServerEntry> serversOnDisk = [];
+        
         foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
         {
             // Don't add the file to the list if it doesn't validate
-            if (!ValidateSave(folder))
+            if (!File.Exists(Path.Combine(folder, "server.cfg")) || !File.Exists(Path.Combine(folder, "Version.json")))
             {
                 continue;
             }
@@ -101,7 +106,8 @@ public partial class ServersViewModel : RoutableViewModelBase
             SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
             string fileEnding = "json";
             if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
-            yield return new ServerEntry
+            
+            ServerEntry entry = new()
             {
                 Name = saveName,
                 ServerIcon = serverIcon,
@@ -122,6 +128,51 @@ public partial class ServersViewModel : RoutableViewModelBase
                                                              // If the above file doesn't exist (server was never ran), use the Version file instead
                                                              Path.Combine(folder, $"Version.{fileEnding}"))
             };
+            
+            serversOnDisk.Add(entry);
         }
+        
+        // Remove any servers from the Servers list that are not found in the saves folder
+        for (int i = Servers.Count - 1; i >= 0; i--)
+        {
+            if (!serversOnDisk.Any(s => s.Name == Servers[i].Name))
+            {
+                Servers.RemoveAt(i);
+            }
+        }
+
+        // Add any new servers found on the disk to the Servers list
+        foreach (ServerEntry server in serversOnDisk)
+        {
+            if (!Servers.Any(s => s.Name == server.Name))
+            {
+                Servers.Add(server);
+            }
+        }
+
+        Servers = new AvaloniaList<ServerEntry>(Servers.OrderByDescending(entry => entry.LastAccessedTime));
+    }
+    
+    private void InitializeWatcher()
+    {
+        watcher = new FileSystemWatcher
+        {
+            Path = SavesFolderDir,
+            NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size,
+            Filter = "*.*",
+            IncludeSubdirectories = true
+        };
+
+        watcher.Changed += OnDirectoryChanged;
+        watcher.Created += OnDirectoryChanged;
+        watcher.Deleted += OnDirectoryChanged;
+        watcher.Renamed += OnDirectoryChanged;
+
+        watcher.EnableRaisingEvents = true;
+    }
+
+    private void OnDirectoryChanged(object sender, FileSystemEventArgs e)
+    {
+        GetSavesOnDisk();
     }
 }
