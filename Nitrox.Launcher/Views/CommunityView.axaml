@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              DataContext="{x:Static design:DesignData.CommunityViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
@@ -23,7 +22,7 @@
                         <Setter Property="FontWeight" Value="Bold" />
                     </Style>
                 </Style>
-                <Style Selector="^ Button Image">
+                <Style Selector="^ Button">
                     <Setter Property="Height" Value="56" />
                 </Style>
                 <Style Selector="^ Button:nth-child(2)">
@@ -41,7 +40,7 @@
                 <Border>
                     <StackPanel>
                         <Panel>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}">
+                            <Button Classes="anycontent" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}">
                                 <Image Source="/Assets/Images/social/discordIco.png" />
                             </Button>
                             <Button Content="Join Discord" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}" />
@@ -53,7 +52,7 @@
                 <Border>
                     <StackPanel>
                         <Grid>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}">
+                            <Button Classes="anycontent" ToolTip.Tip="Follow on Twitter" Command="{Binding TwitterLinkCommand}">
                                 <Image Source="/Assets/Images/social/twitterIco.png" />
                             </Button>
     
@@ -66,7 +65,7 @@
                 <Border>
                     <StackPanel>
                         <Grid>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
+                            <Button Classes="anycontent" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
                                 <Image Source="/Assets/Images/social/redditIco.png" />
                             </Button>
     
@@ -79,7 +78,7 @@
                 <Border>
                     <StackPanel>
                         <Grid>
-                            <Button Classes="anycontent" Margin="0" Height="56" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}">
+                            <Button Classes="anycontent" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}">
                                 <Image Source="/Assets/Images/social/githubIco.png" />
                             </Button>
                             <Button Content="Contribute" ToolTip.Tip="Contribute on GitHub" Command="{Binding GithubLinkCommand}" />
