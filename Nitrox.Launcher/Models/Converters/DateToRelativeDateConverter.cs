@@ -18,11 +18,21 @@ public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter
         switch (value)
         {
             case DateTime dateTime:
-                date = new DateTimeOffset(dateTime);
+                date = dateTime;
                 break;
             case DateTimeOffset dateTimeOffset:
                 date = dateTimeOffset;
                 break;
+            case DateOnly dateOnly:
+                date = dateOnly.ToDateTime(TimeOnly.MinValue);
+                break;
+            case string text:
+                if (DateTimeOffset.TryParse(text, out DateTimeOffset offset))
+                {
+                    date = offset;
+                    break;
+                }
+                goto default;
             default:
                 throw new ArgumentException(nameof(value), $"Value must be a {nameof(DateTime)} or {nameof(DateTimeOffset)}");
         }
