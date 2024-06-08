@@ -8,7 +8,6 @@
                     <Border Background="White" Padding="10" HorizontalAlignment="Center">
                         <ThemeVariantScope RequestedThemeVariant="Light">
                             <Border Margin="0 0 0 110">
-                                <!-- (TODO) The ComboBox item highlight shows correctly in the Previewer, but not in-app. The foreground also looks wrong, but it shows correctly in-app  -->
                                 <ComboBox PlaceholderText="Light" Width="200" HorizontalAlignment="Stretch">
                                     <ComboBoxItem Content="Item 1"/>
                                     <ComboBoxItem Content="Item 2"/>
@@ -20,7 +19,6 @@
                     <Border Background="Black" Padding="10" HorizontalAlignment="Center">
                         <ThemeVariantScope RequestedThemeVariant="Dark">
                             <Border Margin="0 0 0 110">
-                                <!-- The ComboBox item highlight DOESN'T show correctly in the Previewer, but it DOES in-app -->
                                 <ComboBox PlaceholderText="Dark" Width="200" HorizontalAlignment="Stretch">
                                     <ComboBoxItem Content="Item 1"/>
                                     <ComboBoxItem Content="Item 2"/>

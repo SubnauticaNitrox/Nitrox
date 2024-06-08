@@ -168,14 +168,6 @@ public partial class ServerEntry : ObservableObject
 
         public async Task<bool> CloseAsync()
         {
-            // .ContinueWith(t =>
-            // {
-            //     if (t.IsFaulted)
-            //     {
-            //         Log.Error($"Failed to send 'stop' command to server with process id: {serverProcess.Id}");
-            //         LauncherNotifier.Error($"Failed to send 'stop' command to server with process id: {serverProcess.Id}");
-            //     }
-            // })
             try
             {
                 // TODO: Fix the server to always handle stop command, even when it's still starting up.

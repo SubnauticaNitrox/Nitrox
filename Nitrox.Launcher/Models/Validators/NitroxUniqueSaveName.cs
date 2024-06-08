@@ -27,7 +27,10 @@ public sealed class NitroxUniqueSaveName : TypedValidationAttribute<string>
             {
                 foreach (string dir in Directory.EnumerateDirectories(ServersViewModel.SavesFolderDir))
                 {
-                    if (Path.GetFileName(dir).Equals(folderName, StringComparison.Ordinal)) return true;
+                     if (Path.GetFileName(dir).Equals(folderName, StringComparison.Ordinal))
+                     {
+                         return true;
+                     }
                 }
                 return false;
             }

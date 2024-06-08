@@ -28,13 +28,80 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class ManageServerViewModel : RoutableViewModelBase
 {
     private readonly IDialogService dialogService;
-    public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
-    public string OriginalServerName => Server?.Name;
     private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
-    private string serverIconDir;
-    private string serverIconDestinationDir;
 
     private ServerEntry server;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private bool serverAllowCommands;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private bool serverAllowLanDiscovery;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private bool serverAutoPortForward;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyDataErrorInfo]
+    [Range(10, 86400, ErrorMessage = "Value must be between 10s and 24 hours (86400s).")]
+    private int serverAutoSaveInterval;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private Perms serverDefaultPlayerPerm;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private NitroxGameMode serverGameMode;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private Bitmap serverIcon;
+
+    private string serverIconDestinationDir;
+    private string serverIconDir;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [Range(1, 1000)]
+    [NotifyDataErrorInfo]
+    private int serverMaxPlayers;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyDataErrorInfo]
+    [Required]
+    [FileName]
+    [NitroxUniqueSaveName(true, nameof(OriginalServerName))]
+    private string serverName;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private string serverPassword;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private int serverPlayers;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyDataErrorInfo]
+    [Range(ushort.MinValue, ushort.MaxValue)]
+    private int serverPort;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    [NotifyDataErrorInfo]
+    [NitroxWorldSeed]
+    private string serverSeed;
+
+    public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
+    public string OriginalServerName => Server?.Name;
+
     /// <summary>
     ///     When set, navigates to the <see cref="ManageServerView" />.
     /// </summary>
@@ -55,73 +122,55 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         }
     }
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [NotifyDataErrorInfo]
-    [Required]
-    [FileName]
-    [NitroxUniqueSaveName(true, nameof(OriginalServerName))]
-    private string serverName;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private Bitmap serverIcon;
-    
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private string serverPassword;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private NitroxGameMode serverGameMode;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [NotifyDataErrorInfo]
-    [NitroxWorldSeed]
-    private string serverSeed;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private Perms serverDefaultPlayerPerm;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [NotifyDataErrorInfo]
-    [Range(10, 86400, ErrorMessage = "Value must be between 10s and 24 hours (86400s).")]
-    private int serverAutoSaveInterval;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [Range(1, 1000)]
-    [NotifyDataErrorInfo]
-    private int serverMaxPlayers;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private int serverPlayers;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    [NotifyDataErrorInfo]
-    [Range(ushort.MinValue, ushort.MaxValue)]
-    private int serverPort;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private bool serverAutoPortForward;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private bool serverAllowLanDiscovery;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
-    private bool serverAllowCommands;
-
     private bool ServerIsOnline => Server.IsOnline;
 
     private string WorldFolderDirectory => Path.Combine(savesFolderDir, Server.Name);
+
+    public ManageServerViewModel(IScreen screen, IDialogService dialogService) : base(screen)
+    {
+        this.dialogService = dialogService;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
+    public void StartServer()
+    {
+        Server.Start();
+
+        RestoreBackupCommand.NotifyCanExecuteChanged();
+        DeleteServerCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand]
+    public async Task<bool> StopServerAsync()
+    {
+        if (!await Server.StopAsync())
+        {
+            return false;
+        }
+
+        RestoreBackupCommand.NotifyCanExecuteChanged();
+        DeleteServerCommand.NotifyCanExecuteChanged();
+        return true;
+    }
+
+    public void LoadFrom(ServerEntry serverEntry)
+    {
+        Server = serverEntry;
+
+        ServerName = Server.Name;
+        ServerIcon = Server.ServerIcon;
+        ServerPassword = Server.Password;
+        ServerGameMode = Server.GameMode;
+        ServerSeed = Server.Seed;
+        ServerDefaultPlayerPerm = Server.PlayerPermissions;
+        ServerAutoSaveInterval = Server.AutoSaveInterval;
+        ServerMaxPlayers = Server.MaxPlayers;
+        ServerPlayers = Server.Players;
+        ServerPort = Server.Port;
+        ServerAutoPortForward = Server.AutoPortForward;
+        ServerAllowLanDiscovery = Server.AllowLanDiscovery;
+        ServerAllowCommands = Server.AllowCommands;
+    }
 
     private bool HasChanges() => ServerName != Server.Name ||
                                  ServerIcon != Server.ServerIcon ||
@@ -137,40 +186,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
                                  ServerAllowCommands != Server.AllowCommands;
 
-    public ManageServerViewModel(IScreen screen, IDialogService dialogService) : base(screen)
-    {
-        this.dialogService = dialogService;
-    }
-
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     private void Back()
     {
         HostScreen.Back();
     }
 
-    [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    public void StartServer()
-    {
-        Server.Start();
-
-        RestoreBackupCommand.NotifyCanExecuteChanged();
-        DeleteServerCommand.NotifyCanExecuteChanged();
-    }
-
     private bool CanGoBackAndStartServer() => !HasChanges();
-
-    [RelayCommand]
-    public async Task<bool> StopServerAsync()
-    {
-        if (!await Server.StopAsync())
-        {
-            return false;
-        }
-
-        RestoreBackupCommand.NotifyCanExecuteChanged();
-        DeleteServerCommand.NotifyCanExecuteChanged();
-        return true;
-    }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
     private void Save()
@@ -185,7 +207,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             Directory.Move(WorldFolderDirectory, temp.FullName);
             Directory.Move(temp.FullName, newDir);
         }
-        
+
         // Update the servericon.png file if needed
         if (Server.ServerIcon != ServerIcon && serverIconDir != null && serverIconDestinationDir != null)
         {
@@ -214,7 +236,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             if (Server.IsNewServer) { config.Seed = Server.Seed; }
             config.GameMode = Server.GameMode;
             config.DefaultPlayerPerm = Server.PlayerPermissions;
-            config.SaveInterval = Server.AutoSaveInterval*1000;  // Convert seconds to milliseconds
+            config.SaveInterval = Server.AutoSaveInterval * 1000; // Convert seconds to milliseconds
             config.MaxConnections = Server.MaxPlayers;
             config.ServerPort = Server.Port;
             config.AutoPortForward = Server.AutoPortForward;
@@ -266,7 +288,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
             serverIconDir = files[0].TryGetLocalPath();
             serverIconDestinationDir = Path.Combine(WorldFolderDirectory, "servericon.png");
-        
+
             ServerIcon = new(serverIconDir);
         }
         catch (Exception ex)
@@ -274,7 +296,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             Log.Error(ex);
         }
     }
-    
+
     [RelayCommand]
     private void OpenAdvancedSettings()
     {
@@ -316,25 +338,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;
-
-    public void LoadFrom(ServerEntry serverEntry)
-    {
-        Server = serverEntry;
-
-        ServerName = Server.Name;
-        ServerIcon = Server.ServerIcon;
-        ServerPassword = Server.Password;
-        ServerGameMode = Server.GameMode;
-        ServerSeed = Server.Seed;
-        ServerDefaultPlayerPerm = Server.PlayerPermissions;
-        ServerAutoSaveInterval = Server.AutoSaveInterval;
-        ServerMaxPlayers = Server.MaxPlayers;
-        ServerPlayers = Server.Players;
-        ServerPort = Server.Port;
-        ServerAutoPortForward = Server.AutoPortForward;
-        ServerAllowLanDiscovery = Server.AllowLanDiscovery;
-        ServerAllowCommands = Server.AllowCommands;
-    }
 
     private void Server_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
