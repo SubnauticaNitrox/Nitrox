@@ -5,7 +5,6 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Notifications;
 using Avalonia.Data.Converters;
-using Nitrox.Launcher.Models.Extensions;
 
 namespace Nitrox.Launcher.Models.Converters;
 

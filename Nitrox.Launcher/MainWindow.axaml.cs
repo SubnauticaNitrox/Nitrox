@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
@@ -16,10 +17,12 @@ namespace Nitrox.Launcher;
 
 public partial class MainWindow : WindowBase<MainWindowViewModel>
 {
+    private readonly IDialogService dialogService;
     private readonly HashSet<Exception> handledExceptions = [];
 
-    public MainWindow()
+    public MainWindow(IDialogService dialogService)
     {
+        this.dialogService = dialogService;
         // Handle thrown exceptions so they aren't hidden.
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
@@ -79,7 +82,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            await ViewModel?.ShowDialogAsync<ErrorViewModel>(vm => vm.Exception = ex)!;
+            await dialogService?.ShowAsync<ErrorViewModel>(vm => vm.Exception = ex)!;
         });
     }
 

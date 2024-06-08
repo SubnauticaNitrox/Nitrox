@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using LitJson;
 using Nitrox.Launcher.Models.Design;
-using Nitrox.Launcher.Models.Extensions;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher.Models.Utils;

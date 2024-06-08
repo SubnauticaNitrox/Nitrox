@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia.Collections;
 using Avalonia.Threading;
@@ -18,12 +17,12 @@ public partial class BlogViewModel : RoutableViewModelBase
     [ObservableProperty]
     private AvaloniaList<NitroxBlog> nitroxBlogs = [];
 
-    public BlogViewModel(IScreen hostScreen, NitroxBlog[] blogs) : base(hostScreen)
+    public BlogViewModel(IScreen screen, NitroxBlog[] blogs) : base(screen)
     {
         nitroxBlogs.AddRange(blogs);
     }
 
-    public BlogViewModel(IScreen hostScreen) : base(hostScreen)
+    public BlogViewModel(IScreen screen) : base(screen)
     {
         Dispatcher.UIThread.Invoke(async () =>
         {

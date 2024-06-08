@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              DataContext="{x:Static design:DesignData.OptionsViewModel}"
@@ -46,7 +45,7 @@
                         </StackPanel>
                         <Button Grid.Column="2" Classes="primary"  ToolTip.Tip="Direct the launcher to your game's install location"
                                 Width="120" HorizontalAlignment="Right" Margin="22 0 0 0" Content="Change"
-                                Command="{Binding ChangePathCommand}" />
+                                Command="{Binding SetGamePathCommand}" />
                     </Grid>
                     <!--ItemsControl ItemsSource="{Binding KnownGames}">
                         <ItemsControl.ItemTemplate>
@@ -85,7 +84,7 @@
                     <Grid ColumnDefinitions="*, Auto, Auto">
                         
                         <Border  CornerRadius="7">
-                            <Grid Grid.ColumnDefinitions="*, Auto">
+                            <Grid ColumnDefinitions="*, Auto">
                                 <TextBox Height="46"
                                          Padding="13,5" FontSize="15" MaxLines="1"
                                          Foreground="White" TextAlignment="Left"
@@ -121,7 +120,7 @@
                         </Button>
     
                         <Button Grid.Column="2" Classes="primary" ToolTip.Tip="Save launch arguments" Content="Apply"
-                                Width="120" HorizontalAlignment="Right" Command="{Binding ChangeArgumentsCommand}" />
+                                Width="120" HorizontalAlignment="Right" Command="{Binding SetArgumentsCommand}" />
                     </Grid>
                 </Border>
     
@@ -135,7 +134,7 @@
                 <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
                     <Grid ColumnDefinitions="*,Auto">
                         <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderDir}" />
-                        <Button Grid.Column="1" HorizontalAlignment="Right" Classes="primary" Command="{Binding ViewFolderCommand}"
+                        <Button Grid.Column="1" HorizontalAlignment="Right" Classes="primary" Command="{Binding OpenSavesFolderCommand}"
                                 ToolTip.Tip="Open saves folder" Content="Open"
                                 Width="120" Margin="22 0 0 0"/>
                     </Grid>

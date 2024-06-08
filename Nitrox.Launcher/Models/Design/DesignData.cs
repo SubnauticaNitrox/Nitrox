@@ -19,11 +19,11 @@ public static class DesignData
             return;
         }
 
-        MainWindowViewModel = new(null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
+        MainWindowViewModel = new(null, null, null, null, null, null, null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
         
-        LaunchGameViewModel = new(null);
+        LaunchGameViewModel = new(null, null);
         
-        ManageServerViewModel = new(null) { ServerName = "My fun server" };
+        ManageServerViewModel = new(null, null) { ServerName = "My fun server" };
         
         CreateServerViewModel = new() { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };
         
@@ -42,30 +42,6 @@ public static class DesignData
                 PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
                 Platform = Platform.STEAM
             }
-            
-            //KnownGames =
-            //[
-            //    new OptionsViewModel.KnownGame
-            //    {
-            //        PathToGame = @"C:\Games\Steam\steamapps\common\Subnautica",
-            //        Platform = Platform.STEAM
-            //    },
-            //    new OptionsViewModel.KnownGame
-            //    {
-            //        PathToGame = @"C:\Games\Epic\Subnautica",
-            //        Platform = Platform.EPIC
-            //    },
-            //    new OptionsViewModel.KnownGame
-            //    {
-            //        PathToGame = @"C:\Games\Discord\Subnautica",
-            //        Platform = Platform.DISCORD
-            //    },
-            //    new OptionsViewModel.KnownGame
-            //    {
-            //        PathToGame = @"C:\Gamepass\Subnautica",
-            //        Platform = Platform.MICROSOFT
-            //    }
-            //]
         };
         
         ConfirmationBoxViewModel = new() { ConfirmationText = "Confirmation Text" };

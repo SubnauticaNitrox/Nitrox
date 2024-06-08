@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
@@ -21,40 +25,62 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class ServersViewModel : RoutableViewModelBase
 {
     public static readonly string SavesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+    private readonly IDialogService dialogService;
+    private readonly ManageServerViewModel manageServerViewModel;
+    private CancellationTokenSource serverRefreshCts;
 
     [ObservableProperty]
     private AvaloniaList<ServerEntry> servers = [];
 
+    private bool shouldRefreshServersList;
+
     private FileSystemWatcher watcher;
 
-    public ServersViewModel(IScreen hostScreen) : base(hostScreen)
+    public ServersViewModel(IScreen screen, IDialogService dialogService, ManageServerViewModel manageServerViewModel) : base(screen)
     {
-        WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
-        {
-            if (message.PropertyName == nameof(ServerEntry.IsOnline))
-            {
-                ManageServerCommand.NotifyCanExecuteChanged();
-            }
-        });
-        WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
-        {
-            for (int i = Servers.Count - 1; i >= 0; i--)
-            {
-                if (Servers[i].Name == message.SaveName)
-                {
-                    Servers.RemoveAt(i);
-                }
-            }
-        });
+        this.dialogService = dialogService;
+        this.manageServerViewModel = manageServerViewModel;
 
-        GetSavesOnDisk();
-        InitializeWatcher();
+        this.WhenActivated(disposables =>
+        {
+            // Activation
+            serverRefreshCts = new();
+            WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
+            {
+                if (message.PropertyName == nameof(ServerEntry.IsOnline))
+                {
+                    ManageServerCommand.NotifyCanExecuteChanged();
+                }
+            });
+            WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
+            {
+                for (int i = Servers.Count - 1; i >= 0; i--)
+                {
+                    if (Servers[i].Name == message.SaveName)
+                    {
+                        Servers.RemoveAt(i);
+                    }
+                }
+            });
+            GetSavesOnDisk();
+            InitializeWatcher();
+
+            // Deactivation
+            Disposable
+                .Create(this, vm =>
+                {
+                    WeakReferenceMessenger.Default.UnregisterAll(vm);
+                    vm.watcher?.Dispose();
+                    vm.serverRefreshCts.Cancel();
+                })
+                .DisposeWith(disposables);
+        });
     }
 
     [RelayCommand]
     public async Task CreateServer()
     {
-        CreateServerViewModel result = await MainViewModel.ShowDialogAsync<CreateServerViewModel>();
+        CreateServerViewModel result = await dialogService.ShowAsync<CreateServerViewModel>();
         if (result == null)
         {
             return;
@@ -66,25 +92,14 @@ public partial class ServersViewModel : RoutableViewModelBase
     [RelayCommand]
     public void ManageServer(ServerEntry server)
     {
-        ManageServerViewModel viewModel = AppViewLocator.GetSharedViewModel<ManageServerViewModel>();
-        viewModel.LoadFrom(server);
-        MainViewModel.Router.Navigate.Execute(viewModel);
-    }
-
-    private void AddServer(string name, NitroxGameMode gameMode)
-    {
-        Servers.Insert(0, new ServerEntry
-        {
-            Name = name,
-            GameMode = gameMode,
-            Seed = ""
-        });
+        manageServerViewModel.LoadFrom(server);
+        HostScreen.Show(manageServerViewModel);
     }
 
     public void GetSavesOnDisk()
     {
         List<ServerEntry> serversOnDisk = [];
-        
+
         foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
         {
             // Don't add the file to the list if it doesn't validate
@@ -95,18 +110,18 @@ public partial class ServersViewModel : RoutableViewModelBase
 
             string saveName = Path.GetFileName(folder);
             string saveDir = Path.Combine(SavesFolderDir, saveName);
-            
+
             Bitmap serverIcon = null;
             string serverIconPath = Path.Combine(saveDir, "servericon.png");
             if (File.Exists(serverIconPath))
             {
                 serverIcon = new(Path.Combine(saveDir, "servericon.png"));
             }
-            
+
             SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
             string fileEnding = "json";
             if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
-            
+
             ServerEntry entry = new()
             {
                 Name = saveName,
@@ -122,20 +137,22 @@ public partial class ServersViewModel : RoutableViewModelBase
                 AllowLanDiscovery = server.LANDiscoveryEnabled,
                 AllowCommands = !server.DisableConsole,
                 IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
-                LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}")) ?
+                LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}"))
+                                                             ?
                                                              // This file is affected by server saving
-                                                             Path.Combine(folder, $"WorldData.{fileEnding}") :
+                                                             Path.Combine(folder, $"WorldData.{fileEnding}")
+                                                             :
                                                              // If the above file doesn't exist (server was never ran), use the Version file instead
                                                              Path.Combine(folder, $"Version.{fileEnding}"))
             };
-            
+
             serversOnDisk.Add(entry);
         }
-        
+
         // Remove any servers from the Servers list that are not found in the saves folder
         for (int i = Servers.Count - 1; i >= 0; i--)
         {
-            if (!serversOnDisk.Any(s => s.Name == Servers[i].Name))
+            if (serversOnDisk.All(s => s.Name != Servers[i].Name))
             {
                 Servers.RemoveAt(i);
             }
@@ -144,7 +161,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         // Add any new servers found on the disk to the Servers list
         foreach (ServerEntry server in serversOnDisk)
         {
-            if (!Servers.Any(s => s.Name == server.Name))
+            if (Servers.All(s => s.Name != server.Name))
             {
                 Servers.Add(server);
             }
@@ -152,7 +169,17 @@ public partial class ServersViewModel : RoutableViewModelBase
 
         Servers = new AvaloniaList<ServerEntry>(Servers.OrderByDescending(entry => entry.LastAccessedTime));
     }
-    
+
+    private void AddServer(string name, NitroxGameMode gameMode)
+    {
+        Servers.Insert(0, new ServerEntry
+        {
+            Name = name,
+            GameMode = gameMode,
+            Seed = ""
+        });
+    }
+
     private void InitializeWatcher()
     {
         watcher = new FileSystemWatcher
@@ -162,17 +189,41 @@ public partial class ServersViewModel : RoutableViewModelBase
             Filter = "*.*",
             IncludeSubdirectories = true
         };
-
         watcher.Changed += OnDirectoryChanged;
         watcher.Created += OnDirectoryChanged;
         watcher.Deleted += OnDirectoryChanged;
         watcher.Renamed += OnDirectoryChanged;
-
         watcher.EnableRaisingEvents = true;
+
+        Task.Run(async () =>
+        {
+            while (!serverRefreshCts.IsCancellationRequested)
+            {
+                while (shouldRefreshServersList)
+                {
+                    try
+                    {
+                        GetSavesOnDisk();
+                        shouldRefreshServersList = false;
+                    }
+                    catch (IOException)
+                    {
+                        await Task.Delay(500);
+                    }
+                }
+                await Task.Delay(1000);
+            }
+        }).ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+            {
+                LauncherNotifier.Error(t.Exception.Message);
+            }
+        });
     }
 
     private void OnDirectoryChanged(object sender, FileSystemEventArgs e)
     {
-        GetSavesOnDisk();
+        shouldRefreshServersList = true;
     }
 }

@@ -31,7 +31,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     [ObservableProperty]
     private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
 
-    public UpdatesViewModel(IScreen hostScreen) : base(hostScreen)
+    public UpdatesViewModel(IScreen screen) : base(screen)
     {
         Dispatcher.UIThread.Invoke(async () =>
         {

@@ -7,7 +7,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class CommunityViewModel : RoutableViewModelBase
 {
-    public CommunityViewModel(IScreen hostScreen) : base(hostScreen)
+    public CommunityViewModel(IScreen screen) : base(screen)
     {
     }
     

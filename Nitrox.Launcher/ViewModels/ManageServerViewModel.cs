@@ -10,6 +10,7 @@ using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
@@ -26,6 +27,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class ManageServerViewModel : RoutableViewModelBase
 {
+    private readonly IDialogService dialogService;
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string OriginalServerName => Server?.Name;
     private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
@@ -135,14 +137,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
                                  ServerAllowCommands != Server.AllowCommands;
 
-    public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
+    public ManageServerViewModel(IScreen screen, IDialogService dialogService) : base(screen)
     {
+        this.dialogService = dialogService;
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     private void Back()
     {
-        Router.NavigateBack.Execute();
+        HostScreen.Back();
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
@@ -298,7 +301,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
     private async Task DeleteServer()
     {
-        ConfirmationBoxViewModel modalViewModel = await MainViewModel.ShowDialogAsync<ConfirmationBoxViewModel, string>(static (model, serverName) =>
+        ConfirmationBoxViewModel modalViewModel = await dialogService.ShowAsync<ConfirmationBoxViewModel, string>(static (model, serverName) =>
         {
             model.ConfirmationText = $"Are you sure you want to delete the server '{serverName}'?";
         }, ServerName);
@@ -309,7 +312,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
         Directory.Delete(WorldFolderDirectory, true);
         WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
-        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<ServersViewModel>());
+        HostScreen.Back();
     }
 
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;

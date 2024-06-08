@@ -242,7 +242,7 @@
                                     </StackPanel>
                                 </Button>
                             </Border>
-                            <Button Command="{Binding DeleteServerCommand}" Classes="icon" Foreground="#ec1c24">
+                            <Button Command="{Binding DeleteServerCommand}" HotKey="Delete" Classes="icon" Foreground="#ec1c24">
                                 <StackPanel>
                                     <Image Source="/Assets/Images/world-manager/delete-2x.png" />
                                     <TextBlock Text="Delete server" />

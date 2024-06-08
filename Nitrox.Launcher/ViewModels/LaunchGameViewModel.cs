@@ -24,6 +24,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class LaunchGameViewModel : RoutableViewModelBase
 {
+    private readonly OptionsViewModel optionsViewModel;
     public static Task<string> LastFindSubnauticaTask;
 
     [ObservableProperty]
@@ -35,8 +36,9 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", "-vrmode none");
 
-    public LaunchGameViewModel(IScreen hostScreen) : base(hostScreen)
+    public LaunchGameViewModel(IScreen screen, OptionsViewModel optionsViewModel) : base(screen)
     {
+        this.optionsViewModel = optionsViewModel;
         foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
         {
             GalleryImageSources.Add(asset.LocalPath);
@@ -50,7 +52,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
             {
-                Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<OptionsViewModel>());
+                HostScreen.Show(optionsViewModel);
                 throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
             }
 
@@ -75,7 +77,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     {
         if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
         {
-            Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<OptionsViewModel>());
+            HostScreen.Show(optionsViewModel);
             throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
         }
 

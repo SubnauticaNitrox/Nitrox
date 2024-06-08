@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Collections;
@@ -7,7 +6,6 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
@@ -18,21 +16,39 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase, IScreen
+public partial class MainWindowViewModel : ViewModelBase
 {
-    private readonly IDialogService dialogService;
-    public RoutingState Router { get; } = new();
-    public ICommand DefaultViewCommand { get; }
+    private readonly BlogViewModel blogViewModel;
+    private readonly CommunityViewModel communityViewModel;
+    private readonly LaunchGameViewModel launchGameViewModel;
+    private readonly OptionsViewModel optionsViewModel;
+    private readonly IScreen screen;
+    private readonly ServersViewModel serversViewModel;
+    private readonly UpdatesViewModel updatesViewModel;
+
     [ObservableProperty]
     private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
+
     [ObservableProperty]
     private bool updateAvailableOrUnofficial;
 
+    public ICommand DefaultViewCommand { get; }
+
     public AvaloniaList<NotificationItem> Notifications { get; init; }
 
-    public MainWindowViewModel(IDialogService dialogService, IList<NotificationItem> notifications = null)
+    public RoutingState Router => screen.Router;
+
+    public MainWindowViewModel(IScreen screen, LaunchGameViewModel launchGameViewModel, ServersViewModel serversViewModel, CommunityViewModel communityViewModel, BlogViewModel blogViewModel, UpdatesViewModel updatesViewModel,
+                               OptionsViewModel optionsViewModel,
+                               IList<NotificationItem> notifications = null)
     {
-        this.dialogService = dialogService;
+        this.screen = screen;
+        this.launchGameViewModel = launchGameViewModel;
+        this.serversViewModel = serversViewModel;
+        this.communityViewModel = communityViewModel;
+        this.blogViewModel = blogViewModel;
+        this.updatesViewModel = updatesViewModel;
+        this.optionsViewModel = optionsViewModel;
 
         DefaultViewCommand = OpenLaunchGameViewCommand;
         Notifications = notifications == null ? [] : [..notifications];
@@ -55,7 +71,7 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
                 Notifications.Remove(message.Item);
             }
         });
-        
+
         if (!NitroxEnvironment.IsReleaseMode)
         {
             LauncherNotifier.Info("You're now using Nitrox DEV build");
@@ -75,37 +91,37 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
     [RelayCommand]
     public void OpenLaunchGameView()
     {
-        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<LaunchGameViewModel>());
+        screen.Show(launchGameViewModel);
     }
 
     [RelayCommand]
     public void OpenServersView()
     {
-        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<ServersViewModel>());
+        screen.Show(serversViewModel);
     }
 
     [RelayCommand]
     public void OpenCommunityView()
     {
-        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<CommunityViewModel>());
+        screen.Show(communityViewModel);
     }
 
     [RelayCommand]
     public void OpenBlogView()
     {
-        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<BlogViewModel>());
+        screen.Show(blogViewModel);
     }
 
     [RelayCommand]
     public void OpenUpdatesView()
     {
-        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<UpdatesViewModel>());
+        screen.Show(updatesViewModel);
     }
 
     [RelayCommand]
     public void OpenOptionsView()
     {
-        Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<OptionsViewModel>());
+        screen.Show(optionsViewModel);
     }
 
     [RelayCommand]
@@ -134,20 +150,4 @@ public partial class MainWindowViewModel : ViewModelBase, IScreen
             MaximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
         }
     }
-
-    public async Task<T> ShowDialogAsync<T, TExtra>(Action<T, TExtra> setup = null, TExtra extraParameter = default) where T : ModalViewModelBase
-    {
-        ArgumentNullException.ThrowIfNull(dialogService);
-
-        T viewModel = dialogService.CreateViewModel<T>();
-        setup?.Invoke(viewModel, extraParameter);
-        bool? result = await dialogService.ShowDialogAsync<T>(this, viewModel);
-        if (result == true)
-        {
-            return viewModel;
-        }
-        return default;
-    }
-
-    public Task<T> ShowDialogAsync<T>(Action<T> setup = null) where T : ModalViewModelBase => ShowDialogAsync<T,Action<T>>((model, act) => act?.Invoke(model), setup);
 }

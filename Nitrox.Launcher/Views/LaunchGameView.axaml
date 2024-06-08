@@ -40,7 +40,7 @@
                                     <Image HorizontalAlignment="Right" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}}" ToolTip.Tip="{Binding PlatformToolTip}" Width="19"
                                            Height="19" Margin="3 0" />
                                 </Grid>
-                                <Button Classes="big primary" Command="{Binding StartMultiplayerCommand}" ToolTip.Tip="Launch Subnautica with multiplayer enabled" HorizontalAlignment="Stretch">
+                                <Button Classes="big primary" Command="{Binding StartMultiplayerCommand}" design:NitroxAttached.Focus="" ToolTip.Tip="Launch Subnautica with multiplayer enabled" HorizontalAlignment="Stretch">
                                     <StackPanel>
                                         <TextBlock Text="PLAY" />
                                         <TextBlock Text="MULTIPLAYER" />

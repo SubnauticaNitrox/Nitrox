@@ -5,7 +5,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class LibraryViewModel : RoutableViewModelBase
 {
-    public LibraryViewModel(IScreen hostScreen) : base(hostScreen)
+    public LibraryViewModel(IScreen screen) : base(screen)
     {
     }
 }

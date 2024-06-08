@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -21,81 +20,32 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class OptionsViewModel : RoutableViewModelBase
 {
-    //public AvaloniaList<KnownGame> KnownGames { get; init; }
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
+    private string launchArgs;
 
     [ObservableProperty]
     private string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
-    
-    private static string DefaultLaunchArg => "-vrmode none";
-    
+
     [ObservableProperty]
     private KnownGame selectedGame;
-    
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ChangeArgumentsCommand))]
-    private string launchArgs;
-    
+
     [ObservableProperty]
     private bool showResetArgsBtn;
-    
-    public OptionsViewModel(IScreen hostScreen) : base(hostScreen)
-    {
-        SelectedGame = new()
-        {
-            PathToGame = NitroxUser.GamePath,
-            Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE
-        };
-        //KnownGames =
-        //[
-        //    new()
-        //    {
-        //        PathToGame = NitroxUser.GamePath,
-        //        Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE
-        //    }
-        //];
 
-        LaunchArgs = KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", DefaultLaunchArg);
+    private static string DefaultLaunchArg => "-vrmode none";
+
+    public OptionsViewModel(IScreen screen) : base(screen)
+    {
+        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        LaunchArgs = KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", DefaultLaunchArg);
     }
 
-    [RelayCommand]
-    private async Task ChangePath()
-    {
-        // TODO: Maybe use Window.StorageProvider API instead of OpenFileDialog
-        OpenFolderDialog dialog = new()
-        {
-            Title = "Select Subnautica installation directory",
-            Directory = new(SelectedGame.PathToGame)
-        };
-        string selectedDirectory = await dialog.ShowAsync(MainWindow) ?? "";
-        
-        if (selectedDirectory == "")
-        {
-            return;
-        }
-        
-        if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
-        {
-            LauncherNotifier.Error("Invalid subnautica directory");
-            return;
-        }
-        
-        if (selectedDirectory != SelectedGame.PathToGame)
-        {
-            await SetTargetedSubnauticaPath(selectedDirectory);
-            LauncherNotifier.Success("Applied changes");
-        }
-    }
-
-    //[RelayCommand]
-    //private void AddGameInstallation()
-    //{
-    //}
-
-    public async Task<string> SetTargetedSubnauticaPath(string path)
+    public async Task SetTargetedSubnauticaPath(string path)
     {
         if ((string.IsNullOrWhiteSpace(NitroxUser.GamePath) && NitroxUser.GamePath == path) || !Directory.Exists(path))
         {
-            return null;
+            return;
         }
 
         NitroxUser.GamePath = path;
@@ -121,10 +71,10 @@ public partial class OptionsViewModel : RoutableViewModelBase
                     }, DispatcherPriority.ApplicationIdle);
                 }
             }
-            
+
             // Save game path as preferred for future sessions.
             NitroxUser.PreferredGamePath = path;
-            
+
             if (NitroxEntryPatch.IsPatchApplied(NitroxUser.GamePath))
             {
                 NitroxEntryPatch.Remove(NitroxUser.GamePath);
@@ -138,32 +88,55 @@ public partial class OptionsViewModel : RoutableViewModelBase
             return path;
         }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
-        return await LaunchGameViewModel.LastFindSubnauticaTask;
+        await LaunchGameViewModel.LastFindSubnauticaTask;
     }
-    
+
+    [RelayCommand]
+    private async Task SetGamePath()
+    {
+        string selectedDirectory = await MainWindow.StorageProvider.OpenFolderPickerAsync("Select Subnautica installation directory", SelectedGame.PathToGame);
+        if (selectedDirectory == "")
+        {
+            return;
+        }
+
+        if (!GameInstallationHelper.HasGameExecutable(selectedDirectory, GameInfo.Subnautica))
+        {
+            LauncherNotifier.Error("Invalid subnautica directory");
+            return;
+        }
+
+        if (selectedDirectory != SelectedGame.PathToGame)
+        {
+            await SetTargetedSubnauticaPath(selectedDirectory);
+            LauncherNotifier.Success("Applied changes");
+        }
+    }
+
     [RelayCommand]
     private void ResetArguments()
     {
         LaunchArgs = DefaultLaunchArg;
         ShowResetArgsBtn = false;
-        ChangeArgumentsCommand.NotifyCanExecuteChanged();
+        SetArgumentsCommand.NotifyCanExecuteChanged();
     }
-    
-    [RelayCommand(CanExecute = nameof(CanChangeArguments))]
-    private void ChangeArguments()
+
+    [RelayCommand(CanExecute = nameof(CanSetArguments))]
+    private void SetArguments()
     {
         KeyValueStore.Instance.SetValue("SubnauticaLaunchArguments", LaunchArgs);
-        ChangeArgumentsCommand.NotifyCanExecuteChanged();
+        SetArgumentsCommand.NotifyCanExecuteChanged();
     }
-    private bool CanChangeArguments()
+
+    private bool CanSetArguments()
     {
         ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
-        return LaunchArgs != KeyValueStore.Instance.GetValue<string>("SubnauticaLaunchArguments", DefaultLaunchArg);
+        return LaunchArgs != KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", DefaultLaunchArg);
     }
 
     [RelayCommand]
-    private void ViewFolder()
+    private void OpenSavesFolder()
     {
         Process.Start(new ProcessStartInfo
         {
@@ -172,7 +145,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
             UseShellExecute = true
         })?.Dispose();
     }
-    
+
     public class KnownGame
     {
         public string PathToGame { get; init; }

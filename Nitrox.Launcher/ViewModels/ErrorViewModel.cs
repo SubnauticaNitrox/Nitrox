@@ -17,11 +17,6 @@ public partial class ErrorViewModel : ModalViewModelBase
     public KeyGesture OkHotkey { get; } = new(Key.Return);
     public KeyGesture CopyToClipboardHotkey { get; } = new(Key.C, KeyModifiers.Control);
 
-    public ErrorViewModel(Exception exception)
-    {
-        Exception = exception;
-    }
-
     [RelayCommand]
     private async Task CopyToClipboard()
     {

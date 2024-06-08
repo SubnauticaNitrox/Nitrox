@@ -1,23 +1,28 @@
 using System;
-using System.Collections.Concurrent;
-using System.Reflection;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Avalonia;
+using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Launcher.ViewModels;
-using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using ReactiveUI;
 
 namespace Nitrox.Launcher;
 
-internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
+public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
 {
-    private static readonly ConcurrentDictionary<Type, RoutableViewModelBase> viewModelCache = new();
-    private static MainWindow mainWindow;
-    public static Lazy<AppViewLocator> Instance { get; } = new(new AppViewLocator());
+    private static IServiceProvider serviceProvider;
 
+    public AppViewLocator(IServiceProvider serviceProvider)
+    {
+        if (serviceProvider is IServiceScope)
+        {
+            AppViewLocator.serviceProvider = serviceProvider;
+        }
+    }
+
+    private static MainWindow mainWindow;
     public static MainWindow MainWindow
     {
         get
@@ -56,20 +61,7 @@ internal sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
 
         // If the view type is the same as last time, return the same instance.
         Type newView = GetViewType(viewModel);
-        return new ViewDefinition(newView, () => Activator.CreateInstance(newView));
-    }
-
-    public static TViewModel GetSharedViewModel<TViewModel>() where TViewModel : RoutableViewModelBase
-    {
-        Type key = typeof(TViewModel);
-        if (viewModelCache.TryGetValue(key, out RoutableViewModelBase vm))
-        {
-            return (TViewModel)vm;
-        }
-
-        TViewModel viewModel = (TViewModel)key.GetConstructor(BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, [typeof(IScreen)])!.Invoke([MainWindow.ViewModel]);
-        viewModelCache.TryAdd(typeof(TViewModel), viewModel);
-        return viewModel;
+        return new ViewDefinition(newView, () => serviceProvider.GetRequiredService(newView));
     }
 
     public IViewFor ResolveView<T>(T viewModel, string contract = null) => (IViewFor)Locate(viewModel).Create();
