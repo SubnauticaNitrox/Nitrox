@@ -6,7 +6,9 @@ using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
+using Avalonia.Input;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -78,14 +80,16 @@ public partial class ServersViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    public async Task CreateServer()
+    public async Task CreateServer(IInputElement focusTargetOnClose = null)
     {
         CreateServerViewModel result = await dialogService.ShowAsync<CreateServerViewModel>();
         if (result == null)
         {
+            Dispatcher.UIThread.Post(() => focusTargetOnClose?.Focus());
             return;
         }
 
+        Dispatcher.UIThread.Post(() => focusTargetOnClose?.Focus());
         AddServer(result.Name, result.SelectedGameMode);
     }
 

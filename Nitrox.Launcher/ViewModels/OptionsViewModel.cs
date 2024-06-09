@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -114,11 +115,12 @@ public partial class OptionsViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void ResetArguments()
+    private void ResetArguments(IInputElement focusTargetAfterReset = null)
     {
         LaunchArgs = DefaultLaunchArg;
         ShowResetArgsBtn = false;
         SetArgumentsCommand.NotifyCanExecuteChanged();
+        focusTargetAfterReset?.Focus();
     }
 
     [RelayCommand(CanExecute = nameof(CanSetArguments))]

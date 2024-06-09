@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-        xmlns:launcher="clr-namespace:Nitrox.Launcher"
         xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"

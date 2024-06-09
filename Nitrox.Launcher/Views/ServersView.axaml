@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
-             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
              x:Class="Nitrox.Launcher.Views.ServersView"
@@ -15,7 +14,7 @@
                     <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
                     <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world.</TextBlock>
     
-                    <Button design:NitroxAttached.Focus="" Classes="primary big" Command="{Binding CreateServerCommand}" Width="350" Margin="0 40 0 0" HorizontalAlignment="Center">
+                    <Button Classes="primary big" Command="{Binding CreateServerCommand}" HotKey="Enter" Width="350" Margin="0 40 0 0" HorizontalAlignment="Center">
                         <StackPanel>
                             <TextBlock Text="CREATE NEW SERVER" />
                             <TextBlock Text="MULTIPLAYER" />
@@ -93,7 +92,7 @@
                     </ItemsControl>
                 </ScrollViewer>
                 <Border Grid.Row="3" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-                    <Button Classes="primary big" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Height="48" Content="CREATE NEW SERVER"
+                    <Button x:Name="CreateServerBtn" Classes="primary big" HotKey="Enter" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Content="CREATE NEW SERVER"
                             Command="{Binding CreateServerCommand}" />
                 </Border>
             </Grid>

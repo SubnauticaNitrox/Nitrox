@@ -24,11 +24,11 @@ public static class ServiceCollectionExtensions
                                                     provider.GetRequiredService));
 
         // Dialog ViewModels and Dialog Views
-        collection.AddSingleton<CreateServerViewModel>();
+        collection.AddTransient<CreateServerViewModel>();
         collection.AddTransient<CreateServerModal>();
-        collection.AddSingleton<ConfirmationBoxViewModel>();
+        collection.AddTransient<ConfirmationBoxViewModel>();
         collection.AddTransient<ConfirmationBoxModal>();
-        collection.AddSingleton<ErrorViewModel>();
+        collection.AddTransient<ErrorViewModel>();
         collection.AddTransient<ErrorModal>();
 
         // Views

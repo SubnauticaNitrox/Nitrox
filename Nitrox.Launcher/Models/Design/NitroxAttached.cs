@@ -1,7 +1,5 @@
 using System;
-using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -13,42 +11,31 @@ namespace Nitrox.Launcher.Models.Design;
 /// </summary>
 public class NitroxAttached : AvaloniaObject
 {
-    public static readonly AttachedProperty<object> FocusProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, object>("Focus");
     public static readonly AttachedProperty<bool> SelectedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, bool>("Selected");
 
     static NitroxAttached()
     {
     }
     
-    public static object GetFocus(AvaloniaObject obj) => obj.GetValue(FocusProperty);
-
     /// <summary>
     ///     Sets the focus to this control when view is loaded.
     /// </summary>
     public static void SetFocus(AvaloniaObject obj, object value)
     {
-        static async void TryFocusButton(Button btn)
+        static void VisualOnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
-            int retries = 200;
-            do
-            {
-                btn.Focus();
-                await Task.Delay(10);
-            } while (!btn.IsFocused && retries-- > 0);
+            (sender as IInputElement)?.Focus();
         }
 
         switch (obj)
         {
-            case Button button:
-                Dispatcher.UIThread.Post(() => TryFocusButton(button));
-                break;
-            case IInputElement input:
-                Dispatcher.UIThread.Post(() => input.Focus());
+            case Visual visual when visual is IInputElement:
+                Dispatcher.UIThread.Post(() => (visual as IInputElement)?.Focus());
+                visual.AttachedToVisualTree += VisualOnAttachedToVisualTree;
                 break;
             default:
-                throw new NotSupportedException($@"Element {obj} must be a {nameof(Button)} or {nameof(IInputElement)} to support attached property ""{nameof(FocusProperty)}""");
+                throw new NotSupportedException($@"Element {obj} must be an {nameof(IInputElement)} to support ""{nameof(SetFocus)}""");
         }
-        obj.SetValue(FocusProperty, value);
     }
 
     public static bool GetSelected(AvaloniaObject element) => element.GetValue(SelectedProperty);
