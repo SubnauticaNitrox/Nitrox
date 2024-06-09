@@ -147,16 +147,11 @@
             <Setter Property="Height" Value="18" />
         </Style>
 
-        <Style Selector="^:pointerover">
-            <Style Selector="^ /template/ ContentPresenter">
-                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Opacity" Value="1" /> <!-- undo opacity from normal button behavior -->
-            </Style>
-
-            <Style Selector="^ TextBlock">
-                <Setter Property="TextDecorations" Value="Underline" />
-            </Style>
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Opacity" Value="1" /> <!-- undo opacity from normal button behavior -->
+            <Setter Property="TextBlock.TextDecorations" Value="Underline" />
         </Style>
 
         <Style Selector="^:disabled /template/ ContentPresenter">

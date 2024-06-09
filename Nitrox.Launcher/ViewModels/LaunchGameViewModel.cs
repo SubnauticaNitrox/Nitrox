@@ -56,7 +56,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
             }
 
-#if RELEASE
+#if RELEASE // This error is not handled correctly. TODO: Fix this
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
                 throw new Exception("An instance of Subnautica is already running");
