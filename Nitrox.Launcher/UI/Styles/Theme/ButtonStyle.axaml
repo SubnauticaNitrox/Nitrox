@@ -148,11 +148,6 @@
         </Style>
 
         <Style Selector="^:pointerover">
-            <Setter Property="Effect">
-                <!-- TODO: Figure out how to dynamically bind color property to change with active theme  -->
-                <DropShadowDirectionEffect Color="White" BlurRadius="20" ShadowDepth="0" />
-            </Setter>
-
             <Style Selector="^ /template/ ContentPresenter">
                 <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
                 <Setter Property="Cursor" Value="Hand"/>
