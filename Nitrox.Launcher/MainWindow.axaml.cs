@@ -71,8 +71,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         // Restore default window animations for Windows OS
         if (!Design.IsDesignMode)
         {
-            IntPtr windowHandle = GetTopLevel(this).TryGetPlatformHandle().Handle;
-            WindowsApi.EnableDefaultWindowAnimations(windowHandle);
+            IntPtr? windowHandle = GetTopLevel(this)?.TryGetPlatformHandle()?.Handle;
+            if (windowHandle.HasValue)
+            {
+                WindowsApi.EnableDefaultWindowAnimations(windowHandle.Value);
+            }
         }
     }
 
