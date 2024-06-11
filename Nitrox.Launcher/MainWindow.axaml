@@ -1,6 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="using:Avalonia.Xaml.Interactivity"
+        xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:rx="http://reactiveui.net"
         xmlns:launcher="clr-namespace:Nitrox.Launcher"
@@ -107,9 +109,17 @@
         </Style>
     </Window.Styles>
 
-    <Panel>
+    <Panel Margin="{Binding $parent[Window].OffScreenMargin}">
         <!-- Title bar -->
         <Panel Classes="titleBar" PointerPressed="TitleBar_OnPointerPressed">
+            <i:Interaction.Behaviors>
+                <i:BehaviorCollection>
+                    <ia:EventTriggerBehavior EventName="DoubleTapped">
+                        <ia:InvokeCommandAction Command="{Binding MaximizeCommand}" />
+                    </ia:EventTriggerBehavior>
+                </i:BehaviorCollection>
+            </i:Interaction.Behaviors>
+            
             <StackPanel>
                 <Button Command="{Binding MinimizeCommand}">
                     <StackPanel>
