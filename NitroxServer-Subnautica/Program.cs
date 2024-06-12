@@ -77,14 +77,21 @@ public class Program
         {
             Console.TreatControlCAsInput = true;
         }
+        
+        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
         Server server;
         Task handleConsoleInputTask;
         CancellationTokenSource cancellationToken = new();
         try
         {
+            handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
+            AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
+            
+            Stopwatch watch = Stopwatch.StartNew();
+            
             // Allow game path to be given as command argument
-            string gameDir = null;
+            string gameDir = "";
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
             {
                 gameDir = Path.GetFullPath(args[0]);
@@ -98,20 +105,13 @@ public class Program
                     return gameDir;
                 });
             }
+            Log.Info($"Using game files from: {gameDir}");
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
             server = NitroxServiceLocator.LocateService<Server>();
             
-            Log.ServerName = server.Name;
-            
-            handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
-            AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
-            
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
-            Log.Info($"Using game files from: {gameDir}");
+            Log.SaveName = server.Name;
 
             await WaitForAvailablePortAsync(server.Port);
 
