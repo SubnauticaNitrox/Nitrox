@@ -28,6 +28,13 @@ namespace NitroxModel.Logger
             set => SetPlayerName(value);
         }
 
+        public static string ServerName
+        {
+            set => SetServerName(value);
+        }
+
+        private static string LogDecorator { get; set; }
+
         public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.LauncherPath ?? "", "Nitrox Logs"));
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
@@ -44,6 +51,7 @@ namespace NitroxModel.Logger
             NetDebug.Logger = new LiteNetLibLogger();
 
             PlayerName = "";
+            ServerName = "";
 
             // Configure logger and create an instance of it.
             LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug();
@@ -80,9 +88,9 @@ namespace NitroxModel.Logger
             cnf.Enrich.FromLogContext()
                .WriteTo
 #if DEBUG
-               .Map(nameof(PlayerName), "", (playerName, sinkCnf) => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"), sinkCnf));
+               .Map(nameof(LogDecorator), "", (logDecorator, sinkCnf) => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}{logDecorator}-.log"), sinkCnf));
 #else
-               .Async(a => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"), a));
+               .Async(a => a.Map(nameof(LogDecorator), "", (logDecorator, sinkCnf) => AppendFileWriteFormat(Path.Combine(LogDirectory, $"{GetLogFileName()}{logDecorator}-.log"), sinkCnf)));
 #endif
         });
 
@@ -243,18 +251,30 @@ namespace NitroxModel.Logger
         [Conditional("DEBUG")]
         private static void SetPlayerName(string value)
         {
+#if DEBUG
             if (string.IsNullOrEmpty(value))
             {
-                LogContext.PushProperty(nameof(PlayerName), "");
+                LogContext.PushProperty(nameof(LogDecorator), "");
                 return;
             }
-
+            
+            LogContext.PushProperty(nameof(LogDecorator), @$"[{value}]");
+#endif
             if (logger != null)
             {
                 Info($"Setting player name to {value}");
             }
+        }
+        
+        private static void SetServerName(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                LogContext.PushProperty(nameof(LogDecorator), "");
+                return;
+            }
 
-            LogContext.PushProperty(nameof(PlayerName), @$"[{value}]");
+            LogContext.PushProperty(nameof(LogDecorator), @$"[{value}]");
         }
 
         /// <summary>

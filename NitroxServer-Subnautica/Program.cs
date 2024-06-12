@@ -77,39 +77,41 @@ public class Program
         {
             Console.TreatControlCAsInput = true;
         }
-        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
         Server server;
         Task handleConsoleInputTask;
         CancellationTokenSource cancellationToken = new();
         try
         {
-            handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
-            AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
-
-            Stopwatch watch = Stopwatch.StartNew();
-
             // Allow game path to be given as command argument
+            string gameDir = null;
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
             {
-                string gameDir = Path.GetFullPath(args[0]);
-                Log.Info($"Using game files from: {gameDir}");
+                gameDir = Path.GetFullPath(args[0]);
                 gameInstallDir = new Lazy<string>(() => gameDir);
             }
             else
             {
                 gameInstallDir = new Lazy<string>(() =>
                 {
-                    string gameDir = NitroxUser.GamePath;
-                    Log.Info($"Using game files from: {gameDir}");
+                    gameDir = NitroxUser.GamePath;
                     return gameDir;
                 });
             }
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
-
             server = NitroxServiceLocator.LocateService<Server>();
+            
+            Log.ServerName = server.Name;
+            
+            handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
+            AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
+            
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
+            Log.Info($"Using game files from: {gameDir}");
 
             await WaitForAvailablePortAsync(server.Port);
 
@@ -359,9 +361,12 @@ public class Program
 
     private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
     {
+        int messageLength = 0;
         void PrintPortWarn(int timeRemaining)
         {
-            Log.Warn($"Port {port} UDP is already in use. Retrying for {timeRemaining} seconds until it is available..");
+            string message = $"Port {port} UDP is already in use. Please change the server port or close out any program that may be using it. Retrying for {timeRemaining} seconds until it is available...";
+            messageLength = message.Length;
+            Log.Warn(message);
         }
 
         Validate.IsTrue(timeoutInSeconds >= 5, "Timeout must be at least 5 seconds.");
@@ -388,8 +393,17 @@ public class Program
                 }
                 else if (Environment.UserInteractive)
                 {
-                    Console.CursorTop--;
+                    // If not first time, move cursor up the number of lines it takes up to overwrite previous message
+                    int numberOfLines = (int)Math.Ceiling( ((double)messageLength + 15) / Console.BufferWidth );
+                    for (int i = 0; i < numberOfLines; i++)
+                    {
+                        if (Console.CursorTop > 0) // Check to ensure we don't go out of bounds
+                        {
+                            Console.CursorTop--;
+                        }
+                    }
                     Console.CursorLeft = 0;
+                    
                     PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
                 }
 
