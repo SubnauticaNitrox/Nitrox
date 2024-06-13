@@ -33,8 +33,6 @@ namespace NitroxModel.Logger
             set => SetSaveName(value);
         }
 
-        private static string LogDecorator { get; set; }
-
         public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.LauncherPath ?? "", "Nitrox Logs"));
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
@@ -75,23 +73,49 @@ namespace NitroxModel.Logger
 
         private static LoggerConfiguration AppendFileSink(this LoggerSinkConfiguration sinkConfig) => sinkConfig.Logger(cnf =>
         {
+            static bool LogEventHasPropertiesAny(LogEvent @event, params string[] propertyKeys)
+            {
+                foreach (string key in propertyKeys)
+                {
+                    if (!@event.Properties.TryGetValue(key, out LogEventPropertyValue propValue))
+                    {
+                        continue;
+                    }
+                    string propValueStr = propValue.ToString();
+                    // Fallback value returned by the "none" key.
+                    if (propValueStr == "\"\"")
+                    {
+                        continue;
+                    }
+                    if (string.IsNullOrWhiteSpace(propValueStr))
+                    {
+                        continue;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
             cnf.Enrich.FromLogContext()
                .WriteTo
                .Valve(v =>
                {
                    v.Async(a =>
                    {
-                       a.Map(nameof(LogDecorator), "", (logDecorator, sinkCnf) =>
+                       a.Map(nameof(SaveName), "none", (saveName, m) =>
                        {
-                           sinkCnf.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{logDecorator}-.log"),
-                                        outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
-                                        rollingInterval: RollingInterval.Day,
-                                        retainedFileCountLimit: 10,
-                                        fileSizeLimitBytes: 200_000_000, // 200MB
-                                        shared: true);
+                           m.Map(nameof(PlayerName), "none", (playerName, m2) =>
+                           {
+                               m2.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{saveName}{playerName}-.log"),
+                                      outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
+                                      rollingInterval: RollingInterval.Day,
+                                      retainedFileCountLimit: 10,
+                                      fileSizeLimitBytes: 200_000_000, // 200MB
+                                      shared: true);
+                           });
                        });
                    });
-               }, e => e.Properties.TryGetValue(nameof(SaveName), out LogEventPropertyValue propertyValue) && !string.IsNullOrWhiteSpace(propertyValue.ToString()));
+               }, e => LogEventHasPropertiesAny(e, nameof(SaveName), nameof(PlayerName)));
         });
 
         private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate) => sinkConfig.Logger(cnf =>
@@ -251,30 +275,29 @@ namespace NitroxModel.Logger
         [Conditional("DEBUG")]
         private static void SetPlayerName(string value)
         {
-#if DEBUG
             if (string.IsNullOrEmpty(value))
             {
-                LogContext.PushProperty(nameof(LogDecorator), "");
+                LogContext.PushProperty(nameof(PlayerName), "");
                 return;
             }
-            
-            LogContext.PushProperty(nameof(LogDecorator), @$"[{value}]");
-#endif
+            LogContext.PushProperty(nameof(PlayerName), $"[{value}]");
+
             if (logger != null)
             {
                 Info($"Setting player name to {value}");
             }
         }
-        
+
+        [Conditional("DEBUG")]
         private static void SetSaveName(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
-                LogContext.PushProperty(nameof(LogDecorator), "");
+                LogContext.PushProperty(nameof(SaveName), "");
                 return;
             }
 
-            LogContext.PushProperty(nameof(LogDecorator), @$"[{value}]");
+            LogContext.PushProperty(nameof(SaveName), @$"[{value}]");
         }
 
         /// <summary>
@@ -343,17 +366,6 @@ namespace NitroxModel.Logger
                     yield return (prop.Key, new string('*', prop.Value.ToString().Length));
                 }
             }
-        }
-        
-        public static LoggerConfiguration Valve(
-            this LoggerSinkConfiguration loggerConfiguration,
-            Action<LoggerSinkConfiguration> configure,
-            Func<LogEvent, bool> predicate,
-            LogEventLevel minimumLevel = LogEventLevel.Verbose,
-            string outputTemplate = "{Message}",
-            IFormatProvider formatProvider = null)
-        {
-            return LoggerSinkConfiguration.Wrap(loggerConfiguration, wrappedSink => new ConditionalValveSink(predicate, wrappedSink), configure, LogEventLevel.Verbose, null);
         }
     }
 
