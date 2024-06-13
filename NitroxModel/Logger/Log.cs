@@ -22,15 +22,38 @@ namespace NitroxModel.Logger
         private static ILogger inGameLogger = Serilog.Core.Logger.None;
         private static readonly HashSet<int> logOnceCache = new();
         private static bool isSetup;
+        private static string logFileName;
 
         public static string PlayerName
         {
-            set => SetPlayerName(value);
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    LogContext.PushProperty(nameof(PlayerName), "");
+                    return;
+                }
+                LogContext.PushProperty(nameof(PlayerName), $"[{value}]");
+
+                if (logger != null)
+                {
+                    Info($"Setting player name to {value}");
+                }
+            }
         }
 
         public static string SaveName
         {
-            set => SetSaveName(value);
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    LogContext.PushProperty(nameof(SaveName), "");
+                    return;
+                }
+
+                LogContext.PushProperty(nameof(SaveName), @$"[{value}]");
+            }
         }
 
         public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.LauncherPath ?? "", "Nitrox Logs"));
@@ -81,12 +104,7 @@ namespace NitroxModel.Logger
                     {
                         continue;
                     }
-                    string propValueStr = propValue.ToString();
-                    // Fallback value returned by the "none" key.
-                    if (propValueStr == "\"\"")
-                    {
-                        continue;
-                    }
+                    string propValueStr = propValue.ToString().Trim('\"'); // ToString of Serilog properties returns \"\" when empty string.
                     if (string.IsNullOrWhiteSpace(propValueStr))
                     {
                         continue;
@@ -102,9 +120,9 @@ namespace NitroxModel.Logger
                {
                    v.Async(a =>
                    {
-                       a.Map(nameof(SaveName), "none", (saveName, m) =>
+                       a.Map(nameof(SaveName), "", (saveName, m) =>
                        {
-                           m.Map(nameof(PlayerName), "none", (playerName, m2) =>
+                           m.Map(nameof(PlayerName), "", (playerName, m2) =>
                            {
                                m2.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{saveName}{playerName}-.log"),
                                       outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
@@ -115,7 +133,7 @@ namespace NitroxModel.Logger
                            });
                        });
                    });
-               }, e => LogEventHasPropertiesAny(e, nameof(SaveName), nameof(PlayerName)));
+               }, e => LogEventHasPropertiesAny(e, nameof(SaveName), nameof(PlayerName)) || GetLogFileName() is "launcher");
         });
 
         private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate) => sinkConfig.Logger(cnf =>
@@ -271,61 +289,26 @@ namespace NitroxModel.Logger
             }
         }
 
-        // Player name in log file is only important with running two instances of Nitrox.
-        [Conditional("DEBUG")]
-        private static void SetPlayerName(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                LogContext.PushProperty(nameof(PlayerName), "");
-                return;
-            }
-            LogContext.PushProperty(nameof(PlayerName), $"[{value}]");
-
-            if (logger != null)
-            {
-                Info($"Setting player name to {value}");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        private static void SetSaveName(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                LogContext.PushProperty(nameof(SaveName), "");
-                return;
-            }
-
-            LogContext.PushProperty(nameof(SaveName), @$"[{value}]");
-        }
-
         /// <summary>
         ///     Get log file friendly name of the application that is currently logging.
         /// </summary>
         /// <returns>Friendly display name of the current application.</returns>
         private static string GetLoggerName()
         {
-            string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
-            return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
+            string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "game"; // Unity Engine does not set Assembly name
+            return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "server" : name;
         }
 
         private static string GetLogFileName()
         {
             static bool Contains(string haystack, string needle) => haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0;
 
-            string loggerName = GetLoggerName();
-            if (Contains(loggerName, "server"))
+            return logFileName ??= GetLoggerName() switch
             {
-                return "server";
-            }
-
-            if (Contains(loggerName, "launch"))
-            {
-                return "launcher";
-            }
-
-            return "game";
+                { } s when Contains(s, "server")  => "server",
+                { } s when Contains(s, "launch") => "launcher",
+                _ => "game"
+            };
         }
 
         private class SensitiveEnricher : ILogEventEnricher
