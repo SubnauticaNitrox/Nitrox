@@ -42,6 +42,8 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         this.dialogService = dialogService;
         this.manageServerViewModel = manageServerViewModel;
+        
+        GetSavesOnDisk();
 
         this.WhenActivated(disposables =>
         {
@@ -64,7 +66,6 @@ public partial class ServersViewModel : RoutableViewModelBase
                     }
                 }
             });
-            GetSavesOnDisk();
             InitializeWatcher();
 
             // Deactivation
