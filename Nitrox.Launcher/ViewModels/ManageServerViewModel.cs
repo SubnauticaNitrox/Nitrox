@@ -76,7 +76,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyDataErrorInfo]
     [Required]
     [FileName]
-    [Trim(".")]
+    [NotEndsWith(".")]
     [NitroxUniqueSaveName(true, nameof(OriginalServerName))]
     private string serverName;
 

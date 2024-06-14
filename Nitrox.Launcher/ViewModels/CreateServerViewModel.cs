@@ -18,7 +18,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [NotifyDataErrorInfo]
     [Required]
     [FileName]
-    [Trim(".")]
+    [NotEndsWith(".")]
     [NitroxUniqueSaveName]
     private string name;
     [ObservableProperty]
