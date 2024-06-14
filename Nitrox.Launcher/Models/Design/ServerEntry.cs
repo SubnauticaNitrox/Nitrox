@@ -77,6 +77,9 @@ public partial class ServerEntry : ObservableObject
 
     [ObservableProperty]
     private Bitmap serverIcon;
+    
+    [ObservableProperty]
+    private Version version;
 
     private ServerProcess serverProcess;
 

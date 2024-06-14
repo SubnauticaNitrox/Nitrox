@@ -9,7 +9,7 @@ namespace Nitrox.Launcher.Models.Validators;
 /// </summary>
 public sealed class FileNameAttribute : TypedValidationAttribute<string>
 {
-    private static readonly char[] invalidPathCharacters = [..Path.GetInvalidFileNameChars(), '.'];
+    private static readonly char[] invalidPathCharacters = Path.GetInvalidFileNameChars();
 
     protected override ValidationResult IsValid(string value, ValidationContext context)
     {

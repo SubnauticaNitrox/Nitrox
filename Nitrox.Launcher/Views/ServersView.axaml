@@ -82,7 +82,7 @@
                                         </StackPanel>
                                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
                                             <Button Classes="abort" IsVisible="{Binding IsOnline}" Content="Stop" Command="{Binding StopCommand}" />
-                                            <Button IsVisible="{Binding !IsOnline}" Content="Start" Command="{Binding StartCommand}" />
+                                            <Button IsVisible="{Binding !IsOnline}" Content="Start" Command="{Binding DataContext.StartServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
                                             <Button Classes="primary" Content="Manage" Command="{Binding DataContext.ManageServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
                                         </StackPanel>
                                     </DockPanel>

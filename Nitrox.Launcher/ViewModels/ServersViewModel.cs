@@ -20,6 +20,8 @@ using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
+using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -95,14 +97,42 @@ public partial class ServersViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    public void ManageServer(ServerEntry server)
+    public async Task StartServer(ServerEntry server)
     {
+        if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
+        {
+            return;
+        }
+        
+        server.Start();
+        server.Version = NitroxEnvironment.Version;
+    }
+    
+    [RelayCommand]
+    public async Task ManageServer(ServerEntry server)
+    {
+        if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
+        {
+            return;
+        }
+        
         manageServerViewModel.LoadFrom(server);
         HostScreen.Show(manageServerViewModel);
+    }
+    
+    private async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
+    {
+        ConfirmationBoxViewModel modalViewModel = await dialogService.ShowAsync<ConfirmationBoxViewModel>(model =>
+        {
+            model.ConfirmationText = $"The version of '{server.Name}' is v{server.Version}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+        });
+        return modalViewModel != null;
     }
 
     public void GetSavesOnDisk()
     {
+        Directory.CreateDirectory(SavesFolderDir);
+        
         List<ServerEntry> serversOnDisk = [];
 
         foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
@@ -127,6 +157,12 @@ public partial class ServersViewModel : RoutableViewModelBase
             string fileEnding = "json";
             if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
 
+            Version version;
+            using (FileStream stream = new(Path.Combine(folder, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+            }
+
             ServerEntry entry = new()
             {
                 Name = saveName,
@@ -142,6 +178,7 @@ public partial class ServersViewModel : RoutableViewModelBase
                 AllowLanDiscovery = server.LANDiscoveryEnabled,
                 AllowCommands = !server.DisableConsole,
                 IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
+                Version = version,
                 LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}"))
                                                              ?
                                                              // This file is affected by server saving
@@ -181,7 +218,8 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             Name = name,
             GameMode = gameMode,
-            Seed = ""
+            Seed = "",
+            Version = NitroxEnvironment.Version 
         });
     }
 

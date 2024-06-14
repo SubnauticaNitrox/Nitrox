@@ -39,6 +39,7 @@
     <ItemGroup>
       <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
       <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+      <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
     <ItemGroup>
