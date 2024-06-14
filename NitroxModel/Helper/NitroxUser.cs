@@ -101,7 +101,9 @@ namespace NitroxModel.Helper
                 if (potentiallyValidResult?.IsOk == true)
                 {
                     Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Installation.Path}'");
-                    return gamePath = potentiallyValidResult.Installation.Path;
+                    gamePath = potentiallyValidResult.Installation.Path;
+                    GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
+                    return gamePath;
                 }
 
                 Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");

@@ -28,17 +28,23 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public static Task<string> LastFindSubnauticaTask;
 
     [ObservableProperty]
+    private Platform gamePlatform;
+    [ObservableProperty]
+    private string platformToolTip;
+    [ObservableProperty]
     private AvaloniaList<string> galleryImageSources = [];
 
     private ProcessEx gameProcess;
-    public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
-    public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", "-vrmode none");
 
     public LaunchGameViewModel(IScreen screen, OptionsViewModel optionsViewModel) : base(screen)
     {
         this.optionsViewModel = optionsViewModel;
+
+        GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
+        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
+        
         foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
         {
             GalleryImageSources.Add(asset.LocalPath);
