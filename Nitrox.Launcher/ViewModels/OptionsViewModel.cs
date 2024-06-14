@@ -107,7 +107,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
             return;
         }
 
-        if (selectedDirectory != SelectedGame.PathToGame)
+        if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
             await SetTargetedSubnauticaPath(selectedDirectory);
             LauncherNotifier.Success("Applied changes");

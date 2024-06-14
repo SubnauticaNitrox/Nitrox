@@ -20,6 +20,6 @@ public static class StorageProviderExtensions
             AllowMultiple = false,
             SuggestedStartLocation = startingStorageFolder
         });
-        return dialogResult.FirstOrDefault()?.Path.ToString();
+        return dialogResult.FirstOrDefault()?.TryGetLocalPath() ?? "";
     }
 }
