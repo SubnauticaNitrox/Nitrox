@@ -110,6 +110,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
             await SetTargetedSubnauticaPath(selectedDirectory);
+            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LauncherNotifier.Success("Applied changes");
         }
     }

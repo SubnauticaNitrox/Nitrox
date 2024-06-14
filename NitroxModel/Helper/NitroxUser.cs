@@ -85,7 +85,20 @@ namespace NitroxModel.Helper
             set => KeyValueStore.Instance.SetValue(PREFERRED_GAMEPATH_KEY, value);
         }
 
-        public static IGamePlatform GamePlatform { get; private set; }
+        private static IGamePlatform gamePlatform;
+        public static event Action GamePlatformChanged;
+        public static IGamePlatform GamePlatform
+        {
+            get { return gamePlatform; }
+            set
+            {
+                if (gamePlatform != value)
+                {
+                    gamePlatform = value;
+                    GamePlatformChanged?.Invoke();
+                }
+            }
+        }
 
         public static string GamePath
         {

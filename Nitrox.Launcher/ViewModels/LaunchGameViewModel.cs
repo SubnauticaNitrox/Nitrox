@@ -41,6 +41,8 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public LaunchGameViewModel(IScreen screen, OptionsViewModel optionsViewModel) : base(screen)
     {
         this.optionsViewModel = optionsViewModel;
+        
+        NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
         GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
         PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
@@ -149,5 +151,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         };
 
         return game ?? throw new Exception($"Game failed to start through {platform.Name}");
+    }
+    
+    private void UpdateGamePlatform()
+    {
+        GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
+        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
     }
 }
