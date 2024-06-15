@@ -48,4 +48,13 @@
             </ItemGroup>
         </Otherwise>
     </Choose>
+    
+    <Target Name="MoveDependenciesToLib" AfterTargets="Build">
+        <ItemGroup>
+            <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)NitroxServer.dll;$(TargetDir)NitroxServer-Subnautica.dll;$(TargetDir)NitroxModel-Subnautica.dll;$(TargetDir)NitroxModel.dll" />
+            <AllDependencies Include="$(TargetDir)*.dll.config" />
+        </ItemGroup>
+        <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+    </Target>
+    
 </Project>

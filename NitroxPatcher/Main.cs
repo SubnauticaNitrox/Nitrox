@@ -133,7 +133,7 @@ public static class Main
         }
 
         // Load DLLs where Nitrox launcher is first, if not found, use Subnautica's DLLs.
-        string dllPath = Path.Combine(nitroxLauncherDir.Value, "bin", "net472", dllFileName);
+        string dllPath = Path.Combine(nitroxLauncherDir.Value, "lib", "net472", dllFileName);
         if (!File.Exists(dllPath))
         {
             dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);

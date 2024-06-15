@@ -1,5 +1,7 @@
 ﻿using Avalonia;
 using System;
+using System.IO;
+using System.Reflection;
 using Avalonia.ReactiveUI;
 
 namespace Nitrox.Launcher;
@@ -10,8 +12,19 @@ class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
+        
+        LoadAvalonia(args);
+    }
+    
+    private static void LoadAvalonia(string[] args)
+    {
+        BuildAvaloniaApp()
+            .StartWithClassicDesktopLifetime(args);
+    }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
@@ -32,5 +45,26 @@ class Program
         }
 
         return builder;
+    }
+    
+    private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+    {
+        string dllFileName = args.Name.Split(',')[0];
+        if (!dllFileName.EndsWith(".dll"))
+        {
+            dllFileName += ".dll";
+        }
+
+        string dllPath = Path.Combine(Environment.CurrentDirectory, "lib", dllFileName);
+        if (!File.Exists(dllPath))
+        {
+            dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
+        }
+
+        if (!File.Exists(dllPath))
+        {
+            Console.WriteLine($"Nitrox dll missing: {dllPath}");
+        }
+        return Assembly.LoadFile(dllPath);
     }
 }
