@@ -31,7 +31,7 @@ public partial class DialogBoxViewModal : ModalViewModelBase
     public KeyGesture CopyToClipboardHotkey { get; } = new(Key.C, KeyModifiers.Control);
 
     [RelayCommand]
-    private void Yes(Window window)
+    private void Yes()
     {
         DialogResult = true;
         Close();
