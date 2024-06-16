@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxModel.Core;
 using UnityEngine.Events;
 
 namespace NitroxClient.GameLogic.Settings;
 
 public class NitroxSettingsManager
 {
+    private readonly Lazy<Vehicles> vehicles = new(NitroxServiceLocator.LocateService<Vehicles>);
     /// <summary>
     /// Settings grouped by their headings
     /// </summary>
@@ -48,6 +51,17 @@ public class NitroxSettingsManager
                 BuildingHandler.Main.AskForResync();
             }
         }));
+
+        AddSetting("Nitrox_ResyncSettings", new Setting("Nitrox_ResyncVehicles", () =>
+        {
+            if (Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
+            {
+                vehicles.Value.AskForResync();
+            }
+        }));
+
+        AddSetting("Nitrox_ResyncSettings", new Setting("Nitrox_EntitiesAutoResync", NitroxPrefs.EntitiesAutoResync, autoResync => NitroxPrefs.EntitiesAutoResync.Value = autoResync));
+        
 
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
