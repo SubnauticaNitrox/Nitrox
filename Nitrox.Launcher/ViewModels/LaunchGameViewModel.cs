@@ -61,6 +61,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartSingleplayerAsync()
     {
+        Log.Info("Launching Subnautica in singleplayer mode.");
         try
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
@@ -96,6 +97,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartMultiplayerAsync()
     {
+        Log.Info("Launching Subnautica in multiplayer mode.");
         try
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
@@ -119,20 +121,28 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             }
 #endif
             
-            // Check if the game is not in legacy
-            if (GamePlatform == Platform.STEAM)
+            // Check to ensure the game is not in legacy, skip if check fails
+            try
             {
-                string gameVersionFile = Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
-                if (int.Parse(File.ReadAllText(gameVersionFile)) == 68598)
+                if (GamePlatform == Platform.STEAM)
                 {
-                    await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                    string gameVersionFile = Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+                    if (int.Parse(File.ReadAllText(gameVersionFile)) == 68598)
                     {
-                        model.Title = "Legacy Game Detected";
-                        model.Description = "Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version.";
-                        model.ButtonOptions = ButtonOptions.Ok;
-                    });
-                    return;
+                        await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                        {
+                            model.Title = "Legacy Game Detected";
+                            model.Description = "Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version.";
+                            model.ButtonOptions = ButtonOptions.Ok;
+                        });
+                        return;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while checking game version:");
+                Log.Info("Skipping game version check...");
             }
 
             // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory
