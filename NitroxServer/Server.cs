@@ -34,6 +34,7 @@ namespace NitroxServer
         public bool IsRunning => serverCancelSource?.IsCancellationRequested == false;
         public bool IsSaving { get; private set; }
 
+        public string Name => serverConfig.SaveName;
         public int Port => serverConfig?.ServerPort ?? -1;
 
         public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)

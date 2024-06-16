@@ -1,0 +1,50 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             DataContext="{x:Static design:DesignData.BlogViewModel}"
+             mc:Ignorable="d" d:DesignWidth="1000"
+             x:Class="Nitrox.Launcher.Views.BlogView">
+    <ThemeVariantScope RequestedThemeVariant="Dark">
+        <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
+            <StackPanel>
+                <TextBlock Classes="header" Text="Blog"/>
+                <TextBlock Margin="0 16 0 0">
+                    Read the latest news from the Nitrox team! You can view all our blogs
+                    <TextBlock Classes="link" PointerPressed="NitroxBlogTextBlock_OnPointerPressed">here</TextBlock>.
+                </TextBlock>
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <controls:FittingWrapPanel HorizontalAlignment="Center" MaxItemWidth="340" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
+                            <StackPanel Orientation="Vertical" Spacing="10">
+                                <Border CornerRadius="12" ClipToBounds="True">
+                                    <Viewbox>
+                                        <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="16" Height="9">
+                                            <Image IsVisible="{Binding Image, Converter={converters:EqualityConverter}}" Source="/Assets/Images/blog/vines.png" Stretch="UniformToFill" />
+                                            <Image Source="{Binding Image}" Stretch="UniformToFill" />
+                                        </Panel>
+                                    </Viewbox>
+                                </Border>
+                                <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"
+                                           HorizontalAlignment="Left" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrandSubTextBrush}" ToolTip.Tip="{Binding Date, Converter={converters:DateToRelativeDateConverter}}"/>
+                                <TextBlock Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"
+                                           FontSize="16" Margin="0,2,0,4" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ThemeVariantScope>
+</UserControl>

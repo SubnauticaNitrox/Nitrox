@@ -18,6 +18,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [NotifyDataErrorInfo]
     [Required]
     [FileName]
+    [NotEndsWith(".")]
     [NitroxUniqueSaveName]
     private string name;
     [ObservableProperty]
@@ -32,11 +33,11 @@ public partial class CreateServerViewModel : ModalViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanCreate))]
-    private void Create(Window window)
+    private void Create()
     {
         DialogResult = true;
         CreateEmptySave(Name, SelectedGameMode);
-        Close(window);
+        Close();
     }
 
     public static void CreateEmptySave(string saveName, NitroxGameMode saveGameMode)

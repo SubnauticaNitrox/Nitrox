@@ -2,92 +2,100 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
-             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
              x:Class="Nitrox.Launcher.Views.ServersView"
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
-
-    <Panel>
-        <Panel IsVisible="{Binding !Servers.Count}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Image Source="/Assets/Images/serverIllustration.png" Stretch="None" Margin="0 0 0 73" />
-                <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
-                <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world.</TextBlock>
-
-                <Button design:NitroxAttached.Focus="" Classes="nitrox primary big" Command="{Binding CreateServerCommand}" Width="350" Margin="0 40 0 0"
-                        design:NitroxAttached.Text="CREATE NEW SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" HorizontalAlignment="Center" />
-            </StackPanel>
-        </Panel>
-
-        <Grid RowDefinitions="Auto,Auto,*,Auto" IsVisible="{Binding Servers.Count}">
-            <TextBlock Grid.Row="0" Classes="header" Text="Servers" />
-            <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
-            <TextBlock Grid.Row="1">
-                Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the
-                <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.
-            </TextBlock>
-            <ScrollViewer Grid.Row="2" Margin="0 40 0 13">
-                <ItemsControl ItemsSource="{Binding Servers}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Spacing="26" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Classes="serverEntry">
-                                <DockPanel VerticalAlignment="Center">
-                                    <Border CornerRadius="12" ClipToBounds="True">
-                                        <Grid>
-                                            <Image DockPanel.Dock="Left" Source="/Assets/Images/SubnauticaIcon.png" />
-                                            <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
-                                                <controls:GrayscaleControl.Transitions>
-                                                    <Transitions>
-                                                        <DoubleTransition Property="Opacity" Duration="0:0:0.10" />
-                                                    </Transitions>
-                                                </controls:GrayscaleControl.Transitions>
-                                            </controls:GrayscaleControl>
-                                        </Grid>
-                                    </Border>
-                                    <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
-                                        <TextBlock FontSize="16" FontWeight="600" Text="{Binding Name}" />
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
-                                            <Panel>
-                                                <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
-                                                    <Ellipse Margin="0 0 6 0" Fill="#38C149" />
-                                                    <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
+    <ThemeVariantScope RequestedThemeVariant="Dark">
+        <Panel Background="{DynamicResource BrandWhiteBrush}">
+            <Panel IsVisible="{Binding !Servers.Count}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="/Assets/Images/serverIllustration.png" Stretch="None" Margin="0 0 0 73" />
+                    <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
+                    <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world.</TextBlock>
+    
+                    <Button Classes="primary big" Command="{Binding CreateServerCommand}" HotKey="Enter" Width="350" Margin="0 40 0 0" HorizontalAlignment="Center">
+                        <StackPanel>
+                            <TextBlock Text="CREATE NEW SERVER" />
+                            <TextBlock Text="MULTIPLAYER" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Panel>
+    
+            <Grid RowDefinitions="Auto,Auto,*,Auto" IsVisible="{Binding Servers.Count}">
+                <TextBlock Grid.Row="0" Classes="header" Text="Servers" />
+                <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
+                <TextBlock Grid.Row="1">
+                    Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the
+                    <TextBlock Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.
+                </TextBlock>
+                <ScrollViewer Grid.Row="2" Margin="0 40 0 13">
+                    <ItemsControl ItemsSource="{Binding Servers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Spacing="26" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Classes="serverEntry">
+                                    <DockPanel VerticalAlignment="Center">
+                                        <Border DockPanel.Dock="Left" CornerRadius="12" ClipToBounds="True">
+                                            <Grid>
+                                                <Image Source="/Assets/Images/SubnauticaIcon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
+                                                <Border Height="56" Width="56">
+                                                    <Border.Background>
+                                                        <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon}" />
+                                                    </Border.Background>
+                                                </Border>
+                                                <controls:GrayscaleControl Opacity="{Binding !IsOnline}">
+                                                    <controls:GrayscaleControl.Transitions>
+                                                        <Transitions>
+                                                            <DoubleTransition Property="Opacity" Duration="0:0:0.10" />
+                                                        </Transitions>
+                                                    </controls:GrayscaleControl.Transitions>
+                                                </controls:GrayscaleControl>
+                                            </Grid>
+                                        </Border>
+                                        <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
+                                            <TextBlock FontSize="16" FontWeight="600" Text="{Binding Name}" />
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
+                                                <Panel>
+                                                    <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
+                                                        <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOnColor}" />
+                                                        <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
+                                                        <Ellipse Margin="0 0 6 0" Fill="{DynamicResource BrandOffColor}" />
+                                                        <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
+                                                    </StackPanel>
+                                                </Panel>
+                                                <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Players}" />
+                                                    <TextBlock Text="/" />
+                                                    <TextBlock Text="{Binding MaxPlayers}" />
+                                                    <TextBlock Margin="6 0 0 0" Text="playing" />
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
-                                                    <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
-                                                    <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
-                                                </StackPanel>
-                                            </Panel>
-                                            <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Players}" />
-                                                <TextBlock Text="/" />
-                                                <TextBlock Text="{Binding MaxPlayers}" />
-                                                <TextBlock Margin="6 0 0 0" Text="playing" />
                                             </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
-                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                                        <Button Classes="nitrox abort" IsVisible="{Binding IsOnline}" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
-                                        <Button Classes="nitrox" IsVisible="{Binding !IsOnline}" design:NitroxAttached.Text="Start" Command="{Binding StartCommand}" />
-                                        <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage"
-                                                Command="{Binding DataContext.ManageServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
-                                    </StackPanel>
-                                </DockPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-            <Border Grid.Row="3" CornerRadius="12" Background="#151516" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-                <Button Classes="nitrox primary big" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Height="48" design:NitroxAttached.Text="CREATE NEW SERVER"
-                        Command="{Binding CreateServerCommand}" />
-            </Border>
-        </Grid>
-    </Panel>
+                                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                                            <Button Classes="abort" IsVisible="{Binding IsOnline}" Content="Stop" Command="{Binding StopCommand}" />
+                                            <Button IsVisible="{Binding !IsOnline}" Content="Start" Command="{Binding DataContext.StartServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                                            <Button Classes="primary" Content="Manage" Command="{Binding DataContext.ManageServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Border Grid.Row="3" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Button x:Name="CreateServerBtn" Classes="primary big" HotKey="Enter" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Content="CREATE NEW SERVER"
+                            Command="{Binding CreateServerCommand}" />
+                </Border>
+            </Grid>
+        </Panel>
+    </ThemeVariantScope>
 </UserControl>

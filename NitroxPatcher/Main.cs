@@ -1,5 +1,4 @@
 extern alias JB;
-global using static NitroxModel.Extensions;
 global using NitroxModel.Logger;
 global using static NitroxClient.Helpers.NitroxEntityExtensions;
 using System;
@@ -63,14 +62,6 @@ public static class Main
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-        if (nitroxLauncherDir.Value == null)
-        {
-            Console.WriteLine("Nitrox will not load because launcher path was not provided.");
-            return;
-        }
-
-        Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
-
         Init();
     }
 
@@ -83,6 +74,15 @@ public static class Main
     private static void Init()
     {
         Log.Setup(gameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
+
+        if (nitroxLauncherDir.Value == null)
+        {
+            Console.WriteLine("Nitrox will not load because launcher path was not provided.");
+            return;
+        }
+
+        Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
+
         // Capture unity errors to be logged by our logging framework.
         Application.logMessageReceived += (condition, stackTrace, type) =>
         {
@@ -133,7 +133,7 @@ public static class Main
         }
 
         // Load DLLs where Nitrox launcher is first, if not found, use Subnautica's DLLs.
-        string dllPath = Path.Combine(nitroxLauncherDir.Value, "lib", dllFileName);
+        string dllPath = Path.Combine(nitroxLauncherDir.Value, "lib", "net472", dllFileName);
         if (!File.Exists(dllPath))
         {
             dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);

@@ -1,31 +1,18 @@
+using System;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using HanumanInstitute.MvvmDialogs;
-using HanumanInstitute.MvvmDialogs.Avalonia;
-using Nitrox.Launcher.ViewModels;
-using Splat;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Nitrox.Launcher;
 
-public partial class App : Application
+public class App : Application
 {
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-
-        IMutableDependencyResolver build = Locator.CurrentMutable;
-        build.RegisterLazySingleton(() => (IDialogService)new DialogService(
-                                        new DialogManager(
-                                            viewLocator: AppViewLocator.Instance.Value,
-                                            dialogFactory: new DialogFactory()),
-                                        viewModelFactory: x => Locator.Current.GetService(x)));
-
-        SplatRegistrations.Register<MainWindowViewModel>();
-        SplatRegistrations.Register<CreateServerViewModel>();
-        SplatRegistrations.Register<ConfirmationBoxViewModel>();
-        SplatRegistrations.Register<ErrorViewModel>();
-        SplatRegistrations.SetupIOC();
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -39,11 +26,26 @@ public partial class App : Application
             }
         }
 
-        DialogService.Show(null, MainWindow);
+        MainWindow mainWindow = new ServiceCollection()
+                                .AddAppServices()
+                                .BuildServiceProvider()
+                                .GetRequiredService<MainWindow>();
+        switch (ApplicationLifetime)
+        {
+            case IClassicDesktopStyleApplicationLifetime desktop:
+                desktop.MainWindow = mainWindow;
+                break;
+            case ISingleViewApplicationLifetime singleViewPlatform:
+                singleViewPlatform.MainView = mainWindow;
+                break;
+            default:
+                if (!Design.IsDesignMode)
+                {
+                    throw new NotSupportedException($"Current platform '{ApplicationLifetime?.GetType().Name}' is not supported by {nameof(Nitrox)}.{nameof(Launcher)}");
+                }
+                break;
+        }
 
         base.OnFrameworkInitializationCompleted();
     }
-
-    public static MainWindowViewModel MainWindow => Locator.Current.GetService<MainWindowViewModel>()!;
-    public static IDialogService DialogService => Locator.Current.GetService<IDialogService>()!;
 }

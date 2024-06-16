@@ -1,121 +1,154 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Avalonia.Collections;
 using Avalonia.Controls;
-using Avalonia.Media;
-using HanumanInstitute.MvvmDialogs;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Helper;
+using NitroxModel.Logger;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase, IScreen
+public partial class MainWindowViewModel : ViewModelBase
 {
-    private readonly IDialogService dialogService;
-    public RoutingState Router { get; } = new();
-    public List<INavigationItem> NavigationHeaderItems { get; }
-    public List<INavigationItem> NavigationFooterItems { get; }
-    public List<TitleBarItem> TitleBarItems { get; }
+    private readonly BlogViewModel blogViewModel;
+    private readonly CommunityViewModel communityViewModel;
+    private readonly LaunchGameViewModel launchGameViewModel;
+    private readonly OptionsViewModel optionsViewModel;
+    private readonly IScreen screen;
+    private readonly ServersViewModel serversViewModel;
+    private readonly UpdatesViewModel updatesViewModel;
 
-    public MainWindowViewModel(IDialogService dialogService)
+    [ObservableProperty]
+    private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
+
+    [ObservableProperty]
+    private bool updateAvailableOrUnofficial;
+
+    public ICommand DefaultViewCommand { get; }
+
+    public AvaloniaList<NotificationItem> Notifications { get; init; }
+
+    public RoutingState Router => screen.Router;
+
+    public MainWindowViewModel(IScreen screen, LaunchGameViewModel launchGameViewModel, ServersViewModel serversViewModel, CommunityViewModel communityViewModel, BlogViewModel blogViewModel, UpdatesViewModel updatesViewModel,
+                               OptionsViewModel optionsViewModel, IList<NotificationItem> notifications = null)
     {
-        this.dialogService = dialogService;
-        TitleBarItem maximizeControl = new()
+        Log.Setup();
+        
+        this.screen = screen;
+        this.launchGameViewModel = launchGameViewModel;
+        this.serversViewModel = serversViewModel;
+        this.communityViewModel = communityViewModel;
+        this.blogViewModel = blogViewModel;
+        this.updatesViewModel = updatesViewModel;
+        this.optionsViewModel = optionsViewModel;
+
+        DefaultViewCommand = OpenLaunchGameViewCommand;
+        Notifications = notifications == null ? [] : [..notifications];
+
+        WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
         {
-            Icon = "/Assets/Images/material-design-icons/max-w-10.png"
-        };
-        maximizeControl.Command = ReactiveCommand.Create(() =>
+            Notifications.Add(message.Item);
+            Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
+            });
+        });
+        WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, async (_, message) =>
         {
-            if (MainWindow.WindowState == WindowState.Normal)
+            message.Item.Dismissed = true;
+            await Task.Delay(1000); // Wait for animations
+            if (!Design.IsDesignMode) // Prevent design preview crashes
             {
-                MainWindow.WindowState = WindowState.Maximized;
-                maximizeControl.Icon = "/Assets/Images/material-design-icons/restore-w-10.png";
-            }
-            else
-            {
-                MainWindow.WindowState = WindowState.Normal;
-                maximizeControl.Icon = "/Assets/Images/material-design-icons/max-w-10.png";
+                Notifications.Remove(message.Item);
             }
         });
-        TitleBarItems = new List<TitleBarItem>
-        {
-            new()
-            {
-                Command = ReactiveCommand.Create(() => MainWindow.WindowState = WindowState.Minimized),
-                Icon = "/Assets/Images/material-design-icons/min-w-10.png"
-            },
-            maximizeControl,
-            new()
-            {
-                Command = ReactiveCommand.Create(() => MainWindow.Close()),
-                Icon = "/Assets/Images/material-design-icons/close-w-10.png",
-                HoverBackgroundColor = new SolidColorBrush(Colors.Red)
-            }
-        };
 
-        NavigationHeaderItems = new List<INavigationItem>
+        if (!NitroxEnvironment.IsReleaseMode)
         {
-            new NavigationHeader("PLAY"),
-            new NavigationItem("Play game")
-            {
-                ToolTipText = "Play the game",
-                Icon = "/Assets/Images/material-design-icons/play.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
-            },
-            new NavigationItem("Servers")
-            {
-                ToolTipText = "Configure and start the server",
-                Icon = "/Assets/Images/material-design-icons/server.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<ServersViewModel>()))
-            },
-            new NavigationItem("Library")
-            {
-                ToolTipText = "Configure your setup",
-                Icon = "/Assets/Images/material-design-icons/library.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
-            },
-            new NavigationHeader("EXPLORE"),
-            new NavigationItem("Community")
-            {
-                ToolTipText = "Join the Nitrox community",
-                Icon = "/Assets/Images/material-design-icons/community.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
-            },
-            new NavigationItem("Blog")
-            {
-                ToolTipText = "Read the latest from the Dev Blog",
-                Icon = "/Assets/Images/material-design-icons/blog.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
-            }
-        };
-
-        NavigationFooterItems = new List<INavigationItem>
-        {
-            new NavigationItem("Updates")
-            {
-                Icon = "/Assets/Images/material-design-icons/download.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
-            },
-            new NavigationItem("Options")
-            {
-                Icon = "/Assets/Images/material-design-icons/options.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(AppViewLocator.GetSharedViewModel<PlayViewModel>()))
-            }
-        };
-    }
-
-    public async Task<T> ShowDialogAsync<T, TExtra>(Action<T, TExtra> setup = null, TExtra extraParameter = default) where T : ModalViewModelBase
-    {
-        T viewModel = dialogService.CreateViewModel<T>();
-        setup?.Invoke(viewModel, extraParameter);
-        bool? result = await dialogService.ShowDialogAsync<T>(this, viewModel);
-        if (result == true)
-        {
-            return viewModel;
+            LauncherNotifier.Info("You're now using Nitrox DEV build");
         }
-        return default;
+
+        Task.Run(async () =>
+        {
+            if (!await NetHelper.HasInternetConnectivityAsync())
+            {
+                Log.Warn("Launcher may not be connected to internet");
+                LauncherNotifier.Warning("Launcher may not be connected to internet");
+            }
+            UpdateAvailableOrUnofficial = await UpdatesViewModel.IsNitroxUpdateAvailableAsync();
+        });
     }
 
-    public Task<T> ShowDialogAsync<T>(Action<T> setup = null) where T : ModalViewModelBase => ShowDialogAsync<T,Action<T>>((model, act) => act?.Invoke(model), setup);
+    [RelayCommand]
+    public void OpenLaunchGameView()
+    {
+        screen.Show(launchGameViewModel);
+    }
+
+    [RelayCommand]
+    public void OpenServersView()
+    {
+        screen.Show(serversViewModel);
+    }
+
+    [RelayCommand]
+    public void OpenCommunityView()
+    {
+        screen.Show(communityViewModel);
+    }
+
+    [RelayCommand]
+    public void OpenBlogView()
+    {
+        screen.Show(blogViewModel);
+    }
+
+    [RelayCommand]
+    public void OpenUpdatesView()
+    {
+        screen.Show(updatesViewModel);
+    }
+
+    [RelayCommand]
+    public void OpenOptionsView()
+    {
+        screen.Show(optionsViewModel);
+    }
+
+    [RelayCommand]
+    public void Minimize()
+    {
+        MainWindow.WindowState = WindowState.Minimized;
+    }
+
+    [RelayCommand]
+    public void Close()
+    {
+        MainWindow.Close();
+    }
+
+    [RelayCommand]
+    public void Maximize()
+    {
+        if (MainWindow.WindowState == WindowState.Normal)
+        {
+            MainWindow.WindowState = WindowState.Maximized;
+            MaximizeButtonIcon = "/Assets/Images/material-design-icons/restore-w-10.png";
+        }
+        else
+        {
+            MainWindow.WindowState = WindowState.Normal;
+            MaximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
+        }
+    }
 }

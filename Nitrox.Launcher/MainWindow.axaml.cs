@@ -1,22 +1,30 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive;
+using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
+using NitroxModel.Platforms.OS.Windows;
 using ReactiveUI;
+using Serilog;
 
 namespace Nitrox.Launcher;
 
 public partial class MainWindow : WindowBase<MainWindowViewModel>
 {
-    private readonly HashSet<Exception> handledExceptions = new();
+    private readonly IDialogService dialogService;
+    private readonly HashSet<Exception> handledExceptions = [];
 
-    public MainWindow()
+    public MainWindow(IDialogService dialogService)
     {
+        this.dialogService = dialogService;
         // Handle thrown exceptions so they aren't hidden.
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
@@ -38,31 +46,71 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         this.WhenActivated(d =>
         {
             // Set clicked nav item as selected (and deselect the others).
-            Button lastClickedNav = null;
+            Button lastClickedNav = OpenLaunchGameViewButton;
             d(Button.ClickEvent.Raised.Subscribe(tuple =>
             {
-                if (tuple.Item2.Source is Button btn && btn.Classes.Contains("nav"))
+                if (tuple.Item2.Source is Button btn && btn.Parent?.Classes.Contains("nav") == true)
                 {
                     lastClickedNav?.SetValue(NitroxAttached.SelectedProperty, false);
                     lastClickedNav = btn;
                     btn.SetValue(NitroxAttached.SelectedProperty, true);
                 }
             }));
+
+            try
+            {
+                ViewModel?.DefaultViewCommand.Execute(null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Failed to execute {nameof(ViewModel.DefaultViewCommand)} command");
+            }
         });
 
         InitializeComponent();
+
+        // Restore default window animations for Windows OS
+        if (!Design.IsDesignMode)
+        {
+            IntPtr? windowHandle = GetTopLevel(this)?.TryGetPlatformHandle()?.Handle;
+            if (windowHandle.HasValue)
+            {
+                WindowsApi.EnableDefaultWindowAnimations(windowHandle.Value);
+            }
+        }
     }
 
     private async void UnhandledExceptionHandler(Exception ex)
     {
-        if (handledExceptions.Contains(ex))
+        if (!handledExceptions.Add(ex))
         {
             return;
         }
-        handledExceptions.Add(ex);
+        if (Design.IsDesignMode)
+        {
+            Debug.WriteLine(ex);
+            return;
+        }
 
-        await ViewModel?.ShowDialogAsync<ErrorViewModel>(vm => vm.Exception = ex)!;
+        string title = ex switch
+                       {
+                           TargetInvocationException e => e.InnerException?.Message,
+                           _ => ex.Message
+                       } ??
+                       ex.Message;
+
+        await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        {
+            model.Title = $"Error: {title}";
+            model.Description = ex.ToString();
+            model.DescriptionForeground = new SolidColorBrush(Colors.Red);
+            model.ButtonOptions = ButtonOptions.OkClipboard;
+        });
+
+        Environment.Exit(1);
     }
 
     private void TitleBar_OnPointerPressed(object sender, PointerPressedEventArgs e) => BeginMoveDrag(e);
+
+    private void Window_OnPointerPressed(object sender, PointerPressedEventArgs e) => Focus(); // Allow for de-focusing textboxes when clicking outside of them.
 }

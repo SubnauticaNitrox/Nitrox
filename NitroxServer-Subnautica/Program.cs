@@ -1,8 +1,9 @@
 ﻿global using NitroxModel.Logger;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,11 +20,12 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
+using NitroxServer_Subnautica.Communication;
 using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer_Subnautica;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
+[SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
 public class Program
 {
     private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new();
@@ -75,6 +77,7 @@ public class Program
         {
             Console.TreatControlCAsInput = true;
         }
+        
         Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
         Server server;
@@ -84,30 +87,31 @@ public class Program
         {
             handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
             AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
-
+            
             Stopwatch watch = Stopwatch.StartNew();
-
+            
             // Allow game path to be given as command argument
+            string gameDir = "";
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
             {
-                string gameDir = Path.GetFullPath(args[0]);
-                Log.Info($"Using game files from: {gameDir}");
+                gameDir = Path.GetFullPath(args[0]);
                 gameInstallDir = new Lazy<string>(() => gameDir);
             }
             else
             {
                 gameInstallDir = new Lazy<string>(() =>
                 {
-                    string gameDir = NitroxUser.GamePath;
-                    Log.Info($"Using game files from: {gameDir}");
+                    gameDir = NitroxUser.GamePath;
                     return gameDir;
                 });
             }
+            Log.Info($"Using game files from: {gameDir}");
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
-
             server = NitroxServiceLocator.LocateService<Server>();
+            
+            Log.SaveName = server.Name;
 
             await WaitForAvailablePortAsync(server.Port);
 
@@ -138,185 +142,231 @@ public class Program
     }
 
     /// <summary>
-    ///     Handles per-key input of the console and passes input submit to <see cref="ConsoleCommandProcessor"/>.
+    ///     Handles per-key input of the console and passes input submit to <see cref="ConsoleCommandProcessor" />.
     /// </summary>
     private static async Task HandleConsoleInputAsync(Action<string> submitHandler, CancellationTokenSource cancellation = default)
     {
+        cancellation ??= new CancellationTokenSource();
+
+        ConcurrentQueue<string> commandQueue = new();
+
         if (Console.IsInputRedirected)
         {
-            while (!cancellation?.IsCancellationRequested ?? false)
+            Task.Run(() =>
             {
-                submitHandler(await Task.Run(Console.ReadLine));
-            }
-            return;
-        }
-
-        StringBuilder inputLineBuilder = new();
-
-        void ClearInputLine()
-        {
-            currentHistoryIndex = 0;
-            inputLineBuilder.Clear();
-            Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r");
-        }
-
-        void RedrawInput(int start = 0, int end = 0)
-        {
-            int lastPosition = Console.CursorLeft;
-            // Expand range to end if end value is -1
-            if (start > -1 && end == -1)
-            {
-                end = Math.Max(inputLineBuilder.Length - start, 0);
-            }
-
-            if (start == 0 && end == 0)
-            {
-                // Redraw entire line
-                Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r{inputLineBuilder}");
-            }
-            else
-            {
-                // Redraw part of line
-                string changedInputSegment = inputLineBuilder.ToString(start, end);
-                Console.CursorVisible = false;
-                Console.Write($"{changedInputSegment}{new string(' ', inputLineBuilder.Length - changedInputSegment.Length - Console.CursorLeft + 1)}");
-                Console.CursorVisible = true;
-            }
-            Console.CursorLeft = lastPosition;
-        }
-
-        while (!cancellation?.IsCancellationRequested ?? false)
-        {
-            if (!Console.KeyAvailable)
-            {
-                await Task.Delay(10, cancellation.Token);
-                continue;
-            }
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            // Handle (ctrl) hotkeys
-            if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
-            {
-                switch (keyInfo.Key)
+                while (!cancellation.IsCancellationRequested)
                 {
-                    case ConsoleKey.C:
-                        if (inputLineBuilder.Length > 0)
-                        {
-                            ClearInputLine();
-                            continue;
-                        }
-
-                        cancellation.Cancel();
-                        return;
-                    case ConsoleKey.D:
-                        cancellation.Cancel();
-                        return;
-                    default:
-                        // Unhandled modifier key
-                        continue;
+                    string commandRead = Console.ReadLine();
+                    commandQueue.Enqueue(commandRead);
                 }
-            }
-
-            if (keyInfo.Modifiers == 0)
+            }, cancellation.Token).ContinueWith(t =>
             {
-                switch (keyInfo.Key)
+                if (t.IsFaulted)
                 {
-                    case ConsoleKey.LeftArrow when Console.CursorLeft > 0:
-                        Console.CursorLeft--;
-                        continue;
-                    case ConsoleKey.RightArrow when Console.CursorLeft < inputLineBuilder.Length:
-                        Console.CursorLeft++;
-                        continue;
-                    case ConsoleKey.Backspace:
-                        if (inputLineBuilder.Length > Console.CursorLeft - 1 && Console.CursorLeft > 0)
-                        {
-                            inputLineBuilder.Remove(Console.CursorLeft - 1, 1);
-                            Console.CursorLeft--;
-                            Console.Write(' ');
-                            Console.CursorLeft--;
-                            RedrawInput();
-                        }
-                        continue;
-                    case ConsoleKey.Delete:
-                        if (inputLineBuilder.Length > 0 && Console.CursorLeft < inputLineBuilder.Length)
-                        {
-                            inputLineBuilder.Remove(Console.CursorLeft, 1);
-                            RedrawInput(Console.CursorLeft, inputLineBuilder.Length - Console.CursorLeft);
-                        }
-                        continue;
-                    case ConsoleKey.Home:
-                        Console.CursorLeft = 0;
-                        continue;
-                    case ConsoleKey.End:
-                        Console.CursorLeft = inputLineBuilder.Length;
-                        continue;
-                    case ConsoleKey.Escape:
-                        ClearInputLine();
-                        continue;
-                    case ConsoleKey.Tab:
-                        if (Console.CursorLeft + 4 < Console.WindowWidth)
-                        {
-                            inputLineBuilder.Insert(Console.CursorLeft, "    ");
-                            RedrawInput(Console.CursorLeft, -1);
-                            Console.CursorLeft += 4;
-                        }
-                        continue;
-                    case ConsoleKey.UpArrow when inputHistory.Count > 0 && currentHistoryIndex > -inputHistory.Count:
-                        inputLineBuilder.Clear();
-                        inputLineBuilder.Append(inputHistory[--currentHistoryIndex]);
-                        RedrawInput();
-                        Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
-                        continue;
-                    case ConsoleKey.DownArrow when inputHistory.Count > 0 && currentHistoryIndex < 0:
-                        if (currentHistoryIndex == -1)
-                        {
-                            ClearInputLine();
-                            continue;
-                        }
-                        inputLineBuilder.Clear();
-                        inputLineBuilder.Append(inputHistory[++currentHistoryIndex]);
-                        RedrawInput();
-                        Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
-                        continue;
+                    Log.Error(t.Exception);
                 }
-            }
-            // Handle input submit to submit handler
-            if (keyInfo.Key == ConsoleKey.Enter)
+            });
+        }
+        else
+        {
+            StringBuilder inputLineBuilder = new();
+
+            void ClearInputLine()
             {
-                string submit = inputLineBuilder.ToString();
-                if (inputHistory.Count == 0 || inputHistory[inputHistory.LastChangedIndex] != submit)
-                {
-                    inputHistory.Add(submit);
-                }
                 currentHistoryIndex = 0;
-                submitHandler?.Invoke(submit);
                 inputLineBuilder.Clear();
-                Console.WriteLine();
-                continue;
+                Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r");
             }
 
-            // If unhandled key, append as input.
-            if (keyInfo.KeyChar != 0)
+            void RedrawInput(int start = 0, int end = 0)
             {
-                Console.Write(keyInfo.KeyChar);
-                if (Console.CursorLeft - 1 < inputLineBuilder.Length)
+                int lastPosition = Console.CursorLeft;
+                // Expand range to end if end value is -1
+                if (start > -1 && end == -1)
                 {
-                    inputLineBuilder.Insert(Console.CursorLeft - 1, keyInfo.KeyChar);
-                    RedrawInput(Console.CursorLeft, -1);
+                    end = Math.Max(inputLineBuilder.Length - start, 0);
+                }
+
+                if (start == 0 && end == 0)
+                {
+                    // Redraw entire line
+                    Console.Write($"\r{new string(' ', Console.WindowWidth - 1)}\r{inputLineBuilder}");
                 }
                 else
                 {
-                    inputLineBuilder.Append(keyInfo.KeyChar);
+                    // Redraw part of line
+                    string changedInputSegment = inputLineBuilder.ToString(start, end);
+                    Console.CursorVisible = false;
+                    Console.Write($"{changedInputSegment}{new string(' ', inputLineBuilder.Length - changedInputSegment.Length - Console.CursorLeft + 1)}");
+                    Console.CursorVisible = true;
                 }
+                Console.CursorLeft = lastPosition;
             }
+
+            Task.Run(async () =>
+            {
+                while (!cancellation?.IsCancellationRequested ?? false)
+                {
+                    if (!Console.KeyAvailable)
+                    {
+                        try
+                        {
+                            await Task.Delay(10, cancellation.Token);
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            // ignored
+                        }
+                        continue;
+                    }
+
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                    // Handle (ctrl) hotkeys
+                    if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
+                    {
+                        switch (keyInfo.Key)
+                        {
+                            case ConsoleKey.C:
+                                if (inputLineBuilder.Length > 0)
+                                {
+                                    ClearInputLine();
+                                    continue;
+                                }
+
+                                await cancellation.CancelAsync();
+                                return;
+                            case ConsoleKey.D:
+                                await cancellation.CancelAsync();
+                                return;
+                            default:
+                                // Unhandled modifier key
+                                continue;
+                        }
+                    }
+
+                    if (keyInfo.Modifiers == 0)
+                    {
+                        switch (keyInfo.Key)
+                        {
+                            case ConsoleKey.LeftArrow when Console.CursorLeft > 0:
+                                Console.CursorLeft--;
+                                continue;
+                            case ConsoleKey.RightArrow when Console.CursorLeft < inputLineBuilder.Length:
+                                Console.CursorLeft++;
+                                continue;
+                            case ConsoleKey.Backspace:
+                                if (inputLineBuilder.Length > Console.CursorLeft - 1 && Console.CursorLeft > 0)
+                                {
+                                    inputLineBuilder.Remove(Console.CursorLeft - 1, 1);
+                                    Console.CursorLeft--;
+                                    Console.Write(' ');
+                                    Console.CursorLeft--;
+                                    RedrawInput();
+                                }
+                                continue;
+                            case ConsoleKey.Delete:
+                                if (inputLineBuilder.Length > 0 && Console.CursorLeft < inputLineBuilder.Length)
+                                {
+                                    inputLineBuilder.Remove(Console.CursorLeft, 1);
+                                    RedrawInput(Console.CursorLeft, inputLineBuilder.Length - Console.CursorLeft);
+                                }
+                                continue;
+                            case ConsoleKey.Home:
+                                Console.CursorLeft = 0;
+                                continue;
+                            case ConsoleKey.End:
+                                Console.CursorLeft = inputLineBuilder.Length;
+                                continue;
+                            case ConsoleKey.Escape:
+                                ClearInputLine();
+                                continue;
+                            case ConsoleKey.Tab:
+                                if (Console.CursorLeft + 4 < Console.WindowWidth)
+                                {
+                                    inputLineBuilder.Insert(Console.CursorLeft, "    ");
+                                    RedrawInput(Console.CursorLeft, -1);
+                                    Console.CursorLeft += 4;
+                                }
+                                continue;
+                            case ConsoleKey.UpArrow when inputHistory.Count > 0 && currentHistoryIndex > -inputHistory.Count:
+                                inputLineBuilder.Clear();
+                                inputLineBuilder.Append(inputHistory[--currentHistoryIndex]);
+                                RedrawInput();
+                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                                continue;
+                            case ConsoleKey.DownArrow when inputHistory.Count > 0 && currentHistoryIndex < 0:
+                                if (currentHistoryIndex == -1)
+                                {
+                                    ClearInputLine();
+                                    continue;
+                                }
+                                inputLineBuilder.Clear();
+                                inputLineBuilder.Append(inputHistory[++currentHistoryIndex]);
+                                RedrawInput();
+                                Console.CursorLeft = Math.Min(inputLineBuilder.Length, Console.WindowWidth);
+                                continue;
+                        }
+                    }
+                    // Handle input submit to submit handler
+                    if (keyInfo.Key == ConsoleKey.Enter)
+                    {
+                        string submit = inputLineBuilder.ToString();
+                        if (inputHistory.Count == 0 || inputHistory[inputHistory.LastChangedIndex] != submit)
+                        {
+                            inputHistory.Add(submit);
+                        }
+                        currentHistoryIndex = 0;
+                        commandQueue.Enqueue(submit);
+                        inputLineBuilder.Clear();
+                        Console.WriteLine();
+                        continue;
+                    }
+
+                    // If unhandled key, append as input.
+                    if (keyInfo.KeyChar != 0)
+                    {
+                        Console.Write(keyInfo.KeyChar);
+                        if (Console.CursorLeft - 1 < inputLineBuilder.Length)
+                        {
+                            inputLineBuilder.Insert(Console.CursorLeft - 1, keyInfo.KeyChar);
+                            RedrawInput(Console.CursorLeft, -1);
+                        }
+                        else
+                        {
+                            inputLineBuilder.Append(keyInfo.KeyChar);
+                        }
+                    }
+                }
+            }, cancellation.Token).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    Log.Error(t.Exception);
+                }
+            });
+        }
+
+        using IpcHost ipcHost = IpcHost.StartReadingCommands(command => commandQueue.Enqueue(command));
+
+        // Important: keep command handler on the main thread (i.e. don't Task.Run)
+        while (!cancellation.IsCancellationRequested)
+        {
+            while (commandQueue.TryDequeue(out string command))
+            {
+                submitHandler(command);
+            }
+            await Task.Delay(10);
         }
     }
 
     private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
     {
+        int messageLength = 0;
         void PrintPortWarn(int timeRemaining)
         {
-            Log.Warn($"Port {port} UDP is already in use. Retrying for {timeRemaining} seconds until it is available..");
+            string message = $"Port {port} UDP is already in use. Please change the server port or close out any program that may be using it. Retrying for {timeRemaining} seconds until it is available...";
+            messageLength = message.Length;
+            Log.Warn(message);
         }
 
         Validate.IsTrue(timeoutInSeconds >= 5, "Timeout must be at least 5 seconds.");
@@ -343,8 +393,17 @@ public class Program
                 }
                 else if (Environment.UserInteractive)
                 {
-                    Console.CursorTop--;
+                    // If not first time, move cursor up the number of lines it takes up to overwrite previous message
+                    int numberOfLines = (int)Math.Ceiling( ((double)messageLength + 15) / Console.BufferWidth );
+                    for (int i = 0; i < numberOfLines; i++)
+                    {
+                        if (Console.CursorTop > 0) // Check to ensure we don't go out of bounds
+                        {
+                            Console.CursorTop--;
+                        }
+                    }
                     Console.CursorLeft = 0;
+                    
                     PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
                 }
 
@@ -413,28 +472,5 @@ public class Program
         // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
         Assembly assembly = Assembly.Load(File.ReadAllBytes(dllPath));
         return resolvedAssemblyCache[dllFileName] = assembly;
-    }
-
-    /**
-     * Internal subnautica files are setup using US english number formats and dates.  To ensure
-     * that we parse all of these appropriately, we will set the default cultureInfo to en-US.
-     * This must best done for any thread that is spun up and needs to read from files (unless
-     * we were to migrate to 4.5.)  Failure to set the context can result in very strange behaviour
-     * throughout the entire application.  This originally manifested itself as a duplicate spawning
-     * issue for players in Europe.  This was due to incorrect parsing of probability tables.
-     */
-    private static void ConfigureCultureInfo()
-    {
-        CultureInfo cultureInfo = new("en-US");
-
-        // Although we loaded the en-US cultureInfo, let's make sure to set these incase the
-        // default was overriden by the user.
-        cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
-        cultureInfo.NumberFormat.NumberGroupSeparator = ",";
-
-        Thread.CurrentThread.CurrentCulture = cultureInfo;
-        Thread.CurrentThread.CurrentUICulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
     }
 }

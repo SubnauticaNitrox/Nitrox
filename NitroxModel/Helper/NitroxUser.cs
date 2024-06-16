@@ -26,7 +26,7 @@ namespace NitroxModel.Helper
             () =>
             {
                 Assembly currentAsm = Assembly.GetEntryAssembly();
-                if (currentAsm?.GetName().Name.Equals("NitroxLauncher") ?? false)
+                if (currentAsm?.GetName().Name.Equals("Nitrox.Launcher") ?? false)
                 {
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
@@ -40,7 +40,7 @@ namespace NitroxModel.Helper
                     return execParentDir.FullName;
                 }
 
-                // NitroxModel, NitroxServer and other assemblies are stored in NitroxLauncher/lib
+                // NitroxModel, NitroxServer and other assemblies are stored in Nitrox.Launcher/lib
                 if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "LanguageFiles")))
                 {
                     return execParentDir.Parent.FullName;
@@ -85,7 +85,20 @@ namespace NitroxModel.Helper
             set => KeyValueStore.Instance.SetValue(PREFERRED_GAMEPATH_KEY, value);
         }
 
-        public static IGamePlatform GamePlatform { get; private set; }
+        private static IGamePlatform gamePlatform;
+        public static event Action GamePlatformChanged;
+        public static IGamePlatform GamePlatform
+        {
+            get { return gamePlatform; }
+            set
+            {
+                if (gamePlatform != value)
+                {
+                    gamePlatform = value;
+                    GamePlatformChanged?.Invoke();
+                }
+            }
+        }
 
         public static string GamePath
         {
@@ -101,7 +114,9 @@ namespace NitroxModel.Helper
                 if (potentiallyValidResult?.IsOk == true)
                 {
                     Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Installation.Path}'");
-                    return gamePath = potentiallyValidResult.Installation.Path;
+                    gamePath = potentiallyValidResult.Installation.Path;
+                    GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
+                    return gamePath;
                 }
 
                 Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");

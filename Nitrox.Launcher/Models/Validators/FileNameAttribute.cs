@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 
 namespace Nitrox.Launcher.Models.Validators;
 
@@ -12,11 +13,16 @@ public sealed class FileNameAttribute : TypedValidationAttribute<string>
 
     protected override ValidationResult IsValid(string value, ValidationContext context)
     {
-        if (value == null || value.IndexOfAny(invalidPathCharacters) == -1)
+        if (value == null)
         {
             return ValidationResult.Success;
         }
+        int indexOfAny = value.IndexOfAny(invalidPathCharacters);
+        if (indexOfAny > -1)
+        {
+            return new ValidationResult($"{context.DisplayName} must not contain '{value[indexOfAny]}'. All invalid characters: {string.Join(' ', invalidPathCharacters.Where(c => c > 31))}");
+        }
 
-        return new ValidationResult($"The field {context.DisplayName} must be valid as a file name.");
+        return ValidationResult.Success;
     }
 }
