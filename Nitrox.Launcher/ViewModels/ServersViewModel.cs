@@ -122,9 +122,10 @@ public partial class ServersViewModel : RoutableViewModelBase
     
     private async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
     {
-        ConfirmationBoxViewModel modalViewModel = await dialogService.ShowAsync<ConfirmationBoxViewModel>(model =>
+        DialogBoxViewModal modalViewModel = await dialogService.ShowAsync<DialogBoxViewModal>(model =>
         {
-            model.ConfirmationText = $"The version of '{server.Name}' is v{server.Version}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+            model.Description = $"The version of '{server.Name}' is v{server.Version}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+            model.ButtonOptions = ButtonOptions.YesNo;
         });
         return modalViewModel != null;
     }

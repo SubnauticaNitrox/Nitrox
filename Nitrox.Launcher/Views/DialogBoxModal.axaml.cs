@@ -2,9 +2,9 @@ using Nitrox.Launcher.Views.Abstract;
 
 namespace Nitrox.Launcher.Views;
 
-public partial class ConfirmationBoxModal : ModalBase
+public partial class DialogBoxModal : ModalBase
 {
-    public ConfirmationBoxModal()
+    public DialogBoxModal()
     {
         InitializeComponent();
     }

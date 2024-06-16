@@ -21,7 +21,7 @@ public static class DesignData
 
         MainWindowViewModel = new(null, null, null, null, null, null, null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
         
-        LaunchGameViewModel = new(null, null);
+        LaunchGameViewModel = new(null, null, null);
         
         ManageServerViewModel = new(null, null) { ServerName = "My fun server" };
         
@@ -44,7 +44,7 @@ public static class DesignData
             }
         };
         
-        ConfirmationBoxViewModel = new() { ConfirmationText = "Confirmation Text" };
+        DialogBoxViewModal = new() { Title = "Title Text", Description = "Description Text" };
     }
     
     public static MainWindowViewModel MainWindowViewModel { get; }
@@ -56,5 +56,5 @@ public static class DesignData
     public static BlogViewModel BlogViewModel { get; }
     public static UpdatesViewModel UpdatesViewModel { get; }
     public static OptionsViewModel OptionsViewModel { get; }
-    public static ConfirmationBoxViewModel ConfirmationBoxViewModel { get; }
+    public static DialogBoxViewModal DialogBoxViewModal { get; }
 }

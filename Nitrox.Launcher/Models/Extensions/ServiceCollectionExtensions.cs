@@ -26,10 +26,8 @@ public static class ServiceCollectionExtensions
         // Dialog ViewModels and Dialog Views
         collection.AddTransient<CreateServerViewModel>();
         collection.AddTransient<CreateServerModal>();
-        collection.AddTransient<ConfirmationBoxViewModel>();
-        collection.AddTransient<ConfirmationBoxModal>();
-        collection.AddTransient<ErrorViewModel>();
-        collection.AddTransient<ErrorModal>();
+        collection.AddTransient<DialogBoxViewModal>();
+        collection.AddTransient<DialogBoxModal>();
 
         // Views
         collection.AddSingleton(provider => new MainWindow(provider.GetRequiredService<IDialogService>()) { DataContext = provider.GetRequiredService<MainWindowViewModel>() });
