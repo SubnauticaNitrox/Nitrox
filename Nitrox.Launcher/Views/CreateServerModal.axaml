@@ -29,8 +29,8 @@
         </StackPanel>
         <ContentControl Classes="footer">
             <Panel>
-                <Button Content="Back" FontWeight="Bold" HotKey="{Binding BackHotkey}" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                <Button Classes="primary" Content="Create" HorizontalAlignment="Right" HotKey="{Binding CreateHotkey}" Command="{Binding CreateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                <Button Content="Back" FontWeight="Bold" HotKey="{Binding BackHotkey}" Command="{Binding CloseCommand}" />
+                <Button Classes="primary" Content="Create" HorizontalAlignment="Right" HotKey="{Binding CreateHotkey}" Command="{Binding CreateCommand}" />
             </Panel>
         </ContentControl>
     </StackPanel>

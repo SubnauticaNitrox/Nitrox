@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿using System.Linq;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
@@ -13,9 +15,9 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
     [ObservableProperty] private bool? dialogResult;
 
     [RelayCommand]
-    public void Close(Window window)
+    public void Close()
     {
-        window.Close(DialogResult);
+        ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close(DialogResult);
     }
 
     public static implicit operator bool(ModalViewModelBase self)

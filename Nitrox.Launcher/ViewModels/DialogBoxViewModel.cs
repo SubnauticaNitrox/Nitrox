@@ -34,7 +34,7 @@ public partial class DialogBoxViewModal : ModalViewModelBase
     private void Yes(Window window)
     {
         DialogResult = true;
-        Close(window);
+        Close();
     }
     
     [RelayCommand]
