@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxLauncher", "NitroxLauncher\NitroxLauncher.csproj", "{59EB8953-864F-4147-A210-7FC97E1A5294}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{39E377AD-2163-4428-952D-EBECD402C8F3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel-Subnautica", "NitroxModel-Subnautica\NitroxModel-Subnautica.csproj", "{47D774E0-750C-427B-8C38-F8F985114A2E}"
@@ -49,10 +47,6 @@ Global
 		{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Release|Any CPU.Build.0 = Release|Any CPU
 		{39E377AD-2163-4428-952D-EBECD402C8F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39E377AD-2163-4428-952D-EBECD402C8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39E377AD-2163-4428-952D-EBECD402C8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
