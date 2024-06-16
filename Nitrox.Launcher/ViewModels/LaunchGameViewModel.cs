@@ -46,12 +46,12 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     {
         this.dialogService = dialogService;
         this.optionsViewModel = optionsViewModel;
-        
+
         NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
         GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
         PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
-        
+
         foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
         {
             GalleryImageSources.Add(asset.LocalPath);
@@ -83,7 +83,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in singleplayer mode:");
-            await dialogService.ShowAsync<DialogBoxViewModal>(model =>
+            await dialogService.ShowAsync<DialogBoxViewModel>(model =>
             {
                 model.Title = "Error while starting game in singleplayer mode";
                 model.Description = $"Error while starting game in singleplayer mode: {ex}";
@@ -153,7 +153,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in multiplayer mode:");
-            await dialogService.ShowAsync<DialogBoxViewModal>(model =>
+            await dialogService.ShowAsync<DialogBoxViewModel>(model =>
             {
                 model.Title = "Error while starting game in multiplayer mode";
                 model.Description = $"Error while starting game in multiplayer mode: {ex}";
@@ -182,7 +182,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 
         return game ?? throw new Exception($"Game failed to start through {platform.Name}");
     }
-    
+
     private void UpdateGamePlatform()
     {
         GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;

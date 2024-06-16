@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
         // Dialog ViewModels and Dialog Views
         collection.AddTransient<CreateServerViewModel>();
         collection.AddTransient<CreateServerModal>();
-        collection.AddTransient<DialogBoxViewModal>();
+        collection.AddTransient<DialogBoxViewModel>();
         collection.AddTransient<DialogBoxModal>();
 
         // Views

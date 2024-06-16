@@ -33,6 +33,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     private readonly IDialogService dialogService;
     private readonly ManageServerViewModel manageServerViewModel;
     private CancellationTokenSource serverRefreshCts;
+    private bool isFirstView = true;
 
     [ObservableProperty]
     private AvaloniaList<ServerEntry> servers = [];
@@ -45,37 +46,42 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         this.dialogService = dialogService;
         this.manageServerViewModel = manageServerViewModel;
-        
+
         GetSavesOnDisk();
+
+        WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
+        {
+            if (message.PropertyName == nameof(ServerEntry.IsOnline))
+            {
+                ManageServerCommand.NotifyCanExecuteChanged();
+            }
+        });
+        WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
+        {
+            for (int i = Servers.Count - 1; i >= 0; i--)
+            {
+                if (Servers[i].Name == message.SaveName)
+                {
+                    Servers.RemoveAt(i);
+                }
+            }
+        });
 
         this.WhenActivated(disposables =>
         {
             // Activation
             serverRefreshCts = new();
-            WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
+            if (!isFirstView)
             {
-                if (message.PropertyName == nameof(ServerEntry.IsOnline))
-                {
-                    ManageServerCommand.NotifyCanExecuteChanged();
-                }
-            });
-            WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
-            {
-                for (int i = Servers.Count - 1; i >= 0; i--)
-                {
-                    if (Servers[i].Name == message.SaveName)
-                    {
-                        Servers.RemoveAt(i);
-                    }
-                }
-            });
+                GetSavesOnDisk();
+            }
+            isFirstView = false;
             InitializeWatcher();
 
             // Deactivation
             Disposable
                 .Create(this, vm =>
                 {
-                    WeakReferenceMessenger.Default.UnregisterAll(vm);
                     vm.watcher?.Dispose();
                     vm.serverRefreshCts.Cancel();
                 })
@@ -104,11 +110,11 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             return;
         }
-        
+
         server.Start();
         server.Version = NitroxEnvironment.Version;
     }
-    
+
     [RelayCommand]
     public async Task ManageServer(ServerEntry server)
     {
@@ -116,27 +122,27 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             return;
         }
-        
+
         manageServerViewModel.LoadFrom(server);
         HostScreen.Show(manageServerViewModel);
     }
-    
+
     private async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
     {
-        DialogBoxViewModal modalViewModel = await dialogService.ShowAsync<DialogBoxViewModal>(model =>
+        DialogBoxViewModel modelViewModel = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Description = $"The version of '{server.Name}' is v{server.Version}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
             model.DescriptionFontSize = 24;
             model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
-        return modalViewModel != null;
+        return modelViewModel != null;
     }
 
     public void GetSavesOnDisk()
     {
         Directory.CreateDirectory(SavesFolderDir);
-        
+
         List<ServerEntry> serversOnDisk = [];
 
         foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
@@ -223,7 +229,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             Name = name,
             GameMode = gameMode,
             Seed = "",
-            Version = NitroxEnvironment.Version 
+            Version = NitroxEnvironment.Version
         });
     }
 

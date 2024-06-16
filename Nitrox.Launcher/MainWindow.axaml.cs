@@ -68,7 +68,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         });
 
         InitializeComponent();
-        
+
         // Restore default window animations for Windows OS
         if (!Design.IsDesignMode)
         {
@@ -98,15 +98,15 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                            _ => ex.Message
                        } ??
                        ex.Message;
-        
-        await dialogService.ShowAsync<DialogBoxViewModal>(model =>
+
+        await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Title = $"Error: {title}";
             model.Description = ex.ToString();
             model.DescriptionForeground = new SolidColorBrush(Colors.Red);
             model.ButtonOptions = ButtonOptions.OkClipboard;
         });
-        
+
         Environment.Exit(1);
     }
 

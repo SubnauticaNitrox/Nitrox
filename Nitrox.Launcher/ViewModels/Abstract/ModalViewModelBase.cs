@@ -13,15 +13,16 @@ namespace Nitrox.Launcher.ViewModels.Abstract;
 public abstract partial class ModalViewModelBase : ObservableValidator, IModalDialogViewModel
 {
     [ObservableProperty] private bool? dialogResult;
+    [ObservableProperty] private ButtonOptions? selectedOption;
+
+    public static implicit operator bool(ModalViewModelBase self)
+    {
+        return self is { DialogResult: true } and not { SelectedOption: ButtonOptions.No };
+    }
 
     [RelayCommand]
     public void Close()
     {
         ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close(DialogResult);
-    }
-
-    public static implicit operator bool(ModalViewModelBase self)
-    {
-        return self is { DialogResult: true };
     }
 }

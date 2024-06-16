@@ -54,7 +54,7 @@ public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
             BlogViewModel => typeof(BlogView),
             UpdatesViewModel => typeof(UpdatesView),
             OptionsViewModel => typeof(OptionsView),
-            DialogBoxViewModal => typeof(DialogBoxModal),
+            DialogBoxViewModel => typeof(DialogBoxModal),
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
         };
 

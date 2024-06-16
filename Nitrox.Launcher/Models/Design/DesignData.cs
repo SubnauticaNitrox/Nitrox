@@ -44,7 +44,7 @@ public static class DesignData
             }
         };
         
-        DialogBoxViewModal = new() { Title = "Title Text", Description = "Description Text" };
+        DialogBoxViewModel = new() { Title = "Title Text", Description = "Description Text" };
     }
     
     public static MainWindowViewModel MainWindowViewModel { get; }
@@ -56,5 +56,5 @@ public static class DesignData
     public static BlogViewModel BlogViewModel { get; }
     public static UpdatesViewModel UpdatesViewModel { get; }
     public static OptionsViewModel OptionsViewModel { get; }
-    public static DialogBoxViewModal DialogBoxViewModal { get; }
+    public static DialogBoxViewModel DialogBoxViewModel { get; }
 }
