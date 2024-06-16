@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -125,6 +126,8 @@ public partial class ServersViewModel : RoutableViewModelBase
         DialogBoxViewModal modalViewModel = await dialogService.ShowAsync<DialogBoxViewModal>(model =>
         {
             model.Description = $"The version of '{server.Name}' is v{server.Version}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+            model.DescriptionFontSize = 24;
+            model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
         return modalViewModel != null;

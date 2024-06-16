@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Diagnostics; // Only used on Release
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -87,8 +87,8 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             {
                 model.Title = "Error while starting game in singleplayer mode";
                 model.Description = $"Error while starting game in singleplayer mode: {ex}";
+                model.DescriptionForeground = new SolidColorBrush(Colors.Red);
                 model.ButtonOptions = ButtonOptions.OkClipboard;
-                model.Foreground = new SolidColorBrush(Colors.Red);
             });
         }
     }
@@ -98,8 +98,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     {
         try
         {
-            throw new Exception(string.Concat(Enumerable.Repeat("This is a part of a very long error message. ", 150))); // TEMP
-            
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
             {
                 HostScreen.Show(optionsViewModel);
@@ -159,8 +157,8 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             {
                 model.Title = "Error while starting game in multiplayer mode";
                 model.Description = $"Error while starting game in multiplayer mode: {ex}";
+                model.DescriptionForeground = new SolidColorBrush(Colors.Red);
                 model.ButtonOptions = ButtonOptions.OkClipboard;
-                model.Foreground = new SolidColorBrush(Colors.Red);
             });
         }
     }

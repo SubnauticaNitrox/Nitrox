@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+        xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MaxHeight="700"
         d:DataContext="{x:Static design:DesignData.DialogBoxViewModal}"
         x:Class="Nitrox.Launcher.Views.DialogBoxModal"
@@ -13,11 +14,13 @@
         Title="{Binding Title}"
         RequestedThemeVariant="Light">
     <Grid RowDefinitions="Auto,*,Auto">
-        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="24" Margin="24 20 24 -10"
-                   IsVisible="{Binding !Title, Converter={converters:StringIsNullOrEmptyToBoolConverter}}"/>
+        <TextBlock Text="{Binding Title}" Margin="24 20 24 -10" Foreground="{Binding TitleForeground}"
+                   FontWeight="{Binding TitleFontWeight}" FontSize="{Binding TitleFontSize}"
+                   IsVisible="{Binding !Title, Converter={converters:EqualityConverter}}" />
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="24 20 10 20">
-            <TextBlock Foreground="{Binding Foreground}" Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0" />
+            <TextBlock Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0" Foreground="{Binding DescriptionForeground}"
+                       FontWeight="{Binding DescriptionFontWeight}" FontSize="{Binding DescriptionFontSize}" IsVisible="{Binding !Description, Converter={converters:EqualityConverter}}" />
         </ScrollViewer>
         
         <ContentControl Grid.Row="2" Classes="footer">
@@ -25,20 +28,20 @@
                 <!-- Ok Button Option -->
                 <Button Classes="primary" Content="OK" FontWeight="Bold" HorizontalAlignment="Right" HorizontalContentAlignment="Center" Width="80" HotKey="{Binding OkHotkey}"
                         Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                        IsVisible="{Binding ButtonOptions, Converter={converters:ButtonOptionsToBoolConverter}, ConverterParameter=Ok}"
-                        IsEnabled="{Binding ButtonOptions, Converter={converters:ButtonOptionsToBoolConverter}, ConverterParameter=Ok}" />
+                        IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}"
+                        IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}" />
                 
                 <!-- OkClipboard Button Option -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8"
-                            IsVisible="{Binding ButtonOptions, Converter={converters:ButtonOptionsToBoolConverter}, ConverterParameter=OkClipboard}"
-                            IsEnabled="{Binding ButtonOptions, Converter={converters:ButtonOptionsToBoolConverter}, ConverterParameter=OkClipboard}">
+                            IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}"
+                            IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}">
                     <Button HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" Content="Copy to clipboard" />
                     <Button Classes="primary" Content="OK" HotKey="{Binding OkHotkey}" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                 </StackPanel>
                 
                 <!-- YesNo Button Option -->
-                <Panel IsVisible="{Binding ButtonOptions, Converter={converters:ButtonOptionsToBoolConverter}, ConverterParameter=YesNo}"
-                       IsEnabled="{Binding ButtonOptions, Converter={converters:ButtonOptionsToBoolConverter}, ConverterParameter=YesNo}">
+                <Panel IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}"
+                       IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}">
                     <!-- The yes button doesn't have a hotkey to prevent accidental confirmation. -->
                     <Button Content="Yes" FontWeight="Bold" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="80"
                             Command="{Binding YesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -327,6 +328,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         DialogBoxViewModal modalViewModel = await dialogService.ShowAsync<DialogBoxViewModal>(model =>
         {
             model.Description = $"Are you sure you want to delete the server '{ServerName}'?";
+            model.DescriptionFontSize = 24;
+            model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
         if (!modalViewModel)

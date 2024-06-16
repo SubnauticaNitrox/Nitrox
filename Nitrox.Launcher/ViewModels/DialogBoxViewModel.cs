@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
@@ -16,10 +15,17 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class DialogBoxViewModal : ModalViewModelBase
 {
     [ObservableProperty] private string title;
-    [ObservableProperty] [Required] private string description;
-    [ObservableProperty] private ButtonOptions buttonOptions = ButtonOptions.Ok;
-    [ObservableProperty] private IBrush foreground;
+    [ObservableProperty] private IBrush titleForeground = Brushes.Black;
+    [ObservableProperty] private double titleFontSize = 24;
+    [ObservableProperty] private FontWeight titleFontWeight = FontWeight.Bold;
+    
+    [ObservableProperty] private string description;
+    [ObservableProperty] private IBrush descriptionForeground = Brushes.Black;
+    [ObservableProperty] private double descriptionFontSize = 14;
+    [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
 
+    [ObservableProperty] private ButtonOptions buttonOptions = ButtonOptions.Ok;
+    
     public KeyGesture OkHotkey { get; } = new(Key.Return);
     public KeyGesture NoHotkey { get; } = new(Key.Escape);
     public KeyGesture CopyToClipboardHotkey { get; } = new(Key.C, KeyModifiers.Control);

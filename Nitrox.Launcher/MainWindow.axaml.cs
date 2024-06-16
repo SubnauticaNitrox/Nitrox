@@ -103,9 +103,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         {
             model.Title = $"Error: {title}";
             model.Description = ex.ToString();
+            model.DescriptionForeground = new SolidColorBrush(Colors.Red);
             model.ButtonOptions = ButtonOptions.OkClipboard;
-            model.Foreground = new SolidColorBrush(Colors.Red);
         });
+        
+        Environment.Exit(1);
     }
 
     private void TitleBar_OnPointerPressed(object sender, PointerPressedEventArgs e) => BeginMoveDrag(e);
