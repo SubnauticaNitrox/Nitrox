@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
@@ -48,15 +49,16 @@ public sealed class Steam : IGamePlatform
         }));
 
         // Wait for steam to write to its log file, which indicates it's ready to start games.
+        using CancellationTokenSource steamReadyCts = new(TimeSpan.FromSeconds(30));
         try
         {
             DateTime consoleLogFileLastWrite = GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe));
             await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
                                                v => v > 0,
                                                TimeSpan.FromSeconds(20));
-            while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe)))
+            while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe)) && !steamReadyCts.IsCancellationRequested)
             {
-                await Task.Delay(250);
+                await Task.Delay(250, steamReadyCts.Token);
             }
         }
         catch (Exception ex)
