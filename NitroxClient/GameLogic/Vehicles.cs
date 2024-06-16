@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
@@ -17,6 +18,9 @@ namespace NitroxClient.GameLogic;
 
 public class Vehicles
 {
+    private static readonly TimeSpan ResyncRequestCooldown = TimeSpan.FromSeconds(10);
+    private DateTimeOffset LatestResyncRequestTimeOffset;
+
     private readonly IPacketSender packetSender;
     private readonly IMultiplayerSession multiplayerSession;
 
@@ -240,5 +244,24 @@ public class Vehicles
         VehicleWorldEntity vehicleEntity = new(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), string.Empty, false, constructedObjectId, techType.ToDto(), null);
         VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
         return vehicleEntity;
+    }
+
+    public void AskForResync()
+    {
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
+        {
+            return;
+        }
+        TimeSpan deltaTime = DateTimeOffset.UtcNow - LatestResyncRequestTimeOffset;
+        if (deltaTime < ResyncRequestCooldown)
+        {
+            double timeLeft = ResyncRequestCooldown.TotalSeconds - deltaTime.TotalSeconds;
+            Log.InGame(Language.main.Get("Nitrox_ResyncOnCooldown").Replace("{TIME_LEFT}", string.Format("{0:N2}", timeLeft)));
+            return;
+        }
+        LatestResyncRequestTimeOffset = DateTimeOffset.UtcNow;
+
+        packetSender.Send(new VehiclesResyncRequest());
+        Log.InGame(Language.main.Get("Nitrox_ResyncRequestedVehicles"));
     }
 }

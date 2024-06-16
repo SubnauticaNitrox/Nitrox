@@ -5,6 +5,7 @@ using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
@@ -24,7 +25,7 @@ using UWE;
 
 namespace NitroxClient.GameLogic
 {
-    public class Entities
+    public partial class Entities
     {
         private readonly IPacketSender packetSender;
         private readonly ThrottledPacketSender throttledPacketSender;
@@ -133,6 +134,7 @@ namespace NitroxClient.GameLogic
             {
                 entityMetadataManager.ClearNewerMetadata();
                 deletedEntitiesIds.Clear();
+                RequestEntityResyncs();
             }
         }
 
@@ -320,6 +322,7 @@ namespace NitroxClient.GameLogic
         public void MarkAsSpawned(Entity entity)
         {
             spawnedAsType[entity.Id] = entity.GetType();
+            requiredEntityResyncs.Remove(entity.Id);
         }
 
         public void RemoveEntity(NitroxId id) => spawnedAsType.Remove(id);
