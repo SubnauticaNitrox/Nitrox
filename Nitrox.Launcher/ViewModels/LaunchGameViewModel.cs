@@ -118,6 +118,22 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 return;
             }
 #endif
+            
+            // Check if the game is not in legacy
+            if (GamePlatform == Platform.STEAM)
+            {
+                string gameVersionFile = Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+                if (int.Parse(File.ReadAllText(gameVersionFile)) == 68598)
+                {
+                    await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                    {
+                        model.Title = "Legacy Game Detected";
+                        model.Description = "Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version.";
+                        model.ButtonOptions = ButtonOptions.Ok;
+                    });
+                    return;
+                }
+            }
 
             // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory
             string initDllName = "NitroxPatcher.dll";
