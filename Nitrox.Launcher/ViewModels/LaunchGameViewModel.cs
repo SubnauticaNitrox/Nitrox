@@ -132,7 +132,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                         {
                             model.Title = "Legacy Game Detected";
-                            model.Description = "Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version.";
+                            model.Description = "Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version to run the Subnautica with Nitrox.";
                             model.ButtonOptions = ButtonOptions.Ok;
                         });
                         return;

@@ -429,7 +429,7 @@ public class Program
             return;
         }
 
-        string mostRecentLogFile = Log.GetMostRecentLogFile();
+        string mostRecentLogFile = Log.GetMostRecentLogFile(); // TODO fix: This does not open the server's actual log file
         if (mostRecentLogFile == null)
         {
             return;
