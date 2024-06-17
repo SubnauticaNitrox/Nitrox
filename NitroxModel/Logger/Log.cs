@@ -58,7 +58,7 @@ namespace NitroxModel.Logger
 
         public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.LauncherPath ?? "", "Nitrox Logs"));
 
-        public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
+        public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName; // TODO: Filter by servername ( .Where(f => f.Name.Contains($"[{SaveName}]")) )
 
         public static void Setup(bool asyncConsoleWriter = false, InGameLogger gameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true)
         {
