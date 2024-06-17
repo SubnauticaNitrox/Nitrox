@@ -59,7 +59,7 @@ public enum ButtonOptions
     Ok = 1 << 0,
     Yes = 1 << 1,
     No = 1 << 2,
-    Clipboard = 1 << 2,
+    Clipboard = 1 << 3,
     OkClipboard = Ok | Clipboard,
     YesNo = Yes | No,
 }

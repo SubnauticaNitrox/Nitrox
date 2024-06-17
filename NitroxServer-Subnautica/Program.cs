@@ -105,7 +105,7 @@ public class Program
                     return gameDir;
                 });
             }
-            Log.Info($"Using game files from: {gameDir}");
+            Log.Info($"Using game files from: \'{gameInstallDir.Value}\'");
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();

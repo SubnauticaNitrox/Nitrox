@@ -162,6 +162,8 @@ public partial class ServersViewModel : RoutableViewModelBase
             model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
+        Log.Debug($"Returning \"{modelViewModel} != null\" => \"{modelViewModel != null}\" from ConfirmServerVersionAsync.");
+        Log.Debug($"Selected option: {modelViewModel.SelectedOption}");
         return modelViewModel != null;
     }
 
