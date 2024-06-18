@@ -8,8 +8,7 @@
              xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
              DataContext="{x:Static design:DesignData.LaunchGameViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
-             x:Class="Nitrox.Launcher.Views.LaunchGameView"
-             Margin="0">
+             x:Class="Nitrox.Launcher.Views.LaunchGameView">
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
             <StackPanel Spacing="20" Margin="20 0 20 20" Background="{DynamicResource BrandWhiteBrush}">

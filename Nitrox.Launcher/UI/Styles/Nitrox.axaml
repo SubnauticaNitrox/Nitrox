@@ -134,7 +134,13 @@
         <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Style Selector="^ > :is(UserControl):not(ScrollViewer), ^ > ScrollViewer > :is(UserControl)">
+        <Style Selector="^ > :is(UserControl) > :is(Control) > ScrollViewer.main">
+            <Setter Property="Margin" Value="-34 -45" />
+            <Style Selector="^ > :is(Control)">
+                <Setter Property="Margin" Value="34 45" />
+            </Style>
+        </Style>
+        <Style Selector="^ > :is(UserControl) > :is(Control) > :is(Control):not(ScrollViewer.main)">
             <Setter Property="Margin" Value="34 45" />
         </Style>
     </Style>

@@ -36,7 +36,7 @@
         <ScrollViewer Classes="main">
             <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
                 <TextBlock Classes="header" Text="Community" />
-                <Image Source="/Assets/Images/communityHeader.png" MaxHeight="252" />
+                <Image Source="/Assets/Images/communityHeader.png" MaxWidth="1580" />
                 <UniformGrid HorizontalAlignment="Center" Rows="2" Columns="2">
                     <Border>
                         <StackPanel>

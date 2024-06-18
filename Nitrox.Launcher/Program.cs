@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Avalonia.ReactiveUI;
 
 namespace Nitrox.Launcher;
@@ -47,6 +48,7 @@ class Program
         return builder;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
     {
         static Assembly ResolveFromLib(string dllName)

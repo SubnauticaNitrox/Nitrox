@@ -30,7 +30,7 @@
                     Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the
                     <TextBlock Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.
                 </TextBlock>
-                <ScrollViewer Grid.Row="2" Margin="0 40 0 13">
+                <ScrollViewer Grid.Row="2" Margin="0 40 0 13" Padding="0 0 0 -150">
                     <ItemsControl ItemsSource="{Binding Servers}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
