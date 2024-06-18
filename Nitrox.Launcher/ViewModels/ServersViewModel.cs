@@ -155,16 +155,13 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     private async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
     {
-        DialogBoxViewModel modelViewModel = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        return await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Description = $"The version of '{server.Name}' is v{server.Version}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
             model.DescriptionFontSize = 24;
             model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
-        Log.Debug($"Returning \"{modelViewModel} != null\" => \"{modelViewModel != null}\" from ConfirmServerVersionAsync.");
-        Log.Debug($"Selected option: {modelViewModel.SelectedOption}");
-        return modelViewModel != null;
     }
 
     public void GetSavesOnDisk()

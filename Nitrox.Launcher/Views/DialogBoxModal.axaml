@@ -28,17 +28,20 @@
                 <!-- Ok Button Option -->
                 <Button Classes="primary" Content="OK" FontWeight="Bold" HorizontalAlignment="Right" HorizontalContentAlignment="Center" Width="80" HotKey="{Binding OkHotkey}"
                         Command="{Binding CloseCommand}"
-                        IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}"/>
+                        IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}" 
+                        IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}" />
 
                 <!-- OkClipboard Button Option -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8"
-                            IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}">
+                            IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}"
+                            IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}">
                     <Button HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding Description}" Content="Copy to clipboard" />
                     <Button Classes="primary" Content="OK" HotKey="{Binding OkHotkey}" Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.Ok}" />
                 </StackPanel>
 
                 <!-- YesNo Button Option -->
-                <Panel IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}">
+                <Panel IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}"
+                       IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}" >
                     <!-- The yes button doesn't have a hotkey to prevent accidental confirmation. -->
                     <Button Content="Yes" FontWeight="Bold" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="80"
                             Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.Yes}" />
