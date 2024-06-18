@@ -13,6 +13,7 @@ class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Main(string[] args)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
@@ -21,6 +22,7 @@ class Program
         LoadAvalonia(args);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void LoadAvalonia(string[] args)
     {
         BuildAvaloniaApp()
@@ -48,7 +50,6 @@ class Program
         return builder;
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
     private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
     {
         static Assembly ResolveFromLib(string dllName)
@@ -65,11 +66,14 @@ class Program
                 dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
             }
 
-            if (!File.Exists(dllPath))
+            try
             {
-                Console.WriteLine($"Nitrox dll missing: {dllPath}");
+                return Assembly.LoadFile(dllPath);
             }
-            return Assembly.LoadFile(dllPath);
+            catch
+            {
+                return null;
+            }
         }
 
         return ResolveFromLib(args.Name) ?? Assembly.Load(args.Name);
