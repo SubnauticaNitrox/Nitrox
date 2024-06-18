@@ -26,9 +26,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IScreen screen;
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
-    
-    private Dictionary<string, Vector> scrollPositions = new();
-    
+
     [ObservableProperty]
     private Vector scrollViewerOffset;
 
@@ -48,7 +46,7 @@ public partial class MainWindowViewModel : ViewModelBase
                                OptionsViewModel optionsViewModel, IList<NotificationItem> notifications = null)
     {
         Log.Setup();
-        
+
         this.screen = screen;
         this.launchGameViewModel = launchGameViewModel;
         this.serversViewModel = serversViewModel;
@@ -98,51 +96,37 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     public void OpenLaunchGameView()
     {
-        OpenView(launchGameViewModel);
+        screen.Show(launchGameViewModel);
     }
 
     [RelayCommand]
     public void OpenServersView()
     {
-        OpenView(serversViewModel);
+        screen.Show(serversViewModel);
     }
 
     [RelayCommand]
     public void OpenCommunityView()
     {
-        OpenView(communityViewModel);
+        screen.Show(communityViewModel);
     }
 
     [RelayCommand]
     public void OpenBlogView()
     {
-        OpenView(blogViewModel);
+        screen.Show(blogViewModel);
     }
 
     [RelayCommand]
     public void OpenUpdatesView()
     {
-        OpenView(updatesViewModel);
+        screen.Show(updatesViewModel);
     }
 
     [RelayCommand]
     public void OpenOptionsView()
     {
-        OpenView(optionsViewModel);
-    }
-
-    private void OpenView(RoutableViewModelBase viewModel)
-    {
-        scrollPositions[Router.GetCurrentViewModel()?.ToString() ?? ""] = ScrollViewerOffset;
-        screen.Show(viewModel);
-        if (scrollPositions.TryGetValue(viewModel.ToString(), out Vector offset))
-        {
-            ScrollViewerOffset = offset;
-        }
-        else
-        {
-            ScrollViewerOffset = new Vector(0, 0);
-        }
+        screen.Show(optionsViewModel);
     }
 
     [RelayCommand]
