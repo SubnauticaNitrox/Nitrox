@@ -16,10 +16,10 @@ class Program
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
-        
+
         LoadAvalonia(args);
     }
-    
+
     private static void LoadAvalonia(string[] args)
     {
         BuildAvaloniaApp()
@@ -46,25 +46,30 @@ class Program
 
         return builder;
     }
-    
+
     private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
     {
-        string dllFileName = args.Name.Split(',')[0];
-        if (!dllFileName.EndsWith(".dll"))
+        static Assembly ResolveFromLib(string dllName)
         {
-            dllFileName += ".dll";
+            string dllFileName = dllName.Split(',')[0];
+            if (!dllFileName.EndsWith(".dll"))
+            {
+                dllFileName += ".dll";
+            }
+
+            string dllPath = Path.Combine(Environment.CurrentDirectory, "lib", dllFileName);
+            if (!File.Exists(dllPath))
+            {
+                dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
+            }
+
+            if (!File.Exists(dllPath))
+            {
+                Console.WriteLine($"Nitrox dll missing: {dllPath}");
+            }
+            return Assembly.LoadFile(dllPath);
         }
 
-        string dllPath = Path.Combine(Environment.CurrentDirectory, "lib", dllFileName);
-        if (!File.Exists(dllPath))
-        {
-            dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
-        }
-
-        if (!File.Exists(dllPath))
-        {
-            Console.WriteLine($"Nitrox dll missing: {dllPath}");
-        }
-        return Assembly.LoadFile(dllPath);
+        return ResolveFromLib(args.Name) ?? Assembly.Load(args.Name);
     }
 }
