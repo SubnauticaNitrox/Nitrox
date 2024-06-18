@@ -197,7 +197,7 @@
             </Border>
 
             <!-- Right side -->
-            <ScrollViewer Grid.Column="1" Classes="main">
+            <ScrollViewer Grid.Column="1" Classes="main" Offset="{Binding ScrollViewerOffset, Mode=TwoWay}">
                 <rx:RoutedViewHost Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
                     <rx:RoutedViewHost.DefaultContent>
                         <TextBlock Text="No view set. You should not see this message." HorizontalAlignment="Center" VerticalAlignment="Center" />

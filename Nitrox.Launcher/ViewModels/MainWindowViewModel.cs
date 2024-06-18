@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,6 +26,11 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IScreen screen;
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
+    
+    private Dictionary<string, Vector> scrollPositions = new();
+    
+    [ObservableProperty]
+    private Vector scrollViewerOffset;
 
     [ObservableProperty]
     private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
@@ -92,37 +98,51 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     public void OpenLaunchGameView()
     {
-        screen.Show(launchGameViewModel);
+        OpenView(launchGameViewModel);
     }
 
     [RelayCommand]
     public void OpenServersView()
     {
-        screen.Show(serversViewModel);
+        OpenView(serversViewModel);
     }
 
     [RelayCommand]
     public void OpenCommunityView()
     {
-        screen.Show(communityViewModel);
+        OpenView(communityViewModel);
     }
 
     [RelayCommand]
     public void OpenBlogView()
     {
-        screen.Show(blogViewModel);
+        OpenView(blogViewModel);
     }
 
     [RelayCommand]
     public void OpenUpdatesView()
     {
-        screen.Show(updatesViewModel);
+        OpenView(updatesViewModel);
     }
 
     [RelayCommand]
     public void OpenOptionsView()
     {
-        screen.Show(optionsViewModel);
+        OpenView(optionsViewModel);
+    }
+
+    private void OpenView(RoutableViewModelBase viewModel)
+    {
+        scrollPositions[Router.GetCurrentViewModel()?.ToString() ?? ""] = ScrollViewerOffset;
+        screen.Show(viewModel);
+        if (scrollPositions.TryGetValue(viewModel.ToString(), out Vector offset))
+        {
+            ScrollViewerOffset = offset;
+        }
+        else
+        {
+            ScrollViewerOffset = new Vector(0, 0);
+        }
     }
 
     [RelayCommand]
