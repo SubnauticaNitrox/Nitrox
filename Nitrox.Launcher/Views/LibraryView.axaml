@@ -10,8 +10,10 @@
              x:Class="Nitrox.Launcher.Views.LibraryView">
     <!-- WIP -->
     <ThemeVariantScope RequestedThemeVariant="Dark">
-        <Grid Background="{DynamicResource BrandWhiteBrush}">
-            <TextBlock Text="Library View"/>
-        </Grid>
+        <ScrollViewer Classes="main">
+            <Grid Background="{DynamicResource BrandWhiteBrush}">
+                <TextBlock Text="Library View"/>
+            </Grid>
+        </ScrollViewer>
     </ThemeVariantScope>
 </UserControl>

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,9 +25,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IScreen screen;
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
-
-    [ObservableProperty]
-    private Vector scrollViewerOffset;
 
     [ObservableProperty]
     private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
