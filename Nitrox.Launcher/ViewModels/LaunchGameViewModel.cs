@@ -120,14 +120,14 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 return;
             }
 #endif
-            
+
             // Check to ensure the game is not in legacy, skip if check fails
             try
             {
                 if (GamePlatform == Platform.STEAM)
                 {
                     string gameVersionFile = Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
-                    if (int.Parse(File.ReadAllText(gameVersionFile)) == 68598)
+                    if (int.Parse(await File.ReadAllTextAsync(gameVersionFile)) == 68598)
                     {
                         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                         {
@@ -150,7 +150,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             try
             {
                 File.Copy(
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "lib", "net472", initDllName),
+                    Path.Combine(NitroxUser.CurrentExecutablePath ?? "", "lib", "net472", initDllName),
                     Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", initDllName),
                     true
                 );

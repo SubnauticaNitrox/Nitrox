@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using NitroxModel.Discovery;
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Platforms.OS.Windows.Internal;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
 
@@ -41,12 +41,35 @@ namespace NitroxModel.Helper
                 }
 
                 // NitroxModel, NitroxServer and other assemblies are stored in Nitrox.Launcher/lib
-                if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "LanguageFiles")))
+                if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "Resources", "LanguageFiles")))
                 {
                     return execParentDir.Parent.FullName;
                 }
 
                 return null;
+            },
+            () =>
+            {
+                Process[] processes = Process.GetProcessesByName("Nitrox.Launcher");
+                try
+                {
+                    foreach (Process process in processes)
+                    {
+                        string executable = process?.MainModule?.FileName;
+                        if (!string.IsNullOrWhiteSpace(executable))
+                        {
+                            return Path.GetDirectoryName(executable);
+                        }
+                    }
+                    return null;
+                }
+                finally
+                {
+                    foreach (Process process in processes)
+                    {
+                        process.Dispose();
+                    }
+                }
             }
         };
 
@@ -77,7 +100,8 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static string AssetsPath => Path.Combine(LauncherPath, "AssetBundles");
+        public static string AssetsPath => Path.Combine(LauncherPath, "Resources", "AssetBundles");
+        public static string LanguageFilesPath => Path.Combine(LauncherPath, "Resources", "LanguageFiles");
 
         public static string PreferredGamePath
         {

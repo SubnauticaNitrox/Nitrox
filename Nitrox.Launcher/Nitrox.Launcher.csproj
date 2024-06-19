@@ -60,7 +60,7 @@
     <Target Name="BuildNet472BinariesForGame" AfterTargets="Build">
         <MSBuild Projects="..\NitroxPatcher\NitroxPatcher.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472;OutputPath=$(TargetDir)\lib\net472" />
     </Target>
-    
+
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build">
         <ItemGroup>
             <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
@@ -68,12 +68,12 @@
             <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
             <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
         </ItemGroup>
-        <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
         <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" />
-        <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\LanguageFiles\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\Resources\LanguageFiles\%(RecursiveDir)" />
         <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
-    
+
     <Target Name="MoveDependenciesToLib" AfterTargets="Build">
         <ItemGroup>
             <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)Nitrox.Launcher.dll" />
@@ -81,5 +81,5 @@
         </ItemGroup>
         <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
     </Target>
-    
+
 </Project>

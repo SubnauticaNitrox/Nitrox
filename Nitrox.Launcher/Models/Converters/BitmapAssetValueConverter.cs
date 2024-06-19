@@ -72,10 +72,11 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
         {
             return null;
         }
-        while (fileUri.StartsWith('/') | fileUri.StartsWith('\\'))
+        ReadOnlySpan<char> fileUriSpan = fileUri.AsSpan();
+        while (fileUriSpan.StartsWith("/") || fileUriSpan.StartsWith("\\"))
         {
-            fileUri = fileUri.Substring(1);
+            fileUriSpan = fileUriSpan.Slice(1);
         }
-        return new Bitmap(Path.Combine(targetedProject, fileUri));
+        return new Bitmap(Path.Combine(targetedProject, fileUriSpan.ToString()));
     }
 }
