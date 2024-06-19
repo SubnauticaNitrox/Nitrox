@@ -13,6 +13,8 @@
         <Authors>Nitrox</Authors>
         <Company>Nitrox</Company>
         <PackageProjectUrl>https://github.com/SubnauticaNitrox/Nitrox</PackageProjectUrl>
+        <!-- TODO: Update dependencies so trimming won't break the app -->
+        <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
@@ -81,5 +83,4 @@
         </ItemGroup>
         <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
     </Target>
-
 </Project>

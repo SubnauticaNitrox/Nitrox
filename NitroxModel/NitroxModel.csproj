@@ -25,7 +25,6 @@
     <!-- .NET Framework polyfills for modern C# lang support -->
     <ItemGroup>
         <PackageReference Include="IndexRange" Version="1.0.2" />
-        <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
 
     <ItemGroup>

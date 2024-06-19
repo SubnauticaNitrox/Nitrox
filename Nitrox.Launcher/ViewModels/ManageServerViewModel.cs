@@ -135,7 +135,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    public async void StartServer()
+    public async Task StartServer()
     {
         // Check to ensure the Subnautica is not in legacy, skip if check fails
         try
@@ -160,7 +160,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             Log.Error(ex, "Error while checking game version:");
             Log.Info("Skipping game version check...");
         }
-        
+
         Server.Start();
 
         RestoreBackupCommand.NotifyCanExecuteChanged();

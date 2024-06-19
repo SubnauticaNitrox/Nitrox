@@ -77,7 +77,7 @@ public class Program
         {
             Console.TreatControlCAsInput = true;
         }
-        
+
         Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
         Server server;
@@ -87,9 +87,9 @@ public class Program
         {
             handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
             AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
-            
+
             Stopwatch watch = Stopwatch.StartNew();
-            
+
             // Allow game path to be given as command argument
             string gameDir = "";
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
@@ -110,7 +110,7 @@ public class Program
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
             server = NitroxServiceLocator.LocateService<Server>();
-            
+
             Log.SaveName = server.Name;
 
             await WaitForAvailablePortAsync(server.Port);
@@ -152,7 +152,7 @@ public class Program
 
         if (Console.IsInputRedirected)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 while (!cancellation.IsCancellationRequested)
                 {
@@ -203,7 +203,7 @@ public class Program
                 Console.CursorLeft = lastPosition;
             }
 
-            Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 while (!cancellation?.IsCancellationRequested ?? false)
                 {
@@ -403,7 +403,7 @@ public class Program
                         }
                     }
                     Console.CursorLeft = 0;
-                    
+
                     PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
                 }
 
@@ -444,7 +444,7 @@ public class Program
         {
             // Log.Info($"Opening log file at: {mostRecentLogFile}..");
             // using Process process = FileSystem.Instance.OpenOrExecuteFile(mostRecentLogFile);
-            
+
             Process.Start(new ProcessStartInfo
             {
                 FileName = Log.LogDirectory,

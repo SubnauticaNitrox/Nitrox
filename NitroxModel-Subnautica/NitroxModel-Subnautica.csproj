@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>NitroxModel_Subnautica</RootNamespace>
     <Nullable>disable</Nullable>
-    <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
