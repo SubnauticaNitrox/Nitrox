@@ -13,12 +13,11 @@
             <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
                 <StackPanel>
                     <TextBlock Classes="header" Text="Blog"/>
-                    <TextBlock Margin="0 16 0 0">
-                        Read the latest news from the Nitrox team! You can view all our blogs
-                        <TextBlock Classes="link" PointerPressed="NitroxBlogTextBlock_OnPointerPressed">here</TextBlock>.
-                    </TextBlock>
+                    <controls:RichTextBlock Margin="0 16 0 0">
+                        Read the latest news from the Nitrox team! You can view all our blogs [here](nitroxblog.rux.gg)
+                    </controls:RichTextBlock>
                 </StackPanel>
-    
+
                 <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

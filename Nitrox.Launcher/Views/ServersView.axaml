@@ -13,7 +13,7 @@
                     <Image Source="/Assets/Images/serverIllustration.png" Stretch="None" Margin="0 0 0 73" />
                     <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
                     <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world.</TextBlock>
-    
+
                     <Button Classes="primary big" Command="{Binding CreateServerCommand}" HotKey="Enter" Width="350" Margin="0 40 0 0" HorizontalAlignment="Center">
                         <StackPanel>
                             <TextBlock Text="CREATE NEW SERVER" />
@@ -22,15 +22,11 @@
                     </Button>
                 </StackPanel>
             </Panel>
-    
+
             <Grid RowDefinitions="Auto,Auto,*,Auto" IsVisible="{Binding Servers.Count}">
                 <TextBlock Grid.Row="0" Classes="header" Text="Servers" />
-                <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
-                <TextBlock Grid.Row="1">
-                    Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the
-                    <TextBlock Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.
-                </TextBlock>
-                <ScrollViewer Grid.Row="2" Margin="0 40 0 13" Padding="0 0 0 -150">
+                <controls:RichTextBlock Grid.Row="1">Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server)</controls:RichTextBlock>
+                <ScrollViewer Grid.Row="2" Margin="0 40 0 13">
                     <ItemsControl ItemsSource="{Binding Servers}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>

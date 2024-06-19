@@ -1,5 +1,4 @@
-﻿extern alias JB;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Avalonia;
@@ -10,18 +9,20 @@ using Avalonia.Media;
 namespace Nitrox.Launcher.UI.Controls;
 
 /// <summary>
-///     A basic Rich Textbox. Supports bold, italic and underline tags.
+///     A basic Rich Textbox. Supports bold, italic, underline and hyperlinks.
 /// </summary>
 /// <remarks>
 ///     Tag legend:<br />
 ///     [b][/b] - Bold <br />
 ///     [i][/i] - Italicize <br />
 ///     [u][/u] - Underline <br />
+///     [Flavor text](example.com) <br />
 /// </remarks>
 /// <example>
 ///     [b]Text[/b] => <b>Text</b> <br />
 ///     [i]Text[/i] => <i>Text</i> <br />
 ///     [u]Text[/u] => <u>Text</u> <br />
+///     <a href="https://example.com">Flavor text</a> <br />
 /// </example>
 public partial class RichTextBlock : TextBlock
 {
@@ -43,7 +44,7 @@ public partial class RichTextBlock : TextBlock
         }
     }
 
-    [GeneratedRegex(@"\[\/?(\w+)\]")]
+    [GeneratedRegex(@"\[\/?([^]]+)\](?:\(([^\)]*)\))?")]
     private static partial Regex TagParserRegex();
 
     private void ParseTextAndAddInlines(string text)
@@ -53,6 +54,11 @@ public partial class RichTextBlock : TextBlock
             int start = lastMatch == null ? 0 : lastMatch.Index + lastMatch.Length;
             int length = (currentMatch?.Index ?? text.Length) - start;
             return length > 0 ? text.Substring(start, length) : "";
+        }
+
+        if (Inlines == null)
+        {
+            return;
         }
 
         MatchCollection matches = TagParserRegex().Matches(text);
@@ -66,29 +72,27 @@ public partial class RichTextBlock : TextBlock
             HashSet<string> activeTags = [];
             foreach (Match match in matches)
             {
-                Run run = null;
+                string subText = GetSubText(text, lastMatch, match);
+                if (!string.IsNullOrEmpty(subText))
+                {
+                    Inlines.Add(CreateRunWithTags(subText, activeTags));
+                }
+
                 switch (match)
                 {
-                    case { Groups: [_, { Value: var tag }] } when lastMatch == null:
-                        run = new Run(text.Substring(0, match.Index));
-                        activeTags.Add(tag);
-                        break;
-                    case { ValueSpan: ['[', '/', ..], Groups: [_, { Value: var tag }] }:
-                        string subText = GetSubText(text, lastMatch, match);
-                        if (!string.IsNullOrEmpty(subText))
-                        {
-                            run = CreateRunWithTags(subText, activeTags);
-                        }
+                    case { ValueSpan: ['[', '/', ..], Groups: [_, { Value: var tag }, ..] }:
                         activeTags.Remove(tag);
                         break;
-                    case { Groups: [_, { Value: var tag }] }:
-                        run = new Run(GetSubText(text, lastMatch, match));
+                    case { Groups: [_, { Value: var name }, { Value: { Length: > 0 } url }] }:
+                        TextBlock textBlock = new();
+                        textBlock.Classes.Add("link");
+                        textBlock.Text = name;
+                        textBlock.Tag = url;
+                        Inlines.Add(textBlock);
+                        break;
+                    case { Groups: [_, { Value: var tag }, ..] }:
                         activeTags.Add(tag);
                         break;
-                }
-                if (run != null)
-                {
-                    Inlines?.Add(run);
                 }
 
                 lastMatch = match;
@@ -117,4 +121,6 @@ public partial class RichTextBlock : TextBlock
         }
         return run;
     }
+
+    protected override Type StyleKeyOverride { get; } = typeof(TextBlock);
 }

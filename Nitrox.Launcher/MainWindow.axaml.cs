@@ -47,13 +47,29 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         {
             // Set clicked nav item as selected (and deselect the others).
             Button lastClickedNav = OpenLaunchGameViewButton;
-            d(Button.ClickEvent.Raised.Subscribe(tuple =>
+            d(Button.ClickEvent.Raised.Subscribe(args =>
             {
-                if (tuple.Item2.Source is Button btn && btn.Parent?.Classes.Contains("nav") == true)
+                if (args.Item2 is { Source: Button btn } && btn.Parent?.Classes.Contains("nav") == true && btn.GetValue(NitroxAttached.SelectedProperty) == false)
                 {
                     lastClickedNav?.SetValue(NitroxAttached.SelectedProperty, false);
                     lastClickedNav = btn;
                     btn.SetValue(NitroxAttached.SelectedProperty, true);
+                }
+            }));
+            d(PointerPressedEvent.Raised.Subscribe(args =>
+            {
+                if (args.Item2 is { Handled: false, Source: Control { Tag: string url } control } && control.Classes.Contains("link"))
+                {
+                    Task.Run(() =>
+                    {
+                        UriBuilder urlBuilder = new(url)
+                        {
+                            Scheme = Uri.UriSchemeHttps,
+                            Port = -1
+                        };
+                        Process.Start(new ProcessStartInfo(urlBuilder.Uri.ToString()) { UseShellExecute = true, Verb = "open" })?.Dispose();
+                    });
+                    args.Item2.Handled = true;
                 }
             }));
 
