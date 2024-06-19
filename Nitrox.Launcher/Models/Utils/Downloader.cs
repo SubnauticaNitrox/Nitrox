@@ -122,7 +122,7 @@ public partial class Downloader
                 {
                     if (patchnotes[j].ToString().StartsWith('-'))
                     {
-                        builder.AppendLine($"\n<b><u>{patchnotes[j].ToString().TrimStart('-', ' ')}</u></b>");
+                        builder.AppendLine($"\n[b][u]{patchnotes[j].ToString().TrimStart('-', ' ')}[/u][/b]");
                     }
                     else
                     {

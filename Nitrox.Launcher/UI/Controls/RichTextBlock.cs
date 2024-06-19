@@ -8,6 +8,20 @@ using Avalonia.Media;
 
 namespace Nitrox.Launcher.UI.Controls;
 
+/// <summary>
+/// A basic Rich Textbox. Supports bold, italic and underline tags.
+/// </summary>
+/// <remarks>
+/// Tag legend:<br/>
+///  [b][/b] - Bold <br/>
+///  [i][/i] - Italicize <br/>
+///  [u][/u] - Underline <br/>
+/// </remarks>
+/// <example>
+/// [b]Text[/b] => <b>Text</b> <br/>
+/// [i]Text[/i] => <i>Text</i> <br/>
+/// [u]Text[/u] => <u>Text</u> <br/>
+/// </example>
 public class RichTextBlock : TextBlock
 {
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -21,37 +35,46 @@ public class RichTextBlock : TextBlock
         }
     }
     
-    // TODO: Fix code to allow for multiple tags to be applied to the same text.
     private void ParseTextAndAddInlines(string text)
     {
         // Define the tags and their corresponding formatting actions.
         Dictionary<string, Action<Run>> tagActions = new()
         {
-            { "<u>", run => run.TextDecorations = run.TextDecorations = [new() { Location = TextDecorationLocation.Underline }] },
-            { "<b>", run => run.FontWeight = FontWeight.Bold },
-            { "<i>", run => run.FontStyle = FontStyle.Italic }
+            { "b", run => run.FontWeight = FontWeight.Bold },
+            { "i", run => run.FontStyle = FontStyle.Italic },
+            { "u", run => run.TextDecorations = [new() { Location = TextDecorationLocation.Underline }] }
         };
 
         // Split the text into sections based on the tags.
-        List<(string Tag, string Text)> sections = new();
-        string currentTag = "";
+        List<(List<string> Tags, string Text)> sections = new();
+        List<string> currentTags = new();
         StringBuilder currentText = new();
+
         for (int i = 0; i < text.Length; i++)
         {
-            if (text[i] == '<')
+            if (text[i] == '[')
             {
                 // Start of a tag.
-                sections.Add((currentTag, currentText.ToString()));
+                sections.Add((new List<string>(currentTags), currentText.ToString()));
                 currentText.Clear();
 
-                int tagEndIndex = text.IndexOf('>', i);
+                int tagEndIndex = text.IndexOf(']', i);
                 if (tagEndIndex == -1)
                 {
                     // Invalid tag, ignore it.
                     continue;
                 }
 
-                currentTag = text.Substring(i, tagEndIndex - i + 1);
+                string tag = text.Substring(i + 1, tagEndIndex - i - 1);
+                if (tag.StartsWith('/'))
+                {
+                    currentTags.Remove(tag.Substring(1));
+                }
+                else
+                {
+                    currentTags.Add(tag);
+                }
+
                 i = tagEndIndex;
             }
             else
@@ -62,23 +85,23 @@ public class RichTextBlock : TextBlock
         }
 
         // Add the last section.
-        sections.Add((currentTag, currentText.ToString()));
+        sections.Add((currentTags, currentText.ToString()));
 
         // Apply the formatting to each section based on its tag.
-        foreach ((string Tag, string Text) section in sections)
+        foreach ((List<string> Tags, string Text) section in sections)
         {
-            if (tagActions.TryGetValue(section.Tag, out Action<Run> action))
+            Run run = new(section.Text);
+            
+            if (string.IsNullOrEmpty(run.Text) || run.Text == "Empty") continue;
+            
+            foreach (string tag in section.Tags)
             {
-                // The section has a tag, apply the corresponding formatting.
-                Run run = new Run(section.Text);
-                action(run);
-                Inlines.Add(run);
+                if (tagActions.TryGetValue(tag, out Action<Run> action))
+                {
+                    action(run);
+                }
             }
-            else
-            {
-                // The section doesn't have a tag, add it as regular text.
-                Inlines.Add(new Run(section.Text));
-            }
+            Inlines.Add(run);
         }
     }
 
