@@ -22,6 +22,12 @@
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     </ItemGroup>
 
+    <!-- .NET Framework polyfills for modern C# lang support -->
+    <ItemGroup>
+        <PackageReference Include="IndexRange" Version="1.0.2" />
+        <PackageReference Include="System.Memory" Version="4.5.5" />
+    </ItemGroup>
+
     <ItemGroup>
         <Reference Include="LZ4">
             <HintPath>..\Nitrox.Assets.Subnautica\LZ4.dll</HintPath>
