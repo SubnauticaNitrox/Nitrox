@@ -35,7 +35,6 @@ public partial class ServersViewModel : RoutableViewModelBase
     private readonly IDialogService dialogService;
     private readonly ManageServerViewModel manageServerViewModel;
     private CancellationTokenSource serverRefreshCts;
-    private bool isFirstView = true;
 
     [ObservableProperty]
     private AvaloniaList<ServerEntry> servers = [];
@@ -49,7 +48,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         this.dialogService = dialogService;
         this.manageServerViewModel = manageServerViewModel;
 
-        GetSavesOnDisk();
+        Task.Run(GetSavesOnDisk);
 
         WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
         {
@@ -73,11 +72,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             // Activation
             serverRefreshCts = new();
-            if (!isFirstView)
-            {
-                GetSavesOnDisk();
-            }
-            isFirstView = false;
+            GetSavesOnDisk();
             InitializeWatcher();
 
             // Deactivation
@@ -112,7 +107,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             return;
         }
-        
+
         // Check to ensure the Subnautica is not in legacy, skip if check fails
         try
         {
@@ -153,6 +148,97 @@ public partial class ServersViewModel : RoutableViewModelBase
         HostScreen.Show(manageServerViewModel);
     }
 
+    public void GetSavesOnDisk()
+    {
+        try
+        {
+            Directory.CreateDirectory(SavesFolderDir);
+
+            List<ServerEntry> serversOnDisk = [];
+
+            foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
+            {
+                // Don't add the file to the list if it doesn't validate
+                if (!File.Exists(Path.Combine(folder, "server.cfg")) || !File.Exists(Path.Combine(folder, "Version.json")))
+                {
+                    continue;
+                }
+
+                string saveName = Path.GetFileName(folder);
+                string saveDir = Path.Combine(SavesFolderDir, saveName);
+
+                Bitmap serverIcon = null;
+                string serverIconPath = Path.Combine(saveDir, "servericon.png");
+                if (File.Exists(serverIconPath))
+                {
+                    serverIcon = new(Path.Combine(saveDir, "servericon.png"));
+                }
+
+                SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
+                string fileEnding = "json";
+                if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
+
+                Version version;
+                using (FileStream stream = new(Path.Combine(folder, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+                }
+
+                ServerEntry entry = new()
+                {
+                    Name = saveName,
+                    ServerIcon = serverIcon,
+                    Password = server.ServerPassword,
+                    Seed = server.Seed,
+                    GameMode = server.GameMode,
+                    PlayerPermissions = server.DefaultPlayerPerm,
+                    AutoSaveInterval = server.SaveInterval / 1000,
+                    MaxPlayers = server.MaxConnections,
+                    Port = server.ServerPort,
+                    AutoPortForward = server.AutoPortForward,
+                    AllowLanDiscovery = server.LANDiscoveryEnabled,
+                    AllowCommands = !server.DisableConsole,
+                    IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
+                    Version = version,
+                    LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}"))
+                                                                 ?
+                                                                 // This file is affected by server saving
+                                                                 Path.Combine(folder, $"WorldData.{fileEnding}")
+                                                                 :
+                                                                 // If the above file doesn't exist (server was never ran), use the Version file instead
+                                                                 Path.Combine(folder, $"Version.{fileEnding}"))
+                };
+
+                serversOnDisk.Add(entry);
+            }
+
+            // Remove any servers from the Servers list that are not found in the saves folder
+            for (int i = Servers.Count - 1; i >= 0; i--)
+            {
+                if (serversOnDisk.All(s => s.Name != Servers[i].Name))
+                {
+                    Servers.RemoveAt(i);
+                }
+            }
+
+            // Add any new servers found on the disk to the Servers list
+            foreach (ServerEntry server in serversOnDisk)
+            {
+                if (Servers.All(s => s.Name != server.Name))
+                {
+                    Servers.Add(server);
+                }
+            }
+
+            Servers = new AvaloniaList<ServerEntry>(Servers.OrderByDescending(entry => entry.LastAccessedTime));
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
+            dialogService.ShowErrorAsync(ex);
+        }
+    }
+
     private async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
     {
         return await dialogService.ShowAsync<DialogBoxViewModel>(model =>
@@ -162,89 +248,6 @@ public partial class ServersViewModel : RoutableViewModelBase
             model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
-    }
-
-    public void GetSavesOnDisk()
-    {
-        Directory.CreateDirectory(SavesFolderDir);
-
-        List<ServerEntry> serversOnDisk = [];
-
-        foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
-        {
-            // Don't add the file to the list if it doesn't validate
-            if (!File.Exists(Path.Combine(folder, "server.cfg")) || !File.Exists(Path.Combine(folder, "Version.json")))
-            {
-                continue;
-            }
-
-            string saveName = Path.GetFileName(folder);
-            string saveDir = Path.Combine(SavesFolderDir, saveName);
-
-            Bitmap serverIcon = null;
-            string serverIconPath = Path.Combine(saveDir, "servericon.png");
-            if (File.Exists(serverIconPath))
-            {
-                serverIcon = new(Path.Combine(saveDir, "servericon.png"));
-            }
-
-            SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
-            string fileEnding = "json";
-            if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
-
-            Version version;
-            using (FileStream stream = new(Path.Combine(folder, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
-            }
-
-            ServerEntry entry = new()
-            {
-                Name = saveName,
-                ServerIcon = serverIcon,
-                Password = server.ServerPassword,
-                Seed = server.Seed,
-                GameMode = server.GameMode,
-                PlayerPermissions = server.DefaultPlayerPerm,
-                AutoSaveInterval = server.SaveInterval / 1000,
-                MaxPlayers = server.MaxConnections,
-                Port = server.ServerPort,
-                AutoPortForward = server.AutoPortForward,
-                AllowLanDiscovery = server.LANDiscoveryEnabled,
-                AllowCommands = !server.DisableConsole,
-                IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
-                Version = version,
-                LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}"))
-                                                             ?
-                                                             // This file is affected by server saving
-                                                             Path.Combine(folder, $"WorldData.{fileEnding}")
-                                                             :
-                                                             // If the above file doesn't exist (server was never ran), use the Version file instead
-                                                             Path.Combine(folder, $"Version.{fileEnding}"))
-            };
-
-            serversOnDisk.Add(entry);
-        }
-
-        // Remove any servers from the Servers list that are not found in the saves folder
-        for (int i = Servers.Count - 1; i >= 0; i--)
-        {
-            if (serversOnDisk.All(s => s.Name != Servers[i].Name))
-            {
-                Servers.RemoveAt(i);
-            }
-        }
-
-        // Add any new servers found on the disk to the Servers list
-        foreach (ServerEntry server in serversOnDisk)
-        {
-            if (Servers.All(s => s.Name != server.Name))
-            {
-                Servers.Add(server);
-            }
-        }
-
-        Servers = new AvaloniaList<ServerEntry>(Servers.OrderByDescending(entry => entry.LastAccessedTime));
     }
 
     private void AddServer(string name, NitroxGameMode gameMode)
@@ -271,10 +274,11 @@ public partial class ServersViewModel : RoutableViewModelBase
         watcher.Created += OnDirectoryChanged;
         watcher.Deleted += OnDirectoryChanged;
         watcher.Renamed += OnDirectoryChanged;
-        watcher.EnableRaisingEvents = true;
 
         Task.Run(async () =>
         {
+            watcher.EnableRaisingEvents = true; // Slowish (~2ms) - Moved into Task.Run.
+
             while (!serverRefreshCts.IsCancellationRequested)
             {
                 while (shouldRefreshServersList)

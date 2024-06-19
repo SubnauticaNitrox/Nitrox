@@ -84,13 +84,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in singleplayer mode:");
-            await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-            {
-                model.Title = "Error while starting game in singleplayer mode";
-                model.Description = $"Error while starting game in singleplayer mode: {ex}";
-                model.DescriptionForeground = new SolidColorBrush(Colors.Red);
-                model.ButtonOptions = ButtonOptions.OkClipboard;
-            });
+            await dialogService.ShowErrorAsync(ex, "Error while starting game in singleplayer mode", "Error while starting game in singleplayer mode");
         }
     }
 
@@ -179,13 +173,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in multiplayer mode:");
-            await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-            {
-                model.Title = "Error while starting game in multiplayer mode";
-                model.Description = $"Error while starting game in multiplayer mode: {ex}";
-                model.DescriptionForeground = new SolidColorBrush(Colors.Red);
-                model.ButtonOptions = ButtonOptions.OkClipboard;
-            });
+            await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode", "Error while starting game in multiplayer mode");
         }
     }
 

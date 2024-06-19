@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive;
-using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Media;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
@@ -110,18 +108,12 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         string title = ex switch
                        {
-                           TargetInvocationException e => e.InnerException?.Message,
+                           { InnerException: {} inner } => inner.Message,
                            _ => ex.Message
                        } ??
                        ex.Message;
 
-        await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-        {
-            model.Title = $"Error: {title}";
-            model.Description = ex.ToString();
-            model.DescriptionForeground = new SolidColorBrush(Colors.Red);
-            model.ButtonOptions = ButtonOptions.OkClipboard;
-        });
+        await dialogService.ShowErrorAsync(ex, $"Error: {title}");
 
         Environment.Exit(1);
     }
