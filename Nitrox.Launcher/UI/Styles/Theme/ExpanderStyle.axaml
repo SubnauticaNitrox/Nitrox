@@ -37,7 +37,7 @@
     </Design.PreviewWith>
 
     <!-- TODO: Create a clean Nitrox Expander+ToggleButton style -->
-    
+
     <Style Selector="ToggleButton.changelog">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -65,14 +65,7 @@
                 </Border>
             </ControlTemplate>
         </Setter>
-    
-        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]"> -->
-        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" /> -->
-        <!-- </Style> -->
-        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=DARK]"> -->
-        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" /> -->
-        <!-- </Style> -->
-    
+
         <Style Selector="^:pointerover">
             <Setter Property="Cursor" Value="Hand" />
             <Style Selector="^ /template/ TextBlock">
@@ -80,7 +73,7 @@
                 <Setter Property="TextDecorations" Value="Underline" />
             </Style>
         </Style>
-        
+
         <!-- Arrow Animation -->
         <Style Selector="^[Tag=expanded] /template/ Path">
             <Style.Animations>
@@ -107,7 +100,7 @@
             </Style.Animations>
         </Style>
     </Style>
-    
+
     <Style Selector="Expander.changelog">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -131,14 +124,7 @@
                 </StackPanel>
             </ControlTemplate>
         </Setter>
-    
-        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]"> -->
-        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" /> -->
-        <!-- </Style> -->
-        <!-- <Style Selector="^[(design|NitroxAttached.Theme)=DARK]"> -->
-        <!--     <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" /> -->
-        <!-- </Style> -->
-    
+
         <Style Selector="^:expanded /template/ ToggleButton">
             <Setter Property="Tag" Value="expanded" />
         </Style>

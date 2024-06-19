@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Threading;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
@@ -33,7 +33,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
 
     public UpdatesViewModel(IScreen screen) : base(screen)
     {
-        Dispatcher.UIThread.Invoke(async () =>
+        Task.Run(async () =>
         {
             try
             {
@@ -90,8 +90,18 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private static void DownloadUpdate()
+    private void DownloadUpdate()
     {
         Process.Start(new ProcessStartInfo("https://nitrox.rux.gg/download") { UseShellExecute = true, Verb = "open" })?.Dispose();
+    }
+
+    [RelayCommand]
+    private void Expand(Expander expander)
+    {
+        if (expander == null)
+        {
+            return;
+        }
+        expander.IsExpanded = !expander.IsExpanded;
     }
 }
