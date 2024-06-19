@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              DataContext="{x:Static design:DesignData.UpdatesViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
@@ -92,7 +93,7 @@
                                     <TextBlock FontSize="12" FontWeight="Light" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown', TargetNullValue='Unknown'}" ToolTip.Tip="{Binding Released}"/>
                                 </Grid>
                                 <Expander Classes="changelog" Header="View changelog">
-                                    <TextBlock FontSize="14" TextWrapping="Wrap" FontWeight="Normal" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
+                                    <controls:RichTextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
                                 </Expander>
                                 <Border BorderThickness="0 1 0 0" />
                             </StackPanel>

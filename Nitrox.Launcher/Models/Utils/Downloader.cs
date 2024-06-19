@@ -120,7 +120,14 @@ public partial class Downloader
                 builder.Clear();
                 for (int j = 0; j < patchnotes.Count; j++)
                 {
-                    builder.AppendLine($"• {(string)patchnotes[j]}");
+                    if (patchnotes[j].ToString().StartsWith('-'))
+                    {
+                        builder.AppendLine($"\n<b><u>{patchnotes[j].ToString().TrimStart('-', ' ')}</u></b>");
+                    }
+                    else
+                    {
+                        builder.AppendLine($"• {(string)patchnotes[j]}");
+                    }
                 }
 
                 changelogs.Add(new NitroxChangelog(version, dateTime, builder.ToString()));

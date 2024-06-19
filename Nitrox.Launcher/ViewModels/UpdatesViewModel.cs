@@ -54,7 +54,11 @@ public partial class UpdatesViewModel : RoutableViewModelBase
             Version latestVersion = await Downloader.GetNitroxLatestVersion();
 
             newUpdateAvailable = latestVersion > currentVersion;
+#if DEBUG
+            usingOfficialVersion = false;
+#else
             usingOfficialVersion = latestVersion >= currentVersion;
+#endif
 
             if (newUpdateAvailable)
             {
@@ -72,10 +76,14 @@ public partial class UpdatesViewModel : RoutableViewModelBase
             version = currentVersion.ToString();
             officialVersion = latestVersion.ToString();
         }
-        catch // If update check fails, just show "No Update Available" text
+        catch // If update check fails, just show "No Update Available" text unless on debug mode
         {
             newUpdateAvailable = false;
+#if DEBUG
+            usingOfficialVersion = false;
+#else
             usingOfficialVersion = true;
+#endif
         }
 
         return newUpdateAvailable || !usingOfficialVersion;
