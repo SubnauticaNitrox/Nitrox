@@ -8,16 +8,6 @@
              DataContext="{x:Static design:DesignData.UpdatesViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.UpdatesView">
-    <UserControl.Styles>
-        <Style Selector="StackPanel.changelog">
-            <!-- Set a background to non-null so hand cursor is always shown when on the StackPanel -->
-            <Setter Property="Background" Value="Transparent" />
-            <Style Selector="^:pointerover">
-                <Setter Property="Cursor" Value="Hand" />
-            </Style>
-        </Style>
-    </UserControl.Styles>
-
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
             <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
@@ -96,20 +86,12 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Spacing="5" Classes="changelog">
-                                <Interaction.Behaviors>
-                                    <BehaviorCollection>
-                                        <!-- Allows the user to click anywhere on the changelog to open/close it. -->
-                                        <EventTriggerBehavior EventName="PointerPressed">
-                                            <InvokeCommandAction Command="{Binding DataContext.ExpandCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding #Expander}" />
-                                        </EventTriggerBehavior>
-                                    </BehaviorCollection>
-                                </Interaction.Behaviors>
+                            <StackPanel Spacing="5">
                                 <Grid>
                                     <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, TargetNullValue='Unknown'}"/>
                                     <TextBlock FontSize="12" FontWeight="Light" HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown', TargetNullValue='Unknown'}" ToolTip.Tip="{Binding Released}"/>
                                 </Grid>
-                                <Expander x:Name="Expander" Classes="changelog" Header="View changelog">
+                                <Expander Classes="changelog" Header="View changelog">
                                     <controls:RichTextBlock FontSize="14" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
                                 </Expander>
                                 <Border BorderThickness="0 1 0 0" />

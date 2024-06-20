@@ -224,10 +224,18 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style Selector="^:pointerover /template/ Border">
-            <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPointerOverBrush}" />
+
+        <Style Selector="^ /template/ Border">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.10" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPointerOverBrush}" />
+            </Style>
         </Style>
-        <Style Selector="^:pressed  /template/ Border">
+        <Style Selector="^:pressed /template/ Border">
             <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPressedBrush}" />
         </Style>
         
