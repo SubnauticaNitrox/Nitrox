@@ -47,14 +47,13 @@
       <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
       <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
-    
+
     <!-- Ensure server files are available for launcher. -->
     <Target Name="BuildServer" AfterTargets="Build">
         <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
     </Target>
 
     <!-- Build dependencies that will be loaded by the game, which must be net472 compatible. -->
-    <!-- TODO: Improve build process so it doesn't cause file conflicts (i.e. read/write access) when building in parallel -->
     <Target Name="BuildNet472BinariesForGame" AfterTargets="Build">
         <MSBuild Projects="..\NitroxPatcher\NitroxPatcher.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472;OutputPath=$(TargetDir)\lib\net472" />
     </Target>
@@ -77,6 +76,8 @@
             <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)Nitrox.Launcher.dll" />
             <AllDependencies Include="$(TargetDir)*.dll.config" />
         </ItemGroup>
-        <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+        <!-- In Debug mode, keep DLLs for the Avalonia previewer in the expected location. It does not use custom AppDomain.CurrentDomain.AssemblyResolve handlers. -->
+        <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+        <Move Condition="'$(Configuration)' == 'Release'" SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
     </Target>
 </Project>
