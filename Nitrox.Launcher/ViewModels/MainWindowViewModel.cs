@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -149,6 +153,17 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             MainWindow.WindowState = WindowState.Normal;
             MaximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
+        }
+    }
+
+    [RelayCommand]
+    public void Drag(PointerPressedEventArgs args)
+    {
+        ArgumentNullException.ThrowIfNull(args);
+
+        if (args.Source is ILogical element)
+        {
+            element.FindLogicalAncestorOfType<Window>()?.BeginMoveDrag(args);
         }
     }
 }

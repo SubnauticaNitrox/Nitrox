@@ -17,7 +17,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(MultiplayerSessionPolicyRequest packet, INitroxConnection connection)
         {
             Log.Info("Providing session policies...");
-            connection.SendPacket(new MultiplayerSessionPolicy(packet.CorrelationId, config.DisableConsole, config.MaxConnections, config.IsPasswordRequired));
+            connection.SendPacket(new MultiplayerSessionPolicy(packet.CorrelationId, config.DisableConsole, config.MaxConnections, config.IsPasswordRequired()));
         }
     }
 }

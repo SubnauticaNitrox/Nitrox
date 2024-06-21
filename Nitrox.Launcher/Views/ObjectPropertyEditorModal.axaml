@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="700" MinHeight="200"
+        d:DataContext="{x:Static design:DesignData.ObjectPropertyEditorViewModel}"
+        x:Class="Nitrox.Launcher.Views.ObjectPropertyEditorModal"
+        SystemDecorations="None"
+        SizeToContent="Width"
+        CanResize="False"
+        Focusable="True"
+        RequestedThemeVariant="Light">
+    <Grid RowDefinitions="Auto, *, Auto">
+        <TextBlock Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Classes="form" Margin="24">
+                <ItemsControl ItemsSource="{Binding EditorFields}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="14" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!-- TODO: Prevent empty ContentPresenter (when DataType doesn't match) -->
+                            <ContentPresenter Content="{Binding Value}">
+                                <ContentPresenter.DataTemplates>
+                                    <DataTemplate DataType="{x:Type system:String}">
+                                        <StackPanel DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                                <TextBox Text="{Binding Value, Mode=TwoWay}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type system:Boolean}">
+                                        <StackPanel DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                                <CheckBox Classes="switch" IsChecked="{Binding Value}" HorizontalAlignment="Right" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type system:Int32}">
+                                        <StackPanel DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                                <NumericUpDown Value="{Binding Value}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ContentPresenter.DataTemplates>
+                            </ContentPresenter>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+        <Border Classes="footer" Grid.Row="2">
+            <Panel>
+                <Button Content="Back" Command="{Binding CloseCommand}" HotKey="Escape" FontWeight="Bold" />
+                <Button Classes="primary" Content="Save" Command="{Binding SaveCommand}" HorizontalAlignment="Right" HotKey="Enter" />
+            </Panel>
+        </Border>
+    </Grid>
+</Window>

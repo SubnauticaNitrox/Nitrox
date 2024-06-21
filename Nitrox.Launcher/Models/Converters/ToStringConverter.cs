@@ -25,7 +25,11 @@ public class ToStringConverter : Converter<ToStringConverter>, IValueConverter
         {
             value = (value as Enum)?.GetAttribute<DescriptionAttribute>()?.Description ?? value.ToString();
         }
-        if (value is not string sourceText || !targetType.IsAssignableTo(typeof(string)))
+        if (value is not string sourceText)
+        {
+            sourceText = value?.ToString();
+        }
+        if (!targetType.IsAssignableTo(typeof(string)) || sourceText == null)
         {
             return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
         }

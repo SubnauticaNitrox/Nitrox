@@ -2,9 +2,9 @@ using Nitrox.Launcher.Views.Abstract;
 
 namespace Nitrox.Launcher.Views;
 
-public partial class CreateServerModal : ModalBase
+public partial class ObjectPropertyEditorModal : ModalBase
 {
-    public CreateServerModal()
+    public ObjectPropertyEditorModal()
     {
         InitializeComponent();
     }

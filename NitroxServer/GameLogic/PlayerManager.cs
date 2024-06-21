@@ -7,7 +7,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Server;
@@ -98,7 +97,7 @@ namespace NitroxServer.GameLogic
             string playerName = authenticationContext.Username;
 
             allPlayersByName.TryGetValue(playerName, out Player player);
-            if (player?.IsPermaDeath == true && serverConfig.IsHardcore)
+            if (player?.IsPermaDeath == true && serverConfig.IsHardcode())
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -341,7 +340,7 @@ namespace NitroxServer.GameLogic
                 .Where(assetPackage => assetPackage.Player != null)
                 .Select(assetPackage => assetPackage.Player);
         }
-        
+
         public void BroadcastPlayerJoined(Player player)
         {
             PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);

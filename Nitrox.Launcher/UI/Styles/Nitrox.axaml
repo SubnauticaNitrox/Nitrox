@@ -38,9 +38,10 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackgroundBrush}" />
     </Style>
 
-    <Style Selector=":is(TemplatedControl).footer">
-        <Setter Property="Background" Value="#ECECEC" />
+    <Style Selector=":is(Border).footer">
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
         <Setter Property="Padding" Value="24 20" />
+        <Setter Property="BoxShadow" Value="0 0 0 2 #7F000000" />
     </Style>
 
     <Style Selector=":is(Control)">
@@ -67,16 +68,15 @@
         </Style>
     </Style>
 
-    <Style Selector=".form > :is(Layoutable)">
-        <Setter Property="Margin" Value="0 0 0 26" />
-    </Style>
-    <Style Selector=".form > :is(Layoutable):nth-last-child(1)">
-        <Setter Property="Margin" Value="0" />
-    </Style>
-    <Style Selector=".form > :is(Layoutable) > TextBlock:nth-child(1)">
-        <Setter Property="FontSize" Value="10" />
-        <Setter Property="FontWeight" Value="700" />
-        <Setter Property="Margin" Value="0 0 0 11" />
+    <Style Selector=".form">
+        <Style Selector="^ > :is(Layoutable):not(:nth-last-child(1))">
+            <Setter Property="Margin" Value="0 0 0 26" />
+        </Style>
+        <Style Selector="^ TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="700" />
+            <Setter Property="Margin" Value="0 0 0 11" />
+        </Style>
     </Style>
 
     <Style Selector=":is(Panel).titleBar">

@@ -2,6 +2,8 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.Serialization;
+using NitroxModel.Server;
 
 namespace NitroxModel;
 
@@ -132,4 +134,7 @@ public static class Extensions
             ArrayPool<TKey>.Shared.Return(toRemove, true);
         }
     }
+
+    public static bool IsHardcode(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;
+    public static bool IsPasswordRequired(this SubnauticaServerConfig config) => config.ServerPassword != "";
 }

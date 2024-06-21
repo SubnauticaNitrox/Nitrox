@@ -1,5 +1,5 @@
 extern alias JB;
-
+using System;
 using System.Collections.Generic;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -11,19 +11,19 @@ using JB::JetBrains.Annotations;
 namespace Nitrox.Launcher.Models.Design;
 
 /// <summary>
-///     Selects a <see cref="DataTemplate"/> based on its <see cref="DataTemplate.DataType"/>.
+///     Selects a <see cref="DataTemplate" /> based on its <see cref="DataTemplate.DataType" />.
 /// </summary>
 public class MultiDataTemplate : AvaloniaList<DataTemplate>, IDataTemplate
 {
     [Content]
     [UsedImplicitly]
     public List<DataTemplate> Content { get; set; } = new();
-    
+
     public bool Match(object data)
     {
         foreach (DataTemplate template in Content)
         {
-            if (template.DataType.IsInstanceOfType(data))
+            if (template.DataType?.IsInstanceOfType(data) ?? false)
             {
                 return true;
             }
@@ -36,12 +36,12 @@ public class MultiDataTemplate : AvaloniaList<DataTemplate>, IDataTemplate
     {
         foreach (DataTemplate template in Content)
         {
-            if (template.DataType.IsInstanceOfType(param))
+            if (template.DataType?.IsInstanceOfType(param) ?? false)
             {
                 return template.Build(param);
             }
         }
 
-        return new TextBlock() { Text = param.ToString() };
+        return new TextBlock() { Text = "" };
     }
 }

@@ -23,12 +23,12 @@
                        FontWeight="{Binding DescriptionFontWeight}" FontSize="{Binding DescriptionFontSize}" IsVisible="{Binding !Description, Converter={converters:EqualityConverter}}" />
         </ScrollViewer>
 
-        <ContentControl Grid.Row="2" Classes="footer">
+        <Border Grid.Row="2" Classes="footer">
             <Panel>
                 <!-- Ok Button Option -->
                 <Button Classes="primary" Content="OK" FontWeight="Bold" HorizontalAlignment="Right" HorizontalContentAlignment="Center" Width="80" HotKey="{Binding OkHotkey}"
                         Command="{Binding CloseCommand}"
-                        IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}" 
+                        IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}"
                         IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.Ok}}" />
 
                 <!-- OkClipboard Button Option -->
@@ -49,6 +49,6 @@
                             Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.No}" />
                 </Panel>
             </Panel>
-        </ContentControl>
+        </Border>
     </Grid>
 </Window>

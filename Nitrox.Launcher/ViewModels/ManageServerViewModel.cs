@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Buffers;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -31,7 +34,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 {
     private readonly IDialogService dialogService;
     private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
-
     private ServerEntry server;
 
     [ObservableProperty]
@@ -325,9 +327,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void OpenAdvancedSettings()
+    private async Task OpenAdvancedSettings()
     {
-        // TODO: Open Advanced Settings Popup (which is automatically populated with the rest of the server.cfg settings)
+        await dialogService.ShowAsync<ObjectPropertyEditorViewModel>(model =>
+        {
+            model.Title = $"Server '{ServerName}' config editor";
+            model.OwnerObject = SubnauticaServerConfig.Load(WorldFolderDirectory);
+            // TODO: Fix filter
+            model.FieldAcceptFilter = p => !((string[])["password", "filename"]).Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
+        });
     }
 
     [RelayCommand]
@@ -350,14 +358,14 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
     private async Task DeleteServer()
     {
-        DialogBoxViewModel modelViewModel = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        DialogBoxViewModel modalViewModel = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
             model.Description = $"Are you sure you want to delete the server '{ServerName}'?";
             model.DescriptionFontSize = 24;
             model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
-        if (!modelViewModel)
+        if (!modalViewModel)
         {
             return;
         }

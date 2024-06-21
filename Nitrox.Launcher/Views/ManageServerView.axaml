@@ -32,7 +32,7 @@
                                     </Grid>
                                     <Button.Styles>
                                         <Style Selector="Button:pointerover /template/ ContentPresenter">
-                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="Cursor" Value="Hand" />
                                         </Style>
                                     </Button.Styles>
                                 </Button>
@@ -107,7 +107,7 @@
                 <StackPanel VerticalAlignment="Stretch" Spacing="42">
                     <StackPanel.Styles>
                         <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
-                            <Setter Property="Margin" Value="0 0 0 11"/>
+                            <Setter Property="Margin" Value="0 0 0 11" />
                         </Style>
                     </StackPanel.Styles>
 
@@ -115,13 +115,13 @@
                         <StackPanel>
                             <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" />
                             <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName, Converter={converters:TrimConverter}}"
-                                     IsEnabled="{Binding !ServerIsOnline}"/>
+                                     IsEnabled="{Binding !ServerIsOnline}" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" />
                             <TextBox Classes="revealPasswordButton" Watermark="Server password" Text="{Binding ServerPassword, Converter={converters:TrimConverter}}"
-                                     IsEnabled="{Binding !ServerIsOnline}"/>
+                                     IsEnabled="{Binding !ServerIsOnline}" />
                         </StackPanel>
                     </Grid>
 
@@ -129,7 +129,7 @@
                         <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Opacity=".5" />
                         <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}"
                                                    SelectedItem="{Binding ServerGameMode, Mode=TwoWay}"
-                                                   IsEnabled="{Binding !ServerIsOnline}"/>
+                                                   IsEnabled="{Binding !ServerIsOnline}" />
                     </StackPanel>
 
                     <Grid ColumnDefinitions="*,30,*,30,*">
@@ -165,7 +165,7 @@
                             <TextBox Watermark="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
                                      Text="{Binding ServerAutoSaveInterval, Converter={converters:IntToStringConverter}}"
                                      IsEnabled="{Binding !ServerIsOnline}"
-                                     KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
+                                     KeyDown="InputElement_OnKeyDown" MaxLength="9" />
                         </StackPanel>
                     </Grid>
 
@@ -174,14 +174,14 @@
                             <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
                             <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, Converter={converters:IntToStringConverter}}"
                                      IsEnabled="{Binding !ServerIsOnline}"
-                                     KeyDown="InputElement_OnKeyDown" MaxLength="9"/>
+                                     KeyDown="InputElement_OnKeyDown" MaxLength="9" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
                             <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, Converter={converters:IntToStringConverter}}"
                                      IsEnabled="{Binding !ServerIsOnline}"
-                                     KeyDown="InputElement_OnKeyDown" MaxLength="5"/>
+                                     KeyDown="InputElement_OnKeyDown" MaxLength="5" />
                         </StackPanel>
                     </Grid>
 
@@ -190,21 +190,21 @@
                         <StackPanel Spacing="20" IsEnabled="{Binding !ServerIsOnline}">
                             <StackPanel.Styles>
                                 <Style Selector="Grid > TextBlock">
-                                    <Setter Property="FontSize" Value="16"/>
-                                    <Setter Property="FontWeight" Value="400"/>
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontSize" Value="16" />
+                                    <Setter Property="FontWeight" Value="400" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
                                 </Style>
                             </StackPanel.Styles>
                             <Grid>
-                                <TextBlock Text="Enable auto port forwarding"/>
+                                <TextBlock Text="Enable auto port forwarding" />
                                 <CheckBox Classes="switch" IsChecked="{Binding ServerAutoPortForward}" HorizontalAlignment="Right" />
                             </Grid>
                             <Grid>
-                                <TextBlock Text="Allow LAN Discovery"/>
+                                <TextBlock Text="Allow LAN Discovery" />
                                 <CheckBox Classes="switch" IsChecked="{Binding ServerAllowLanDiscovery}" HorizontalAlignment="Right" />
                             </Grid>
                             <Grid>
-                                <TextBlock Text="Enable Commands"/>
+                                <TextBlock Text="Enable Commands" />
                                 <CheckBox Classes="switch" IsChecked="{Binding ServerAllowCommands}" HorizontalAlignment="Right" />
                             </Grid>
                         </StackPanel>
@@ -215,8 +215,8 @@
                         <StackPanel Spacing="20">
                             <StackPanel.Styles>
                                 <Style Selector="Button">
-                                    <Setter Property="FontSize" Value="16"/>
-                                    <Setter Property="FontWeight" Value="400"/>
+                                    <Setter Property="FontSize" Value="16" />
+                                    <Setter Property="FontWeight" Value="400" />
                                 </Style>
                             </StackPanel.Styles>
 
@@ -255,7 +255,7 @@
             </ScrollViewer>
 
             <Border Grid.Row="2" Background="{DynamicResource BrandPanelBackgroundBrush}" CornerRadius="12" Padding="25 17">
-                <Grid ColumnDefinitions="*,1*"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid ColumnDefinitions="*,1*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Panel Grid.Column="1" HorizontalAlignment="Stretch">
                         <Button Classes="abort big" IsVisible="{Binding ServerIsOnline}" Content="STOP SERVER" Command="{Binding StopServerCommand}" HorizontalAlignment="Stretch" />
                         <Button Classes="primary big" IsVisible="{Binding !ServerIsOnline}" Command="{Binding StartServerCommand}" HorizontalAlignment="Stretch">

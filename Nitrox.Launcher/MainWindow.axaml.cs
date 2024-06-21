@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Input;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
@@ -117,8 +116,4 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         Environment.Exit(1);
     }
-
-    private void TitleBar_OnPointerPressed(object sender, PointerPressedEventArgs e) => BeginMoveDrag(e);
-
-    private void Window_OnPointerPressed(object sender, PointerPressedEventArgs e) => Focus(); // Allow for de-focusing textboxes when clicking outside of them.
 }

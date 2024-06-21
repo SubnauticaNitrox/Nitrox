@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,10 +12,11 @@ namespace Nitrox.Launcher.ViewModels.Abstract;
 /// <summary>
 ///     Base class for (popup) dialog ViewModels.
 /// </summary>
-public abstract partial class ModalViewModelBase : ObservableValidator, IModalDialogViewModel
+public abstract partial class ModalViewModelBase : ObservableValidator, IModalDialogViewModel, IDisposable
 {
     [ObservableProperty] private bool? dialogResult;
     [ObservableProperty] private ButtonOptions? selectedOption;
+    protected readonly CompositeDisposable Disposables = new();
 
     public static implicit operator bool(ModalViewModelBase self)
     {
@@ -25,4 +28,6 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
     {
         ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close(DialogResult);
     }
+
+    public void Dispose() => Disposables.Dispose();
 }

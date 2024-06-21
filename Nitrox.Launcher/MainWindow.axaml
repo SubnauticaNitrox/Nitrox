@@ -17,7 +17,7 @@
         MinWidth="800" MinHeight="600"
         RequestedThemeVariant="Dark"
         Icon="/Assets/Images/nitroxIco.ico"
-        PointerPressed="Window_OnPointerPressed" Focusable="True">
+        Focusable="True">
 
     <Window.Styles>
         <Style Selector="Border.nav">
@@ -111,15 +111,18 @@
 
     <Panel Margin="{Binding $parent[Window].OffScreenMargin}">
         <!-- Title bar -->
-        <Panel Classes="titleBar" PointerPressed="TitleBar_OnPointerPressed">
+        <Panel Classes="titleBar">
             <i:Interaction.Behaviors>
                 <i:BehaviorCollection>
+                    <ia:EventTriggerBehavior EventName="PointerPressed">
+                        <ia:InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
+                    </ia:EventTriggerBehavior>
                     <ia:EventTriggerBehavior EventName="DoubleTapped">
                         <ia:InvokeCommandAction Command="{Binding MaximizeCommand}" />
                     </ia:EventTriggerBehavior>
                 </i:BehaviorCollection>
             </i:Interaction.Behaviors>
-            
+
             <StackPanel>
                 <Button Command="{Binding MinimizeCommand}">
                     <StackPanel>
