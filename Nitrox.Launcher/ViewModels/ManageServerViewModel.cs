@@ -332,9 +332,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         await dialogService.ShowAsync<ObjectPropertyEditorViewModel>(model =>
         {
             model.Title = $"Server '{ServerName}' config editor";
-            model.OwnerObject = SubnauticaServerConfig.Load(WorldFolderDirectory);
-            // TODO: Fix filter
             model.FieldAcceptFilter = p => !((string[])["password", "filename"]).Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
+            model.OwnerObject = SubnauticaServerConfig.Load(WorldFolderDirectory);
         });
     }
 

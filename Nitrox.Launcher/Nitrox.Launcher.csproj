@@ -65,7 +65,7 @@
         <MSBuild Projects="..\NitroxPatcher\NitroxPatcher.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472;OutputPath=$(TargetDir)\lib\net472" />
     </Target>
 
-    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build">
+    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build;BuildServer;BuildNet472BinariesForGame">
         <ItemGroup>
             <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
             <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
@@ -78,7 +78,7 @@
         <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
 
-    <Target Name="MoveDependenciesToLib" AfterTargets="Build;BuildNet472BinariesForGame">
+    <Target Name="MoveDependenciesToLib" AfterTargets="Build;MoveNitroxAssetsToLauncherOutput">
         <ItemGroup>
             <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)Nitrox.Launcher.dll" />
             <AllDependencies Include="$(TargetDir)*.dll.config" />
