@@ -78,7 +78,7 @@
         <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
 
-    <Target Name="MoveDependenciesToLib" AfterTargets="Build">
+    <Target Name="MoveDependenciesToLib" AfterTargets="Build;BuildNet472BinariesForGame">
         <ItemGroup>
             <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)Nitrox.Launcher.dll" />
             <AllDependencies Include="$(TargetDir)*.dll.config" />

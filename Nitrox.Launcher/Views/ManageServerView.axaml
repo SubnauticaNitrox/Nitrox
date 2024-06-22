@@ -220,14 +220,12 @@
                                 </Style>
                             </StackPanel.Styles>
 
-                            <Border Background="Transparent" HorizontalAlignment="Left" ToolTip.Tip="Coming Soon!"> <!-- Temp border in order to show tooltip -->
-                                <Button IsEnabled="False" Command="{Binding OpenAdvancedSettingsCommand}" Classes="icon">
-                                    <StackPanel>
-                                        <Image Source="/Assets/Images/world-manager/cog-2x.png" />
-                                        <TextBlock Text="Advanced settings" />
-                                    </StackPanel>
-                                </Button>
-                            </Border>
+                            <Button Command="{Binding OpenAdvancedSettingsCommand}" Classes="icon">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/world-manager/cog-2x.png" />
+                                    <TextBlock Text="Advanced settings" />
+                                </StackPanel>
+                            </Button>
                             <Button Command="{Binding OpenWorldFolderCommand}" Classes="icon">
                                 <StackPanel>
                                     <Image Source="/Assets/Images/world-manager/window-external-2x.png" />
