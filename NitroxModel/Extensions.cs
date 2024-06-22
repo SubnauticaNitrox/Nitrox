@@ -135,6 +135,6 @@ public static class Extensions
         }
     }
 
-    public static bool IsHardcode(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;
+    public static bool IsHardcore(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;
     public static bool IsPasswordRequired(this SubnauticaServerConfig config) => config.ServerPassword != "";
 }
