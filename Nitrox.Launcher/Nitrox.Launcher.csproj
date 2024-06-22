@@ -48,24 +48,17 @@
       <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Views\ObjectPropertyEditorModal.axaml.cs">
-        <DependentUpon>ServerAdvancedOptionsModal.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-    </ItemGroup>
-
     <!-- Ensure server files are available for launcher. -->
     <Target Name="BuildServer" AfterTargets="Build">
         <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
     </Target>
 
     <!-- Build dependencies that will be loaded by the game, which must be net472 compatible. -->
-    <Target Name="BuildNet472BinariesForGame" AfterTargets="Build">
+    <Target Name="BuildNet472BinariesForGame" AfterTargets="Build;BuildServer">
         <MSBuild Projects="..\NitroxPatcher\NitroxPatcher.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472;OutputPath=$(TargetDir)\lib\net472" />
     </Target>
 
-    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build;BuildServer;BuildNet472BinariesForGame">
+    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build;BuildNet472BinariesForGame">
         <ItemGroup>
             <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
             <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
