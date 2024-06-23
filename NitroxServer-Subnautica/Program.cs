@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,6 +72,10 @@ public class Program
         // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
         Log.Setup(true, isConsoleApp: true);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+        PosixSignalRegistration.Create(PosixSignal.SIGTERM, CloseWindowHandler);
+        PosixSignalRegistration.Create(PosixSignal.SIGQUIT, CloseWindowHandler);
+        PosixSignalRegistration.Create(PosixSignal.SIGINT, CloseWindowHandler);
+        PosixSignalRegistration.Create(PosixSignal.SIGHUP, CloseWindowHandler);
 
         CultureManager.ConfigureCultureInfo();
         if (!Console.IsInputRedirected)
@@ -153,6 +158,12 @@ public class Program
         {
             // ignored
         }
+    }
+
+    private static void CloseWindowHandler(PosixSignalContext context)
+    {
+        context.Cancel = false;
+        serverCts?.Cancel();
     }
 
     /// <summary>
