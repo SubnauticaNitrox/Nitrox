@@ -30,19 +30,19 @@
                             <ContentPresenter Content="{Binding Value}">
                                 <ContentPresenter.DataTemplates>
                                     <DataTemplate DataType="{x:Type system:String}">
-                                        <StackPanel DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <TextBox Text="{Binding Value, Mode=TwoWay}" />
                                         </StackPanel>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type system:Boolean}">
-                                        <StackPanel DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <CheckBox Classes="switch" IsChecked="{Binding Value}" HorizontalAlignment="Right" />
                                         </StackPanel>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type system:Int32}">
-                                        <StackPanel DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <NumericUpDown Value="{Binding Value}" />
                                         </StackPanel>

@@ -72,7 +72,7 @@
         <Style Selector="^ > :is(Layoutable):not(:nth-last-child(1))">
             <Setter Property="Margin" Value="0 0 0 26" />
         </Style>
-        <Style Selector="^ TextBlock:nth-child(1)">
+        <Style Selector="^ StackPanel.form > TextBlock:nth-child(1)">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="700" />
             <Setter Property="Margin" Value="0 0 0 11" />

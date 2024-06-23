@@ -18,11 +18,11 @@
     <StackPanel>
         <StackPanel Classes="form" Margin="24">
             <TextBlock Text="Create a server" Classes="modalHeader" />
-            <StackPanel>
+            <StackPanel Classes="form">
                 <TextBlock Text="SERVER NAME" />
                 <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Name, Converter={converters:TrimConverter}}" MaxWidth="400" MaxLength="120" />
             </StackPanel>
-            <StackPanel>
+            <StackPanel Classes="form">
                 <TextBlock Text="GAMEMODE" />
                 <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}" />
             </StackPanel>

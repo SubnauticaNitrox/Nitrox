@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Buffers;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -27,11 +25,13 @@ using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 using ReactiveUI;
+using Config = NitroxModel.Serialization.SubnauticaServerConfig;
 
 namespace Nitrox.Launcher.ViewModels;
 
 public partial class ManageServerViewModel : RoutableViewModelBase
 {
+    private readonly string[] advancedSettingsDeniedFields = ["password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode)];
     private readonly IDialogService dialogService;
     private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
     private ServerEntry server;
@@ -329,12 +329,17 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task OpenAdvancedSettings()
     {
-        await dialogService.ShowAsync<ObjectPropertyEditorViewModel>(model =>
+        ObjectPropertyEditorViewModel result = await dialogService.ShowAsync<ObjectPropertyEditorViewModel>(model =>
         {
             model.Title = $"Server '{ServerName}' config editor";
-            model.FieldAcceptFilter = p => !((string[])["password", "filename"]).Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
+            model.FieldAcceptFilter = p => !advancedSettingsDeniedFields.Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
             model.OwnerObject = SubnauticaServerConfig.Load(WorldFolderDirectory);
         });
+        if (result && result.OwnerObject is SubnauticaServerConfig config)
+        {
+            config.Serialize(WorldFolderDirectory);
+        }
+        LoadFrom(server);
     }
 
     [RelayCommand]

@@ -12,8 +12,8 @@
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhiteBrush}">
 
-            <StackPanel Classes="form">
-                <Button Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">
+            <StackPanel>
+                <Button Margin="0 0 0 26" Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">
                     <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
                 </Button>
                 <Grid ColumnDefinitions="Auto,*">
