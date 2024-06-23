@@ -61,7 +61,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartSingleplayerAsync()
     {
-        if (GameInspect.IsGameRunning("Subnautica"))
+        if (GameInspect.IsGameRunning(GameInfo.Subnautica))
         {
             return;
         }
@@ -102,7 +102,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
                 return;
             }
-            if (GameInspect.IsGameRunning("Subnautica"))
+            if (GameInspect.IsGameRunning(GameInfo.Subnautica))
             {
                 return;
             }

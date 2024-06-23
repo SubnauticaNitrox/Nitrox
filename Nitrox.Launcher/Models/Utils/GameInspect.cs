@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.ViewModels;
+using NitroxModel;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.Store;
@@ -19,7 +19,7 @@ internal static class GameInspect
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallDir);
 
-            IGamePlatform platform = GamePlatforms.AllPlatforms.FirstOrDefault(p => p.OwnsGame(gameInstallDir));
+            IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(gameInstallDir);
             if (platform?.Platform == Platform.STEAM)
             {
                 string gameVersionFile = Path.Combine(gameInstallDir, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
@@ -52,10 +52,10 @@ internal static class GameInspect
     /// <summary>
     ///     Checks game is running and if it is, warns. Does nothing in development mode for debugging purposes.
     /// </summary>
-    public static bool IsGameRunning(string processName)
+    public static bool IsGameRunning(GameInfo game)
     {
 #if RELEASE
-        if (ProcessEx.ProcessExists(processName))
+        if (NitroxModel.Platforms.OS.Shared.ProcessEx.ProcessExists(game.Name))
         {
             LauncherNotifier.Warning("An instance of Subnautica is already running");
             return true;
