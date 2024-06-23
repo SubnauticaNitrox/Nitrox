@@ -4,22 +4,11 @@ using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class LayoutElementDrawer : IDrawer
+public class LayoutElementDrawer : IDrawer<LayoutElement>
 {
     private const float LABEL_WIDTH = 100;
-    public Type[] ApplicableTypes { get; } = { typeof(LayoutElement) };
 
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case LayoutElement layoutElement:
-                DrawLayoutElement(layoutElement);
-                break;
-        }
-    }
-
-    private static void DrawLayoutElement(LayoutElement layoutElement)
+    public void Draw(LayoutElement layoutElement)
     {
         using (new GUILayout.HorizontalScope())
         {

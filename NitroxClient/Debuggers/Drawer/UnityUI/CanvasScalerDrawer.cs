@@ -1,25 +1,22 @@
-﻿using System;
-using NitroxClient.Debuggers.Drawer.Unity;
+﻿using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class CanvasScalerDrawer : IDrawer
+public class CanvasScalerDrawer : IDrawer<CanvasScaler>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(CanvasScaler) };
+    private readonly VectorDrawer vectorDrawer;
 
-    public void Draw(object target)
+    public CanvasScalerDrawer(VectorDrawer vectorDrawer)
     {
-        switch (target)
-        {
-            case CanvasScaler canvasScaler:
-                DrawCanvasScaler(canvasScaler);
-                break;
-        }
+        Validate.NotNull(vectorDrawer);
+
+        this.vectorDrawer = vectorDrawer;
     }
 
-    private static void DrawCanvasScaler(CanvasScaler canvasScaler)
+    public void Draw(CanvasScaler canvasScaler)
     {
         if (canvasScaler.GetComponent<Canvas>().renderMode == RenderMode.WorldSpace)
         {
@@ -54,7 +51,7 @@ public class CanvasScalerDrawer : IDrawer
                 {
                     GUILayout.Label("Reference Resolution", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
                     NitroxGUILayout.Separator();
-                    canvasScaler.referenceResolution = VectorDrawer.DrawVector2(canvasScaler.referenceResolution);
+                    canvasScaler.referenceResolution = vectorDrawer.Draw(canvasScaler.referenceResolution);
                 }
 
                 using (new GUILayout.HorizontalScope())
@@ -69,7 +66,7 @@ public class CanvasScalerDrawer : IDrawer
                     GUILayout.Label("Match", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
                     NitroxGUILayout.Separator();
                     float newMatchValue = NitroxGUILayout.FloatField(canvasScaler.matchWidthOrHeight);
-                    canvasScaler.matchWidthOrHeight = Mathf.Max(0, Mathf.Min(newMatchValue, 1));
+                    canvasScaler.matchWidthOrHeight = UnityEngine.Mathf.Max(0, UnityEngine.Mathf.Min(newMatchValue, 1));
                 }
             }
             else
@@ -93,7 +90,7 @@ public class CanvasScalerDrawer : IDrawer
                     GUILayout.Label("Default Sprite DPI", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
                     NitroxGUILayout.Separator();
                     float newDefaultSpriteDPI = NitroxGUILayout.FloatField(canvasScaler.defaultSpriteDPI);
-                    canvasScaler.defaultSpriteDPI = Mathf.Max(1, newDefaultSpriteDPI);
+                    canvasScaler.defaultSpriteDPI = UnityEngine.Mathf.Max(1, newDefaultSpriteDPI);
                 }
             }
         }
