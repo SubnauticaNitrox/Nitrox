@@ -6,14 +6,15 @@
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="700" MinHeight="200"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="800" MaxHeight="450" MinWidth="700" MinHeight="200"
         d:DataContext="{x:Static design:DesignData.ObjectPropertyEditorViewModel}"
         x:Class="Nitrox.Launcher.Views.ObjectPropertyEditorModal"
         SystemDecorations="None"
         SizeToContent="Width"
         CanResize="False"
         Focusable="True"
-        RequestedThemeVariant="Light">
+        RequestedThemeVariant="Light"
+        Title="{Binding Title}">
     <Grid RowDefinitions="Auto, *, Auto">
         <TextBlock Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
         <ScrollViewer Grid.Row="1">
@@ -46,6 +47,20 @@
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <NumericUpDown Value="{Binding Value}" />
                                         </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type system:Single}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                            <NumericUpDown Value="{Binding Value}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <!-- TODO: Switch between enum dropdown and empty DataTemplate -->
+                                    <DataTemplate DataType="{x:Type system:Object}">
+                                        <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
+                                            <TextBlock Text="{Binding PropertyInfo.Name}" />
+                                            <ComboBox PlaceholderText="Value" ItemsSource="{Binding PossibleValues}" SelectedItem="{Binding Value, Mode=TwoWay}" />
+                                        </StackPanel>
+                                        <!-- <Border Margin="0 0 0 -14" Height="0" /> -->
                                     </DataTemplate>
                                 </ContentPresenter.DataTemplates>
                             </ContentPresenter>

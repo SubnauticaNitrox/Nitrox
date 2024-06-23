@@ -31,7 +31,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class ManageServerViewModel : RoutableViewModelBase
 {
-    private readonly string[] advancedSettingsDeniedFields = ["password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode)];
+    private readonly string[] advancedSettingsDeniedFields = ["password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole), nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerStats)];
     private readonly IDialogService dialogService;
     private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
     private ServerEntry server;
