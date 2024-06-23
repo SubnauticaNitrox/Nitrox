@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Design;
@@ -24,5 +27,11 @@ public static class LauncherNotifier
     public static void Success(string message)
     {
         WeakReferenceMessenger.Default.Send(new NotificationAddMessage(new NotificationItem(message, NotificationType.Success)));
+    }
+
+    [Conditional("DEBUG")]
+    public static void Debug(string message, [CallerMemberName] string memberName = "")
+    {
+        WeakReferenceMessenger.Default.Send(new NotificationAddMessage(new NotificationItem($"Error in '{memberName}':{Environment.NewLine}{message}", NotificationType.Success)));
     }
 }

@@ -107,29 +107,10 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             return;
         }
-
         // Check to ensure the Subnautica is not in legacy, skip if check fails
-        try
+        if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
         {
-            if (NitroxUser.GamePlatform.Platform == Platform.STEAM)
-            {
-                string gameVersionFile = Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
-                if (int.Parse(File.ReadAllText(gameVersionFile)) == 68598)
-                {
-                    await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-                    {
-                        model.Title = "Legacy Game Detected";
-                        model.Description = "Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version to run the Nitrox server.";
-                        model.ButtonOptions = ButtonOptions.Ok;
-                    });
-                    return;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Error while checking game version:");
-            Log.Info("Skipping game version check...");
+            return;
         }
 
         server.Start();
