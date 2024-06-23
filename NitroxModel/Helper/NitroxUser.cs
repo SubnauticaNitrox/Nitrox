@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using NitroxModel.Discovery;
 using NitroxModel.Discovery.InstallationFinders.Core;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
 
@@ -50,26 +50,9 @@ namespace NitroxModel.Helper
             },
             () =>
             {
-                Process[] processes = Process.GetProcessesByName("Nitrox.Launcher");
-                try
-                {
-                    foreach (Process process in processes)
-                    {
-                        string executable = process?.MainModule?.FileName;
-                        if (!string.IsNullOrWhiteSpace(executable))
-                        {
-                            return Path.GetDirectoryName(executable);
-                        }
-                    }
-                    return null;
-                }
-                finally
-                {
-                    foreach (Process process in processes)
-                    {
-                        process.Dispose();
-                    }
-                }
+                using ProcessEx proc = ProcessEx.GetFirstProcess("Nitrox.Launcher");
+                string executable = proc?.MainModule?.FileName;
+                return !string.IsNullOrWhiteSpace(executable) ? Path.GetDirectoryName(executable) : null;
             }
         };
 

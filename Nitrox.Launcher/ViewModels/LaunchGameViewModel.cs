@@ -1,13 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics; // Only used on Release
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Media;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
@@ -91,53 +89,62 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         Log.Info("Launching Subnautica in multiplayer mode.");
         try
         {
-            if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
+            bool setupResult = await Task.Run(async () =>
             {
-                HostScreen.Show(optionsViewModel);
-                LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings.");
-                return;
-            }
-            if (PirateDetection.HasTriggered)
-            {
-                LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
-                return;
-            }
-            if (GameInspect.IsGameRunning(GameInfo.Subnautica))
-            {
-                return;
-            }
-            if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
-            {
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() => HostScreen.Show(optionsViewModel));
+                    LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings.");
+                    return false;
+                }
+                if (PirateDetection.HasTriggered)
+                {
+                    LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
+                    return false;
+                }
+                if (GameInspect.IsGameRunning(GameInfo.Subnautica))
+                {
+                    return false;
+                }
+                if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
+                {
+                    return false;
+                }
 
-            // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory
-            string initDllName = "NitroxPatcher.dll";
-            try
-            {
-                File.Copy(
-                    Path.Combine(NitroxUser.CurrentExecutablePath ?? "", "lib", "net472", initDllName),
-                    Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", initDllName),
-                    true
-                );
-            }
-            catch (IOException ex)
-            {
-                Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
-            }
+                // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory
+                string initDllName = "NitroxPatcher.dll";
+                try
+                {
+                    File.Copy(
+                        Path.Combine(NitroxUser.CurrentExecutablePath ?? "", "lib", "net472", initDllName),
+                        Path.Combine(NitroxUser.GamePath, "Subnautica_Data", "Managed", initDllName),
+                        true
+                    );
+                }
+                catch (IOException ex)
+                {
+                    Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
+                }
 
-            // Try inject Nitrox into Subnautica code.
-            if (LastFindSubnauticaTask != null)
-            {
-                await LastFindSubnauticaTask;
-            }
-            NitroxEntryPatch.Remove(NitroxUser.GamePath);
-            NitroxEntryPatch.Apply(NitroxUser.GamePath);
+                // Try inject Nitrox into Subnautica code.
+                if (LastFindSubnauticaTask != null)
+                {
+                    await LastFindSubnauticaTask;
+                }
+                NitroxEntryPatch.Remove(NitroxUser.GamePath);
+                NitroxEntryPatch.Apply(NitroxUser.GamePath);
 
-            if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
+                if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
+                {
+                    Log.Warn("Seems like QModManager is Installed");
+                    LauncherNotifier.Info("QModManager Detected in the game folder");
+                }
+
+                return true;
+            });
+            if (!setupResult)
             {
-                Log.Warn("Seems like QModManager is Installed");
-                LauncherNotifier.Info("QModManager Detected in the game folder");
+                return;
             }
 
             gameProcess = await StartSubnauticaAsync();
