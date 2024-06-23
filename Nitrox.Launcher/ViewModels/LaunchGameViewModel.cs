@@ -36,7 +36,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [ObservableProperty]
     private AvaloniaList<string> galleryImageSources = [];
 
-    private ProcessEx gameProcess;
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", "-vrmode none");
 
@@ -74,7 +73,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 return;
             }
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
-            gameProcess = await StartSubnauticaAsync();
+            await StartSubnauticaAsync();
         }
         catch (Exception ex)
         {
@@ -147,7 +146,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 return;
             }
 
-            gameProcess = await StartSubnauticaAsync();
+            await StartSubnauticaAsync();
         }
         catch (Exception ex)
         {
@@ -156,7 +155,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         }
     }
 
-    private async Task<ProcessEx> StartSubnauticaAsync()
+    private async Task StartSubnauticaAsync()
     {
         string subnauticaPath = NitroxUser.GamePath;
         string subnauticaLaunchArguments = SubnauticaLaunchArguments;
@@ -173,7 +172,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.")
         };
 
-        return game ?? throw new Exception($"Game failed to start through {platform.Name}");
+        if (game == null)
+        {
+            throw new Exception($"Game failed to start through {platform.Name}");
+        }
     }
 
     private void UpdateGamePlatform()
