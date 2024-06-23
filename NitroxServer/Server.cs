@@ -29,7 +29,8 @@ namespace NitroxServer
 
         public static Server Instance { get; private set; }
 
-        public bool IsRunning => serverCancelSource?.IsCancellationRequested == false;
+        public bool IsRunning { get; private set; }
+
         public bool IsSaving { get; private set; }
 
         public string Name => serverConfig.SaveName;
@@ -157,13 +158,21 @@ namespace NitroxServer
             IsSaving = false;
         }
 
-        public bool Start(CancellationTokenSource cancellationToken)
+        public bool Start(CancellationTokenSource ct)
         {
-            serverCancelSource = cancellationToken;
-            if (!server.Start())
+            Debug.Assert(serverCancelSource == null);
+
+            Validate.NotNull(ct);
+            if (ct.IsCancellationRequested)
             {
                 return false;
             }
+            if (!server.Start(ct.Token))
+            {
+                return false;
+            }
+            serverCancelSource = ct;
+            IsRunning = true;
 
             try
             {
@@ -213,8 +222,17 @@ namespace NitroxServer
             {
                 return;
             }
+            IsRunning = false;
 
-            serverCancelSource.Cancel();
+            try
+            {
+                serverCancelSource.Cancel();
+            }
+            catch
+            {
+                // ignored
+            }
+
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
 

@@ -1,66 +1,56 @@
 ﻿using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Principal;
 using System.Threading;
-using NitroxModel.Helper;
 
-namespace NitroxServer_Subnautica
+namespace NitroxServer_Subnautica;
+
+public static class AppMutex
 {
-    public static class AppMutex
+    private static readonly SemaphoreSlim mutexReleaseGate = new(1);
+    private static readonly SemaphoreSlim callerGate = new(1);
+
+    public static void Hold(Action onWaitingForMutex = null, CancellationToken ct = default)
     {
-        private static readonly SemaphoreSlim mutexReleaseGate = new SemaphoreSlim(1);
-        private static readonly SemaphoreSlim callerGate = new SemaphoreSlim(1);
-
-        public static void Hold(Action onWaitingForMutex = null, int timeoutInMs = 5000)
+        Thread thread = new(o =>
         {
-            Validate.IsTrue(timeoutInMs >= 5000, "Timeout must be at least 5 seconds.");
-
-            using CancellationTokenSource acquireSource = new CancellationTokenSource(timeoutInMs);
-            CancellationToken token = acquireSource.Token;
-            Thread thread = new Thread(o =>
+            bool first = true;
+            Mutex mutex = new(false, typeof(AppMutex).Assembly.FullName, out bool _);
+            try
             {
-                bool first = true;
-                Mutex mutex = new(false, typeof(AppMutex).Assembly.FullName, out bool _);
                 try
                 {
-                    try
+                    while (!mutex.WaitOne(100, false))
                     {
-                        while (!mutex.WaitOne(100, false))
+                        ct.ThrowIfCancellationRequested();
+                        if (first)
                         {
-                            token.ThrowIfCancellationRequested();
-                            if (first)
-                            {
-                                first = false;
-                                onWaitingForMutex?.Invoke();
-                            }
+                            first = false;
+                            onWaitingForMutex?.Invoke();
                         }
                     }
-                    catch (AbandonedMutexException)
-                    {
-                        // Mutex was abandoned in another process, it will still get acquired
-                    }
                 }
-                finally
+                catch (AbandonedMutexException)
                 {
-                    callerGate.Release();
-                    mutexReleaseGate.Wait(-1);
-                    mutex.ReleaseMutex();
+                    // Mutex was abandoned in another process, it will still get acquired
                 }
-            });
-            mutexReleaseGate.Wait(-1, token);
-            callerGate.Wait(0, token);
-            thread.Start();
-
-            while (!callerGate.Wait(100, token))
-            {
             }
-        }
+            finally
+            {
+                callerGate.Release();
+                mutexReleaseGate.Wait(-1);
+                mutex.ReleaseMutex();
+            }
+        });
+        mutexReleaseGate.Wait(-1, ct);
+        callerGate.Wait(0, ct);
+        thread.Start();
 
-        public static void Release()
+        while (!callerGate.Wait(100, ct))
         {
-            mutexReleaseGate.Release();
         }
+    }
+
+    public static void Release()
+    {
+        mutexReleaseGate.Release();
     }
 }

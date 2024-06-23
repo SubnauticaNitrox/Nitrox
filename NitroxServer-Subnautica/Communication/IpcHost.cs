@@ -12,20 +12,32 @@ namespace NitroxServer_Subnautica.Communication;
 /// </summary>
 public class IpcHost : IDisposable
 {
-    private readonly CancellationTokenSource commandReadCancellation = new();
+    private readonly CancellationTokenSource commandReadCancellation;
     private readonly NamedPipeServerStream server = new($"Nitrox Server {NitroxEnvironment.CurrentProcessId}", PipeDirection.In, 1);
 
-    public static IpcHost StartReadingCommands(Action<string> onCommandReceived)
+    private IpcHost(CancellationTokenSource commandReadCancellation)
+    {
+        this.commandReadCancellation = commandReadCancellation;
+    }
+
+    public static IpcHost StartReadingCommands(Action<string> onCommandReceived, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(onCommandReceived);
 
-        IpcHost host = new();
+        IpcHost host = new(CancellationTokenSource.CreateLinkedTokenSource(ct));
         Thread thread = new(async () =>
         {
-            while (!host.commandReadCancellation.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
-                string command = await host.ReadStringAsync(host.commandReadCancellation.Token);
-                onCommandReceived(command);
+                try
+                {
+                    string command = await host.ReadStringAsync(ct);
+                    onCommandReceived(command);
+                }
+                catch (OperationCanceledException)
+                {
+                    // ignored
+                }
             }
         });
         thread.IsBackground = true;

@@ -18,7 +18,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
 using NitroxServer_Subnautica.Communication;
 using NitroxServer.ConsoleCommands.Processor;
@@ -32,6 +31,7 @@ public class Program
     private static Lazy<string> gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
+    private static readonly CancellationTokenSource serverCts = new();
 
     private static async Task Main(string[] args)
     {
@@ -80,13 +80,12 @@ public class Program
 
         Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
-        Server server;
         Task handleConsoleInputTask;
-        CancellationTokenSource cancellationToken = new();
+        Server server;
         try
         {
-            handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), cancellationToken);
-            AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), 120000);
+            handleConsoleInputTask = HandleConsoleInputAsync(ConsoleCommandHandler(), serverCts.Token);
+            AppMutex.Hold(() => Log.Info("Waiting on other Nitrox servers to initialize before starting.."), serverCts.Token);
 
             Stopwatch watch = Stopwatch.StartNew();
 
@@ -101,33 +100,35 @@ public class Program
             {
                 gameInstallDir = new Lazy<string>(() =>
                 {
-                    gameDir = NitroxUser.GamePath;
-                    return gameDir;
+                    return gameDir = NitroxUser.GamePath;
                 });
             }
             Log.Info($"Using game files from: \'{gameInstallDir.Value}\'");
 
+            // TODO: Fix DI to not be slow (should not use IO in type constructors). Instead, use Lazy<T> (et al). This way, cancellation can be faster.
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
             server = NitroxServiceLocator.LocateService<Server>();
-
             Log.SaveName = server.Name;
 
-            await WaitForAvailablePortAsync(server.Port);
+            using (CancellationTokenSource portWaitCts = CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token))
+            {
+                TimeSpan portWaitTimeout = TimeSpan.FromSeconds(30);
+                portWaitCts.CancelAfter(portWaitTimeout);
+                await WaitForAvailablePortAsync(server.Port, portWaitTimeout, portWaitCts.Token);
+            }
 
-            if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
+            if (!serverCts.IsCancellationRequested)
             {
-                throw new Exception("Unable to start server.");
-            }
-            else if (cancellationToken.IsCancellationRequested)
-            {
-                watch.Stop();
-            }
-            else
-            {
-                watch.Stop();
-                Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
-                Log.Info("To get help for commands, run help in console or /help in chatbox");
+                if (!server.Start(serverCts))
+                {
+                    throw new Exception("Unable to start server.");
+                }
+                else
+                {
+                    Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
+                    Log.Info("To get help for commands, run help in console or /help in chatbox");
+                }
             }
         }
         finally
@@ -137,35 +138,46 @@ public class Program
         }
 
         await handleConsoleInputTask;
+        server.Stop(true);
 
-        Console.WriteLine($"{Environment.NewLine}Server is closing..");
+        try
+        {
+            if (Environment.UserInteractive && Console.In != StreamReader.Null && Debugger.IsAttached)
+            {
+                Task.Delay(100).Wait(); // Wait for async logs to flush to console
+                Console.WriteLine($"{Environment.NewLine}Press any key to continue . . .");
+                Console.ReadKey(true);
+            }
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     /// <summary>
     ///     Handles per-key input of the console and passes input submit to <see cref="ConsoleCommandProcessor" />.
     /// </summary>
-    private static async Task HandleConsoleInputAsync(Action<string> submitHandler, CancellationTokenSource cancellation = default)
+    private static async Task HandleConsoleInputAsync(Action<string> submitHandler, CancellationToken ct = default)
     {
-        cancellation ??= new CancellationTokenSource();
-
         ConcurrentQueue<string> commandQueue = new();
 
         if (Console.IsInputRedirected)
         {
             _ = Task.Run(() =>
             {
-                while (!cancellation.IsCancellationRequested)
+                while (!ct.IsCancellationRequested)
                 {
                     string commandRead = Console.ReadLine();
                     commandQueue.Enqueue(commandRead);
                 }
-            }, cancellation.Token).ContinueWith(t =>
+            }, ct).ContinueWith(t =>
             {
                 if (t.IsFaulted)
                 {
                     Log.Error(t.Exception);
                 }
-            });
+            }, ct);
         }
         else
         {
@@ -205,13 +217,13 @@ public class Program
 
             _ = Task.Run(async () =>
             {
-                while (!cancellation?.IsCancellationRequested ?? false)
+                while (!ct.IsCancellationRequested)
                 {
                     if (!Console.KeyAvailable)
                     {
                         try
                         {
-                            await Task.Delay(10, cancellation.Token);
+                            await Task.Delay(10, ct);
                         }
                         catch (TaskCanceledException)
                         {
@@ -233,10 +245,10 @@ public class Program
                                     continue;
                                 }
 
-                                await cancellation.CancelAsync();
+                                await serverCts.CancelAsync();
                                 return;
                             case ConsoleKey.D:
-                                await cancellation.CancelAsync();
+                                await serverCts.CancelAsync();
                                 return;
                             default:
                                 // Unhandled modifier key
@@ -337,49 +349,61 @@ public class Program
                         }
                     }
                 }
-            }, cancellation.Token).ContinueWith(t =>
+            }, ct).ContinueWith(t =>
             {
                 if (t.IsFaulted)
                 {
                     Log.Error(t.Exception);
                 }
-            });
+            }, ct);
         }
 
-        using IpcHost ipcHost = IpcHost.StartReadingCommands(command => commandQueue.Enqueue(command));
+        using IpcHost ipcHost = IpcHost.StartReadingCommands(command => commandQueue.Enqueue(command), ct);
 
         // Important: keep command handler on the main thread (i.e. don't Task.Run)
-        while (!cancellation.IsCancellationRequested)
+        while (!ct.IsCancellationRequested)
         {
             while (commandQueue.TryDequeue(out string command))
             {
                 submitHandler(command);
             }
-            await Task.Delay(10);
+            try
+            {
+                await Task.Delay(10, ct);
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
+            }
         }
     }
 
-    private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
+    private static async Task WaitForAvailablePortAsync(int port, TimeSpan timeout = default, CancellationToken ct = default)
     {
-        int messageLength = 0;
-        void PrintPortWarn(int timeRemaining)
+        if (timeout == default)
         {
-            string message = $"Port {port} UDP is already in use. Please change the server port or close out any program that may be using it. Retrying for {timeRemaining} seconds until it is available...";
+            timeout = TimeSpan.FromSeconds(30);
+        }
+        else
+        {
+            Validate.IsTrue(timeout.TotalSeconds >= 5, "Timeout must be at least 5 seconds.");
+        }
+
+        int messageLength = 0;
+        void PrintPortWarn(TimeSpan timeRemaining)
+        {
+            string message = $"Port {port} UDP is already in use. Please change the server port or close out any program that may be using it. Retrying for {timeRemaining.TotalSeconds} seconds until it is available...";
             messageLength = message.Length;
             Log.Warn(message);
         }
 
-        Validate.IsTrue(timeoutInSeconds >= 5, "Timeout must be at least 5 seconds.");
-
         DateTimeOffset time = DateTimeOffset.UtcNow;
         bool first = true;
-        using CancellationTokenSource source = new(timeoutInSeconds * 1000);
-
         try
         {
             while (true)
             {
-                source.Token.ThrowIfCancellationRequested();
+                ct.ThrowIfCancellationRequested();
                 IPEndPoint endPoint = IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().FirstOrDefault(ip => ip.Port == port);
                 if (endPoint == null)
                 {
@@ -389,7 +413,7 @@ public class Program
                 if (first)
                 {
                     first = false;
-                    PrintPortWarn(timeoutInSeconds);
+                    PrintPortWarn(timeout);
                 }
                 else if (Environment.UserInteractive)
                 {
@@ -404,16 +428,15 @@ public class Program
                     }
                     Console.CursorLeft = 0;
 
-                    PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
+                    PrintPortWarn(timeout - (DateTimeOffset.UtcNow - time));
                 }
 
-                await Task.Delay(500, source.Token);
+                await Task.Delay(500, ct);
             }
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
-            Log.Error(ex, "Port availability timeout reached.");
-            throw;
+            // ignored
         }
     }
 

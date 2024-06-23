@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
@@ -38,7 +39,7 @@ namespace NitroxServer.Communication
             useLANBroadcast = serverConfig.LANDiscoveryEnabled;
         }
 
-        public abstract bool Start();
+        public abstract bool Start(CancellationToken ct = default);
 
         public abstract void Stop();
 
