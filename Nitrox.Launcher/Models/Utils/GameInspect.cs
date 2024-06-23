@@ -48,4 +48,19 @@ internal static class GameInspect
 
         return false;
     }
+
+    /// <summary>
+    ///     Checks game is running and if it is, warns. Does nothing in development mode for debugging purposes.
+    /// </summary>
+    public static bool IsGameRunning(string processName)
+    {
+#if RELEASE
+        if (ProcessEx.ProcessExists(processName))
+        {
+            LauncherNotifier.Warning("An instance of Subnautica is already running");
+            return true;
+        }
+#endif
+        return false;
+    }
 }

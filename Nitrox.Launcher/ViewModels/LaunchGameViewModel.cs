@@ -61,6 +61,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartSingleplayerAsync()
     {
+        if (GameInspect.IsGameRunning("Subnautica"))
+        {
+            return;
+        }
+
         Log.Info("Launching Subnautica in singleplayer mode.");
         try
         {
@@ -70,14 +75,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings.");
                 return;
             }
-
-#if RELEASE
-            if (Process.GetProcessesByName("Subnautica").Length > 0)
-            {
-                LauncherNotifier.Warning("An instance of Subnautica is already running");
-                return;
-            }
-#endif
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
             gameProcess = await StartSubnauticaAsync();
         }
@@ -100,21 +97,15 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings.");
                 return;
             }
-
             if (PirateDetection.HasTriggered)
             {
                 LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
                 return;
             }
-
-#if RELEASE
-            if (Process.GetProcessesByName("Subnautica").Length > 0)
+            if (GameInspect.IsGameRunning("Subnautica"))
             {
-                LauncherNotifier.Warning("An instance of Subnautica is already running");
                 return;
             }
-#endif
-
             if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
             {
                 return;
