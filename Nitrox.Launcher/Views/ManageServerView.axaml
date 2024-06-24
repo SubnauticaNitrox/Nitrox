@@ -103,7 +103,7 @@
                 </Grid>
             </StackPanel>
 
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="0 26">
+            <ScrollViewer Grid.Row="1" x:Name="mainScrollViewer" HorizontalScrollBarVisibility="Disabled" Margin="0 26">
                 <StackPanel VerticalAlignment="Stretch" Spacing="42">
                     <StackPanel.Styles>
                         <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
