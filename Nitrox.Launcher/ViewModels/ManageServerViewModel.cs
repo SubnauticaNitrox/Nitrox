@@ -289,12 +289,18 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         try
         {
-            // TODO: Allow selection of .ico files
+            string serverIconFileName = "serverIcon";
+            
             IReadOnlyList<IStorageFile> files = await MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = "Select an image",
                 AllowMultiple = false,
-                FileTypeFilter = new[] { FilePickerFileTypes.ImageAll }
+                FileTypeFilter = new[] { new FilePickerFileType("All Images + Icons")
+                { 
+                    Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.ico" },
+                    AppleUniformTypeIdentifiers = new[] { "public.image" },
+                    MimeTypes = new[] { "image/*" }
+                } }
             });
 
             serverIconDir = files[0].TryGetLocalPath();

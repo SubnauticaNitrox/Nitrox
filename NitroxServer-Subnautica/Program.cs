@@ -403,7 +403,7 @@ public class Program
         int messageLength = 0;
         void PrintPortWarn(TimeSpan timeRemaining)
         {
-            string message = $"Port {port} UDP is already in use. Please change the server port or close out any program that may be using it. Retrying for {timeRemaining.TotalSeconds} seconds until it is available...";
+            string message = $"Port {port} UDP is already in use. Please change the server port or close out any program that may be using it. Retrying for {Math.Floor(timeRemaining.TotalSeconds)} seconds until it is available...";
             messageLength = message.Length;
             Log.Warn(message);
         }
