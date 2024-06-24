@@ -77,6 +77,12 @@
             <Setter Property="FontWeight" Value="700" />
             <Setter Property="Margin" Value="0 0 0 11" />
         </Style>
+        <Style Selector="^ StackPanel.form > TextBlock:nth-child(2)">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="500" />
+            <Setter Property="Margin" Value="0 -11 0 11" />
+            <Setter Property="IsVisible" Value="{Binding !Text, RelativeSource={RelativeSource Mode=Self}, Converter={converters:EqualityConverter}}" />
+        </Style>
     </Style>
 
     <Style Selector=":is(Panel).titleBar">

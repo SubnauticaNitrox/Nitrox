@@ -67,18 +67,6 @@
             </Setter>
         </Style>
         
-        <!-- Focus dimming of main text -->
-        <Style Selector="^ /template/ TextPresenter">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="^:focus /template/ TextPresenter">
-            <Setter Property="Opacity" Value=".7" />
-        </Style>
-        
         <!-- Disabled Style -->
         <Style Selector="^:disabled">
             <Style Selector="^ /template/ Border">

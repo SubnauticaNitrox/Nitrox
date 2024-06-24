@@ -46,18 +46,19 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
                                           .GetType()
                                           .GetProperties()
                                           .Where(FieldAcceptFilter)
-                                          .Select(p => new EditorField(p, p.GetValue(owner), GetPossibleValues(p))));
+                                          .Select(p => new EditorField(p, p.GetValue(owner), GetPossibleValues(p)))
+                                          .Where(editorField => editorField.Value is string or bool or int or float || editorField.PossibleValues != null));
                     // TEMP in order to see values:
                     StringBuilder consoleText = new();
                     foreach (EditorField editorField in EditorFields)
                     {
                         consoleText.AppendLine($"{editorField.PropertyInfo.Name} = {editorField.Value} ({editorField.Value.GetType()})");
-                        if (editorField.PossibleValues.Any())
+                        if (editorField.PossibleValues is not null)
                         {
                             consoleText.AppendLine($"  Possible values: {string.Join(", ", editorField.PossibleValues)}");
                         }
                     }
-                    EditorFields.Add(new EditorField(typeof(string).GetProperty("TEMP: Values"), consoleText.ToString(), []));
+                    EditorFields.Add(new EditorField(typeof(string).GetProperty("Length"), consoleText.ToString(), []));
                 }
             })
             .DisposeWith(Disposables);
@@ -83,13 +84,8 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
 
     public bool CanSave() => !HasErrors;
     
-    private AvaloniaList<object> GetPossibleValues(PropertyInfo propertyInfo)
+    private static AvaloniaList<object> GetPossibleValues(PropertyInfo propertyInfo)
     {
-        //return new AvaloniaList<object>([NitroxGameMode.CREATIVE, NitroxGameMode.SURVIVAL, NitroxGameMode.HARDCORE]); // For testing
-        if (propertyInfo.PropertyType.IsEnum)
-        {
-            return new AvaloniaList<object>(Enum.GetValues(propertyInfo.PropertyType));
-        }
-        return [];
+        return propertyInfo.PropertyType.IsEnum ? new AvaloniaList<object>(propertyInfo.PropertyType.GetFields(BindingFlags.Static | BindingFlags.Public).Select(f => f.GetValue(propertyInfo.PropertyType))) : null;
     }
 }
