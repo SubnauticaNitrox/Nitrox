@@ -122,8 +122,8 @@
                                InheritsTransform="True">
                             <Border x:Name="PopupBorder"
                                     Background="{TemplateBinding Background}"
-                                    BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    BorderBrush="{DynamicResource BrandWhiteBrush}"
+                                    BorderThickness="1 0 2 2"
                                     Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                                     HorizontalAlignment="Stretch"
                                     CornerRadius="{DynamicResource OverlayCornerRadius}">
