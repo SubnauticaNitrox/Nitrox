@@ -139,8 +139,11 @@
                                      MaxLength="10" IsEnabled="{Binding !ServerIsOnline}"
                                      IsReadOnly="{Binding !Server.IsNewServer}">
                                 <TextBox.Styles>
+                                    <Style Selector="TextBox[IsReadOnly=False]">
+                                        <Setter Property="ToolTip.Tip" Value="Leave blank to automatically generate one" />
+                                    </Style>
                                     <Style Selector="TextBox[IsReadOnly=True]">
-                                        <Setter Property="ToolTip.Tip" Value="Seed cannot be changed for servers that have been run." />
+                                        <Setter Property="ToolTip.Tip" Value="Seed cannot be changed for servers that have been run" />
                                     </Style>
                                 </TextBox.Styles>
                             </TextBox>

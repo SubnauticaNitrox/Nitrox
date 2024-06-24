@@ -1,8 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="using:Avalonia.Xaml.Interactivity"
-        xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:rx="http://reactiveui.net"
         xmlns:launcher="clr-namespace:Nitrox.Launcher"
@@ -11,13 +9,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static design:DesignData.MainWindowViewModel}"
         x:Class="Nitrox.Launcher.MainWindow"
         Title="Nitrox Launcher"
-        FontFamily="/Assets/Fonts/Inter-Black.ttf"
-        WindowStartupLocation="CenterScreen"
         Width="1200" Height="720"
         MinWidth="800" MinHeight="600"
-        RequestedThemeVariant="Dark"
-        Icon="/Assets/Images/nitroxIco.ico"
-        Focusable="True">
+        RequestedThemeVariant="Dark">
 
     <Window.Styles>
         <Style Selector="Border.nav">
@@ -112,32 +106,26 @@
     <Panel Margin="{Binding $parent[Window].OffScreenMargin}">
         <!-- Title bar -->
         <Panel Classes="titleBar">
-            <i:Interaction.Behaviors>
-                <i:BehaviorCollection>
-                    <ia:EventTriggerBehavior EventName="PointerPressed">
-                        <ia:InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
-                    </ia:EventTriggerBehavior>
-                    <ia:EventTriggerBehavior EventName="DoubleTapped">
-                        <ia:InvokeCommandAction Command="{Binding MaximizeCommand}" />
-                    </ia:EventTriggerBehavior>
-                </i:BehaviorCollection>
-            </i:Interaction.Behaviors>
+            <Interaction.Behaviors>
+                <BehaviorCollection>
+                    <EventTriggerBehavior EventName="PointerPressed">
+                        <InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
+                    </EventTriggerBehavior>
+                    <EventTriggerBehavior EventName="DoubleTapped">
+                        <InvokeCommandAction Command="{Binding MaximizeCommand}" />
+                    </EventTriggerBehavior>
+                </BehaviorCollection>
+            </Interaction.Behaviors>
 
             <StackPanel>
                 <Button Command="{Binding MinimizeCommand}">
-                    <StackPanel>
-                        <Image Source="/Assets/Images/material-design-icons/min-w-10.png" />
-                    </StackPanel>
+                    <Image Source="/Assets/Images/material-design-icons/min-w-10.png" />
                 </Button>
                 <Button Command="{Binding MaximizeCommand}">
-                    <StackPanel>
-                        <Image Source="{Binding MaximizeButtonIcon, Converter={converters:BitmapAssetValueConverter}}" />
-                    </StackPanel>
+                    <Image Source="{Binding MaximizeButtonIcon, Converter={converters:BitmapAssetValueConverter}}" />
                 </Button>
                 <Button Command="{Binding CloseCommand}">
-                    <StackPanel>
-                        <Image Source="/Assets/Images/material-design-icons/close-w-10.png" />
-                    </StackPanel>
+                    <Image Source="/Assets/Images/material-design-icons/close-w-10.png" />
                 </Button>
             </StackPanel>
         </Panel>

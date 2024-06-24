@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
+using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
@@ -30,4 +33,15 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
     }
 
     public void Dispose() => Disposables.Dispose();
+    
+    [RelayCommand]
+    public void Drag(PointerPressedEventArgs args)
+    {
+        ArgumentNullException.ThrowIfNull(args);
+
+        if (args.Source is ILogical element)
+        {
+            element.FindLogicalAncestorOfType<Window>()?.BeginMoveDrag(args);
+        }
+    }
 }

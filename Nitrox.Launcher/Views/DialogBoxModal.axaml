@@ -11,9 +11,27 @@
         SystemDecorations="None"
         SizeToContent="WidthAndHeight"
         CanResize="False"
-        Title="{Binding Title}"
+        Title="{Binding WindowTitle}"
         RequestedThemeVariant="Light">
     <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Title bar -->
+        <Panel Grid.RowSpan="2" Classes="titleBar">
+            <Interaction.Behaviors>
+                <BehaviorCollection>
+                    <EventTriggerBehavior EventName="PointerPressed">
+                        <InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
+                    </EventTriggerBehavior>
+                </BehaviorCollection>
+            </Interaction.Behaviors>
+
+            <Button Command="{Binding CloseCommand}">
+                <Rectangle>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </Panel>
         <TextBlock Text="{Binding Title}" Margin="24 20 24 -10" Foreground="{Binding TitleForeground}"
                    FontWeight="{Binding TitleFontWeight}" FontSize="{Binding TitleFontSize}"
                    IsVisible="{Binding !Title, Converter={converters:EqualityConverter}}" />

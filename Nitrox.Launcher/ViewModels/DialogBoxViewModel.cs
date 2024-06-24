@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -7,6 +8,7 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
+using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -15,6 +17,8 @@ namespace Nitrox.Launcher.ViewModels;
 /// </summary>
 public partial class DialogBoxViewModel : ModalViewModelBase
 {
+    [ObservableProperty] private string windowTitle;
+    
     [ObservableProperty] private string title;
     [ObservableProperty] private IBrush titleForeground = Brushes.Black;
     [ObservableProperty] private double titleFontSize = 24;
@@ -31,6 +35,19 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     public KeyGesture NoHotkey { get; } = new(Key.Escape);
     public KeyGesture CopyToClipboardHotkey { get; } = new(Key.C, KeyModifiers.Control);
 
+    public DialogBoxViewModel()
+    {
+        // TODO: Figure out why WindowTitle is always being assigned "Dialog Window" when it should be the title or description.
+        this.WhenAnyValue(model => model.Title, model => model.Description)
+            .Subscribe(tuple =>
+            {
+                (string titleText, string descriptionText) = tuple;
+                // ReSharper disable once ConstantNullCoalescingCondition
+                WindowTitle ??= string.IsNullOrEmpty(titleText) ? string.IsNullOrEmpty(descriptionText) ? "Dialog Window" : $"{descriptionText[..Math.Min(30, descriptionText.Length)]}..." : titleText;
+            })
+            .DisposeWith(Disposables);
+    }
+    
     [RelayCommand]
     private void OptionSelect(ButtonOptions option)
     {
