@@ -11,7 +11,7 @@
         SystemDecorations="None"
         SizeToContent="WidthAndHeight"
         CanResize="False"
-        Title="{Binding WindowTitle}"
+        Title="{Binding WindowTitle, TargetNullValue='Dialog Window'}"
         RequestedThemeVariant="Light">
     <Grid RowDefinitions="Auto,*,Auto">
         <!-- Title bar -->

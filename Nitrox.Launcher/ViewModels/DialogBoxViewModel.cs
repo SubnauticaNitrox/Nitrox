@@ -18,7 +18,7 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class DialogBoxViewModel : ModalViewModelBase
 {
     [ObservableProperty] private string windowTitle;
-    
+
     [ObservableProperty] private string title;
     [ObservableProperty] private IBrush titleForeground = Brushes.Black;
     [ObservableProperty] private double titleFontSize = 24;
@@ -37,17 +37,16 @@ public partial class DialogBoxViewModel : ModalViewModelBase
 
     public DialogBoxViewModel()
     {
-        // TODO: Figure out why WindowTitle is always being assigned "Dialog Window" when it should be the title or description.
         this.WhenAnyValue(model => model.Title, model => model.Description)
             .Subscribe(tuple =>
             {
                 (string titleText, string descriptionText) = tuple;
-                // ReSharper disable once ConstantNullCoalescingCondition
-                WindowTitle ??= string.IsNullOrEmpty(titleText) ? string.IsNullOrEmpty(descriptionText) ? "Dialog Window" : $"{descriptionText[..Math.Min(30, descriptionText.Length)]}..." : titleText;
+                WindowTitle ??= string.IsNullOrEmpty(titleText) ? WindowTitle : titleText;
+                WindowTitle ??= string.IsNullOrEmpty(descriptionText) ? WindowTitle : $"{descriptionText[..Math.Min(30, descriptionText.Length)]}...";
             })
             .DisposeWith(Disposables);
     }
-    
+
     [RelayCommand]
     private void OptionSelect(ButtonOptions option)
     {
