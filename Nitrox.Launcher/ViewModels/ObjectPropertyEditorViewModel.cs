@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Server;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -67,11 +66,23 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
     [RelayCommand(CanExecute = nameof(CanSave))]
     public void Save()
     {
+        // TODO: Fix validation for int -> float conversion (or opposite? Not sure...)
         foreach (EditorField field in EditorFields)
         {
-            try
+            if (field.Value is int value)
+            {
+                field.Value = (float) value;
+                field.PropertyInfo.SetValue(OwnerObject, field.Value);
+            }
+            else
             {
                 field.PropertyInfo.SetValue(OwnerObject, field.Value);
+            }
+            
+            // ^ temporarily outside of try-catch to see if it throws any exceptions
+            try
+            {
+                    
             }
             catch (ArgumentException)
             {
