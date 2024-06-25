@@ -223,7 +223,7 @@
                                 </Style>
                             </StackPanel.Styles>
 
-                            <Button Command="{Binding OpenAdvancedSettingsCommand}" Classes="icon">
+                            <Button Command="{Binding ShowAdvancedSettingsCommand}" Classes="icon">
                                 <StackPanel>
                                     <Image Source="/Assets/Images/world-manager/cog-2x.png" />
                                     <TextBlock Text="Advanced settings" />

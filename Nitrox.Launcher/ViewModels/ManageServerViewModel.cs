@@ -31,7 +31,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class ManageServerViewModel : RoutableViewModelBase
 {
-    private readonly string[] advancedSettingsDeniedFields = ["password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole), nameof(Config.LANDiscoveryEnabled)];
+    private readonly string[] advancedSettingsDeniedFields = ["password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole), nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm)];
     private readonly IDialogService dialogService;
     private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
     private ServerEntry server;
@@ -290,13 +290,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         try
         {
             string serverIconFileName = "serverIcon";
-            
+
             IReadOnlyList<IStorageFile> files = await MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = "Select an image",
                 AllowMultiple = false,
                 FileTypeFilter = new[] { new FilePickerFileType("All Images + Icons")
-                { 
+                {
                     Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.ico" },
                     AppleUniformTypeIdentifiers = new[] { "public.image" },
                     MimeTypes = new[] { "image/*" }
@@ -315,7 +315,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private async Task OpenAdvancedSettings()
+    private async Task ShowAdvancedSettings()
     {
         ObjectPropertyEditorViewModel result = await dialogService.ShowAsync<ObjectPropertyEditorViewModel>(model =>
         {

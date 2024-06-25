@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reflection;
-using System.Text;
+using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
@@ -14,6 +15,8 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
 {
+    private readonly IDialogService dialogService;
+
     [ObservableProperty]
     private AvaloniaList<EditorField> editorFields = [];
 
@@ -33,8 +36,10 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
     /// </summary>
     public Func<PropertyInfo, bool> FieldAcceptFilter { get; set; } = _ => true;
 
-    public ObjectPropertyEditorViewModel()
+
+    public ObjectPropertyEditorViewModel(IDialogService dialogService)
     {
+        this.dialogService = dialogService;
         this.WhenAnyValue(model => model.OwnerObject)
             .Subscribe(owner =>
             {
@@ -47,46 +52,23 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
                                           .Where(FieldAcceptFilter)
                                           .Select(p => new EditorField(p, p.GetValue(owner), GetPossibleValues(p)))
                                           .Where(editorField => editorField.Value is string or bool or int or float || editorField.PossibleValues != null));
-                    // TEMP in order to see values:
-                    StringBuilder consoleText = new();
-                    foreach (EditorField editorField in EditorFields)
-                    {
-                        consoleText.AppendLine($"{editorField.PropertyInfo.Name} = {editorField.Value} ({editorField.Value.GetType()})");
-                        if (editorField.PossibleValues is not null)
-                        {
-                            consoleText.AppendLine($"  Possible values: {string.Join(", ", editorField.PossibleValues)}");
-                        }
-                    }
-                    EditorFields.Add(new EditorField(typeof(string).GetProperty("Length"), consoleText.ToString(), []));
                 }
             })
             .DisposeWith(Disposables);
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
-    public void Save()
+    public async Task Save()
     {
-        // TODO: Fix validation for int -> float conversion (or opposite? Not sure...)
         foreach (EditorField field in EditorFields)
         {
-            if (field.Value is int value)
-            {
-                field.Value = (float) value;
-                field.PropertyInfo.SetValue(OwnerObject, field.Value);
-            }
-            else
-            {
-                field.PropertyInfo.SetValue(OwnerObject, field.Value);
-            }
-            
-            // ^ temporarily outside of try-catch to see if it throws any exceptions
             try
             {
-                    
+                field.PropertyInfo.SetValue(OwnerObject, Convert.ChangeType(field.Value, field.PropertyInfo.PropertyType));
             }
-            catch (ArgumentException)
+            catch (Exception ex)
             {
-                // ignored
+                await dialogService.ShowErrorAsync(ex, description: field.ToString());
             }
         }
         DialogResult = true;
@@ -94,7 +76,7 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
     }
 
     public bool CanSave() => !HasErrors;
-    
+
     private static AvaloniaList<object> GetPossibleValues(PropertyInfo propertyInfo)
     {
         return propertyInfo.PropertyType.IsEnum ? new AvaloniaList<object>(propertyInfo.PropertyType.GetFields(BindingFlags.Static | BindingFlags.Public).Select(f => f.GetValue(propertyInfo.PropertyType))) : null;

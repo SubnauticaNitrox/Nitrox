@@ -32,7 +32,7 @@
                 </Rectangle>
             </Button>
         </Panel>
-        <TextBlock Text="{Binding Title}" Margin="24 20 24 -10" Foreground="{Binding TitleForeground}"
+        <TextBlock Grid.Row="0" Text="{Binding Title}" Margin="24 20 24 -10" Foreground="{Binding TitleForeground}"
                    FontWeight="{Binding TitleFontWeight}" FontSize="{Binding TitleFontSize}"
                    IsVisible="{Binding !Title, Converter={converters:EqualityConverter}}" />
 
