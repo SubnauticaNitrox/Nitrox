@@ -7,11 +7,9 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NitroxModel;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
+using NitroxModel.Serialization;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Timer = System.Timers.Timer;
 
@@ -21,7 +19,7 @@ namespace NitroxServer
     {
         private readonly Communication.NitroxServer server;
         private readonly WorldPersistence worldPersistence;
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
         private readonly WorldEntityManager worldEntityManager;
@@ -31,12 +29,14 @@ namespace NitroxServer
 
         public static Server Instance { get; private set; }
 
-        public bool IsRunning => serverCancelSource?.IsCancellationRequested == false;
+        public bool IsRunning { get; private set; }
+
         public bool IsSaving { get; private set; }
 
+        public string Name => serverConfig.SaveName;
         public int Port => serverConfig?.ServerPort ?? -1;
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
+        public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
@@ -63,7 +63,7 @@ namespace NitroxServer
             StringBuilder builder = new("\n");
             if (viewerPerms is Perms.CONSOLE)
             {
-                builder.AppendLine($" - Save location: {Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)}");
+                builder.AppendLine($" - Save location: {Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)}");
             }
             builder.AppendLine($"""
              - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
@@ -80,12 +80,12 @@ namespace NitroxServer
             return builder.ToString();
         }
 
-        public static ServerConfig ServerStartHandler()
+        public static SubnauticaServerConfig ServerStartHandler()
         {
             string saveDir = null;
             foreach (string arg in Environment.GetCommandLineArgs())
             {
-                if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                if (arg.StartsWith(OldWorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
                 {
                     saveDir = arg;
                     break;
@@ -94,7 +94,7 @@ namespace NitroxServer
             if (saveDir == null)
             {
                 // Check if there are any save files
-                WorldManager.Listing[] worldList = WorldManager.GetSaves().ToArray();
+                OldWorldManager.Listing[] worldList = OldWorldManager.GetSaves().ToArray();
                 if (worldList.Any())
                 {
                     // Get last save file used
@@ -114,15 +114,15 @@ namespace NitroxServer
                 else
                 {
                     // Create new save file
-                    saveDir = Path.Combine(WorldManager.SavesFolderDir, "My World");
+                    saveDir = Path.Combine(OldWorldManager.SavesFolderDir, "My World");
                     Directory.CreateDirectory(saveDir);
-                    ServerConfig serverConfig = ServerConfig.Load(saveDir);
+                    SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(saveDir);
                     Log.Debug($"No save file was found, creating a new one...");
                 }
 
             }
 
-            return ServerConfig.Load(saveDir);
+            return SubnauticaServerConfig.Load(saveDir);
         }
 
         public void Save()
@@ -134,7 +134,7 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName));
+            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName));
             if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try
@@ -158,13 +158,21 @@ namespace NitroxServer
             IsSaving = false;
         }
 
-        public bool Start(CancellationTokenSource cancellationToken)
+        public bool Start(CancellationTokenSource ct)
         {
-            serverCancelSource = cancellationToken;
-            if (!server.Start())
+            Debug.Assert(serverCancelSource == null);
+
+            Validate.NotNull(ct);
+            if (ct.IsCancellationRequested)
             {
                 return false;
             }
+            if (!server.Start(ct.Token))
+            {
+                return false;
+            }
+            serverCancelSource = ct;
+            IsRunning = true;
 
             try
             {
@@ -214,8 +222,17 @@ namespace NitroxServer
             {
                 return;
             }
+            IsRunning = false;
 
-            serverCancelSource.Cancel();
+            try
+            {
+                serverCancelSource.Cancel();
+            }
+            catch
+            {
+                // ignored
+            }
+
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
 

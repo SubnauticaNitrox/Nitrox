@@ -37,7 +37,7 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
 
     private static bool TryLoadLanguageFile(string fileName, IDictionary<string, string> strings)
     {
-        string filePath = Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", $"{fileName}.json");
+        string filePath = Path.Combine(NitroxUser.LanguageFilesPath, $"{fileName}.json");
 
         if (!File.Exists(filePath))
         {

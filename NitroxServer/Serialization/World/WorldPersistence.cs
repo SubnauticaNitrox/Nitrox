@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
@@ -29,12 +30,12 @@ namespace NitroxServer.Serialization.World
 
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerJsonSerializer jsonSerializer;
-        private readonly ServerConfig config;
+        private readonly SubnauticaServerConfig config;
         private readonly RandomStartGenerator randomStart;
         private readonly IWorldModifier worldModifier;
         private readonly SaveDataUpgrade[] upgrades;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
@@ -149,7 +150,7 @@ namespace NitroxServer.Serialization.World
 
         public World Load()
         {
-            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(WorldManager.SavesFolderDir, config.SaveName));
+            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(OldWorldManager.SavesFolderDir, config.SaveName));
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

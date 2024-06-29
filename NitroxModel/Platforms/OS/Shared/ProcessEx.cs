@@ -175,35 +175,51 @@ namespace NitroxModel.Platforms.OS.Shared
             return StartInternal(fileName, false, environmentVariables, workingDirectory, commandLine, createWindow);
         }
 
-        public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer = null)
+        public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
         {
             comparer ??= StringComparer.OrdinalIgnoreCase;
-            ProcessEx found = null;
-            foreach (Process proc in Process.GetProcesses())
+            Process found = null;
+            Process[] processes = Process.GetProcesses();
+            try
             {
-                // Already found, dispose all other resources to processes.
-                if (found != null)
+                foreach (Process process in processes)
                 {
-                    proc.Dispose();
-                    continue;
+                    if (comparer.Compare(procName, process.ProcessName) == 0)
+                    {
+                        ProcessEx processEx = new(process);
+                        if (predicate == null || predicate(processEx))
+                        {
+                            found = process;
+                            return processEx;
+                        }
+                    }
                 }
-
-                if (comparer.Compare(procName, proc.ProcessName) != 0)
-                {
-                    proc.Dispose();
-                    continue;
-                }
-                ProcessEx procEx = new(proc);
-                if (!predicate(procEx))
-                {
-                    procEx.Dispose();
-                    continue;
-                }
-
-                found = procEx;
+                return null;
             }
+            finally
+            {
+                foreach (Process process in processes)
+                {
+                    if (process != found)
+                    {
+                        process.Dispose();
+                    }
+                }
+            }
+        }
 
-            return found;
+        public static bool ProcessExists(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
+        {
+            ProcessEx proc = null;
+            try
+            {
+                proc = GetFirstProcess(procName, predicate, comparer);
+                return proc != null;
+            }
+            finally
+            {
+                proc?.Dispose();
+            }
         }
 
         public IntPtr CreateThread(IntPtr start, IntPtr parameter)

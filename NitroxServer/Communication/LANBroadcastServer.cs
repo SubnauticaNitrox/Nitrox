@@ -10,33 +10,36 @@ public static class LANBroadcastServer
 {
     private static NetManager server;
     private static EventBasedNetListener listener;
-
     private static Timer pollTimer;
 
-    public static void Start()
+    public static void Start(CancellationToken ct)
     {
         listener = new EventBasedNetListener();
+        listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
         server = new NetManager(listener);
-
         server.AutoRecycle = true;
         server.BroadcastReceiveEnabled = true;
         server.UnconnectedMessagesEnabled = true;
 
-        for (int i = 0; i < LANDiscoveryConstants.BROADCAST_PORTS.Length; i++)
+        foreach (int port in LANDiscoveryConstants.BROADCAST_PORTS)
         {
-            if (server.Start(LANDiscoveryConstants.BROADCAST_PORTS[i]))
+            if (server.Start(port))
             {
                 break;
             }
         }
 
-        listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
-
-        pollTimer = new Timer((state) =>
-        {
-            server.PollEvents();
-        });
+        pollTimer = new Timer(_ => server.PollEvents());
         pollTimer.Change(0, 100);
+        Log.Debug($"{nameof(LANBroadcastServer)} started");
+    }
+
+    public static void Stop()
+    {
+        listener?.ClearNetworkReceiveUnconnectedEvent();
+        server?.Stop();
+        pollTimer?.Dispose();
+        Log.Debug($"{nameof(LANBroadcastServer)} stopped");
     }
 
     private static void NetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
@@ -53,12 +56,5 @@ public static class LANBroadcastServer
                 server.SendBroadcast(writer, remoteEndPoint.Port);
             }
         }
-    }
-
-    public static void Stop()
-    {
-        listener?.ClearNetworkReceiveUnconnectedEvent();
-        server?.Stop();
-        pollTimer?.Dispose();
     }
 }

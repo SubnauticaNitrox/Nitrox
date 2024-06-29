@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace AddressablesTools.Catalog
@@ -21,7 +22,7 @@ namespace AddressablesTools.Catalog
         internal static object Decode(BinaryReader br)
         {
             ObjectType type = (ObjectType)br.ReadByte();
-            
+
             switch (type)
             {
                 case ObjectType.AsciiString:
@@ -60,6 +61,10 @@ namespace AddressablesTools.Catalog
 
                 case ObjectType.Type:
                 {
+                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        throw new NotSupportedException($"{nameof(ObjectType)}.{nameof(ObjectType.Type)} is only supported on windows because it uses {nameof(Type.GetTypeFromCLSID)}");
+                    }
                     string str = ReadString1(br);
                     return Type.GetTypeFromCLSID(new Guid(str));
                 }

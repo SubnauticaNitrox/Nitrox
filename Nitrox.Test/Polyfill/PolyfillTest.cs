@@ -26,18 +26,13 @@ public class PolyfillTest
 
         public TestClass()
         {
-        
+
         }
 
         [SetsRequiredMembers]
         public TestClass(string name)
         {
             Name = name;
-        }
-
-        public string AutomaticName(int number, [CallerArgumentExpression(nameof(number))] string name = "")
-        {
-            return name;
         }
 
         [SkipLocalsInit]

@@ -1,0 +1,213 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+    <Design.PreviewWith>
+        <Panel Background="Cornflowerblue">
+            <StackPanel Margin="10" Spacing="10">
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <ContentControl Padding="10" Background="#FFFFFF">
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock>Light</TextBlock>
+                            <TextBox Watermark="Enter something here.." />
+                        </StackPanel>
+                    </ContentControl>
+                </ThemeVariantScope>
+
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <ContentControl Padding="10" Background="#000000">
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock>Dark</TextBlock>
+                            <TextBox Watermark="Enter something here.." />
+                        </StackPanel>
+                    </ContentControl>
+                </ThemeVariantScope>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <Style Selector="Window">
+        <Setter Property="Icon" Value="/Assets/Images/nitroxIco.ico" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="WindowStartupLocation" Value="CenterOwner" />
+        <Setter Property="FontFamily" Value="/Assets/Fonts/Inter-Black.ttf" />
+        <!-- Disables window border but allow resizing -->
+        <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+        <Setter Property="SystemDecorations" Value="None" />
+        <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+        <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
+    </Style>
+
+    <Style Selector="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackgroundBrush}" />
+    </Style>
+
+    <Style Selector=":is(Border).footer">
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
+        <Setter Property="Padding" Value="24 20" />
+        <Setter Property="BorderThickness" Value="0 2 0 0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandWhiteBrush}" />
+    </Style>
+
+    <Style Selector=":is(Control)">
+        <Style Selector="^ /template/ ContentPresenter">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- TODO: a good-looking focus overlay, compatible with all controls -->
+        <Setter Property="FocusAdorner">
+            <Setter.Value>
+                <FocusAdornerTemplate>
+                    <Border Name="FocusBorder" BorderThickness="2" BorderBrush="{DynamicResource BrandFocusBorderBrush}" />
+                </FocusAdornerTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value=".85" />
+        </Style>
+    </Style>
+
+    <Style Selector=".form">
+        <Style Selector="^ > :is(Layoutable):not(:nth-last-child(1))">
+            <Setter Property="Margin" Value="0 0 0 26" />
+        </Style>
+        <Style Selector="^ StackPanel.form > TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="700" />
+            <Setter Property="Margin" Value="0 0 0 11" />
+        </Style>
+        <Style Selector="^ StackPanel.form > TextBlock:nth-child(2)">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="500" />
+            <Setter Property="Margin" Value="0 -11 0 11" />
+            <Setter Property="IsVisible" Value="{Binding !Text, RelativeSource={RelativeSource Mode=Self}, Converter={converters:EqualityConverter}}" />
+        </Style>
+    </Style>
+
+    <Style Selector=":is(Panel).titleBar">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ZIndex" Value="100" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <Style Selector="^ Button">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="46" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Style Selector="^:pressed">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+
+        <Style Selector="^ StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+
+            <Style Selector="^ Button">
+                <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+            </Style>
+            <Style Selector="^ Button:nth-child(1)">
+                <Setter Property="CornerRadius" Value="0 0 0 8" />
+            </Style>
+            <Style Selector="^ Button:nth-last-child(1):pointerover">
+                <Setter Property="Background" Value="Red" />
+            </Style>
+        </Style>
+
+        <Style Selector="^ > Button">
+            <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="CornerRadius" Value="0 0 0 8" />
+            <Style Selector="^ > Rectangle">
+                <Setter Property="Width" Value="10" />
+                <Setter Property="Height" Value="10" />
+                <Setter Property="Fill" Value="{DynamicResource BrandBlackBrush}" />
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="Red" />
+            </Style>
+        </Style>
+
+        <Style Selector="^ Image">
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Height" Value="10" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+
+    </Style>
+
+    <Style Selector="Image.header">
+        <Setter Property="Width" Value="108" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+    </Style>
+
+    <Style Selector=":is(ContentControl).content">
+        <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Style Selector="^ > :is(UserControl) > :is(Control) > ScrollViewer.main">
+            <Setter Property="Margin" Value="-34 -45" />
+            <Style Selector="^ > :is(Control)">
+                <Setter Property="Margin" Value="34 45" />
+            </Style>
+        </Style>
+        <Style Selector="^ > :is(UserControl) > :is(Control) > :is(Control):not(ScrollViewer.main)">
+            <Setter Property="Margin" Value="34 45" />
+        </Style>
+    </Style>
+
+    <Style Selector="Border.serverEntry">
+        <Setter Property="Background" Value="{DynamicResource BrandPanelBackgroundBrush}" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="22 20" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="96" />
+
+        <Style Selector="^ StackPanel.description">
+            <Style Selector="^ > :is(Control)">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="6 0" />
+            </Style>
+            <Style Selector="^ > :is(Control):nth-child(1)">
+                <Setter Property="Margin" Value="0 0 6 0" />
+            </Style>
+            <Style Selector="^ > :is(Control):nth-last-child(1)">
+                <Setter Property="Margin" Value="6 0 0 0" />
+            </Style>
+            <Style Selector="^ Ellipse">
+                <Setter Property="Height" Value="6" />
+                <Setter Property="Width" Value="6" />
+            </Style>
+            <Style Selector="^ TextBlock">
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+        </Style>
+    </Style>
+
+    <StyleInclude Source="/UI/Styles/Theme/ValidationErrorsStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/TextBoxStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/TextBlockStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/ToolTipStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/ButtonStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/ComboBoxStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/CheckBoxStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/RadioButtonGroupStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/RadioButtonStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/ScrollViewerStyle.axaml" />
+    <StyleInclude Source="/UI/Styles/Theme/ExpanderStyle.axaml" />
+</Styles>

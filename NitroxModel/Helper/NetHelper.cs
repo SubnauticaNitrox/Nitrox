@@ -136,6 +136,17 @@ namespace NitroxModel.Helper
             return null;
         }
 
+        public static async Task<bool> HasInternetConnectivityAsync()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                return false;
+            }
+            using Ping ping = new();
+            PingReply reply = await ping.SendPingAsync(new IPAddress([8, 8, 8, 8]),2000);
+            return reply.Status == IPStatus.Success;
+        }
+
         /// <summary>
         ///     Returns true if the given IP address is reserved for private networks.
         /// </summary>

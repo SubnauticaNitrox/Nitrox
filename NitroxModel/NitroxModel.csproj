@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
+        <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="System.Text.Json" Version="7.0.0" />
         <PackageReference Include="Autofac" Version="4.9.4" />
         <PackageReference Include="LiteNetLib" Version="1.2.0" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
@@ -16,11 +17,14 @@
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="System.Buffers" Version="4.5.1" />
-        <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-        <PackageReference Include="System.IO.Compression" Version="4.3.0" />
         <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
         <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    </ItemGroup>
+
+    <!-- .NET Framework polyfills for modern C# lang support -->
+    <ItemGroup>
+        <PackageReference Include="IndexRange" Version="1.0.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,6 +37,20 @@
         <Reference Include="Serilog.Sinks.Map">
             <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
         </Reference>
-        <Reference Include="System.Net.Http" />
     </ItemGroup>
+
+    <Choose>
+        <When Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+            <ItemGroup>
+                <!-- .NET Framework 4.7.2 specific references -->
+                <Reference Include="System.Net.Http" />
+                <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+            </ItemGroup>
+        </When>
+        <Otherwise>
+            <ItemGroup>
+                <!-- netstandard 2.0 specific references -->
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
 </Project>
