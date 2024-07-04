@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -60,17 +61,17 @@ namespace NitroxModel.Serialization
                             continue;
                         }
 
-                        unserializedMembers.Remove(member); // This member was serialized in the file 
+                        unserializedMembers.Remove(member); // This member was serialized in the file
 
                         if (!SetMemberValue(this, member, keyValuePair[1]))
                         {
-                            (Type type, object value) data = member switch
+                            (Type type, object value) logData = member switch
                             {
                                 FieldInfo field => (field.FieldType, field.GetValue(this)),
                                 PropertyInfo prop => (prop.PropertyType, prop.GetValue(this)),
                                 _ => (typeof(string), "")
                             };
-                            Log.Warn($@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
+                            Log.Warn($@"Property ""({logData.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(logData.value)}");
                         }
                     }
                     else
@@ -190,7 +191,7 @@ namespace NitroxModel.Serialization
             {
                 try
                 {
-                    object newValue = TypeDescriptor.GetConverter(typeOfValue).ConvertFrom(valueFromFile);
+                    object newValue = TypeDescriptor.GetConverter(typeOfValue).ConvertFrom(null!, CultureInfo.InvariantCulture, valueFromFile);
                     isDefault = false;
                     return newValue;
                 }
@@ -219,7 +220,7 @@ namespace NitroxModel.Serialization
         {
             stream.Write(member.Name);
             stream.Write('=');
-            stream.WriteLine(value);
+            stream.WriteLine(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
 
         private void WritePropertyDescription(MemberInfo member, StreamWriter stream)
