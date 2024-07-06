@@ -13,6 +13,9 @@ namespace Nitrox.Launcher.Models.Utils;
 
 internal static class GameInspect
 {
+    /// <summary>
+    ///     Check to ensure the Subnautica is not in legacy.
+    /// </summary>
     public static async Task<bool> IsOutdatedGameAndNotify(string gameInstallDir, IDialogService dialogService = null)
     {
         try
@@ -30,7 +33,7 @@ internal static class GameInspect
                         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                         {
                             model.Title = "Legacy Game Detected";
-                            model.Description = "Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version to run the Subnautica with Nitrox.";
+                            model.Description = $"Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version to run the Subnautica with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
                             model.ButtonOptions = ButtonOptions.Ok;
                         });
                     }

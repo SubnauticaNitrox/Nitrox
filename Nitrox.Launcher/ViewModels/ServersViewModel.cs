@@ -107,7 +107,6 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             return;
         }
-        // Check to ensure the Subnautica is not in legacy, skip if check fails
         if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
         {
             return;

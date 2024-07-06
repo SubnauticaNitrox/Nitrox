@@ -37,7 +37,7 @@
                    IsVisible="{Binding !Title, Converter={converters:EqualityConverter}}" />
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="24 20 10 20">
-            <TextBlock Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0" Foreground="{Binding DescriptionForeground}"
+            <SelectableTextBlock Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0" Foreground="{Binding DescriptionForeground}"
                        FontWeight="{Binding DescriptionFontWeight}" FontSize="{Binding DescriptionFontSize}" IsVisible="{Binding !Description, Converter={converters:EqualityConverter}}" />
         </ScrollViewer>
 

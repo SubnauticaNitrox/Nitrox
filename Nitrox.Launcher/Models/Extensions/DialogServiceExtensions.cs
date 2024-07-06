@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia.Media;
+using Avalonia.Threading;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels;
@@ -17,7 +18,8 @@ public static class DialogServiceExtensions
         try
         {
             ArgumentNullException.ThrowIfNull(dialogService);
-            INotifyPropertyChanged owner = AppViewLocator.MainWindow?.DataContext as INotifyPropertyChanged;
+            // DataContext must be accessed on the UI thread or it'll throw error.
+            INotifyPropertyChanged owner = await Dispatcher.UIThread.InvokeAsync(() => AppViewLocator.MainWindow?.DataContext as INotifyPropertyChanged);
             ArgumentNullException.ThrowIfNull(owner);
 
             T viewModel = dialogService.CreateViewModel<T>();

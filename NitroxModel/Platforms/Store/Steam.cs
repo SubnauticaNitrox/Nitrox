@@ -58,7 +58,14 @@ public sealed class Steam : IGamePlatform
                                                TimeSpan.FromSeconds(20));
             while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe)) && !steamReadyCts.IsCancellationRequested)
             {
-                await Task.Delay(250, steamReadyCts.Token);
+                try
+                {
+                    await Task.Delay(250, steamReadyCts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    // ignored
+                }
             }
         }
         catch (Exception ex)
