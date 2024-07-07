@@ -167,7 +167,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         }
         else
         {
-            Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
+            subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
         }
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
 

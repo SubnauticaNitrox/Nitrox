@@ -139,8 +139,18 @@ public sealed class Steam : IGamePlatform
             );
         }
 
-        // TODO: Supply environment variables
-        return new ProcessEx(Process.Start(pathToGameExe));
+        ProcessStartInfo startInfo = new()
+        {
+            FileName = pathToGameExe,
+            WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
+            Environment =
+            {
+                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
+                ["SteamGameId"] = steamAppId.ToString(),
+                ["SteamAppID"] = steamAppId.ToString()
+            }
+        };
+        return new ProcessEx(Process.Start(startInfo));
     }
 
     private DateTime GetSteamConsoleLogLastWrite(string exePath) => File.GetLastWriteTime(Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt"));

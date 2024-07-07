@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using JB::JetBrains.Annotations;
 using Microsoft.Win32;
 using NitroxModel.Helper;
@@ -38,15 +39,18 @@ public static class Main
             return envPath;
         }
 
-        // Get path from windows registry.
-        using RegistryKey nitroxRegKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Nitrox");
-        if (nitroxRegKey == null)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return null;
+            // Get path from windows registry.
+            using RegistryKey nitroxRegKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Nitrox");
+            if (nitroxRegKey == null)
+            {
+                return null;
+            }
+            string path = nitroxRegKey.GetValue("LauncherPath") as string;
+            return Directory.Exists(path) ? path : null;
         }
-
-        string path = nitroxRegKey.GetValue("LauncherPath") as string;
-        return Directory.Exists(path) ? path : null;
+        return null;
     });
 
     private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
