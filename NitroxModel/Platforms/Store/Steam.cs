@@ -47,7 +47,8 @@ public sealed class Steam : IGamePlatform
     public async Task<ProcessEx> StartPlatformAsync()
     {
         // If steam is already running, do not start it.
-        ProcessEx steam = ProcessEx.GetFirstProcess("steam", p => p.MainModuleDirectory != null && File.Exists(Path.Combine(p.MainModuleDirectory, "steamclient.dll")));
+        // TODO: fix this for macos p => p.MainModuleDirectory != null && File.Exists(Path.Combine(p.MainModuleDirectory, "steamclient.dll"))
+        ProcessEx steam = ProcessEx.GetFirstProcess("steam");
         if (steam != null)
         {
             return steam;
@@ -107,7 +108,7 @@ public sealed class Steam : IGamePlatform
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            exe = Path.Combine("/Applications", "Steam.app", "Contents", "steam");
+            exe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx");
         }
 
         return File.Exists(exe) ? Path.GetFullPath(exe) : null;
