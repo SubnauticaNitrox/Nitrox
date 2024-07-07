@@ -23,18 +23,24 @@ public sealed class Steam : IGamePlatform
 
     public bool OwnsGame(string gameDirectory)
     {
-        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return true;
+            Log.Warn($"TESTING PATH: '{Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")}'");
+            if (File.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")))
+            {
+                return true;
+            }
         }
-        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll")))
+        else
         {
-            return true;
-        }
-        // On OSX it's steam_api.bundle
-        if (File.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")))
-        {
-            return true;
+            if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")))
+            {
+                return true;
+            }
+            if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll")))
+            {
+                return true;
+            }
         }
         return false;
     }
