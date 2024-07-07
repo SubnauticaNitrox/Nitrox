@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.Discovery.Models;
@@ -22,7 +23,20 @@ public sealed class Steam : IGamePlatform
 
     public bool OwnsGame(string gameDirectory)
     {
-        return File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")) || File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll"));
+        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")))
+        {
+            return true;
+        }
+        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll")))
+        {
+            return true;
+        }
+        // On OSX it's steam_api.bundle
+        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api.bundle")))
+        {
+            return true;
+        }
+        return false;
     }
 
     public async Task<ProcessEx> StartPlatformAsync()
@@ -53,9 +67,12 @@ public sealed class Steam : IGamePlatform
         try
         {
             DateTime consoleLogFileLastWrite = GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe));
-            await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
-                                               v => v > 0,
-                                               TimeSpan.FromSeconds(20));
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
+                                                   v => v > 0,
+                                                   TimeSpan.FromSeconds(20));
+            }
             while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe)) && !steamReadyCts.IsCancellationRequested)
             {
                 try
@@ -78,8 +95,16 @@ public sealed class Steam : IGamePlatform
 
     public string GetExeFile()
     {
-        string steamPath = RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", "");
-        string exe = Path.Combine(steamPath, "steam.exe");
+        string exe = "";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            exe = Path.Combine(RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", ""), "steam.exe");
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            exe = Path.Combine("/Applications", "Steam.app", "Contents", "steam");
+        }
+
         return File.Exists(exe) ? Path.GetFullPath(exe) : null;
     }
 
@@ -98,12 +123,18 @@ public sealed class Steam : IGamePlatform
             throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
-        return ProcessEx.Start(
-            pathToGameExe,
-            new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
-            Path.GetDirectoryName(pathToGameExe),
-            launchArguments
-        );
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return ProcessEx.Start(
+                pathToGameExe,
+                new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                Path.GetDirectoryName(pathToGameExe),
+                launchArguments
+            );
+        }
+
+        // TODO: Supply environment variables
+        return new ProcessEx(Process.Start(pathToGameExe));
     }
 
     private DateTime GetSteamConsoleLogLastWrite(string exePath) => File.GetLastWriteTime(Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt"));
