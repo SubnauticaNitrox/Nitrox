@@ -32,7 +32,7 @@ public sealed class Steam : IGamePlatform
             return true;
         }
         // On OSX it's steam_api.bundle
-        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api.bundle")))
+        if (File.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")))
         {
             return true;
         }
