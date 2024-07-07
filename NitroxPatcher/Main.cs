@@ -33,7 +33,7 @@ public static class Main
         }
 
         // Get path from environment variable.
-        string envPath = Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH");
+        string envPath = Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH", EnvironmentVariableTarget.Process);
         if (Directory.Exists(envPath))
         {
             return envPath;
@@ -85,7 +85,7 @@ public static class Main
             return;
         }
 
-        Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
+        Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value, EnvironmentVariableTarget.Process);
 
         // Capture unity errors to be logged by our logging framework.
         Application.logMessageReceived += (condition, stackTrace, type) =>

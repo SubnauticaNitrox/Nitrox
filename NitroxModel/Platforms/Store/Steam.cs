@@ -143,6 +143,7 @@ public sealed class Steam : IGamePlatform
         {
             FileName = pathToGameExe,
             WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
+            UseShellExecute = false,
             Environment =
             {
                 [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
