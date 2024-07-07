@@ -110,6 +110,7 @@ namespace NitroxModel.Serialization
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
                 try
                 {
+                    Directory.CreateDirectory(saveDir);
                     using StreamWriter stream = new(new FileStream(Path.Combine(saveDir, FileName), FileMode.Create, FileAccess.Write), Encoding.UTF8);
                     WritePropertyDescription(type, stream);
 
