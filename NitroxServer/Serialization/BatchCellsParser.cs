@@ -56,7 +56,7 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "Build18");
+            string path = Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "Build18");
             string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 
             if (!File.Exists(fileName))
@@ -70,7 +70,7 @@ namespace NitroxServer.Serialization
         /**
          * It is suspected that 'cache' is a misnomer carried over from when UWE was actually doing procedurally
          * generated worlds.  In the final release, this 'cache' has simply been baked into a final version that
-         * we can parse. 
+         * we can parse.
          */
         private void ParseCacheCells(NitroxInt3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
         {
