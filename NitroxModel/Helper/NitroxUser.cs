@@ -159,7 +159,7 @@ namespace NitroxModel.Helper
                 // File URI works different on OSX so just return path directly.
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory();
+                    return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory();
                 }
                 return currentExecutablePath = new Uri(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
             }
