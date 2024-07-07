@@ -39,6 +39,10 @@ public sealed class SteamFinder : IGameFinder
             }
         }
 
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            path = Path.Combine(path + ".app", "Contents");
+        }
         if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo))
         {
             return Error($"Path '{path}' known by Steam for '{gameInfo.FullName}' does not point to a valid game file structure");
