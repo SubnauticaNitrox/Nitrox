@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Threading;
@@ -47,7 +48,10 @@ public class IpcHost : IDisposable
 
     public async Task<string> ReadStringAsync(CancellationToken cancellationToken = default)
     {
-        await WaitForConnection();
+        if (!await WaitForConnection())
+        {
+            return "";
+        }
 
         byte[] sizeBytes = new byte[4];
         await server.ReadExactlyAsync(sizeBytes, cancellationToken);
@@ -62,12 +66,28 @@ public class IpcHost : IDisposable
         server.Dispose();
     }
 
-    private async Task WaitForConnection()
+    private async Task<bool> WaitForConnection()
     {
         if (server.IsConnected)
         {
-            return;
+            return true;
         }
-        await server.WaitForConnectionAsync();
+        try
+        {
+            await server.WaitForConnectionAsync();
+            return true;
+        }
+        catch (IOException)
+        {
+            try
+            {
+                server.Disconnect();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+        return false;
     }
 }
