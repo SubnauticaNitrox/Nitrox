@@ -41,7 +41,7 @@ public sealed class SteamFinder : IGameFinder
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            path = Path.Combine(path + ".app", "Contents");
+            path = Path.Combine(path, $"{gameInfo.Name}.app", "Contents");
         }
         if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo))
         {
