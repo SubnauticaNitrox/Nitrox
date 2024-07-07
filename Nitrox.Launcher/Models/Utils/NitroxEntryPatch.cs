@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using NitroxModel;
 using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher.Models.Patching;
@@ -25,7 +26,7 @@ public static class NitroxEntryPatch
 
     public static void Apply(string subnauticaBasePath)
     {
-        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
@@ -63,7 +64,7 @@ public static class NitroxEntryPatch
 
     public static void Remove(string subnauticaBasePath)
     {
-        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
@@ -126,7 +127,7 @@ public static class NitroxEntryPatch
 
     public static bool IsPatchApplied(string subnauticaBasePath)
     {
-        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
         string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
 
         using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))

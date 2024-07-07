@@ -25,7 +25,7 @@ internal static class GameInspect
             IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(gameInstallDir);
             if (platform?.Platform == Platform.STEAM)
             {
-                string gameVersionFile = Path.Combine(gameInstallDir, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+                string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
                 if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 68598)
                 {
                     if (dialogService != null)

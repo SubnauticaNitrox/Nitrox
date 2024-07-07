@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using NitroxModel.Discovery;
 using NitroxModel.Discovery.InstallationFinders.Core;
 using NitroxModel.Platforms.OS.Shared;
@@ -155,6 +156,11 @@ namespace NitroxModel.Helper
                     return currentExecutablePath;
                 }
 
+                // File URI works different on OSX so just return path directly.
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory();
+                }
                 return currentExecutablePath = new Uri(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
             }
         }
