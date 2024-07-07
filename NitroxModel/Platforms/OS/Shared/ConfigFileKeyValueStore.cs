@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using NitroxModel.Helper;
 
@@ -16,12 +15,6 @@ public class ConfigFileKeyValueStore : IKeyValueStore
 
     public ConfigFileKeyValueStore()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            // we would include a platform in the error message, but .NET provides no facilities to get a platform, only to check if we're running on it
-            throw new NotSupportedException("Unsupported platform for ConfigFileBackingStore; your platform was not detected to be OSPlatform.Linux");
-        }
-
         // LocalApplicationData's default is $HOME/.config under linux and XDG_CONFIG_HOME if set
         // What is the difference between .config and .local/share?
         // .config should contain all config files.
@@ -77,19 +70,19 @@ public class ConfigFileKeyValueStore : IKeyValueStore
     public (bool success, Exception error) TrySaveConfig()
     {
         // saving configs isn't critical, if it fails the values will still exists at runtime, but won't be loaded the next time you start up Nitrox.
-        try 
+        try
         {
             // Create directories if they don't already exist
             Directory.CreateDirectory(FolderPath);
 
             // serialize the keyValuePairs
             string serialized = JsonSerializer.Serialize(keyValuePairs, new JsonSerializerOptions { WriteIndented = true });
-            
+
             // try to write the file
             File.WriteAllText(FilePath, serialized);
             return (true, null);
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
             return (false, e);
         }
