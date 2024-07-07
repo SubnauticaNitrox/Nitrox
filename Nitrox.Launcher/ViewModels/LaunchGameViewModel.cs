@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Platform;
@@ -159,7 +160,15 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     {
         string subnauticaPath = NitroxUser.GamePath;
         string subnauticaLaunchArguments = SubnauticaLaunchArguments;
-        string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
+        string subnauticaExe = "";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            subnauticaExe = Path.Combine(subnauticaPath, "MacOS", GameInfo.Subnautica.ExeName);
+        }
+        else
+        {
+            Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
+        }
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
 
         // Start game & gaming platform if needed.
