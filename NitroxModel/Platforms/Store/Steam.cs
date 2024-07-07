@@ -22,7 +22,7 @@ public sealed class Steam : IGamePlatform
 
     public bool OwnsGame(string gameDirectory)
     {
-        return File.Exists(Path.Combine(gameDirectory, "Subnautica_Data", "Plugins", "x86_64", "steam_api64.dll")) || File.Exists(Path.Combine(gameDirectory, "Subnautica_Data", "Plugins", "steam_api64.dll"));
+        return File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")) || File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll"));
     }
 
     public async Task<ProcessEx> StartPlatformAsync()

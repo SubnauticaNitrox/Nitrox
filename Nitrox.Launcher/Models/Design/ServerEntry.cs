@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -77,7 +77,7 @@ public partial class ServerEntry : ObservableObject
 
     [ObservableProperty]
     private Bitmap serverIcon;
-    
+
     [ObservableProperty]
     private Version version;
 
@@ -140,7 +140,12 @@ public partial class ServerEntry : ObservableObject
         {
             SaveName = saveName;
 
-            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, "Server", "NitroxServer-Subnautica.exe");
+            string serverExeName = "NitroxServer-Subnautica.exe";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                serverExeName = "NitroxServer-Subnautica";
+            }
+            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, "Server", serverExeName);
             ProcessStartInfo startInfo = new(serverPath)
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,

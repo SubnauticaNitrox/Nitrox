@@ -509,7 +509,14 @@ public class Program
         if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
         {
             // Try find game managed libraries
-            dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllFileName);
+            }
+            else
+            {
+                dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
+            }
         }
 
         // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
