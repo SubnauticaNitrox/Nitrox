@@ -25,8 +25,7 @@ public sealed class Steam : IGamePlatform
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            Log.Warn($"TESTING PATH: '{Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")}', Exists?: '{(File.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")) ? "true" : "false")}'");
-            if (File.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")))
+            if (Directory.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")))
             {
                 return true;
             }
