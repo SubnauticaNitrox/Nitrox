@@ -111,6 +111,16 @@ namespace NitroxLauncher
                 {
                     LauncherNotifier.Warning("You're now using Nitrox DEV build");
                 }
+
+                string[] launchArgs = Environment.GetCommandLineArgs();
+                for (int i = 0; i < launchArgs.Length; i++)
+                {
+                    if (launchArgs[i].Equals("-instantlaunch", StringComparison.OrdinalIgnoreCase) && launchArgs.Length > i + 1)
+                    {
+                        _ = LauncherLogic.Instance.StartMultiplayerAsync();
+                        LauncherLogic.Server.StartServer(true, launchArgs[i + 1]);
+                    }
+                }
             };
 
             logic.SetTargetedSubnauticaPath(NitroxUser.GamePath)
