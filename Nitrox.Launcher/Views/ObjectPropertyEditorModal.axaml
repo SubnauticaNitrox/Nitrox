@@ -5,11 +5,11 @@
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="700" MinHeight="200"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="700" MaxHeight="1000" MinHeight="200"
         d:DataContext="{x:Static design:DesignData.ObjectPropertyEditorViewModel}"
         x:Class="Nitrox.Launcher.Views.ObjectPropertyEditorModal"
         SystemDecorations="None"
-        SizeToContent="Width"
+        SizeToContent="WidthAndHeight"
         RequestedThemeVariant="Light"
         Title="{Binding Title}">
     <Grid RowDefinitions="Auto, *, Auto">

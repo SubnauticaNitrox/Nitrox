@@ -16,6 +16,8 @@ namespace NitroxModel.Serialization
 
         private int saveIntervalSetting = 120000;
 
+        private int maxBackupsSetting = 10;
+        
         private string postSaveCommandPath = string.Empty;
 
         private string saveNameSetting = "My World";
@@ -35,6 +37,17 @@ namespace NitroxModel.Serialization
             {
                 Validate.IsTrue(value >= 1000, "SaveInterval must be greater than 1000");
                 saveIntervalSetting = value;
+            }
+        }
+        
+        public int MaxBackups
+        {
+            get => maxBackupsSetting;
+
+            set
+            {
+                Validate.IsTrue(value >= 0, "MaxBackups must be greater than or equal to 0");
+                maxBackupsSetting = value;
             }
         }
 
@@ -71,6 +84,8 @@ namespace NitroxModel.Serialization
 
         public bool DisableAutoSave { get; set; }
 
+        public bool DisableAutoBackup { get; set; }
+        
         public string SaveName
         {
             get => saveNameSetting;

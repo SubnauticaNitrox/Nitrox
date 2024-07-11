@@ -235,14 +235,12 @@
                                     <TextBlock Text="Open world folder" />
                                 </StackPanel>
                             </Button>
-                            <Border Background="Transparent" HorizontalAlignment="Left" ToolTip.Tip="Coming Soon!"> <!-- Temp border in order to show tooltip -->
-                                <Button IsEnabled="False" Command="{Binding RestoreBackupCommand}" Classes="icon">
-                                    <StackPanel>
-                                        <Image Source="/Assets/Images/world-manager/export-2x.png" />
-                                        <TextBlock Text="Restore a backup" />
-                                    </StackPanel>
-                                </Button>
-                            </Border>
+                            <Button Command="{Binding RestoreBackupCommand}" Classes="icon">
+                                <StackPanel>
+                                    <Image Source="/Assets/Images/world-manager/export-2x.png" />
+                                    <TextBlock Text="Restore a backup" />
+                                </StackPanel>
+                            </Button>
                             <Button Command="{Binding DeleteServerCommand}" HotKey="Delete" Classes="icon" Foreground="#ec1c24">
                                 <StackPanel>
                                     <Image Source="/Assets/Images/world-manager/delete-2x.png" />

@@ -26,6 +26,8 @@ public static class ServiceCollectionExtensions
         // Dialog ViewModels and Dialog Views
         collection.AddTransient<CreateServerViewModel>();
         collection.AddTransient<CreateServerModal>();
+        collection.AddTransient<BackupRestoreViewModel>();
+        collection.AddTransient<BackupRestoreModal>();
         collection.AddTransient<ObjectPropertyEditorViewModel>();
         collection.AddTransient<ObjectPropertyEditorModal>();
         collection.AddTransient<DialogBoxViewModel>();

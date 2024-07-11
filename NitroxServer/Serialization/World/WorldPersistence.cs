@@ -90,6 +90,59 @@ namespace NitroxServer.Serialization.World
             }
         }
 
+        public bool BackUp(string saveDir)
+        {
+            if(config.MaxBackups == 0)
+            {
+                Log.Info("No backup was made (\"MaxBackups\" is equal to 0)");
+                return false;
+            }
+
+            string backupDir = Path.Combine(saveDir, "Backups");
+            string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now:yyyyMMddHHmmss}");
+
+            try
+            {
+                // Back up the save files
+                Directory.CreateDirectory(backupDir);
+                Directory.CreateDirectory(outZip);
+
+                foreach (string file in Directory.GetFiles(saveDir))
+                {
+                    File.Copy(file, Path.Combine(outZip, Path.GetFileName(file)));
+                }
+
+                FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
+                Directory.Delete(outZip, true);
+
+                // Check for total number of backups and prune as necessary
+                List<string> backups = [];
+                backups.AddRange(from file in Directory.EnumerateFiles(backupDir) let fileInfo = new FileInfo(file) where fileInfo.Extension == ".zip" && fileInfo.Name.Contains($"Backup - ") select file);
+
+                if (backups.Count > config.MaxBackups)
+                {
+                    int numBackupsToDelete = backups.Count - config.MaxBackups;
+                    for (int i = 0; i < numBackupsToDelete; i++)
+                    {
+                        File.Delete(backups.ElementAt(i));
+                    }
+                }
+
+                // Done
+                Log.Info("World backed up");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Could not back up world.");
+                if (Directory.Exists(outZip))
+                {
+                    Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left 
+                }
+                return false;
+            }
+        }
+        
         internal Optional<World> LoadFromFile(string saveDir)
         {
             if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
@@ -136,12 +189,10 @@ namespace NitroxServer.Serialization.World
                 // Check if the world was newly created using the world manager
                 if (new FileInfo(Path.Combine(saveDir, $"Version{FileEnding}")).Length > 0)
                 {
-                    Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+                    // Give error saying that world could not be used, and to restore a backup
+                    Log.Error($"Could not load world, please restore one of your backups to continue using this world. : {ex.GetType()} {ex.Message}");
 
-                    // Backup world if loading fails
-                    string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                    Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
-                    FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
+                    throw;
                 }
             }
 

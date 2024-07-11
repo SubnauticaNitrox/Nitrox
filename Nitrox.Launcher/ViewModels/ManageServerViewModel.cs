@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media;
@@ -129,7 +130,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private bool ServerIsOnline => Server.IsOnline;
 
-    private string WorldFolderDirectory => Path.Combine(savesFolderDir, Server.Name);
+    private string SaveFolderDirectory => Path.Combine(savesFolderDir, Server.Name);
 
     public ManageServerViewModel(IScreen screen, IDialogService dialogService) : base(screen)
     {
@@ -209,12 +210,12 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         // If world name was changed, rename save folder to match it
         string newDir = Path.Combine(savesFolderDir, ServerName);
-        if (WorldFolderDirectory != newDir)
+        if (SaveFolderDirectory != newDir)
         {
             // Windows, by default, ignores case when renaming folders. We circumvent this by changing the name to a random one, and then to the desired name.
             DirectoryInfo temp = Directory.CreateTempSubdirectory();
             temp.Delete();
-            Directory.Move(WorldFolderDirectory, temp.FullName);
+            Directory.Move(SaveFolderDirectory, temp.FullName);
             Directory.Move(temp.FullName, newDir);
         }
 
@@ -238,8 +239,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(WorldFolderDirectory);
-        using (config.Update(WorldFolderDirectory))
+        SubnauticaServerConfig config = SubnauticaServerConfig.Load(SaveFolderDirectory);
+        using (config.Update(SaveFolderDirectory))
         {
             config.SaveName = Server.Name;
             config.ServerPassword = Server.Password;
@@ -289,8 +290,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         try
         {
-            string serverIconFileName = "serverIcon";
-
             IReadOnlyList<IStorageFile> files = await MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = "Select an image",
@@ -304,7 +303,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             });
 
             serverIconDir = files[0].TryGetLocalPath();
-            serverIconDestinationDir = Path.Combine(WorldFolderDirectory, "servericon.png");
+            serverIconDestinationDir = Path.Combine(SaveFolderDirectory, "servericon.png");
 
             ServerIcon = new(serverIconDir);
         }
@@ -321,11 +320,11 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         {
             model.Title = $"Server '{ServerName}' config editor";
             model.FieldAcceptFilter = p => !advancedSettingsDeniedFields.Any(v => p.Name.Contains(v, StringComparison.OrdinalIgnoreCase));
-            model.OwnerObject = SubnauticaServerConfig.Load(WorldFolderDirectory);
+            model.OwnerObject = Config.Load(SaveFolderDirectory);
         });
-        if (result && result.OwnerObject is SubnauticaServerConfig config)
+        if (result && result.OwnerObject is Config config)
         {
-            config.Serialize(WorldFolderDirectory);
+            config.Serialize(SaveFolderDirectory);
         }
         LoadFrom(server);
     }
@@ -335,16 +334,40 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = WorldFolderDirectory,
+            FileName = SaveFolderDirectory,
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
     }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
-    private void RestoreBackup()
+    private async Task RestoreBackup()
     {
-        // TODO: Open Restore Backup Popup
+        BackupRestoreViewModel result = await dialogService.ShowAsync<BackupRestoreViewModel>(model =>
+        {
+            model.Title = $"Restore a Backup for '{ServerName}'";
+            model.SaveFolderDirectory = SaveFolderDirectory;
+        });
+        
+        if (result && !string.IsNullOrWhiteSpace(result.SelectedBackup.BackupPath))
+        {
+            string backupPath = result.SelectedBackup.BackupPath;
+            try
+            {
+                if (!File.Exists(backupPath))
+                {
+                    throw new FileNotFoundException("Selected backup file not found.", backupPath);
+                }
+
+                ZipFile.ExtractToDirectory(backupPath, SaveFolderDirectory, true);
+                LoadFrom(server); // TODO: This does not update the UI with the new values. Change the way that LoadFrom() is made to load directly from the config and icon files.
+                LauncherNotifier.Success("Backup restored successfully.");
+            }
+            catch (Exception ex)
+            {
+                await dialogService.ShowErrorAsync(ex, "Error while restoring backup", ex.Message);
+            }
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
@@ -362,7 +385,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             return;
         }
 
-        Directory.Delete(WorldFolderDirectory, true);
+        Directory.Delete(SaveFolderDirectory, true);
         WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
         HostScreen.Back();
     }
