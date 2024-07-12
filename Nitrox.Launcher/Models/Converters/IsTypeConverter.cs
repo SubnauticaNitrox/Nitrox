@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Data;
-using Avalonia.Data.Converters;
 
 namespace Nitrox.Launcher.Models.Converters;
 
@@ -10,9 +8,9 @@ namespace Nitrox.Launcher.Models.Converters;
 ///     Returns true if values are equal to each other.
 ///     Or if value is singular, if parameter is equal to the value.
 /// </summary>
-public class IsTypeConverter : Converter<IsTypeConverter>, IValueConverter
+public class IsTypeConverter : Converter<IsTypeConverter>
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (parameter is not Type typeParameter)
         {
@@ -21,6 +19,4 @@ public class IsTypeConverter : Converter<IsTypeConverter>, IValueConverter
 
         return typeParameter.IsInstanceOfType(value);
     }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 }

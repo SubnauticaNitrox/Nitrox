@@ -1,24 +1,23 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Avalonia.Data.Converters;
 
 namespace Nitrox.Launcher.Models.Converters;
 
 /// <summary>
 ///     Formats the bound value as a string from an integer.
 /// </summary>
-public partial class IntToStringConverter : Converter<IntToStringConverter>, IValueConverter
+public partial class IntToStringConverter : Converter<IntToStringConverter>
 {
     [GeneratedRegex("[^0-9]")]
     private static partial Regex DigitReplaceRegex();
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value?.ToString() ?? "";
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null)
         {

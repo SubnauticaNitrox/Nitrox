@@ -1,18 +1,17 @@
 using System;
 using System.Globalization;
-using Avalonia.Data.Converters;
 
 namespace Nitrox.Launcher.Models.Converters;
 
 /// <summary>
 ///     Formats the bound value as a relative date string from a DateTime value.
 /// </summary>
-public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter>, IValueConverter
+public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter>
 {
     private const float DAYS_IN_YEAR = 365.2425f;
     private const float MEAN_DAYS_IN_MONTH = DAYS_IN_YEAR / 12f;
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         DateTimeOffset date;
         switch (value)
@@ -55,6 +54,4 @@ public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter
             _ => $"{(int)(delta.TotalDays / DAYS_IN_YEAR)} years ago"
         };
     }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 }

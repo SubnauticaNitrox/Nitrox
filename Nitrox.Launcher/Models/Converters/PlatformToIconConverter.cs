@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Globalization;
-using Avalonia.Data.Converters;
 using NitroxModel.Discovery.Models;
 
 namespace Nitrox.Launcher.Models.Converters;
 
-internal class PlatformToIconConverter : Converter<PlatformToIconConverter>, IValueConverter
+internal class PlatformToIconConverter : Converter<PlatformToIconConverter>
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return BitmapAssetValueConverter.GetBitmapFromPath(GetIconPathForPlatform(value as Platform?));
     }
@@ -22,10 +21,5 @@ internal class PlatformToIconConverter : Converter<PlatformToIconConverter>, IVa
             Platform.DISCORD => "/Assets/Images/store-icons/discord-2x.png",
             _ => "/Assets/Images/store-icons/missing-2x.png",
         };
-    }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
     }
 }

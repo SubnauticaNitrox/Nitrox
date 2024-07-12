@@ -4,11 +4,10 @@ using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Notifications;
-using Avalonia.Data.Converters;
 
 namespace Nitrox.Launcher.Models.Converters;
 
-public class NotificationTypeToColorConverter : Converter<NotificationTypeToColorConverter>, IValueConverter
+public class NotificationTypeToColorConverter : Converter<NotificationTypeToColorConverter>
 {
     private static readonly Dictionary<NotificationType, object> typeToResourceCache = new()
     {
@@ -26,7 +25,7 @@ public class NotificationTypeToColorConverter : Converter<NotificationTypeToColo
         }
     }
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (Application.Current == null)
         {
@@ -39,6 +38,4 @@ public class NotificationTypeToColorConverter : Converter<NotificationTypeToColo
 
         return typeToResourceCache[type];
     }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }

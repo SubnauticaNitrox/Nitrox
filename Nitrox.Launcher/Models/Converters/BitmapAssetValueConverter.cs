@@ -4,14 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Path = System.IO.Path;
 
 namespace Nitrox.Launcher.Models.Converters;
 
-public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, IValueConverter
+public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>
 {
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
     private static readonly Dictionary<string, Bitmap> assetCache = [];
@@ -46,7 +45,7 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
         return bitmap;
     }
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null)
         {
@@ -58,8 +57,6 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
         }
         return GetBitmapFromPath(rawUri);
     }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 
     private static Bitmap TryLoadFromLocalFileSystem(string fileUri)
     {
