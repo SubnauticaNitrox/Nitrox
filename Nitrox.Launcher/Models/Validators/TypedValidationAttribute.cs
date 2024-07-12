@@ -9,6 +9,10 @@ public abstract class TypedValidationAttribute<T> : ValidationAttribute
 
     protected override ValidationResult IsValid(object value, ValidationContext context)
     {
+        if (value == default)
+        {
+            return IsValid(default, context);
+        }
         if (value is not T typedValue)
         {
             return new ValidationResult($"The field {context.DisplayName} must be of type {typeof(T).Name}.");
