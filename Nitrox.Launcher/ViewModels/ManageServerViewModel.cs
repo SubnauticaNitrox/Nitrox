@@ -34,7 +34,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 {
     private readonly string[] advancedSettingsDeniedFields = ["password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole), nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm)];
     private readonly IDialogService dialogService;
-    private readonly string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+    private readonly IKeyValueStore keyValueStore;
     private ServerEntry server;
 
     [ObservableProperty]
@@ -67,7 +67,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
     private Bitmap serverIcon;
 
-    private string serverIconDestinationDir;
     private string serverIconDir;
 
     [ObservableProperty]
@@ -82,7 +81,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [Required]
     [FileName]
     [NotEndsWith(".")]
-    [NitroxUniqueSaveName(true, nameof(OriginalServerName))]
+    [NitroxUniqueSaveName(nameof(SavesFolderDir), true, nameof(OriginalServerName))]
     private string serverName;
 
     [ObservableProperty]
@@ -130,11 +129,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private bool ServerIsOnline => Server.IsOnline;
 
-    private string SaveFolderDirectory => Path.Combine(savesFolderDir, Server.Name);
+    private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server.Name);
+    private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
 
-    public ManageServerViewModel(IScreen screen, IDialogService dialogService) : base(screen)
+    public ManageServerViewModel(IScreen screen, IDialogService dialogService, IKeyValueStore keyValueStore) : base(screen)
     {
         this.dialogService = dialogService;
+        this.keyValueStore = keyValueStore;
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
@@ -145,7 +146,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             return;
         }
 
-        Server.Start();
+        Server.Start(keyValueStore.GetSavesFolderDir());
     }
 
     [RelayCommand]
@@ -204,7 +205,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void Save()
     {
         // If world name was changed, rename save folder to match it
-        string newDir = Path.Combine(savesFolderDir, ServerName);
+        string newDir = Path.Combine(SavesFolderDir, ServerName);
         if (SaveFolderDirectory != newDir)
         {
             // Windows, by default, ignores case when renaming folders. We circumvent this by changing the name to a random one, and then to the desired name.
@@ -215,9 +216,9 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         }
 
         // Update the servericon.png file if needed
-        if (Server.ServerIcon != ServerIcon && serverIconDir != null && serverIconDestinationDir != null)
+        if (Server.ServerIcon != ServerIcon && serverIconDir != null)
         {
-            File.Copy(serverIconDir, serverIconDestinationDir, true);
+            File.Copy(serverIconDir, Path.Combine(newDir, "servericon.png"), true);
         }
 
         Server.Name = ServerName;
@@ -296,10 +297,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                     MimeTypes = new[] { "image/*" }
                 } }
             });
+            string newIconFile = files.FirstOrDefault()?.TryGetLocalPath();
+            if (newIconFile == null || !File.Exists(newIconFile))
+            {
+                return;
+            }
 
-            serverIconDir = files[0].TryGetLocalPath();
-            serverIconDestinationDir = Path.Combine(SaveFolderDirectory, "servericon.png");
-
+            serverIconDir = newIconFile;
             ServerIcon = new(serverIconDir);
         }
         catch (Exception ex)
@@ -346,16 +350,17 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
         if (result)
         {
-            string backupPath = result.SelectedBackup.BackupPath;
+            string backupFile = result.SelectedBackup.BackupFileName;
             try
             {
-                if (!File.Exists(backupPath))
+                if (!File.Exists(backupFile))
                 {
-                    throw new FileNotFoundException("Selected backup file not found.", backupPath);
+                    throw new FileNotFoundException("Selected backup file not found.", backupFile);
                 }
 
-                ZipFile.ExtractToDirectory(backupPath, SaveFolderDirectory, true);
-                LoadFrom(server); // TODO: This does not update the UI with the new values. Change the way that LoadFrom() is made to load directly from the config and icon files.
+                ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
+                server.RefreshFromDirectory(SaveFolderDirectory);
+                LoadFrom(server);
                 LauncherNotifier.Success("Backup restored successfully.");
             }
             catch (Exception ex)

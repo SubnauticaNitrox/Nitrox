@@ -13,12 +13,13 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
 using Nitrox.Launcher.Models.Utils;
-using Nitrox.Launcher.ViewModels;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
+using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -27,7 +28,6 @@ namespace Nitrox.Launcher.Models.Design;
 /// </summary>
 public partial class ServerEntry : ObservableObject
 {
-    // ServerEntry Variables
     private static readonly SubnauticaServerConfig serverDefaults = new();
 
     [ObservableProperty]
@@ -78,19 +78,77 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private Bitmap serverIcon;
 
+    private ServerProcess serverProcess;
+
     [ObservableProperty]
     private Version version;
-
-    private ServerProcess serverProcess;
 
     public ServerEntry()
     {
         PropertyChanged += OnPropertyChanged;
     }
 
-    [RelayCommand]
-    public void Start()
+    public static ServerEntry FromDirectory(string saveDir)
     {
+        ServerEntry result = new();
+        result.RefreshFromDirectory(saveDir);
+        return result;
+    }
+
+    public void RefreshFromDirectory(string saveDir)
+    {
+        if (!File.Exists(Path.Combine(saveDir, "server.cfg")) || !File.Exists(Path.Combine(saveDir, "Version.json")))
+        {
+            return;
+        }
+
+        Bitmap serverIcon = null;
+        string serverIconPath = Path.Combine(saveDir, "servericon.png");
+        if (File.Exists(serverIconPath))
+        {
+            serverIcon = new Bitmap(Path.Combine(saveDir, "servericon.png"));
+        }
+
+        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        string fileEnding = "json";
+        if (config.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
+
+        Version version;
+        using (FileStream stream = new(Path.Combine(saveDir, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
+        {
+            version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+        }
+
+        Name = Path.GetFileName(saveDir);
+        ServerIcon = serverIcon;
+        Password = config.ServerPassword;
+        Seed = config.Seed;
+        GameMode = config.GameMode;
+        PlayerPermissions = config.DefaultPlayerPerm;
+        AutoSaveInterval = config.SaveInterval / 1000;
+        MaxPlayers = config.MaxConnections;
+        Port = config.ServerPort;
+        AutoPortForward = config.AutoPortForward;
+        AllowLanDiscovery = config.LANDiscoveryEnabled;
+        AllowCommands = !config.DisableConsole;
+        IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json"));
+        Version = version;
+        LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}"))
+                                                     ?
+                                                     // This file is affected by server saving
+                                                     Path.Combine(saveDir, $"WorldData.{fileEnding}")
+                                                     :
+                                                     // If the above file doesn't exist (server was never ran), use the Version file instead
+                                                     Path.Combine(saveDir, $"Version.{fileEnding}"));
+    }
+
+    public void Start(string savesDir)
+    {
+        if (!Directory.Exists(savesDir))
+        {
+            throw new DirectoryNotFoundException($"Directory '{savesDir}' not found");
+        }
+
         try
         {
             if (serverProcess?.IsRunning ?? false)
@@ -98,7 +156,7 @@ public partial class ServerEntry : ObservableObject
                 throw new DuplicateSingularApplicationException("Nitrox Server");
             }
             // Start server and add notify when server closed.
-            serverProcess = ServerProcess.Start(Name, () => Dispatcher.UIThread.InvokeAsync(StopAsync));
+            serverProcess = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync));
         }
         catch (Exception ex)
         {
@@ -123,23 +181,16 @@ public partial class ServerEntry : ObservableObject
         return false;
     }
 
-    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
-    }
+    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
 
     private class ServerProcess : IDisposable
     {
-        private Process serverProcess;
         private NamedPipeClientStream commandStream;
-        public string SaveName { get; }
+        private Process serverProcess;
         public bool IsRunning => !serverProcess?.HasExited ?? false;
-        public string SaveDir => Path.Combine(ServersViewModel.SavesFolderDir, SaveName);
 
-        private ServerProcess(string saveName, Action onExited)
+        private ServerProcess(string saveDir, Action onExited)
         {
-            SaveName = saveName;
-
             string serverExeName = "NitroxServer-Subnautica.exe";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
@@ -150,7 +201,7 @@ public partial class ServerEntry : ObservableObject
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,
                 Verb = "open",
-                Arguments = $@"""{SaveDir}"""
+                Arguments = $@"""{saveDir}"""
             };
 
             serverProcess = Process.Start(startInfo);
@@ -163,16 +214,13 @@ public partial class ServerEntry : ObservableObject
                 };
             }
 
-            if (File.Exists(Path.Combine(SaveDir, "WorldData.json")))
+            if (File.Exists(Path.Combine(saveDir, "WorldData.json")))
             {
-                File.SetLastWriteTime(Path.Combine(SaveDir, "WorldData.json"), DateTime.Now);
+                File.SetLastWriteTime(Path.Combine(saveDir, "WorldData.json"), DateTime.Now);
             }
         }
 
-        public static ServerProcess Start(string saveName, Action onExited)
-        {
-            return new(saveName, onExited);
-        }
+        public static ServerProcess Start(string saveDir, Action onExited) => new(saveDir, onExited);
 
         public async Task<bool> CloseAsync()
         {

@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 
@@ -12,35 +13,33 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class CreateServerViewModel : ModalViewModelBase
 {
+    private readonly IKeyValueStore keyValueStore;
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
     [NotifyDataErrorInfo]
     [Required]
     [FileName]
     [NotEndsWith(".")]
-    [NitroxUniqueSaveName]
+    [NitroxUniqueSaveName(nameof(SavesFolderDir))]
     private string name;
+
     [ObservableProperty]
     private NitroxGameMode selectedGameMode = NitroxGameMode.SURVIVAL;
+
     public KeyGesture BackHotkey { get; } = new(Key.Escape);
     public KeyGesture CreateHotkey { get; } = new(Key.Return);
 
-    public CreateServerViewModel()
+    private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
+
+    public CreateServerViewModel(IKeyValueStore keyValueStore)
     {
-        // At least one property has an "invalid" default value, so we need to trigger it manually so that the Create button is disabled.
-        ValidateAllProperties();
+        this.keyValueStore = keyValueStore;
     }
 
-    [RelayCommand(CanExecute = nameof(CanCreate))]
-    private void Create()
+    public void CreateEmptySave(string saveName, NitroxGameMode saveGameMode)
     {
-        CreateEmptySave(Name, SelectedGameMode);
-        Close();
-    }
-
-    public static void CreateEmptySave(string saveName, NitroxGameMode saveGameMode)
-    {
-        string saveDir = Path.Combine(ServersViewModel.SavesFolderDir, saveName);
+        string saveDir = Path.Combine(SavesFolderDir, saveName);
         Directory.CreateDirectory(saveDir);
         SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
         string fileEnding = "json";
@@ -55,6 +54,13 @@ public partial class CreateServerViewModel : ModalViewModelBase
             config.SaveName = saveName;
             config.GameMode = saveGameMode;
         }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCreate))]
+    private void Create()
+    {
+        CreateEmptySave(Name, SelectedGameMode);
+        Close();
     }
 
     private bool CanCreate() => !HasErrors;

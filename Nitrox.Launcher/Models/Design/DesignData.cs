@@ -21,14 +21,14 @@ public static class DesignData
         }
 
         MainWindowViewModel = new(null, null, null, null, null, null, null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
-        LaunchGameViewModel = new(null, null, null);
-        ManageServerViewModel = new(null, null) { ServerName = "My fun server" };
-        CreateServerViewModel = new() { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };
+        LaunchGameViewModel = new(null, null, null, null);
+        ManageServerViewModel = new(null, null, null) { ServerName = "My fun server" };
+        CreateServerViewModel = new(null) { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };
         LibraryViewModel = new(null);
         CommunityViewModel = new(null);
         BlogViewModel = new(null, [new NitroxBlog("Design blog", DateOnly.FromDateTime(DateTime.UtcNow - TimeSpan.FromDays(5)), "google.com", null)]);
         UpdatesViewModel = new(null);
-        OptionsViewModel = new(null)
+        OptionsViewModel = new(null, null)
         {
             SelectedGame = new()
             {

@@ -21,12 +21,11 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class OptionsViewModel : RoutableViewModelBase
 {
+    private readonly IKeyValueStore keyValueStore;
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetArgumentsCommand))]
     private string launchArgs;
-
-    [ObservableProperty]
-    private string savesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
 
     [ObservableProperty]
     private KnownGame selectedGame;
@@ -36,10 +35,11 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
     private static string DefaultLaunchArg => "-vrmode none";
 
-    public OptionsViewModel(IScreen screen) : base(screen)
+    public OptionsViewModel(IScreen screen, IKeyValueStore keyValueStore) : base(screen)
     {
+        this.keyValueStore = keyValueStore;
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-        LaunchArgs = KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", DefaultLaunchArg);
+        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
     }
 
     public async Task SetTargetedSubnauticaPath(string path)
@@ -127,7 +127,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanSetArguments))]
     private void SetArguments()
     {
-        KeyValueStore.Instance.SetValue("SubnauticaLaunchArguments", LaunchArgs);
+        keyValueStore.SetSubnauticaLaunchArguments(LaunchArgs);
         SetArgumentsCommand.NotifyCanExecuteChanged();
     }
 
@@ -135,7 +135,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         ShowResetArgsBtn = LaunchArgs != DefaultLaunchArg;
 
-        return LaunchArgs != KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", DefaultLaunchArg);
+        return LaunchArgs != keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
     }
 
     [RelayCommand]
@@ -143,7 +143,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = SavesFolderDir,
+            FileName = keyValueStore.GetSavesFolderDir(),
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();

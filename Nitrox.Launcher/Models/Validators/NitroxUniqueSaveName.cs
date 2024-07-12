@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using Nitrox.Launcher.ViewModels;
 
 namespace Nitrox.Launcher.Models.Validators;
 
@@ -10,35 +9,38 @@ namespace Nitrox.Launcher.Models.Validators;
 /// </summary>
 public sealed class NitroxUniqueSaveName : TypedValidationAttribute<string>
 {
+    public string SavesFolderDirPropertyName { get; }
     public bool AllowCaseInsensitiveName { get; }
     public string OriginalValuePropertyName { get; }
 
-    public NitroxUniqueSaveName(bool allowCaseInsensitiveName = false, string originalValuePropertyName = null)
+    public NitroxUniqueSaveName(string savesFolderDirPropertyName, bool allowCaseInsensitiveName = false, string originalValuePropertyName = null)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(savesFolderDirPropertyName);
+        SavesFolderDirPropertyName = savesFolderDirPropertyName;
         AllowCaseInsensitiveName = allowCaseInsensitiveName;
         OriginalValuePropertyName = originalValuePropertyName;
     }
 
     protected override ValidationResult IsValid(string value, ValidationContext context)
     {
-        static bool SaveFolderExists(string folderName, bool matchExact)
+        static bool SaveFolderExists(string folderName, bool matchExact, string savesFolderDir)
         {
             if (!matchExact)
             {
-                foreach (string dir in Directory.EnumerateDirectories(ServersViewModel.SavesFolderDir))
+                foreach (string dir in Directory.EnumerateDirectories(savesFolderDir))
                 {
-                     if (Path.GetFileName(dir).Equals(folderName, StringComparison.Ordinal))
-                     {
-                         return true;
-                     }
+                    if (Path.GetFileName(dir).Equals(folderName, StringComparison.Ordinal))
+                    {
+                        return true;
+                    }
                 }
                 return false;
             }
 
-            return Path.Exists(Path.Combine(ServersViewModel.SavesFolderDir, folderName));
+            return Path.Exists(Path.Combine(savesFolderDir, folderName));
         }
 
-        if (!Directory.Exists(ServersViewModel.SavesFolderDir))
+        if (!Directory.Exists(ReadProperty<string>(context, SavesFolderDirPropertyName)))
         {
             return ValidationResult.Success;
         }
@@ -46,7 +48,7 @@ public sealed class NitroxUniqueSaveName : TypedValidationAttribute<string>
         {
             return ValidationResult.Success;
         }
-        if (SaveFolderExists(value, !AllowCaseInsensitiveName))
+        if (SaveFolderExists(value, !AllowCaseInsensitiveName, ReadProperty<string>(context, SavesFolderDirPropertyName)))
         {
             return new ValidationResult($@"Save ""{value}"" already exists.");
         }

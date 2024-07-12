@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,20 +17,16 @@ using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.Serialization;
 using NitroxModel.Server;
-using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
 public partial class ServersViewModel : RoutableViewModelBase
 {
-    public static readonly string SavesFolderDir = KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+    private readonly IKeyValueStore keyValueStore;
     private readonly IDialogService dialogService;
     private readonly ManageServerViewModel manageServerViewModel;
     private CancellationTokenSource serverRefreshCts;
@@ -43,8 +38,9 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     private FileSystemWatcher watcher;
 
-    public ServersViewModel(IScreen screen, IDialogService dialogService, ManageServerViewModel manageServerViewModel) : base(screen)
+    public ServersViewModel(IScreen screen, IKeyValueStore keyValueStore, IDialogService dialogService, ManageServerViewModel manageServerViewModel) : base(screen)
     {
+        this.keyValueStore = keyValueStore;
         this.dialogService = dialogService;
         this.manageServerViewModel = manageServerViewModel;
 
@@ -112,7 +108,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             return;
         }
 
-        server.Start();
+        server.Start(keyValueStore.GetSavesFolderDir());
         server.Version = NitroxEnvironment.Version;
     }
 
@@ -132,64 +128,16 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         try
         {
-            Directory.CreateDirectory(SavesFolderDir);
+            Directory.CreateDirectory(keyValueStore.GetSavesFolderDir());
 
             List<ServerEntry> serversOnDisk = [];
-
-            foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
+            foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesFolderDir()))
             {
-                // Don't add the file to the list if it doesn't validate
-                if (!File.Exists(Path.Combine(folder, "server.cfg")) || !File.Exists(Path.Combine(folder, "Version.json")))
+                ServerEntry entryFromDir = ServerEntry.FromDirectory(saveDir);
+                if (entryFromDir != null)
                 {
-                    continue;
+                    serversOnDisk.Add(entryFromDir);
                 }
-
-                string saveName = Path.GetFileName(folder);
-                string saveDir = Path.Combine(SavesFolderDir, saveName);
-
-                Bitmap serverIcon = null;
-                string serverIconPath = Path.Combine(saveDir, "servericon.png");
-                if (File.Exists(serverIconPath))
-                {
-                    serverIcon = new(Path.Combine(saveDir, "servericon.png"));
-                }
-
-                SubnauticaServerConfig server = SubnauticaServerConfig.Load(saveDir);
-                string fileEnding = "json";
-                if (server.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
-
-                Version version;
-                using (FileStream stream = new(Path.Combine(folder, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
-                }
-
-                ServerEntry entry = new()
-                {
-                    Name = saveName,
-                    ServerIcon = serverIcon,
-                    Password = server.ServerPassword,
-                    Seed = server.Seed,
-                    GameMode = server.GameMode,
-                    PlayerPermissions = server.DefaultPlayerPerm,
-                    AutoSaveInterval = server.SaveInterval / 1000,
-                    MaxPlayers = server.MaxConnections,
-                    Port = server.ServerPort,
-                    AutoPortForward = server.AutoPortForward,
-                    AllowLanDiscovery = server.LANDiscoveryEnabled,
-                    AllowCommands = !server.DisableConsole,
-                    IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json")),
-                    Version = version,
-                    LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}"))
-                                                                 ?
-                                                                 // This file is affected by server saving
-                                                                 Path.Combine(folder, $"WorldData.{fileEnding}")
-                                                                 :
-                                                                 // If the above file doesn't exist (server was never ran), use the Version file instead
-                                                                 Path.Combine(folder, $"Version.{fileEnding}"))
-                };
-
-                serversOnDisk.Add(entry);
             }
 
             // Remove any servers from the Servers list that are not found in the saves folder
@@ -245,7 +193,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         watcher = new FileSystemWatcher
         {
-            Path = SavesFolderDir,
+            Path = keyValueStore.GetSavesFolderDir(),
             NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size,
             Filter = "*.*",
             IncludeSubdirectories = true

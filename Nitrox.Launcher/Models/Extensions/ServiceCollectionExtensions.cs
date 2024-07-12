@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
+using NitroxModel.Helper;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.Models.Extensions;
@@ -14,6 +15,7 @@ public static class ServiceCollectionExtensions
     {
         // Domain services
         collection.AddSingleton(provider => new AppViewLocator(provider));
+        collection.AddSingleton(_ => KeyValueStore.Instance);
 
         // Avalonia and Reactive services
         collection.AddSingleton<IScreen, RoutingScreen>();

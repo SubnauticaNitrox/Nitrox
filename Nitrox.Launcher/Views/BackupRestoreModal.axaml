@@ -53,7 +53,7 @@
                     </ListBox.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding BackupPath}">
+                            <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding BackupFileName}">
                                 <TextBlock Text="Backup " />
                                 <TextBlock Text="{Binding BackupDate}" />
                             </StackPanel>

@@ -2,4 +2,4 @@
 
 namespace Nitrox.Launcher.Models.Design;
 
-public record BackupItem(DateTime BackupDate, string BackupPath);
+public record BackupItem(DateTime BackupDate, string BackupFileName);

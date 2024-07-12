@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace Nitrox.Launcher.Models.Validators;
 
@@ -14,10 +15,10 @@ public abstract class TypedValidationAttribute<T> : ValidationAttribute
         }
         return IsValid(typedValue, context);
     }
-    
+
     protected static TResult ReadProperty<TResult>(ValidationContext context, string propertyName)
     {
-        object value = context.ObjectType.GetProperty(propertyName)?.GetValue(context.ObjectInstance);
+        object value = context.ObjectType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(context.ObjectInstance);
         return value is TResult tValue ? tValue : default;
     }
 }

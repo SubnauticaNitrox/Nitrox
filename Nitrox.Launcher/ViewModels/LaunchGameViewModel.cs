@@ -27,6 +27,7 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class LaunchGameViewModel : RoutableViewModelBase
 {
     private readonly OptionsViewModel optionsViewModel;
+    private readonly IKeyValueStore keyValueStore;
     public static Task<string> LastFindSubnauticaTask;
     private readonly IDialogService dialogService;
 
@@ -38,12 +39,13 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     private AvaloniaList<string> galleryImageSources = [];
 
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
-    public string SubnauticaLaunchArguments => KeyValueStore.Instance.GetValue("SubnauticaLaunchArguments", "-vrmode none");
+    public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
 
-    public LaunchGameViewModel(IScreen screen, IDialogService dialogService, OptionsViewModel optionsViewModel) : base(screen)
+    public LaunchGameViewModel(IScreen screen, IDialogService dialogService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore) : base(screen)
     {
         this.dialogService = dialogService;
         this.optionsViewModel = optionsViewModel;
+        this.keyValueStore = keyValueStore;
 
         NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
