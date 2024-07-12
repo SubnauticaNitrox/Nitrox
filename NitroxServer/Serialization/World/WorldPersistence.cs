@@ -7,7 +7,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -25,6 +24,8 @@ namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
+        public const string BACKUP_DATE_TIME_FORMAT = "yyyy-MM-dd HH.mm.ss";
+
         public IServerSerializer Serializer { get; private set; }
         private string FileEnding => Serializer?.FileEnding ?? "";
 
@@ -92,14 +93,14 @@ namespace NitroxServer.Serialization.World
 
         public bool BackUp(string saveDir)
         {
-            if(config.MaxBackups == 0)
+            if (config.MaxBackups == 0)
             {
-                Log.Info("No backup was made (\"MaxBackups\" is equal to 0)");
+                Log.Info($"No backup was made (\"{nameof(config.MaxBackups)}\" is equal to 0)");
                 return false;
             }
 
             string backupDir = Path.Combine(saveDir, "Backups");
-            string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now:yyyyMMddHHmmss}");
+            string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now.ToString(BACKUP_DATE_TIME_FORMAT)}");
 
             try
             {
@@ -137,12 +138,12 @@ namespace NitroxServer.Serialization.World
                 Log.Error(ex, $"Could not back up world.");
                 if (Directory.Exists(outZip))
                 {
-                    Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left 
+                    Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left
                 }
                 return false;
             }
         }
-        
+
         internal Optional<World> LoadFromFile(string saveDir)
         {
             if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))

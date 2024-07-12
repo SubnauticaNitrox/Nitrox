@@ -146,9 +146,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         }
 
         Server.Start();
-
-        RestoreBackupCommand.NotifyCanExecuteChanged();
-        DeleteServerCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -159,8 +156,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             return false;
         }
 
-        RestoreBackupCommand.NotifyCanExecuteChanged();
-        DeleteServerCommand.NotifyCanExecuteChanged();
         return true;
     }
 
@@ -348,8 +343,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             model.Title = $"Restore a Backup for '{ServerName}'";
             model.SaveFolderDirectory = SaveFolderDirectory;
         });
-        
-        if (result && !string.IsNullOrWhiteSpace(result.SelectedBackup.BackupPath))
+
+        if (result)
         {
             string backupPath = result.SelectedBackup.BackupPath;
             try
@@ -397,6 +392,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         if (e.PropertyName == nameof(ServerEntry.IsOnline))
         {
             OnPropertyChanged(nameof(ServerIsOnline));
+            RestoreBackupCommand.NotifyCanExecuteChanged();
+            DeleteServerCommand.NotifyCanExecuteChanged();
         }
     }
 }

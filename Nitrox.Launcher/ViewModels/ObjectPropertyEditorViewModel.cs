@@ -71,7 +71,6 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
                 await dialogService.ShowErrorAsync(ex, description: field.ToString());
             }
         }
-        DialogResult = true;
         Close();
     }
 

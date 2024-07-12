@@ -38,7 +38,7 @@ public static class DesignData
         };
         DialogBoxViewModel = new() { Title = "Title Text", Description = "Description Text" };
         ObjectPropertyEditorViewModel = new(null) { OwnerObject = new SubnauticaServerConfig() };
-        BackupRestoreViewModel = new(null) {  };
+        BackupRestoreViewModel = new();
     }
 
     public static MainWindowViewModel MainWindowViewModel { get; }

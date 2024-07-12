@@ -3,8 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="500" MaxHeight="800" MinHeight="200"
         d:DataContext="{x:Static design:DesignData.BackupRestoreViewModel}"
         x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
@@ -31,11 +29,11 @@
                 </Rectangle>
             </Button>
         </Panel>
-        
+
         <TextBlock Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
-        
-        
-        
+
+
+
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <Panel>
                 <!-- Backups Don't Exist -->
@@ -44,7 +42,7 @@
                     <Image Source="/Assets/Images/serverIllustration.png" Width="300" Margin="-25 0 0 0" Stretch="None" />
                     <TextBlock Text="No backups here yet" FontSize="32" TextAlignment="Center" FontWeight="600" Margin="0 0 0 40" />
                 </StackPanel>
-                
+
                 <!-- Backups Exist -->
                 <ListBox Margin="24" ItemsSource="{Binding Backups}" SelectedItem="{Binding SelectedBackup, Mode=TwoWay}" VerticalAlignment="Top"
                          IsVisible="{Binding Backups.Count}">
@@ -64,7 +62,7 @@
                 </ListBox>
             </Panel>
         </ScrollViewer>
-        
+
         <Border Classes="footer" Grid.Row="2">
             <Panel>
                 <Button Content="Back" Command="{Binding CloseCommand}" HotKey="Escape" FontWeight="Bold" />

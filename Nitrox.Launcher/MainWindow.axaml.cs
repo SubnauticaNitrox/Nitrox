@@ -8,7 +8,6 @@ using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
-using NitroxModel.Platforms.OS.Windows;
 using ReactiveUI;
 using Serilog;
 
@@ -81,16 +80,6 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         });
 
         InitializeComponent();
-
-        // Restore default window animations for Windows OS
-        if (!Design.IsDesignMode)
-        {
-            IntPtr? windowHandle = GetTopLevel(this)?.TryGetPlatformHandle()?.Handle;
-            if (windowHandle.HasValue)
-            {
-                WindowsApi.EnableDefaultWindowAnimations(windowHandle.Value);
-            }
-        }
     }
 
     private async void UnhandledExceptionHandler(Exception ex)

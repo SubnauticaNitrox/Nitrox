@@ -34,7 +34,6 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [RelayCommand(CanExecute = nameof(CanCreate))]
     private void Create()
     {
-        DialogResult = true;
         CreateEmptySave(Name, SelectedGameMode);
         Close();
     }
@@ -50,7 +49,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
             fileEnding = "nitrox";
         }
         File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).DisposeAsync();
-        
+
         using (config.Update(saveDir))
         {
             config.SaveName = saveName;

@@ -51,7 +51,6 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     private void OptionSelect(ButtonOptions option)
     {
         SelectedOption = option;
-        DialogResult = true;
         Close();
     }
 

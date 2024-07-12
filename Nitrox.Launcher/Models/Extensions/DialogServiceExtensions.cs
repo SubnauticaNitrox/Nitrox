@@ -18,7 +18,7 @@ public static class DialogServiceExtensions
         try
         {
             ArgumentNullException.ThrowIfNull(dialogService);
-            // DataContext must be accessed on the UI thread or it'll throw error.
+            // DataContext must be accessed on the UI thread, or it'll throw error.
             INotifyPropertyChanged owner = await Dispatcher.UIThread.InvokeAsync(() => AppViewLocator.MainWindow?.DataContext as INotifyPropertyChanged);
             ArgumentNullException.ThrowIfNull(owner);
 

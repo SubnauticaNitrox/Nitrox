@@ -17,23 +17,24 @@ namespace Nitrox.Launcher.ViewModels.Abstract;
 /// </summary>
 public abstract partial class ModalViewModelBase : ObservableValidator, IModalDialogViewModel, IDisposable
 {
-    [ObservableProperty] private bool? dialogResult;
-    [ObservableProperty] private ButtonOptions? selectedOption;
     protected readonly CompositeDisposable Disposables = new();
+    [ObservableProperty] private ButtonOptions? selectedOption;
 
-    public static implicit operator bool(ModalViewModelBase self)
+    bool? IModalDialogViewModel.DialogResult => (bool)this;
+
+    protected ModalViewModelBase()
     {
-        return self is { DialogResult: true } and not { SelectedOption: ButtonOptions.No };
+        // Always run validation first so HasErrors is set (i.e. trigger CanExecute logic). Downside is that this will show field errors immediately (depending on field validators and their initial values).
+        ValidateAllProperties();
     }
+
+    public static implicit operator bool(ModalViewModelBase self) => self is { HasErrors: false } and not { SelectedOption: ButtonOptions.No };
 
     [RelayCommand]
-    public void Close()
-    {
-        ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close(DialogResult);
-    }
+    public void Close() => ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close();
 
     public void Dispose() => Disposables.Dispose();
-    
+
     [RelayCommand]
     public void Drag(PointerPressedEventArgs args)
     {

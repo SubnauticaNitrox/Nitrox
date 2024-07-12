@@ -14,6 +14,6 @@ public sealed class NotEndsWithAttribute(string text, StringComparison compariso
         {
             return ValidationResult.Success;
         }
-        return value.EndsWith(text, comparison) ? new ValidationResult($"{context.DisplayName} must not contain a '{text}' at the end.") : ValidationResult.Success;
+        return value.EndsWith(text, comparison) ? new ValidationResult($"{context.DisplayName} must not contain the text '{text}' at the end.") : ValidationResult.Success;
     }
 }
