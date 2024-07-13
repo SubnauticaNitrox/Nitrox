@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -13,7 +14,7 @@ using ReactiveUI;
 namespace Nitrox.Launcher.ViewModels;
 
 /// <summary>
-///     Simple yes/no or OK confirmation box. The yes button doesn't have a hotkey to prevent accidental confirmation.
+///     Simple Yes/No or OK confirmation box.
 /// </summary>
 public partial class DialogBoxViewModel : ModalViewModelBase
 {
@@ -30,6 +31,7 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
 
     [ObservableProperty] private ButtonOptions buttonOptions = ButtonOptions.Ok;
+    private Task copyToClipboardTask;
 
     public KeyGesture OkHotkey { get; } = new(Key.Return);
     public KeyGesture NoHotkey { get; } = new(Key.Escape);
@@ -55,13 +57,30 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     }
 
     [RelayCommand]
-    private async Task CopyToClipboard()
+    private async Task CopyToClipboard(ContentControl commandControl)
     {
+        if (!copyToClipboardTask?.IsCompleted ?? false)
+        {
+            return;
+        }
+
+
         string text = $"{Title}{Environment.NewLine}{(Description.StartsWith(Title) ? Description[Title.Length..].TrimStart() : Description)}";
         IClipboard clipboard = TopLevel.GetTopLevel(AppViewLocator.MainWindow)?.Clipboard;
         if (clipboard != null)
         {
             await clipboard.SetTextAsync(text);
+
+            if (commandControl != null)
+            {
+                object previousContent = commandControl.Content;
+                commandControl.Content = "Copied!";
+                copyToClipboardTask = Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await Task.Delay(3000);
+                    commandControl.Content = previousContent;
+                });
+            }
         }
     }
 }

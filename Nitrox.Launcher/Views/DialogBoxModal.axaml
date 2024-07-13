@@ -5,7 +5,7 @@
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MaxHeight="700"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="400" MaxWidth="1000"
         d:DataContext="{x:Static design:DesignData.DialogBoxViewModel}"
         x:Class="Nitrox.Launcher.Views.DialogBoxModal"
         SystemDecorations="None"
@@ -54,7 +54,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8"
                             IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}"
                             IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}">
-                    <Button HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" Content="Copy to clipboard" x:Name="CopyButton" Click="CopyButton_OnClick" />
+                    <Button HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding $self}" Content="Copy to clipboard" />
                     <Button Classes="primary" Content="OK" HotKey="{Binding OkHotkey}" Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.Ok}" />
                 </StackPanel>
 

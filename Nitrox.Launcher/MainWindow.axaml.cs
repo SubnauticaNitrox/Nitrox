@@ -36,7 +36,6 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 UnhandledExceptionHandler(args.Exception);
             }
         };
-
         RxApp.DefaultExceptionHandler = Observer.Create<Exception>(UnhandledExceptionHandler);
 
         this.WhenActivated(d =>
@@ -95,12 +94,10 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         }
 
         string title = ex switch
-                       {
-                           { InnerException: {} inner } => inner.Message,
-                           _ => ex.Message
-                       } ??
-                       ex.Message;
-
+        {
+            { InnerException: {} inner } => inner.Message,
+            _ => ex.Message
+        };
         await dialogService.ShowErrorAsync(ex, $"Error: {title}");
 
         Environment.Exit(1);
