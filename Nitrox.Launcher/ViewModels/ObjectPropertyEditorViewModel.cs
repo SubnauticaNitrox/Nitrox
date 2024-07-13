@@ -71,7 +71,7 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
                 await dialogService.ShowErrorAsync(ex, description: field.ToString());
             }
         }
-        Close();
+        Close(ButtonOptions.Ok);
     }
 
     public bool CanSave() => !HasErrors;

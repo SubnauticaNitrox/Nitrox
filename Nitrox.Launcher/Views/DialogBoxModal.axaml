@@ -24,7 +24,7 @@
                 </BehaviorCollection>
             </Interaction.Behaviors>
 
-            <Button Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.No}">
+            <Button Command="{Binding CloseCommand}">
                 <Rectangle>
                     <Rectangle.OpacityMask>
                         <ImageBrush Source="/Assets/Images/material-design-icons/close-w-10.png" />
@@ -55,7 +55,7 @@
                             IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}"
                             IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}">
                     <Button HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding $self}" Content="Copy to clipboard" />
-                    <Button Classes="primary" Content="OK" HotKey="{Binding OkHotkey}" Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.Ok}" />
+                    <Button Classes="primary" Content="OK" HotKey="{Binding OkHotkey}" Command="{Binding CloseCommand}" CommandParameter="{x:Static vm:ButtonOptions.Ok}" />
                 </StackPanel>
 
                 <!-- YesNo Button Option -->
@@ -63,9 +63,9 @@
                        IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.YesNo}}" >
                     <!-- The yes button doesn't have a hotkey to prevent accidental confirmation. -->
                     <Button Content="Yes" FontWeight="Bold" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="80"
-                            Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.Yes}" />
+                            Command="{Binding CloseCommand}" CommandParameter="{x:Static vm:ButtonOptions.Yes}" />
                     <Button Classes="primary" Content="No" HorizontalAlignment="Right" HorizontalContentAlignment="Center" Width="80" HotKey="{Binding NoHotkey}"
-                            Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.No}" />
+                            Command="{Binding CloseCommand}" CommandParameter="{x:Static vm:ButtonOptions.No}" />
                 </Panel>
             </Panel>
         </Border>

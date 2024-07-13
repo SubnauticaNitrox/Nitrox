@@ -12,7 +12,7 @@
         Title="{Binding Title}">
     <Grid RowDefinitions="Auto, *, Auto">
         <!-- Title bar -->
-        <Panel Grid.RowSpan="2" Classes="titleBar">
+        <Panel Grid.Row="0" Grid.RowSpan="2" Classes="titleBar">
             <Interaction.Behaviors>
                 <BehaviorCollection>
                     <EventTriggerBehavior EventName="PointerPressed">
@@ -30,9 +30,7 @@
             </Button>
         </Panel>
 
-        <TextBlock Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
-
-
+        <TextBlock Grid.Row="0" Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <Panel>

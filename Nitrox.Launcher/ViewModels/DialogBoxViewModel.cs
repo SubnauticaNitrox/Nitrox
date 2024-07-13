@@ -50,13 +50,6 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     }
 
     [RelayCommand]
-    private void OptionSelect(ButtonOptions option)
-    {
-        SelectedOption = option;
-        Close();
-    }
-
-    [RelayCommand]
     private async Task CopyToClipboard(ContentControl commandControl)
     {
         if (!copyToClipboardTask?.IsCompleted ?? false)

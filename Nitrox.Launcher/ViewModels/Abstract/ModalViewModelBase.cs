@@ -28,10 +28,17 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
         ValidateAllProperties();
     }
 
-    public static implicit operator bool(ModalViewModelBase self) => self is { HasErrors: false } and not { SelectedOption: ButtonOptions.No };
+    public static implicit operator bool(ModalViewModelBase self) => self is { HasErrors: false } and not { SelectedOption: null or ButtonOptions.No };
 
     [RelayCommand]
-    public void Close() => ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close();
+    public void Close(ButtonOptions? buttonOptions = null)
+    {
+        if (buttonOptions != null)
+        {
+            SelectedOption = buttonOptions;
+        }
+        ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close();
+    }
 
     public void Dispose() => Disposables.Dispose();
 

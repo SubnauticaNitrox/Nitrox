@@ -14,7 +14,7 @@
         Title="{Binding Title}">
     <Grid RowDefinitions="Auto, *, Auto">
         <!-- Title bar -->
-        <Panel Grid.RowSpan="2" Classes="titleBar">
+        <Panel Grid.Row="0" Grid.RowSpan="2" Classes="titleBar">
             <Interaction.Behaviors>
                 <BehaviorCollection>
                     <EventTriggerBehavior EventName="PointerPressed">
@@ -31,7 +31,7 @@
                 </Rectangle>
             </Button>
         </Panel>
-        <TextBlock Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
+        <TextBlock Grid.Row="0" Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Classes="form" Margin="24">
                 <ItemsControl ItemsSource="{Binding EditorFields}">
