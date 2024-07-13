@@ -140,6 +140,15 @@ public partial class ServerEntry : ObservableObject
                                                      :
                                                      // If the above file doesn't exist (server was never ran), use the Version file instead
                                                      Path.Combine(saveDir, $"Version.{fileEnding}"));
+
+        // Handle and correct cases where config save name does not match folder name.
+        if (Name != config.SaveName)
+        {
+            using (config.Update(saveDir))
+            {
+                config.SaveName = Name;
+            }
+        }
     }
 
     public void Start(string savesDir)

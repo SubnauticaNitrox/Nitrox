@@ -55,15 +55,13 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     }
 
     [RelayCommand]
-    private async Task CopyToClipboard(string text)
+    private async Task CopyToClipboard()
     {
-        if (!string.IsNullOrWhiteSpace(text))
+        string text = $"{Title}{Environment.NewLine}{(Description.StartsWith(Title) ? Description[Title.Length..].TrimStart() : Description)}";
+        IClipboard clipboard = TopLevel.GetTopLevel(AppViewLocator.MainWindow)?.Clipboard;
+        if (clipboard != null)
         {
-            IClipboard clipboard = TopLevel.GetTopLevel(AppViewLocator.MainWindow)?.Clipboard;
-            if (clipboard != null)
-            {
-                await clipboard.SetTextAsync(text);
-            }
+            await clipboard.SetTextAsync(text);
         }
     }
 }

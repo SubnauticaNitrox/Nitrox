@@ -81,7 +81,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in singleplayer mode:");
-            await dialogService.ShowErrorAsync(ex, "Error while starting game in singleplayer mode", "Error while starting game in singleplayer mode");
+            await dialogService.ShowErrorAsync(ex, "Error while starting game in singleplayer mode");
         }
     }
 
@@ -154,7 +154,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in multiplayer mode:");
-            await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode", "Error while starting game in multiplayer mode");
+            await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode");
         }
     }
 

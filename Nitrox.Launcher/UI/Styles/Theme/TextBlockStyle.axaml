@@ -3,6 +3,10 @@
     <Style Selector="TextBlock">
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
+    
+    <Style Selector="SelectableTextBlock">
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
 
     <Style Selector="TextBlock.link">
         <Setter Property="Foreground" Value="{DynamicResource BrandPrimaryBrush}" />

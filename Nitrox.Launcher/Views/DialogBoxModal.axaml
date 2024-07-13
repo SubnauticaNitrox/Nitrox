@@ -24,7 +24,7 @@
                 </BehaviorCollection>
             </Interaction.Behaviors>
 
-            <Button Command="{Binding CloseCommand}">
+            <Button Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.No}">
                 <Rectangle>
                     <Rectangle.OpacityMask>
                         <ImageBrush Source="/Assets/Images/material-design-icons/close-w-10.png" />
@@ -38,7 +38,8 @@
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="24 20 10 20">
             <SelectableTextBlock Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0" Foreground="{Binding DescriptionForeground}"
-                       FontWeight="{Binding DescriptionFontWeight}" FontSize="{Binding DescriptionFontSize}" IsVisible="{Binding !Description, Converter={converters:EqualityConverter}}" />
+                                 FontWeight="{Binding DescriptionFontWeight}" FontSize="{Binding DescriptionFontSize}"
+                                 IsVisible="{Binding !Description, Converter={converters:EqualityConverter}}" />
         </ScrollViewer>
 
         <Border Grid.Row="2" Classes="footer">
@@ -53,7 +54,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8"
                             IsVisible="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}"
                             IsEnabled="{Binding ButtonOptions, Converter={converters:EqualityConverter}, ConverterParameter={x:Static vm:ButtonOptions.OkClipboard}}">
-                    <Button HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding Description}" Content="Copy to clipboard" />
+                    <Button HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" Content="Copy to clipboard" x:Name="CopyButton" Click="CopyButton_OnClick" />
                     <Button Classes="primary" Content="OK" HotKey="{Binding OkHotkey}" Command="{Binding OptionSelectCommand}" CommandParameter="{x:Static vm:ButtonOptions.Ok}" />
                 </StackPanel>
 

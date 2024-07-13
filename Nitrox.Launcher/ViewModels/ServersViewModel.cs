@@ -133,10 +133,17 @@ public partial class ServersViewModel : RoutableViewModelBase
             List<ServerEntry> serversOnDisk = [];
             foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesFolderDir()))
             {
-                ServerEntry entryFromDir = ServerEntry.FromDirectory(saveDir);
-                if (entryFromDir != null)
+                try
                 {
-                    serversOnDisk.Add(entryFromDir);
+                    ServerEntry entryFromDir = ServerEntry.FromDirectory(saveDir);
+                    if (entryFromDir != null)
+                    {
+                        serversOnDisk.Add(entryFromDir);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Error while initializing save from directory \"{saveDir}\". Skipping...");
                 }
             }
 
@@ -152,7 +159,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             // Add any new servers found on the disk to the Servers list
             foreach (ServerEntry server in serversOnDisk)
             {
-                if (Servers.All(s => s.Name != server.Name))
+                if (Servers.All(s => s.Name != server.Name) && !string.IsNullOrWhiteSpace(server.Name))
                 {
                     Servers.Add(server);
                 }
@@ -163,7 +170,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex);
-            dialogService.ShowErrorAsync(ex);
+            dialogService.ShowErrorAsync(ex, "Error while getting saves");
         }
     }
 
@@ -171,7 +178,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         return await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
-            model.Description = $"The version of '{server.Name}' is v{server.Version}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
+            model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
             model.DescriptionFontSize = 24;
             model.DescriptionFontWeight = FontWeight.ExtraBold;
             model.ButtonOptions = ButtonOptions.YesNo;

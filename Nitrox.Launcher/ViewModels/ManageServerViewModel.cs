@@ -365,7 +365,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             }
             catch (Exception ex)
             {
-                await dialogService.ShowErrorAsync(ex, "Error while restoring backup", ex.Message);
+                await dialogService.ShowErrorAsync(ex, "Error while restoring backup");
             }
         }
     }
@@ -385,9 +385,16 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             return;
         }
 
-        Directory.Delete(SaveFolderDirectory, true);
-        WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
-        HostScreen.Back();
+        try
+        {
+            Directory.Delete(SaveFolderDirectory, true);
+            WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
+            HostScreen.Back();
+        }
+        catch (Exception ex)
+        {
+            await dialogService.ShowErrorAsync(ex, $"Error while deleting world \"{ServerName}\"");
+        }
     }
 
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;

@@ -40,7 +40,7 @@
                                    Height="36" Width="36" />
                             <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding SelectedGame.Platform, Converter={converters:ToStringConverter}}" />
-                                <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
+                                <SelectableTextBlock FontSize="14" Foreground="#BFFFFFFF" Text="{Binding SelectedGame.PathToGame, FallbackValue='Unknown path'}" />
                             </StackPanel>
                             <Button Grid.Column="2" Classes="primary"  ToolTip.Tip="Direct the launcher to your game's install location"
                                     Width="120" HorizontalAlignment="Right" Margin="22 0 0 0" Content="Change"
