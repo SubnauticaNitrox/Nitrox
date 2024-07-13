@@ -59,7 +59,7 @@ public partial class DialogBoxViewModel : ModalViewModelBase
 
 
         string text = $"{Title}{Environment.NewLine}{(Description.StartsWith(Title) ? Description[Title.Length..].TrimStart() : Description)}";
-        IClipboard clipboard = TopLevel.GetTopLevel(AppViewLocator.MainWindow)?.Clipboard;
+        IClipboard clipboard = AppViewLocator.MainWindow.Clipboard;
         if (clipboard != null)
         {
             await clipboard.SetTextAsync(text);

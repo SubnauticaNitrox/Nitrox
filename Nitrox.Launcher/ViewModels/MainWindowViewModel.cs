@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -158,9 +158,9 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        if (args.Source is ILogical element)
+        if (args.Source is Visual element && element.GetWindow() is {} window)
         {
-            element.FindLogicalAncestorOfType<Window>()?.BeginMoveDrag(args);
+            window.BeginMoveDrag(args);
         }
     }
 }

@@ -47,9 +47,9 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        if (args.Source is ILogical element)
+        if (args.Source is Visual element && element.GetWindow() is {} window)
         {
-            element.FindLogicalAncestorOfType<Window>()?.BeginMoveDrag(args);
+            window.BeginMoveDrag(args);
         }
     }
 }

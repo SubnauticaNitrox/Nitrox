@@ -51,7 +51,7 @@ public static class Extensions
     }
 
     /// <inheritdoc cref="Enum.IsDefined" />
-    public static bool IsDefined<TEnum>(this TEnum value)
+    public static bool IsDefined<TEnum>(this TEnum value) where TEnum : Enum
     {
         return Enum.IsDefined(typeof(TEnum), value);
     }

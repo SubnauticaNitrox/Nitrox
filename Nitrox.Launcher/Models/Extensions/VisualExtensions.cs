@@ -18,17 +18,18 @@ public static class VisualExtensions
         {
             return;
         }
-        TopLevel topLevel = TopLevel.GetTopLevel(visual);
         // Only apply style if window can resize. Otherwise, (on Windows) it will force resizing and might look ugly if not accounted for in UI.
-        if (topLevel is Window { CanResize: false })
+        if (visual.GetWindow() is not { CanResize: true } window)
         {
             return;
         }
 
-        IntPtr? windowHandle = topLevel?.TryGetPlatformHandle()?.Handle;
+        IntPtr? windowHandle = window.TryGetPlatformHandle()?.Handle;
         if (windowHandle.HasValue)
         {
             WindowsApi.EnableDefaultWindowAnimations(windowHandle.Value);
         }
     }
+
+    public static Window GetWindow(this Visual visual) => TopLevel.GetTopLevel(visual) as Window;
 }
