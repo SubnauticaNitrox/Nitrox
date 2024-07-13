@@ -11,8 +11,8 @@ namespace NitroxModel.Serialization
 {
     public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
     {
-        // ReSharper disable once StaticMemberInGenericType
         private static readonly Dictionary<string, MemberInfo> typeCache = new();
+        private static readonly Dictionary<string, object> unserializedMembersWarnOnceCache = [];
         private readonly object locker = new();
         private readonly char[] newlineChars = Environment.NewLine.ToCharArray();
 
@@ -82,22 +82,35 @@ namespace NitroxModel.Serialization
 
                 if (unserializedMembers.Any())
                 {
-                    IEnumerable<string> unserializedProps = unserializedMembers.Select(m =>
+                    string[] unserializedProps = unserializedMembers
+                                                 .Select(m =>
+                                                 {
+                                                     object value = null;
+                                                     if (m is FieldInfo field)
+                                                     {
+                                                         value = field.GetValue(this);
+                                                     }
+                                                     else if (m is PropertyInfo prop)
+                                                     {
+                                                         value = prop.GetValue(this);
+                                                     }
+
+                                                     if (unserializedMembersWarnOnceCache.TryGetValue(m.Name, out object cachedValue))
+                                                     {
+                                                         if (Equals(value, cachedValue))
+                                                         {
+                                                             return null;
+                                                         }
+                                                     }
+                                                     unserializedMembersWarnOnceCache[m.Name] = value;
+                                                     return $" - {m.Name}: {value}";
+                                                 })
+                                                 .Where(i => i != null)
+                                                 .ToArray();
+                    if (unserializedProps.Length > 0)
                     {
-                        object value = null;
-                        if (m is FieldInfo field)
-                        {
-                            value = field.GetValue(this);
-                        }
-                        else if (m is PropertyInfo prop)
-                        {
-                            value = prop.GetValue(this);
-                        }
-
-                        return $" - {m.Name}: {value}";
-                    });
-
-                    Log.Warn($@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
+                        Log.Warn($"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
+                    }
                 }
             }
         }

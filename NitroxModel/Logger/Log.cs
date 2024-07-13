@@ -115,14 +115,6 @@ namespace NitroxModel.Logger
             }
 
             cnf.Enrich.FromLogContext()
-               .Filter.ByExcluding(logEvent =>
-               {
-                   string[] uniqueIdentifiers = ["is using default values for the missing properties:", "Json serialization error:"];
-                   
-                   bool isLauncherLog = GetLogFileName() == "launcher";
-                   bool hasUniqueIdentifier = uniqueIdentifiers.Any(identifier => logEvent.MessageTemplate.Text.Contains(identifier));
-                   return isLauncherLog && hasUniqueIdentifier;
-               })
                .WriteTo
                .Valve(v =>
                {
