@@ -27,7 +27,7 @@ internal class ChangeServerGamemodeCommand : Command
     {
         NitroxGameMode sgm = args.Get<NitroxGameMode>(0);
 
-        using (serverConfig.Update(Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName)))
+        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName)))
         {
             if (serverConfig.GameMode != sgm)
             {

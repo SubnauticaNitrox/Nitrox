@@ -201,7 +201,7 @@ namespace NitroxServer.Serialization.World
 
         public World Load()
         {
-            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(Extensions.GetSavesFolderDir(), config.SaveName));
+            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), config.SaveName));
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

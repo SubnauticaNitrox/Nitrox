@@ -11,8 +11,8 @@ namespace NitroxModel;
 
 public static class Extensions
 {
-    public static string GetSavesFolderDir() => KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
-    
+    public static string GetSavesFolderDir(this IKeyValueStore store) => store.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+
     public static TAttribute GetAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
     {
         Type type = value.GetType();

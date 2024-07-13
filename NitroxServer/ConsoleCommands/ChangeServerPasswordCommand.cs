@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
         {
             string password = args.Get(0) ?? string.Empty;
 
-            using (serverConfig.Update(Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName)))
+            using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName)))
             {
                 serverConfig.ServerPassword = password;
             }

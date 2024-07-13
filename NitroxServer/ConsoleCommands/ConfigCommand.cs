@@ -30,7 +30,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             // Save config file if it doesn't exist yet.
-            string saveDir = Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName);
+            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName);
             string configFile = Path.Combine(saveDir, serverConfig.FileName);
             if (!File.Exists(configFile))
             {

@@ -20,7 +20,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string saveDir = Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName);
+            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName);
             using (serverConfig.Update(saveDir))
             {
                 string newPassword = args.Get(0);

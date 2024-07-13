@@ -72,7 +72,7 @@ namespace NitroxServer
             StringBuilder builder = new("\n");
             if (viewerPerms is Perms.CONSOLE)
             {
-                builder.AppendLine($" - Save location: {Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName)}");
+                builder.AppendLine($" - Save location: {Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName)}");
             }
             builder.AppendLine($"""
              - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
@@ -94,7 +94,7 @@ namespace NitroxServer
             string saveDir = null;
             foreach (string arg in Environment.GetCommandLineArgs())
             {
-                if (arg.StartsWith(Extensions.GetSavesFolderDir(), StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                if (arg.StartsWith(KeyValueStore.Instance.GetSavesFolderDir(), StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
                 {
                     saveDir = arg;
                     break;
@@ -124,7 +124,7 @@ namespace NitroxServer
                 {
                     // Create new save file
                     Log.Debug($"No save file was found, creating a new one...");
-                    saveDir = Path.Combine(Extensions.GetSavesFolderDir(), "My World");
+                    saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), "My World");
                     Directory.CreateDirectory(saveDir);
                     SubnauticaServerConfig.Load(saveDir);
                 }
@@ -143,7 +143,7 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName));
+            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName));
             if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try
@@ -182,10 +182,10 @@ namespace NitroxServer
             }
             serverCancelSource = ct;
             IsRunning = true;
-            
+
             if(!serverConfig.DisableAutoBackup)
             {
-                worldPersistence.BackUp(Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName));
+                worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName));
             }
 
             try
@@ -269,7 +269,7 @@ namespace NitroxServer
 
             Save();
 
-            worldPersistence.BackUp(Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName));
+            worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName));
         }
 
         private async Task LogHowToConnectAsync()
@@ -335,10 +335,10 @@ namespace NitroxServer
         {
             try
             {
-                Directory.CreateDirectory(Extensions.GetSavesFolderDir());
+                Directory.CreateDirectory(KeyValueStore.Instance.GetSavesFolderDir());
 
                 List<ServerListing> saves = [];
-                foreach (string saveDir in Directory.EnumerateDirectories(Extensions.GetSavesFolderDir()))
+                foreach (string saveDir in Directory.EnumerateDirectories(KeyValueStore.Instance.GetSavesFolderDir()))
                 {
                     try
                     {
@@ -369,7 +369,7 @@ namespace NitroxServer
         public string SaveDir { get; set; }
         public Version SaveVersion { get; set; }
         public DateTime LastAccessedTime { get; set; }
-        
+
         internal static ServerListing Validate(string saveDir)
         {
             ServerListing serverListing = new();
@@ -377,27 +377,27 @@ namespace NitroxServer
             {
                 return null;
             }
-    
+
             SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
             string fileEnding = "json";
             if (config.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
-    
+
             Version version;
             using (FileStream stream = new(Path.Combine(saveDir, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
             }
-    
+
             serverListing.SaveDir = saveDir;
             serverListing.SaveVersion = version;
-            serverListing.LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}")) 
+            serverListing.LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}"))
                                                                        ?
                                                                        // This file is affected by server saving
                                                                        Path.Combine(saveDir, $"WorldData.{fileEnding}")
                                                                        :
                                                                        // If the above file doesn't exist (server was never ran), use the Version file instead
                                                                        Path.Combine(saveDir, $"Version.{fileEnding}"));
-    
+
             // Handle and correct cases where config save name does not match folder name.
             string name = Path.GetFileName(saveDir);
             if (name != config.SaveName)
