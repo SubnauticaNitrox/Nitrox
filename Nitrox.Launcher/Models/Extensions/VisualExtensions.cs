@@ -18,8 +18,14 @@ public static class VisualExtensions
         {
             return;
         }
+        TopLevel topLevel = TopLevel.GetTopLevel(visual);
+        // Only apply style if window can resize. Otherwise, (on Windows) it will force resizing and might look ugly if not accounted for in UI.
+        if (topLevel is Window { CanResize: false })
+        {
+            return;
+        }
 
-        IntPtr? windowHandle = TopLevel.GetTopLevel(visual)?.TryGetPlatformHandle()?.Handle;
+        IntPtr? windowHandle = topLevel?.TryGetPlatformHandle()?.Handle;
         if (windowHandle.HasValue)
         {
             WindowsApi.EnableDefaultWindowAnimations(windowHandle.Value);
