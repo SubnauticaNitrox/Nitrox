@@ -57,7 +57,7 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
             Directory.GetFiles(backupRootDir, "*.zip")
                      .Where(file =>
                      {
-                         // Verify file name format of "Backup - {DateTime:yyyyMMddHHmmss}.zip"
+                         // Verify file name format of "Backup - {DateTime:BACKUP_DATE_TIME_FORMAT}.zip"
                          string fileName = Path.GetFileNameWithoutExtension(file);
                          if (!fileName.StartsWith("Backup - "))
                          {

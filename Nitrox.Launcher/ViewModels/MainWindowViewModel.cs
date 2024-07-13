@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -45,8 +44,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(IScreen screen, LaunchGameViewModel launchGameViewModel, ServersViewModel serversViewModel, CommunityViewModel communityViewModel, BlogViewModel blogViewModel, UpdatesViewModel updatesViewModel,
                                OptionsViewModel optionsViewModel, IList<NotificationItem> notifications = null)
     {
-        Log.Setup();
-
         this.screen = screen;
         this.launchGameViewModel = launchGameViewModel;
         this.serversViewModel = serversViewModel;

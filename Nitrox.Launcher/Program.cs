@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using NitroxModel.Logger;
 
 namespace Nitrox.Launcher;
 
@@ -19,6 +20,8 @@ internal static class Program
     {
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.Handler;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyResolver.Handler;
+
+        Log.Setup();
 
         LoadAvalonia(args);
     }

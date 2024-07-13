@@ -37,6 +37,8 @@ public partial class ServersViewModel : RoutableViewModelBase
     private bool shouldRefreshServersList;
 
     private FileSystemWatcher watcher;
+    
+    private HashSet<string> loggedErrorDirectories = [];
 
     public ServersViewModel(IScreen screen, IKeyValueStore keyValueStore, IDialogService dialogService, ManageServerViewModel manageServerViewModel) : base(screen)
     {
@@ -140,10 +142,14 @@ public partial class ServersViewModel : RoutableViewModelBase
                     {
                         serversOnDisk.Add(entryFromDir);
                     }
+                    loggedErrorDirectories.Remove(saveDir);
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Error while initializing save from directory \"{saveDir}\". Skipping...");
+                    if (loggedErrorDirectories.Add(saveDir)) // Only log once per directory to prevent log spam
+                    {
+                        Log.Error(ex, $"Error while initializing save from directory \"{saveDir}\". Skipping...");
+                    }
                 }
             }
 
