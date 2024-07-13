@@ -175,7 +175,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex);
+            Log.Error(ex, "Error while getting saves");
             dialogService.ShowErrorAsync(ex, "Error while getting saves");
         }
     }

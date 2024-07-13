@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
         {
             bool toggle = args.Get<bool>(0);
 
-            using (serverConfig.Update(Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)))
+            using (serverConfig.Update(Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName)))
             {
                 if (toggle)
                 {

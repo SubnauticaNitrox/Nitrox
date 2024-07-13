@@ -1,7 +1,9 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 
@@ -9,6 +11,8 @@ namespace NitroxModel;
 
 public static class Extensions
 {
+    public static string GetSavesFolderDir() => KeyValueStore.Instance.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+    
     public static TAttribute GetAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
     {
         Type type = value.GetType();

@@ -9,7 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Serialization;
+using NitroxModel.Server;
 using NitroxServer.GameLogic.Entities;
+using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Timer = System.Timers.Timer;
 
@@ -70,7 +72,7 @@ namespace NitroxServer
             StringBuilder builder = new("\n");
             if (viewerPerms is Perms.CONSOLE)
             {
-                builder.AppendLine($" - Save location: {Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName)}");
+                builder.AppendLine($" - Save location: {Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName)}");
             }
             builder.AppendLine($"""
              - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
@@ -92,7 +94,7 @@ namespace NitroxServer
             string saveDir = null;
             foreach (string arg in Environment.GetCommandLineArgs())
             {
-                if (arg.StartsWith(OldWorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                if (arg.StartsWith(Extensions.GetSavesFolderDir(), StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
                 {
                     saveDir = arg;
                     break;
@@ -101,18 +103,18 @@ namespace NitroxServer
             if (saveDir == null)
             {
                 // Check if there are any save files
-                OldWorldManager.Listing[] worldList = OldWorldManager.GetSaves().ToArray();
-                if (worldList.Any())
+                List<ServerListing> saves = GetSaves();
+                if (saves.Any())
                 {
                     // Get last save file used
-                    string lastSaveAccessed = worldList[0].WorldSaveDir;
-                    if (worldList.Length > 1)
+                    string lastSaveAccessed = saves[0].SaveDir;
+                    if (saves.Count > 1)
                     {
-                        for (int i = 1; i < worldList.Length; i++)
+                        for (int i = 1; i < saves.Count; i++)
                         {
-                            if (File.GetLastWriteTime(Path.Combine(worldList[i].WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
+                            if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
                             {
-                                lastSaveAccessed = worldList[i].WorldSaveDir;
+                                lastSaveAccessed = saves[i].SaveDir;
                             }
                         }
                     }
@@ -121,10 +123,10 @@ namespace NitroxServer
                 else
                 {
                     // Create new save file
-                    saveDir = Path.Combine(OldWorldManager.SavesFolderDir, "My World");
-                    Directory.CreateDirectory(saveDir);
-                    SubnauticaServerConfig serverConfig = SubnauticaServerConfig.Load(saveDir);
                     Log.Debug($"No save file was found, creating a new one...");
+                    saveDir = Path.Combine(Extensions.GetSavesFolderDir(), "My World");
+                    Directory.CreateDirectory(saveDir);
+                    SubnauticaServerConfig.Load(saveDir);
                 }
 
             }
@@ -141,7 +143,7 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName));
+            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName));
             if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try
@@ -180,6 +182,11 @@ namespace NitroxServer
             }
             serverCancelSource = ct;
             IsRunning = true;
+            
+            if(!serverConfig.DisableAutoBackup)
+            {
+                worldPersistence.BackUp(Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName));
+            }
 
             try
             {
@@ -262,7 +269,7 @@ namespace NitroxServer
 
             Save();
 
-            worldPersistence.BackUp(Path.Combine(OldWorldManager.SavesFolderDir, serverConfig.SaveName));
+            worldPersistence.BackUp(Path.Combine(Extensions.GetSavesFolderDir(), serverConfig.SaveName));
         }
 
         private async Task LogHowToConnectAsync()
@@ -322,6 +329,86 @@ namespace NitroxServer
             }
             world.TimeKeeper.StartCounting();
             Log.Info("Server has resumed");
+        }
+
+        private static List<ServerListing> GetSaves()
+        {
+            try
+            {
+                Directory.CreateDirectory(Extensions.GetSavesFolderDir());
+
+                List<ServerListing> saves = [];
+                foreach (string saveDir in Directory.EnumerateDirectories(Extensions.GetSavesFolderDir()))
+                {
+                    try
+                    {
+                        ServerListing entryFromDir = ServerListing.Validate(saveDir);
+                        if (entryFromDir != null)
+                        {
+                            saves.Add(entryFromDir);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Log.Error(ex, $"Error while initializing save from directory \"{saveDir}\". Skipping...");
+                    }
+                }
+
+                return [..saves.OrderByDescending(entry => entry.LastAccessedTime)];
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while getting saves");
+            }
+            return [];
+        }
+    }
+
+    internal class ServerListing
+    {
+        public string SaveDir { get; set; }
+        public Version SaveVersion { get; set; }
+        public DateTime LastAccessedTime { get; set; }
+        
+        internal static ServerListing Validate(string saveDir)
+        {
+            ServerListing serverListing = new();
+            if (!File.Exists(Path.Combine(saveDir, "server.cfg")) || !File.Exists(Path.Combine(saveDir, "Version.json")))
+            {
+                return null;
+            }
+    
+            SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+            string fileEnding = "json";
+            if (config.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
+    
+            Version version;
+            using (FileStream stream = new(Path.Combine(saveDir, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+            }
+    
+            serverListing.SaveDir = saveDir;
+            serverListing.SaveVersion = version;
+            serverListing.LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}")) 
+                                                                       ?
+                                                                       // This file is affected by server saving
+                                                                       Path.Combine(saveDir, $"WorldData.{fileEnding}")
+                                                                       :
+                                                                       // If the above file doesn't exist (server was never ran), use the Version file instead
+                                                                       Path.Combine(saveDir, $"Version.{fileEnding}"));
+    
+            // Handle and correct cases where config save name does not match folder name.
+            string name = Path.GetFileName(saveDir);
+            if (name != config.SaveName)
+            {
+                using (config.Update(saveDir))
+                {
+                    config.SaveName = name;
+                }
+            }
+
+            return serverListing;
         }
     }
 }

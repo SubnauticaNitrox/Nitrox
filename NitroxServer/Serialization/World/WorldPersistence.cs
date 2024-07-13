@@ -91,56 +91,55 @@ namespace NitroxServer.Serialization.World
             }
         }
 
-        public bool BackUp(string saveDir)
+        public void BackUp(string saveDir)
         {
-            if (config.MaxBackups == 0)
-            {
-                Log.Info($"No backup was made (\"{nameof(config.MaxBackups)}\" is equal to 0)");
-                return false;
-            }
-
             string backupDir = Path.Combine(saveDir, "Backups");
             string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now.ToString(BACKUP_DATE_TIME_FORMAT)}");
 
             try
             {
-                // Back up the save files
-                Directory.CreateDirectory(backupDir);
-                Directory.CreateDirectory(outZip);
-
-                foreach (string file in Directory.GetFiles(saveDir))
-                {
-                    File.Copy(file, Path.Combine(outZip, Path.GetFileName(file)));
-                }
-
-                FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
-                Directory.Delete(outZip, true);
-
-                // Check for total number of backups and prune as necessary
                 List<string> backups = [];
                 backups.AddRange(from file in Directory.EnumerateFiles(backupDir) let fileInfo = new FileInfo(file) where fileInfo.Extension == ".zip" && fileInfo.Name.Contains($"Backup - ") select file);
 
+                if (config.MaxBackups == 0)
+                {
+                    Log.Info($"No backup was made (\"{nameof(config.MaxBackups)}\" is equal to 0)");
+                }
+                else
+                {
+                    // Back up the save files
+                    Directory.CreateDirectory(backupDir);
+                    Directory.CreateDirectory(outZip);
+
+                    foreach (string file in Directory.GetFiles(saveDir))
+                    {
+                        File.Copy(file, Path.Combine(outZip, Path.GetFileName(file)));
+                    }
+
+                    FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
+                    Directory.Delete(outZip, true);
+
+                    // Done
+                    Log.Info("World backed up");
+                }
+
+                // Check for total number of backups and prune as necessary
                 if (backups.Count > config.MaxBackups)
                 {
                     int numBackupsToDelete = backups.Count - config.MaxBackups;
-                    for (int i = 0; i < numBackupsToDelete; i++)
+                    for (int i = 0; i <= numBackupsToDelete; i++)
                     {
-                        File.Delete(backups.ElementAt(i));
+                        File.Delete(backups.ElementAt(i)); // TODO: Fix error here when MaxBackups is at 0 and there are still saves
                     }
                 }
-
-                // Done
-                Log.Info("World backed up");
-                return true;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Could not back up world.");
+                Log.Error(ex, "Error while backing up world");
                 if (Directory.Exists(outZip))
                 {
                     Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left
                 }
-                return false;
             }
         }
 
@@ -202,7 +201,7 @@ namespace NitroxServer.Serialization.World
 
         public World Load()
         {
-            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(OldWorldManager.SavesFolderDir, config.SaveName));
+            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(Extensions.GetSavesFolderDir(), config.SaveName));
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

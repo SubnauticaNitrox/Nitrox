@@ -18,10 +18,10 @@ internal static class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Main(string[] args)
     {
+        Log.Setup();
+
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.Handler;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyResolver.Handler;
-
-        Log.Setup();
 
         LoadAvalonia(args);
     }
