@@ -107,9 +107,6 @@ csharp_style_var_elsewhere = false:silent
 csharp_style_conditional_delegate_call = true:suggestion
 csharp_using_directive_placement = outside_namespace:silent
 
-[*.g.cs]
-generated_code = true
-
 # Newlines
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
@@ -217,3 +214,6 @@ dotnet_naming_rule.public_fields.severity = warning
 dotnet_naming_rule.general_types.symbols = types
 dotnet_naming_rule.general_types.style = pascal_case_style
 dotnet_naming_rule.general_types.severity = warning
+
+[*.g.cs]
+generated_code = true

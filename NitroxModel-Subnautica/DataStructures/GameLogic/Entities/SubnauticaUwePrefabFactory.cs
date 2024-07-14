@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 using LitJson;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.Helper;
 using static LootDistributionData;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
@@ -52,7 +51,10 @@ public class SubnauticaUwePrefabFactory : IUwePrefabFactory
 
     private LootDistributionData GetLootDistributionData(string lootDistributionJson)
     {
-        ForceCultureOverride();
+        // LitJson uses the computer's local CultureInfo when parsing the JSON files.
+        // However, these json files were saved in en_US. Ensure that this is done for the current thread.
+        CultureManager.ConfigureCultureInfo();
+
         JsonMapper.RegisterImporter((double value) => Convert.ToSingle(value));
 
         Dictionary<string, LootDistributionData.SrcData> result = JsonMapper.ToObject<Dictionary<string, LootDistributionData.SrcData>>(lootDistributionJson);
@@ -61,20 +63,5 @@ public class SubnauticaUwePrefabFactory : IUwePrefabFactory
         lootDistributionData.Initialize(result);
 
         return lootDistributionData;
-    }
-
-    // LitJson uses the computers local CultureInfo when parsing the JSON files.  However,
-    // these json files were saved in en_US.  Ensure that this is done for the current thread.
-    private void ForceCultureOverride()
-    {
-        CultureInfo cultureInfo = new CultureInfo("en-US");
-
-        // Although we loaded the en-US cultureInfo, let's make sure to set these incase the 
-        // default was overriden by the user.
-        cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
-        cultureInfo.NumberFormat.NumberGroupSeparator = ",";
-
-        Thread.CurrentThread.CurrentCulture = cultureInfo;
-        Thread.CurrentThread.CurrentUICulture = cultureInfo;
     }
 }

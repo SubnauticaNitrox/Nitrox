@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Nullable>disable</Nullable>
@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,10 +24,19 @@
         </Reference>
     </ItemGroup>
 
-  <Target Name="MoveNitroxAssetsToServerOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
-    <ItemGroup>
-      <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
-  </Target>
+    <Target Name="MoveNitroxAssetsToServerOutput" AfterTargets="Build">
+        <ItemGroup>
+            <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
+        </ItemGroup>
+        <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
+    </Target>
+    
+    <Target Name="MoveDependenciesToLib" AfterTargets="Build">
+        <ItemGroup>
+            <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)NitroxServer.dll;$(TargetDir)NitroxServer-Subnautica.dll;$(TargetDir)NitroxModel-Subnautica.dll;$(TargetDir)NitroxModel.dll" />
+            <AllDependencies Include="$(TargetDir)*.dll.config" />
+        </ItemGroup>
+        <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+    </Target>
+    
 </Project>
