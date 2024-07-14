@@ -49,7 +49,7 @@ public partial class RichTextBlock : TextBlock
 
     private void ParseTextAndAddInlines(string text)
     {
-        static string GetSubText(string text, Match lastMatch, Match currentMatch = null)
+        static string GetTextPart(string text, Match lastMatch, Match currentMatch = null)
         {
             int start = lastMatch == null ? 0 : lastMatch.Index + lastMatch.Length;
             int length = (currentMatch?.Index ?? text.Length) - start;
@@ -62,7 +62,7 @@ public partial class RichTextBlock : TextBlock
         }
 
         MatchCollection matches = TagParserRegex().Matches(text);
-        if (matches.Count == 0)
+        if (matches is [])
         {
             Inlines?.Add(new Run(text));
         }
@@ -72,10 +72,10 @@ public partial class RichTextBlock : TextBlock
             HashSet<string> activeTags = [];
             foreach (Match match in matches)
             {
-                string subText = GetSubText(text, lastMatch, match);
-                if (!string.IsNullOrEmpty(subText))
+                string textPart = GetTextPart(text, lastMatch, match);
+                if (!string.IsNullOrEmpty(textPart))
                 {
-                    Inlines.Add(CreateRunWithTags(subText, activeTags));
+                    Inlines.Add(CreateRunWithTags(textPart, activeTags));
                 }
 
                 switch (match)
@@ -99,7 +99,7 @@ public partial class RichTextBlock : TextBlock
             }
 
             // Handle text that comes after last end tag.
-            string lastPart = GetSubText(text, lastMatch);
+            string lastPart = GetTextPart(text, lastMatch);
             if (!string.IsNullOrEmpty(lastPart))
             {
                 Inlines?.Add(CreateRunWithTags(lastPart, activeTags));
