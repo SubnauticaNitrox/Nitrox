@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Patching;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel;
 using NitroxModel.Discovery;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
@@ -38,8 +37,13 @@ public partial class OptionsViewModel : RoutableViewModelBase
     public OptionsViewModel(IScreen screen, IKeyValueStore keyValueStore) : base(screen)
     {
         this.keyValueStore = keyValueStore;
-        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+
+        this.WhenActivated(() =>
+        {
+            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+            return null;
+        });
     }
 
     public async Task SetTargetedSubnauticaPath(string path)

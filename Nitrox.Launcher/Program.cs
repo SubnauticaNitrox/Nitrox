@@ -18,8 +18,6 @@ internal static class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Main(string[] args)
     {
-        Log.Setup();
-
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.Handler;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyResolver.Handler;
 
@@ -29,6 +27,8 @@ internal static class Program
     // Avalonia configuration, don't remove; also used by visual designer.
     private static AppBuilder BuildAvaloniaApp()
     {
+        Log.Setup();
+
         AppBuilder builder = AppBuilder.Configure<App>()
                                        .UsePlatformDetect()
                                        .LogToTrace()

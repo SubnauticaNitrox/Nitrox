@@ -5,6 +5,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using NitroxModel.Logger;
 
 namespace Nitrox.Launcher;
 
@@ -38,12 +39,11 @@ public class App : Application
             case ISingleViewApplicationLifetime singleViewPlatform:
                 singleViewPlatform.MainView = mainWindow;
                 break;
-            default:
-                if (!Design.IsDesignMode)
-                {
-                    throw new NotSupportedException($"Current platform '{ApplicationLifetime?.GetType().Name}' is not supported by {nameof(Nitrox)}.{nameof(Launcher)}");
-                }
+            case null when Design.IsDesignMode:
+                Log.Info("Running in design previewer!");
                 break;
+            default:
+                throw new NotSupportedException($"Current platform '{ApplicationLifetime?.GetType().Name}' is not supported by {nameof(Nitrox)}.{nameof(Launcher)}");
         }
 
         base.OnFrameworkInitializationCompleted();
