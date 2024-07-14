@@ -22,6 +22,10 @@ public abstract class TypedValidationAttribute<T> : ValidationAttribute
 
     protected static TResult ReadProperty<TResult>(ValidationContext context, string propertyName)
     {
+        if (string.IsNullOrWhiteSpace(propertyName))
+        {
+            return default;
+        }
         object value = context.ObjectType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(context.ObjectInstance);
         return value is TResult tValue ? tValue : default;
     }

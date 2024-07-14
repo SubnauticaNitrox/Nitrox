@@ -6,7 +6,7 @@
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="400" MaxWidth="1000"
-        d:DataContext="{x:Static design:DesignData.DialogBoxViewModel}"
+        DataContext="{x:Static design:DesignData.DialogBoxViewModel}"
         x:Class="Nitrox.Launcher.Views.DialogBoxModal"
         SystemDecorations="None"
         SizeToContent="WidthAndHeight"

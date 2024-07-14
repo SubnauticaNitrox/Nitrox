@@ -8,7 +8,7 @@
              DataContext="{x:Static design:DesignData.LibraryViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.LibraryView">
-    <!-- WIP -->
+    <!-- TODO: WIP -->
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
             <Grid Background="{DynamicResource BrandWhiteBrush}">

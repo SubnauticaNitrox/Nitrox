@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="500" MinHeight="200"
-        d:DataContext="{x:Static design:DesignData.BackupRestoreViewModel}"
+        DataContext="{x:Static design:DesignData.BackupRestoreViewModel}"
         x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
         SystemDecorations="None"
         SizeToContent="WidthAndHeight"

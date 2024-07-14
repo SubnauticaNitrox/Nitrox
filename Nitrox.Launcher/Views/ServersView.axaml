@@ -4,8 +4,9 @@
              xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              x:Class="Nitrox.Launcher.Views.ServersView"
-             d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
+             DataContext="{x:Static design:DesignData.ServersViewModel}">
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <Panel Background="{DynamicResource BrandWhiteBrush}">
             <Panel IsVisible="{Binding !Servers.Count}">
