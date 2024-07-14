@@ -93,53 +93,54 @@ namespace NitroxServer.Serialization.World
 
         public void BackUp(string saveDir)
         {
+            if (config.MaxBackups < 1)
+            {
+                Log.Info($"No backup was made (\"{nameof(config.MaxBackups)}\" is equal to 0)");
+                return;
+            }
             string backupDir = Path.Combine(saveDir, "Backups");
-            string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now.ToString(BACKUP_DATE_TIME_FORMAT)}");
+            string tempOutDir = Path.Combine(backupDir, $"Backup - {DateTime.Now.ToString(BACKUP_DATE_TIME_FORMAT)}");
             Directory.CreateDirectory(backupDir);
 
             try
             {
-                List<string> backups = [];
-                backups.AddRange(from file in Directory.EnumerateFiles(backupDir) let fileInfo = new FileInfo(file) where fileInfo.Extension == ".zip" && fileInfo.Name.Contains($"Backup - ") select file);
-
-                if (config.MaxBackups == 0)
+                // Prepare backup location
+                Directory.CreateDirectory(tempOutDir);
+                string newZipFile = $"{tempOutDir}.zip";
+                if (File.Exists(newZipFile))
                 {
-                    Log.Info($"No backup was made (\"{nameof(config.MaxBackups)}\" is equal to 0)");
+                    File.Delete(newZipFile);
                 }
-                else
+                foreach (string file in Directory.GetFiles(saveDir))
                 {
-                    // Back up the save files
-                    Directory.CreateDirectory(backupDir);
-                    Directory.CreateDirectory(outZip);
-
-                    foreach (string file in Directory.GetFiles(saveDir))
-                    {
-                        File.Copy(file, Path.Combine(outZip, Path.GetFileName(file)));
-                    }
-
-                    FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
-                    Directory.Delete(outZip, true);
-
-                    // Done
-                    Log.Info("World backed up");
+                    File.Copy(file, Path.Combine(tempOutDir, Path.GetFileName(file)));
                 }
 
-                // Check for total number of backups and prune as necessary
-                if (backups.Count > config.MaxBackups)
+                FileSystem.Instance.ZipFilesInDirectory(tempOutDir, newZipFile);
+                Directory.Delete(tempOutDir, true);
+                Log.Info("World backed up");
+
+                // Prune old backups
+                FileInfo[] backups = Directory.EnumerateFiles(backupDir)
+                                              .Select(f => new FileInfo(f))
+                                              .Where(f => f is { Extension: ".zip" } info && info.Name.Contains("Backup - "))
+                                              .OrderBy(f => File.GetCreationTime(f.FullName))
+                                              .ToArray();
+                if (backups.Length > config.MaxBackups)
                 {
-                    int numBackupsToDelete = backups.Count - config.MaxBackups;
-                    for (int i = 0; i <= numBackupsToDelete; i++)
+                    int numBackupsToDelete = backups.Length - Math.Max(1, config.MaxBackups);
+                    for (int i = 0; i < numBackupsToDelete; i++)
                     {
-                        File.Delete(backups.ElementAt(i)); // TODO: Fix error here when MaxBackups is at 0 and there are still saves
+                        backups[i].Delete();
                     }
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error while backing up world");
-                if (Directory.Exists(outZip))
+                if (Directory.Exists(tempOutDir))
                 {
-                    Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left
+                    Directory.Delete(tempOutDir, true); // Delete the outZip folder that is sometimes left
                 }
             }
         }

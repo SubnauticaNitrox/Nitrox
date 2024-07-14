@@ -17,7 +17,7 @@ namespace NitroxModel.Serialization
         private int saveIntervalSetting = 120000;
 
         private int maxBackupsSetting = 10;
-        
+
         private string postSaveCommandPath = string.Empty;
 
         private string saveNameSetting = "My World";
@@ -39,7 +39,7 @@ namespace NitroxModel.Serialization
                 saveIntervalSetting = value;
             }
         }
-        
+
         public int MaxBackups
         {
             get => maxBackupsSetting;
@@ -85,7 +85,7 @@ namespace NitroxModel.Serialization
         public bool DisableAutoSave { get; set; }
 
         public bool DisableAutoBackup { get; set; }
-        
+
         public string SaveName
         {
             get => saveNameSetting;
