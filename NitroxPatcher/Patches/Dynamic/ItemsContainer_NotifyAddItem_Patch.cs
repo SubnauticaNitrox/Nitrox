@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -10,7 +11,7 @@ public sealed partial class ItemsContainer_NotifyAddItem_Patch : NitroxPatch, ID
 
     public static void Postfix(ItemsContainer __instance, InventoryItem item)
     {
-        if (item != null)
+        if (item != null && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
         {
             Resolve<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
         }
