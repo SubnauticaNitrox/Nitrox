@@ -6,6 +6,7 @@ using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -37,8 +38,8 @@ public partial class ServersViewModel : RoutableViewModelBase
     private bool shouldRefreshServersList;
 
     private FileSystemWatcher watcher;
-    
-    private HashSet<string> loggedErrorDirectories = [];
+
+    private readonly HashSet<string> loggedErrorDirectories = [];
 
     public ServersViewModel(IScreen screen, IKeyValueStore keyValueStore, IDialogService dialogService, ManageServerViewModel manageServerViewModel) : base(screen)
     {
@@ -46,7 +47,10 @@ public partial class ServersViewModel : RoutableViewModelBase
         this.dialogService = dialogService;
         this.manageServerViewModel = manageServerViewModel;
 
-        Task.Run(GetSavesOnDisk);
+        if (!Design.IsDesignMode)
+        {
+            Task.Run(GetSavesOnDisk);
+        }
 
         WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
         {

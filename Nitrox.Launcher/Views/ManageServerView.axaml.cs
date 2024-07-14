@@ -13,7 +13,7 @@ public partial class ManageServerView : RoutableViewBase<ManageServerViewModel>
         InitializeComponent();
         Loaded += OnLoaded;
     }
-    
+
     private void InputElement_OnKeyDown(object sender, KeyEventArgs e)
     {
         switch (e.Key)
@@ -51,9 +51,14 @@ public partial class ManageServerView : RoutableViewBase<ManageServerViewModel>
         }
         e.Handled = true;
     }
-    
+
     private void OnLoaded(object sender, EventArgs e)
     {
-        mainScrollViewer.ScrollToHome();
+        if (Design.IsDesignMode)
+        {
+            return;
+        }
+
+        ServerNameScrollViewer.ScrollToHome();
     }
 }

@@ -91,7 +91,7 @@
                         </StackPanel>
 
                         <Grid ColumnDefinitions="*,200">
-                            <ScrollViewer Grid.Column="0" Margin="0 0 10 0" PointerWheelChanged="ScrollViewer_OnPointerWheelChanged">
+                            <ScrollViewer Grid.Column="0" Margin="0 0 10 0">
                                 <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
                             </ScrollViewer>
 
@@ -104,7 +104,7 @@
                 </Grid>
             </StackPanel>
 
-            <ScrollViewer Grid.Row="1" x:Name="mainScrollViewer" HorizontalScrollBarVisibility="Disabled" Margin="0 26">
+            <ScrollViewer Grid.Row="1" x:Name="ServerNameScrollViewer" HorizontalScrollBarVisibility="Disabled" Margin="0 26">
                 <StackPanel VerticalAlignment="Stretch" Spacing="42">
                     <StackPanel.Styles>
                         <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
