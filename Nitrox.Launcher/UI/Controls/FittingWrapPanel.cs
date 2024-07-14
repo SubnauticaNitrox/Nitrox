@@ -13,7 +13,7 @@ namespace Nitrox.Launcher.UI.Controls;
 ///     (https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Controls/WrapPanel.cs).
 /// </summary>
 /// <remarks>
-///     Looks similar to YouTube's video layout.
+///     Looks similar to YouTube video layout.
 /// </remarks>
 public class FittingWrapPanel : Panel, INavigableContainer
 {
