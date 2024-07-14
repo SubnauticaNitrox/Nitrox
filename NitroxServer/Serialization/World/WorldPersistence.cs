@@ -7,8 +7,8 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
@@ -24,17 +24,19 @@ namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
+        public const string BACKUP_DATE_TIME_FORMAT = "yyyy-MM-dd HH.mm.ss";
+
         public IServerSerializer Serializer { get; private set; }
         private string FileEnding => Serializer?.FileEnding ?? "";
 
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerJsonSerializer jsonSerializer;
-        private readonly ServerConfig config;
+        private readonly SubnauticaServerConfig config;
         private readonly RandomStartGenerator randomStart;
         private readonly IWorldModifier worldModifier;
         private readonly SaveDataUpgrade[] upgrades;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, SubnauticaServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
@@ -89,6 +91,58 @@ namespace NitroxServer.Serialization.World
             }
         }
 
+        public void BackUp(string saveDir)
+        {
+            string backupDir = Path.Combine(saveDir, "Backups");
+            string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now.ToString(BACKUP_DATE_TIME_FORMAT)}");
+
+            try
+            {
+                List<string> backups = [];
+                backups.AddRange(from file in Directory.EnumerateFiles(backupDir) let fileInfo = new FileInfo(file) where fileInfo.Extension == ".zip" && fileInfo.Name.Contains($"Backup - ") select file);
+
+                if (config.MaxBackups == 0)
+                {
+                    Log.Info($"No backup was made (\"{nameof(config.MaxBackups)}\" is equal to 0)");
+                }
+                else
+                {
+                    // Back up the save files
+                    Directory.CreateDirectory(backupDir);
+                    Directory.CreateDirectory(outZip);
+
+                    foreach (string file in Directory.GetFiles(saveDir))
+                    {
+                        File.Copy(file, Path.Combine(outZip, Path.GetFileName(file)));
+                    }
+
+                    FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
+                    Directory.Delete(outZip, true);
+
+                    // Done
+                    Log.Info("World backed up");
+                }
+
+                // Check for total number of backups and prune as necessary
+                if (backups.Count > config.MaxBackups)
+                {
+                    int numBackupsToDelete = backups.Count - config.MaxBackups;
+                    for (int i = 0; i <= numBackupsToDelete; i++)
+                    {
+                        File.Delete(backups.ElementAt(i)); // TODO: Fix error here when MaxBackups is at 0 and there are still saves
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while backing up world");
+                if (Directory.Exists(outZip))
+                {
+                    Directory.Delete(outZip, true); // Delete the outZip folder that is sometimes left
+                }
+            }
+        }
+
         internal Optional<World> LoadFromFile(string saveDir)
         {
             if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
@@ -135,12 +189,10 @@ namespace NitroxServer.Serialization.World
                 // Check if the world was newly created using the world manager
                 if (new FileInfo(Path.Combine(saveDir, $"Version{FileEnding}")).Length > 0)
                 {
-                    Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+                    // Give error saying that world could not be used, and to restore a backup
+                    Log.Error($"Could not load world, please restore one of your backups to continue using this world. : {ex.GetType()} {ex.Message}");
 
-                    // Backup world if loading fails
-                    string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                    Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
-                    FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
+                    throw;
                 }
             }
 
@@ -149,7 +201,7 @@ namespace NitroxServer.Serialization.World
 
         public World Load()
         {
-            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(WorldManager.SavesFolderDir, config.SaveName));
+            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), config.SaveName));
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

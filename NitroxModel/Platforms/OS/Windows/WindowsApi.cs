@@ -6,11 +6,20 @@ namespace NitroxModel.Platforms.OS.Windows;
 
 public class WindowsApi
 {
-    public static void EnableDefaultWindowAnimations(IntPtr hWnd, int nIndex = -16)
+    public static void EnableDefaultWindowAnimations(IntPtr hWnd, bool canResize = true, int nIndex = -16)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            IntPtr dwNewLong = new((long)(Win32Native.WS.WS_CAPTION | Win32Native.WS.WS_CLIPCHILDREN | Win32Native.WS.WS_MINIMIZEBOX | Win32Native.WS.WS_MAXIMIZEBOX | Win32Native.WS.WS_SYSMENU | Win32Native.WS.WS_SIZEBOX));
+            IntPtr dwNewLong;
+            if (canResize)
+            {
+                dwNewLong = new((long)(Win32Native.WS.WS_CAPTION | Win32Native.WS.WS_CLIPCHILDREN | Win32Native.WS.WS_MINIMIZEBOX | Win32Native.WS.WS_MAXIMIZEBOX | Win32Native.WS.WS_SYSMENU | Win32Native.WS.WS_SIZEBOX));
+            }
+            else
+            {
+                dwNewLong = new((long)(Win32Native.WS.WS_CAPTION | Win32Native.WS.WS_CLIPCHILDREN | Win32Native.WS.WS_MINIMIZEBOX | Win32Native.WS.WS_MAXIMIZEBOX | Win32Native.WS.WS_SYSMENU));
+            }
+            
             HandleRef handle = new(null, hWnd);
             switch (IntPtr.Size)
             {

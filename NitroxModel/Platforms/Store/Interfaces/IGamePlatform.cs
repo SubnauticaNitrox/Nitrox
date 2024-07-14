@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Platforms.OS.Shared;
 
 namespace NitroxModel.Platforms.Store.Interfaces
@@ -9,7 +9,7 @@ namespace NitroxModel.Platforms.Store.Interfaces
         string Name { get; }
 
         Platform Platform { get; }
-        
+
         /// <summary>
         ///     Tries to start the platform and waits for it to be ready to launch games. If it has already been started it will return true.
         /// </summary>
@@ -28,7 +28,5 @@ namespace NitroxModel.Platforms.Store.Interfaces
         /// <param name="gameDirectory">Directory to a game, usually where the exe file is.</param>
         /// <returns>Returns true if the game platform owns this game.</returns>
         bool OwnsGame(string gameDirectory);
-
-
     }
 }

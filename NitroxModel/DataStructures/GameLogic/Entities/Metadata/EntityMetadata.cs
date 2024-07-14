@@ -36,7 +36,9 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(76, typeof(RadiationMetadata))]
     [ProtoInclude(77, typeof(CrashHomeMetadata))]
     [ProtoInclude(78, typeof(EatableMetadata))]
-    [ProtoInclude(79, typeof(SeaTreaderMetadata))]
+    [ProtoInclude(79, typeof(PlantableMetadata))]
+    [ProtoInclude(80, typeof(FruitPlantMetadata))]
+    [ProtoInclude(81, typeof(SeaTreaderMetadata))]
     public abstract class EntityMetadata
     {
     }

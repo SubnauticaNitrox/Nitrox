@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper.Faker;
 using NitroxModel.Core;
@@ -76,9 +70,6 @@ public class WorldPersistenceTest
             case EquippedItemData equippedItemData when itemDataAfter is EquippedItemData equippedItemDataAfter:
                 Assert.AreEqual(equippedItemData.Slot, equippedItemDataAfter.Slot);
                 Assert.AreEqual(equippedItemData.TechType, equippedItemDataAfter.TechType);
-                break;
-            case PlantableItemData plantableItemData when itemDataAfter is PlantableItemData plantableItemDataAfter:
-                Assert.AreEqual(plantableItemData.PlantedGameTime, plantableItemDataAfter.PlantedGameTime);
                 break;
             default:
                 Assert.Fail($"Runtime types of {nameof(ItemData)} where not equal");
@@ -235,7 +226,12 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.Duration, metadataAfter.Duration);
                 break;
             case PlantableMetadata metadata when entityAfter.Metadata is PlantableMetadata metadataAfter:
-                Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
+                Assert.AreEqual(metadata.TimeStartGrowth, metadataAfter.TimeStartGrowth);
+                Assert.AreEqual(metadata.SlotID, metadataAfter.SlotID);
+                break;
+            case FruitPlantMetadata metadata when entityAfter.Metadata is FruitPlantMetadata metadataAfter:
+                Assert.AreEqual(metadata.PickedStates, metadataAfter.PickedStates);
+                Assert.AreEqual(metadata.TimeNextFruit, metadataAfter.TimeNextFruit);
                 break;
             case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
                 Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);

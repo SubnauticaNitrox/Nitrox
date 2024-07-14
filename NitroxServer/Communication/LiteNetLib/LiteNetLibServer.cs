@@ -6,10 +6,10 @@ using LiteNetLib.Utils;
 using Mono.Nat;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.LiteNetLib;
 
@@ -18,13 +18,13 @@ public class LiteNetLibServer : NitroxServer
     private readonly EventBasedNetListener listener;
     private readonly NetManager server;
 
-    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
+    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, SubnauticaServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
     {
         listener = new EventBasedNetListener();
         server = new NetManager(listener);
     }
 
-    public override bool Start()
+    public override bool Start(CancellationToken ct = default)
     {
         listener.PeerConnectedEvent += PeerConnected;
         listener.PeerDisconnectedEvent += PeerDisconnected;
@@ -43,54 +43,66 @@ public class LiteNetLibServer : NitroxServer
         {
             return false;
         }
-
         if (useUpnpPortForwarding)
         {
-            PortForwardAsync((ushort)portNumber).ConfigureAwait(false);
+            _ = PortForwardAsync((ushort)portNumber, ct);
         }
-
         if (useLANBroadcast)
         {
-            LANBroadcastServer.Start();
+            LANBroadcastServer.Start(ct);
         }
 
         return true;
     }
 
-    private async Task PortForwardAsync(ushort port)
+    private async Task PortForwardAsync(ushort port, CancellationToken ct = default)
     {
-        if (await NatHelper.GetPortMappingAsync(port, Protocol.Udp) != null)
+        if (await NatHelper.GetPortMappingAsync(port, Protocol.Udp, ct) != null)
         {
             Log.Info($"Port {port} UDP is already port forwarded");
             return;
         }
 
-        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp);
-        switch (mappingResult)
+        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp, ct);
+        if (!ct.IsCancellationRequested)
         {
-            case NatHelper.ResultCodes.SUCCESS:
-                Log.Info($"Server port {port} UDP has been automatically opened on your router (port is closed when server closes)");
-                break;
-            case NatHelper.ResultCodes.CONFLICT_IN_MAPPING_ENTRY:
-                Log.Warn($"Port forward for {port} UDP failed. It appears to already be port forwarded or it conflicts with another port forward rule.");
-                break;
-            case NatHelper.ResultCodes.UNKNOWN_ERROR:
-                Log.Warn($"Failed to port forward {port} UDP through UPnP. If using Hamachi or you've manually port-forwarded, please disregard this warning. To disable this feature you can go into the server settings.");
-                break;
+            switch (mappingResult)
+            {
+                case NatHelper.ResultCodes.SUCCESS:
+                    Log.Info($"Server port {port} UDP has been automatically opened on your router (port is closed when server closes)");
+                    break;
+                case NatHelper.ResultCodes.CONFLICT_IN_MAPPING_ENTRY:
+                    Log.Warn($"Port forward for {port} UDP failed. It appears to already be port forwarded or it conflicts with another port forward rule.");
+                    break;
+                case NatHelper.ResultCodes.UNKNOWN_ERROR:
+                    Log.Warn($"Failed to port forward {port} UDP through UPnP. If using Hamachi or you've manually port-forwarded, please disregard this warning. To disable this feature you can go into the server settings.");
+                    break;
+            }
         }
     }
 
     public override void Stop()
     {
+        if (!server.IsRunning)
+        {
+            return;
+        }
+
         playerManager.SendPacketToAllPlayers(new ServerStopped());
         // We want every player to receive this packet
         Thread.Sleep(500);
         server.Stop();
         if (useUpnpPortForwarding)
         {
-            NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp).ConfigureAwait(false).GetAwaiter().GetResult();
+            if (NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp, CancellationToken.None).GetAwaiter().GetResult())
+            {
+                Log.Debug($"Port forward rule removed for {portNumber} UDP");
+            }
+            else
+            {
+                Log.Warn($"Failed to remove port forward rule {portNumber} UDP");
+            }
         }
-
         if (useLANBroadcast)
         {
             LANBroadcastServer.Stop();
@@ -131,7 +143,7 @@ public class LiteNetLibServer : NitroxServer
         {
             reader.GetBytes(packetData, packetDataLength);
             Packet packet = Packet.Deserialize(packetData);
-            NitroxConnection connection = GetConnection(peer.Id);
+            INitroxConnection connection = GetConnection(peer.Id);
             ProcessIncomingData(connection, packet);
         }
         finally
@@ -140,9 +152,9 @@ public class LiteNetLibServer : NitroxServer
         }
     }
 
-    private NitroxConnection GetConnection(int remoteIdentifier)
+    private INitroxConnection GetConnection(int remoteIdentifier)
     {
-        NitroxConnection connection;
+        INitroxConnection connection;
         lock (connectionsByRemoteIdentifier)
         {
             connectionsByRemoteIdentifier.TryGetValue(remoteIdentifier, out connection);

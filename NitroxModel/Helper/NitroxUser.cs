@@ -1,9 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using NitroxModel.Discovery;
-using NitroxModel.Platforms.OS.Windows.Internal;
+using NitroxModel.Discovery.InstallationFinders.Core;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
 
@@ -12,10 +15,11 @@ namespace NitroxModel.Helper
     public static class NitroxUser
     {
         public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
-        private const string PREFERRED_GAMEPATH_REGKEY = @"SOFTWARE\Nitrox\PreferredGamePath";
+        private const string PREFERRED_GAMEPATH_KEY = "PreferredGamePath";
         private static string appDataPath;
         private static string launcherPath;
         private static string gamePath;
+        private static string currentExecutablePath;
 
         private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
         {
@@ -23,7 +27,7 @@ namespace NitroxModel.Helper
             () =>
             {
                 Assembly currentAsm = Assembly.GetEntryAssembly();
-                if (currentAsm?.GetName().Name.Equals("NitroxLauncher") ?? false)
+                if (currentAsm?.GetName().Name.Equals("Nitrox.Launcher") ?? false)
                 {
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
@@ -37,13 +41,19 @@ namespace NitroxModel.Helper
                     return execParentDir.FullName;
                 }
 
-                // NitroxModel, NitroxServer and other assemblies are stored in NitroxLauncher/lib
-                if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "LanguageFiles")))
+                // NitroxModel, NitroxServer and other assemblies are stored in Nitrox.Launcher/lib
+                if (execParentDir?.Parent != null && Directory.Exists(Path.Combine(execParentDir.Parent.FullName, "Resources", "LanguageFiles")))
                 {
                     return execParentDir.Parent.FullName;
                 }
 
                 return null;
+            },
+            () =>
+            {
+                using ProcessEx proc = ProcessEx.GetFirstProcess("Nitrox.Launcher");
+                string executable = proc?.MainModule?.FileName;
+                return !string.IsNullOrWhiteSpace(executable) ? Path.GetDirectoryName(executable) : null;
             }
         };
 
@@ -74,15 +84,29 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static string AssetsPath => Path.Combine(LauncherPath, "AssetBundles");
+        public static string AssetsPath => Path.Combine(LauncherPath, "Resources", "AssetBundles");
+        public static string LanguageFilesPath => Path.Combine(LauncherPath, "Resources", "LanguageFiles");
 
         public static string PreferredGamePath
         {
-            get => RegistryEx.Read<string>(PREFERRED_GAMEPATH_REGKEY);
-            set => RegistryEx.Write(PREFERRED_GAMEPATH_REGKEY, value);
+            get => KeyValueStore.Instance.GetValue<string>(PREFERRED_GAMEPATH_KEY);
+            set => KeyValueStore.Instance.SetValue(PREFERRED_GAMEPATH_KEY, value);
         }
 
-        public static IGamePlatform GamePlatform { get; private set; }
+        private static IGamePlatform gamePlatform;
+        public static event Action GamePlatformChanged;
+        public static IGamePlatform GamePlatform
+        {
+            get { return gamePlatform; }
+            set
+            {
+                if (gamePlatform != value)
+                {
+                    gamePlatform = value;
+                    GamePlatformChanged?.Invoke();
+                }
+            }
+        }
 
         public static string GamePath
         {
@@ -93,14 +117,17 @@ namespace NitroxModel.Helper
                     return gamePath;
                 }
 
-                List<string> errors = new();
-                string path = GameInstallationFinder.Instance.FindGame(errors);
-                if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
+                List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
+                GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
+                if (potentiallyValidResult?.IsOk == true)
                 {
-                    return gamePath = path;
+                    Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Installation.Path}'");
+                    gamePath = potentiallyValidResult.Installation.Path;
+                    GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
+                    return gamePath;
                 }
 
-                Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
                 return string.Empty;
             }
             set
@@ -117,6 +144,24 @@ namespace NitroxModel.Helper
                 // Ensures the path looks alright (no mixed / and \ path separators)
                 gamePath = Path.GetFullPath(value);
                 GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
+            }
+        }
+
+        public static string CurrentExecutablePath
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(currentExecutablePath))
+                {
+                    return currentExecutablePath;
+                }
+
+                // File URI works different on OSX so just return path directly.
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory();
+                }
+                return currentExecutablePath = new Uri(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
             }
         }
     }

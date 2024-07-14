@@ -1,24 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ContentSizeFitterDrawer : IDrawer
+public class ContentSizeFitterDrawer : IDrawer<ContentSizeFitter>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(ContentSizeFitter) };
-
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case ContentSizeFitter contentSizeFitter:
-                DrawContentSizeFitter(contentSizeFitter);
-                break;
-        }
-    }
-
-    private static void DrawContentSizeFitter(ContentSizeFitter contentSizeFitter)
+    public void Draw(ContentSizeFitter contentSizeFitter)
     {
         using (new GUILayout.HorizontalScope())
         {

@@ -1,27 +1,21 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace NitroxModel.Serialization
+namespace NitroxModel.Serialization;
+
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class, Inherited = false)]
+public sealed class PropertyDescriptionAttribute : DescriptionAttribute
 {
-    public interface IProperties
+    public PropertyDescriptionAttribute(string desc) : base(desc)
     {
-        public string FileName { get; }
     }
 
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class, Inherited = false)]
-    public sealed class PropertyDescriptionAttribute : DescriptionAttribute
+    public PropertyDescriptionAttribute(string desc, Type type)
     {
-        public PropertyDescriptionAttribute(string desc) : base(desc)
+        if (type.IsEnum)
         {
-        }
-
-        public PropertyDescriptionAttribute(string desc, Type type)
-        {
-            if (type.IsEnum)
-            {
-                desc += $" {string.Join(", ", type.GetEnumNames())}";
-                DescriptionValue = desc;
-            }
+            desc += $" {string.Join(", ", type.GetEnumNames())}";
+            DescriptionValue = desc;
         }
     }
 }

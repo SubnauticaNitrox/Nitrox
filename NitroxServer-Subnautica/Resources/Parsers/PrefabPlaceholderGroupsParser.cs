@@ -9,9 +9,10 @@ using AddressablesTools.Catalog;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Helper;
+using NitroxServer_Subnautica.Resources.Parsers.Helper;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Resources;
-using NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
@@ -38,7 +39,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
         am = new AssetsBundleManager(aaRootPath);
         // ReSharper disable once StringLiteralTypo
-        am.LoadClassPackage(Path.Combine("Resources", "classdata.tpk"));
+        am.LoadClassPackage(Path.Combine(NitroxUser.LauncherPath ?? NitroxUser.CurrentExecutablePath, "Resources", "classdata.tpk"));
         am.LoadClassDatabaseFromPackage("2019.4.36f1");
         am.SetMonoTempGenerator(monoGen = new(managedPath));
     }
@@ -223,7 +224,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         List<AssetTypeValueField> prefabPlaceholdersOnGroup = prefabPlaceholdersGroupScript["prefabPlaceholders"].Children;
 
         IPrefabAsset[] prefabPlaceholders = new IPrefabAsset[prefabPlaceholdersOnGroup.Count];
-        
+
         for (int index = 0; index < prefabPlaceholdersOnGroup.Count; index++)
         {
             AssetTypeValueField prefabPlaceholderPtr = prefabPlaceholdersOnGroup[index];

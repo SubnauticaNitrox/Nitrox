@@ -1,0 +1,163 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Design.PreviewWith>
+        <Panel Background="CornflowerBlue" Width="250">
+            <StackPanel Margin="10" Spacing="10">
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button Content="Normal button" HorizontalAlignment="Stretch" />
+                        <Button Classes="primary" Content="Primary button" HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                </ThemeVariantScope>
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button Content="Normal button" HorizontalAlignment="Stretch" />
+                        <Button Classes="primary" Content="Primary button" HorizontalAlignment="Stretch" />
+                        <Button Classes="abort" Content="Abort button" HorizontalAlignment="Stretch" />
+                        <Button Classes="primary big" HorizontalAlignment="Stretch" Content="Primary text" />
+                        <Button Classes="primary big" HorizontalAlignment="Stretch">
+                            <StackPanel>
+                                <TextBlock Text="Primary Button Big" />
+                                <TextBlock Text="Some sub text" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ThemeVariantScope>
+                <StackPanel HorizontalAlignment="Center" Spacing="5">
+                    <ThemeVariantScope RequestedThemeVariant="Light">
+                        <Button HorizontalAlignment="Center" Classes="icon" Background="White">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/cog-2x.png" />
+                                <TextBlock Text="Icon button" />
+                            </StackPanel>
+                        </Button>
+                    </ThemeVariantScope>
+                    <ThemeVariantScope RequestedThemeVariant="Dark">
+                        <Button HorizontalAlignment="Center" Classes="icon" Background="Black">
+                            <StackPanel>
+                                <Image Source="/Assets/Images/world-manager/cog-2x.png" />
+                                <TextBlock Text="Icon button" />
+                            </StackPanel>
+                        </Button>
+                    </ThemeVariantScope>
+                </StackPanel>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <Style Selector="Button">
+        <Setter Property="Background" Value="{DynamicResource BrandBorderBackgroundBrush}" />
+        <Setter Property="Padding" Value="16 8.73" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+
+        <Style Selector="^ TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="^ TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style Selector="^ StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+
+        <Style Selector="^ /template/ ContentPresenter">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ ContentPresenter">
+            <!-- TODO: Nice disabled style (loading indicator?) -->
+            <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Opacity" Value="0.25" />
+        </Style>
+
+        <Style Selector="^.primary">
+            <Setter Property="Background" Value="{DynamicResource BrandPrimaryBrush}" />
+            <Setter Property="Foreground" Value="#ffffff" />
+        </Style>
+
+        <Style Selector="^.abort">
+            <Setter Property="Background" Value="{DynamicResource BrandAbortBrush}" />
+            <Setter Property="Foreground" Value="#ffffff" />
+        </Style>
+
+        <Style Selector="^.big">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="MinHeight" Value="62" />
+            <Style Selector="^ StackPanel">
+                <Setter Property="Orientation" Value="Vertical" />
+            </Style>
+            <Style Selector="^ ContentPresenter /template/ TextBlock">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+            <Style Selector="^ TextBlock:not(:nth-child(1))">
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+        </Style>
+
+        <Style Selector="^.anycontent">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="4" />
+
+            <Style Selector="^:pointerover">
+                <Style Selector="^ /template/ ContentPresenter">
+                    <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+                    <Setter Property="Opacity" Value="0.6" />
+                </Style>
+            </Style>
+
+            <Style Selector="^:disabled /template/ ContentPresenter">
+                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+                <Setter Property="Opacity" Value="0.25" />
+            </Style>
+        </Style>
+    </Style>
+
+    <Style Selector="Button.icon">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="4" />
+
+        <Style Selector="^ StackPanel">
+            <Setter Property="Spacing" Value="10" />
+        </Style>
+
+        <Style Selector="^ Image">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+        </Style>
+
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Opacity" Value="1" /> <!-- undo opacity from normal button behavior -->
+            <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+    </Style>
+    
+</Styles>
