@@ -183,7 +183,7 @@ namespace NitroxServer
             serverCancelSource = ct;
             IsRunning = true;
 
-            if(!serverConfig.DisableAutoBackup)
+            if (!serverConfig.DisableAutoBackup)
             {
                 worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName));
             }

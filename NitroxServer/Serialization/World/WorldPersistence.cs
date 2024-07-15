@@ -95,6 +95,7 @@ namespace NitroxServer.Serialization.World
         {
             string backupDir = Path.Combine(saveDir, "Backups");
             string outZip = Path.Combine(backupDir, $"Backup - {DateTime.Now.ToString(BACKUP_DATE_TIME_FORMAT)}");
+            Directory.CreateDirectory(backupDir);
 
             try
             {
