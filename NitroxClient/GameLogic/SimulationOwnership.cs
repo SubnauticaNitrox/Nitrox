@@ -111,5 +111,10 @@ namespace NitroxClient.GameLogic
                 GameObject.Destroy(remotelyControlled);
             }
         }
+
+        public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
+        {
+            return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
+        }
     }
 }
