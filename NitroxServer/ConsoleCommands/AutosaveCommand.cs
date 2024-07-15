@@ -1,17 +1,17 @@
 ﻿using System.IO;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class AutoSaveCommand : Command
     {
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
 
-        public AutoSaveCommand(ServerConfig serverConfig) : base("autosave", Perms.ADMIN, "Toggles the map autosave")
+        public AutoSaveCommand(SubnauticaServerConfig serverConfig) : base("autosave", Perms.ADMIN, "Toggles the map autosave")
         {
             AddParameter(new TypeBoolean("on/off", true, "Whether autosave should be on or off"));
 
@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
         {
             bool toggle = args.Get<bool>(0);
 
-            using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
+            using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName)))
             {
                 if (toggle)
                 {

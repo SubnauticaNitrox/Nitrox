@@ -2,18 +2,18 @@
 using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors;
 
 public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordRequestIP>
 {
-    private readonly ServerConfig serverConfig;
+    private readonly SubnauticaServerConfig serverConfig;
 
     private string ipPort;
 
-    public DiscordRequestIPProcessor(ServerConfig serverConfig)
+    public DiscordRequestIPProcessor(SubnauticaServerConfig serverConfig)
     {
         this.serverConfig = serverConfig;
     }

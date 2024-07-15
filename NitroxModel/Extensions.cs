@@ -1,12 +1,18 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using NitroxModel.Helper;
+using NitroxModel.Serialization;
+using NitroxModel.Server;
 
 namespace NitroxModel;
 
 public static class Extensions
 {
+    public static string GetSavesFolderDir(this IKeyValueStore store) => store.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+
     public static TAttribute GetAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
     {
         Type type = value.GetType();
@@ -45,7 +51,7 @@ public static class Extensions
     }
 
     /// <inheritdoc cref="Enum.IsDefined" />
-    public static bool IsDefined<TEnum>(this TEnum value)
+    public static bool IsDefined<TEnum>(this TEnum value) where TEnum : Enum
     {
         return Enum.IsDefined(typeof(TEnum), value);
     }
@@ -132,4 +138,7 @@ public static class Extensions
             ArrayPool<TKey>.Shared.Return(toRemove, true);
         }
     }
+
+    public static bool IsHardcore(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;
+    public static bool IsPasswordRequired(this SubnauticaServerConfig config) => config.ServerPassword != "";
 }

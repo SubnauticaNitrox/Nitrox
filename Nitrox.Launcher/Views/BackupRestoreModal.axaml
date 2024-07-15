@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="500" MinHeight="200"
+        DataContext="{x:Static design:DesignData.BackupRestoreViewModel}"
+        x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
+        SystemDecorations="None"
+        SizeToContent="WidthAndHeight"
+        RequestedThemeVariant="Light"
+        Title="{Binding Title}">
+    <Grid RowDefinitions="Auto, *, Auto">
+        <!-- Title bar -->
+        <Panel Grid.Row="0" Grid.RowSpan="2" Classes="titleBar">
+            <Interaction.Behaviors>
+                <BehaviorCollection>
+                    <EventTriggerBehavior EventName="PointerPressed">
+                        <InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
+                    </EventTriggerBehavior>
+                </BehaviorCollection>
+            </Interaction.Behaviors>
+
+            <Button Command="{Binding CloseCommand}">
+                <Rectangle>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </Panel>
+
+        <TextBlock Grid.Row="0" Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+            <Panel>
+                <!-- Backups Don't Exist -->
+                <StackPanel Spacing="50" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            IsVisible="{Binding !Backups.Count}">
+                    <Image Source="/Assets/Images/serverIllustration.png" Width="300" Margin="-25 0 0 0" Stretch="None" />
+                    <TextBlock Text="No backups here yet" FontSize="32" TextAlignment="Center" FontWeight="600" Margin="0 0 0 40" />
+                </StackPanel>
+
+                <!-- Backups Exist -->
+                <ListBox Margin="24" ItemsSource="{Binding Backups}" SelectedItem="{Binding SelectedBackup, Mode=TwoWay}" VerticalAlignment="Top"
+                         IsVisible="{Binding Backups.Count}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="14" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding BackupFileName}">
+                                <TextBlock Text="Backup " />
+                                <TextBlock Text="{Binding BackupDate}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+            </Panel>
+        </ScrollViewer>
+
+        <Border Classes="footer" Grid.Row="2">
+            <Panel>
+                <Button Content="Back" Command="{Binding CloseCommand}" HotKey="Escape" FontWeight="Bold" />
+                <Button Classes="primary" Content="Restore" Command="{Binding RestoreBackupCommand}" HorizontalAlignment="Right" HotKey="Enter" />
+            </Panel>
+        </Border>
+    </Grid>
+</Window>

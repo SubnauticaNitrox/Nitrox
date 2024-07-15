@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <LangVersion>$(LangVersion)</LangVersion>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+        <ApplicationIcon>Assets\Images\nitroxIco.ico</ApplicationIcon>
+        <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
+        <Authors>Nitrox</Authors>
+        <Company>Nitrox</Company>
+        <PackageProjectUrl>https://github.com/SubnauticaNitrox/Nitrox</PackageProjectUrl>
+        <!-- TODO: Update dependencies so trimming won't break the app -->
+        <PublishTrimmed>false</PublishTrimmed>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="Roots.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.0.10.9" />
+        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.10.9" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="dnlib" Version="3.4.0" />
+        <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
+        <PackageReference Include="LitJson" Version="0.19.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="ReactiveUI.Validation" Version="4.0.9" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+      <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+      <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+    </ItemGroup>
+
+    <!-- Ensure server files are available for launcher. -->
+    <Target Name="BuildServer" AfterTargets="Build">
+        <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
+    </Target>
+
+    <!-- Build dependencies that will be loaded by the game, which must be net472 compatible. -->
+    <Target Name="BuildNet472BinariesForGame" AfterTargets="Build;BuildServer">
+        <MSBuild Projects="..\NitroxPatcher\NitroxPatcher.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472;OutputPath=$(TargetDir)\lib\net472" />
+    </Target>
+
+    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build;BuildNet472BinariesForGame">
+        <ItemGroup>
+            <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
+            <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
+            <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
+            <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\Resources\LanguageFiles\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
+    </Target>
+
+    <Target Name="MoveDependenciesToLib" AfterTargets="Build;MoveNitroxAssetsToLauncherOutput">
+        <ItemGroup>
+            <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)Nitrox.Launcher.dll" />
+            <AllDependencies Include="$(TargetDir)*.dll.config" />
+        </ItemGroup>
+        <!-- In Debug mode, keep DLLs for the Avalonia previewer in the expected location. It does not use custom AppDomain.CurrentDomain.AssemblyResolve handlers. -->
+        <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+        <Move Condition="'$(Configuration)' == 'Release'" SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+    </Target>
+</Project>

@@ -1,0 +1,56 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+        xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        DataContext="{x:Static design:DesignData.CreateServerViewModel}"
+        x:Class="Nitrox.Launcher.Views.CreateServerModal"
+        SystemDecorations="None"
+        SizeToContent="WidthAndHeight"
+        CanResize="False"
+        Title="Create a server"
+        RequestedThemeVariant="Light">
+    <Grid>
+        <!-- Title bar -->
+        <Panel Grid.RowSpan="2" Classes="titleBar">
+            <Interaction.Behaviors>
+                <BehaviorCollection>
+                    <EventTriggerBehavior EventName="PointerPressed">
+                        <InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
+                    </EventTriggerBehavior>
+                </BehaviorCollection>
+            </Interaction.Behaviors>
+
+            <Button Command="{Binding CloseCommand}">
+                <Rectangle>
+                    <Rectangle.OpacityMask>
+                        <ImageBrush Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </Panel>
+        <StackPanel>
+            <StackPanel Classes="form" Margin="24">
+                <TextBlock Text="Create a server" Classes="modalHeader" />
+                <StackPanel Classes="form">
+                    <TextBlock Text="SERVER NAME" />
+                    <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Name, Converter={converters:TrimConverter}}" MaxWidth="400" MaxLength="120" />
+                </StackPanel>
+                <StackPanel Classes="form">
+                    <TextBlock Text="GAMEMODE" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type server:NitroxGameMode}" SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}" />
+                </StackPanel>
+            </StackPanel>
+            <Border Classes="footer">
+                <Panel>
+                    <Button Content="Back" FontWeight="Bold" HotKey="{Binding BackHotkey}" Command="{Binding CloseCommand}" />
+                    <Button Classes="primary" Content="Create" HorizontalAlignment="Right" HotKey="{Binding CreateHotkey}" Command="{Binding CreateCommand}" />
+                </Panel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>

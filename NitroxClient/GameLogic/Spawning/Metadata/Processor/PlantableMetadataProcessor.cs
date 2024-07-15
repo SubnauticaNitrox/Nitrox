@@ -4,16 +4,33 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
-public class PlantableMetadataProcessor : EntityMetadataProcessor<PlantableMetadata>
+public class PlantableMetadataProcessor(FruitPlantMetadataProcessor fruitPlantMetadataProcessor) : EntityMetadataProcessor<PlantableMetadata>
 {
+    private readonly FruitPlantMetadataProcessor fruitPlantMetadataProcessor = fruitPlantMetadataProcessor;
+
     public override void ProcessMetadata(GameObject gameObject, PlantableMetadata metadata)
     {
-        Plantable plantable = gameObject.GetComponent<Plantable>();
-
-        // Plantable will only have a growing plant when residing in the proper container.
-        if (plantable && plantable.growingPlant)
+        if (gameObject.TryGetComponent(out Plantable plantable))
         {
-            plantable.growingPlant.SetProgress(metadata.Progress);
+            if (plantable.growingPlant)
+            {
+                plantable.growingPlant.timeStartGrowth = metadata.TimeStartGrowth;
+            }
+            else if (plantable.model.TryGetComponent(out GrowingPlant growingPlant))
+            {
+                // Calculation from GrowingPlant.GetProgress (reversed because we're looking for "progress" while we already know timeStartGrowth)
+                plantable.plantAge = Mathf.Clamp((DayNightCycle.main.timePassedAsFloat - metadata.TimeStartGrowth) / growingPlant.GetGrowthDuration(), 0f, growingPlant.maxProgress);
+            }
+
+            // TODO: Refer to the TODO in PlantableMetadata
+            if (metadata.FruitPlantMetadata != null)
+            {
+                fruitPlantMetadataProcessor.ProcessMetadata(gameObject, metadata.FruitPlantMetadata);
+            }
+        }
+        else
+        {
+            Log.Error($"[{nameof(PlantableMetadataProcessor)}] Could not find {nameof(Plantable)} on {gameObject.name}");
         }
     }
 }

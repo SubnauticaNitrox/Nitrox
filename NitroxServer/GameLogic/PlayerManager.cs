@@ -7,12 +7,11 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Server;
+using NitroxModel.Serialization;
 using NitroxServer.Communication;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.GameLogic
 {
@@ -29,10 +28,10 @@ namespace NitroxServer.GameLogic
 
         private Timer initialSyncTimer;
 
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
         private ushort currentPlayerId;
 
-        public PlayerManager(List<Player> players, ServerConfig serverConfig)
+        public PlayerManager(List<Player> players, SubnauticaServerConfig serverConfig)
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
@@ -98,7 +97,7 @@ namespace NitroxServer.GameLogic
             string playerName = authenticationContext.Username;
 
             allPlayersByName.TryGetValue(playerName, out Player player);
-            if (player?.IsPermaDeath == true && serverConfig.IsHardcore)
+            if (player?.IsPermaDeath == true && serverConfig.IsHardcore())
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -341,7 +340,7 @@ namespace NitroxServer.GameLogic
                 .Where(assetPackage => assetPackage.Player != null)
                 .Select(assetPackage => assetPackage.Player);
         }
-        
+
         public void BroadcastPlayerJoined(Player player)
         {
             PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);
