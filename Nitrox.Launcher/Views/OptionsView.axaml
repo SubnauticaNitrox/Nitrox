@@ -106,7 +106,6 @@
                             <Button Grid.Column="2" HorizontalAlignment="Stretch" Classes="primary" ToolTip.Tip="Save launch arguments" Content="Apply" Command="{Binding SetArgumentsCommand}" />
                         </Grid>
                     </Border>
-
                 </StackPanel>
 
                 <!-- Saves Folder Location -->

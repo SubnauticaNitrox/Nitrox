@@ -20,7 +20,10 @@ public static class DialogServiceExtensions
             ArgumentNullException.ThrowIfNull(dialogService);
             // DataContext must be accessed on the UI thread, or it'll throw error.
             INotifyPropertyChanged owner = await Dispatcher.UIThread.InvokeAsync(() => AppViewLocator.MainWindow?.DataContext as INotifyPropertyChanged);
-            ArgumentNullException.ThrowIfNull(owner);
+            if (owner == null)
+            {
+                throw new InvalidOperationException($"Expected {nameof(AppViewLocator.MainWindow)}.{nameof(AppViewLocator.MainWindow.DataContext)} to not be null");
+            }
 
             T viewModel = dialogService.CreateViewModel<T>();
             setup?.Invoke(viewModel, extraParameter);
