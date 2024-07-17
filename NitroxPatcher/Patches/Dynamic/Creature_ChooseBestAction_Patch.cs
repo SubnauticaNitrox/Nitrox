@@ -1,50 +1,43 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// For players without lock: apply remote creature actions and prevent the original call.
+/// For players with lock: broadcast new creature actions
+/// </summary>
 public sealed partial class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default(float)));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default));
 
-    private static CreatureAction previousAction;
-
-    public static bool Prefix(Creature __instance, ref CreatureAction __result)
+    public static bool Prefix(Creature __instance, out NitroxId __state, ref CreatureAction __result)
     {
-        if (!__instance.TryGetNitroxId(out NitroxId id))
+        if (!__instance.TryGetIdOrWarn(out __state) || Resolve<SimulationOwnership>().HasAnyLockType(__state))
         {
-            Log.WarnOnce($"[Creature_ChooseBestAction_Patch] Couldn't find an id on {__instance.GetFullHierarchyPath()}");
             return true;
         }
 
-        if (Resolve<SimulationOwnership>().HasAnyLockType(id))
+        // If we have received any order
+        if (Resolve<AI>().TryGetActionForCreature(__instance, out CreatureAction action))
         {
-            previousAction = __instance.prevBestAction;
-            return true;
+            __result = action;
         }
-
-        // CreatureActionChangedProcessor.ActionById.TryGetValue(id, out __result);
-
         return false;
     }
 
-    // TODO: Postfix disabled for the moment as it has no functionality
-    public static void Postfix_disabled(Creature __instance, ref CreatureAction __result)
+    public static void Postfix(Creature __instance, bool __runOriginal, NitroxId __state, ref CreatureAction __result)
     {
-        if (!__instance.TryGetIdOrWarn(out NitroxId id))
+        if (!__runOriginal || __state == null)
         {
             return;
         }
 
-        if (Resolve<SimulationOwnership>().HasAnyLockType(id))
+        if (Resolve<SimulationOwnership>().HasAnyLockType(__state))
         {
-            if (previousAction != __result)
-            {
-                // Multiplayer.Logic.AI.CreatureActionChanged(id, __result);
-            }
+            Resolve<AI>().BroadcastNewAction(__state, __instance, __result);
         }
     }
 }

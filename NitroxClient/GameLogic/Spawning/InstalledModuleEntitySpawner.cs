@@ -51,7 +51,7 @@ public class InstalledModuleEntitySpawner : SyncEntitySpawner<InstalledModuleEnt
         return true;
     }
 
-    protected override bool SpawnsOwnChildren(InstalledModuleEntity entity) => true;
+    protected override bool SpawnsOwnChildren(InstalledModuleEntity entity) => false;
 
     private bool CanSpawn(InstalledModuleEntity entity, out GameObject parentObject, out Equipment equipment, out string errorLog)
     {
