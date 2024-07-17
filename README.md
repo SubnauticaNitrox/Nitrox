@@ -10,54 +10,19 @@ An open-source, multiplayer modification for the game <a href="https://unknownwo
 [![Translation status](https://hosted.weblate.org/widgets/subnauticanitrox/-/svg-badge.svg)](https://hosted.weblate.org/engage/subnauticanitrox/)
 [![Discord](https://img.shields.io/discord/525437013403631617?logo=discord&logoColor=white)](https://discord.gg/E8B4X9s)
 
-## FAQ
+## MacOS Preview Version
+This Nitrox 1.8.0.0 version is basically the [Linux launcher PR](https://github.com/SubnauticaNitrox/Nitrox/pull/1848) merged with several other PRs for testing.  
+Merged PRs in this version:
+1. [Linux launcher](https://github.com/SubnauticaNitrox/Nitrox/pull/1848)
+2. [Crops syncing](https://github.com/SubnauticaNitrox/Nitrox/pull/2137)
+3. [Waterpark (Alien Containment) syncing](https://github.com/SubnauticaNitrox/Nitrox/pull/2132)
+4. [Teleport Vehicle fix](https://github.com/SubnauticaNitrox/Nitrox/pull/2111)
+5. and finally [Leviathans sync](https://github.com/SubnauticaNitrox/Nitrox/pull/2106)
 
-### What is the current status?
-The mod is in the very early stages of development; however, a solid foundation has been laid for the community to iterate on.
-The following milestones have been completed:
+Additional files I added for macos:
+1. `launchNitrox.command` simply runs the correct Nitrox.Launcher
+2. `whitelistNitrox.command` disables Gatekeeper for the rest of the Nitrox folder (and only the Nitrox folder, to avoid needing to disable gatekeeper for the entire machine).
+3. `steam_appid.txt` mitigates a bug where Subnautica thinks Steam isn't opened and crashes due to piracy protection. It is copied to the correct directory by the whitelist command.
+4. `packageLauncher` makes a nice zip of the launcher and server files, and it isn't presented to the user
 
-* Client / Server Communication
-* Player movement
-* Picking up / Dropping item syncing
-* Long-range world syncing
-* Base building
-* Furniture building
-* Most furniture interactions (containers / medkit fabricators / chargers / etc)
-* Power management
-* Seamoth & Exosuit Syncing
-* Cyclops syncing
-* Chat system
-* New HUD for remote players
-* Basic player animations
-* Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
-* Friendly Launcher
-* Published on the <a href="https://nitrox.rux.gg">Nitrox website</a>
-
-### How can I play this mod?
-Please do keep in mind that this mod is still in progressional development. 
-
-We finally have reached a stage, where we feel comfortable enough to give the public easy access to the mod by providing a launcher to use on each reoccurring update.
-
-If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://subnauticanitrox.github.io/Documentation/">docs</a> to set up a development environment where pushed updates will be synchronized automatically.
-
-You can download the latest release of the mod on the <a href="https://nitrox.rux.gg">Nitrox website</a>.
-
-### Problems/bugs/issues
-Due to the huge influx of new players for Subnautica the Issue tracker turned into a forum instead of its actual purpose. Please join the <a href="https://discord.gg/E8B4X9s">Nitrox Discord</a> to discuss any and all issues you have with Nitrox. From there we'll pick up on new issues to track.
-
-Keep in mind that your issue may already exist. Please refer to the existing issues on Discord if you want to add new information about existing issues. You can peruse the existing issues <a href="https://github.com/SubnauticaNitrox/Nitrox/issues">here on Github</a>.
-
-### Translations
-We have a translation platform for those of you who speak another language to work on translating the mod into your native language. You can get started at https://hosted.weblate.org/engage/subnauticanitrox/.
-
-You'll need to sign up to start translating to a new language, or you can suggest translations for an existing language without an account (but someone with an account will have to manually verify your suggestions). This will send an email to the address you provide. Be sure check your spam folder, as Gmail can sometimes put the emails there.
-
-
-### How can I contribute?
-Simply submit a pull request. Full documentation & contribution guidelines can be found on the <a href="https://subnauticanitrox.github.io/Documentation/">documentation site</a>. Feel free to join us in the <a href="https://discord.gg/E8B4X9s">Nitrox Discord channel</a>.
-
-### How can I donate?
-We do not accept donations to the mod.  Those wishing to give money can do so here: https://www.doctorswithoutborders.org/
-
-### Why the name 'Nitrox'?
-Nitrox is an alternative air mixture, used by scuba divers, to achieve longer bottom times. As a mod, it will provide a new dimension of gameplay to extend your enjoyment.
+Hopefully in the future we can get a .app for Nitrox instead of the currently messy `.command` setup (and also avoid needing to install .NET)
