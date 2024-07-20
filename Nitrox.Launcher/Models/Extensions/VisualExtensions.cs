@@ -18,15 +18,16 @@ public static class VisualExtensions
         {
             return;
         }
-
-        Window window = visual.GetWindow();
-        IntPtr? windowHandle = window.TryGetPlatformHandle()?.Handle;
+        if (visual.GetWindow() is not { } window)
+        {
+            return;
+        }
+        nint? windowHandle = window.TryGetPlatformHandle()?.Handle;
         if (!windowHandle.HasValue)
         {
             return;
         }
 
-        // Only apply resizable style if window can resize. Otherwise, (on Windows) it will force resizing and might look ugly if not accounted for in UI.
         WindowsApi.EnableDefaultWindowAnimations(windowHandle.Value, window.CanResize);
     }
 
