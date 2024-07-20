@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Input;
@@ -29,7 +28,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     private string savesFolderDir;
-        
+
     [ObservableProperty]
     private KnownGame selectedGame;
 
@@ -42,13 +41,9 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         this.keyValueStore = keyValueStore;
 
-        this.WhenActivated(() =>
-        {
-            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-            SavesFolderDir = keyValueStore.GetSavesFolderDir();
-            return [Disposable.Empty];
-        });
+        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        SavesFolderDir = keyValueStore.GetSavesFolderDir();
     }
 
     public async Task SetTargetedSubnauticaPath(string path)
