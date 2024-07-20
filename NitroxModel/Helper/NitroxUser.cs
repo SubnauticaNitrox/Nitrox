@@ -97,7 +97,14 @@ namespace NitroxModel.Helper
         public static event Action GamePlatformChanged;
         public static IGamePlatform GamePlatform
         {
-            get { return gamePlatform; }
+            get
+            {
+                if (gamePlatform == null)
+                {
+                    _ = GamePath; // Ensure gamePath is set
+                }
+                return gamePlatform;
+            }
             set
             {
                 if (gamePlatform != value)

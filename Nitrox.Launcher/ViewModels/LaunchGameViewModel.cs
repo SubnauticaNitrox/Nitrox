@@ -13,7 +13,6 @@ using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Patching;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
-using NitroxModel;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -49,8 +48,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 
         NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
-        GamePlatform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
-        PlatformToolTip = GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
+        UpdateGamePlatform();
 
         foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
         {

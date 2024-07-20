@@ -28,6 +28,9 @@ public partial class OptionsViewModel : RoutableViewModelBase
     private string launchArgs;
 
     [ObservableProperty]
+    private string savesFolderDir;
+        
+    [ObservableProperty]
     private KnownGame selectedGame;
 
     [ObservableProperty]
@@ -43,6 +46,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
         {
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+            SavesFolderDir = keyValueStore.GetSavesFolderDir();
             return [Disposable.Empty];
         });
     }
@@ -148,7 +152,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = keyValueStore.GetSavesFolderDir(),
+            FileName = SavesFolderDir,
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
