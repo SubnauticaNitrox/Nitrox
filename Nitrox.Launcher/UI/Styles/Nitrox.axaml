@@ -36,6 +36,7 @@
         <Setter Property="SystemDecorations" Value="None" />
         <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
         <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
+        <Setter Property="Padding" Value="{Binding OffScreenMargin, RelativeSource={RelativeSource Self}}" />
     </Style>
 
     <Style Selector="Border">

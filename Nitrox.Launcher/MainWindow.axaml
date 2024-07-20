@@ -103,7 +103,7 @@
         </Style>
     </Window.Styles>
 
-    <Panel Margin="{Binding $parent[Window].OffScreenMargin}">
+    <Panel>
         <!-- Title bar -->
         <Panel Classes="titleBar">
             <Interaction.Behaviors>
