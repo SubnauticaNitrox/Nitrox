@@ -91,7 +91,7 @@
                         </StackPanel>
 
                         <Grid ColumnDefinitions="*,200">
-                            <ScrollViewer Grid.Column="0" Margin="0 0 10 0">
+                            <ScrollViewer Grid.Column="0" Margin="0 0 10 0" design:NitroxAttached.PrimaryScrollWheelDirection="Horizontal">
                                 <TextBlock Classes="header" Text="{Binding ServerName}" Foreground="White" />
                             </ScrollViewer>
 
@@ -104,7 +104,7 @@
                 </Grid>
             </StackPanel>
 
-            <ScrollViewer Grid.Row="1" x:Name="ServerNameScrollViewer" HorizontalScrollBarVisibility="Disabled" Margin="0 26">
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="0 26" design:NitroxAttached.AutoScrollToHome="True">
                 <StackPanel VerticalAlignment="Stretch" Spacing="42">
                     <StackPanel.Styles>
                         <Style Selector="ScrollViewer > StackPanel > Grid > StackPanel > TextBlock, ScrollViewer > StackPanel > StackPanel > TextBlock">
@@ -166,26 +166,23 @@
 
                         <StackPanel Grid.Column="4">
                             <TextBlock Text="AUTO SAVE INTERVAL (s)" FontSize="10" Opacity=".5" FontWeight="700" />
-                            <TextBox Watermark="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
+                            <TextBox design:NitroxAttached.IsNumericInput="True" Watermark="Autosave interval" FontSize="13" HorizontalAlignment="Stretch"
                                      Text="{Binding ServerAutoSaveInterval, Converter={converters:IntToStringConverter}}"
-                                     IsEnabled="{Binding !ServerIsOnline}"
-                                     KeyDown="InputElement_OnKeyDown" MaxLength="9" />
+                                     IsEnabled="{Binding !ServerIsOnline}" MaxLength="9" />
                         </StackPanel>
                     </Grid>
 
                     <Grid ColumnDefinitions="*,30,*">
                         <StackPanel>
                             <TextBlock Text="PLAYER LIMIT" FontSize="10" FontWeight="700" Opacity=".5" />
-                            <TextBox Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, Converter={converters:IntToStringConverter}}"
-                                     IsEnabled="{Binding !ServerIsOnline}"
-                                     KeyDown="InputElement_OnKeyDown" MaxLength="9" />
+                            <TextBox design:NitroxAttached.IsNumericInput="True" Watermark="Enter a player limit" Text="{Binding ServerMaxPlayers, Converter={converters:IntToStringConverter}}"
+                                     IsEnabled="{Binding !ServerIsOnline}" MaxLength="9" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="SERVER PORT" FontSize="10" FontWeight="700" Opacity=".5" />
-                            <TextBox Watermark="Enter a port number" Text="{Binding ServerPort, Converter={converters:IntToStringConverter}}"
-                                     IsEnabled="{Binding !ServerIsOnline}"
-                                     KeyDown="InputElement_OnKeyDown" MaxLength="5" />
+                            <TextBox design:NitroxAttached.IsNumericInput="True" Watermark="Enter a port number" Text="{Binding ServerPort, Converter={converters:IntToStringConverter}}"
+                                     IsEnabled="{Binding !ServerIsOnline}" MaxLength="5" />
                         </StackPanel>
                     </Grid>
 

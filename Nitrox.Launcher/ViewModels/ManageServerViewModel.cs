@@ -23,7 +23,6 @@ using Nitrox.Launcher.Views;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.Serialization;
 using NitroxModel.Server;
 using ReactiveUI;
 using Config = NitroxModel.Serialization.SubnauticaServerConfig;
@@ -32,7 +31,12 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class ManageServerViewModel : RoutableViewModelBase
 {
-    private readonly string[] advancedSettingsDeniedFields = ["password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole), nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm)];
+    private readonly string[] advancedSettingsDeniedFields =
+    [
+        "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
+        nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm)
+    ];
+
     private readonly IDialogService dialogService;
     private readonly IKeyValueStore keyValueStore;
     private ServerEntry server;
@@ -194,10 +198,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerAllowCommands != Server.AllowCommands;
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    private void Back()
-    {
-        HostScreen.Back();
-    }
+    private void Back() => HostScreen.Back();
 
     private bool CanGoBackAndStartServer() => !HasChanges();
 
@@ -235,7 +236,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
 
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(SaveFolderDirectory);
+        Config config = Config.Load(SaveFolderDirectory);
         using (config.Update(SaveFolderDirectory))
         {
             config.SaveName = Server.Name;
@@ -290,12 +291,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             {
                 Title = "Select an image",
                 AllowMultiple = false,
-                FileTypeFilter = new[] { new FilePickerFileType("All Images + Icons")
+                FileTypeFilter = new[]
                 {
-                    Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.ico" },
-                    AppleUniformTypeIdentifiers = new[] { "public.image" },
-                    MimeTypes = new[] { "image/*" }
-                } }
+                    new FilePickerFileType("All Images + Icons")
+                    {
+                        Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.ico" },
+                        AppleUniformTypeIdentifiers = new[] { "public.image" },
+                        MimeTypes = new[] { "image/*" }
+                    }
+                }
             });
             string newIconFile = files.FirstOrDefault()?.TryGetLocalPath();
             if (newIconFile == null || !File.Exists(newIconFile))
@@ -304,7 +308,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             }
 
             serverIconDir = newIconFile;
-            ServerIcon = new(serverIconDir);
+            ServerIcon = new Bitmap(serverIconDir);
         }
         catch (Exception ex)
         {
@@ -329,15 +333,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private void OpenWorldFolder()
-    {
+    private void OpenWorldFolder() =>
         Process.Start(new ProcessStartInfo
         {
             FileName = SaveFolderDirectory,
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
-    }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
     private async Task RestoreBackup()
