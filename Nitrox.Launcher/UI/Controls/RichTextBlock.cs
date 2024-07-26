@@ -26,6 +26,8 @@ namespace Nitrox.Launcher.UI.Controls;
 /// </example>
 public partial class RichTextBlock : TextBlock
 {
+    private static readonly TextDecorationCollection underlineTextDecoration = [new() { Location = TextDecorationLocation.Underline }];
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -73,21 +75,21 @@ public partial class RichTextBlock : TextBlock
                 case ['[', '/', ..]:
                     activeTags.Remove(match[2..^1].ToString());
                     break;
+                case "[b]":
+                    activeTags["b"] = run => run.FontWeight = FontWeight.Bold;
+                    break;
+                case "[u]":
+                    activeTags["u"] = run => run.TextDecorations = underlineTextDecoration;
+                    break;
+                case "[i]":
+                    activeTags["i"] = run => run.FontStyle = FontStyle.Italic;
+                    break;
                 case ['[', ..] when match.IndexOf("](") > -1:
                     TextBlock textBlock = new();
                     textBlock.Classes.Add("link");
                     textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
                     textBlock.Tag = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
                     Inlines.Add(textBlock);
-                    break;
-                case "[b]":
-                    activeTags["b"] = run => run.FontWeight = FontWeight.Bold;
-                    break;
-                case "[u]":
-                    activeTags["u"] = run => run.TextDecorations = run.TextDecorations = [new() { Location = TextDecorationLocation.Underline }];
-                    break;
-                case "[i]":
-                    activeTags["i"] = run => run.FontStyle = FontStyle.Italic;
                     break;
                 default:
                     // Unknown tag, let's handle as normal text (issue is likely due to input text not knowing about this RichTextBox format)
