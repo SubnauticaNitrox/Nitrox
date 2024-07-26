@@ -26,13 +26,6 @@ namespace Nitrox.Launcher.UI.Controls;
 /// </example>
 public partial class RichTextBlock : TextBlock
 {
-    private static readonly Dictionary<string, Action<Run>> tagActions = new()
-    {
-        { "u", run => run.TextDecorations = run.TextDecorations = [new() { Location = TextDecorationLocation.Underline }] },
-        { "b", run => run.FontWeight = FontWeight.Bold },
-        { "i", run => run.FontStyle = FontStyle.Italic }
-    };
-
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -47,77 +40,78 @@ public partial class RichTextBlock : TextBlock
     [GeneratedRegex(@"\[\/?([^]]+)\](?:\(([^\)]*)\))?")]
     private static partial Regex TagParserRegex();
 
-    private void ParseTextAndAddInlines(string text)
+    private void ParseTextAndAddInlines(ReadOnlySpan<char> text)
     {
-        static string GetTextPart(string text, Match lastMatch, Match currentMatch = null)
-        {
-            int start = lastMatch == null ? 0 : lastMatch.Index + lastMatch.Length;
-            int length = (currentMatch?.Index ?? text.Length) - start;
-            return length > 0 ? text.Substring(start, length) : "";
-        }
-
         if (Inlines == null)
         {
             return;
         }
-
-        MatchCollection matches = TagParserRegex().Matches(text);
-        if (matches is [])
+        Regex.ValueMatchEnumerator matchEnumerator = TagParserRegex().EnumerateMatches(text);
+        if (!matchEnumerator.MoveNext())
         {
-            Inlines?.Add(new Run(text));
+            Inlines?.Add(new Run(text.ToString()));
+            return;
         }
-        else
+
+        ValueMatch lastRange = default;
+        Dictionary<string, Action<Run>> activeTags = new(3);
+        do
         {
-            Match lastMatch = null;
-            HashSet<string> activeTags = [];
-            foreach (Match match in matches)
+            ValueMatch range = matchEnumerator.Current;
+
+            // Handle text that's in front of current tag (and after last tag).
+            ReadOnlySpan<char> textPart = text[(lastRange.Index + lastRange.Length)..range.Index];
+            if (!textPart.IsEmpty)
             {
-                string textPart = GetTextPart(text, lastMatch, match);
-                if (!string.IsNullOrEmpty(textPart))
-                {
-                    Inlines.Add(CreateRunWithTags(textPart, activeTags));
-                }
-
-                switch (match)
-                {
-                    case { ValueSpan: ['[', '/', ..], Groups: [_, { Value: var tag }, ..] }:
-                        activeTags.Remove(tag);
-                        break;
-                    case { Groups: [_, { Value: var name }, { Value: { Length: > 0 } url }] }:
-                        TextBlock textBlock = new();
-                        textBlock.Classes.Add("link");
-                        textBlock.Text = name;
-                        textBlock.Tag = url;
-                        Inlines.Add(textBlock);
-                        break;
-                    case { Groups: [_, { Value: var tag }, ..] }:
-                        activeTags.Add(tag);
-                        break;
-                }
-
-                lastMatch = match;
+                Inlines.Add(CreateRunWithTags(textPart.ToString(), activeTags));
             }
 
-            // Handle text that comes after last end tag.
-            string lastPart = GetTextPart(text, lastMatch);
-            if (!string.IsNullOrEmpty(lastPart))
+            // Handle current matched tag
+            ReadOnlySpan<char> match = text.Slice(range.Index, range.Length);
+            switch (match)
             {
-                Inlines?.Add(CreateRunWithTags(lastPart, activeTags));
+                case ['[', '/', ..]:
+                    activeTags.Remove(match[2..^1].ToString());
+                    break;
+                case ['[', ..] when match.IndexOf("](") > -1:
+                    TextBlock textBlock = new();
+                    textBlock.Classes.Add("link");
+                    textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
+                    textBlock.Tag = match[(match.IndexOfAny("(")+1)..match.IndexOfAny(")")].ToString();
+                    Inlines.Add(textBlock);
+                    break;
+                case "[b]":
+                    activeTags["b"] = run => run.FontWeight = FontWeight.Bold;
+                    break;
+                case "[u]":
+                    activeTags["u"] = run => run.TextDecorations = run.TextDecorations = [new() { Location = TextDecorationLocation.Underline }];
+                    break;
+                case "[i]":
+                    activeTags["i"] = run => run.FontStyle = FontStyle.Italic;
+                    break;
+                default:
+                    // Unknown tag, let's handle as normal text (issue is likely due to input text not knowing about this RichTextBox format)
+                    Inlines.Add(CreateRunWithTags(match.ToString(), activeTags));
+                    break;
             }
+
+            lastRange = range;
+        } while (matchEnumerator.MoveNext());
+
+        // Handle ending of text (i.e. after last tag).
+        ReadOnlySpan<char> lastPart = text[(lastRange.Index + lastRange.Length)..];
+        if (!lastPart.IsEmpty)
+        {
+            Inlines?.Add(CreateRunWithTags(lastPart.ToString(), activeTags));
         }
     }
 
-    private Run CreateRunWithTags(string text, HashSet<string> tags)
+    private Run CreateRunWithTags(string text, Dictionary<string, Action<Run>> tags)
     {
-        ArgumentNullException.ThrowIfNull(text);
-
         Run run = new(text);
-        foreach (string tag in tags)
+        foreach (KeyValuePair<string, Action<Run>> tag in tags)
         {
-            if (tagActions.TryGetValue(tag, out Action<Run> action))
-            {
-                action(run);
-            }
+            tag.Value(run);
         }
         return run;
     }
