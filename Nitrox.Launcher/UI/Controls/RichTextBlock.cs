@@ -51,7 +51,7 @@ public partial class RichTextBlock : TextBlock
         Regex.ValueMatchEnumerator matchEnumerator = TagParserRegex().EnumerateMatches(text);
         if (!matchEnumerator.MoveNext())
         {
-            Inlines?.Add(new Run(text.ToString()));
+            Inlines.Add(new Run(text.ToString()));
             return;
         }
 
@@ -104,7 +104,7 @@ public partial class RichTextBlock : TextBlock
         ReadOnlySpan<char> lastPart = text[(lastRange.Index + lastRange.Length)..];
         if (!lastPart.IsEmpty)
         {
-            Inlines?.Add(CreateRunWithTags(lastPart.ToString(), activeTags));
+            Inlines.Add(CreateRunWithTags(lastPart.ToString(), activeTags));
         }
     }
 
