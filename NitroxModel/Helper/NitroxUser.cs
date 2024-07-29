@@ -128,8 +128,8 @@ namespace NitroxModel.Helper
                 GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
                 if (potentiallyValidResult?.IsOk == true)
                 {
-                    Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Installation.Path}'");
-                    gamePath = potentiallyValidResult.Installation.Path;
+                    Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Path}'");
+                    gamePath = potentiallyValidResult.Path;
                     GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
                     return gamePath;
                 }

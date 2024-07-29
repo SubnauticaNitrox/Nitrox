@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Discovery.Models;
 using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace NitroxModel.Discovery.InstallationFinders;
@@ -38,12 +37,7 @@ public sealed class EpicGamesFinder : IGameFinder
                     continue;
                 }
 
-                return Ok(new GameInstallation
-                {
-                    Path = matchedPath,
-                    GameInfo = gameInfo,
-                    Origin = GameLibraries.EPIC
-                });
+                return Ok(matchedPath);
             }
         }
 

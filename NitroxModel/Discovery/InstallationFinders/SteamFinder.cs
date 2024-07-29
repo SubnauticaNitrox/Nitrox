@@ -3,7 +3,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Discovery.Models;
 using NitroxModel.Platforms.OS.Windows;
 using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
@@ -48,12 +47,7 @@ public sealed class SteamFinder : IGameFinder
             return Error($"Path '{path}' known by Steam for '{gameInfo.FullName}' does not point to a valid game file structure");
         }
 
-        return Ok(new GameInstallation
-        {
-            Path = path,
-            GameInfo = gameInfo,
-            Origin = GameLibraries.STEAM
-        });
+        return Ok(path);
     }
 
     private static string GetSteamPath()

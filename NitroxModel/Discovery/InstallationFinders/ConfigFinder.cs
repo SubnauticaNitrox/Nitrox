@@ -1,5 +1,4 @@
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
@@ -24,11 +23,6 @@ public sealed class ConfigFinder : IGameFinder
             return Error($"Game installation directory config '{path}' is invalid. Please enter the path to the '{gameInfo.Name}' installation");
         }
 
-        return Ok(new GameInstallation
-        {
-            Path = path,
-            GameInfo = gameInfo,
-            Origin = GameLibraries.CONFIG
-        });
+        return Ok(path);
     }
 }

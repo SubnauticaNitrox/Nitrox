@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using NitroxModel.Discovery.InstallationFinders;
 using NitroxModel.Discovery.InstallationFinders.Core;
 using NitroxModel.Discovery.Models;
@@ -49,7 +50,11 @@ public sealed class GameInstallationFinder
             {
                 result = result with { ErrorMessage = $"It appears you don't have {gameInfo.Name} installed" };
             }
-            yield return result;
+            if (result.Origin == default)
+            {
+                result = result with { Origin = wantedFinder };
+            }
+            yield return result with { Path = Path.GetFullPath(result.Path) };
         }
     }
 }
