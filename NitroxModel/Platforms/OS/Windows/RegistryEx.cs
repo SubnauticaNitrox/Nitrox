@@ -205,7 +205,7 @@ public static class RegistryEx
 
     public static Task CompareAsync<T>(string pathWithKey, Func<T, bool> predicate, TimeSpan timeout = default)
     {
-        CancellationTokenSource source = new(timeout == default(TimeSpan) ? TimeSpan.FromSeconds(10) : timeout);
+        CancellationTokenSource source = new(timeout == default ? TimeSpan.FromSeconds(10) : timeout);
         return CompareAsync(pathWithKey, predicate, source.Token);
     }
 

@@ -77,7 +77,7 @@ public sealed class Steam : IGamePlatform
             {
                 await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
                                                    v => v > 0,
-                                                   TimeSpan.FromSeconds(20));
+                                                   steamReadyCts.Token);
             }
             while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe)) && !steamReadyCts.IsCancellationRequested)
             {
