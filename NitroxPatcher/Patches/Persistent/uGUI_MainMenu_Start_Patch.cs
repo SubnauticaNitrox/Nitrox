@@ -1,3 +1,4 @@
+#if DEBUG
 using System;
 using System.Reflection;
 using HarmonyLib;
@@ -33,3 +34,4 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
         }
     }
 }
+#endif
