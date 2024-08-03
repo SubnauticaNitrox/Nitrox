@@ -14,6 +14,7 @@ public sealed class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch
 
     public static bool PrefixRestore()
     {
+        // TODO: If this is implemented someday, adapt behaviour of VirtualCyclops to not be deleted when a cyclops is destroyed
         Log.InGame(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
     }

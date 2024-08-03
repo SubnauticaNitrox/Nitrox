@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxClient.Unity.Helper;
 using NitroxModel.GameLogic.FMOD;
@@ -130,8 +131,8 @@ public class RemotePlayer : INitroxPlayer
             aimingRotation = vehicleAngle * aimingRotation;
         }
 
-        RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
-        RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
+        RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
+        RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime);
 
         AnimationController.AimingRotation = aimingRotation;
         AnimationController.UpdatePlayerAnimations = true;

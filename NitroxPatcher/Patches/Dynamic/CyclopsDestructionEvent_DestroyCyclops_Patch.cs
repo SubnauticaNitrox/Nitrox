@@ -1,11 +1,14 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.PlayerLogic;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// Broadcasts the cyclops destruction by calling <see cref="LiveMixin.Kill"/>, and safely remove every player from it.
+/// </summary>
 public sealed partial class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsDestructionEvent t) => t.DestroyCyclops());
@@ -19,9 +22,9 @@ public sealed partial class CyclopsDestructionEvent_DestroyCyclops_Patch : Nitro
         }
 
         // Before the cyclops destruction, we move out the remote players so that they aren't stuck in its hierarchy
-        foreach (RemotePlayerIdentifier remotePlayerIdentifier in __instance.GetComponentsInChildren<RemotePlayerIdentifier>(true))
+        if (Player.main && Player.main.currentSub == __instance.subRoot && __instance.subRoot.TryGetComponent(out NitroxCyclops nitroxCyclops))
         {
-            remotePlayerIdentifier.RemotePlayer.ResetStates();
+            nitroxCyclops.RemoveAllPlayers();
         }
     }
 }
