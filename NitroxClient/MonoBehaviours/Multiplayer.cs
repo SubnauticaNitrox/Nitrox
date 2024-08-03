@@ -10,6 +10,7 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
@@ -167,6 +168,7 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
             gameObject.AddComponent<BuildingHandler>();
+            VirtualCyclops.Initialize();
         }
 
         public void StopCurrentSession()
