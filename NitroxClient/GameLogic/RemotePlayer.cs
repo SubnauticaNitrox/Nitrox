@@ -48,6 +48,8 @@ public class RemotePlayer : INitroxPlayer
 
     public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
 
+    public CyclopsPawn Pawn { get; set; }
+
     public RemotePlayer(PlayerContext playerContext, PlayerModelManager playerModelManager, PlayerVitalsManager playerVitalsManager, FMODWhitelist fmodWhitelist)
     {
         PlayerContext = playerContext;
@@ -94,6 +96,17 @@ public class RemotePlayer : INitroxPlayer
 
         vitals = playerVitalsManager.CreateOrFindForPlayer(this);
         RefreshVitalsVisibility();
+
+        PlayerDisconnectEvent.AddHandler(Body, _ =>
+        {
+            Pawn?.Unregister();
+            Pawn = null;
+        });
+
+        PlayerDeathEvent.AddHandler(Body, _ =>
+        {
+            ResetStates();
+        });
     }
 
     public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -121,9 +134,24 @@ public class RemotePlayer : INitroxPlayer
         // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
         SetVehicle(null);
         SetPilotingChair(null);
+
+        AnimationController.AimingRotation = aimingRotation;
+        AnimationController.UpdatePlayerAnimations = true;
+        AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
+
         // If in a subroot the position will be relative to the subroot
         if (SubRoot && !SubRoot.isBase)
         {
+            if (Pawn != null)
+            {
+                Pawn.Handle.transform.localPosition = SubRoot.transform.InverseTransformPoint(position);
+                Pawn.Handle.transform.localRotation = bodyRotation;
+
+                AnimationController.AimingRotation = aimingRotation;
+                AnimationController.UpdatePlayerAnimations = true;
+                return;
+            }
+
             Quaternion vehicleAngle = SubRoot.transform.rotation;
             position = vehicleAngle * position;
             position += SubRoot.transform.position;
@@ -131,11 +159,8 @@ public class RemotePlayer : INitroxPlayer
             aimingRotation = vehicleAngle * aimingRotation;
         }
 
-        RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
+        RigidBody.velocity = AnimationController.Velocity;
         RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime);
-
-        AnimationController.AimingRotation = aimingRotation;
-        AnimationController.UpdatePlayerAnimations = true;
     }
 
     public void SetPilotingChair(PilotingChair newPilotingChair)
@@ -163,10 +188,15 @@ public class RemotePlayer : INitroxPlayer
 
                 mpCyclops.CurrentPlayer = this;
                 mpCyclops.Enter();
+
+                if (SubRoot)
+                {
+                    SkyEnvironmentChanged.Broadcast(Body, SubRoot);
+                }
             }
             else
             {
-                SetSubRoot(SubRoot);
+                SetSubRoot(SubRoot, true);
                 ArmsController.SetWorldIKTarget(null, null);
 
                 if (mpCyclops)
@@ -176,17 +206,29 @@ public class RemotePlayer : INitroxPlayer
                 }
             }
 
-            RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair;
+            bool isKinematic = newPilotingChair;
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(RigidBody, isKinematic, true);
+            AnimationController["cyclops_steering"] = newPilotingChair;
         }
     }
 
-    public void SetSubRoot(SubRoot newSubRoot)
+    public void SetSubRoot(SubRoot newSubRoot, bool force = false)
     {
-        if (SubRoot != newSubRoot)
+        if (SubRoot != newSubRoot || force)
         {
+            // Unregister from previous cyclops
+            Pawn?.Unregister();
+            Pawn = null;
+
             if (newSubRoot)
             {
                 Attach(newSubRoot.transform, true);
+                
+                // Register in new cyclops
+                if (newSubRoot.TryGetComponent(out NitroxCyclops nitroxCyclops))
+                {
+                    nitroxCyclops.OnPlayerEnter(this);
+                }
             }
             else
             {
@@ -250,7 +292,8 @@ public class RemotePlayer : INitroxPlayer
                 }
             }
 
-            RigidBody.isKinematic = newVehicle;
+            bool isKinematic = newVehicle;
+            UWE.Utils.SetIsKinematicAndUpdateInterpolation(RigidBody, isKinematic, true);
 
             Vehicle = newVehicle;
 
@@ -260,13 +303,16 @@ public class RemotePlayer : INitroxPlayer
     }
 
     /// <summary>
-    /// Drops the remote player, swimming where he is
+    /// Drops the remote player, swimming where he is. Resets its animator.
     /// </summary>
     public void ResetStates()
     {
+        SetPilotingChair(null);
         SetVehicle(null);
         SetSubRoot(null);
         AnimationController.UpdatePlayerAnimations = true;
+        AnimationController.Reset();
+        ArmsController.SetWorldIKTarget(null, null);
     }
 
     public void Destroy()

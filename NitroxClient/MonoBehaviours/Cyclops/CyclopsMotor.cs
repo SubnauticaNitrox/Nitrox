@@ -148,6 +148,12 @@ public partial class CyclopsMotor : GroundMotor
 
         Vector3 move = (horizontalVelocity + verticalVelocity) * DeltaTime;
 
+        float num = Mathf.Max(Pawn.Controller.stepOffset, Mathf.Sqrt(move.x * move.x + move.z * move.z));
+        if (grounded)
+        {
+            move -= num * Up;
+        }
+
         Collision = Pawn.Controller.Move(move);
 
         float verticalDot = Vector3.Dot(verticalVelocity, Up);
@@ -169,6 +175,12 @@ public partial class CyclopsMotor : GroundMotor
                     surfaceType = VFXSurfaceTypes.metal
                 });
             }
+        }
+        // If player is no longer grounded after move
+        else if (previouslyGrounded)
+        {
+            SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
+            Pawn.Handle.transform.localPosition += num * Up;
         }
 
         // Give velocity info for the animations

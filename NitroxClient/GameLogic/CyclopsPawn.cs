@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
@@ -12,6 +13,11 @@ namespace NitroxClient.GameLogic;
 /// </summary>
 public class CyclopsPawn
 {
+    private static readonly List<CharacterController> controllers = [];
+    public static readonly int PLAYER_LAYER = 1 << LayerMask.NameToLayer("Player");
+
+    private readonly INitroxPlayer player;
+    private readonly VirtualCyclops virtualCyclops;
     private readonly Transform parentTransform;
     private readonly Transform realCyclopsTransform;
     private readonly bool isLocalPlayer;
@@ -28,6 +34,8 @@ public class CyclopsPawn
 
     public CyclopsPawn(INitroxPlayer player, VirtualCyclops virtualCyclops, Transform realCyclopsTransform)
     {
+        this.player = player;
+        this.virtualCyclops = virtualCyclops;
         parentTransform = virtualCyclops.transform;
         this.realCyclopsTransform = realCyclopsTransform;
 
@@ -40,8 +48,8 @@ public class CyclopsPawn
         }
         else if (player is RemotePlayer remotePlayer)
         {
-            RealObject = player.Body;
-            MaintainPredicate = () => true;
+            RealObject = remotePlayer.Body;
+            MaintainPredicate = () => !remotePlayer.PilotingChair;
         }
 
         Initialize($"{player.PlayerName}-Pawn", RealObject.transform.localPosition);
@@ -54,7 +62,7 @@ public class CyclopsPawn
         CharacterController reference = Player.main.GetComponent<CharacterController>();
 
         Handle = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-        Handle.layer = LayerMask.NameToLayer("Player");
+        Handle.layer = 1 << PLAYER_LAYER;
         Handle.name = name;
         Handle.transform.parent = parentTransform;
         Handle.transform.localPosition = localPosition;
@@ -70,7 +78,19 @@ public class CyclopsPawn
         Controller.skinWidth = reference.skinWidth;
         Controller.stepOffset = groundMotor.controllerSetup.stepOffset;
         Controller.slopeLimit = groundMotor.controllerSetup.slopeLimit;
+
+        RegisterController();
+
         Log.Debug($"Pawn: height: {Controller.height}, center {center}, radius: {Controller.radius}, skinWidth: {Controller.skinWidth}");
+    }
+
+    public void RegisterController()
+    {
+        foreach (CharacterController controller in controllers)
+        {
+            Physics.IgnoreCollision(controller, Controller);
+        }
+        controllers.Add(Controller);
     }
 
     public void SetReference()
@@ -92,8 +112,24 @@ public class CyclopsPawn
         }
     }
 
+    public void Unregister()
+    {
+        if (virtualCyclops)
+        {
+            if (isLocalPlayer)
+            {
+                virtualCyclops.Cyclops.OnLocalPlayerExit();
+            }
+            else
+            {
+                virtualCyclops.Cyclops.OnPlayerExit((RemotePlayer)player);
+            }
+        }
+    }
+
     public void Terminate()
     {
+        controllers.Remove(Controller);
         GameObject.Destroy(Handle);
     }
 }

@@ -24,6 +24,10 @@ public class VirtualCyclops : MonoBehaviour
     public NitroxCyclops Cyclops;
     public Transform axis;
 
+    private Rigidbody rigidbody;
+    private Vector3 InitialPosition;
+    private Quaternion InitialRotation;
+
     public static void Initialize()
     {
         CreateVirtualPrefab();
@@ -63,14 +67,19 @@ public class VirtualCyclops : MonoBehaviour
         {
             Vector3 position = Vector3.up * 500 + Vector3.right * (Offset - 100);
             Offset += 10;
+            Quaternion rotation = Quaternion.identity;
 
-            GameObject instance = GameObject.Instantiate(Prefab, position, Quaternion.identity, false);
+            GameObject instance = GameObject.Instantiate(Prefab, position, rotation, false);
             instance.name = NAME;
             LargeWorldEntity.Register(instance);
             virtualCyclops = instance.GetComponent<VirtualCyclops>();
             virtualCyclops.Cyclops = cyclopsObject.GetComponent<NitroxCyclops>();
             virtualCyclops.axis = instance.GetComponent<SubRoot>().subAxis;
             virtualCyclops.RegisterOpenables();
+            virtualCyclops.InitialPosition = position;
+            virtualCyclops.InitialRotation = rotation;
+            virtualCyclops.rigidbody = instance.GetComponent<Rigidbody>();
+            virtualCyclops.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
             instance.GetComponent<WorldForces>().enabled = false;
             instance.GetComponent<WorldForces>().lockInterpolation = false;
@@ -94,6 +103,12 @@ public class VirtualCyclops : MonoBehaviour
             Destroy(associatedVirtualCyclops.gameObject);
             VirtualCyclopsByObject.Remove(cyclopsObject);
         }
+    }
+
+    public void Update()
+    {
+        transform.position = InitialPosition;
+        transform.rotation = InitialRotation;
     }
 
     public void ToggleRenderers(bool toggled)

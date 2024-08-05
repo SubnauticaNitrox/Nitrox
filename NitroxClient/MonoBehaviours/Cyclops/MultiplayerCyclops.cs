@@ -23,13 +23,13 @@ public class MultiplayerCyclops : MultiplayerVehicleControl
 
     protected override void FixedUpdate()
     {
-        /*base.FixedUpdate();
+        base.FixedUpdate();
         if (CurrentPlayer != null)
         {
             // These values are set by the game code, but they do not seem to have any impact on animations.
             CurrentPlayer.AnimationController.SetFloat("cyclops_yaw", SmoothYaw.SmoothValue);
             CurrentPlayer.AnimationController.SetFloat("cyclops_pitch", SmoothPitch.SmoothValue);
-        }*/
+        }
     }
 
     internal override void SetSteeringWheel(float yaw, float pitch)
