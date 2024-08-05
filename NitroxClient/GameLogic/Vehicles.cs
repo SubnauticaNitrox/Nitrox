@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -20,6 +21,7 @@ public class Vehicles
 {
     private readonly IPacketSender packetSender;
     private readonly IMultiplayerSession multiplayerSession;
+    private readonly Dictionary<TechType, string> pilotingChairByTechType = [];
 
     public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
     {
@@ -101,8 +103,26 @@ public class Vehicles
             RemotePlayer playerInstance = player.Value;
             playerInstance.SetVehicle(vehicle);
             playerInstance.SetSubRoot(subRoot);
-            playerInstance.SetPilotingChair(subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>());
+            playerInstance.SetPilotingChair(FindPilotingChairWithCache(opGameObject.Value, vehicleModel.TechType.ToUnity()));
             playerInstance.AnimationController.UpdatePlayerAnimations = false;
+        }
+    }
+
+    private PilotingChair FindPilotingChairWithCache(GameObject parent, TechType techType)
+    {
+        if (!parent)
+        {
+            return null;
+        }
+        if (pilotingChairByTechType.TryGetValue(techType, out string path))
+        {
+            return parent.transform.Find(path).GetComponent<PilotingChair>();
+        }
+        else
+        {
+            PilotingChair chair = parent.GetComponentInChildren<PilotingChair>(true);
+            pilotingChairByTechType.Add(techType, chair.gameObject.GetHierarchyPath(parent));
+            return chair;
         }
     }
 

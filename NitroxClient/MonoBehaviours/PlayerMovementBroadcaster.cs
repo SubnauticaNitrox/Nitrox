@@ -11,30 +11,15 @@ namespace NitroxClient.MonoBehaviours;
 
 public class PlayerMovementBroadcaster : MonoBehaviour
 {
-    /// <summary>
-    ///     Amount of physics updates to skip for sending location broadcasts.
-    ///     TODO: Allow servers to set this value for clients. With many clients connected to the server, a higher value can be preferred.
-    /// </summary>
-    public const int LOCATION_BROADCAST_TICK_SKIPS = 1;
-
     private LocalPlayer localPlayer;
-    private int locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
 
     public void Awake()
     {
-        localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        localPlayer = this.Resolve<LocalPlayer>();
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
-        // Throttle location broadcasts to not run on every physics tick.
-        if (locationBroadcastSkipThreshold-- > 0)
-        {
-            return;
-        }
-        // Reset skip threshold.
-        locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
-
         // Freecam does disable main camera control
         // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
         if (!MainCameraControl.main.isActiveAndEnabled &&
@@ -59,10 +44,9 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             // Rotate relative player position relative to the subroot (else there are problems with respawning)
             Transform subRootTransform = subRoot.transform;
             Quaternion undoVehicleAngle = subRootTransform.rotation.GetInverse();
-            currentPosition = currentPosition - subRootTransform.position;
-            currentPosition = undoVehicleAngle * currentPosition;
             bodyRotation = undoVehicleAngle * bodyRotation;
             aimingRotation = undoVehicleAngle * aimingRotation;
+            currentPosition = subRootTransform.TransformPoint(currentPosition);
 
             if (Player.main.isPiloting && subRoot.isCyclops)
             {

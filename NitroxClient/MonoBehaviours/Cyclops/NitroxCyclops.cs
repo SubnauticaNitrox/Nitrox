@@ -90,7 +90,7 @@ public class NitroxCyclops : MonoBehaviour
     /// </summary>
     public void OnPlayerEnter(RemotePlayer remotePlayer)
     {
-        Virtual.AddPawnForPlayer(remotePlayer);
+        remotePlayer.Pawn = Virtual.AddPawnForPlayer(remotePlayer);
     }
 
     /// <summary>
@@ -99,6 +99,7 @@ public class NitroxCyclops : MonoBehaviour
     public void OnPlayerExit(RemotePlayer remotePlayer)
     {
         Virtual.RemovePawnForPlayer(remotePlayer);
+        remotePlayer.Pawn = null;
     }
 
     public void MaintainPawns()

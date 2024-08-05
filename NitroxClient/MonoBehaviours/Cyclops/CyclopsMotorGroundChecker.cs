@@ -1,3 +1,4 @@
+using NitroxClient.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -11,7 +12,7 @@ public partial class CyclopsMotor
     private const float CAST_EXTRA_DISTANCE = 0.001f;
 
     public const QueryTriggerInteraction QuerySetting = QueryTriggerInteraction.Ignore;
-    public static readonly int LayerMaskExceptPlayer = ~(1 << LayerMask.NameToLayer("Player"));
+    public static readonly int LayerMaskExceptPlayer = ~CyclopsPawn.PLAYER_LAYER;
 
     /// <summary>
     /// Latest snapshot of the Pawn's global position. It is updated every frame before being used.
