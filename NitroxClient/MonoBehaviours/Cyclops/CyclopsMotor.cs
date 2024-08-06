@@ -142,8 +142,6 @@ public partial class CyclopsMotor : GroundMotor
     /// <returns>Pawn's local velocity</returns>
     public Vector3 Move(Vector3 horizontalVelocity)
     {
-        // TODO: Replicate modules' colliders in the virtual cyclops
-        // TODO: Try to improve collisions with closing doors (maybe set pawns to be kinematic)
         Vector3 beforePosition = Pawn.Position;
 
         Vector3 move = (horizontalVelocity + verticalVelocity) * DeltaTime;

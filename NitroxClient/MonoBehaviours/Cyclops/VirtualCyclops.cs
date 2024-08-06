@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -20,6 +21,8 @@ public class VirtualCyclops : MonoBehaviour
     public static readonly Dictionary<GameObject, VirtualCyclops> VirtualCyclopsByObject = [];
 
     private readonly Dictionary<string, Openable> openableByName = [];
+    private readonly Dictionary<GameObject, GameObject> virtualConstructableByRealGameObject = [];
+    private readonly Dictionary<TechType, GameObject> cacheColliderCopy = [];
     public readonly Dictionary<INitroxPlayer, CyclopsPawn> Pawns = [];
     public NitroxCyclops Cyclops;
     public Transform axis;
@@ -154,6 +157,76 @@ public class VirtualCyclops : MonoBehaviour
             {
                 virtualOpenable.PlayOpenAnimation(openState, virtualOpenable.animTime);
             }
+        }
+    }
+
+    public void ReplicateConstructable(Constructable constructable)
+    {
+        if (virtualConstructableByRealGameObject.ContainsKey(constructable.gameObject))
+        {
+            return;
+        }
+        GameObject colliderCopy = CreateColliderCopy(constructable.gameObject, constructable.techType);
+        // WorldPositionStays is set to false so we keep the same local parameters
+        colliderCopy.transform.parent = transform;
+        colliderCopy.transform.localPosition = constructable.transform.localPosition;
+        colliderCopy.transform.localRotation = constructable.transform.localRotation;
+        colliderCopy.transform.localScale = constructable.transform.localScale;
+
+        virtualConstructableByRealGameObject.Add(constructable.gameObject, colliderCopy);
+    }
+
+    /// <summary>
+    /// Creates an empty shell simulating the presence of modules by copying its children containing a collider.
+    /// </summary>
+    public GameObject CreateColliderCopy(GameObject realObject, TechType techType)
+    {
+        if (cacheColliderCopy.TryGetValue(techType, out GameObject colliderCopy))
+        {
+            return GameObject.Instantiate(colliderCopy);
+        }
+        colliderCopy = new GameObject($"{realObject.name}-collidercopy");
+
+        Transform transform = realObject.transform;
+
+        Dictionary<Transform, Transform> copiedTransformByRealTransform = [];
+        copiedTransformByRealTransform[transform] = colliderCopy.transform;
+
+        IEnumerable<GameObject> uniqueColliderObjects = realObject.GetComponentsInChildren<Collider>(true).Select(c => c.gameObject).Distinct();
+        foreach (GameObject colliderObject in uniqueColliderObjects)
+        {
+            GameObject copiedCollider = Instantiate(colliderObject);
+            copiedCollider.name = colliderObject.name;
+
+            // "child" is always a copied transform looking for its copied parent
+            Transform child = copiedCollider.transform;
+            // "parent" is always the real parent of the real transform corresponding to "child"
+            Transform parent = colliderObject.transform.parent;
+
+            while (!copiedTransformByRealTransform.ContainsKey(parent))
+            {
+                Transform copiedParent = copiedTransformByRealTransform[parent] = Instantiate(parent);
+
+                child.SetParent(copiedParent, false);
+
+                child = copiedParent;
+                parent = parent.parent;
+            }
+
+            // At the top of the tree we can simply stick the latest child to the collider
+            child.SetParent(colliderCopy.transform, false);
+        }
+
+        cacheColliderCopy.Add(techType, colliderCopy);
+        return GameObject.Instantiate(colliderCopy);
+    }
+
+    public void UnregisterConstructable(GameObject realObject)
+    {
+        if (virtualConstructableByRealGameObject.TryGetValue(realObject, out GameObject virtualConstructable))
+        {
+            Destroy(virtualConstructable);
+            virtualConstructableByRealGameObject.Remove(realObject);
         }
     }
 }
