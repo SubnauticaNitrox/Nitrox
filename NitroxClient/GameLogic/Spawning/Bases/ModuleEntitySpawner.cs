@@ -82,7 +82,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         moduleTransform.localScale = moduleEntity.Transform.LocalScale.ToUnity();
         ApplyModuleData(moduleEntity, moduleObject, result);
 
-        if (parent && parent.TryGetComponent(out NitroxCyclops nitroxCyclops))
+        if (parent && parent.TryGetComponent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
         {
             nitroxCyclops.Virtual.ReplicateConstructable(moduleObject.GetComponent<Constructable>());
         }

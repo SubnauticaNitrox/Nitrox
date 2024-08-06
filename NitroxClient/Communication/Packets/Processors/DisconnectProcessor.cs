@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.DataStructures.Util;
@@ -26,6 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.PlayerId);
             if (remotePlayer.HasValue)
             {
+                remotePlayer.Value.PlayerDisconnectEvent.Trigger(remotePlayer.Value);
                 remotePlayerManager.RemovePlayer(disconnect.PlayerId);
                 Log.Info($"{remotePlayer.Value.PlayerName} disconnected");
                 Log.InGame(Language.main.Get("Nitrox_PlayerDisconnected").Replace("{PLAYER}", remotePlayer.Value.PlayerName));

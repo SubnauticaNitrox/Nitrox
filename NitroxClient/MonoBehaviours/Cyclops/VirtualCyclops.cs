@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
-using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -14,16 +12,13 @@ namespace NitroxClient.MonoBehaviours.Cyclops;
 /// </summary>
 public class VirtualCyclops : MonoBehaviour
 {
-    private static GameObject Prefab;
-    private static float Offset;
+    public static VirtualCyclops Instance;
     public const string NAME = "VirtualCyclops";
 
-    public static readonly Dictionary<GameObject, VirtualCyclops> VirtualCyclopsByObject = [];
-
-    private readonly Dictionary<string, Openable> openableByName = [];
+    private readonly Dictionary<string, Openable> virtualOpenableByName = [];
+    private readonly Dictionary<string, Openable> realOpenableByName = [];
     private readonly Dictionary<GameObject, GameObject> virtualConstructableByRealGameObject = [];
     private readonly Dictionary<TechType, GameObject> cacheColliderCopy = [];
-    public readonly Dictionary<INitroxPlayer, CyclopsPawn> Pawns = [];
     public NitroxCyclops Cyclops;
     public Transform axis;
 
@@ -33,15 +28,23 @@ public class VirtualCyclops : MonoBehaviour
 
     public static void Initialize()
     {
-        CreateVirtualPrefab();
+        CreateVirtualCyclops();
+        Multiplayer.OnAfterMultiplayerEnd += Dispose;
+    }
+
+    public static void Dispose()
+    {
+        Destroy(Instance.gameObject);
+        Instance = null;
+        Multiplayer.OnAfterMultiplayerEnd -= Dispose;
     }
 
     /// <summary>
     /// Initializes the <see cref="Prefab"/> object with reduced utility to ensure the virtual cyclops won't be eating too much performance.
     /// </summary>
-    public static void CreateVirtualPrefab()
+    public static void CreateVirtualCyclops()
     {
-        if (Prefab)
+        if (Instance)
         {
             return;
         }
@@ -49,62 +52,80 @@ public class VirtualCyclops : MonoBehaviour
         LightmappedPrefabs.main.RequestScenePrefab("cyclops", (cyclopsPrefab) =>
         {
             SubConsoleCommand.main.OnSubPrefabLoaded(cyclopsPrefab);
-            Prefab = SubConsoleCommand.main.GetLastCreatedSub();
-            Prefab.name = NAME;
-            Prefab.GetComponent<LargeWorldEntity>().enabled = false;
-            Prefab.transform.parent = null;
+            GameObject model = SubConsoleCommand.main.GetLastCreatedSub();
+            model.name = NAME;
+            LargeWorldEntity.Register(model);
+            Vector3 position = Vector3.up * 500;
+            Quaternion rotation = Quaternion.identity;
+            model.transform.position = position;
+            model.transform.rotation = rotation;
 
-            GameObject.Destroy(Prefab.GetComponent<EcoTarget>());
-            GameObject.Destroy(Prefab.GetComponent<PingInstance>());
-            Prefab.AddComponent<VirtualCyclops>();
-            Prefab.SetActive(false);
+            Instance = model.AddComponent<VirtualCyclops>();
+
+            Instance.axis = model.GetComponent<SubRoot>().subAxis;
+
+            GameObject.Destroy(model.GetComponent<EcoTarget>());
+            GameObject.Destroy(model.GetComponent<PingInstance>());
+                        
+            Instance.InitialPosition = position;
+            Instance.InitialRotation = rotation;
+            Instance.rigidbody = Instance.GetComponent<Rigidbody>();
+            Instance.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
+            model.GetComponent<WorldForces>().enabled = false;
+            model.GetComponent<WorldForces>().lockInterpolation = false;
+            model.GetComponent<Stabilizer>().stabilizerEnabled = false;
+            model.GetComponent<Rigidbody>().isKinematic = true;
+
+            Instance.RegisterVirtualOpenables();
+            Instance.ToggleRenderers(false);
+            model.SetActive(true);
         });
     }
 
-    /// <summary>
-    /// Instantiates the <see cref="Prefab"/> object associated with a regular cyclops and links references where required.
-    /// </summary>
-    public static VirtualCyclops CreateVirtualInstance(GameObject cyclopsObject)
+    public void Populate()
     {
-        if (!VirtualCyclopsByObject.TryGetValue(cyclopsObject, out VirtualCyclops virtualCyclops))
+        foreach (Constructable constructable in Cyclops.GetComponentsInChildren<Constructable>(true))
         {
-            Vector3 position = Vector3.up * 500 + Vector3.right * (Offset - 100);
-            Offset += 10;
-            Quaternion rotation = Quaternion.identity;
-
-            GameObject instance = GameObject.Instantiate(Prefab, position, rotation, false);
-            instance.name = NAME;
-            LargeWorldEntity.Register(instance);
-            virtualCyclops = instance.GetComponent<VirtualCyclops>();
-            virtualCyclops.Cyclops = cyclopsObject.GetComponent<NitroxCyclops>();
-            virtualCyclops.axis = instance.GetComponent<SubRoot>().subAxis;
-            virtualCyclops.RegisterOpenables();
-            virtualCyclops.InitialPosition = position;
-            virtualCyclops.InitialRotation = rotation;
-            virtualCyclops.rigidbody = instance.GetComponent<Rigidbody>();
-            virtualCyclops.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-
-            instance.GetComponent<WorldForces>().enabled = false;
-            instance.GetComponent<WorldForces>().lockInterpolation = false;
-            instance.GetComponent<Stabilizer>().stabilizerEnabled = false;
-            instance.GetComponent<Rigidbody>().isKinematic = true;
-
-            instance.SetActive(true);
-            virtualCyclops.ToggleRenderers(false);
-            VirtualCyclopsByObject.Add(cyclopsObject, virtualCyclops);
+            ReplicateConstructable(constructable);
         }
-        return virtualCyclops;
+
+        foreach (Openable openable in Cyclops.GetComponentsInChildren<Openable>(true))
+        {
+            openable.blocked = false;
+            ReplicateOpening(openable, openable.isOpen);
+            realOpenableByName.Add(openable.name, openable);
+        }
     }
 
-    /// <summary>
-    /// Destroys the virtual cyclops instance associated with a regular cyclops object.
-    /// </summary>
-    public static void Terminate(GameObject cyclopsObject)
+    public void Depopulate()
     {
-        if (VirtualCyclopsByObject.TryGetValue(cyclopsObject, out VirtualCyclops associatedVirtualCyclops))
+        foreach (GameObject virtualObject in virtualConstructableByRealGameObject.Values)
         {
-            Destroy(associatedVirtualCyclops.gameObject);
-            VirtualCyclopsByObject.Remove(cyclopsObject);
+            Destroy(virtualObject);
+        }
+        virtualConstructableByRealGameObject.Clear();
+        
+        foreach (Openable openable in realOpenableByName.Values)
+        {
+            openable.blocked = false;
+        }
+        realOpenableByName.Clear();
+    }
+
+    public void SetCurrentCyclops(NitroxCyclops nitroxCyclops)
+    {
+        if (Cyclops)
+        {
+            Cyclops.Virtual = null;
+            Depopulate();
+            Cyclops = null;
+        }
+
+        Cyclops = nitroxCyclops;
+        if (Cyclops)
+        {
+            Populate();
         }
     }
 
@@ -122,41 +143,30 @@ public class VirtualCyclops : MonoBehaviour
         }
     }
 
-    public CyclopsPawn AddPawnForPlayer(INitroxPlayer player)
-    {
-        if (!Pawns.TryGetValue(player, out CyclopsPawn pawn))
-        {
-            pawn = new(player, this, Cyclops.transform);
-            Pawns.Add(player, pawn);
-        }
-        return pawn;
-    }
-
-    public void RemovePawnForPlayer(INitroxPlayer player)
-    {
-        if (Pawns.TryGetValue(player, out CyclopsPawn pawn))
-        {
-            pawn.Terminate();
-        }
-        Pawns.Remove(player);
-    }
-
-    public void RegisterOpenables()
+    public void RegisterVirtualOpenables()
     {
         foreach (Openable openable in transform.GetComponentsInChildren<Openable>(true))
         {
-            openableByName.Add(openable.name, openable);
+            virtualOpenableByName.Add(openable.name, openable);
         }
     }
 
     public void ReplicateOpening(Openable openable, bool openState)
     {
-        if (openableByName.TryGetValue(openable.name, out Openable virtualOpenable))
+        if (virtualOpenableByName.TryGetValue(openable.name, out Openable virtualOpenable))
         {
             using (PacketSuppressor<OpenableStateChanged>.Suppress())
             {
                 virtualOpenable.PlayOpenAnimation(openState, virtualOpenable.animTime);
             }
+        }
+    }
+
+    public void ReplicateBlock(Openable openable, bool blockState)
+    {
+        if (realOpenableByName.TryGetValue(openable.name, out Openable realOpenable))
+        {
+            realOpenable.blocked = blockState;
         }
     }
 
@@ -167,7 +177,6 @@ public class VirtualCyclops : MonoBehaviour
             return;
         }
         GameObject colliderCopy = CreateColliderCopy(constructable.gameObject, constructable.techType);
-        // WorldPositionStays is set to false so we keep the same local parameters
         colliderCopy.transform.parent = transform;
         colliderCopy.transform.localPosition = constructable.transform.localPosition;
         colliderCopy.transform.localRotation = constructable.transform.localRotation;
@@ -186,6 +195,8 @@ public class VirtualCyclops : MonoBehaviour
             return GameObject.Instantiate(colliderCopy);
         }
         colliderCopy = new GameObject($"{realObject.name}-collidercopy");
+        // This will act as a prefab but will stay in the material world so we put it out of hands in the meantime
+        colliderCopy.transform.position = Vector3.up * 1000 + Vector3.right * 10 * cacheColliderCopy.Count;
 
         Transform transform = realObject.transform;
 

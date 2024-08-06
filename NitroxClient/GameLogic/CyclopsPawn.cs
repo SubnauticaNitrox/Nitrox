@@ -17,8 +17,8 @@ public class CyclopsPawn
     public static readonly int PLAYER_LAYER = 1 << LayerMask.NameToLayer("Player");
 
     private readonly INitroxPlayer player;
-    private readonly VirtualCyclops virtualCyclops;
-    private readonly Transform parentTransform;
+    private readonly NitroxCyclops cyclops;
+    private readonly Transform virtualTransform;
     private readonly Transform realCyclopsTransform;
     private readonly bool isLocalPlayer;
     public readonly GameObject RealObject;
@@ -32,12 +32,12 @@ public class CyclopsPawn
         set { Handle.transform.position = value; }
     }
 
-    public CyclopsPawn(INitroxPlayer player, VirtualCyclops virtualCyclops, Transform realCyclopsTransform)
+    public CyclopsPawn(INitroxPlayer player, NitroxCyclops cyclops)
     {
         this.player = player;
-        this.virtualCyclops = virtualCyclops;
-        parentTransform = virtualCyclops.transform;
-        this.realCyclopsTransform = realCyclopsTransform;
+        this.cyclops = cyclops;
+        virtualTransform = VirtualCyclops.Instance.transform;
+        realCyclopsTransform = cyclops.transform;
 
         if (player is ILocalNitroxPlayer)
         {
@@ -64,7 +64,7 @@ public class CyclopsPawn
         Handle = GameObject.CreatePrimitive(PrimitiveType.Capsule);
         Handle.layer = 1 << PLAYER_LAYER;
         Handle.name = name;
-        Handle.transform.parent = parentTransform;
+        Handle.transform.parent = virtualTransform;
         Handle.transform.localPosition = localPosition;
         GameObject.DestroyImmediate(Handle.GetComponent<Collider>());
 
@@ -80,6 +80,8 @@ public class CyclopsPawn
         Controller.slopeLimit = groundMotor.controllerSetup.slopeLimit;
 
         RegisterController();
+
+        Handle.AddComponent<CyclopsPawnIdentifier>().Pawn = this;
 
         Log.Debug($"Pawn: height: {Controller.height}, center {center}, radius: {Controller.radius}, skinWidth: {Controller.skinWidth}");
     }
@@ -114,16 +116,28 @@ public class CyclopsPawn
 
     public void Unregister()
     {
-        if (virtualCyclops)
+        if (cyclops)
         {
             if (isLocalPlayer)
             {
-                virtualCyclops.Cyclops.OnLocalPlayerExit();
+                cyclops.OnLocalPlayerExit();
             }
             else
             {
-                virtualCyclops.Cyclops.OnPlayerExit((RemotePlayer)player);
+                cyclops.OnPlayerExit((RemotePlayer)player);
             }
+        }
+    }
+
+    /// <summary>
+    /// Replicates openable being blocked only if the pawn causing the block is in the cyclops associated to the virtual one.
+    /// </summary>
+    public void BlockOpenable(Openable openable, bool blockState)
+    {
+        if (cyclops.Virtual)
+        {
+            openable.blocked = blockState;
+            cyclops.Virtual.ReplicateBlock(openable, blockState);
         }
     }
 
@@ -132,4 +146,9 @@ public class CyclopsPawn
         controllers.Remove(Controller);
         GameObject.Destroy(Handle);
     }
+}
+
+public class CyclopsPawnIdentifier : MonoBehaviour
+{
+    public CyclopsPawn Pawn;
 }
