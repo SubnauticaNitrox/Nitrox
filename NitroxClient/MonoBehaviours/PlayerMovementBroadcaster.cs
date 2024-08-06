@@ -44,6 +44,8 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             // Rotate relative player position relative to the subroot (else there are problems with respawning)
             Transform subRootTransform = subRoot.transform;
             Quaternion undoVehicleAngle = subRootTransform.rotation.GetInverse();
+            currentPosition = currentPosition - subRootTransform.position;
+            currentPosition = undoVehicleAngle * currentPosition;
             bodyRotation = undoVehicleAngle * bodyRotation;
             aimingRotation = undoVehicleAngle * aimingRotation;
             currentPosition = subRootTransform.TransformPoint(currentPosition);
