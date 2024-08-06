@@ -95,7 +95,7 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
             module.ParentId = parentId;
             Resolve<IPacketSender>().Send(new PlaceModule(module));
 
-            if (constructable.transform.parent && constructable.transform.parent.TryGetComponent(out NitroxCyclops nitroxCyclops))
+            if (constructable.transform.parent && constructable.transform.parent.TryGetComponent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
             {
                 nitroxCyclops.Virtual.ReplicateConstructable(constructable);
             }

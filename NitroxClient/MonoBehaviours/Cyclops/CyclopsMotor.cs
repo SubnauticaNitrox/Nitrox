@@ -74,9 +74,9 @@ public partial class CyclopsMotor : GroundMotor
         RecalculateConstants();
     }
 
-    public void SetCyclops(SubRoot subRoot, CyclopsPawn pawn)
+    public void SetCyclops(NitroxCyclops cyclops, SubRoot subRoot, CyclopsPawn pawn)
     {
-        cyclops = subRoot.GetComponent<NitroxCyclops>();
+        this.cyclops = cyclops;
         sub = subRoot;
         realAxis = sub.subAxis;
         virtualAxis = cyclops.Virtual.axis;

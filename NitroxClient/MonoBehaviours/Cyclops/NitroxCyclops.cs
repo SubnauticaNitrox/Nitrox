@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -10,7 +11,7 @@ namespace NitroxClient.MonoBehaviours.Cyclops;
 /// </summary>
 public class NitroxCyclops : MonoBehaviour
 {
-    public VirtualCyclops Virtual { get; private set; }
+    public VirtualCyclops Virtual;
     private CyclopsMotor cyclopsMotor;
     private SubRoot subRoot;
     private SubControl subControl;
@@ -20,7 +21,7 @@ public class NitroxCyclops : MonoBehaviour
     private CharacterController controller;
     private int ballasts;
 
-    public SubControl.Mode Mode;
+    public readonly Dictionary<INitroxPlayer, CyclopsPawn> Pawns = [];
 
     public void Start()
     {
@@ -36,18 +37,6 @@ public class NitroxCyclops : MonoBehaviour
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, false, true);
 
         GetComponent<SubFire>().enabled = false;
-        SetReceiving();
-
-        Virtual = VirtualCyclops.CreateVirtualInstance(gameObject);
-    }
-
-    /// <remarks>
-    /// Triggered by <see cref="LiveMixin"/> sending a "OnKill" message when cyclops is destroyed.
-    /// This might need to be adapted once the "restore" command is synced (for now a destroyed cyclops can't be restored)
-    /// </remarks>
-    public void OnKill()
-    {
-        VirtualCyclops.Terminate(gameObject);
     }
 
     /// <summary>
@@ -64,53 +53,77 @@ public class NitroxCyclops : MonoBehaviour
     }
 
     /// <summary>
-    /// Parents local player to the cyclops and registers it in the virtual cyclops.
+    /// Parents local player to the cyclops and registers it in the current cyclops.
     /// </summary>
     public void OnLocalPlayerEnter()
     {
+        Virtual = VirtualCyclops.Instance;
+        Virtual.SetCurrentCyclops(this);
+
         Player.mainObject.transform.parent = subRoot.transform;
-        CyclopsPawn pawn = Virtual.AddPawnForPlayer(this.Resolve<ILocalNitroxPlayer>());
-        cyclopsMotor.SetCyclops(subRoot, pawn);
+        CyclopsPawn pawn = AddPawnForPlayer(this.Resolve<ILocalNitroxPlayer>());
+        cyclopsMotor.SetCyclops(this, subRoot, pawn);
         cyclopsMotor.ToggleCyclopsMotor(true);
     }
 
     /// <summary>
-    /// Unregisters the local player from the cyclops (and from the virtual one). Ensures the player is not weirdly rotated when it leaves the cyclops.
+    /// Unregisters the local player from the current cyclops. Ensures the player is not weirdly rotated when it leaves the cyclops.
     /// </summary>
     public void OnLocalPlayerExit()
     {
-        Virtual.RemovePawnForPlayer(this.Resolve<ILocalNitroxPlayer>());
+        RemovePawnForPlayer(this.Resolve<ILocalNitroxPlayer>());
         Player.main.transform.parent = null;
         Player.main.transform.rotation = Quaternion.identity;
         cyclopsMotor.ToggleCyclopsMotor(false);
+
+        Virtual.SetCurrentCyclops(null);
     }
 
     /// <summary>
-    /// Registers a remote player in the virtual cyclops.
+    /// Registers a remote player for it to get a pawn in the current cyclops.
     /// </summary>
     public void OnPlayerEnter(RemotePlayer remotePlayer)
     {
-        remotePlayer.Pawn = Virtual.AddPawnForPlayer(remotePlayer);
+        remotePlayer.Pawn = AddPawnForPlayer(remotePlayer);
     }
 
     /// <summary>
-    /// Unregisters a remote player from the virtual cyclops.
+    /// Unregisters a remote player from the current cyclops.
     /// </summary>
     public void OnPlayerExit(RemotePlayer remotePlayer)
     {
-        Virtual.RemovePawnForPlayer(remotePlayer);
+        RemovePawnForPlayer(remotePlayer);
         remotePlayer.Pawn = null;
     }
 
     public void MaintainPawns()
     {
-        foreach (CyclopsPawn pawn in Virtual.Pawns.Values)
+        foreach (CyclopsPawn pawn in Pawns.Values)
         {
             if (pawn.MaintainPredicate())
             {
                 pawn.MaintainPosition();
             }
         }
+    }
+
+    public CyclopsPawn AddPawnForPlayer(INitroxPlayer player)
+    {
+        if (!Pawns.TryGetValue(player, out CyclopsPawn pawn))
+        {
+            pawn = new(player, this);
+            Pawns.Add(player, pawn);
+        }
+        return pawn;
+    }
+
+    public void RemovePawnForPlayer(INitroxPlayer player)
+    {
+        if (Pawns.TryGetValue(player, out CyclopsPawn pawn))
+        {
+            pawn.Terminate();
+        }
+        Pawns.Remove(player);
     }
 
     public void SetBroadcasting()
