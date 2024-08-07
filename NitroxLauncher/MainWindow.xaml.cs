@@ -118,7 +118,7 @@ namespace NitroxLauncher
                 {
                     if (launchArgs[i].Equals("-instantlaunch", StringComparison.OrdinalIgnoreCase) && launchArgs.Length > i + 1)
                     {
-                        _ = LauncherLogic.Instance.StartMultiplayerAsync();
+                        LauncherLogic.Instance.StartMultiplayerAsync().ContinueWithHandleError();
                         LauncherLogic.Server.StartServer(true, launchArgs[i + 1]);
                     }
                 }
