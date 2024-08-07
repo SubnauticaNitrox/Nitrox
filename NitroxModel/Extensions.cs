@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NitroxModel;
 
@@ -84,6 +85,30 @@ public static class Extensions
         double num = Math.Round(byteSize / Math.Pow(1024, place), 1);
         return num + suf[place];
     }
+
+    /// <summary>
+    ///     Calls an action if an error happens. If null, logs the error as-is.
+    /// </summary>
+    /// <remarks>
+    ///     Use this for fire-and-forget tasks so that errors aren't hidden when they happen.
+    /// </remarks>
+    public static Task ContinueWithHandleError(this Task task, Action<Exception> onError = null) =>
+        task.ContinueWith(t =>
+        {
+            if (t is not { IsFaulted: true, Exception: { } ex })
+            {
+                return;
+            }
+
+            if (onError != null)
+            {
+                onError(ex);
+            }
+            else
+            {
+                Log.Error(ex);
+            }
+        });
 
     public static string GetFirstNonAggregateMessage(this Exception exception) => exception switch
     {
