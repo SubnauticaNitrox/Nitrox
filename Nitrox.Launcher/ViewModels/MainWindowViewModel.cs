@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -41,8 +41,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public RoutingState Router => screen.Router;
 
-    public MainWindowViewModel(IScreen screen, LaunchGameViewModel launchGameViewModel, ServersViewModel serversViewModel, CommunityViewModel communityViewModel, BlogViewModel blogViewModel, UpdatesViewModel updatesViewModel,
-                               OptionsViewModel optionsViewModel, IList<NotificationItem> notifications = null)
+    public MainWindowViewModel(
+        IScreen screen,
+        ServersViewModel serversViewModel,
+        LaunchGameViewModel launchGameViewModel,
+        CommunityViewModel communityViewModel,
+        BlogViewModel blogViewModel,
+        UpdatesViewModel updatesViewModel,
+        OptionsViewModel optionsViewModel,
+        IList<NotificationItem> notifications = null
+    )
     {
         this.screen = screen;
         this.launchGameViewModel = launchGameViewModel;
@@ -53,7 +61,7 @@ public partial class MainWindowViewModel : ViewModelBase
         this.optionsViewModel = optionsViewModel;
 
         DefaultViewCommand = OpenLaunchGameViewCommand;
-        Notifications = notifications == null ? [] : [..notifications];
+        Notifications = notifications == null ? [] : [.. notifications];
 
         WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
         {
@@ -158,7 +166,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        if (args.Source is Visual element && element.GetWindow() is {} window)
+        if (args.Source is Visual element && element.GetWindow() is { } window)
         {
             window.BeginMoveDrag(args);
         }

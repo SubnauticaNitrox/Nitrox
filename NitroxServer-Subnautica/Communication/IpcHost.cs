@@ -21,18 +21,18 @@ public class IpcHost : IDisposable
         this.commandReadCancellation = commandReadCancellation;
     }
 
-    public static IpcHost StartReadingCommands(Action<string> onCommandReceived, CancellationToken ct = default)
+    public static IpcHost StartReadingCommands(Action<string> onCommandReceived, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(onCommandReceived);
 
-        IpcHost host = new(CancellationTokenSource.CreateLinkedTokenSource(ct));
+        IpcHost host = new(CancellationTokenSource.CreateLinkedTokenSource(cancellationToken));
         Thread thread = new(async () =>
         {
-            while (!ct.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    string command = await host.ReadStringAsync(ct);
+                    string command = await host.ReadStringAsync(cancellationToken);
                     onCommandReceived(command);
                 }
                 catch (OperationCanceledException)
@@ -57,6 +57,7 @@ public class IpcHost : IDisposable
         await server.ReadExactlyAsync(sizeBytes, cancellationToken);
         byte[] stringBytes = new byte[BitConverter.ToUInt32(sizeBytes)];
         await server.ReadExactlyAsync(stringBytes, cancellationToken);
+
         return Encoding.UTF8.GetString(stringBytes);
     }
 

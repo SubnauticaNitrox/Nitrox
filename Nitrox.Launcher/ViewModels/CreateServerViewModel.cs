@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -47,7 +47,8 @@ public partial class CreateServerViewModel : ModalViewModelBase
         {
             fileEnding = "nitrox";
         }
-        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).DisposeAsync();
+
+        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).Dispose();
 
         using (config.Update(saveDir))
         {

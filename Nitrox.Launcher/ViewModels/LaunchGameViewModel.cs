@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -86,7 +86,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartMultiplayerAsync()
     {
-        Log.Info("Launching Subnautica in multiplayer mode.");
+        Log.Info("Launching Subnautica in multiplayer mode");
         try
         {
             bool setupResult = await Task.Run(async () =>
@@ -94,7 +94,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
                 {
                     await Dispatcher.UIThread.InvokeAsync(() => HostScreen.Show(optionsViewModel));
-                    LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings.");
+                    LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                     return false;
                 }
                 if (PirateDetection.HasTriggered)
@@ -112,18 +112,19 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 }
 
                 // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory
-                string initDllName = "NitroxPatcher.dll";
                 try
                 {
+                    const string PATCHER_DLL_NAME = "NitroxPatcher.dll";
+
                     File.Copy(
-                        Path.Combine(NitroxUser.CurrentExecutablePath ?? "", "lib", "net472", initDllName),
-                        Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", initDllName),
+                        Path.Combine(NitroxUser.CurrentExecutablePath ?? "", "lib", "net472", PATCHER_DLL_NAME),
+                        Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
                         true
                     );
                 }
                 catch (IOException ex)
                 {
-                    Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
+                    Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs");
                 }
 
                 // Try inject Nitrox into Subnautica code.
@@ -136,12 +137,13 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 
                 if (QModHelper.IsQModInstalled(NitroxUser.GamePath))
                 {
-                    Log.Warn("Seems like QModManager is Installed");
-                    LauncherNotifier.Info("QModManager Detected in the game folder");
+                    Log.Warn("Seems like QModManager is installed");
+                    LauncherNotifier.Warning("QModManager Detected in the game folder");
                 }
 
                 return true;
             });
+
             if (!setupResult)
             {
                 return;
@@ -177,11 +179,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.Subnautica.SteamAppId, subnauticaLaunchArguments),
             EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             MSStore m => await m.StartGameAsync(subnauticaExe),
-            //DiscordStore d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
             _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.")
         };
 
-        if (game == null)
+        if (game is null)
         {
             throw new Exception($"Game failed to start through {platform.Name}");
         }

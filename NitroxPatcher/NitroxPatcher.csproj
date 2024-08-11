@@ -1,17 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
-        <Nullable>disable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="HarmonyX" Version="2.10.0" />
+        <PackageReference Include="HarmonyX" Version="2.10.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
-      <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+        <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
+        <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
     </ItemGroup>
 
     <ItemGroup>

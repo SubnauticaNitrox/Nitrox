@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

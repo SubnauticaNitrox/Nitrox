@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <Nullable>disable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,16 +14,4 @@
         </Reference>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="GameLogic\Vehicles\" />
-    </ItemGroup>
-
-    <Target Name="MoveDependenciesToLib" AfterTargets="Build">
-        <ItemGroup>
-            <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)NitroxServer.dll;$(TargetDir)NitroxServer-Subnautica.dll;$(TargetDir)NitroxModel.dll;$(TargetDir)NitroxModel-Subnautica.dll" />
-            <AllDependencies Include="$(TargetDir)*.dll.config" />
-        </ItemGroup>
-        <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
-    </Target>
-    
 </Project>

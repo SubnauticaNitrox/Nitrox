@@ -20,10 +20,11 @@ public class AssetsBundleManager : AssetsManager
 
     public string CleanBundlePath(string bundlePath)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             bundlePath = bundlePath.Replace('\\', '/');
         }
+
         return aaRootPath + bundlePath.Substring(bundlePath.IndexOf('}') + 1);
     }
 
@@ -135,7 +136,7 @@ public class AssetsBundleManager : AssetsManager
             {
                 return GetExtAsset(relativeTo, valueField);
             }
-            catch
+            catch (Exception)
             {
                 // ignored
             }

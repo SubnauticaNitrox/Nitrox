@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="CheckDependenciesExist">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="PrepareForModding">
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
             <!-- UnityEngine libraries to include -->

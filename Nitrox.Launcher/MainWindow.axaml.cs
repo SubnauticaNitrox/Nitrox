@@ -18,9 +18,16 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
     private readonly IDialogService dialogService;
     private readonly HashSet<Exception> handledExceptions = [];
 
+    // For designer
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
+
     public MainWindow(IDialogService dialogService)
     {
         this.dialogService = dialogService;
+
         // Handle thrown exceptions so they aren't hidden.
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
@@ -87,6 +94,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         {
             return;
         }
+
         if (Design.IsDesignMode)
         {
             Debug.WriteLine(ex);

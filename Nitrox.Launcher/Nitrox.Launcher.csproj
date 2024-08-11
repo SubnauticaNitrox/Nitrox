@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <LangVersion>$(LangVersion)</LangVersion>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
@@ -9,11 +8,8 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
         <ApplicationIcon>Assets\Images\nitroxIco.ico</ApplicationIcon>
-        <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
         <Authors>Nitrox</Authors>
         <Company>Nitrox</Company>
-        <PackageProjectUrl>https://github.com/SubnauticaNitrox/Nitrox</PackageProjectUrl>
-        <!-- TODO: Update dependencies so trimming won't break the app -->
         <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
 
@@ -43,22 +39,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
-      <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
-      <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+        <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
-    <!-- Ensure server files are available for launcher. -->
-    <Target Name="BuildServer" AfterTargets="Build">
-        <MSBuild Projects="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" Targets="Build" Properties="Configuration=$(Configuration);OutputPath=$(TargetDir)\Server" />
-    </Target>
+    <!-- Generate lib folders for project dependencies -->
+    <Import Project="..\GenerateLibFolder.props" />
 
-    <!-- Build dependencies that will be loaded by the game, which must be net472 compatible. -->
-    <Target Name="BuildNet472BinariesForGame" AfterTargets="Build;BuildServer">
-        <MSBuild Projects="..\NitroxPatcher\NitroxPatcher.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472;OutputPath=$(TargetDir)\lib\net472" />
-    </Target>
+    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+        <Message Importance="High" Text="Running MoveNitroxAssetsToLauncherOutput" />
 
-    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build;BuildNet472BinariesForGame">
         <ItemGroup>
             <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
             <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
@@ -71,13 +61,37 @@
         <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
 
-    <Target Name="MoveDependenciesToLib" AfterTargets="Build;MoveNitroxAssetsToLauncherOutput">
-        <ItemGroup>
-            <AllDependencies Include="$(TargetDir)*.dll" Exclude="$(TargetDir)Nitrox.Launcher.dll" />
-            <AllDependencies Include="$(TargetDir)*.dll.config" />
-        </ItemGroup>
-        <!-- In Debug mode, keep DLLs for the Avalonia previewer in the expected location. It does not use custom AppDomain.CurrentDomain.AssemblyResolve handlers. -->
-        <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
-        <Move Condition="'$(Configuration)' == 'Release'" SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+    <!-- Build dependencies that will be loaded by the game, which must be net472 compatible -->
+    <Target Name="BuildNet472BinariesForGame" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+        <Message Importance="High" Text="Running BuildNet472BinariesForGame" />
+
+        <PropertyGroup>
+            <OutputDirectory>$(TargetDir)lib\net472</OutputDirectory>
+        </PropertyGroup>
+
+        <!-- Create directory if it doesn't exist -->
+        <MakeDir Directories="$(OutputDirectory)"
+                 Condition="!Exists('$(OutputDirectory)')"
+                 ContinueOnError="WarnAndContinue" />
+
+         <!-- MSBuild project build target with OutputPath somehow doesn't work -->
+        <Exec Command="dotnet msbuild ..\NitroxPatcher\NitroxPatcher.csproj /t:Build /p:Configuration=$(Configuration) /p:TargetFramework=net472 /p:OutputPath=$(OutputDirectory)" />
     </Target>
+
+    <Target Name="BuildServer" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+        <Message Importance="High" Text="Running BuildServer" />
+
+        <PropertyGroup>
+            <OutputDirectory>$(TargetDir)server</OutputDirectory>
+        </PropertyGroup>
+
+        <!-- Create directory if it doesn't exist -->
+        <MakeDir Directories="$(OutputDirectory)"
+                 Condition="!Exists('$(OutputDirectory)')"
+                 ContinueOnError="WarnAndContinue" />
+
+        <!-- MSBuild project build target with OutputPath somehow doesn't work -->
+        <Exec Command="dotnet msbuild ..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj /t:Build /p:Configuration=$(Configuration) /p:OutputPath=$(OutputDirectory)" />
+    </Target>
+
 </Project>

@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
@@ -12,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		GenerateLibFolder.props = GenerateLibFolder.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{39E377AD-2163-4428-952D-EBECD402C8F3}"
@@ -67,10 +67,10 @@ Global
 		{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}.Release|Any CPU.Build.0 = Release|Any CPU
-								{30493A43-7EB3-4898-A82F-98A387284EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-								{30493A43-7EB3-4898-A82F-98A387284EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-								{30493A43-7EB3-4898-A82F-98A387284EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-								{30493A43-7EB3-4898-A82F-98A387284EB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B4C9C786-10A1-4091-A88F-C22AA14C05D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4C9C786-10A1-4091-A88F-C22AA14C05D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4C9C786-10A1-4091-A88F-C22AA14C05D4}.Release|Any CPU.ActiveCfg = Release|Any CPU

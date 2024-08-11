@@ -110,8 +110,12 @@ public partial class ServerEntry : ObservableObject
         }
 
         SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
-        string fileEnding = "json";
-        if (config.SerializerMode == ServerSerializerMode.PROTOBUF) { fileEnding = "nitrox"; }
+        string fileEnding = config.SerializerMode switch
+        {
+            ServerSerializerMode.JSON => "json",
+            ServerSerializerMode.PROTOBUF => "nitrox",
+            _ => throw new NotImplementedException()
+        };
 
         Version version;
         using (FileStream stream = new(Path.Combine(saveDir, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -205,7 +209,7 @@ public partial class ServerEntry : ObservableObject
             {
                 serverExeName = "NitroxServer-Subnautica";
             }
-            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, "Server", serverExeName);
+            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, "server", serverExeName);
             ProcessStartInfo startInfo = new(serverPath)
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,

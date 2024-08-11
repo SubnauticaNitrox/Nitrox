@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
-        <Nullable>disable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1" />
+      <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
     </ItemGroup>
 
 </Project>

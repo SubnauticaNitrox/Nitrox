@@ -1,0 +1,46 @@
+<Project>
+
+    <PropertyGroup>
+        <_NitroxMoveDependenciesToLibTaskName>MoveDependenciesToLib</_NitroxMoveDependenciesToLibTaskName>
+        <_NitroxCleanLibFolderTaskName>CleanLibFolder</_NitroxCleanLibFolderTaskName>
+        <_NitroxOutputFolder>lib\</_NitroxOutputFolder>
+    </PropertyGroup>
+
+    <Target Name="MoveDependenciesToLib" AfterTargets="Build">
+        <Message Importance="High"
+                 Text="Running $(_NitroxMoveDependenciesToLibTaskName) on $(MSBuildProjectName)" />
+
+        <PropertyGroup>
+            <OutputDirectory>$(TargetDir)$(_NitroxOutputFolder)</OutputDirectory>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <DependenciesFile
+                    Include="$(TargetDir)*.dll;$(TargetDir)*.dll.config"
+                    Exclude="$(TargetDir)Nitrox*.dll;$(TargetDir)Nitrox*.dll.config"
+            />
+        </ItemGroup>
+
+        <!-- Create directory if it doesn't exist -->
+        <MakeDir Directories="$(OutputDirectory)"
+                 Condition="!Exists('$(OutputDirectory)')"
+                 ContinueOnError="WarnAndContinue" />
+
+        <!-- Move every matching files to OutputDirectory -->
+        <Move SourceFiles="@(DependenciesFile)"
+              DestinationFolder="$(OutputDirectory)"
+              OverwriteReadOnlyFiles="True"
+              ContinueOnError="ErrorAndContinue" />
+    </Target>
+
+    <!-- Remove our lib folder when we're using the solution/project clean -->
+    <Target Name="CleanLibFolder" AfterTargets="AfterClean">
+        <Message Importance="High"
+                 Text="Running $(_NitroxCleanLibFolderTaskName) on $(MSBuildProjectName)" />
+
+        <RemoveDir Directories="$(TargetDir)$(_NitroxOutputFolder)"
+                   Condition="Exists('$(TargetDir)$(_NitroxOutputFolder)')"
+                   ContinueOnError="WarnAndContinue" />
+    </Target>
+
+</Project>

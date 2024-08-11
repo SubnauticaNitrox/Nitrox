@@ -1,24 +1,31 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8</TargetFramework>
-        <Nullable>disable</Nullable>
+        <TargetFramework>net8.0</TargetFramework>
+        <IsTestProject>true</IsTestProject>
+        <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="34.0.2" />
-        <PackageReference Include="CompareNETObjects" Version="4.78.0" />
-        <PackageReference Include="coverlet.collector" Version="3.1.2" />
+        <PackageReference Include="Bogus" Version="35.6.0" />
+        <PackageReference Include="CompareNETObjects" Version="4.83.0" />
+        <PackageReference Include="coverlet.collector" Version="6.0.2">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
-        <PackageReference Include="MSTest" Version="3.2.0" />
-        <PackageReference Include="NSubstitute" Version="4.4.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.5.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.5.1" />
+        <PackageReference Include="NSubstitute" Version="5.1.0" />
     </ItemGroup>
 
     <ItemGroup>
         <!-- NitroxClient and NitroxPatcher should be loaded as netstandard2.0 for testing only (Subnautica does not fully support netstandard2.0 APIs) -->
         <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" SetTargetFramework="TargetFramework=netstandard2.0" />
         <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" SetTargetFramework="TargetFramework=netstandard2.0" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" SetTargetFramework="TargetFramework=netstandard2.0" />
         <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
         <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
@@ -27,7 +34,7 @@
         <ItemGroup>
             <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
             <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
-            <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
+            <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
             <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
         </ItemGroup>
         <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
