@@ -26,10 +26,18 @@
                  Condition="!Exists('$(OutputDirectory)')"
                  ContinueOnError="WarnAndContinue" />
 
+        <!-- Can break some systems that doesn't use our assembly resolve inside lib folder -->
+        <Copy SourceFiles="@(DependenciesFile)"
+              DestinationFolder="$(OutputDirectory)"
+              OverwriteReadOnlyFiles="True"
+              Condition="'$(Configuration)' == 'Debug'"
+              ContinueOnError="ErrorAndContinue" />
+
         <!-- Move every matching files to OutputDirectory -->
         <Move SourceFiles="@(DependenciesFile)"
               DestinationFolder="$(OutputDirectory)"
               OverwriteReadOnlyFiles="True"
+              Condition="'$(Configuration)' == 'Release'"
               ContinueOnError="ErrorAndContinue" />
     </Target>
 
