@@ -62,6 +62,12 @@ internal static class Program
                 {
                     dllName = string.Concat(dllName, ".dll");
                 }
+
+                if (dllName.EndsWith(".resources.dll"))
+                {
+                    return null;
+                }
+
                 string dllNameStr = dllName.ToString();
 
                 string dllPath = Path.Combine(GetExecutableDirectory(), "lib", dllNameStr);
@@ -80,7 +86,13 @@ internal static class Program
                 }
             }
 
-            return ResolveFromLib(args.Name) ?? Assembly.Load(args.Name);
+            Assembly assembly = ResolveFromLib(args.Name);
+            if (assembly == null && !args.Name.Contains(".resources"))
+            {
+                assembly = Assembly.Load(args.Name);
+            }
+
+            return assembly;
         }
 
         private static string GetExecutableDirectory()
