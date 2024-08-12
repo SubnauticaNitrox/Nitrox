@@ -22,16 +22,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+        <PackageReference Include="Avalonia" Version="11.1.2" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.1.2" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.2" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.2" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.0.10.9" />
-        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.10.9" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.2" />
+        <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.1.0" />
+        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.1.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="dnlib" Version="3.4.0" />
+        <PackageReference Include="dnlib" Version="4.4.0" />
         <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
         <PackageReference Include="LitJson" Version="0.19.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
@@ -70,9 +70,7 @@
         </PropertyGroup>
 
         <!-- Create directory if it doesn't exist -->
-        <MakeDir Directories="$(OutputDirectory)"
-                 Condition="!Exists('$(OutputDirectory)')"
-                 ContinueOnError="WarnAndContinue" />
+        <MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')" ContinueOnError="WarnAndContinue" />
 
          <!-- MSBuild project build target with OutputPath somehow doesn't work -->
         <Exec Command="dotnet msbuild ..\NitroxPatcher\NitroxPatcher.csproj /t:Build /p:Configuration=$(Configuration) /p:TargetFramework=net472 /p:OutputPath=$(OutputDirectory)" />
@@ -86,9 +84,7 @@
         </PropertyGroup>
 
         <!-- Create directory if it doesn't exist -->
-        <MakeDir Directories="$(OutputDirectory)"
-                 Condition="!Exists('$(OutputDirectory)')"
-                 ContinueOnError="WarnAndContinue" />
+        <MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')" ContinueOnError="WarnAndContinue" />
 
         <!-- MSBuild project build target with OutputPath somehow doesn't work -->
         <Exec Command="dotnet msbuild ..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj /t:Build /p:Configuration=$(Configuration) /p:OutputPath=$(OutputDirectory)" />
