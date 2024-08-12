@@ -46,7 +46,7 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
         if (Player.main.currentSub != engineState.subRoot)
         {
             engineState.startEngine = isOn;
-            engineState.subRoot.BroadcastMessage("InvokeChangeEngineState", isOn, SendMessageOptions.RequireReceiver);
+            engineState.subRoot.BroadcastMessage(nameof(CyclopsMotorMode.InvokeChangeEngineState), isOn, SendMessageOptions.RequireReceiver);
             engineState.invalidButton = true;
             engineState.Invoke(nameof(CyclopsEngineChangeState.ResetInvalidButton), 2.5f);
         }

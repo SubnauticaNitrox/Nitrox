@@ -76,14 +76,12 @@ public class CyclopsPawn
         Controller.center = center;
         Controller.radius = playerController.controllerRadius;
         Controller.skinWidth = reference.skinWidth;
-        Controller.stepOffset = groundMotor.controllerSetup.stepOffset;
-        Controller.slopeLimit = groundMotor.controllerSetup.slopeLimit;
+        Controller.stepOffset = groundMotor.controller.stepOffset;
+        Controller.slopeLimit = groundMotor.controller.slopeLimit;
 
         RegisterController();
 
         Handle.AddComponent<CyclopsPawnIdentifier>().Pawn = this;
-
-        Log.Debug($"Pawn: height: {Controller.height}, center {center}, radius: {Controller.radius}, skinWidth: {Controller.skinWidth}");
     }
 
     public void RegisterController()
