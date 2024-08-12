@@ -17,11 +17,11 @@
                 <Border CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}" Padding="22">
                     <Grid>
                         <!-- Official Version only text -->
-                        <StackPanel Spacing="10" IsVisible="{Binding UsingOfficialVersion}">
+                        <StackPanel Spacing="10" IsVisible="{Binding UsingOfficialVersion, Mode=OneWay}">
                             <Image Source="/Assets/Images/nitroxIco.ico" ToolTip.Tip="You are the best captain on the planet, I'm not even squiddin'" Width="56" Height="56" HorizontalAlignment="Center" />
 
                             <!-- "No Update Available" text -->
-                            <StackPanel Spacing="5" IsVisible="{Binding !NewUpdateAvailable}">
+                            <StackPanel Spacing="5" IsVisible="{Binding !NewUpdateAvailable, Mode=OneWay}">
                                 <TextBlock Text="No Update Available" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>
 
                                 <TextBlock FontWeight="Normal" FontSize="14" TextWrapping="Wrap" TextAlignment="Center">
@@ -34,7 +34,7 @@
                             </StackPanel>
 
                             <!-- "New Nitrox Update Available" text -->
-                            <StackPanel Spacing="6" IsVisible="{Binding NewUpdateAvailable}">
+                            <StackPanel Spacing="6" IsVisible="{Binding NewUpdateAvailable, Mode=OneWay}">
                                 <TextBlock Text="New Nitrox Update Available" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>
 
                                 <TextBlock Text="Time for an update! A new version of Nitrox is now available to download. Back up your content and get the latest version to start using all the latest features and improvements."
@@ -50,7 +50,7 @@
                         </StackPanel>
 
                         <!-- Unofficial Version only text -->
-                        <StackPanel Spacing="10" IsVisible="{Binding !UsingOfficialVersion}">
+                        <StackPanel Spacing="10" IsVisible="{Binding !UsingOfficialVersion, Mode=OneWay}">
                             <!-- TODO: Better Icon here -->
                             <Image Source="/Assets/Images/material-design-icons/close-w-10.png" ToolTip.Tip=":(" Width="56" Height="56" HorizontalAlignment="Center" />
 
@@ -77,7 +77,8 @@
                     </Grid>
                 </Border>
 
-                <ItemsControl ItemsSource="{Binding NitroxChangelogs}">
+                <ItemsControl ItemsSource="{Binding NitroxChangelogs, Mode=OneWay}">
+                    
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Spacing="18" />
@@ -85,7 +86,7 @@
                     </ItemsControl.ItemsPanel>
 
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="design:NitroxChangelog">
                             <StackPanel Spacing="5">
                                 <Grid>
                                     <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, TargetNullValue='Unknown'}"/>

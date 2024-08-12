@@ -47,12 +47,12 @@
                                         </Viewbox>
                                     </Border>
 
-                                    <TextBlock Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"
+                                    <TextBlock Text="{Binding Title, TargetNullValue='No title'}"
                                                HorizontalAlignment="Left"
                                                FontSize="16"
                                                FontWeight="Bold" />
                                     
-                                    <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:D}', TargetNullValue=''}"
+                                    <TextBlock Text="{Binding Date, StringFormat='{}{0:D}', TargetNullValue=''}"
                                                HorizontalAlignment="Left"
                                                FontSize="10"
                                                FontWeight="Bold"
