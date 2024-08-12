@@ -100,7 +100,7 @@
         <Setter Property="VerticalAlignment" Value="Top" />
 
         <Style Selector="^ Button">
-            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Opacity" Value="1" />
             <Setter Property="CornerRadius" Value="0" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Foreground" Value="#FFFFFF" />
@@ -108,9 +108,6 @@
             <Setter Property="Width" Value="46" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Style Selector="^:pressed">
-                <Setter Property="Opacity" Value="1" />
-            </Style>
         </Style>
 
         <Style Selector="^ StackPanel">

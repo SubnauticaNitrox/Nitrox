@@ -44,7 +44,7 @@
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="MinWidth" Value="100"/>
-        <Setter Property="MinHeight" Value="30"/>
+        <Setter Property="MinHeight" Value="30" />
         <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
         <Style Selector="^ /template/ ContentPresenter">
             <Style Selector="^ TextBlock">
@@ -59,6 +59,7 @@
         </Style>
 
         <Style Selector="^:pointerover /template/ Border#Background">
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
         </Style>
 
