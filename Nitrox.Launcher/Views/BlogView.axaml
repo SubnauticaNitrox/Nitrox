@@ -31,7 +31,7 @@
                                     <Border CornerRadius="12" ClipToBounds="True">
                                         <Viewbox>
                                             <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="16" Height="9">
-                                                <Image IsVisible="{Binding Image, Converter={converters:EqualityConverter}}" Source="/Assets/Images/blog/vines.png" Stretch="UniformToFill" />
+                                                <Image IsVisible="{Binding Image, Converter={converters:EqualityConverter}}" Source="{Binding DataContext.FallbackImage, RelativeSource={RelativeSource AncestorType=ItemsControl}}" Stretch="UniformToFill" />
                                                 <Image Source="{Binding Image}" Stretch="UniformToFill" />
                                             </Panel>
                                         </Viewbox>
