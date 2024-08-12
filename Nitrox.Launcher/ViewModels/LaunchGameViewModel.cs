@@ -64,13 +64,15 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             return;
         }
 
-        Log.Info("Launching Subnautica in singleplayer mode.");
+        LauncherNotifier.Info("Starting game");
+        Log.Info("Launching Subnautica in singleplayer mode");
+
         try
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
             {
                 HostScreen.Show(optionsViewModel);
-                LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings.");
+                LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                 return;
             }
             NitroxEntryPatch.Remove(NitroxUser.GamePath);
@@ -86,6 +88,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartMultiplayerAsync()
     {
+        LauncherNotifier.Info("Starting game");
         Log.Info("Launching Subnautica in multiplayer mode");
         try
         {
