@@ -11,7 +11,7 @@ namespace NitroxClient.MonoBehaviours;
 public partial class CyclopsMotor : GroundMotor
 {
     public GroundMotor ActualMotor { get; private set; }
-    public CyclopsPawn Pawn { get; private set; }
+    public CyclopsPawn Pawn;
 
     private Transform body;
     private NitroxCyclops cyclops;
@@ -24,6 +24,7 @@ public partial class CyclopsMotor : GroundMotor
     public float DeltaTime => Time.fixedDeltaTime;
 
     private Vector3 verticalVelocity;
+    private Vector3 latestVelocity;
 
     public new void Awake()
     {
@@ -86,6 +87,7 @@ public partial class CyclopsMotor : GroundMotor
     public void Setup(bool enabled)
     {
         verticalVelocity = Vector3.zero;
+        latestVelocity = Vector3.zero;
 
         if (enabled)
         {
@@ -139,25 +141,65 @@ public partial class CyclopsMotor : GroundMotor
     /// <summary>
     /// Simulates player movement on its pawn and update the grounded state
     /// </summary>
+    /// <remarks>
+    /// Adapted from <see cref="GroundMotor.UpdateFunction"/>
+    /// </remarks>
     /// <returns>Pawn's local velocity</returns>
     public Vector3 Move(Vector3 horizontalVelocity)
     {
         Vector3 beforePosition = Pawn.Position;
 
-        Vector3 move = (horizontalVelocity + verticalVelocity) * DeltaTime;
+        Vector3 velocity = new(horizontalVelocity.x, verticalVelocity.y, horizontalVelocity.z);
+        Vector3 movementThisFrame = velocity * DeltaTime;
 
-        float num = Mathf.Max(Pawn.Controller.stepOffset, Mathf.Sqrt(move.x * move.x + move.z * move.z));
+        float step = Mathf.Max(Pawn.Controller.stepOffset, Mathf.Sqrt(movementThisFrame.x * movementThisFrame.x + movementThisFrame.z * movementThisFrame.z));
         if (grounded)
         {
-            move -= num * Up;
+            movementThisFrame -= step * Up;
         }
 
-        Collision = Pawn.Controller.Move(move);
+        Collision = Pawn.Controller.Move(movementThisFrame);
 
         float verticalDot = Vector3.Dot(verticalVelocity, Up);
 
         bool previouslyGrounded = grounded;
         CheckGrounded(Collision, verticalDot <= 0f);
+
+        Vector3 velocityXZ = velocity._X0Z();
+        Vector3 instantVelocity = (Pawn.Position - beforePosition) / DeltaTime;
+        if (instantVelocity.sqrMagnitude <= 0.2f)
+        {
+            instantVelocity = velocity;
+        }
+        if (instantVelocity.y > 0f || Collision == CollisionFlags.None)
+        {
+            instantVelocity.y = velocity.y;
+        }
+
+        latestVelocity = instantVelocity;
+        
+        Vector3 instantVelocityXZ = instantVelocity._X0Z();
+        if (velocityXZ == Vector3.zero)
+        {
+            latestVelocity = latestVelocity._0Y0();
+        }
+        else
+        {
+            float deviation = Vector3.Dot(instantVelocityXZ, velocityXZ) / velocityXZ.sqrMagnitude;
+            latestVelocity = velocityXZ * Mathf.Clamp01(deviation) + latestVelocity.y * Up;
+        }
+
+        if (latestVelocity.y < velocity.y - 0.001)
+        {
+            if (latestVelocity.y < 0f)
+            {
+                latestVelocity.y = velocity.y;
+            }
+            else
+            {
+                jumping.holdingJumpButton = false;
+            }
+        }
 
         if (grounded)
         {
@@ -166,23 +208,23 @@ public partial class CyclopsMotor : GroundMotor
             if (!previouslyGrounded)
             {
                 jumping.jumping = false;
-                // Prefilled data is made to not hurt the player at any time when colliding with cyclops, but only to 
+                // Prefilled data is made to not hurt the player at any time when colliding with cyclops, but only to play the noise
                 SendMessage(nameof(Player.OnLand), new MovementCollisionData
                 {
                     impactVelocity = Vector3.one,
                     surfaceType = VFXSurfaceTypes.metal
-                });
+                }, SendMessageOptions.DontRequireReceiver);
             }
         }
         // If player is no longer grounded after move
         else if (previouslyGrounded)
         {
             SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
-            Pawn.Handle.transform.localPosition += num * Up;
+            Pawn.Handle.transform.localPosition += step * Up;
         }
 
         // Give velocity info for the animations
-        return (Pawn.Position - beforePosition) / DeltaTime;
+        return cyclops.transform.rotation * latestVelocity;
     }
 
     /// <summary>
@@ -191,12 +233,12 @@ public partial class CyclopsMotor : GroundMotor
     /// </summary>
     public Vector3 CalculateVerticalVelocity()
     {
-        if (!jumpPressed || !canControl)
+        if (!jumpPressed)
         {
             jumping.holdingJumpButton = false;
             jumping.lastButtonDownTime = -100f;
         }
-        if (jumpPressed && (jumping.lastButtonDownTime < 0f || flyCheatEnabled) && canControl)
+        if (jumpPressed && (jumping.lastButtonDownTime < 0f || flyCheatEnabled))
         {
             jumping.lastButtonDownTime = Time.time;
         }
@@ -206,18 +248,20 @@ public partial class CyclopsMotor : GroundMotor
         if (!grounded)
         {
             verticalMove = -gravity * Up * DeltaTime;
+            verticalMove.y = Mathf.Max(verticalMove.y, -movement.maxFallSpeed);
         }
         if (grounded || allowMidAirJumping || flyCheatEnabled)
         {
-            if (canControl && Time.time - jumping.lastButtonDownTime < 0.2)
+            if (Time.time - jumping.lastButtonDownTime < 0.2)
             {
                 grounded = false;
                 jumping.jumping = true;
                 jumping.lastStartTime = Time.time;
                 jumping.lastButtonDownTime = -100f;
                 jumping.holdingJumpButton = true;
+                Vector3 jumpDirection = Vector3.Slerp(Up, groundNormal, TooSteep() ? jumping.steepPerpAmount : jumping.perpAmount);
+                verticalMove = jumpDirection * CalculateJumpVerticalSpeed(jumping.baseHeight);
                 SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
-                verticalMove = Up * CalculateJumpVerticalSpeed(jumping.baseHeight);
             }
             else
             {
@@ -244,15 +288,15 @@ public partial class CyclopsMotor : GroundMotor
         Vector3 projectedForward = Vector3.ProjectOnPlane(forwardRef.forward, Up).normalized;
         Vector3 projectedRight = Vector3.ProjectOnPlane(forwardRef.right, Up).normalized;
 
-        Vector3 moveDir = (projectedForward * input.z + projectedRight * input.x).normalized;
+        Vector3 moveDirection = (projectedForward * input.z + projectedRight * input.x).normalized;
 
         Vector3 velocity;
         // Manage sliding on slopes
         if (grounded && TooSteep())
         {
             velocity = GetSlidingDirection();
-            Vector3 moveProjectedOnSlope =  Vector3.Project(moveDir, velocity);
-            velocity += moveProjectedOnSlope * sliding.speedControl + (moveDir - moveProjectedOnSlope) * sliding.sidewaysControl;
+            Vector3 moveProjectedOnSlope =  Vector3.Project(movementInputDirection, velocity);
+            velocity += moveProjectedOnSlope * sliding.speedControl + (movementInputDirection - moveProjectedOnSlope) * sliding.sidewaysControl;
             velocity *= sliding.slidingSpeed;
         }
         else
@@ -272,7 +316,7 @@ public partial class CyclopsMotor : GroundMotor
                 }
                 sprinting = true;
             }
-            velocity = moveDir * forwardMaxSpeed * modifier * moveMinMagnitude;
+            velocity = moveDirection * forwardMaxSpeed * modifier * moveMinMagnitude;
         }
         if (XRSettings.enabled)
         {
@@ -281,11 +325,28 @@ public partial class CyclopsMotor : GroundMotor
 
         if (grounded)
         {
-            return AdjustGroundVelocityToNormal(velocity, groundNormal);
+            velocity = AdjustGroundVelocityToNormal(velocity, groundNormal);
+        }
+        else
+        {
+            latestVelocity.y = 0f;
         }
 
-        velocity.y = 0;
-        return velocity;
+        float maxSpeed = GetMaxAcceleration(grounded) * DeltaTime;
+        
+        Vector3 difference = velocity - latestVelocity;
+        if (difference.sqrMagnitude > maxSpeed * maxSpeed)
+        {
+            difference = difference.normalized * maxSpeed;
+        }
+        latestVelocity += difference;
+
+        if (grounded)
+        {
+            latestVelocity.y = Mathf.Min(latestVelocity.y, 0f);
+        }
+
+        return latestVelocity;
     }
 
     public static string text;
