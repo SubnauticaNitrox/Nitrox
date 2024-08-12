@@ -53,4 +53,10 @@ public class MultiplayerCyclops : MultiplayerVehicleControl
             subThrottleHandlers?.ForEach(throttleHandlers => throttleHandlers.OnSubAppliedThrottle());
         }
     }
+
+    public override void Exit()
+    {
+        base.Exit();
+        CurrentPlayer = null;
+    }
 }

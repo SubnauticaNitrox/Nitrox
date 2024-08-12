@@ -1,10 +1,11 @@
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -28,6 +29,11 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             return;
         }
 
+        if (BroadcastPlayerInCyclopsMovement())
+        {
+            return;
+        }
+
         Vector3 currentPosition = Player.main.transform.position;
         Vector3 playerVelocity = Player.main.playerController.velocity;
 
@@ -39,7 +45,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         SubRoot subRoot = Player.main.GetCurrentSub();
 
         // If in a subroot the position will be relative to the subroot
-        if (subRoot && !subRoot.isBase)
+        if (subRoot)
         {
             // Rotate relative player position relative to the subroot (else there are problems with respawning)
             Transform subRootTransform = subRoot.transform;
@@ -58,6 +64,18 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         }
 
         localPlayer.BroadcastLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
+    }
+
+    private bool BroadcastPlayerInCyclopsMovement()
+    {
+        if (!Player.main.isPiloting && Player.main.TryGetComponent(out CyclopsMotor cyclopsMotor) && cyclopsMotor.Pawn != null)
+        {
+            Transform pawnTransform = cyclopsMotor.Pawn.Handle.transform;
+            PlayerInCyclopsMovement packet = new(this.Resolve<LocalPlayer>().PlayerId.Value, pawnTransform.localPosition.ToDto(), pawnTransform.localRotation.ToDto());
+            this.Resolve<IPacketSender>().Send(packet);
+            return true;
+        }
+        return false;
     }
 
     private Optional<VehicleMovementData> GetVehicleMovement()

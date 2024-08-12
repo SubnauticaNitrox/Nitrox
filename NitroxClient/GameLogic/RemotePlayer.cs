@@ -129,6 +129,12 @@ public class RemotePlayer : INitroxPlayer
 
     public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
     {
+        // It might happen that we get movement packets before the body is actually initialized which is not too bad
+        if (!Body)
+        {
+            return;
+        }
+
         Body.SetActive(true);
 
         // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
@@ -142,16 +148,6 @@ public class RemotePlayer : INitroxPlayer
         // If in a subroot the position will be relative to the subroot
         if (SubRoot && !SubRoot.isBase)
         {
-            if (Pawn != null)
-            {
-                Pawn.Handle.transform.localPosition = SubRoot.transform.InverseTransformPoint(position);
-                Pawn.Handle.transform.localRotation = bodyRotation;
-
-                AnimationController.AimingRotation = aimingRotation;
-                AnimationController.UpdatePlayerAnimations = true;
-                return;
-            }
-
             Quaternion vehicleAngle = SubRoot.transform.rotation;
             position = vehicleAngle * position;
             position += SubRoot.transform.position;
@@ -161,6 +157,27 @@ public class RemotePlayer : INitroxPlayer
 
         RigidBody.velocity = AnimationController.Velocity;
         RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime);
+    }
+
+    public void UpdatePositionInCyclops(Vector3 localPosition, Quaternion localRotation)
+    {
+        if (Pawn == null)
+        {
+            return;
+        }
+
+        SetVehicle(null);
+        SetPilotingChair(null);
+
+        AnimationController.AimingRotation = localRotation;
+        AnimationController.UpdatePlayerAnimations = true;
+        AnimationController.Velocity = (localPosition - Pawn.Handle.transform.localPosition) / Time.fixedDeltaTime;
+
+        Pawn.Handle.transform.localPosition = localPosition;
+        Pawn.Handle.transform.localRotation = localRotation;
+
+        AnimationController.UpdatePlayerAnimations = true;
+        AnimationController.AimingRotation = localRotation;
     }
 
     public void SetPilotingChair(PilotingChair newPilotingChair)

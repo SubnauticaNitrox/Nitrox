@@ -72,8 +72,8 @@ public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 
         Player.main.SetCurrentSub(subRoot, true);
         // If the player's in a base/cyclops we don't need to wait for the world to load
-        Player.main.cinematicModeActive = false;
         Player.main.UpdateIsUnderwater();
+        Player.main.cinematicModeActive = false;
     }
 
     private void AttachPlayerToEscapePod(NitroxId escapePodId)

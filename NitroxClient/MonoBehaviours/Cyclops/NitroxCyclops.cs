@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using UnityEngine;
@@ -37,6 +38,8 @@ public class NitroxCyclops : MonoBehaviour
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, false, true);
 
         GetComponent<SubFire>().enabled = false;
+
+        FixSubNameEditor();
     }
 
     /// <summary>
@@ -75,6 +78,7 @@ public class NitroxCyclops : MonoBehaviour
         Player.main.transform.parent = null;
         Player.main.transform.rotation = Quaternion.identity;
         cyclopsMotor.ToggleCyclopsMotor(false);
+        cyclopsMotor.Pawn = null;
 
         Virtual.SetCurrentCyclops(null);
     }
@@ -128,7 +132,6 @@ public class NitroxCyclops : MonoBehaviour
 
     public void SetBroadcasting()
     {
-        worldForces.OnDisable();
         worldForces.enabled = true;
         stabilizer.stabilizerEnabled = true;
     }
@@ -137,6 +140,57 @@ public class NitroxCyclops : MonoBehaviour
     {
         worldForces.enabled = false;
         stabilizer.stabilizerEnabled = false;
+    }
+
+    private void FixSubNameEditor()
+    {
+        CyclopsSubNameScreen cyclopsSubNameScreen = transform.GetComponentInChildren<CyclopsSubNameScreen>(true);
+
+        cyclopsSubNameScreen.gameObject.AddComponent<SubNameFixer>().Initialize(this, cyclopsSubNameScreen);
+    }
+
+    /// <summary>
+    /// With the changes to the Player's colliders, the sub name screen doesn't detect the player coming close to it.
+    /// The easiest workaround is to replace proximity detection by distance checks.
+    /// </summary>
+    class SubNameFixer : MonoBehaviour
+    {
+        private const float DETECTION_RANGE = 3f;
+        private const string ANIMATOR_PARAM = "PanelActive";
+        private NitroxCyclops cyclops;
+        private CyclopsSubNameScreen cyclopsSubNameScreen;
+        private bool playerIn;
+
+        public void Initialize(NitroxCyclops cyclops, CyclopsSubNameScreen cyclopsSubNameScreen)
+        {
+            this.cyclops = cyclops;
+            this.cyclopsSubNameScreen = cyclopsSubNameScreen;
+        }
+
+        /// <summary>
+        /// Code adapted from <see cref="CyclopsSubNameScreen.OnTriggerEnter"/> and <see cref="CyclopsSubNameScreen.OnTriggerExit"/>
+        /// </summary>
+        public void Update()
+        {
+            // Virtual is not null only when the local player is aboard
+            if (cyclops.Virtual && Vector3.Distance(Player.main.transform.position, transform.position) < DETECTION_RANGE)
+            {
+                if (!playerIn)
+                {
+                    playerIn = true;
+                    cyclopsSubNameScreen.animator.SetBool(ANIMATOR_PARAM, true);
+                    cyclopsSubNameScreen.ContentOn();
+                }
+                return;
+            }
+
+            if (playerIn)
+            {
+                playerIn = false;
+                cyclopsSubNameScreen.animator.SetBool(ANIMATOR_PARAM, false);
+                cyclopsSubNameScreen.Invoke(nameof(cyclopsSubNameScreen.ContentOff), 0.5f);
+            }
+        }
     }
 
     // TODO: all of the below stuff is purely for testing and will probably get removed before merge
@@ -157,30 +211,49 @@ public class NitroxCyclops : MonoBehaviour
     public float Torque;
     public float Roll;
 
-    public void ResetAll()
+    public void Reset(Vector3 positionOffset)
     {
         Torqing = false;
         Rolling = false;
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
-        transform.position = new(70f, -16f, 0f);
+        transform.position = new Vector3(70f, -16f, 0f) + positionOffset;
         transform.rotation = Quaternion.Euler(new(360f, 270f, 0f));
 
-        Player.main.SetCurrentSub(subRoot, true);
-        Player.main.SetPosition(transform.position + up);
-        cyclopsMotor.ToggleCyclopsMotor(true);
-        cyclopsMotor.Pawn.SetReference();
+        if (Player.main.currentSub == subRoot || !Player.main.currentSub)
+        {
+            Player.main.SetCurrentSub(subRoot, true);
+            Player.main.SetPosition(transform.position + up);
+            cyclopsMotor.ToggleCyclopsMotor(true);
+            cyclopsMotor.Pawn.SetReference();
+        }
+    }
 
-        Log.InGame("Reset player");
+    private double latestReset;
+
+    public void ResetAll()
+    {
+        Vector3 offset = Vector3.zero;
+        foreach (NitroxCyclops cyclops in LargeWorldStreamer.main.globalRoot.GetComponentsInChildren<NitroxCyclops>())
+        {
+            offset += new Vector3(60f, 30f, 0);
+            cyclops.Reset(offset);
+        }
+
+        Log.InGame("Reset all cyclops");
     }
 
     public void Update()
     {
-        if (!DevConsole.instance.state)
+        if (!this.Resolve<PlayerChatManager>().IsChatSelected && !DevConsole.instance.selected)
         {
             if (Input.GetKeyUp(KeyCode.R))
             {
-                ResetAll();
+                if (latestReset + 10d < DayNightCycle.main.timePassed)
+                {
+                    latestReset = DayNightCycle.main.timePassed;
+                    ResetAll();
+                }
             }
             if (Input.GetKeyUp(KeyCode.N))
             {

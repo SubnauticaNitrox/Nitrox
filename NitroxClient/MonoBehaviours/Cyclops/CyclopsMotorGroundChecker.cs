@@ -112,6 +112,5 @@ public partial class CyclopsMotor
         Height = controller.height * scale.y;
         Radius = controller.radius * Mathf.Max(Mathf.Max(scale.x, scale.y), scale.z);
         SkinWidth = controller.skinWidth;
-        // SkinWidth: 0.08, Rad: 0.3, Height: 1.75
     }
 }
