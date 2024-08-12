@@ -36,7 +36,7 @@
                                             </Panel>
                                         </Viewbox>
                                     </Border>
-                                    <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"
+                                    <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:D}', TargetNullValue=''}"
                                                HorizontalAlignment="Left" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrandSubTextBrush}" ToolTip.Tip="{Binding Date, Converter={converters:DateToRelativeDateConverter}}"/>
                                     <TextBlock Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"
                                                FontSize="16" Margin="0,2,0,4" FontWeight="Bold"/>
