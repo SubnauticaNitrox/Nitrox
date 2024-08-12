@@ -93,6 +93,8 @@ public sealed class SteamFinder : IGameFinder
                 // https://github.com/flathub/com.valvesoftware.Steam/wiki, https://flathub.org/apps/com.valvesoftware.Steam
                 Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".local", "share", "Steam"),
                 Path.Combine(homePath, ".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
+                Path.Combine(homePath, "Steam"),
+                Path.Combine(homePath, "steam"),
             ];
 
             foreach (string path in commonSteamPath)
