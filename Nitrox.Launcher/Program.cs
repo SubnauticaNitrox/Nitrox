@@ -18,16 +18,15 @@ internal static class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Main(string[] args)
     {
-        CultureManager.ConfigureCultureInfo();
-
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.Handler;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyResolver.Handler;
 
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        LoadAvalonia(args);
     }
 
     private static AppBuilder BuildAvaloniaApp()
     {
+        CultureManager.ConfigureCultureInfo();
         Log.Setup();
 
         AppBuilder builder = AppBuilder.Configure<App>()
@@ -44,6 +43,9 @@ internal static class Program
 
         return builder;
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void LoadAvalonia(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
     private static class AssemblyResolver
     {
