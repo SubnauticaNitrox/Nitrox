@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using Avalonia.Collections;
 using Avalonia.Media.Imaging;
@@ -47,6 +47,12 @@ public partial class BlogViewModel : RoutableViewModelBase
             Port = -1
         };
 
-        Process.Start(new ProcessStartInfo(blogUriBuilder.Uri.ToString()) { UseShellExecute = true, Verb = "open" })?.Dispose();
+        Process.Start(
+            new ProcessStartInfo(blogUriBuilder.Uri.ToString())
+            {
+                UseShellExecute = true,
+                Verb = "open"
+            }
+        )?.Dispose();
     }
 }

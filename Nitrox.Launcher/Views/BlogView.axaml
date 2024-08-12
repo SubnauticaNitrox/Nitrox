@@ -8,38 +8,57 @@
              DataContext="{x:Static design:DesignData.BlogViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.BlogView">
+  
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
-            <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
-                <StackPanel>
+            <StackPanel Spacing="20" Background="{DynamicResource BrandWhiteBrush}">
+              
+                <StackPanel Spacing="15">
                     <TextBlock Classes="header" Text="Blog"/>
-                    <controls:RichTextBlock Margin="0 16 0 0">
-                        Read the latest news from the Nitrox team! You can view all our blogs [here](nitroxblog.rux.gg)
+                    <controls:RichTextBlock>
+                        Read the latest news from the Nitrox team ! You can view all our blogs [here](nitroxblog.rux.gg)
                     </controls:RichTextBlock>
                 </StackPanel>
 
-                <ItemsControl ItemsSource="{Binding NitroxBlogs}" Margin="0 0 -15 0">
+                <ItemsControl ItemsSource="{Binding NitroxBlogs, Mode=OneWay}">
+                    
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <controls:FittingWrapPanel HorizontalAlignment="Center" MaxItemWidth="340" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+                  
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url}">
-                                <StackPanel Orientation="Vertical" Spacing="10">
-                                    <Border CornerRadius="12" ClipToBounds="True">
+                        <DataTemplate x:DataType="design:NitroxBlog">
+                            <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding DataContext.BlogEntryClickCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Url, Mode=OneTime}">
+                                <StackPanel Orientation="Vertical"
+                                            Spacing="5">
+                                    
+                                    <Border CornerRadius="12"
+                                            ClipToBounds="True">
                                         <Viewbox>
-                                            <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="16" Height="9">
+                                            <Panel HorizontalAlignment="Stretch"
+                                                   VerticalAlignment="Stretch"
+                                                   Width="16"
+                                                   Height="9">
                                                 <Image IsVisible="{Binding Image, Converter={converters:EqualityConverter}}" Source="{Binding DataContext.FallbackImage, RelativeSource={RelativeSource AncestorType=ItemsControl}}" Stretch="UniformToFill" />
                                                 <Image Source="{Binding Image}" Stretch="UniformToFill" />
                                             </Panel>
                                         </Viewbox>
                                     </Border>
-                                    <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:D}', TargetNullValue=''}"
-                                               HorizontalAlignment="Left" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrandSubTextBrush}" ToolTip.Tip="{Binding Date, Converter={converters:DateToRelativeDateConverter}}"/>
+
                                     <TextBlock Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"
-                                               FontSize="16" Margin="0,2,0,4" FontWeight="Bold"/>
+                                               HorizontalAlignment="Left"
+                                               FontSize="16"
+                                               FontWeight="Bold" />
+                                    
+                                    <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:D}', TargetNullValue=''}"
+                                               HorizontalAlignment="Left"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               Foreground="{DynamicResource BrandSubTextBrush}"
+                                               ToolTip.Tip="{Binding Date, Converter={converters:DateToRelativeDateConverter}}"/>
+                                  
                                 </StackPanel>
                             </Button>
                         </DataTemplate>
@@ -48,4 +67,5 @@
             </StackPanel>
         </ScrollViewer>
     </ThemeVariantScope>
+  
 </UserControl>
