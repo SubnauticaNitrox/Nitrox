@@ -1,12 +1,11 @@
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher;
@@ -19,7 +18,7 @@ internal static class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Main(string[] args)
     {
-        ConfigureCultureInfo();
+        CultureManager.ConfigureCultureInfo();
 
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.Handler;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyResolver.Handler;
@@ -44,21 +43,6 @@ internal static class Program
         }
 
         return builder;
-    }
-
-    private static void ConfigureCultureInfo()
-    {
-        CultureInfo cultureInfo = new("en-US");
-
-        // Although we loaded the en-US cultureInfo, let's make sure to set these incase the
-        // default was overriden by the user
-        cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
-        cultureInfo.NumberFormat.NumberGroupSeparator = ",";
-
-        Thread.CurrentThread.CurrentCulture = cultureInfo;
-        Thread.CurrentThread.CurrentUICulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
     }
 
     private static class AssemblyResolver
