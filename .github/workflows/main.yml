@@ -1,0 +1,27 @@
+name: .NET Core Desktop
+
+on: ["push", "workflow_dispatch"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+      
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET 8.x
+      uses: actions/setup-dotnet@v3
+      with:
+        # Semantic version range syntax or exact version of a dotnet version
+        dotnet-version: '8.x'
+    - name: Setup SteamCmd
+      env:
+        CREDS: ${{ secrets.CREDS }}
+      shell: bash
+      run: |
+        curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
+        ./steamcmd.sh +@sSteamCmdForcePlatformType windows +login $CREDS +app_update 264710 +quit
+        
+    - name: Read Directory
+      run: |
+        ls -la
+        ls -la ~/
