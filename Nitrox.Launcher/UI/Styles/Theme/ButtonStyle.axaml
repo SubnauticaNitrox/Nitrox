@@ -77,6 +77,7 @@
         </Style>
 
         <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
             <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
             <Setter Property="Opacity" Value="0.6" />
