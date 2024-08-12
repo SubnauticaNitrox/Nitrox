@@ -3,10 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.ReactiveUI;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher;
 
@@ -20,6 +22,11 @@ internal static class Program
     {
         AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.Handler;
         AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyResolver.Handler;
+        
+        if (SingleInstanceChecker.IsAlreadyRunning())
+        {
+            return;
+        }
 
         LoadAvalonia(args);
     }
@@ -107,5 +114,35 @@ internal static class Program
             }
             return currentExecutableDirectory = new Uri(Path.GetDirectoryName(pathAttempt ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
         }
+    }
+}
+
+public static class SingleInstanceChecker
+{
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    private const int SW_RESTORE = 9;
+
+    public static bool IsAlreadyRunning()
+    {
+        bool isRunning = ProcessEx.ProcessExists("Nitrox.Launcher", process =>
+        {
+            if (process.Id == Environment.ProcessId)
+            {
+                return false;
+            }
+
+            // TODO: Fix window focus on the already opened Nitrox Launcher (or add some kind of info dialog for user) - Maybe show "Nitrox Launcher" process instead of "Nitrox.Launcher"?
+            IntPtr handle = process.Handle.DangerousGetHandle();
+            ShowWindow(handle, SW_RESTORE);
+            SetForegroundWindow(handle);
+            return true;
+        });
+
+        return isRunning;
     }
 }
