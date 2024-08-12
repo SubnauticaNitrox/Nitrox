@@ -3,7 +3,7 @@ name: .NET Core Desktop
 on: ["push", "workflow_dispatch"]
 
 jobs:
-  build:
+  buildLinux:
     runs-on: ubuntu-latest
       
     steps:
@@ -13,6 +13,7 @@ jobs:
       with:
         # Semantic version range syntax or exact version of a dotnet version
         dotnet-version: '8.x'
+      
     - name: Setup SteamCmd
       env:
         USER: ${{ secrets.USER }}
@@ -22,7 +23,52 @@ jobs:
         curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
         ./steamcmd.sh +@sSteamCmdForcePlatformType windows +login $USER $PASS +app_update 264710 +quit
         
-    - name: Read Directory
+    - name: Setup Mono-Runtime
       run: |
-        ls -la
-        ls -la ~/
+        sudo apt-get update
+        sudo apt-get install mono-runtime
+
+    - name: Build Nitrox.BuildTool
+      run: |
+        dotnet restore
+        dotnet build Nitrox.BuildTool
+
+    - name: Run Nitrox.BuildTool
+      run: mono Nitrox.BuildTool/bin/Nitrox.BuildTool.exe
+
+    - name: Build Nitrox
+      run: |
+        dotnet build
+        
+  buildWindows:
+    runs-on: windows
+      
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET 8.x
+      uses: actions/setup-dotnet@v3
+      with:
+        # Semantic version range syntax or exact version of a dotnet version
+        dotnet-version: '8.x'
+      
+    - name: Setup SteamCmd
+      env:
+        USER: ${{ secrets.USER }}
+        PASS: ${{ secrets.PASS }}
+      shell: bash
+      run: |
+        curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip" 
+        unzip steamcmd.zip
+        ./steamcmd.exe +login $USER $PASS +app_update 264710 +quit
+
+    - name: Build Nitrox.BuildTool
+      run: |
+        dotnet restore
+        dotnet build Nitrox.BuildTool
+
+    - name: Run Nitrox.BuildTool
+      run: Nitrox.BuildTool/bin/Nitrox.BuildTool.exe
+
+    - name: Build Nitrox
+      run: |
+        dotnet build
