@@ -15,9 +15,6 @@ public sealed partial class SeaMoth_OnUpgradeModuleUse_Patch : NitroxPatch, IDyn
             case TechType.SeamothElectricalDefense:
                 Resolve<SeamothModulesEvent>().BroadcastElectricalDefense(techType, slotID, __instance);
                 break;
-            case TechType.SeamothTorpedoModule:
-                Resolve<SeamothModulesEvent>().BroadcastTorpedoLaunch(techType, slotID, __instance);
-                break;
         }
 
         return true;

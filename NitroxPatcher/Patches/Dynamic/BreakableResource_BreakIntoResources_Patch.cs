@@ -1,8 +1,9 @@
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using System.Reflection;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -12,12 +13,24 @@ public sealed partial class BreakableResource_BreakIntoResources_Patch : NitroxP
 
     public static void Prefix(BreakableResource __instance)
     {
-        if (!__instance.TryGetNitroxEntity(out NitroxEntity destroyedEntity))
+        if (!__instance.TryGetNitroxId(out NitroxId destroyedId))
         {
             Log.Warn($"[{nameof(BreakableResource_BreakIntoResources_Patch)}] Could not find {nameof(NitroxEntity)} for breakable entity {__instance.gameObject.GetFullHierarchyPath()}.");
             return;
         }
-        // Send packet to destroy the entity
-        Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntity.Id));
+
+        // Case by case handling
+
+        // Sea Treaders spawn resource chunks but we don't register them on server-side as they're auto destroyed after 60s
+        // So we need to broadcast their deletion differently
+        if (__instance.GetComponent<SinkingGroundChunk>())
+        {
+            Resolve<IPacketSender>().Send(new SeaTreaderChunkPickedUp(destroyedId));
+        }
+        // Generic case
+        else
+        {
+            Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedId));
+        }
     }
 }

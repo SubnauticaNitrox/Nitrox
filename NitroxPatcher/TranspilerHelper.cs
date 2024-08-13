@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher
 {
@@ -14,6 +16,9 @@ namespace NitroxPatcher
     {
         private static readonly MethodInfo serviceLocator = typeof(NitroxServiceLocator)
             .GetMethod(nameof(NitroxServiceLocator.LocateService), BindingFlags.Static | BindingFlags.Public, null, Array.Empty<Type>(), null);
+
+        private static readonly MethodInfo DELTA_TIME_INSERTED_METHOD = Reflect.Method(() => GetDeltaTime());
+        private static readonly MethodInfo DELTA_TIME_MATCHING_FIELD = Reflect.Property(() => Time.deltaTime).GetGetMethod();
 
         public static CodeInstruction LocateService<T>()
         {
@@ -118,6 +123,26 @@ namespace NitroxPatcher
             }
 
             return Ldloc(method.GetLocalVariableIndex<T>(i));
+        }
+
+        /// <summary>
+        /// Replaces first use of <see cref="Time.deltaTime"/> by <see cref="TimeManager.DeltaTime"/>.
+        /// Doesn't change <see cref="CodeMatcher.Pos"/>.
+        /// </summary>
+        public static CodeMatcher ReplaceDeltaTime(this CodeMatcher codeMatcher)
+        {
+            int pos = codeMatcher.Pos;
+            return codeMatcher.MatchStartForward(new CodeMatch(OpCodes.Call, DELTA_TIME_MATCHING_FIELD))
+                       .SetOperandAndAdvance(DELTA_TIME_INSERTED_METHOD)
+                       .Advance(pos - codeMatcher.Pos);
+        }
+
+        /// <summary>
+        /// Wrapper for dependency resolving and variable querying
+        /// </summary>
+        public static float GetDeltaTime()
+        {
+            return NitroxServiceLocator.Cache<TimeManager>.Value.DeltaTime;
         }
     }
 }
