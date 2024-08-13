@@ -131,14 +131,10 @@ public partial class CyclopsMotor : GroundMotor
         verticalVelocity += CalculateVerticalVelocity();
         Vector3 horizontalVelocity = CalculateInputVelocity();
 
-        text2 = $"movementInputDirection: {movementInputDirection}\nVerticalVel: {verticalVelocity}\nHorizontalVelocity: {horizontalVelocity}\nGrounded/Controller: {grounded}/{controller.isGrounded}\nCollision: {Collision}";
-
         // movement.velocity gives velocity info for the animations and footsteps
         movement.velocity = Move(horizontalVelocity);
         return movement.velocity;
     }
-
-    public static string text2;
 
     /// <summary>
     /// Simulates player movement on its pawn and update the grounded state
@@ -349,8 +345,6 @@ public partial class CyclopsMotor : GroundMotor
 
         return latestVelocity;
     }
-
-    public static string text;
 
     private new Vector3 GetSlidingDirection()
     {

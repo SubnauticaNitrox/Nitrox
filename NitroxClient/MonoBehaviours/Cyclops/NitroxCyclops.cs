@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using UnityEngine;
@@ -40,6 +39,11 @@ public class NitroxCyclops : MonoBehaviour
         GetComponent<SubFire>().enabled = false;
 
         WorkaroundColliders();
+    }
+
+    public void Update()
+    {
+        MaintainPawns();
     }
 
     /// <summary>
@@ -152,121 +156,5 @@ public class NitroxCyclops : MonoBehaviour
         CyclopsLightingPanel cyclopsLightingPanel = transform.GetComponentInChildren<CyclopsLightingPanel>(true);
         TriggerWorkaround lightingTriggerWorkaround = cyclopsLightingPanel.gameObject.AddComponent<TriggerWorkaround>();
         lightingTriggerWorkaround.Initialize(this, cyclopsLightingPanel.uiPanel, cyclopsLightingPanel.ButtonsOn, nameof(CyclopsLightingPanel.ButtonsOff), cyclopsLightingPanel);
-    }
-
-    // TODO: all of the below stuff is purely for testing and will probably get removed before merge
-    // EXCEPT for the MaintainPawns line in Update()
-    private Vector3 forward => subRoot.subAxis.forward;
-    private Vector3 up => subRoot.subAxis.up;
-    private Vector3 right => subRoot.subAxis.right;
-
-    public bool Autopilot;
-    public bool Sinus;
-    public bool Rolling;
-    public bool Torqing;
-    public bool RenderersToggled;
-
-    public float Forward;
-    public float Up;
-    public float VerticalPeriod = 1f;
-    public float Torque;
-    public float Roll;
-
-    public void Reset(Vector3 positionOffset)
-    {
-        Torqing = false;
-        Rolling = false;
-        rigidbody.velocity = Vector3.zero;
-        rigidbody.angularVelocity = Vector3.zero;
-        transform.position = new Vector3(70f, -16f, 0f) + positionOffset;
-        transform.rotation = Quaternion.Euler(new(360f, 270f, 0f));
-
-        if (Player.main.currentSub == subRoot || !Player.main.currentSub)
-        {
-            Player.main.SetCurrentSub(subRoot, true);
-            Player.main.SetPosition(transform.position + up);
-            cyclopsMotor.ToggleCyclopsMotor(true);
-            cyclopsMotor.Pawn.SetReference();
-        }
-    }
-
-    private double latestReset;
-
-    public void ResetAll()
-    {
-        Vector3 offset = Vector3.zero;
-        foreach (NitroxCyclops cyclops in LargeWorldStreamer.main.globalRoot.GetComponentsInChildren<NitroxCyclops>())
-        {
-            offset += new Vector3(60f, 30f, 0);
-            cyclops.Reset(offset);
-        }
-
-        Log.InGame("Reset all cyclops");
-    }
-
-    public void Update()
-    {
-        if (!this.Resolve<PlayerChatManager>().IsChatSelected && !DevConsole.instance.selected)
-        {
-            if (Input.GetKeyUp(KeyCode.R))
-            {
-                if (latestReset + 10d < DayNightCycle.main.timePassed)
-                {
-                    latestReset = DayNightCycle.main.timePassed;
-                    ResetAll();
-                }
-            }
-            if (Input.GetKeyUp(KeyCode.N))
-            {
-                SetReceiving();
-                Rolling = !Rolling;
-                Autopilot = true;
-                Roll = Rolling.ToFloat();
-                Log.InGame($"Rolling: {Rolling}");
-            }
-            if (Input.GetKeyUp(KeyCode.B))
-            {
-                SetReceiving();
-                Torqing = !Torqing;
-                Autopilot = true;
-                Torque = Torqing.ToFloat();
-                Log.InGame($"Torqing: {Torqing}");
-            }
-        }
-
-        MaintainPawns();
-    }
-
-    public void FixedUpdate()
-    {
-        MoveAutopilot();
-    }
-
-    public void MoveAutopilot()
-    {
-        if (!Autopilot)
-        {
-            return;
-        }
-
-        // https://docs.unity3d.com/ScriptReference/Rigidbody.AddTorque.html
-        Vector3 cyclopsTorqueFactor = up * subControl.BaseTurningTorque * subControl.turnScale;
-        rigidbody.angularVelocity += cyclopsTorqueFactor * Torque * Time.fixedDeltaTime;
-
-        Vector3 cyclopsRollFactor = right * subControl.BaseTurningTorque * subControl.turnScale;
-        rigidbody.angularVelocity += cyclopsRollFactor * Roll * Time.fixedDeltaTime;
-
-        // https://docs.unity3d.com/ScriptReference/Rigidbody.AddForce.html
-        Vector3 cyclopsVerticalFactor = up * (subControl.BaseVerticalAccel + ballasts * subControl.AccelPerBallast) * subControl.accelScale;
-        if (Sinus)
-        {
-            cyclopsVerticalFactor *= Mathf.Sin(2 * Mathf.PI * Time.fixedTime / VerticalPeriod);
-        }
-        rigidbody.velocity += cyclopsVerticalFactor * Up * Time.fixedDeltaTime;
-
-        Vector3 cyclopsForwardFactor = forward * subControl.BaseForwardAccel * subControl.accelScale;
-        rigidbody.velocity += cyclopsForwardFactor * Forward * Time.fixedDeltaTime;
-
-        subControl.appliedThrottle = true;
     }
 }
