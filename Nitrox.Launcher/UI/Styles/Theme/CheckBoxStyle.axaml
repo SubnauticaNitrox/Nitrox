@@ -17,14 +17,24 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
                     <ThemeVariantScope RequestedThemeVariant="Light">
-                        <Border Background="White" Padding="5">
-                            <CheckBox Classes="switch" />
+                      <StackPanel Background="White" Spacing="5">
+                        <Border>
+                          <CheckBox Classes="switch" />
                         </Border>
+                        <Border>
+                          <CheckBox Classes="switch" IsChecked="True" />
+                        </Border>
+                      </StackPanel>
                     </ThemeVariantScope>
                     <ThemeVariantScope RequestedThemeVariant="Dark">
-                        <Border Background="Black" Padding="5">
-                            <CheckBox Classes="switch" IsChecked="True" Foreground="White" />
+                      <StackPanel Background="Black" Spacing="5">
+                        <Border>
+                          <CheckBox Classes="switch" />
                         </Border>
+                        <Border>
+                          <CheckBox Classes="switch" IsChecked="True" />
+                        </Border>
+                      </StackPanel>
                     </ThemeVariantScope>
                 </StackPanel>
             </StackPanel>
@@ -95,7 +105,7 @@
 
         <Style Selector="^:checked">
             <!-- Checked Normal State -->
-            <Setter Property="Background" Value="{TemplateBinding Background}" />
+            <Setter Property="Background" Value="{DynamicResource BrandCheckboxBackgroundBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource BrandControlBackgroundBrush}" />
 
             <Style Selector="^ /template/ Border#SlidingIcon">
