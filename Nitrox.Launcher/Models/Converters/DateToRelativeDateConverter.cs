@@ -13,30 +13,17 @@ public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter
 
     public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        DateTimeOffset date;
-        switch (value)
+        DateTimeOffset date = value switch
         {
-            case DateTime dateTime:
-                date = dateTime;
-                break;
-            case DateTimeOffset dateTimeOffset:
-                date = dateTimeOffset;
-                break;
-            case DateOnly dateOnly:
-                date = dateOnly.ToDateTime(TimeOnly.MinValue);
-                break;
-            case string text:
-                if (DateTimeOffset.TryParse(text, out DateTimeOffset offset))
-                {
-                    date = offset;
-                    break;
-                }
-                goto default;
-            default:
-                throw new ArgumentException(nameof(value), $"Value must be a {nameof(DateTime)} or {nameof(DateTimeOffset)}");
-        }
+            DateTime dateTime => dateTime,
+            DateTimeOffset dateTimeOffset => dateTimeOffset,
+            DateOnly dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
+            string text when DateTimeOffset.TryParse(text, out DateTimeOffset offset) => offset,
+            _ => throw new ArgumentException($"Value must be a {nameof(DateTime)} or {nameof(DateTimeOffset)}", nameof(value))
+        };
 
         TimeSpan delta = DateTimeOffset.UtcNow - date;
+
         return delta switch
         {
             { TotalSeconds: < 1 } => "just now",

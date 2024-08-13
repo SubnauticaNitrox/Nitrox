@@ -27,7 +27,7 @@
     </Design.PreviewWith>
 
     <Style Selector="Window">
-        <Setter Property="Icon" Value="/Assets/Images/nitroxIco.ico" />
+        <Setter Property="Icon" Value="/Assets/Images/nitrox-icon.ico" />
         <Setter Property="Focusable" Value="True" />
         <Setter Property="WindowStartupLocation" Value="CenterOwner" />
         <Setter Property="FontFamily" Value="/Assets/Fonts/Inter-Black.ttf" />

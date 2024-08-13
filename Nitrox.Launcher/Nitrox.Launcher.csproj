@@ -7,7 +7,7 @@
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
-        <ApplicationIcon>Assets\Images\nitroxIco.ico</ApplicationIcon>
+        <ApplicationIcon>Assets\Images\nitrox-icon.ico</ApplicationIcon>
         <Authors>Nitrox</Authors>
         <Company>Nitrox</Company>
         <PublishTrimmed>false</PublishTrimmed>

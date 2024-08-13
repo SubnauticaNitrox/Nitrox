@@ -28,7 +28,7 @@
                     <ThemeVariantScope RequestedThemeVariant="Light">
                         <Button HorizontalAlignment="Center" Classes="icon" Background="White">
                             <StackPanel>
-                                <Image Source="/Assets/Images/world-manager/cog-2x.png" />
+                                <Image Source="/Assets/Images/world-manager/cog.png" />
                                 <TextBlock Text="Icon button" />
                             </StackPanel>
                         </Button>
@@ -36,7 +36,7 @@
                     <ThemeVariantScope RequestedThemeVariant="Dark">
                         <Button HorizontalAlignment="Center" Classes="icon" Background="Black">
                             <StackPanel>
-                                <Image Source="/Assets/Images/world-manager/cog-2x.png" />
+                                <Image Source="/Assets/Images/world-manager/cog.png" />
                                 <TextBlock Text="Icon button" />
                             </StackPanel>
                         </Button>

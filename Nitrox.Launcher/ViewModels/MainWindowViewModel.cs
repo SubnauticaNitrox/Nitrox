@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -18,7 +16,6 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.Platforms.OS.Shared;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -35,7 +32,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly UpdatesViewModel updatesViewModel;
 
     [ObservableProperty]
-    private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
+    private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max.png";
 
     [ObservableProperty]
     private bool updateAvailableOrUnofficial;
@@ -160,12 +157,12 @@ public partial class MainWindowViewModel : ViewModelBase
         if (MainWindow.WindowState == WindowState.Normal)
         {
             MainWindow.WindowState = WindowState.Maximized;
-            MaximizeButtonIcon = "/Assets/Images/material-design-icons/restore-w-10.png";
+            MaximizeButtonIcon = "/Assets/Images/material-design-icons/restore.png";
         }
         else
         {
             MainWindow.WindowState = WindowState.Normal;
-            MaximizeButtonIcon = "/Assets/Images/material-design-icons/max-w-10.png";
+            MaximizeButtonIcon = "/Assets/Images/material-design-icons/max.png";
         }
     }
 

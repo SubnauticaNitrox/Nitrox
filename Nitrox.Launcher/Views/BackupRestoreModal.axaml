@@ -23,7 +23,7 @@
             <Button Command="{Binding CloseCommand}">
                 <Rectangle>
                     <Rectangle.OpacityMask>
-                        <ImageBrush Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                        <ImageBrush Source="/Assets/Images/material-design-icons/close.png" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
@@ -36,7 +36,7 @@
                 <!-- Backups Don't Exist -->
                 <StackPanel Spacing="50" HorizontalAlignment="Center" VerticalAlignment="Center"
                             IsVisible="{Binding !Backups.Count}">
-                    <Image Source="/Assets/Images/serverIllustration.png" Width="300" Margin="-25 0 0 0" Stretch="None" />
+                    <Image Source="/Assets/Images/world-manager/server.png" Width="300" Margin="-25 0 0 0" Stretch="None" />
                     <TextBlock Text="No backups here yet" FontSize="32" TextAlignment="Center" FontWeight="600" Margin="0 0 0 40" />
                 </StackPanel>
 

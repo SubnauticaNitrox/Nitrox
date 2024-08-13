@@ -123,13 +123,13 @@
 
             <StackPanel>
                 <Button Command="{Binding MinimizeCommand}">
-                    <Image Source="/Assets/Images/material-design-icons/min-w-10.png" />
+                    <Image Source="/Assets/Images/material-design-icons/min.png" />
                 </Button>
                 <Button Command="{Binding MaximizeCommand}">
                     <Image Source="{Binding MaximizeButtonIcon, Converter={converters:BitmapAssetValueConverter}}" />
                 </Button>
                 <Button Command="{Binding CloseCommand}">
-                    <Image Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                    <Image Source="/Assets/Images/material-design-icons/close.png" />
                 </Button>
             </StackPanel>
         </Panel>
@@ -145,44 +145,43 @@
                     <Panel Grid.Row="1">
                         <StackPanel Classes="nav">
                             <TextBlock Classes="subheader">PLAY</TextBlock>
-                            <Button Command="{Binding OpenLaunchGameViewCommand}" ToolTip.Tip="Play the game" design:NitroxAttached.Selected="True" x:Name="OpenLaunchGameViewButton">
+                            <Button Command="{Binding OpenLaunchGameViewCommand}" ToolTip.Tip="Play game" design:NitroxAttached.Selected="True" x:Name="OpenLaunchGameViewButton">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/material-design-icons/play.png" />
+                                    <Image Source="/Assets/Images/tabs-icons/play.png" />
                                     <TextBlock Text="Play game" />
                                 </StackPanel>
                             </Button>
-                            <Button Command="{Binding OpenServersViewCommand}" ToolTip.Tip="Configure and start the server">
+                            <Button Command="{Binding OpenServersViewCommand}" ToolTip.Tip="Configure and start servers">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/material-design-icons/server.png" />
+                                    <Image Source="/Assets/Images/tabs-icons/server.png" />
                                     <TextBlock Text="Servers" />
                                 </StackPanel>
                             </Button>
                             <TextBlock Classes="subheader">EXPLORE</TextBlock>
-                            <Button Command="{Binding OpenCommunityViewCommand}" ToolTip.Tip="Join the Nitrox community">
+                            <Button Command="{Binding OpenCommunityViewCommand}" ToolTip.Tip="Join Nitrox community">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/material-design-icons/community.png" />
+                                    <Image Source="/Assets/Images/tabs-icons/community.png" />
                                     <TextBlock Text="Community" />
                                 </StackPanel>
                             </Button>
-                            <Button Command="{Binding OpenBlogViewCommand}" ToolTip.Tip="Read the latest from the Dev Blog">
+                            <Button Command="{Binding OpenBlogViewCommand}" ToolTip.Tip="Read latest news from the Dev Blog">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/material-design-icons/blog.png" />
+                                    <Image Source="/Assets/Images/tabs-icons/blog.png" />
                                     <TextBlock Text="Blog" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
                         <!-- Footer navigation items -->
                         <StackPanel Classes="nav" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                            <Button Command="{Binding OpenUpdatesViewCommand}">
+                            <Button Command="{Binding OpenUpdatesViewCommand}" ToolTip.Tip="Check latest updates from Nitrox">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/material-design-icons/download.png" IsVisible="{Binding !UpdateAvailableOrUnofficial}"/>
-                                    <Image Source="/Assets/Images/material-design-icons/downloadDot.png" IsVisible="{Binding UpdateAvailableOrUnofficial, FallbackValue=false}"/>
+                                    <Image Source="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}" />
                                     <TextBlock Text="Updates" />
                                 </StackPanel>
                             </Button>
-                            <Button Command="{Binding OpenOptionsViewCommand}">
+                            <Button Command="{Binding OpenOptionsViewCommand}" ToolTip.Tip="Configure your Nitrox setup">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/material-design-icons/options.png" />
+                                    <Image Source="/Assets/Images/tabs-icons/options.png" />
                                     <TextBlock Text="Options" />
                                 </StackPanel>
                             </Button>
@@ -213,7 +212,7 @@
                                 <Image Grid.Column="0" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" Source="{Binding Type, Converter={converters:NotificationTypeToIconConverter}}" />
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Message}" />
                                 <Button Classes="anycontent" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseCommand}">
-                                    <Image Width="10" VerticalAlignment="Top" Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                                    <Image Width="10" VerticalAlignment="Top" Source="/Assets/Images/material-design-icons/close.png" />
                                 </Button>
                             </Grid>
                         </Border>

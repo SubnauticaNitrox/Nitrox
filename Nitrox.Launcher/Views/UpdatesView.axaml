@@ -18,7 +18,7 @@
                     <Grid>
                         <!-- Official Version only text -->
                         <StackPanel Spacing="10" IsVisible="{Binding UsingOfficialVersion, Mode=OneWay}">
-                            <Image Source="/Assets/Images/nitroxIco.ico" ToolTip.Tip="You are the best captain on the planet, I'm not even squiddin'" Width="56" Height="56" HorizontalAlignment="Center" />
+                            <Image Source="/Assets/Images/nitrox-icon.ico" ToolTip.Tip="You are the best captain on the planet, I'm not even squiddin'" Width="56" Height="56" HorizontalAlignment="Center" />
 
                             <!-- "No Update Available" text -->
                             <StackPanel Spacing="5" IsVisible="{Binding !NewUpdateAvailable, Mode=OneWay}">
@@ -52,7 +52,7 @@
                         <!-- Unofficial Version only text -->
                         <StackPanel Spacing="10" IsVisible="{Binding !UsingOfficialVersion, Mode=OneWay}">
                             <!-- TODO: Better Icon here -->
-                            <Image Source="/Assets/Images/store-icons/pirated-2x.png" ToolTip.Tip=":(" Width="56" Height="56" HorizontalAlignment="Center" />
+                            <Image Source="/Assets/Images/store-icons/pirated.png" ToolTip.Tip=":(" Width="56" Height="56" HorizontalAlignment="Center" />
 
                             <StackPanel Spacing="6">
                                 <TextBlock Text="Unofficial Version Detected" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>

@@ -27,7 +27,7 @@
             <Button Command="{Binding CloseCommand}">
                 <Rectangle>
                     <Rectangle.OpacityMask>
-                        <ImageBrush Source="/Assets/Images/material-design-icons/close-w-10.png" />
+                        <ImageBrush Source="/Assets/Images/material-design-icons/close.png" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Avalonia.Collections;
-using Avalonia.Platform;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
+using Nitrox.Launcher.Models.Converters;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Patching;
 using Nitrox.Launcher.Models.Utils;
@@ -28,18 +27,25 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class LaunchGameViewModel : RoutableViewModelBase
 {
+    public static Task<string> LastFindSubnauticaTask;
+
     private readonly OptionsViewModel optionsViewModel;
     private readonly ServersViewModel serversViewModel;
     private readonly IKeyValueStore keyValueStore;
-    public static Task<string> LastFindSubnauticaTask;
     private readonly IDialogService dialogService;
 
     [ObservableProperty]
     private Platform gamePlatform;
+
     [ObservableProperty]
     private string platformToolTip;
-    [ObservableProperty]
-    private AvaloniaList<string> galleryImageSources = [];
+
+    public Bitmap[] GalleryImageSources { get; } = [
+        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-1.png"),
+        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-2.png"),
+        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-3.png"),
+        BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-4.png")
+    ];
 
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
@@ -55,11 +61,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 
         UpdateGamePlatform();
         HandleInstantLaunchForDevelopment();
-
-        foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
-        {
-            GalleryImageSources.Add(asset.LocalPath);
-        }
     }
 
     [RelayCommand]

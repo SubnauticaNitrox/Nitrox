@@ -29,10 +29,11 @@ public class NotificationTypeToIconConverter : Converter<NotificationTypeToIconC
 
     public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (Application.Current == null)
+        if (Application.Current is null)
         {
             return null;
         }
+
         if (value is not NotificationType type)
         {
             return typeToResourceCache[NotificationType.Error];

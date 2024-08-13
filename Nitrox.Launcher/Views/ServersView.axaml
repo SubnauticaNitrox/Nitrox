@@ -11,7 +11,7 @@
         <Panel Background="{DynamicResource BrandWhiteBrush}">
             <Panel IsVisible="{Binding !Servers.Count}">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="/Assets/Images/serverIllustration.png" Stretch="None" Margin="0 0 0 73" />
+                    <Image Source="/Assets/Images/world-manager/server.png" Stretch="None" Margin="0 0 0 73" />
                     <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
                     <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world</TextBlock>
 
@@ -40,7 +40,7 @@
                                     <DockPanel VerticalAlignment="Center">
                                         <Border DockPanel.Dock="Left" CornerRadius="12" ClipToBounds="True">
                                             <Grid>
-                                                <Image Source="/Assets/Images/SubnauticaIcon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
+                                                <Image Source="/Assets/Images/subnautica-icon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
                                                 <Border Height="56" Width="56">
                                                     <Border.Background>
                                                         <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon}" />

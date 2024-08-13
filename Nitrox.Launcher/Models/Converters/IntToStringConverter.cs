@@ -19,14 +19,15 @@ public partial class IntToStringConverter : Converter<IntToStringConverter>
 
     public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value == null)
+        if (value is null)
         {
             return 0;
         }
+
         if (value is not string str)
         {
             str = value.ToString();
-            if (str == null)
+            if (str is null)
             {
                 return 0;
             }

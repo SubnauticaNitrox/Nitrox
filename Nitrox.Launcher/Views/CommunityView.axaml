@@ -45,17 +45,17 @@
         <ScrollViewer Classes="main">
             <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
                 <TextBlock Classes="header" Text="Community" />
-                <Image Source="/Assets/Images/communityHeader.png" MaxWidth="1580" />
+                <Image Source="/Assets/Images/banners/community.png" MaxWidth="1580" />
                 <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="280">
                     <Border>
                         <StackPanel>
                             <Panel>
-                                <Button Classes="anycontent" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}">
+                                <Button Classes="anycontent" ToolTip.Tip="Join Discord Server" Command="{Binding DiscordLinkCommand}">
                                     <Border Background="#5865F2">
                                         <PathIcon Data="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" />
                                     </Border>
                                 </Button>
-                                <Button Content="Join Discord" ToolTip.Tip="Join the Discord Server" Command="{Binding DiscordLinkCommand}" />
+                                <Button Content="Join Discord" ToolTip.Tip="Join Discord Server" Command="{Binding DiscordLinkCommand}" />
                             </Panel>
                             <TextBlock Text="Discord"/>
                             <TextBlock Text="Join our active Discord server to find servers to play on, get help from the support team and much more."/>
@@ -77,33 +77,33 @@
                         </StackPanel>
                     </Border>
                     <Border>
+                      <StackPanel>
+                        <Grid>
+                          <Button Classes="anycontent" ToolTip.Tip="Follow on Bluesky" Command="{Binding BlueskyLinkCommand}">
+                            <Border Background="#1185fe">
+                              <PathIcon Data="M123.121 33.6637C188.241 82.5526 258.281 181.681 284 234.873C309.719 181.681 379.759 82.5526 444.879 33.6637C491.866 -1.61183 568 -28.9064 568 57.9464C568 75.2916 558.055 203.659 552.222 224.501C531.947 296.954 458.067 315.434 392.347 304.249C507.222 323.8 536.444 388.56 473.333 453.32C353.473 576.312 301.061 422.461 287.631 383.039C285.169 375.812 284.017 372.431 284 375.306C283.983 372.431 282.831 375.812 280.369 383.039C266.939 422.461 214.527 576.312 94.6667 453.32C31.5556 388.56 60.7778 323.8 175.653 304.249C109.933 315.434 36.0535 296.954 15.7778 224.501C9.94525 203.659 0 75.2916 0 57.9464C0 -28.9064 76.1345 -1.61183 123.121 33.6637Z" />
+                            </Border>
+                          </Button>
+
+                          <Button Content="Follow" ToolTip.Tip="Follow on Bluesky" Command="{Binding BlueskyLinkCommand}" />
+                        </Grid>
+                        <TextBlock Text="Bluesky"/>
+                        <TextBlock Text="Follow the Nitrox Bluesky account to always be up to date on latest developments, events, and releases."/>
+                      </StackPanel>
+                    </Border>
+                    <Border>
                         <StackPanel>
                             <Grid>
-                                <Button Classes="anycontent" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
+                                <Button Classes="anycontent" ToolTip.Tip="Join Nitrox Subreddit" Command="{Binding RedditLinkCommand}">
                                     <Border Background="#FF4500">
                                         <PathIcon Data="M 75.011 45 c -0.134 -3.624 -3.177 -6.454 -6.812 -6.331 c -1.611 0.056 -3.143 0.716 -4.306 1.823 c -5.123 -3.49 -11.141 -5.403 -17.327 -5.537 l 2.919 -14.038 l 9.631 2.025 c 0.268 2.472 2.483 4.262 4.955 3.993 c 2.472 -0.268 4.262 -2.483 3.993 -4.955 s -2.483 -4.262 -4.955 -3.993 c -1.421 0.145 -2.696 0.973 -3.4 2.204 L 48.68 17.987 c -0.749 -0.168 -1.499 0.302 -1.667 1.063 c 0 0.011 0 0.011 0 0.022 l -3.322 15.615 c -6.264 0.101 -12.36 2.025 -17.55 5.537 c -2.64 -2.483 -6.801 -2.36 -9.284 0.291 c -2.483 2.64 -2.36 6.801 0.291 9.284 c 0.515 0.481 1.107 0.895 1.767 1.186 c -0.045 0.66 -0.045 1.32 0 1.98 c 0 10.078 11.745 18.277 26.23 18.277 c 14.485 0 26.23 -8.188 26.23 -18.277 c 0.045 -0.66 0.045 -1.32 0 -1.98 C 73.635 49.855 75.056 47.528 75.011 45 z M 30.011 49.508 c 0 -2.483 2.025 -4.508 4.508 -4.508 c 2.483 0 4.508 2.025 4.508 4.508 s -2.025 4.508 -4.508 4.508 C 32.025 53.993 30.011 51.991 30.011 49.508 z M 56.152 62.058 v -0.179 c -3.199 2.405 -7.114 3.635 -11.119 3.468 c -4.005 0.168 -7.919 -1.063 -11.119 -3.468 c -0.425 -0.515 -0.347 -1.286 0.168 -1.711 c 0.447 -0.369 1.085 -0.369 1.544 0 c 2.707 1.98 6.007 2.987 9.362 2.83 c 3.356 0.179 6.667 -0.783 9.407 -2.74 c 0.492 -0.481 1.297 -0.47 1.779 0.022 C 56.655 60.772 56.644 61.577 56.152 62.058 z M 55.537 54.34 c -0.078 0 -0.145 0 -0.224 0 l 0.034 -0.168 c -2.483 0 -4.508 -2.025 -4.508 -4.508 s 2.025 -4.508 4.508 -4.508 s 4.508 2.025 4.508 4.508 C 59.955 52.148 58.02 54.239 55.537 54.34 z" />
                                     </Border>
                                 </Button>
 
-                                <Button Content="Join Subreddit" ToolTip.Tip="Nitrox Subreddit" Command="{Binding RedditLinkCommand}" />
+                                <Button Content="Join Subreddit" ToolTip.Tip="Join Nitrox Subreddit" Command="{Binding RedditLinkCommand}" />
                             </Grid>
                             <TextBlock Text="Reddit"/>
                             <TextBlock Text="Join the Nitrox Subreddit to stay informed about latest releases and post your own Nitrox content."/>
-                        </StackPanel>
-                    </Border>
-                    <Border>
-                        <StackPanel>
-                            <Grid>
-                                <Button Classes="anycontent" ToolTip.Tip="Follow on Bluesky" Command="{Binding BlueskyLinkCommand}">
-                                    <Border Background="#1185fe">
-                                        <PathIcon Data="M123.121 33.6637C188.241 82.5526 258.281 181.681 284 234.873C309.719 181.681 379.759 82.5526 444.879 33.6637C491.866 -1.61183 568 -28.9064 568 57.9464C568 75.2916 558.055 203.659 552.222 224.501C531.947 296.954 458.067 315.434 392.347 304.249C507.222 323.8 536.444 388.56 473.333 453.32C353.473 576.312 301.061 422.461 287.631 383.039C285.169 375.812 284.017 372.431 284 375.306C283.983 372.431 282.831 375.812 280.369 383.039C266.939 422.461 214.527 576.312 94.6667 453.32C31.5556 388.56 60.7778 323.8 175.653 304.249C109.933 315.434 36.0535 296.954 15.7778 224.501C9.94525 203.659 0 75.2916 0 57.9464C0 -28.9064 76.1345 -1.61183 123.121 33.6637Z" />
-                                    </Border>
-                                </Button>
-
-                                <Button Content="Follow" ToolTip.Tip="Follow on Bluesky" Command="{Binding BlueskyLinkCommand}" />
-                            </Grid>
-                            <TextBlock Text="Bluesky"/>
-                            <TextBlock Text="Follow the Nitrox Bluesky account to always be up to date on latest developments, events, and releases."/>
                         </StackPanel>
                     </Border>
                     <Border>

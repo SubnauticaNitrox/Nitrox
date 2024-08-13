@@ -15,7 +15,7 @@
 
             <StackPanel>
                 <Button Margin="0 0 0 26" Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">
-                    <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
+                    <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back.png" Width="24" Height="24" />
                 </Button>
                 <Grid ColumnDefinitions="Auto,*">
                     <StackPanel Margin="0 0 20 0">
@@ -24,7 +24,7 @@
                                 <Button Classes="anycontent" Command="{Binding ChangeServerIconCommand}"
                                         IsHitTestVisible="{Binding !ServerIsOnline}" ToolTip.Tip="Set a custom server icon">
                                     <Grid>
-                                        <Image Source="/Assets/Images/SubnauticaIcon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
+                                        <Image Source="/Assets/Images/subnautica-icon.png" IsVisible="{Binding ServerIcon, Converter={converters:EqualityConverter}}" />
                                         <Border Height="70" Width="70" CornerRadius="12">
                                             <Border.Background>
                                                 <ImageBrush Stretch="UniformToFill" Source="{Binding ServerIcon}" />
@@ -223,25 +223,25 @@
 
                             <Button Command="{Binding ShowAdvancedSettingsCommand}" Classes="icon">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/world-manager/cog-2x.png" />
+                                    <Image Source="/Assets/Images/world-manager/cog.png" />
                                     <TextBlock Text="Advanced settings" />
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding OpenWorldFolderCommand}" Classes="icon">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/world-manager/window-external-2x.png" />
+                                    <Image Source="/Assets/Images/world-manager/window.png" />
                                     <TextBlock Text="Open world folder" />
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding RestoreBackupCommand}" Classes="icon">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/world-manager/export-2x.png" />
+                                    <Image Source="/Assets/Images/world-manager/export.png" />
                                     <TextBlock Text="Restore a backup" />
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding DeleteServerCommand}" HotKey="Delete" Classes="icon" Foreground="#ec1c24">
                                 <StackPanel>
-                                    <Image Source="/Assets/Images/world-manager/delete-2x.png" />
+                                    <Image Source="/Assets/Images/world-manager/delete.png" />
                                     <TextBlock Text="Delete server" />
                                 </StackPanel>
                             </Button>
