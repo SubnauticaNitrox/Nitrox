@@ -69,6 +69,8 @@ namespace NitroxModel.Platforms.OS.Shared
             }
         }
 
+        public IntPtr MainWindowHandle => optionalInnerProcess?.MainWindowHandle ?? IntPtr.Zero;
+
         public string MainWindowTitle => optionalInnerProcess?.MainWindowTitle;
 
         public SafeHandle MainThreadHandle { get; }

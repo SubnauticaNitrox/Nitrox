@@ -12,10 +12,6 @@ public static class ProcessExExtensions
         {
             return;
         }
-        if (process.MainWindowTitle == null)
-        {
-            return;
-        }
-        WindowsApi.BringProcessToFront(process.MainWindowTitle);
+        WindowsApi.BringProcessToFront(process.MainWindowHandle);
     }
 }

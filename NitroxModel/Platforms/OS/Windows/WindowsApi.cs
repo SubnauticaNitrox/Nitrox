@@ -37,20 +37,19 @@ public class WindowsApi
         }
     }
 
-    public static void BringProcessToFront(string windowTitle)
+    public static void BringProcessToFront(IntPtr windowHandle)
     {
-        IntPtr handle = FindWindow(null, windowTitle);
-        if (handle == IntPtr.Zero)
+        if (windowHandle == IntPtr.Zero)
         {
             return;
         }
         const int SW_RESTORE = 9;
-        if (IsIconic(handle))
+        if (IsIconic(windowHandle))
         {
-            ShowWindow(handle, SW_RESTORE);
+            ShowWindow(windowHandle, SW_RESTORE);
         }
 
-        SetForegroundWindow(handle);
+        SetForegroundWindow(windowHandle);
     }
 
     [DllImport("User32.dll")]
