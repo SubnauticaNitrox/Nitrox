@@ -19,11 +19,13 @@
         <Style Selector="Border.nav">
             <Setter Property="Background" Value="{DynamicResource BrandPanelBackgroundBrush}" />
 
-            <Style Selector="^ Image.header">
-                <Setter Property="Margin" Value="34 0 0 20" />
+            <Style Selector="^ TextBlock.header">
+                <Setter Property="Margin" Value="34 28 0 20" />
+                <Setter Property="FontFamily" Value="Barlow" />
+                <Setter Property="FontStyle" Value="Italic" />
             </Style>
 
-            <Style Selector="^ TextBlock.header">
+            <Style Selector="^ TextBlock.subheader">
                 <Setter Property="FontSize" Value="10" />
                 <Setter Property="Margin" Value="34 20 0 10" />
                 <Setter Property="Opacity" Value="0.5" />
@@ -138,11 +140,11 @@
             <Border Grid.Column="0" Classes="nav">
                 <Grid RowDefinitions="80,*">
                     <!-- The "NITROX" header. -->
-                    <Image Grid.Row="0" Classes="header" Source="/Assets/Images/nitroxLogo.png" />
+                    <TextBlock Classes="header">NITROX</TextBlock>
                     <!-- Navigation items -->
                     <Panel Grid.Row="1">
                         <StackPanel Classes="nav">
-                            <TextBlock Classes="header">PLAY</TextBlock>
+                            <TextBlock Classes="subheader">PLAY</TextBlock>
                             <Button Command="{Binding OpenLaunchGameViewCommand}" ToolTip.Tip="Play the game" design:NitroxAttached.Selected="True" x:Name="OpenLaunchGameViewButton">
                                 <StackPanel>
                                     <Image Source="/Assets/Images/material-design-icons/play.png" />
@@ -155,7 +157,7 @@
                                     <TextBlock Text="Servers" />
                                 </StackPanel>
                             </Button>
-                            <TextBlock Classes="header">EXPLORE</TextBlock>
+                            <TextBlock Classes="subheader">EXPLORE</TextBlock>
                             <Button Command="{Binding OpenCommunityViewCommand}" ToolTip.Tip="Join the Nitrox community">
                                 <StackPanel>
                                     <Image Source="/Assets/Images/material-design-icons/community.png" />
