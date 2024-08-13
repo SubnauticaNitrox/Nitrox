@@ -9,7 +9,6 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         DataContext="{x:Static design:DesignData.CreateServerViewModel}"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"
-        SystemDecorations="None"
         SizeToContent="WidthAndHeight"
         CanResize="False"
         Title="Create a server"

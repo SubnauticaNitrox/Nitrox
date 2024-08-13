@@ -6,7 +6,6 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="500" MinHeight="200"
         DataContext="{x:Static design:DesignData.BackupRestoreViewModel}"
         x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
-        SystemDecorations="None"
         SizeToContent="WidthAndHeight"
         RequestedThemeVariant="Light"
         Title="{Binding Title}">

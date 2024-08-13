@@ -8,7 +8,6 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="400" MaxWidth="1000"
         DataContext="{x:Static design:DesignData.DialogBoxViewModel}"
         x:Class="Nitrox.Launcher.Views.DialogBoxModal"
-        SystemDecorations="None"
         SizeToContent="WidthAndHeight"
         CanResize="False"
         Title="{Binding WindowTitle, TargetNullValue='Dialog Window'}"

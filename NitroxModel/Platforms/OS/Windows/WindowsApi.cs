@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using NitroxModel.Platforms.OS.Windows.Internal;
+using static NitroxModel.Platforms.OS.Windows.Internal.Win32Native;
 
 namespace NitroxModel.Platforms.OS.Windows;
 
@@ -19,20 +19,20 @@ public class WindowsApi
             return;
         }
 
-        Win32Native.WS dwNewLong = Win32Native.WS.WS_CAPTION | Win32Native.WS.WS_CLIPCHILDREN | Win32Native.WS.WS_MINIMIZEBOX | Win32Native.WS.WS_MAXIMIZEBOX | Win32Native.WS.WS_SYSMENU;
+        WS dwNewLong = WS.WS_CAPTION | WS.WS_CLIPCHILDREN | WS.WS_MINIMIZEBOX | WS.WS_MAXIMIZEBOX | WS.WS_SYSMENU;
         if (canResize)
         {
-            dwNewLong |= Win32Native.WS.WS_SIZEBOX;
+            dwNewLong |= WS.WS_SIZEBOX;
         }
 
         HandleRef handle = new(null, windowHandle);
         switch (IntPtr.Size)
         {
             case 8:
-                Win32Native.SetWindowLongPtr64(handle, -16, (long)dwNewLong);
+                SetWindowLongPtr64(handle, -16, (long)dwNewLong);
                 break;
             default:
-                Win32Native.SetWindowLong32(handle, -16, (int)dwNewLong);
+                SetWindowLong32(handle, -16, (int)dwNewLong);
                 break;
         }
     }
