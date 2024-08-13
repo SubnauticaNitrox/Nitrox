@@ -1,29 +1,39 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style Selector="TextBlock">
-        <Setter Property="TextWrapping" Value="Wrap" />
-    </Style>
-    
-    <Style Selector="SelectableTextBlock">
-        <Setter Property="TextWrapping" Value="Wrap" />
-    </Style>
 
-    <Style Selector="TextBlock.link">
-        <Setter Property="Foreground" Value="{DynamicResource BrandPrimaryBrush}" />
-        <Setter Property="Cursor" Value="Hand" />
-        
-        <Style Selector="^:pointerover">
-            <Setter Property="TextDecorations" Value="Underline" />
-        </Style>
-    </Style>
+  <Design.PreviewWith>
+    <StackPanel Spacing="10">
+      <TextBlock Text="I'm a textblock ! 0123456789" />
+      <TextBlock Text="I'm a textblock ! 0123456789" Classes="link" />
+      <TextBlock Text="I'm a textblock ! 0123456789" Classes="header" />
+      <TextBlock Text="I'm a textblock ! 0123456789" Classes="modalHeader" />
+    </StackPanel>
+  </Design.PreviewWith>
 
-    <Style Selector="TextBlock.header">
-        <Setter Property="FontSize" Value="32" />
-        <Setter Property="FontWeight" Value="700" />
-    </Style>
+  <Style Selector="TextBlock">
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
 
-    <Style Selector="TextBlock.modalHeader">
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="FontWeight" Value="800" />
+  <Style Selector="SelectableTextBlock">
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
+  <Style Selector="TextBlock.link">
+    <Setter Property="Foreground" Value="{DynamicResource BrandPrimaryBrush}" />
+    <Setter Property="Cursor" Value="Hand" />
+
+    <Style Selector="^:pointerover">
+      <Setter Property="TextDecorations" Value="Underline" />
     </Style>
+  </Style>
+
+  <Style Selector="TextBlock.header">
+    <Setter Property="FontSize" Value="32" />
+    <Setter Property="FontWeight" Value="700" />
+  </Style>
+
+  <Style Selector="TextBlock.modalHeader">
+    <Setter Property="FontSize" Value="24" />
+    <Setter Property="FontWeight" Value="700" />
+  </Style>
 </Styles>
