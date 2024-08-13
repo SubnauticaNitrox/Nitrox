@@ -8,12 +8,13 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="700" MinHeight="200"
         DataContext="{x:Static design:DesignData.ObjectPropertyEditorViewModel}"
         x:Class="Nitrox.Launcher.Views.ObjectPropertyEditorModal"
-        SystemDecorations="None"
-        SizeToContent="WidthAndHeight"
+        SystemDecorations="BorderOnly"
+        SizeToContent="Width"
         RequestedThemeVariant="Light"
         Title="{Binding Title}">
+    
     <Grid RowDefinitions="Auto, *, Auto">
-        <!-- Title bar -->
+        <!-- Action bar -->
         <Panel Grid.Row="0" Grid.RowSpan="2" Classes="titleBar">
             <Interaction.Behaviors>
                 <BehaviorCollection>
@@ -31,15 +32,22 @@
                 </Rectangle>
             </Button>
         </Panel>
+      
+      <!-- Title bar-->
         <TextBlock Grid.Row="0" Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
+
+      <!-- Content -->
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Classes="form" Margin="24">
+              
                 <ItemsControl ItemsSource="{Binding EditorFields}">
+                  
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Spacing="14" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+                  
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <ContentPresenter Content="{Binding Value}">
@@ -55,7 +63,7 @@
                                         <StackPanel Classes="form" DataContext="{Binding $parent[ContentPresenter].Parent.((design:EditorField)DataContext)}">
                                             <TextBlock Text="{Binding PropertyInfo.Name}" />
                                             <TextBlock Text="{Binding Description}" />
-                                            <CheckBox Classes="switch" IsChecked="{Binding Value}" HorizontalAlignment="Right" />
+                                            <CheckBox Classes="switch" IsChecked="{Binding Value}" HorizontalAlignment="Left" />
                                         </StackPanel>
                                     </DataTemplate>
                                     <DataTemplate DataType="{x:Type system:Int32}">
@@ -92,11 +100,14 @@
                 </ItemsControl>
             </StackPanel>
         </ScrollViewer>
+      
         <Border Classes="footer" Grid.Row="2">
             <Panel>
                 <Button Content="Back" Command="{Binding CloseCommand}" HotKey="Escape" FontWeight="Bold" />
                 <Button Classes="primary" Content="Save" Command="{Binding SaveCommand}" HorizontalAlignment="Right" HotKey="Enter" />
             </Panel>
         </Border>
+      
     </Grid>
+
 </Window>
