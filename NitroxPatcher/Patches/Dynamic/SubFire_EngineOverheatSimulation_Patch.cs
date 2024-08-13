@@ -13,7 +13,7 @@ public sealed partial class SubFire_EngineOverheatSimulation_Patch : NitroxPatch
 
     public static bool Prefix()
     {
-        if (GameModeUtils.IsCheatActive(GameModeOption.Creative))
+        if ((GameModeUtils.currentGameMode & GameModeOption.Creative) != 0)
         {
             return false;
         }
