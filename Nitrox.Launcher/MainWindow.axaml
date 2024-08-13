@@ -70,10 +70,10 @@
             </Setter>
             <Style Selector="^:not(.dismiss)">
                 <Style Selector="^:not(:pointerover)">
-                    <Setter Property="Opacity" Value=".95" />
+                    <Setter Property="Opacity" Value=".98" />
                 </Style>
                 <Style Selector="^:pointerover">
-                    <Setter Property="Opacity" Value=".8" />
+                    <Setter Property="Opacity" Value=".9" />
                 </Style>
                 <Style.Animations>
                     <Animation Duration="0:0:0:.2">

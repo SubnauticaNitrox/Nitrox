@@ -77,7 +77,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Notifications.Add(message.Item);
             Task.Run(async () =>
             {
-                await Task.Delay(5000);
+                await Task.Delay(7000);
                 WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
             });
         });
