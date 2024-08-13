@@ -13,11 +13,10 @@ public class NotificationTypeToIconConverter : Converter<NotificationTypeToIconC
 {
     private static readonly Dictionary<NotificationType, Bitmap> typeToResourceCache = new()
     {
-        // TEMP Icons until we can get the real ones
-        [NotificationType.Success] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/material-design-icons/baseline_send_white_24dp.png"))),
-        [NotificationType.Information] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/material-design-icons/max-w-10.png"))),
-        [NotificationType.Warning] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/material-design-icons/options.png"))),
-        [NotificationType.Error] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/material-design-icons/close-w-10.png")))
+        [NotificationType.Success] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/notification-icons/success.png"))),
+        [NotificationType.Information] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/notification-icons/information.png"))),
+        [NotificationType.Warning] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/notification-icons/warning.png"))),
+        [NotificationType.Error] = new Bitmap(AssetLoader.Open(new Uri("avares://Nitrox.Launcher/Assets/Images/notification-icons/error.png")))
     };
 
     static NotificationTypeToIconConverter()

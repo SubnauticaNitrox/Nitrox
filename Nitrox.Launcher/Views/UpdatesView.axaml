@@ -52,7 +52,7 @@
                         <!-- Unofficial Version only text -->
                         <StackPanel Spacing="10" IsVisible="{Binding !UsingOfficialVersion, Mode=OneWay}">
                             <!-- TODO: Better Icon here -->
-                            <Image Source="/Assets/Images/material-design-icons/close-w-10.png" ToolTip.Tip=":(" Width="56" Height="56" HorizontalAlignment="Center" />
+                            <Image Source="/Assets/Images/store-icons/pirated-2x.png" ToolTip.Tip=":(" Width="56" Height="56" HorizontalAlignment="Center" />
 
                             <StackPanel Spacing="6">
                                 <TextBlock Text="Unofficial Version Detected" FontSize="16" TextWrapping="Wrap" FontWeight="Bold" TextAlignment="Center"/>
