@@ -3,12 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
              DataContext="{x:Static design:DesignData.CommunityViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.CommunityView">
 
     <UserControl.Styles>
-        <Style Selector="UniformGrid">
+        <Style Selector="controls|FittingWrapPanel">
             <Setter Property="Margin" Value="-4 0" />
             <Style Selector="^ > Border">
                 <Setter Property="Background" Value="{DynamicResource BrandPanelBackgroundBrush}" />
@@ -45,7 +46,7 @@
             <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
                 <TextBlock Classes="header" Text="Community" />
                 <Image Source="/Assets/Images/communityHeader.png" MaxWidth="1580" />
-                <UniformGrid HorizontalAlignment="Center" Rows="3" Columns="2">
+                <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="280">
                     <Border>
                         <StackPanel>
                             <Panel>
@@ -119,7 +120,7 @@
                             <TextBlock Text="Want to be part of the team? Contribute from code to translations to the Nitrox project on GitHub."/>
                         </StackPanel>
                     </Border>
-                </UniformGrid>
+                </controls:FittingWrapPanel>
             </StackPanel>
         </ScrollViewer>
     </ThemeVariantScope>

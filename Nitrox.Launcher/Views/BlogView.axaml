@@ -24,7 +24,7 @@
                     
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <controls:FittingWrapPanel HorizontalAlignment="Center" MaxItemWidth="340" />
+                            <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="340" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                   

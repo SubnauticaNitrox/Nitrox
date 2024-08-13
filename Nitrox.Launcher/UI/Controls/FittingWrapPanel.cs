@@ -1,14 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Layout;
 using Avalonia.Utilities;
 using static System.Math;
 
 namespace Nitrox.Launcher.UI.Controls;
 
 /// <summary>
-///     Panel that arranges stretchable child controls to fit max width, up to the limit of <see cref="MaxItemWidth" />.
+///     Panel that arranges stretchable child controls to fit min width, up to the limit of <see cref="MinItemWidth" />.
 ///     Code inspired by Avalonia's WrapPanel
 ///     (https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Controls/WrapPanel.cs).
 /// </summary>
@@ -17,41 +16,28 @@ namespace Nitrox.Launcher.UI.Controls;
 /// </remarks>
 public class FittingWrapPanel : Panel, INavigableContainer
 {
-    public static readonly StyledProperty<Orientation> OrientationProperty =
-        AvaloniaProperty.Register<WrapPanel, Orientation>(nameof(Orientation));
+    public static readonly StyledProperty<double> MinItemWidthProperty =
+        AvaloniaProperty.Register<WrapPanel, double>(nameof(MinItemWidth), 100);
 
-    public static readonly StyledProperty<double> MaxItemWidthProperty =
-        AvaloniaProperty.Register<WrapPanel, double>(nameof(MaxItemWidth), double.NaN);
-
-    /// <summary>
-    ///     Gets or sets the orientation in which child controls will be laid out.
-    /// </summary>
-    public Orientation Orientation
+    public double MinItemWidth
     {
-        get => GetValue(OrientationProperty);
-        set => SetValue(OrientationProperty, value);
-    }
-
-    public double MaxItemWidth
-    {
-        get => GetValue(MaxItemWidthProperty);
-        set => SetValue(MaxItemWidthProperty, value);
+        get => GetValue(MinItemWidthProperty);
+        set => SetValue(MinItemWidthProperty, value);
     }
 
     static FittingWrapPanel()
     {
-        AffectsMeasure<WrapPanel>(OrientationProperty, MaxItemWidthProperty);
+        AffectsMeasure<WrapPanel>(MinItemWidthProperty);
     }
 
     /// <inheritdoc />
     protected override Size MeasureOverride(Size constraint)
     {
-        Orientation orientation = Orientation;
-        UVSize curLineSize = new(orientation);
-        UVSize panelSize = new(orientation);
-        UVSize uvConstraint = new(orientation, constraint.Width, constraint.Height);
+        UVSize curLineSize = new();
+        UVSize panelSize = new();
+        UVSize uvConstraint = new(constraint.Width, constraint.Height);
 
-        int itemsPerRow = (int)(constraint.Width / MaxItemWidth);
+        int itemsPerRow = (int)Min(constraint.Width / MinItemWidth, Max(Children.Count, 1));
         double adjustedWidth = constraint.Width / itemsPerRow;
 
         for (int i = 0, count = Children.Count; i < count; i++)
@@ -59,26 +45,26 @@ public class FittingWrapPanel : Panel, INavigableContainer
             Control child = Children[i];
             child.Measure(new Size(adjustedWidth, constraint.Height));
 
-            UVSize sz = new(orientation, adjustedWidth, child.DesiredSize.Height);
+            UVSize sz = new(adjustedWidth, child.DesiredSize.Height);
 
-            if (MathUtilities.GreaterThan(curLineSize.U + sz.U, uvConstraint.U)) // Need to switch to another line
+            if (MathUtilities.GreaterThan(curLineSize.Width + sz.Width, uvConstraint.Width)) // Need to switch to another line
             {
-                panelSize = panelSize with { U = Max(curLineSize.U, panelSize.U), V = panelSize.V + curLineSize.V };
+                panelSize = new UVSize { Width = Max(curLineSize.Width, panelSize.Width), Height = panelSize.Height + curLineSize.Height };
                 curLineSize = sz;
 
-                if (MathUtilities.GreaterThan(sz.U, uvConstraint.U)) // The element is wider then the constraint - give it a separate line
+                if (MathUtilities.GreaterThan(sz.Width, uvConstraint.Width)) // The element is wider then the constraint - give it a separate line
                 {
-                    panelSize = panelSize with { U = Max(sz.U, panelSize.U), V = panelSize.V + sz.V };
-                    curLineSize = new UVSize(orientation);
+                    panelSize = new UVSize { Width = Max(sz.Width, panelSize.Width), Height = panelSize.Height + sz.Height };
+                    curLineSize = new UVSize();
                 }
             }
             else // Continue to accumulate a line
             {
-                curLineSize = curLineSize with { U = curLineSize.U + sz.U, V = Max(sz.V, curLineSize.V) };
+                curLineSize = new UVSize { Width = curLineSize.Width + sz.Width, Height = Max(sz.Height, curLineSize.Height) };
             }
         }
 
-        panelSize = panelSize with { U = Max(curLineSize.U, panelSize.U), V = panelSize.V + curLineSize.V };
+        panelSize = new UVSize { Width = Max(curLineSize.Width, panelSize.Width), Height = panelSize.Height + curLineSize.Height };
 
         return new Size(panelSize.Width, panelSize.Height);
     }
@@ -88,42 +74,42 @@ public class FittingWrapPanel : Panel, INavigableContainer
     {
         int firstInLine = 0;
         double accumulatedV = 0;
-        UVSize curLineSize = new(Orientation);
-        UVSize uvFinalSize = new(Orientation, finalSize.Width, finalSize.Height);
+        UVSize curLineSize = new();
+        UVSize uvFinalSize = new(finalSize.Width, finalSize.Height);
 
-        int itemsPerRow = (int)(finalSize.Width / MaxItemWidth);
+        int itemsPerRow = (int)Min(finalSize.Width / MinItemWidth, Max(Children.Count, 1));
         double adjustedWidth = finalSize.Width / itemsPerRow;
 
         for (int i = 0; i < Children.Count; i++)
         {
             Control child = Children[i];
-            UVSize sz = new(Orientation, adjustedWidth, child.DesiredSize.Height);
+            UVSize sz = new(adjustedWidth, child.DesiredSize.Height);
 
-            if (MathUtilities.GreaterThan(curLineSize.U + sz.U, uvFinalSize.U)) // Need to switch to another line
+            if (MathUtilities.GreaterThan(curLineSize.Width + sz.Width, uvFinalSize.Width)) // Need to switch to another line
             {
-                ArrangeLine(accumulatedV, curLineSize.V, firstInLine, i, adjustedWidth);
+                ArrangeLine(accumulatedV, curLineSize.Height, firstInLine, i, adjustedWidth);
 
-                accumulatedV += curLineSize.V;
+                accumulatedV += curLineSize.Height;
                 curLineSize = sz;
 
-                if (MathUtilities.GreaterThan(sz.U, uvFinalSize.U)) // The element is wider then the constraint - give it a separate line
+                if (MathUtilities.GreaterThan(sz.Width, uvFinalSize.Width)) // The element is wider then the constraint - give it a separate line
                 {
-                    ArrangeLine(accumulatedV, sz.V, i, ++i, adjustedWidth);
+                    ArrangeLine(accumulatedV, sz.Height, i, ++i, adjustedWidth);
 
-                    accumulatedV += sz.V;
-                    curLineSize = new UVSize(Orientation);
+                    accumulatedV += sz.Height;
+                    curLineSize = new UVSize();
                 }
                 firstInLine = i;
             }
             else // Continue to accumulate a line
             {
-                curLineSize = curLineSize with { U = curLineSize.U + sz.U, V = Max(sz.V, curLineSize.V) };
+                curLineSize = new UVSize { Width = curLineSize.Width + sz.Width, Height = Max(sz.Height, curLineSize.Height) };
             }
         }
 
         if (firstInLine < Children.Count)
         {
-            ArrangeLine(accumulatedV, curLineSize.V, firstInLine, Children.Count, adjustedWidth);
+            ArrangeLine(accumulatedV, curLineSize.Height, firstInLine, Children.Count, adjustedWidth);
         }
 
         return finalSize;
@@ -138,9 +124,7 @@ public class FittingWrapPanel : Panel, INavigableContainer
     /// <returns>The control.</returns>
     IInputElement INavigableContainer.GetControl(NavigationDirection direction, IInputElement from, bool wrap)
     {
-        Orientation orientation = Orientation;
         Avalonia.Controls.Controls children = Children;
-        bool horiz = orientation == Orientation.Horizontal;
         int index = from is not null ? Children.IndexOf((Control)from) : -1;
 
         switch (direction)
@@ -158,16 +142,14 @@ public class FittingWrapPanel : Panel, INavigableContainer
                 --index;
                 break;
             case NavigationDirection.Left:
-                index = horiz ? index - 1 : -1;
+                index -= 1;
                 break;
             case NavigationDirection.Right:
-                index = horiz ? index + 1 : -1;
+                index += 1;
                 break;
             case NavigationDirection.Up:
-                index = horiz ? -1 : index - 1;
-                break;
             case NavigationDirection.Down:
-                index = horiz ? -1 : index + 1;
+                index = -1;
                 break;
         }
 
@@ -180,73 +162,28 @@ public class FittingWrapPanel : Panel, INavigableContainer
 
     private void ArrangeLine(double v, double lineV, int start, int end, double itemU)
     {
-        Orientation orientation = Orientation;
         Avalonia.Controls.Controls children = Children;
         double u = 0;
-        bool isHorizontal = orientation == Orientation.Horizontal;
 
         for (int i = start; i < end; i++)
         {
             Control child = children[i];
-            double layoutSlotU = itemU;
-            child.Arrange(new Rect(
-                              isHorizontal ? u : v,
-                              isHorizontal ? v : u,
-                              isHorizontal ? layoutSlotU : lineV,
-                              isHorizontal ? lineV : layoutSlotU));
-            u += layoutSlotU;
+            child.Arrange(new Rect(u, v, itemU, lineV));
+            u += itemU;
         }
     }
 
     private readonly struct UVSize
     {
-        public double U { get; init; }
-        public double V { get; init; }
 
-        private readonly Orientation orientation;
-
-        internal UVSize(Orientation orientation, double width, double height)
+        internal UVSize(double width, double height)
         {
-            this.orientation = orientation;
             Width = width;
             Height = height;
         }
 
-        internal UVSize(Orientation orientation)
-        {
-            this.orientation = orientation;
-        }
+        public double Width { get; init; }
 
-        internal double Width
-        {
-            get => orientation == Orientation.Horizontal ? U : V;
-            init
-            {
-                if (orientation == Orientation.Horizontal)
-                {
-                    U = value;
-                }
-                else
-                {
-                    V = value;
-                }
-            }
-        }
-
-        internal double Height
-        {
-            get => orientation == Orientation.Horizontal ? V : U;
-            init
-            {
-                if (orientation == Orientation.Horizontal)
-                {
-                    V = value;
-                }
-                else
-                {
-                    U = value;
-                }
-            }
-        }
+        internal double Height { get; init; }
     }
 }
