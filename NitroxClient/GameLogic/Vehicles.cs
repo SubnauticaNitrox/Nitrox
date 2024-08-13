@@ -102,7 +102,10 @@ public class Vehicles
         {
             RemotePlayer playerInstance = player.Value;
             playerInstance.SetVehicle(vehicle);
-            playerInstance.SetSubRoot(subRoot);
+            if (subRoot)
+            {
+                playerInstance.SetSubRoot(subRoot);
+            }
             playerInstance.SetPilotingChair(FindPilotingChairWithCache(opGameObject.Value, vehicleModel.TechType.ToUnity()));
             playerInstance.AnimationController.UpdatePlayerAnimations = false;
         }
@@ -116,12 +119,23 @@ public class Vehicles
         }
         if (pilotingChairByTechType.TryGetValue(techType, out string path))
         {
+            if (path == string.Empty)
+            {
+                return null;
+            }
             return parent.transform.Find(path).GetComponent<PilotingChair>();
         }
         else
         {
             PilotingChair chair = parent.GetComponentInChildren<PilotingChair>(true);
-            pilotingChairByTechType.Add(techType, chair.gameObject.GetHierarchyPath(parent));
+            if (chair)
+            {
+                pilotingChairByTechType.Add(techType, chair.gameObject.GetHierarchyPath(parent));
+            }
+            else
+            {
+                pilotingChairByTechType.Add(techType, string.Empty);
+            }
             return chair;
         }
     }

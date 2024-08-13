@@ -130,6 +130,7 @@ public class NitroxCyclops : MonoBehaviour
         Pawns.Remove(player);
     }
 
+    // TODO: Use SetBroadcasting and SetReceiving when we finally have a cyclops movements rework
     public void SetBroadcasting()
     {
         worldForces.enabled = true;
