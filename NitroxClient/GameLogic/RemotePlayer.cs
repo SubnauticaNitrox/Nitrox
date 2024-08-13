@@ -316,6 +316,13 @@ public class RemotePlayer : INitroxPlayer
 
             AnimationController["in_seamoth"] = newVehicle is SeaMoth;
             AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
+
+            // In case we are dismissing the current seamoth to enter the cyclops through a docking,
+            // we need to setup the player back in the cyclops
+            if (!newVehicle && SubRoot)
+            {
+                SetSubRoot(SubRoot, true);
+            }
         }
     }
 

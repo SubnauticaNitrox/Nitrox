@@ -132,8 +132,10 @@ public partial class CyclopsMotor : GroundMotor
         Vector3 horizontalVelocity = CalculateInputVelocity();
 
         text2 = $"movementInputDirection: {movementInputDirection}\nVerticalVel: {verticalVelocity}\nHorizontalVelocity: {horizontalVelocity}\nGrounded/Controller: {grounded}/{controller.isGrounded}\nCollision: {Collision}";
-        // Apply the physics computations
-        return Move(horizontalVelocity);
+
+        // movement.velocity gives velocity info for the animations and footsteps
+        movement.velocity = Move(horizontalVelocity);
+        return movement.velocity;
     }
 
     public static string text2;
@@ -223,7 +225,6 @@ public partial class CyclopsMotor : GroundMotor
             Pawn.Handle.transform.localPosition += step * Up;
         }
 
-        // Give velocity info for the animations
         return cyclops.transform.rotation * latestVelocity;
     }
 
