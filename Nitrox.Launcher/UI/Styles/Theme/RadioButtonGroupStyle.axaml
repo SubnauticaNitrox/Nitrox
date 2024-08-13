@@ -41,12 +41,12 @@
                             BorderBrush="{DynamicResource BrandBorderBrush}"
                             Padding="14 16"
                             Tag="{Binding}"
-                            Command="{Binding ItemClickCommand, RelativeSource={RelativeSource AncestorType=controls:RadioButtonGroup}}"
+                            Command="{Binding $parent[controls:RadioButtonGroup].ItemClickCommand}"
                             CommandParameter="{Binding $self}">
                         <design:NitroxAttached.Selected>
                             <MultiBinding Converter="{converters:EqualityConverter}">
                                 <Binding/>
-                                <Binding Path="SelectedItem" RelativeSource="{RelativeSource AncestorType=controls:RadioButtonGroup}" />
+                                <Binding Path="$parent[controls:RadioButtonGroup].SelectedItem" />
                             </MultiBinding>
                         </design:NitroxAttached.Selected>
                         <TextBlock Name="Text" Text="{Binding Converter={converters:ToStringConverter}}" />
@@ -56,7 +56,7 @@
         </Setter>
     </Style>
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover /template/ ContentPresenter">
-        <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}" />
+        <Setter Property="BorderBrush" Value="{Binding $parent[Button].BorderBrush}" />
     </Style>
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer">
         <Setter Property="Transitions">
@@ -66,9 +66,9 @@
         </Setter>
     </Style>
     <Style Selector="ItemsControl.radioGroup:disabled">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
         <Style Selector="^ Button#ItemContainer /template/ ContentPresenter">
-            <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="BorderBrush" Value="{Binding $parent[Button].BorderBrush}" />
         </Style>
     </Style>
 

@@ -55,7 +55,7 @@
                         CornerRadius="{TemplateBinding CornerRadius}">
                     <Grid ColumnDefinitions="20,*">
                         <Grid Height="32" VerticalAlignment="Top">
-                            
+
                             <Ellipse Name="OuterEllipse"
                                      Width="20"
                                      Height="20"
@@ -63,7 +63,7 @@
                                      Stroke="{TemplateBinding Foreground}"
                                      StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                      UseLayoutRounding="False" />
-                            
+
                             <Ellipse Name="CheckOuterEllipse"
                                      Width="20"
                                      Height="20"
@@ -72,7 +72,7 @@
                                      Stroke="{DynamicResource RadioButtonOuterEllipseCheckedStroke}"
                                      StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                      UseLayoutRounding="False" />
-                            
+
                             <Ellipse Name="CheckGlyph"
                                      Width="8"
                                      Height="8"
@@ -80,9 +80,9 @@
                                      Opacity="0"
                                      Stroke="{DynamicResource RadioButtonCheckGlyphStroke}"
                                      UseLayoutRounding="False" />
-                            
+
                         </Grid>
-                        
+
                         <ContentPresenter Name="PART_ContentPresenter"
                                           Grid.Column="1"
                                           Margin="{TemplateBinding Padding}"
@@ -96,23 +96,23 @@
                 </Border>
             </ControlTemplate>
         </Setter>
-        
-        
+
+
         <!--  PointerOver State  -->
         <Style Selector="^:pointerover">
             <Setter Property="Opacity" Value=".75" />
-            
+
             <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
                 <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
             </Style>
-            
+
             <Style Selector="^ /template/ Border#RootBorder">
                 <Setter Property="Background" Value="{DynamicResource RadioButtonBackground}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonBorderBrush}" />
             </Style>
 
             <Style Selector="^ /template/ Ellipse#OuterEllipse">
-                <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                <Setter Property="Stroke" Value="{Binding $parent[RadioButton].Foreground}" />
                 <Setter Property="Fill" Value="White" />
             </Style>
 
@@ -126,23 +126,23 @@
                 <Setter Property="Fill" Value="{DynamicResource RadioButtonCheckGlyphFill}" />
             </Style>
         </Style>
-        
-        
+
+
         <!--  Pressed State  -->
         <Style Selector="^:pressed">
             <Setter Property="RenderTransform" Value="scale(0.98)" />
-            
+
             <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
                 <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
             </Style>
-            
+
             <Style Selector="^ /template/ Border#RootBorder">
                 <Setter Property="Background" Value="{DynamicResource RadioButtonBackgroundPressed}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonBorderBrushPressed}" />
             </Style>
 
             <Style Selector="^ /template/ Ellipse#OuterEllipse">
-                <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                <Setter Property="Stroke" Value="{Binding $parent[RadioButton].Foreground}" />
                 <Setter Property="Fill" Value="White" />
             </Style>
 
@@ -156,21 +156,21 @@
                 <Setter Property="Fill" Value="{DynamicResource RadioButtonCheckGlyphFillPressed}" />
             </Style>
         </Style>
-        
-        
+
+
         <!--  Disabled State  -->
         <Style Selector="^:disabled">
             <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                <Setter Property="Foreground" Value="{Binding $parent[RadioButton].Foreground}" />
             </Style>
-            
+
             <Style Selector="^ /template/ Border#RootBorder">
-                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                <Setter Property="Background" Value="{Binding $parent[RadioButton].Background}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonBorderBrush}" />
             </Style>
 
             <Style Selector="^ /template/ Ellipse#OuterEllipse">
-                <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                <Setter Property="Stroke" Value="{Binding $parent[RadioButton].Foreground}" />
                 <Setter Property="Fill" Value="White" />
             </Style>
 
@@ -183,12 +183,12 @@
                 <Setter Property="Stroke" Value="{DynamicResource RadioButtonCheckGlyphStroke}" />
                 <Setter Property="Fill" Value="{DynamicResource RadioButtonCheckGlyphFill}" />
             </Style>
-            
+
             <Style Selector="^:unchecked">
                 <Style Selector="^ /template/ Ellipse#CheckGlyph">
                     <Setter Property="Opacity" Value="0" />
                 </Style>
-            
+
                 <Style Selector="^ /template/ Ellipse#OuterEllipse">
                     <Setter Property="Opacity" Value="1" />
                 </Style>
@@ -198,14 +198,14 @@
                 </Style>
             </Style>
         </Style>
-        
-        
+
+
         <!--  Checked State  -->
         <Style Selector="^:checked">
             <Style Selector="^ /template/ Ellipse#CheckGlyph">
                 <Setter Property="Opacity" Value="1" />
             </Style>
-            
+
             <Style Selector="^ /template/ Ellipse#OuterEllipse">
                 <Setter Property="Opacity" Value="0" />
             </Style>

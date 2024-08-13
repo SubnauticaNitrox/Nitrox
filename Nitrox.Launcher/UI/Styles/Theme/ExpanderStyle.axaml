@@ -69,7 +69,7 @@
         <Style Selector="^:pointerover">
             <Setter Property="Cursor" Value="Hand" />
             <Style Selector="^ /template/ TextBlock">
-                <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=ToggleButton}}" />
+                <Setter Property="Background" Value="{Binding $parent[ToggleButton].Background}" />
                 <Setter Property="TextDecorations" Value="Underline" />
             </Style>
         </Style>

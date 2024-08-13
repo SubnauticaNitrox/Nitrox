@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
+             xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:controls="clr-namespace:Nitrox.Launcher.UI.Controls"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
@@ -79,8 +79,8 @@
                                         </StackPanel>
                                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
                                             <Button Classes="abort" IsVisible="{Binding IsOnline}" Content="Stop" Command="{Binding StopCommand}" />
-                                            <Button IsVisible="{Binding !IsOnline}" Content="Start" Command="{Binding DataContext.StartServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
-                                            <Button Classes="primary" Content="Manage" Command="{Binding DataContext.ManageServerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                                            <Button IsVisible="{Binding !IsOnline}" Content="Start" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}" CommandParameter="{Binding}" />
+                                            <Button Classes="primary" Content="Manage" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}" CommandParameter="{Binding}" />
                                         </StackPanel>
                                     </DockPanel>
                                 </Border>

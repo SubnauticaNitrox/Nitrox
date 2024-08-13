@@ -31,7 +31,7 @@
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
-    
+
     <Style Selector="ComboBox">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -69,7 +69,7 @@
                 <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
             </Transitions>
         </Setter>
-        
+
         <Setter Property="Template">
             <ControlTemplate>
                 <DataValidationErrors>
@@ -112,7 +112,7 @@
                                       Foreground="{TemplateBinding Foreground}"
                                       Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"/>
                         </Grid>
-                        
+
                         <Popup Grid.Column="0" Name="PART_Popup"
                                WindowManagerAddShadowHint="False"
                                IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
@@ -136,12 +136,12 @@
                                 </ScrollViewer>
                             </Border>
                         </Popup>
-                        
+
                     </Grid>
                 </DataValidationErrors>
             </ControlTemplate>
         </Setter>
-        
+
         <Style Selector="^:pointerover">
             <Setter Property="Opacity" Value=".75" />
         </Style>
@@ -149,7 +149,7 @@
         <Style Selector="^:pressed">
             <Setter Property="RenderTransform" Value="scale(0.98)" />
         </Style>
-        
+
         <Style Selector="^:disabled">
             <Setter Property="Background" Value="{TemplateBinding Background}" />
         </Style>

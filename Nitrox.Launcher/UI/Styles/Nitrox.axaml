@@ -36,7 +36,7 @@
         <Setter Property="SystemDecorations" Value="None" />
         <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
         <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
-        <Setter Property="Padding" Value="{Binding OffScreenMargin, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Padding" Value="{Binding $self.OffScreenMargin}" />
     </Style>
 
     <Style Selector="Border">
@@ -87,7 +87,7 @@
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="500" />
             <Setter Property="Margin" Value="0 -11 0 11" />
-            <Setter Property="IsVisible" Value="{Binding !Text, RelativeSource={RelativeSource Mode=Self}, Converter={converters:EqualityConverter}}" />
+            <Setter Property="IsVisible" Value="{Binding !$self.Text, Converter={converters:EqualityConverter}}" />
         </Style>
     </Style>
 
