@@ -1,20 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.OS.Shared;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -22,6 +26,7 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly BlogViewModel blogViewModel;
+    private readonly IDialogService dialogService;
     private readonly CommunityViewModel communityViewModel;
     private readonly LaunchGameViewModel launchGameViewModel;
     private readonly OptionsViewModel optionsViewModel;
@@ -43,6 +48,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel(
         IScreen screen,
+        IDialogService dialogService,
         ServersViewModel serversViewModel,
         LaunchGameViewModel launchGameViewModel,
         CommunityViewModel communityViewModel,
@@ -53,6 +59,7 @@ public partial class MainWindowViewModel : ViewModelBase
     )
     {
         this.screen = screen;
+        this.dialogService = dialogService;
         this.launchGameViewModel = launchGameViewModel;
         this.serversViewModel = serversViewModel;
         this.communityViewModel = communityViewModel;
@@ -62,6 +69,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
         DefaultViewCommand = OpenLaunchGameViewCommand;
         Notifications = notifications == null ? [] : [.. notifications];
+        
+        Task.Run(CheckForRunningInstanceAsync);
 
         WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
         {
@@ -96,6 +105,32 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             UpdateAvailableOrUnofficial = await UpdatesViewModel.IsNitroxUpdateAvailableAsync();
         });
+    }
+    
+    private async Task CheckForRunningInstanceAsync()
+    {
+        if (ProcessEx.ProcessExists("Nitrox.Launcher", process => process.Id != Environment.ProcessId))
+        {
+            await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+            {
+                model.Title = "Nitrox Launcher Instance Detected";
+                model.Description = "The Nitrox Launcher is already running. Only one instance of the launcher should be running at a time. Closing launcher...";
+                model.ButtonOptions = ButtonOptions.Ok;
+            });
+            
+            // Set the foreground window and restore it before closing (TODO: FIX - THIS STILL DOES NOT WORK)
+            ProcessEx.ProcessExists("Nitrox.Launcher", process =>
+            {
+                if (process.Id == Environment.ProcessId)
+                {
+                    return false;
+                }
+                Models.Extensions.VisualExtensions.SetForegroundWindowAndRestore(process);
+                return true;
+            });
+            
+            await Dispatcher.UIThread.InvokeAsync(Close);
+        }
     }
 
     [RelayCommand]
