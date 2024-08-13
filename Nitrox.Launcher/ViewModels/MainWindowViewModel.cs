@@ -69,8 +69,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         DefaultViewCommand = OpenLaunchGameViewCommand;
         Notifications = notifications == null ? [] : [.. notifications];
-        
-        Task.Run(CheckForRunningInstanceAsync);
+
 
         WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
         {
@@ -105,32 +104,6 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             UpdateAvailableOrUnofficial = await UpdatesViewModel.IsNitroxUpdateAvailableAsync();
         });
-    }
-    
-    private async Task CheckForRunningInstanceAsync()
-    {
-        if (ProcessEx.ProcessExists("Nitrox.Launcher", process => process.Id != Environment.ProcessId))
-        {
-            await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-            {
-                model.Title = "Nitrox Launcher Instance Detected";
-                model.Description = "The Nitrox Launcher is already running. Only one instance of the launcher should be running at a time. Closing launcher...";
-                model.ButtonOptions = ButtonOptions.Ok;
-            });
-            
-            // Set the foreground window and restore it before closing (TODO: FIX - THIS STILL DOES NOT WORK)
-            ProcessEx.ProcessExists("Nitrox.Launcher", process =>
-            {
-                if (process.Id == Environment.ProcessId)
-                {
-                    return false;
-                }
-                Models.Extensions.VisualExtensions.SetForegroundWindowAndRestore(process);
-                return true;
-            });
-            
-            await Dispatcher.UIThread.InvokeAsync(Close);
-        }
     }
 
     [RelayCommand]

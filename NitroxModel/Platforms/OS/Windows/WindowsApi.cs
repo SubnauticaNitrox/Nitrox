@@ -36,18 +36,29 @@ public class WindowsApi
                 break;
         }
     }
-    
-    [DllImport("user32.dll")]
-    private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-    [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-    private const int SW_RESTORE = 9;
-
-    public static void SetForegroundWindowAndRestore(IntPtr handle)
+    public static void BringProcessToFront(string windowTitle)
     {
-        ShowWindow(handle, SW_RESTORE);
+        IntPtr handle = FindWindow(null, windowTitle);
+        if (handle == IntPtr.Zero)
+        {
+            return;
+        }
+        const int SW_RESTORE = 9;
+        if (IsIconic(handle))
+        {
+            ShowWindow(handle, SW_RESTORE);
+        }
+
         SetForegroundWindow(handle);
     }
+
+    [DllImport("User32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr handle);
+    [DllImport("User32.dll")]
+    private static extern bool ShowWindow(IntPtr handle, int nCmdShow);
+    [DllImport("User32.dll")]
+    private static extern bool IsIconic(IntPtr handle);
+    [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+    private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 }

@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.ReactiveUI;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.Launcher;
 
@@ -27,6 +28,7 @@ internal static class Program
     private static AppBuilder BuildAvaloniaApp()
     {
         CultureManager.ConfigureCultureInfo();
+        CheckForRunningInstance();
         Log.Setup();
 
         AppBuilder builder = AppBuilder.Configure<App>()
@@ -46,6 +48,16 @@ internal static class Program
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void LoadAvalonia(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+
+    private static void CheckForRunningInstance()
+    {
+        using ProcessEx process = ProcessEx.GetFirstProcess("Nitrox.Launcher", process => process.Id != Environment.ProcessId);
+        if (process != null)
+        {
+            process.SetForegroundWindowAndRestore();
+            Environment.Exit(0);
+        }
+    }
 
     private static class AssemblyResolver
     {

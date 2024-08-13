@@ -51,7 +51,7 @@ namespace NitroxModel.Platforms.OS.Shared
                 }
                 catch (Exception ex)
                 {
-                    if (ex is InvalidOperationException || ex is Win32Exception)
+                    if (ex is InvalidOperationException or Win32Exception)
                     {
                         handle = new SafeProcessHandle(IntPtr.Zero, true);
                     }
@@ -68,6 +68,8 @@ namespace NitroxModel.Platforms.OS.Shared
                 handle = value;
             }
         }
+
+        public string MainWindowTitle => optionalInnerProcess?.MainWindowTitle;
 
         public SafeHandle MainThreadHandle { get; }
         public Dictionary<string, Module> Modules => modules ?? GetModules();
