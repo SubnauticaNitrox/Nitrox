@@ -10,25 +10,31 @@ public partial class CommunityViewModel : RoutableViewModelBase
     public CommunityViewModel(IScreen screen) : base(screen)
     {
     }
-    
+
     [RelayCommand]
     private void DiscordLink()
     {
         Process.Start(new ProcessStartInfo("https://discord.gg/E8B4X9s") { UseShellExecute = true, Verb = "open" })?.Dispose();
     }
-    
+
     [RelayCommand]
     private void TwitterLink()
     {
         Process.Start(new ProcessStartInfo("https://twitter.com/modnitrox") { UseShellExecute = true, Verb = "open" })?.Dispose();
     }
-    
+
     [RelayCommand]
     private void RedditLink()
     {
         Process.Start(new ProcessStartInfo("https://reddit.com/r/SubnauticaNitrox") { UseShellExecute = true, Verb = "open" })?.Dispose();
     }
-    
+
+    [RelayCommand]
+    private void BlueskyLink()
+    {
+        Process.Start(new ProcessStartInfo("https://bsky.app/profile/nitroxmod.bsky.social") { UseShellExecute = true, Verb = "open" })?.Dispose();
+    }
+
     [RelayCommand]
     private void GithubLink()
     {
