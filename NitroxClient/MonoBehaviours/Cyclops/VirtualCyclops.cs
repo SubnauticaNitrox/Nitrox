@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -15,10 +17,10 @@ public class VirtualCyclops : MonoBehaviour
     public static VirtualCyclops Instance;
     public const string NAME = "VirtualCyclops";
 
+    private static readonly Dictionary<TechType, GameObject> cacheColliderCopy = [];
     private readonly Dictionary<string, Openable> virtualOpenableByName = [];
     private readonly Dictionary<string, Openable> realOpenableByName = [];
     private readonly Dictionary<GameObject, GameObject> virtualConstructableByRealGameObject = [];
-    private readonly Dictionary<TechType, GameObject> cacheColliderCopy = [];
     public NitroxCyclops Cyclops;
     public Transform axis;
 
@@ -81,6 +83,24 @@ public class VirtualCyclops : MonoBehaviour
             Instance.ToggleRenderers(false);
             model.SetActive(true);
         });
+    }
+
+    public static IEnumerator InitializeConstructablesCache()
+    {
+        List<TechType> constructableTechTypes = [];
+        CraftData.GetBuilderGroupTech(TechGroup.InteriorModules, constructableTechTypes, true);
+        CraftData.GetBuilderGroupTech(TechGroup.Miscellaneous, constructableTechTypes, true);
+
+        TaskResult<GameObject> result = new();
+        foreach (TechType techType in constructableTechTypes)
+        {
+            yield return DefaultWorldEntitySpawner.RequestPrefab(techType, result);
+            if (result.value && result.value.GetComponent<Constructable>())
+            {
+                // We immediately destroy the copy because we only want to cache it for now
+                Destroy(CreateColliderCopy(result.value, techType));
+            }
+        }
     }
 
     public void Populate()
@@ -178,9 +198,7 @@ public class VirtualCyclops : MonoBehaviour
         }
         GameObject colliderCopy = CreateColliderCopy(constructable.gameObject, constructable.techType);
         colliderCopy.transform.parent = transform;
-        colliderCopy.transform.localPosition = constructable.transform.localPosition;
-        colliderCopy.transform.localRotation = constructable.transform.localRotation;
-        colliderCopy.transform.localScale = constructable.transform.localScale;
+        colliderCopy.transform.CopyLocals(constructable.transform);
 
         virtualConstructableByRealGameObject.Add(constructable.gameObject, colliderCopy);
     }
@@ -188,7 +206,7 @@ public class VirtualCyclops : MonoBehaviour
     /// <summary>
     /// Creates an empty shell simulating the presence of modules by copying its children containing a collider.
     /// </summary>
-    public GameObject CreateColliderCopy(GameObject realObject, TechType techType)
+    public static GameObject CreateColliderCopy(GameObject realObject, TechType techType)
     {
         if (cacheColliderCopy.TryGetValue(techType, out GameObject colliderCopy))
         {
@@ -206,11 +224,15 @@ public class VirtualCyclops : MonoBehaviour
         IEnumerable<GameObject> uniqueColliderObjects = realObject.GetComponentsInChildren<Collider>(true).Select(c => c.gameObject).Distinct();
         foreach (GameObject colliderObject in uniqueColliderObjects)
         {
-            GameObject copiedCollider = Instantiate(colliderObject);
-            copiedCollider.name = colliderObject.name;
+            GameObject copiedColliderObject = new(colliderObject.name);
+            copiedColliderObject.transform.CopyLocals(colliderObject.transform);
+            foreach (Collider collider in colliderObject.GetComponents<Collider>())
+            {
+                collider.CopyComponent(copiedColliderObject);
+            }
 
             // "child" is always a copied transform looking for its copied parent
-            Transform child = copiedCollider.transform;
+            Transform child = copiedColliderObject.transform;
             // "parent" is always the real parent of the real transform corresponding to "child"
             Transform parent = colliderObject.transform.parent;
 

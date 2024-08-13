@@ -39,7 +39,7 @@ public class NitroxCyclops : MonoBehaviour
 
         GetComponent<SubFire>().enabled = false;
 
-        FixSubNameEditor();
+        WorkaroundColliders();
     }
 
     /// <summary>
@@ -142,55 +142,15 @@ public class NitroxCyclops : MonoBehaviour
         stabilizer.stabilizerEnabled = false;
     }
 
-    private void FixSubNameEditor()
+    private void WorkaroundColliders()
     {
         CyclopsSubNameScreen cyclopsSubNameScreen = transform.GetComponentInChildren<CyclopsSubNameScreen>(true);
+        TriggerWorkaround subNameTriggerWorkaround = cyclopsSubNameScreen.gameObject.AddComponent<TriggerWorkaround>();
+        subNameTriggerWorkaround.Initialize(this,cyclopsSubNameScreen.animator, cyclopsSubNameScreen.ContentOn, nameof(CyclopsSubNameScreen.ContentOff), cyclopsSubNameScreen);
 
-        cyclopsSubNameScreen.gameObject.AddComponent<SubNameFixer>().Initialize(this, cyclopsSubNameScreen);
-    }
-
-    /// <summary>
-    /// With the changes to the Player's colliders, the sub name screen doesn't detect the player coming close to it.
-    /// The easiest workaround is to replace proximity detection by distance checks.
-    /// </summary>
-    class SubNameFixer : MonoBehaviour
-    {
-        private const float DETECTION_RANGE = 3f;
-        private const string ANIMATOR_PARAM = "PanelActive";
-        private NitroxCyclops cyclops;
-        private CyclopsSubNameScreen cyclopsSubNameScreen;
-        private bool playerIn;
-
-        public void Initialize(NitroxCyclops cyclops, CyclopsSubNameScreen cyclopsSubNameScreen)
-        {
-            this.cyclops = cyclops;
-            this.cyclopsSubNameScreen = cyclopsSubNameScreen;
-        }
-
-        /// <summary>
-        /// Code adapted from <see cref="CyclopsSubNameScreen.OnTriggerEnter"/> and <see cref="CyclopsSubNameScreen.OnTriggerExit"/>
-        /// </summary>
-        public void Update()
-        {
-            // Virtual is not null only when the local player is aboard
-            if (cyclops.Virtual && Vector3.Distance(Player.main.transform.position, transform.position) < DETECTION_RANGE)
-            {
-                if (!playerIn)
-                {
-                    playerIn = true;
-                    cyclopsSubNameScreen.animator.SetBool(ANIMATOR_PARAM, true);
-                    cyclopsSubNameScreen.ContentOn();
-                }
-                return;
-            }
-
-            if (playerIn)
-            {
-                playerIn = false;
-                cyclopsSubNameScreen.animator.SetBool(ANIMATOR_PARAM, false);
-                cyclopsSubNameScreen.Invoke(nameof(cyclopsSubNameScreen.ContentOff), 0.5f);
-            }
-        }
+        CyclopsLightingPanel cyclopsLightingPanel = transform.GetComponentInChildren<CyclopsLightingPanel>(true);
+        TriggerWorkaround lightingTriggerWorkaround = cyclopsLightingPanel.gameObject.AddComponent<TriggerWorkaround>();
+        lightingTriggerWorkaround.Initialize(this, cyclopsLightingPanel.uiPanel, cyclopsLightingPanel.ButtonsOn, nameof(CyclopsLightingPanel.ButtonsOff), cyclopsLightingPanel);
     }
 
     // TODO: all of the below stuff is purely for testing and will probably get removed before merge
