@@ -31,7 +31,6 @@ namespace NitroxServer.GameLogic.Entities
             entitiesById = new Dictionary<NitroxId, Entity>(entities.Count);
             globalRootEntitiesById = new Dictionary<NitroxId, Entity>();
             phasingEntitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
-            bool toWarn = false;
 
             for (int i = 0; i < entities.Count; i++)
             {
@@ -60,13 +59,11 @@ namespace NitroxServer.GameLogic.Entities
                 }
                 catch (System.Exception ex)
                 {
-                    toWarn = true;
+                    Log.Warn($"Entity of type {entity.TechType.Name ?? "Unknown"} with GUID {entity.Id?.ToString() ?? "Unknown"} failed to load");
+#if DEBUG
                     Log.Error(ex);
+#endif
                 }
-            }
-            if (toWarn)
-            {
-                Log.Warn("One or more entities have failed to load");
             }
 
             this.batchEntitySpawner = batchEntitySpawner;
