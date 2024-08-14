@@ -64,7 +64,7 @@ namespace NitroxServer.GameLogic.Entities
 #if DEBUG
                     Log.Error(ex);
 #endif
-                    // TODO - Teleport entity back to where it belongs, rather than just towards the center.
+                    // TODO - Add options for manual relocation and "natural respawning"
                     Log.Info("Press D to delete the entity, or any other key to teleport it between other things in its parent");
                     System.ConsoleKeyInfo key = System.Console.ReadKey();
                     if (key.Key != System.ConsoleKey.D)
