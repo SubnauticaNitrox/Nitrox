@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -63,10 +64,85 @@ namespace NitroxServer.GameLogic.Entities
 #if DEBUG
                     Log.Error(ex);
 #endif
+                    // TODO - Teleport entity back to where it belongs, rather than just towards the center.
+                    Log.Info("Press D to delete the entity, or any other key to teleport it between other things in its parent");
+                    System.ConsoleKeyInfo key = System.Console.ReadKey();
+                    if (key.Key != System.ConsoleKey.D)
+                    {
+                        try
+                        {
+                            Entity parent = entities.Find(x => x.Id == entity.ParentId); // Parent isn't certain to be added to dictionary yet
+                            if (FixNaNTransform(entity, parent))
+                            {
+                                i--; // Back up one and retry adding
+                            }
+                        }
+                        catch
+                        {
+                            Log.Error("Failed to fix entity, aborting");
+                            throw;
+                        }
+                    }
                 }
             }
 
             this.batchEntitySpawner = batchEntitySpawner;
+        }
+
+        private static bool FixNaNTransform(Entity entity, [Optional]Entity parent)
+        {
+            var transform = entity.Transform;
+            bool needsPos = IsNaN(transform.LocalPosition);
+            bool needsRot = IsNaN(transform.LocalRotation);
+            bool needsScale = IsNaN(transform.LocalScale);
+            if (needsPos)
+            {
+                if (parent != null)
+                {
+                    List<NitroxVector3> siblingPosList = parent.ChildEntities.Select(x => x.Transform.LocalPosition).Where(x => !IsNaN(x)).ToList();
+                    if (siblingPosList.Count <= 0)
+                    {
+                        Log.Warn("Object has no siblings, placing at center of parent");
+                        transform.LocalPosition = NitroxVector3.One;
+                    }
+                    else
+                    {
+                        transform.LocalPosition = siblingPosList.Aggregate((x, y) => x + y) / siblingPosList.Count;
+                    }
+                }
+                else
+                {
+                    Log.Error("Object has no parent, position fixing will result in unexpected behaviors.");
+                    Log.Info("Press D to delete the entity, or any other key to continue anyways");
+                    System.ConsoleKeyInfo key = System.Console.ReadKey();
+                    if (key.Key != System.ConsoleKey.D)
+                    {
+                        transform.LocalPosition = NitroxVector3.One;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (needsRot)
+            {
+                transform.LocalRotation = NitroxQuaternion.Identity;
+            }
+            if (needsScale)
+            {
+                transform.LocalScale = NitroxVector3.One;
+            }
+            return true;
+        }
+
+        private static bool IsNaN(NitroxVector3 vector3)
+        {
+            return float.IsNaN(vector3.X) || float.IsNaN(vector3.Y) || float.IsNaN(vector3.Z);
+        }
+        private static bool IsNaN(NitroxQuaternion quaternion)
+        {
+            return float.IsNaN(quaternion.X) || float.IsNaN(quaternion.Y) || float.IsNaN(quaternion.Z) || float.IsNaN(quaternion.W);
         }
 
         public List<Entity> GetVisibleEntities(AbsoluteEntityCell[] cells)
