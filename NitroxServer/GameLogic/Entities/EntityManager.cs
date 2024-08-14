@@ -28,14 +28,46 @@ namespace NitroxServer.GameLogic.Entities
 
         public EntityManager(List<Entity> entities, BatchEntitySpawner batchEntitySpawner)
         {
-            entitiesById = entities.ToDictionary(entity => entity.Id);
+            entitiesById = new Dictionary<NitroxId, Entity>(entities.Count);
+            globalRootEntitiesById = new Dictionary<NitroxId, Entity>();
+            phasingEntitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
+            bool toWarn = false;
 
-            globalRootEntitiesById = entities.FindAll(entity => entity.ExistsInGlobalRoot)
-                                             .ToDictionary(entity => entity.Id);
-
-            phasingEntitiesByAbsoluteCell = entities.FindAll(entity => !entity.ExistsInGlobalRoot)
-                                                    .GroupBy(entity => entity.AbsoluteEntityCell)
-                                                    .ToDictionary(group => group.Key, group => group.ToList());
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity entity = entities[i];
+                try
+                {
+                    if (entity.ExistsInGlobalRoot)
+                    {
+                        globalRootEntitiesById.Add(entity.Id, entity);
+                    }
+                    else
+                    {
+                        AbsoluteEntityCell cell = entity.AbsoluteEntityCell;
+                        if (phasingEntitiesByAbsoluteCell.TryGetValue(cell, out List<Entity> list))
+                        {
+                            list.Add(entity);
+                        }
+                        else
+                        {
+                            list = new List<Entity> {entity};
+                            phasingEntitiesByAbsoluteCell.Add(cell, list);
+                        }
+                    }
+                    // At the end since we don't want entities that cause an error
+                    entitiesById.Add(entity.Id, entity);
+                }
+                catch (System.Exception ex)
+                {
+                    toWarn = true;
+                    Log.Error(ex);
+                }
+            }
+            if (toWarn)
+            {
+                Log.Warn("One or more entities have failed to load");
+            }
 
             this.batchEntitySpawner = batchEntitySpawner;
         }
