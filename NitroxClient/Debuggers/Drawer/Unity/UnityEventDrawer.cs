@@ -1,33 +1,19 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class UnityEventDrawer : IDrawer
+public class UnityEventDrawer : IDrawer<UnityEvent, UnityEventDrawer.DrawOptions>, IDrawer<UnityEvent<bool>, UnityEventDrawer.DrawOptions>
 {
     private const float LABEL_WIDTH = 250;
 
-    public Type[] ApplicableTypes { get; } = { typeof(UnityEvent), typeof(UnityEvent<bool>) };
-
-    public void Draw(object target)
+    public void Draw(UnityEvent unityEvent, DrawOptions options)
     {
-        switch (target)
-        {
-            case UnityEvent unityEvent:
-                DrawUnityEvent(unityEvent);
-                break;
-            case UnityEvent<bool> unityEventBool:
-                DrawUnityEventBool(unityEventBool);
-                break;
-        }
-    }
+        options ??= new DrawOptions();
 
-    public static void DrawUnityEvent(UnityEvent unityEvent, string name = "NoName")
-    {
         using (new GUILayout.HorizontalScope())
         {
-            GUILayout.Label(name, NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
+            GUILayout.Label(options.Name, NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Invoke All", GUILayout.Width(100)))
             {
@@ -38,11 +24,13 @@ public class UnityEventDrawer : IDrawer
         DrawUnityEventBase(unityEvent);
     }
 
-    public static void DrawUnityEventBool(UnityEvent<bool> unityEvent, string name = "NoName")
+    public void Draw(UnityEvent<bool> unityEvent, DrawOptions options)
     {
+        options ??= new DrawOptions();
+
         using (new GUILayout.HorizontalScope())
         {
-            GUILayout.Label(name, NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
+            GUILayout.Label(options.Name, NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Invoke All (true)", GUILayout.Width(100)))
             {
@@ -57,7 +45,7 @@ public class UnityEventDrawer : IDrawer
         DrawUnityEventBase(unityEvent);
     }
 
-    public static void DrawUnityEventBase(UnityEventBase unityEventBase)
+    private static void DrawUnityEventBase(UnityEventBase unityEventBase)
     {
         for (int index = 0; index < unityEventBase.GetPersistentEventCount(); index++)
         {
@@ -68,4 +56,10 @@ public class UnityEventDrawer : IDrawer
             }
         }
     }
+
+    public record DrawOptions(string Name = "NoName");
+
+    public void Draw(UnityEvent unityEvent) => Draw(unityEvent, null);
+
+    public void Draw(UnityEvent<bool> unityEvent) => Draw(unityEvent, null);
 }

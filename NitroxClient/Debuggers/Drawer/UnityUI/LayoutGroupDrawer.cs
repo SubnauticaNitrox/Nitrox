@@ -1,40 +1,39 @@
 ﻿using System;
 using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class HorizontalOrVerticalLayoutGroupDrawer : IDrawer
+public class LayoutGroupDrawer : IDrawer<HorizontalLayoutGroup>, IDrawer<VerticalLayoutGroup>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(HorizontalLayoutGroup), typeof(VerticalLayoutGroup) };
+    private readonly RectDrawer rectDrawer;
 
-    public void Draw(object target)
+    public LayoutGroupDrawer(RectDrawer rectDrawer)
     {
-        switch (target)
-        {
-            case HorizontalLayoutGroup horizontalLayoutGroup:
-                DrawLayoutGroup(horizontalLayoutGroup);
-                break;
-            case VerticalLayoutGroup verticalLayoutGroup:
-                DrawLayoutGroup(verticalLayoutGroup);
-                break;
-        }
+        Validate.NotNull(rectDrawer);
+
+        this.rectDrawer = rectDrawer;
     }
 
-    private static void DrawLayoutGroup(HorizontalOrVerticalLayoutGroup layoutGroup)
+    public void Draw(HorizontalLayoutGroup target)
+    {
+        DrawLayoutGroup(target);
+    }
+
+    public void Draw(VerticalLayoutGroup target)
+    {
+        DrawLayoutGroup(target);
+    }
+
+    private void DrawLayoutGroup(HorizontalOrVerticalLayoutGroup layoutGroup)
     {
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Padding", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            Tuple<int, int, int, int> padding = VectorDrawer.DrawInt4(layoutGroup.padding.left, layoutGroup.padding.right,
-                                                                      layoutGroup.padding.top, layoutGroup.padding.bottom);
-
-            layoutGroup.padding.left = padding.Item1;
-            layoutGroup.padding.right = padding.Item2;
-            layoutGroup.padding.top = padding.Item3;
-            layoutGroup.padding.bottom = padding.Item4;
+            rectDrawer.Draw(layoutGroup.padding);
         }
 
         using (new GUILayout.HorizontalScope())

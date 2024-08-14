@@ -1,23 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class MaterialDrawer : IDrawer
+public class MaterialDrawer : IEditorDrawer<Material>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Material) };
-
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case Material material:
-                Draw(material);
-                break;
-        }
-    }
-
-    public static Material Draw(Material material)
+    public Material Draw(Material material)
     {
         // TODO: Implement Material picker
         GUILayout.Box(material.name, GUILayout.Width(150), GUILayout.Height(20));
