@@ -4,6 +4,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using static NitroxModel.Helper.Reflect;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -18,25 +19,31 @@ public sealed class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch
         return false;
     }
 
-    public static bool PrefixDestroy(CyclopsDestructionEvent __instance)
+    public static bool PrefixDestroy(CyclopsDestructionEvent __instance, out bool __state)
     {
         // We only apply the destroy to the current Cyclops
-        if (!Player.main.currentSub || Player.main.currentSub.gameObject != __instance.gameObject)
-        {
-            return false;
-        }
+        __state = Player.main.currentSub == __instance.subRoot;
+        return __state;
+    }
 
-        if (__instance.TryGetIdOrWarn(out NitroxId id))
+    /// <remarks>
+    /// This must happen at postfix so that the SubRootChanged packet are sent before the destroyed vehicle one,
+    /// thus saving player entities from deletion.
+    /// </remarks>
+    public static void PostfixDestroy(CyclopsDestructionEvent __instance, bool __state)
+    {
+        if (__state && __instance.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
         }
-
-        return true;
     }
 
     public override void Patch(Harmony harmony)
     {
+        MethodInfo destroyPrefixInfo = Method(() => PrefixDestroy(default, out Ref<bool>.Field));
+
         PatchPrefix(harmony, TARGET_METHOD_RESTORE, ((Func<bool>)PrefixRestore).Method);
-        PatchPrefix(harmony, TARGET_METHOD_DESTROY, ((Func<CyclopsDestructionEvent, bool>)PrefixDestroy).Method);
+        PatchPrefix(harmony, TARGET_METHOD_DESTROY, destroyPrefixInfo);
+        PatchPostfix(harmony, TARGET_METHOD_DESTROY, ((Action<CyclopsDestructionEvent, bool>)PostfixDestroy).Method);
     }
 }

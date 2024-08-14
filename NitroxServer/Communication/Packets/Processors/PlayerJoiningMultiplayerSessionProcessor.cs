@@ -57,7 +57,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
-            player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player); ;
+            player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player);
 
             List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
             bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;

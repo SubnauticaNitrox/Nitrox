@@ -144,7 +144,7 @@ public class Vehicles
     {
         using (PacketSuppressor<VehicleOnPilotModeChanged>.Suppress())
         {
-            EntityDestroyed vehicleDestroyed = new(id);
+            VehicleDestroyed vehicleDestroyed = new(id);
             packetSender.Send(vehicleDestroyed);
         }
     }
