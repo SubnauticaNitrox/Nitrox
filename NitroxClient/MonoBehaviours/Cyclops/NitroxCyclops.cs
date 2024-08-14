@@ -51,12 +51,17 @@ public class NitroxCyclops : MonoBehaviour
     /// </summary>
     public void RemoveAllPlayers()
     {
+        // This will call OnLocalPlayerExit
+        if (Player.main.currentSub == subRoot)
+        {
+            Player.main.SetCurrentSub(null);
+        }
+ 
         foreach (RemotePlayerIdentifier remotePlayerIdentifier in GetComponentsInChildren<RemotePlayerIdentifier>(true))
         {
             remotePlayerIdentifier.RemotePlayer.ResetStates();
             OnPlayerExit(remotePlayerIdentifier.RemotePlayer);
         }
-        OnLocalPlayerExit();
     }
 
     /// <summary>
@@ -84,7 +89,10 @@ public class NitroxCyclops : MonoBehaviour
         cyclopsMotor.ToggleCyclopsMotor(false);
         cyclopsMotor.Pawn = null;
 
-        Virtual.SetCurrentCyclops(null);
+        if (Virtual)
+        {
+            Virtual.SetCurrentCyclops(null);
+        }
     }
 
     /// <summary>

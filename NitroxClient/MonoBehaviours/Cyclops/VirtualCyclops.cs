@@ -68,6 +68,7 @@ public class VirtualCyclops : MonoBehaviour
 
             GameObject.Destroy(model.GetComponent<EcoTarget>());
             GameObject.Destroy(model.GetComponent<PingInstance>());
+            GameObject.Destroy(model.GetComponent<CyclopsDestructionEvent>());
                         
             Instance.InitialPosition = position;
             Instance.InitialRotation = rotation;
@@ -78,6 +79,7 @@ public class VirtualCyclops : MonoBehaviour
             model.GetComponent<WorldForces>().lockInterpolation = false;
             model.GetComponent<Stabilizer>().stabilizerEnabled = false;
             model.GetComponent<Rigidbody>().isKinematic = true;
+            model.GetComponent<LiveMixin>().invincible = true;
 
             Instance.RegisterVirtualOpenables();
             Instance.ToggleRenderers(false);
