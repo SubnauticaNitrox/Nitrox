@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -28,16 +29,120 @@ namespace NitroxServer.GameLogic.Entities
 
         public EntityManager(List<Entity> entities, BatchEntitySpawner batchEntitySpawner)
         {
-            entitiesById = entities.ToDictionary(entity => entity.Id);
+            entitiesById = new Dictionary<NitroxId, Entity>(entities.Count);
+            globalRootEntitiesById = new Dictionary<NitroxId, Entity>();
+            phasingEntitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
 
-            globalRootEntitiesById = entities.FindAll(entity => entity.ExistsInGlobalRoot)
-                                             .ToDictionary(entity => entity.Id);
-
-            phasingEntitiesByAbsoluteCell = entities.FindAll(entity => !entity.ExistsInGlobalRoot)
-                                                    .GroupBy(entity => entity.AbsoluteEntityCell)
-                                                    .ToDictionary(group => group.Key, group => group.ToList());
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity entity = entities[i];
+                try
+                {
+                    if (entity.ExistsInGlobalRoot)
+                    {
+                        globalRootEntitiesById.Add(entity.Id, entity);
+                    }
+                    else
+                    {
+                        AbsoluteEntityCell cell = entity.AbsoluteEntityCell;
+                        if (phasingEntitiesByAbsoluteCell.TryGetValue(cell, out List<Entity> list))
+                        {
+                            list.Add(entity);
+                        }
+                        else
+                        {
+                            list = new List<Entity> {entity};
+                            phasingEntitiesByAbsoluteCell.Add(cell, list);
+                        }
+                    }
+                    // At the end since we don't want entities that cause an error
+                    entitiesById.Add(entity.Id, entity);
+                }
+                catch (System.Exception ex)
+                {
+                    Log.Warn($"Entity of type {entity.TechType.Name ?? "Unknown"} with GUID {entity.Id?.ToString() ?? "Unknown"} failed to load");
+#if DEBUG
+                    Log.Error(ex);
+#endif
+                    // TODO - Add options for manual relocation and "natural respawning"
+                    Log.Info("Press D to delete the entity, or any other key to teleport it between other things in its parent");
+                    System.ConsoleKeyInfo key = System.Console.ReadKey();
+                    if (key.Key != System.ConsoleKey.D)
+                    {
+                        try
+                        {
+                            Entity parent = entities.Find(x => x.Id == entity.ParentId); // Parent isn't certain to be added to dictionary yet
+                            if (FixNaNTransform(entity, parent))
+                            {
+                                i--; // Back up one and retry adding
+                            }
+                        }
+                        catch
+                        {
+                            Log.Error("Failed to fix entity, aborting");
+                            throw;
+                        }
+                    }
+                }
+            }
 
             this.batchEntitySpawner = batchEntitySpawner;
+        }
+
+        private static bool FixNaNTransform(Entity entity, [Optional]Entity parent)
+        {
+            var transform = entity.Transform;
+            bool needsPos = IsNaN(transform.LocalPosition);
+            bool needsRot = IsNaN(transform.LocalRotation);
+            bool needsScale = IsNaN(transform.LocalScale);
+            if (needsPos)
+            {
+                if (parent != null)
+                {
+                    List<NitroxVector3> siblingPosList = parent.ChildEntities.Select(x => x.Transform.LocalPosition).Where(x => !IsNaN(x)).ToList();
+                    if (siblingPosList.Count <= 0)
+                    {
+                        Log.Warn("Object has no siblings, placing at center of parent");
+                        transform.LocalPosition = NitroxVector3.One;
+                    }
+                    else
+                    {
+                        transform.LocalPosition = siblingPosList.Aggregate((x, y) => x + y) / siblingPosList.Count;
+                    }
+                }
+                else
+                {
+                    Log.Error("Object has no parent, position fixing will result in unexpected behaviors.");
+                    Log.Info("Press D to delete the entity, or any other key to continue anyways");
+                    System.ConsoleKeyInfo key = System.Console.ReadKey();
+                    if (key.Key != System.ConsoleKey.D)
+                    {
+                        transform.LocalPosition = NitroxVector3.One;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (needsRot)
+            {
+                transform.LocalRotation = NitroxQuaternion.Identity;
+            }
+            if (needsScale)
+            {
+                transform.LocalScale = NitroxVector3.One;
+            }
+            return true;
+        }
+
+        private static bool IsNaN(NitroxVector3 vector3)
+        {
+            return float.IsNaN(vector3.X) || float.IsNaN(vector3.Y) || float.IsNaN(vector3.Z);
+        }
+        private static bool IsNaN(NitroxQuaternion quaternion)
+        {
+            return float.IsNaN(quaternion.X) || float.IsNaN(quaternion.Y) || float.IsNaN(quaternion.Z) || float.IsNaN(quaternion.W);
         }
 
         public List<Entity> GetVisibleEntities(AbsoluteEntityCell[] cells)
