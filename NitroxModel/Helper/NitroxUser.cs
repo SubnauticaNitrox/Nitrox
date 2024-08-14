@@ -32,8 +32,16 @@ namespace NitroxModel.Helper
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
 
+                DirectoryInfo execParentDir;
                 Assembly execAsm = Assembly.GetExecutingAssembly();
-                DirectoryInfo execParentDir = Directory.GetParent(execAsm.Location);
+                if (string.IsNullOrEmpty(execAsm.Location))
+                {
+                    execParentDir = Directory.GetParent(Directory.GetCurrentDirectory());
+                }
+                else
+                {
+                    execParentDir = Directory.GetParent(execAsm.Location);
+                }
 
                 // When running tests LanguageFiles is in same directory
                 if (execParentDir != null && Directory.Exists(Path.Combine(execParentDir.FullName, "LanguageFiles")))

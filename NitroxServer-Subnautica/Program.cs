@@ -28,7 +28,6 @@ namespace NitroxServer_Subnautica;
 [SuppressMessage("Usage", "DIMA001:Dependency Injection container is used directly")]
 public class Program
 {
-    private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new();
     private static Lazy<string> gameInstallDir;
     private static readonly CircularBuffer<string> inputHistory = new(1000);
     private static int currentHistoryIndex;
@@ -36,8 +35,8 @@ public class Program
 
     private static async Task Main(string[] args)
     {
-        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
+        AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.Handler;
+        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyResolver.Handler;
 
         await StartServer(args);
     }
@@ -490,37 +489,85 @@ public class Program
         Environment.Exit(1);
     }
 
-    private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+    private static class AssemblyResolver
     {
-        string dllFileName = args.Name.Split(',')[0];
-        if (!dllFileName.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
+        private static string currentExecutableDirectory;
+        private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = [];
+
+        public static Assembly Handler(object sender, ResolveEventArgs args)
         {
-            dllFileName += ".dll";
-        }
-        // If available, return cached assembly
-        if (resolvedAssemblyCache.TryGetValue(dllFileName, out Assembly val))
-        {
-            return val;
+            static Assembly ResolveFromLib(ReadOnlySpan<char> dllName)
+            {
+                dllName = dllName.Slice(0, Math.Max(dllName.IndexOf(','), 0));
+                if (dllName.IsEmpty)
+                {
+                    return null;
+                }
+                if (!dllName.EndsWith(".dll"))
+                {
+                    dllName = string.Concat(dllName, ".dll");
+                }
+                if (dllName.EndsWith(".resources.dll"))
+                {
+                    return null;
+                }
+                string dllNameStr = dllName.ToString();
+                // If available, return cached assembly
+                if (resolvedAssemblyCache.TryGetValue(dllNameStr, out Assembly val))
+                {
+                    return val;
+                }
+
+                // Load DLLs where this program (exe) is located
+                string dllPath = Path.Combine(GetExecutableDirectory(), "lib", dllNameStr);
+                // Prefer to use Newtonsoft dll from game instead of our own due to protobuf issues. TODO: Remove when we do our own deserialization of game data instead of using the game's protobuf.
+                if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
+                {
+                    // Try find game managed libraries
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllNameStr);
+                    }
+                    else
+                    {
+                        dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllNameStr);
+                    }
+                }
+
+                try
+                {
+                    // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
+                    Assembly assembly = Assembly.Load(File.ReadAllBytes(dllPath));
+                    return resolvedAssemblyCache[dllNameStr] = assembly;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            Assembly assembly = ResolveFromLib(args.Name);
+            if (assembly == null && !args.Name.Contains(".resources"))
+            {
+                assembly = Assembly.Load(args.Name);
+            }
+
+            return assembly;
         }
 
-        // Load DLLs where this program (exe) is located
-        string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", "lib", dllFileName);
-        // Prefer to use Newtonsoft dll from game instead of our own due to protobuf issues. TODO: Remove when we do our own deserialization of game data instead of using the game's protobuf.
-        if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
+        private static string GetExecutableDirectory()
         {
-            // Try find game managed libraries
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (currentExecutableDirectory != null)
             {
-                dllPath = Path.Combine(gameInstallDir.Value, "Resources", "Data", "Managed", dllFileName);
+                return currentExecutableDirectory;
             }
-            else
+            string pathAttempt = Assembly.GetEntryAssembly()?.Location;
+            if (string.IsNullOrWhiteSpace(pathAttempt))
             {
-                dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
+                using Process proc = Process.GetCurrentProcess();
+                pathAttempt = proc.MainModule?.FileName;
             }
+            return currentExecutableDirectory = new Uri(Path.GetDirectoryName(pathAttempt ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
         }
-
-        // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-        Assembly assembly = Assembly.Load(File.ReadAllBytes(dllPath));
-        return resolvedAssemblyCache[dllFileName] = assembly;
     }
 }

@@ -15,10 +15,13 @@
         </PropertyGroup>
 
         <ItemGroup>
+            <ExecutableFiles Include="$(TargetDir)*.exe" />
             <DependenciesFile
-                    Include="$(TargetDir)*.dll;$(TargetDir)*.dll.config"
-                    Exclude="$(TargetDir)Nitrox*.dll;$(TargetDir)Nitrox*.dll.config"
+                Include="$(TargetDir)*.dll;$(TargetDir)*.dll.config;$(TargetDir)*.deps.json"
+                Exclude="$(TargetDir)*.exe;$(TargetDir)*.runtimeconfig.json"
             />
+            <!-- Makes sure that the dll of the executable files are next to each other -->
+            <DependenciesFile Remove="$(TargetDir)%(ExecutableFiles.Filename).dll" />
         </ItemGroup>
 
         <!-- Create directory if it doesn't exist -->
@@ -26,7 +29,7 @@
                  Condition="!Exists('$(OutputDirectory)')"
                  ContinueOnError="WarnAndContinue" />
 
-        <!-- Can break some systems that doesn't use our assembly resolve inside lib folder -->
+        <!-- Copy in debug because some systems break when they don't use our assembly resolve to look inside lib folder -->
         <Copy SourceFiles="@(DependenciesFile)"
               DestinationFolder="$(OutputDirectory)"
               OverwriteReadOnlyFiles="True"
@@ -37,7 +40,6 @@
         <Move SourceFiles="@(DependenciesFile)"
               DestinationFolder="$(OutputDirectory)"
               OverwriteReadOnlyFiles="True"
-              Condition="'$(Configuration)' == 'Release'"
               ContinueOnError="ErrorAndContinue" />
     </Target>
 

@@ -209,7 +209,7 @@ public partial class ServerEntry : ObservableObject
             {
                 serverExeName = "NitroxServer-Subnautica";
             }
-            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, "server", serverExeName);
+            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, serverExeName);
             ProcessStartInfo startInfo = new(serverPath)
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,

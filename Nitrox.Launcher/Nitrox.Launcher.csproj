@@ -76,11 +76,11 @@
         <Exec Command="dotnet msbuild ..\NitroxPatcher\NitroxPatcher.csproj /t:Build /p:Configuration=$(Configuration) /p:TargetFramework=net472 /p:OutputPath=$(OutputDirectory)" />
     </Target>
 
-    <Target Name="BuildServer" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+    <Target Name="BuildServer" AfterTargets="Build" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
         <Message Importance="High" Text="Running BuildServer" />
 
         <PropertyGroup>
-            <OutputDirectory>$(TargetDir)server</OutputDirectory>
+            <OutputDirectory>$(TargetDir)</OutputDirectory>
         </PropertyGroup>
 
         <!-- Create directory if it doesn't exist -->
