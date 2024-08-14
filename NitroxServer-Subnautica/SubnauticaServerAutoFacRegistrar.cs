@@ -1,11 +1,8 @@
-using System.Collections.Generic;
 using Autofac;
 using NitroxModel;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
@@ -16,7 +13,6 @@ using NitroxServer.Serialization;
 using NitroxServer_Subnautica.GameLogic;
 using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
-using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
 using NitroxServer_Subnautica.Resources;
 using NitroxServer_Subnautica.Serialization;
 
@@ -52,7 +48,7 @@ namespace NitroxServer_Subnautica
             containerBuilder.Register(c => resourceAssets.NitroxRandom).SingleInstance();
             containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<IUweWorldEntityFactory>().SingleInstance();
 
-            SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
+            SubnauticaUwePrefabFactory prefabFactory = new(resourceAssets.LootDistributionsJson);
             containerBuilder.Register(c => prefabFactory).As<IUwePrefabFactory>().SingleInstance();
             containerBuilder.RegisterType<SubnauticaEntityBootstrapperManager>()
                             .As<IEntityBootstrapperManager>()

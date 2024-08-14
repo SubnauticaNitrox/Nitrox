@@ -8,9 +8,8 @@ namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 public class AssetsBundleManager : AssetsManager
 {
-    private ThreadSafeMonoCecilTempGenerator monoTempGenerator;
+    private readonly Dictionary<AssetsFileInstance, string[]> dependenciesByAssetFileInst = [];
     private readonly string aaRootPath;
-    private readonly Dictionary<AssetsFileInstance, string[]> dependenciesByAssetFileInst = new();
 
     public AssetsBundleManager(string aaRootPath)
     {
@@ -45,7 +44,7 @@ public class AssetsBundleManager : AssetsManager
             }
             catch
             {
-                // ignored
+                Log.Warn($"Failed to load asset from bundle: {bundlePaths[i]}");
             }
         }
 
@@ -108,23 +107,16 @@ public class AssetsBundleManager : AssetsManager
         return new(transformField["m_LocalPosition"].ToNitroxVector3(), transformField["m_LocalRotation"].ToNitroxQuaternion(), transformField["m_LocalScale"].ToNitroxVector3());
     }
 
-    public new void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)
+    public void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)
     {
-        monoTempGenerator = (ThreadSafeMonoCecilTempGenerator)generator;
-        base.SetMonoTempGenerator(generator);
+        MonoTempGenerator = generator;
     }
     /// <summary>
     /// Returns a ready to use <see cref="AssetsManager"/> with loaded <see cref="AssetsManager.classDatabase"/>, <see cref="AssetsManager.classPackage"/> and <see cref="IMonoBehaviourTemplateGenerator"/>.
     /// </summary>
     public AssetsBundleManager Clone()
     {
-        AssetsBundleManager bundleManagerInst = new(aaRootPath)
-        {
-            classDatabase = classDatabase, 
-            classPackage = classPackage
-        };
-        bundleManagerInst.SetMonoTempGenerator(monoTempGenerator);
-        return bundleManagerInst;
+        return (AssetsBundleManager)MemberwiseClone();
     }
 
     /// <inheritdoc cref="AssetsManager.UnloadAll"/>
@@ -132,9 +124,13 @@ public class AssetsBundleManager : AssetsManager
     {
         if (unloadClassData)
         {
-            monoTempGenerator.Dispose();
+            base.UnloadAll(unloadClassData);
         }
-        dependenciesByAssetFileInst.Clear();
-        base.UnloadAll(unloadClassData);
+        else
+        {
+            dependenciesByAssetFileInst.Clear();
+            UnloadAllAssetsFiles(true);
+            UnloadAllBundleFiles();
+        }
     }
 }
