@@ -22,7 +22,6 @@ using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
-using NitroxModel.Server;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -31,7 +30,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 {
     private readonly OptionsViewModel optionsViewModel;
     private readonly ServersViewModel serversViewModel;
-    private readonly CreateServerViewModel createServerViewModel;
     private readonly IKeyValueStore keyValueStore;
     public static Task<string> LastFindSubnauticaTask;
     private readonly IDialogService dialogService;
@@ -46,11 +44,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
 
-    public LaunchGameViewModel(IScreen screen, IDialogService dialogService, ServersViewModel serversViewModel, CreateServerViewModel createServerViewModel, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore) : base(screen)
+    public LaunchGameViewModel(IScreen screen, IDialogService dialogService, ServersViewModel serversViewModel, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore) : base(screen)
     {
         this.dialogService = dialogService;
         this.serversViewModel = serversViewModel;
-        this.createServerViewModel = createServerViewModel;
         this.optionsViewModel = optionsViewModel;
         this.keyValueStore = keyValueStore;
 
