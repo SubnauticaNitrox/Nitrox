@@ -26,7 +26,7 @@ public static class Main
         string[] args = Environment.GetCommandLineArgs();
         for (int i = 0; i < args.Length - 1; i++)
         {
-            if (args[i].Equals("-nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
+            if (args[i].Equals("--nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
             {
                 return Path.GetFullPath(args[i + 1]);
             }
