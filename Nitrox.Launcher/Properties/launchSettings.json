@@ -9,7 +9,7 @@
     },
     "InstantLaunch": {
       "commandName": "Project",
-      "commandLineArgs": "-instantlaunch \"world\""
+      "commandLineArgs": "--instantlaunch \"world\""
     }
   }
 }

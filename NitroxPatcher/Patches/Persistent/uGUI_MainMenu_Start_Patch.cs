@@ -27,9 +27,9 @@ public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistent
         Log.Info(string.Join(" ", args));
         for (int i = 0; i < args.Length; i++)
         {
-            if (args[i].Equals("-instantlaunch", StringComparison.OrdinalIgnoreCase) && args.Length > i + 1)
+            if (args[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) && args.Length > i + 1)
             {
-                Log.Info($"Detected instant launch, connecting to 127.0.0.1:11000");
+                Log.Info("Detected instant launch, connecting to 127.0.0.1:11000");
                 MainMenuMultiplayerPanel.OpenJoinServerMenuAsync("127.0.0.1", "11000", true).ContinueWithHandleError(ex =>
                 {
                     Log.Error(ex);

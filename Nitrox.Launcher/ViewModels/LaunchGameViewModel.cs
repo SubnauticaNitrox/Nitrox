@@ -56,15 +56,15 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
         UpdateGamePlatform();
-        
-# if DEBUG
+
+#if DEBUG
         // Launch the server and Subnautica if the -instantlaunch argument is present
         string[] launchArgs = Environment.GetCommandLineArgs();
         Task.Run(async () =>
         {
             for (int i = 0; i < launchArgs.Length; i++)
             {
-                if (!launchArgs[i].Equals("-instantlaunch", StringComparison.OrdinalIgnoreCase) || launchArgs.Length <= i + 1)
+                if (!launchArgs[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) || launchArgs.Length <= i + 1)
                 {
                     continue;
                 }
@@ -74,19 +74,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
                 if (!Directory.Exists(serverPath))
                 {
-                    bool result = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-                    {
-                        model.Description = $"The save file \"{serverName}\" does not exist. Would you still like to create it?";
-                        model.DescriptionFontSize = 24;
-                        model.DescriptionFontWeight = FontWeight.ExtraBold;
-                        model.ButtonOptions = ButtonOptions.YesNo;
-                    });
-
-                    if (!result)
-                    {
-                        break;
-                    }
-                    
                     createServerViewModel.CreateEmptySave(serverName, NitroxGameMode.SURVIVAL);
                 }
                 bool serverStarted = await serversViewModel.StartServer(ServerEntry.FromDirectory(serverPath));
