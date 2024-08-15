@@ -103,19 +103,29 @@ public partial class ServersViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    public async Task StartServer(ServerEntry server)
+    public async Task<bool> StartServer(ServerEntry server)
     {
         if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
         {
-            return;
+            return false;
         }
         if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
         {
-            return;
+            return false;
         }
 
-        server.Start(keyValueStore.GetSavesFolderDir());
-        server.Version = NitroxEnvironment.Version;
+        try
+        {
+            server.Start(keyValueStore.GetSavesFolderDir());
+            server.Version = NitroxEnvironment.Version;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Error while starting server \"{server.Name}\"");
+            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{server.Name}\""));
+            return false;
+        }
     }
 
     [RelayCommand]
@@ -195,7 +205,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         });
     }
 
-    private void AddServer(string name, NitroxGameMode gameMode)
+    public void AddServer(string name, NitroxGameMode gameMode)
     {
         Servers.Insert(0, new ServerEntry
         {

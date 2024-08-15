@@ -162,21 +162,12 @@ public partial class ServerEntry : ObservableObject
             throw new DirectoryNotFoundException($"Directory '{savesDir}' not found");
         }
 
-        try
+        if (serverProcess?.IsRunning ?? false)
         {
-            if (serverProcess?.IsRunning ?? false)
-            {
-                throw new DuplicateSingularApplicationException("Nitrox Server");
-            }
-            // Start server and add notify when server closed.
-            serverProcess = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync));
+            throw new DuplicateSingularApplicationException("Nitrox Server");
         }
-        catch (Exception ex)
-        {
-            LauncherNotifier.Error(ex.Message);
-            Log.Error(ex);
-            return;
-        }
+        // Start server and add notify when server closed.
+        serverProcess = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync));
 
         IsNewServer = false;
         IsOnline = true;

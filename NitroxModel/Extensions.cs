@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -85,6 +86,29 @@ public static class Extensions
 
     public static int GetIndex<T>(this T[] list, T itemToFind) => Array.IndexOf(list, itemToFind);
 
+    /// <summary>
+    ///     Calls an action if an error happens. If null, logs the error as-is.
+    /// </summary>
+    /// <remarks>
+    ///     Use this for fire-and-forget tasks so that errors aren't hidden when they happen.
+    /// </remarks>
+    public static Task ContinueWithHandleError(this Task task, Action<Exception> onError = null) =>
+        task.ContinueWith(t =>
+        {
+            if (t is not { IsFaulted: true, Exception: { } ex })
+            {
+                return;
+            }
+            if (onError != null)
+            {
+                onError(ex);
+            }
+            else
+            {
+                Log.Error(ex);
+            }
+        });
+    
     public static string AsByteUnitText(this uint byteSize)
     {
         // Uint can't go past 4GiB, so we don't need to worry about overflow.

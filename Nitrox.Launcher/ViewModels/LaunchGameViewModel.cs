@@ -5,11 +5,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Collections;
+using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
+using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Patching;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -19,6 +21,7 @@ using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
+using NitroxModel.Server;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -26,6 +29,8 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class LaunchGameViewModel : RoutableViewModelBase
 {
     private readonly OptionsViewModel optionsViewModel;
+    private readonly ServersViewModel serversViewModel;
+    private readonly CreateServerViewModel createServerViewModel;
     private readonly IKeyValueStore keyValueStore;
     public static Task<string> LastFindSubnauticaTask;
     private readonly IDialogService dialogService;
@@ -40,15 +45,60 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
 
-    public LaunchGameViewModel(IScreen screen, IDialogService dialogService, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore) : base(screen)
+    public LaunchGameViewModel(IScreen screen, IDialogService dialogService, ServersViewModel serversViewModel, CreateServerViewModel createServerViewModel, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore) : base(screen)
     {
         this.dialogService = dialogService;
+        this.serversViewModel = serversViewModel;
+        this.createServerViewModel = createServerViewModel;
         this.optionsViewModel = optionsViewModel;
         this.keyValueStore = keyValueStore;
 
         NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
         UpdateGamePlatform();
+        
+# if DEBUG
+        // Launch the server and Subnautica if the -instantlaunch argument is present
+        string[] launchArgs = Environment.GetCommandLineArgs();
+        Task.Run(async () =>
+        {
+            for (int i = 0; i < launchArgs.Length; i++)
+            {
+                if (!launchArgs[i].Equals("-instantlaunch", StringComparison.OrdinalIgnoreCase) || launchArgs.Length <= i + 1)
+                {
+                    continue;
+                }
+
+                // Start the server
+                string serverName = launchArgs[i + 1];
+                string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
+                if (!Directory.Exists(serverPath))
+                {
+                    bool result = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                    {
+                        model.Description = $"The save file \"{serverName}\" does not exist. Would you still like to create it?";
+                        model.DescriptionFontSize = 24;
+                        model.DescriptionFontWeight = FontWeight.ExtraBold;
+                        model.ButtonOptions = ButtonOptions.YesNo;
+                    });
+
+                    if (!result)
+                    {
+                        break;
+                    }
+                    
+                    createServerViewModel.CreateEmptySave(serverName, NitroxGameMode.SURVIVAL);
+                }
+                bool serverStarted = await serversViewModel.StartServer(ServerEntry.FromDirectory(serverPath));
+
+                // Start the game in multiplayer
+                if (serverStarted)
+                {
+                    await StartMultiplayerAsync().ContinueWithHandleError();
+                }
+            }
+        });
+#endif
 
         foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
         {
@@ -157,14 +207,14 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex, "Error while starting game in multiplayer mode:");
-            await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode");
+            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, "Error while starting game in multiplayer mode"));
         }
     }
 
     private async Task StartSubnauticaAsync()
     {
         string subnauticaPath = NitroxUser.GamePath;
-        string subnauticaLaunchArguments = SubnauticaLaunchArguments;
+        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", Environment.GetCommandLineArgs())}";
         string subnauticaExe = "";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {

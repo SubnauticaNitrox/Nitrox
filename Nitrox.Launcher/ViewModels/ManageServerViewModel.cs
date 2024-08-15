@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -150,7 +151,16 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             return;
         }
 
-        Server.Start(keyValueStore.GetSavesFolderDir());
+        try
+        {
+            server.Start(keyValueStore.GetSavesFolderDir());
+            server.Version = NitroxEnvironment.Version;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Error while starting server \"{server.Name}\"");
+            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{server.Name}\""));
+        }
     }
 
     [RelayCommand]
