@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Security.Cryptography;
-using System.Text;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
@@ -11,16 +9,7 @@ public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel,
     /// <summary>
     ///     Gets the unique URL for the view.
     /// </summary>
-    public string UrlPathSegment
-    {
-        get
-        {
-            using MD5 md5 = MD5.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(GetType().Name);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
-            return Convert.ToHexString(hashBytes);
-        }
-    }
+    public string UrlPathSegment => Convert.ToHexString(GetType().Name.AsMd5Hash());
 
     public IScreen HostScreen { get; }
 

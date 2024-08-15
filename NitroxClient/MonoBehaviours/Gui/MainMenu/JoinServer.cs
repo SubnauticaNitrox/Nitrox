@@ -215,13 +215,11 @@ public class JoinServer : MonoBehaviour
                 if (!string.IsNullOrEmpty(InstantLaunchPlayerName))
                 {
                     joinWindow.PlayerName = InstantLaunchPlayerName;
-                    byte[] nameHash = InstantLaunchPlayerName.Md5Hash();
-                    if (nameHash.Length >= 6)
+                    byte[] nameHash = InstantLaunchPlayerName.AsMd5Hash();
+                    if (nameHash.Length >= 8)
                     {
-                        float r = BitConverter.ToUInt16([nameHash[0], nameHash[1]], 0) / (float)ushort.MaxValue;
-                        float g = BitConverter.ToUInt16([nameHash[2], nameHash[3]], 0) / (float)ushort.MaxValue;
-                        float b = BitConverter.ToUInt16([nameHash[4], nameHash[5]], 0) / (float)ushort.MaxValue;
-                        joinWindow.SetHSB(new Vector3(r, g, b));
+                        float hue = BitConverter.ToUInt64([nameHash[0], nameHash[1], nameHash[2], nameHash[3], nameHash[4], nameHash[5], nameHash[6], nameHash[7]], 0) / (float)ulong.MaxValue;
+                        joinWindow.SetHSB(new Vector3(hue, 1, 1));
                     }
                     OnJoinClick();
                 }

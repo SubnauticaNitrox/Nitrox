@@ -171,9 +171,8 @@ public static class Extensions
         }
     }
 
-    public static byte[] Md5Hash(this string input)
+    public static byte[] AsMd5Hash(this string input)
     {
-        // Use input string to calculate MD5 hash
         using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
         byte[] inputBytes = Encoding.ASCII.GetBytes(input);
         return md5.ComputeHash(inputBytes);
