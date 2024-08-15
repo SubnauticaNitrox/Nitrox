@@ -103,7 +103,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    public async Task<bool> StartServer(ServerEntry server)
+    public async Task<bool> StartServerAsync(ServerEntry server)
     {
         if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
         {

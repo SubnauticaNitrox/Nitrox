@@ -3,13 +3,9 @@
     "Nitrox.Launcher": {
       "commandName": "Project"
     },
-    "WSL": {
-      "commandName": "WSL2",
-      "distributionName": ""
-    },
-    "InstantLaunch": {
+    "Instant launch \"world\"": {
       "commandName": "Project",
-      "commandLineArgs": "--instantlaunch \"world\""
+      "commandLineArgs": "--instantlaunch \"world\" \"Player1\""
     }
   }
 }

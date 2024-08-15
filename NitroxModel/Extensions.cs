@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
@@ -108,7 +109,7 @@ public static class Extensions
                 Log.Error(ex);
             }
         });
-    
+
     public static string AsByteUnitText(this uint byteSize)
     {
         // Uint can't go past 4GiB, so we don't need to worry about overflow.
@@ -168,6 +169,14 @@ public static class Extensions
         {
             ArrayPool<TKey>.Shared.Return(toRemove, true);
         }
+    }
+
+    public static byte[] Md5Hash(this string input)
+    {
+        // Use input string to calculate MD5 hash
+        using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
+        byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+        return md5.ComputeHash(inputBytes);
     }
 
     public static bool IsHardcore(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;

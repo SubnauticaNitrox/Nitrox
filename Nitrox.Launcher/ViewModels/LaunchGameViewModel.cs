@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -56,36 +57,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
         UpdateGamePlatform();
-
-#if DEBUG
-        // Launch the server and Subnautica if the -instantlaunch argument is present
-        string[] launchArgs = Environment.GetCommandLineArgs();
-        Task.Run(async () =>
-        {
-            for (int i = 0; i < launchArgs.Length; i++)
-            {
-                if (!launchArgs[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) || launchArgs.Length <= i + 1)
-                {
-                    continue;
-                }
-
-                // Start the server
-                string serverName = launchArgs[i + 1];
-                string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
-                if (!Directory.Exists(serverPath))
-                {
-                    createServerViewModel.CreateEmptySave(serverName, NitroxGameMode.SURVIVAL);
-                }
-                bool serverStarted = await serversViewModel.StartServer(ServerEntry.FromDirectory(serverPath));
-
-                // Start the game in multiplayer
-                if (serverStarted)
-                {
-                    await StartMultiplayerAsync().ContinueWithHandleError();
-                }
-            }
-        });
-#endif
+        HandleInstantLaunchForDevelopment();
 
         foreach (Uri asset in AssetLoader.GetAssets(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/Images/gallery-images"), null))
         {
@@ -123,7 +95,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private async Task StartMultiplayerAsync()
+    private async Task StartMultiplayerAsync(string[] args = null)
     {
         LauncherNotifier.Info("Starting game");
         Log.Info("Launching Subnautica in multiplayer mode");
@@ -189,7 +161,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 return;
             }
 
-            await StartSubnauticaAsync();
+            await StartSubnauticaAsync(args);
         }
         catch (Exception ex)
         {
@@ -198,11 +170,62 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         }
     }
 
-    private async Task StartSubnauticaAsync()
+    /// <summary>
+    /// Launch the server and Subnautica (for each given player name) if the --instantlaunch argument is present.
+    /// </summary>
+    [Conditional("DEBUG")]
+    private void HandleInstantLaunchForDevelopment()
+    {
+        Task.Run(async () =>
+        {
+            string[] launchArgs = Environment.GetCommandLineArgs();
+            for (int i = 0; i < launchArgs.Length; i++)
+            {
+                if (!launchArgs[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) || launchArgs.Length <= i + 1)
+                {
+                    continue;
+                }
+                List<string> playerNames = [];
+                for (int j = i + 2; j < launchArgs.Length; j++)
+                {
+                    if (launchArgs[j].StartsWith("--", StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
+                    }
+                    playerNames.Add(launchArgs[j]);
+                }
+                if (playerNames is [])
+                {
+                    string error = "--instantlaunch requires at least one player name";
+                    Log.Error(error);
+                    LauncherNotifier.Error(error);
+                    return;
+                }
+
+                // Start the server
+                string serverName = launchArgs[i + 1];
+                string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
+                if (!Directory.Exists(serverPath))
+                {
+                    createServerViewModel.CreateEmptySave(serverName, NitroxGameMode.SURVIVAL);
+                }
+                Task serverStartTask = serversViewModel.StartServerAsync(ServerEntry.FromDirectory(serverPath)).ContinueWithHandleError();
+                // Start a game in multiplayer for each player
+                foreach (string playerName in playerNames)
+                {
+                    await StartMultiplayerAsync(["--instantlaunch", playerName]).ContinueWithHandleError();
+                }
+
+                await serverStartTask;
+            }
+        });
+    }
+
+    private async Task StartSubnauticaAsync(string[] args = null)
     {
         string subnauticaPath = NitroxUser.GamePath;
-        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", Environment.GetCommandLineArgs())}";
-        string subnauticaExe = "";
+        string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? Environment.GetCommandLineArgs())}";
+        string subnauticaExe;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             subnauticaExe = Path.Combine(subnauticaPath, "MacOS", GameInfo.Subnautica.ExeName);
