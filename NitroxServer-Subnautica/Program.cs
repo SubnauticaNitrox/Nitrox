@@ -113,7 +113,8 @@ public class Program
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
             server = NitroxServiceLocator.LocateService<Server>();
-            Log.SaveName = server.Name;
+            string serverSaveName = Server.GetSaveName(args);
+            Log.SaveName = serverSaveName;
 
             using (CancellationTokenSource portWaitCts = CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token))
             {
@@ -124,7 +125,7 @@ public class Program
 
             if (!serverCts.IsCancellationRequested)
             {
-                if (!server.Start(serverCts))
+                if (!server.Start(serverSaveName, serverCts))
                 {
                     throw new Exception("Unable to start server.");
                 }

@@ -52,7 +52,6 @@ public partial class CreateServerViewModel : ModalViewModelBase
 
         using (config.Update(saveDir))
         {
-            config.SaveName = saveName;
             config.GameMode = saveGameMode;
         }
     }

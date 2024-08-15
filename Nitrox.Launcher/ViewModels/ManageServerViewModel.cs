@@ -34,7 +34,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 {
     private readonly string[] advancedSettingsDeniedFields =
     [
-        "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveName), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
+        "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
         nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm)
     ];
 
@@ -249,7 +249,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Config config = Config.Load(SaveFolderDirectory);
         using (config.Update(SaveFolderDirectory))
         {
-            config.SaveName = Server.Name;
             config.ServerPassword = Server.Password;
             if (Server.IsNewServer) { config.Seed = Server.Seed; }
             config.GameMode = Server.GameMode;

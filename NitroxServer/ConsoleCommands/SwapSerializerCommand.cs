@@ -10,13 +10,15 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class SwapSerializerCommand : Command
     {
+        private readonly Server server;
         private readonly WorldPersistence worldPersistence;
         private readonly SubnauticaServerConfig serverConfig;
 
-        public SwapSerializerCommand(SubnauticaServerConfig serverConfig, WorldPersistence worldPersistence) : base("swapserializer", Perms.CONSOLE, "Allows to change the save format")
+        public SwapSerializerCommand(Server server, SubnauticaServerConfig serverConfig, WorldPersistence worldPersistence) : base("swapserializer", Perms.CONSOLE, "Allows to change the save format")
         {
             AddParameter(new TypeEnum<ServerSerializerMode>("serializer", true, "Save format to change to"));
 
+            this.server = server;
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
         }
@@ -25,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerSerializerMode serializerMode = args.Get<ServerSerializerMode>(0);
 
-            using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName)))
+            using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
             {
                 if (serializerMode != serverConfig.SerializerMode)
                 {

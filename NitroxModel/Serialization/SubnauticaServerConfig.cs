@@ -20,7 +20,6 @@ namespace NitroxModel.Serialization
 
         private string postSaveCommandPath = string.Empty;
 
-        private string saveNameSetting = "My World";
         public override string FileName => "server.cfg";
 
         [PropertyDescription("Leave blank for a random spawn position")]
@@ -85,17 +84,6 @@ namespace NitroxModel.Serialization
         public bool DisableAutoSave { get; set; }
 
         public bool DisableAutoBackup { get; set; }
-
-        public string SaveName
-        {
-            get => saveNameSetting;
-
-            set
-            {
-                Validate.IsFalse(string.IsNullOrWhiteSpace(value), "SaveName can't be an empty string");
-                saveNameSetting = value;
-            }
-        }
 
         public string ServerPassword { get; set; } = string.Empty;
 

@@ -6,19 +6,20 @@ using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
-using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands;
 
 internal class ChangeServerGamemodeCommand : Command
 {
+    private readonly Server server;
     private readonly PlayerManager playerManager;
     private readonly SubnauticaServerConfig serverConfig;
 
-    public ChangeServerGamemodeCommand(PlayerManager playerManager, SubnauticaServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
+    public ChangeServerGamemodeCommand(Server server, PlayerManager playerManager, SubnauticaServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
     {
         AddParameter(new TypeEnum<NitroxGameMode>("gamemode", true, "Gamemode to change to"));
 
+        this.server = server;
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
     }
@@ -27,7 +28,7 @@ internal class ChangeServerGamemodeCommand : Command
     {
         NitroxGameMode sgm = args.Get<NitroxGameMode>(0);
 
-        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName)))
+        using (serverConfig.Update(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name)))
         {
             if (serverConfig.GameMode != sgm)
             {

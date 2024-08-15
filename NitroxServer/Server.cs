@@ -35,7 +35,7 @@ public class Server
 
     public bool IsSaving { get; private set; }
 
-    public string Name => serverConfig.SaveName;
+    public string Name { get; private set; } = "My World";
     public int Port => serverConfig?.ServerPort ?? -1;
 
     public Server(WorldPersistence worldPersistence, World world, SubnauticaServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
@@ -72,7 +72,7 @@ public class Server
         StringBuilder builder = new("\n");
         if (viewerPerms is Perms.CONSOLE)
         {
-            builder.AppendLine($" - Save location: {Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName)}");
+            builder.AppendLine($" - Save location: {Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name)}");
         }
         builder.AppendLine($"""
          - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
@@ -89,10 +89,12 @@ public class Server
         return builder.ToString();
     }
 
-    public static SubnauticaServerConfig ServerStartHandler()
+    [Obsolete("Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)")]
+    public static SubnauticaServerConfig CreateOrLoadConfig()
     {
         string saveDir = null;
-        foreach (string arg in Environment.GetCommandLineArgs())
+        string[] args = Environment.GetCommandLineArgs();
+        foreach (string arg in args)
         {
             if (arg.StartsWith(KeyValueStore.Instance.GetSavesFolderDir(), StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
             {
@@ -123,12 +125,10 @@ public class Server
             else
             {
                 // Create new save file
-                Log.Debug($"No save file was found, creating a new one...");
-                saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), "My World");
+                Log.Debug("No save file was found, creating a new one...");
+                saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), GetSaveName(args));
                 Directory.CreateDirectory(saveDir);
-                SubnauticaServerConfig.Load(saveDir);
             }
-
         }
 
         return SubnauticaServerConfig.Load(saveDir);
@@ -143,7 +143,7 @@ public class Server
 
         IsSaving = true;
 
-        bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName));
+        bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name));
         if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
         {
             try
@@ -167,7 +167,7 @@ public class Server
         IsSaving = false;
     }
 
-    public bool Start(CancellationTokenSource ct)
+    public bool Start(string saveName, CancellationTokenSource ct)
     {
         Debug.Assert(serverCancelSource == null);
 
@@ -180,12 +180,13 @@ public class Server
         {
             return false;
         }
+        Name = saveName;
         serverCancelSource = ct;
         IsRunning = true;
 
         if (!serverConfig.DisableAutoBackup)
         {
-            worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName));
+            worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName));
         }
 
         try
@@ -263,7 +264,7 @@ public class Server
 
         Save();
 
-        worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName));
+        worldPersistence.BackUp(Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name));
     }
 
     private async Task LogHowToConnectAsync()
@@ -355,6 +356,47 @@ public class Server
         }
         return [];
     }
+
+    /// <summary>
+    ///     Parses the save name from the given command line arguments or defaults to the standard save name.
+    /// </summary>
+    [Obsolete("Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)")]
+    public static string GetSaveName(string[] args)
+    {
+        if (args.Length == 1 && IsValidSaveName(args[0]))
+        {
+            return args[0].Trim();
+        }
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (i + 1 < args.Length && args[i] is "--save" or "--name" && IsValidSaveName(args[i + 1]))
+            {
+                return args[i + 1].Trim();
+            }
+        }
+        return "My World";
+    }
+
+    private static bool IsValidSaveName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return false;
+        }
+        if (name.StartsWith("--"))
+        {
+            return false;
+        }
+        if (name.EndsWith("."))
+        {
+            return false;
+        }
+        if (name.IndexOfAny(Path.GetInvalidFileNameChars().ToArray()) > -1)
+        {
+            return false;
+        }
+        return true;
+    }
 }
 
 internal class ServerListing
@@ -391,16 +433,6 @@ internal class ServerListing
                                                                    :
                                                                    // If the above file doesn't exist (server was never ran), use the Version file instead
                                                                    Path.Combine(saveDir, $"Version.{fileEnding}"));
-
-        // Handle and correct cases where config save name does not match folder name.
-        string name = Path.GetFileName(saveDir);
-        if (name != config.SaveName)
-        {
-            using (config.Update(saveDir))
-            {
-                config.SaveName = name;
-            }
-        }
 
         return serverListing;
     }

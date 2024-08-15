@@ -7,17 +7,18 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class ConfigCommand : Command
     {
         private readonly SemaphoreSlim configOpenLock = new(1);
+        private readonly Server server;
         private readonly SubnauticaServerConfig serverConfig;
 
-        public ConfigCommand(SubnauticaServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
+        public ConfigCommand(Server server, SubnauticaServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
         {
+            this.server = server;
             this.serverConfig = serverConfig;
         }
 
@@ -30,7 +31,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             // Save config file if it doesn't exist yet.
-            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), serverConfig.SaveName);
+            string saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), server.Name);
             string configFile = Path.Combine(saveDir, serverConfig.FileName);
             if (!File.Exists(configFile))
             {

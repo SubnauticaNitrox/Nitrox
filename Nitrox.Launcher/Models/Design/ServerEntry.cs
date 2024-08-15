@@ -58,7 +58,7 @@ public partial class ServerEntry : ObservableObject
     private int maxPlayers = serverDefaults.MaxConnections;
 
     [ObservableProperty]
-    private string name = "world";
+    private string name;
 
     [ObservableProperty]
     private string password;
@@ -144,15 +144,6 @@ public partial class ServerEntry : ObservableObject
                                                      :
                                                      // If the above file doesn't exist (server was never ran), use the Version file instead
                                                      Path.Combine(saveDir, $"Version.{fileEnding}"));
-
-        // Handle and correct cases where config save name does not match folder name.
-        if (Name != config.SaveName)
-        {
-            using (config.Update(saveDir))
-            {
-                config.SaveName = Name;
-            }
-        }
     }
 
     public void Start(string savesDir)
@@ -161,7 +152,6 @@ public partial class ServerEntry : ObservableObject
         {
             throw new DirectoryNotFoundException($"Directory '{savesDir}' not found");
         }
-
         if (serverProcess?.IsRunning ?? false)
         {
             throw new DuplicateSingularApplicationException("Nitrox Server");
@@ -205,7 +195,7 @@ public partial class ServerEntry : ObservableObject
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,
                 Verb = "open",
-                Arguments = $@"""{saveDir}"""
+                Arguments = $@"""{Path.GetFileName(saveDir)}"""
             };
 
             serverProcess = Process.Start(startInfo);
