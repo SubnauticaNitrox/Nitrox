@@ -20,8 +20,10 @@
                 Include="$(TargetDir)*.dll;$(TargetDir)*.dll.config;$(TargetDir)*.deps.json"
                 Exclude="$(TargetDir)*.exe;$(TargetDir)*.runtimeconfig.json"
             />
-            <!-- Makes sure that the dll of the executable files are next to each other -->
+            <!-- Makes sure that the main dll of the executable files are next to each other -->
             <DependenciesFile Remove="$(TargetDir)%(ExecutableFiles.Filename).dll" />
+            <!-- Makes sure that the native dependency json files of the executable files are next to each other -->
+            <DependenciesFile Remove="$(TargetDir)%(ExecutableFiles.Filename).deps.json" />
         </ItemGroup>
 
         <!-- Create directory if it doesn't exist -->
