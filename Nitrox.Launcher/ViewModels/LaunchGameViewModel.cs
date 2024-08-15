@@ -205,10 +205,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 // Start the server
                 string serverName = launchArgs[i + 1];
                 string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
-                if (!Directory.Exists(serverPath))
-                {
-                    createServerViewModel.CreateEmptySave(serverName, NitroxGameMode.SURVIVAL);
-                }
                 Task serverStartTask = serversViewModel.StartServerAsync(ServerEntry.FromDirectory(serverPath)).ContinueWithHandleError();
                 // Start a game in multiplayer for each player
                 foreach (string playerName in playerNames)

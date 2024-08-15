@@ -58,7 +58,7 @@ public partial class ServerEntry : ObservableObject
     private int maxPlayers = serverDefaults.MaxConnections;
 
     [ObservableProperty]
-    private string name;
+    private string name = "world";
 
     [ObservableProperty]
     private string password;
@@ -81,7 +81,7 @@ public partial class ServerEntry : ObservableObject
     private ServerProcess serverProcess;
 
     [ObservableProperty]
-    private Version version;
+    private Version version = NitroxEnvironment.Version;
 
     public ServerEntry()
     {
