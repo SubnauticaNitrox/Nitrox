@@ -28,8 +28,8 @@ public static class ResourceAssetsParser
             };
         }
         AssetParser.Dispose();
-        //TODO: Validate if this is needed to be commented out
-        //ResourceAssets.ValidateMembers(resourceAssets);
+
+        ResourceAssets.ValidateMembers(resourceAssets);
         return resourceAssets;
     }
 
@@ -65,17 +65,17 @@ public static class ResourceAssetsParser
             throw new DirectoryNotFoundException("Could not locate Subnautica Below Zero installation directory for resource parsing.");
         }
 
-        if (File.Exists(Path.Combine(subnauticaPath, "SubnauticaZero_Data", "resources.assets")))
+        if (File.Exists(Path.Combine(subnauticaPath, GameInfo.SubnauticaBelowZero.DataFolder, "resources.assets")))
         {
-            return Path.Combine(subnauticaPath, "SubnauticaZero_Data");
+            return Path.Combine(subnauticaPath, GameInfo.SubnauticaBelowZero.DataFolder);
         }
         if (File.Exists(Path.Combine("..", "resources.assets"))) //  SubServer => SubnauticaZero/SubnauticaZero_Data/SubServer
         {
             return Path.GetFullPath(Path.Combine(".."));
         }
-        if (File.Exists(Path.Combine("..", "SubnauticaZero_Data", "resources.assets"))) //  SubServer => SubnauticaZero/SubServer
+        if (File.Exists(Path.Combine("..", GameInfo.SubnauticaBelowZero.DataFolder, "resources.assets"))) //  SubServer => SubnauticaZero/SubServer
         {
-            return Path.GetFullPath(Path.Combine("..", "SubnauticaZero_Data"));
+            return Path.GetFullPath(Path.Combine("..", GameInfo.SubnauticaBelowZero.DataFolder));
         }
         if (File.Exists("resources.assets")) //  SubServer/* => SubnauticaZero/SubnauticaZero_Data/
         {

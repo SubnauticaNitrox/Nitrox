@@ -17,7 +17,11 @@ public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPa
 
     public static bool Prefix(DockedVehicleHandTarget __instance, GUIHand hand)
     {
+#if SUBNAUTICA
         Vehicle vehicle = __instance.dockingBay.GetDockedVehicle();
+#elif BELOWZERO
+        Dockable vehicle = __instance.dockingBay.GetDockedObject();
+#endif
 
         if (skipPrefix || !vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
         {
@@ -42,14 +46,21 @@ public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPa
         if (lockAcquired)
         {
             VehicleDockingBay dockingBay = context.Target.dockingBay;
+#if SUBNAUTICA
             Vehicle vehicle =  dockingBay.GetDockedVehicle();
+#elif BELOWZERO
+            Dockable vehicle =  dockingBay.GetDockedObject();
+#endif
 
             if (!dockingBay.TryGetIdOrWarn(out NitroxId dockId))
             {
                 return;
             }
-
+#if SUBNAUTICA
             Vehicles.EngagePlayerMovementSuppressor(vehicle);
+#elif BELOWZERO
+            Vehicles.EngagePlayerMovementSuppressor(vehicle);
+#endif
             Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId, true));
 
             skipPrefix = true;

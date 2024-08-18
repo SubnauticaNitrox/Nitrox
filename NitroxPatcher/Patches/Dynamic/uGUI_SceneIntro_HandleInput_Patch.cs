@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+// TODO: Get a replacement for this patch
+#if SUBNAUTICA
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -79,3 +81,4 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
         }
     }
 }
+#endif

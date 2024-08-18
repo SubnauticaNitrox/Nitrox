@@ -14,6 +14,10 @@
         <PackageProjectUrl>https://github.com/SubnauticaNitrox/Nitrox</PackageProjectUrl>
         <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='BelowZero'">
+        <DefineConstants>DEBUG;BELOWZERO</DefineConstants>
+    </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="dnlib" Version="3.4.0" />
@@ -39,6 +43,13 @@
     <ItemGroup>
       <Reference Include="Microsoft.VisualBasic" />
       <Reference Include="PresentationFramework.Aero2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Nitrox.Discovery.MSBuild" Version="0.1.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
     <!-- Move assets from Subnautica assets to launcher.

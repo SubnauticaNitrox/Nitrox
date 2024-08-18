@@ -8,6 +8,10 @@ public class AggressiveWhenSeeTargetChangedProcessor : ClientPacketProcessor<Agg
 {
     public override void Process(AggressiveWhenSeeTargetChanged packet)
     {
+#if SUBNAUTICA
         AI.AggressiveWhenSeeTargetChanged(packet.CreatureId, packet.TargetId, packet.Locked, packet.AggressionAmount);
+#elif BELOWZERO
+        AI.AggressiveWhenSeeTargetChanged(packet.CreatureId, packet.TargetId, packet.Locked, packet.AggressionAmount, packet.TargetPriority);
+#endif
     }
 }

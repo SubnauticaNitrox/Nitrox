@@ -14,4 +14,11 @@
         <PackageReference Include="LitJson" Version="0.19.0" />
     </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Nitrox.Discovery.MSBuild" Version="0.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

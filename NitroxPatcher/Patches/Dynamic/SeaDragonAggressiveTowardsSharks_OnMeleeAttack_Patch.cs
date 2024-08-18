@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxModel.Helper;
@@ -22,3 +23,4 @@ public sealed partial class SeaDragonAggressiveTowardsSharks_OnMeleeAttack_Patch
         return true;
     }
 }
+#endif

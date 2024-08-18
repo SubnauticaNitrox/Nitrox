@@ -6,6 +6,10 @@
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='BelowZero'">
+        <DefineConstants>DEBUG;BELOWZERO</DefineConstants>
+    </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />

@@ -158,7 +158,11 @@ public static class JoinServerBackend
     {
 #pragma warning disable CS0618 // God Damn it UWE...
         Multiplayer.SubnauticaLoadingStarted();
+#if SUBNAUTICA
         IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
+#elif BELOWZERO
+        IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameModePresetId.Survival);
+#endif
 #pragma warning restore CS0618 // God damn it UWE...
         UWE.CoroutineHost.StartCoroutine(startNewGame);
         LoadingScreenVersionText.Initialize();

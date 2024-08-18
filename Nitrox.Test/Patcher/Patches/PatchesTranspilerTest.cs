@@ -21,7 +21,11 @@ public class PatchesTranspilerTest
         [typeof(BaseDeconstructable_Deconstruct_Patch), BaseDeconstructable_Deconstruct_Patch.InstructionsToAdd(true).Count() * 2],
         [typeof(BaseHullStrength_CrushDamageUpdate_Patch), 3],
         [typeof(BreakableResource_SpawnResourceFromPrefab_Patch), 2],
+#if SUBNAUTICA
         [typeof(Builder_TryPlace_Patch), Builder_TryPlace_Patch.InstructionsToAdd1.Count + Builder_TryPlace_Patch.InstructionsToAdd2.Count],
+#elif BELOWZERO
+        [typeof(Builder_TryPlace_Patch), 4],
+#endif
         [typeof(CellManager_TryLoadCacheBatchCells_Patch), 4],
         [typeof(Constructable_Construct_Patch), Constructable_Construct_Patch.InstructionsToAdd.Count],
         [typeof(Constructable_DeconstructAsync_Patch), Constructable_DeconstructAsync_Patch.InstructionsToAdd.Count],
@@ -43,17 +47,27 @@ public class PatchesTranspilerTest
         [typeof(EntityCell_AwakeAsync_Patch), 2],
         [typeof(EntityCell_SleepAsync_Patch), 2],
         [typeof(Equipment_RemoveItem_Patch), 7],
+#if SUBNAUTICA
         [typeof(EscapePod_Start_Patch), 43],
+#endif
         [typeof(FireExtinguisherHolder_TakeTankAsync_Patch), 2],
         [typeof(FireExtinguisherHolder_TryStoreTank_Patch), 3],
         [typeof(Flare_Update_Patch), 0],
+#if SUBNAUTICA
         [typeof(FootstepSounds_OnStep_Patch), 6],
+#endif
         [typeof(GameInput_Initialize_Patch), 5],
         [typeof(GrowingPlant_SpawnGrownModelAsync_Patch), -1],
+#if SUBNAUTICA
         [typeof(Player_TriggerInfectionRevealAsync_Patch), 1],
+#endif
         [typeof(IngameMenu_OnSelect_Patch), -2],
         [typeof(IngameMenu_QuitGameAsync_Patch), 2],
+#if SUBNAUTICA
         [typeof(IngameMenu_QuitSubscreen_Patch), -24],
+#elif BELOWZERO
+        [typeof(IngameMenu_QuitSubscreen_Patch), -25],
+#endif
         [typeof(ItemsContainer_DestroyItem_Patch), 2],
         [typeof(Knife_OnToolUseAnim_Patch), 0],
         [typeof(LargeRoomWaterPark_OnDeconstructionStart_Patch), 3],
@@ -64,7 +78,11 @@ public class PatchesTranspilerTest
         [typeof(MeleeAttack_CanDealDamageTo_Patch), 4],
         [typeof(PDAScanner_Scan_Patch), 3],
         [typeof(PickPrefab_AddToContainerAsync_Patch), 4],
+#if SUBNAUTICA
+        [typeof(Player_OnKill_Patch), -1],
+#elif BELOWZERO
         [typeof(Player_OnKill_Patch), 0],
+#endif
         [typeof(Respawn_Start_Patch), 3],
         [typeof(RocketConstructor_StartRocketConstruction_Patch), 3],
         [typeof(SpawnConsoleCommand_SpawnAsync_Patch), 2],
@@ -76,8 +94,10 @@ public class PatchesTranspilerTest
         [typeof(uGUI_PDA_Initialize_Patch), 2],
         [typeof(uGUI_PDA_SetTabs_Patch), 3],
         [typeof(uGUI_Pings_IsVisibleNow_Patch), 0],
+#if SUBNAUTICA
         [typeof(uGUI_SceneIntro_HandleInput_Patch), -2],
         [typeof(uGUI_SceneIntro_IntroSequence_Patch), 8],
+#endif
         [typeof(uSkyManager_SetVaryingMaterialProperties_Patch), 0],
         [typeof(Welder_Weld_Patch), 1],
         [typeof(Poop_Perform_Patch), 1],
@@ -110,7 +130,7 @@ public class PatchesTranspilerTest
 
     [TestMethod]
     [DynamicData(nameof(TranspilerPatchClasses))]
-    public void AllPatchesTranspilerSanity(Type patchClassType, int ilDifference, bool logInstructions = false)
+    public void AllPatchesTranspilerSanity(Type patchClassType, int ilDifference, bool logInstructions = true)
     {
         FieldInfo targetMethodInfo = patchClassType.GetRuntimeFields().FirstOrDefault(x => string.Equals(x.Name.Replace("_", ""), "targetMethod", StringComparison.OrdinalIgnoreCase));
         if (targetMethodInfo == null)

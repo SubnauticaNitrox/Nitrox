@@ -6,7 +6,9 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
+#if BELOWZERO
 using UnityEngine;
+#endif
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -41,8 +43,11 @@ public sealed partial class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             }
         }
     }
-
+#if SUBNAUTICA
+    public static void SetupNitroxIcons(uGUI_PDA __instance, Atlas.Sprite[] array)
+#elif BELOWZERO
     public static void SetupNitroxIcons(uGUI_PDA __instance, Sprite[] array)
+#endif
     {
         // In the case SetTabs is used with a null value (from TimeCapsule for example)
         if (array.Length == 0)
@@ -59,7 +64,11 @@ public sealed partial class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             int tabIndex = customTabs.Count - i - 1;
 
             string tabIconAssetName = customTabs[tabIndex].TabIconAssetName;
+#if SUBNAUTICA
+            if (!nitroxTabManager.TryGetTabSprite(tabIconAssetName, out Atlas.Sprite sprite))
+#elif BELOWZERO
             if (!nitroxTabManager.TryGetTabSprite(tabIconAssetName, out Sprite sprite))
+#endif
             {
                 nitroxTabManager.SetSpriteLoadedCallback(tabIconAssetName, callbackSprite => AssignSprite(__instance.toolbar, arrayIndex, callbackSprite));
                 // Take the fallback icon from another tab
@@ -68,8 +77,11 @@ public sealed partial class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             array[arrayIndex] = sprite;
         }
     }
-
+#if SUBNAUTICA
+    private static void AssignSprite(uGUI_Toolbar toolbar, int index, Atlas.Sprite sprite)
+#elif BELOWZERO
     private static void AssignSprite(uGUI_Toolbar toolbar, int index, Sprite sprite)
+#endif
     {
         if (index < toolbar.icons.Count)
         {

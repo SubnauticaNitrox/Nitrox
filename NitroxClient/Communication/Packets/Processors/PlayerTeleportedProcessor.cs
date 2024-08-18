@@ -26,7 +26,11 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
         
         if (packet.SubRootID.HasValue && NitroxEntity.TryGetComponentFrom(packet.SubRootID.Value, out SubRoot subRoot))
         {
+#if SUBNAUTICA
             Player.main.SetCurrentSub(subRoot, true);
+#elif BELOWZERO
+            Player.main.SetCurrentSub(subRoot);
+#endif
             return;
         }
         

@@ -66,8 +66,11 @@ public class AI
             actions[creature] = creatureAction;
         }
     }
-
+#if SUBNAUTICA
     public static void AggressiveWhenSeeTargetChanged(NitroxId creatureId, NitroxId targetId, bool locked, float aggressionAmount)
+#elif BELOWZERO
+    public static void AggressiveWhenSeeTargetChanged(NitroxId creatureId, NitroxId targetId, bool locked, float aggressionAmount, float targetPriority)
+#endif
     {
         if (!NitroxEntity.TryGetComponentFrom(creatureId, out AggressiveWhenSeeTarget aggressiveWhenSeeTarget) ||
             !NitroxEntity.TryGetObjectFrom(targetId, out GameObject targetObject))
@@ -80,7 +83,11 @@ public class AI
         // Code from AggressiveWhenSeeTarget.ScanForAggressionTarget
         creature.Aggression.Value = aggressionAmount;
         LastTarget lastTarget = aggressiveWhenSeeTarget.lastTarget;
+#if SUBNAUTICA
         lastTarget.SetTargetInternal(targetObject);
+#elif BELOWZERO
+        lastTarget.SetTargetInternal(targetObject, targetPriority);
+#endif
         lastTarget.targetLocked = locked;
 
         if (aggressiveWhenSeeTarget.sightedSound && !aggressiveWhenSeeTarget.sightedSound.GetIsPlaying())

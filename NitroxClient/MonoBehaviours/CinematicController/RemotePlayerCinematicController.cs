@@ -378,6 +378,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         {
             transform = player.Body.GetComponent<Transform>();
         }
+
 #if SUBNAUTICA
         bool isVrAnimationMode = !GameOptions.GetVrAnimationMode();
 #elif BELOWZERO

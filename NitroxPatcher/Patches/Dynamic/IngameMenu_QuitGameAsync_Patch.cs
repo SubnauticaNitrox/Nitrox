@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -20,7 +20,11 @@ public sealed partial class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynam
     {
         return new CodeMatcher(instructions)
                .MatchEndForward(
+#if SUBNAUTICA
                    new CodeMatch(OpCodes.Call, Reflect.Method(() => GameModeUtils.IsPermadeath()))
+#elif BELOWZERO
+                   new CodeMatch(OpCodes.Call, Reflect.Method(() => GameModeManager.GetOption<bool>(GameOption.PermanentDeath)))
+#endif
                )
                .Set(OpCodes.Ldc_I4_0, null)
                .MatchEndForward(

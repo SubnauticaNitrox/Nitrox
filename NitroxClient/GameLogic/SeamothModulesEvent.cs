@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
@@ -31,3 +32,4 @@ namespace NitroxClient.GameLogic
         }
     }
 }
+#endif

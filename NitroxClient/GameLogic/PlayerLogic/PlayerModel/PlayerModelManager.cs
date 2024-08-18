@@ -33,14 +33,14 @@ public class PlayerModelManager
         {
             new DiveSuitVisibilityHandler(playerModel),
             new FinsVisibilityHandler(playerModel),
-            new StillSuitVisibilityHandler(playerModel),
             new ReinforcedSuitVisibilityHandler(playerModel),
+            new StillSuitVisibilityHandler(playerModel),
 #if SUBNAUTICA
-            new RadiationSuitVisibilityHandler(playerModel),
-            new ScubaSuitVisibilityHandler(playerModel)
+            new ScubaSuitVisibilityHandler(playerModel),
+            new RadiationSuitVisibilityHandler(playerModel)
 #elif BELOWZERO
-            new ColdProtectiveSuitVisibilityHandler(playerModel),
-            new BaseVisibilityHandler(playerModel)
+            new BaseVisibilityHandler(playerModel),
+            new ColdProtectiveSuitVisibilityHandler(playerModel)
 #endif
         };
     }

@@ -1,4 +1,5 @@
-﻿using System;
+#if SUBNAUTICA
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -101,3 +102,4 @@ public sealed partial class EscapePod_Start_Patch : NitroxPatch, IDynamicPatch
         yield return new CodeInstruction(OpCodes.Ret).WithLabels(returnJump);
     }
 }
+#endif

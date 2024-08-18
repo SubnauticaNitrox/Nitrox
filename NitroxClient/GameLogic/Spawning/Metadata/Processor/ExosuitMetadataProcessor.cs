@@ -17,6 +17,7 @@ public class ExosuitMetadataProcessor : VehicleMetadataProcessor<ExosuitMetadata
             Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(Exosuit)} on {gameObject}");
             return;
         }
+        //TODO: Check login here for subNameInput
 #if SUBNAUTICA
         if (!gameObject.TryGetComponent(out SubName subName))
         {

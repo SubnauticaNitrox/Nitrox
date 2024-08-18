@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -17,3 +18,4 @@ public sealed partial class AuroraWarnings_Update_Patch : NitroxPatch, IDynamicP
         return Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted;
     }
 }
+#endif

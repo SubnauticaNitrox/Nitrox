@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
@@ -38,3 +39,4 @@ public sealed partial class SeaDragonAggressiveTowardsSharks_GetAggressionTarget
         return false;
     }
 }
+#endif

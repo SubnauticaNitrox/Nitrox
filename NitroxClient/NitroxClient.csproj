@@ -4,6 +4,10 @@
         <TargetFrameworks>net472;net9.0</TargetFrameworks>
         <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='BelowZero'">
+        <DefineConstants>DEBUG;BELOWZERO</DefineConstants>
+    </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
@@ -19,6 +23,13 @@
 
     <ItemGroup>
         <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Nitrox.Discovery.MSBuild" Version="0.1.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>

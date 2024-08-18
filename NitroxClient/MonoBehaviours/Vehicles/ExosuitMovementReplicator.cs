@@ -33,7 +33,11 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
 
         float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
+#if SUBNAUTICA
         EventInstance soundHandle = exosuit.loopingJetSound.playing ? exosuit.loopingJetSound.evt : exosuit.loopingJetSound.evtStop;
+#elif BELOWZERO
+        EventInstance soundHandle = exosuit.loopingSlideSound.playing ? exosuit.loopingSlideSound.evt : exosuit.loopingSlideSound.evtStop;
+#endif
         if (soundHandle.hasHandle())
         {
             soundHandle.setVolume(volume);
@@ -62,13 +66,22 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         {
             if (jetsActive && thrustPower > 0f)
             {
+#if SUBNAUTICA
                 exosuit.loopingJetSound.Play();
+#elif BELOWZERO
+                // TODO: do we want this one or one of the other sounds
+                exosuit.loopingSlideSound.Play();
+#endif
                 exosuit.fxcontrol.Play(0);
                 exosuit.areFXPlaying = true;
             }
             else
             {
+#if SUBNAUTICA
                 exosuit.loopingJetSound.Stop();
+#elif BELOWZERO
+                exosuit.loopingSlideSound.Stop();
+#endif
                 exosuit.fxcontrol.Stop(0);
                 exosuit.areFXPlaying = false;
             }
@@ -104,13 +117,23 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
     private void SetupSound()
     {
+#if SUBNAUTICA
         this.Resolve<FMODWhitelist>().TryGetSoundData(exosuit.loopingJetSound.asset.path, out SoundData jetSoundData);
+#elif BELOWZERO
+        this.Resolve<FMODWhitelist>().TryGetSoundData(exosuit.loopingSlideSound.asset.path, out SoundData jetSoundData);
+#endif
         jetLoopingSoundDistance = jetSoundData.Radius;
-        
+#if SUBNAUTICA
         if (FMODUWE.IsInvalidParameterId(exosuit.fmodIndexSpeed))
         {
             exosuit.fmodIndexSpeed = exosuit.ambienceSound.GetParameterIndex("speed");
         }
+#elif BELOWZERO
+        if (FMODUWE.IsInvalidParameterId(exosuit.fmodIndexVelocity))
+        {
+            exosuit.fmodIndexVelocity = exosuit.ambienceSound.GetParameterIndex("velocity");
+        }
+#endif
         if (FMODUWE.IsInvalidParameterId(exosuit.fmodIndexRotate))
         {
             exosuit.fmodIndexRotate = exosuit.ambienceSound.GetParameterIndex("rotate");
@@ -126,7 +149,11 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
     public override void Exit()
     {
         exosuit.SetIKEnabled(false);
+#if SUBNAUTICA
         exosuit.loopingJetSound.Stop(STOP_MODE.ALLOWFADEOUT);
+#elif BELOWZERO
+        exosuit.loopingSlideSound.Stop();
+#endif
         exosuit.fxcontrol.Stop(0);
 
         jetsActive = false;

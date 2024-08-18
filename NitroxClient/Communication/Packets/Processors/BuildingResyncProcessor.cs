@@ -169,11 +169,19 @@ public class BuildingResyncProcessor : ClientPacketProcessor<BuildingResync>
         }
         foreach (VehicleDockingBay vehicleDockingBay in @base.GetComponentsInChildren<VehicleDockingBay>(true))
         {
+#if SUBNAUTICA
             if (vehicleDockingBay.dockedVehicle)
             {
                 UnityEngine.Object.Destroy(vehicleDockingBay.dockedVehicle.gameObject);
                 vehicleDockingBay.SetVehicleUndocked();
             }
+#elif BELOWZERO
+            if (vehicleDockingBay.dockedObject.gameObject)
+            {
+                UnityEngine.Object.Destroy(vehicleDockingBay.dockedObject.gameObject);
+                vehicleDockingBay.SetVehicleUndocked();
+            }
+#endif
         }
     }
 }

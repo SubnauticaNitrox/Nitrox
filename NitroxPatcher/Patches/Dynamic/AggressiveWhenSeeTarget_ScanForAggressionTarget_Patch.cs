@@ -60,8 +60,13 @@ public sealed partial class AggressiveWhenSeeTarget_ScanForAggressionTarget_Patc
             aggressiveWhenSeeTarget.TryGetNitroxId(out NitroxId creatureId))
         {
             float aggressionAmount = aggressiveWhenSeeTarget.creature.Aggression.Value;
-            
+#if SUBNAUTICA
             Resolve<IPacketSender>().Send(new AggressiveWhenSeeTargetChanged(creatureId, targetId, lastTarget.targetLocked, aggressionAmount));
+#elif BELOWZERO
+            float targetPriority = aggressiveWhenSeeTarget.targetPriority;
+
+            Resolve<IPacketSender>().Send(new AggressiveWhenSeeTargetChanged(creatureId, targetId, lastTarget.targetLocked, aggressionAmount, targetPriority));
+#endif
         }
     }
 }

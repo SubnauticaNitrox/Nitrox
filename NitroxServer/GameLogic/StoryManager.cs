@@ -1,4 +1,4 @@
-    using System;
+using System;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Helper;
@@ -50,6 +50,7 @@ public class StoryManager : IDisposable
         this.storyGoalData = storyGoalData;
         this.timeKeeper = timeKeeper;
         this.seed = seed;
+
 #if SUBNAUTICA
         AuroraCountdownTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
         AuroraWarningTimeMs = auroraWarningTime ?? ElapsedMilliseconds;
@@ -76,6 +77,7 @@ public class StoryManager : IDisposable
         }
 #endif
     }
+
 #if SUBNAUTICA
     /// <param name="instantaneous">Whether we should make Aurora explode instantly or after a short countdown</param>
     public void BroadcastExplodeAurora(bool instantaneous)

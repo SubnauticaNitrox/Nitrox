@@ -13,7 +13,11 @@ public sealed partial class VehicleDockingBay_OnUndockingComplete_Patch : Nitrox
     public static void Prefix(VehicleDockingBay __instance)
     {
         if (!__instance.TryGetIdOrWarn(out NitroxId dockId) ||
+#if SUBNAUTICA
             !__instance.GetDockedVehicle().TryGetIdOrWarn(out NitroxId vehicleId))
+#elif BELOWZERO
+            !__instance.GetDockedObject().TryGetIdOrWarn(out NitroxId vehicleId))
+#endif
         {
             return;
         }

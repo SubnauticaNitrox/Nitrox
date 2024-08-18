@@ -10,7 +10,11 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class CreatureAction_Perform_Patch : NitroxPatch, IDynamicPatch
 {
+#if SUBNAUTICA
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CreatureAction t) => t.Perform(default, default, default));
+#elif BELOWZERO
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CreatureAction t) => t.Perform(default, default));
+#endif
 
     public static bool Prefix(CreatureAction __instance)
     {

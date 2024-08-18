@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
@@ -10,7 +10,7 @@ namespace NitroxClient.MonoBehaviours.CinematicController;
 public class MultiplayerCinematicReference : MonoBehaviour
 {
     private readonly Dictionary<string, Dictionary<int, MultiplayerCinematicController>> controllerByKey = new();
-
+#if SUBNAUTICA
     private bool isEscapePod;
 
     private void Start()
@@ -18,10 +18,15 @@ public class MultiplayerCinematicReference : MonoBehaviour
         // TODO: Currently only single EscapePod is supported, therefor EscapePod.main. Can probably be removed after we use one pod per intro sequence
         isEscapePod = gameObject == EscapePod.main.gameObject;
     }
+#endif
 
     public void CallStartCinematicMode(string key, int identifier, RemotePlayer player)
     {
+#if SUBNAUTICA
         if(isEscapePod && this.Resolve<LocalPlayer>().IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER) return;
+#elif BELOWZERO
+        if(this.Resolve<LocalPlayer>().IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER) return;
+#endif
 
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {
@@ -38,7 +43,11 @@ public class MultiplayerCinematicReference : MonoBehaviour
 
     public void CallCinematicModeEnd(string key, int identifier, RemotePlayer player)
     {
+#if SUBNAUTICA
         if(isEscapePod && this.Resolve<LocalPlayer>().IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER) return;
+#elif BELOWZERO
+        if (this.Resolve<LocalPlayer>().IntroCinematicMode is IntroCinematicMode.PLAYING or IntroCinematicMode.SINGLEPLAYER) return;
+#endif
 
         if (!controllerByKey.TryGetValue(key, out Dictionary<int, MultiplayerCinematicController> controllers))
         {

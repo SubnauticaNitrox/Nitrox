@@ -63,7 +63,11 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
     private static IEnumerator StartUndockingAnimation(VehicleDockingBay vehicleDockingBay)
     {
         yield return Yielders.WaitFor2Seconds;
+#if SUBNAUTICA
         vehicleDockingBay.vehicle_docked_param = false;
+#elif BELOWZERO
+        vehicleDockingBay.docked_param = false;
+#endif
     }
 
     private void FinishVehicleUndocking(VehicleUndocking packet, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
@@ -72,7 +76,11 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
         {
             vehicleDockingBay.SetVehicleUndocked();
         }
+#if SUBNAUTICA
         vehicleDockingBay.dockedVehicle = null;
+#elif BELOWZERO
+        vehicleDockingBay.dockedObject = null;
+#endif
         vehicleDockingBay.CancelInvoke(nameof(VehicleDockingBay.RepairVehicle));
         vehicle.docked = false;
         if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer player))

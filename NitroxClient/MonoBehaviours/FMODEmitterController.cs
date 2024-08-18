@@ -44,6 +44,7 @@ public class FMODEmitterController : MonoBehaviour
             }
         }
     }
+
 #if SUBNAUTICA
     public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float maxDistance)
     {

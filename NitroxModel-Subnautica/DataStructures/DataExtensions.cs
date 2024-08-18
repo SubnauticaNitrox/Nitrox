@@ -140,7 +140,10 @@ public static class DataExtensions
             Story.GoalType.Radio => StoryGoalExecuted.EventType.RADIO,
             Story.GoalType.Encyclopedia => StoryGoalExecuted.EventType.ENCYCLOPEDIA,
             Story.GoalType.Story => StoryGoalExecuted.EventType.STORY,
-            _ => throw new ArgumentException("The provided Story.GoalType doesn't correspond to a StoryEventSend.EventType"),
+#if BELOWZERO
+            Story.GoalType.Call => StoryGoalExecuted.EventType.CALL,
+#endif
+            _ => throw new ArgumentException($"The provided Story.GoalType ({goalType}) doesn't correspond to a StoryEventSend.EventType"),
         };
     }
 
@@ -152,7 +155,10 @@ public static class DataExtensions
             StoryGoalExecuted.EventType.RADIO => Story.GoalType.Radio,
             StoryGoalExecuted.EventType.ENCYCLOPEDIA => Story.GoalType.Encyclopedia,
             StoryGoalExecuted.EventType.STORY => Story.GoalType.Story,
-            _ => throw new ArgumentException("The provided StoryEventSend.EventType doesn't correspond to a Story.GoalType")
+#if BELOWZERO
+            StoryGoalExecuted.EventType.CALL => Story.GoalType.Call,
+#endif
+            _ => throw new ArgumentException($"The provided StoryEventSend.EventType ({eventType}) doesn't correspond to a Story.GoalType")
         };
     }
 

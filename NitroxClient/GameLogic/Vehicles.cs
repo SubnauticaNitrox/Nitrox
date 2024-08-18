@@ -78,8 +78,11 @@ public class Vehicles
             entities.BroadcastMetadataUpdate(id, cyclopsMetadata);
         }
     }
-
+#if SUBNAUTICA
     public static void EngagePlayerMovementSuppressor(Vehicle vehicle)
+#elif BELOWZERO
+    public static void EngagePlayerMovementSuppressor(Dockable vehicle)
+#endif
     {
         // TODO: Properly prevent the vehicle from sending position update as long as it's not free from the animation
         PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();

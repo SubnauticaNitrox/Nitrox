@@ -16,7 +16,7 @@
         <PropertyGroup>
             <GameManagedDir>$(GameDir)$(GameDataFolder)\Managed\</GameManagedDir>
             <GameVersionFile>$(GameDir)$(GameDataFolder)\StreamingAssets\SNUnmanagedData\plastic_status.ignore</GameVersionFile>
-            <GameLegacyVersion>0</GameLegacyVersion>
+            <GameLegacyVersion>49370</GameLegacyVersion>
         </PropertyGroup>
         <ReadLinesFromFile File="$(GameVersionFile)">
             <Output TaskParameter="Lines" ItemName="GameVersion" />

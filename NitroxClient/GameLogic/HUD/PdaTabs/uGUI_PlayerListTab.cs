@@ -75,7 +75,11 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             {
                 if (asset.name.Equals("player_list_tab@3x"))
                 {
+#if SUBNAUTICA
+                    nitroxPDATabManager.AddTabSprite(asset.name, new Atlas.Sprite(sprite));
+#elif BELOWZERO
                     nitroxPDATabManager.AddTabSprite(asset.name, Sprite.Create(sprite.texture, sprite.rect, sprite.pivot, sprite.pixelsPerUnit));
+#endif
                 }
                 assets.Add(asset.name, sprite);
             }

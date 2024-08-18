@@ -13,7 +13,11 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Poop_Perform_Patch : NitroxPatch, IDynamicPatch
 {
+#if SUBNAUTICA
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((Poop t) => t.Perform(default, default, default));
+#elif BELOWZERO
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((Poop t) => t.Perform(default, default));
+#endif
 
     /*
      *     UnityEngine.Object.Instantiate<GameObject>(this.recourcePrefab, this.recourceSpawnPoint.position, this.recourceSpawnPoint.rotation);

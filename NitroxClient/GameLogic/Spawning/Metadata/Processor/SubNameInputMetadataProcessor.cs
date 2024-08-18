@@ -7,7 +7,6 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using static GameInput;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 
@@ -20,6 +19,7 @@ public class SubNameInputMetadataProcessor : EntityMetadataProcessor<SubNameInpu
             Log.ErrorOnce($"[{nameof(SubNameInputMetadataProcessor)}] Could not find {nameof(SubNameInput)} on {gameObject}");
             return;
         }
+        //TODO: Check the naming logic here
 #if SUBNAUTICA
         SubName subName = subNameInput.target;
         if (!subName && !subNameInput.TryGetComponent(out subName))

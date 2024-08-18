@@ -1,7 +1,11 @@
+#if BELOWZERO
 using System.Linq;
+#endif
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+#if BELOWZERO
 using NitroxModel_Subnautica.DataStructures;
+#endif
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 

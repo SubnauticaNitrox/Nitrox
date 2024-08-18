@@ -1,3 +1,5 @@
+// TODO: Rewrite for new footstep system
+#if SUBNAUTICA
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -105,3 +107,4 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
         Resolve<IPacketSender>().Send(footstepPacket);
     }
 }
+#endif

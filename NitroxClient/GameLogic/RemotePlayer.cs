@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if BELOWZERO
 using FMODUnity;
+#endif
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
@@ -82,7 +84,6 @@ public class RemotePlayer : INitroxPlayer
         NitroxEntity.SetNewId(Body, PlayerContext.PlayerNitroxId);
 
         // Get player
-        PlayerModel = Body.RequireGameObject("player_view");
 #if SUBNAUTICA
         PlayerModel = Body.RequireGameObject("player_view");
 #elif BELOWZERO
@@ -551,10 +552,12 @@ public class RemotePlayer : INitroxPlayer
     /// </summary>
     private void SetupMixins()
     {
+#if SUBNAUTICA
         InfectedMixin = Body.AddComponent<InfectedMixin>();
         InfectedMixin.shaderKeyWord = InfectedMixin.uwe_playerinfection;
         Renderer renderer = PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_hands_geo").GetComponent<Renderer>();
         InfectedMixin.renderers = [renderer];
+#endif
 
         LiveMixin = Body.AddComponent<LiveMixin>();
         LiveMixin.data = new()
@@ -566,7 +569,7 @@ public class RemotePlayer : INitroxPlayer
         // We set the remote player to invincible because we only want this component to be detectable but not to work
         LiveMixin.invincible = true;
     }
-
+#if SUBNAUTICA
     public void UpdateHealthAndInfection(float health, float infection)
     {
         if (LiveMixin)
@@ -580,6 +583,15 @@ public class RemotePlayer : INitroxPlayer
             InfectedMixin.UpdateInfectionShading();
         }
     }
+#elif BELOWZERO
+    public void UpdateHealth(float health)
+    {
+        if (LiveMixin)
+        {
+            LiveMixin.health = health;
+        }
+    }
+#endif
 
     public void SetGameMode(NitroxGameMode gameMode)
     {
@@ -602,6 +614,10 @@ public class RemotePlayer : INitroxPlayer
     /// </summary>
     public bool CanBeAttacked()
     {
+#if SUBNAUTICA
         return !SubRoot && !EscapePod && PlayerContext.GameMode != NitroxGameMode.CREATIVE;
+#elif BELOWZERO
+        return !SubRoot && PlayerContext.GameMode != NitroxGameMode.CREATIVE;
+#endif
     }
 }

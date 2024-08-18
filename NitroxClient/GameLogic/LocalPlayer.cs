@@ -112,6 +112,7 @@ public class LocalPlayer : ILocalNitroxPlayer
             packetSender.Send(new SubRootChanged(PlayerId.Value, subrootId));
         }
     }
+
 #if SUBNAUTICA
     public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId)
     {
@@ -137,6 +138,7 @@ public class LocalPlayer : ILocalNitroxPlayer
     private GameObject CreateBodyPrototype()
     {
         GameObject prototype = Body;
+
         // Cheap fix for showing head, much easier since male_geo contains many different heads
 #if SUBNAUTICA
         prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;

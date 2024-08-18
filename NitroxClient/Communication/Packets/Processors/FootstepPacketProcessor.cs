@@ -31,6 +31,7 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
         Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerID);
         if (player.HasValue)
         {
+#if SUBNAUTICA
             FMODAsset asset = packet.AssetIndex switch
             {
                 FootstepPacket.StepSounds.PRECURSOR => localFootstepSounds.Value.precursorInteriorSound,
@@ -38,6 +39,13 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
                 FootstepPacket.StepSounds.LAND => localFootstepSounds.Value.landSound,
                 _ => null
             };
+#elif BELOWZERO
+            FMODAsset asset = packet.AssetIndex switch
+            {
+                FootstepPacket.StepSounds.LAND => localFootstepSounds.Value.footStepSound,
+                _ => null
+            };
+#endif
             EventInstance evt = FMODUWE.GetEvent(asset);
             if (evt.isValid())
             {

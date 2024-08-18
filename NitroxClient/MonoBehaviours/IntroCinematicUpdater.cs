@@ -1,3 +1,4 @@
+// TODO: Fix intro
 using System.Collections;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -27,51 +28,51 @@ public class IntroCinematicUpdater : MonoBehaviour
 
     public void Awake()
     {
-        if (Partner == null)
-        {
-            Log.Error($"[{nameof(IntroCinematicUpdater)}.Awake()]: Partner was null. Disabling MonoBehaviour.");
-            enabled = false;
-            return;
-        }
-        modelRoot = EscapePod.main.transform.Find("models/Life_Pod_damaged_03/root");
-        Transform seatLeft = modelRoot.Find("life_pod_seat_01_left_damaged_jnt1");
-        Transform seatRight = modelRoot.Find("life_pod_seat_01_right_damaged_jnt1");
+        //if (Partner == null)
+        //{
+        //    Log.Error($"[{nameof(IntroCinematicUpdater)}.Awake()]: Partner was null. Disabling MonoBehaviour.");
+        //    enabled = false;
+        //    return;
+        //}
+        //modelRoot = EscapePod.main.transform.Find("models/Life_Pod_damaged_03/root");
+        //Transform seatLeft = modelRoot.Find("life_pod_seat_01_left_damaged_jnt1");
+        //Transform seatRight = modelRoot.Find("life_pod_seat_01_right_damaged_jnt1");
 
-        seatPartsLeft = new[]
-        {
-            seatLeft.Find("life_pod_seat_01_left_damaged_jnt2"),
-            seatLeft.Find("life_pod_seat_01_left_damaged_jnt3")
-        };
+        //seatPartsLeft = new[]
+        //{
+        //    seatLeft.Find("life_pod_seat_01_left_damaged_jnt2"),
+        //    seatLeft.Find("life_pod_seat_01_left_damaged_jnt3")
+        //};
 
-        seatPartsRight = new[]
-        {
-            seatRight.Find("life_pod_seat_01_right_damaged_jnt2"),
-            seatRight.Find("life_pod_seat_01_right_damaged_jnt3")
-        };
+        //seatPartsRight = new[]
+        //{
+        //    seatRight.Find("life_pod_seat_01_right_damaged_jnt2"),
+        //    seatRight.Find("life_pod_seat_01_right_damaged_jnt3")
+        //};
 
-        seatArmRestLeft = modelRoot.Find("life_pod_seat_01_left_damaged_jnt4/life_pod_seat_01_left_damaged_jnt5");
-        seatArmRestRight = modelRoot.Find("life_pod_seat_01_right_damaged_jnt4/life_pod_seat_01_right_damaged_jnt5");
+        //seatArmRestLeft = modelRoot.Find("life_pod_seat_01_left_damaged_jnt4/life_pod_seat_01_left_damaged_jnt5");
+        //seatArmRestRight = modelRoot.Find("life_pod_seat_01_right_damaged_jnt4/life_pod_seat_01_right_damaged_jnt5");
 
-        seatBarRendererRight = modelRoot.parent.Find("lifepod_damaged_03_geo/life_pod_seat_01_R").GetComponentsInChildren<SkinnedMeshRenderer>();
+        //seatBarRendererRight = modelRoot.parent.Find("lifepod_damaged_03_geo/life_pod_seat_01_R").GetComponentsInChildren<SkinnedMeshRenderer>();
 
-        remoteRenders = Partner.PlayerModel.GetComponentsInChildren<SkinnedMeshRenderer>();
-        remotePlayerHeadRenderer = Partner.PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_head_geo").GetComponent<SkinnedMeshRenderer>();
+        //remoteRenders = Partner.PlayerModel.GetComponentsInChildren<SkinnedMeshRenderer>();
+        //remotePlayerHeadRenderer = Partner.PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_head_geo").GetComponent<SkinnedMeshRenderer>();
 
-        remotePlayerCustomHead = Instantiate(new GameObject("diveSuit_custom_head_geo"), Partner.PlayerModel.transform.Find("export_skeleton/head_rig"));
-        remotePlayerCustomHead.transform.localPosition = new Vector3(1.0941f, -0.1163f, -1.2107f);
-        remotePlayerCustomHead.transform.localRotation = new Quaternion(-0.05750692f, -0.5272675f, -0.6740523f, -0.5141357f);
+        //remotePlayerCustomHead = Instantiate(new GameObject("diveSuit_custom_head_geo"), Partner.PlayerModel.transform.Find("export_skeleton/head_rig"));
+        //remotePlayerCustomHead.transform.localPosition = new Vector3(1.0941f, -0.1163f, -1.2107f);
+        //remotePlayerCustomHead.transform.localRotation = new Quaternion(-0.05750692f, -0.5272675f, -0.6740523f, -0.5141357f);
 
-        MeshFilter mesh = remotePlayerCustomHead.AddComponent<MeshFilter>();
-        MeshRenderer meshRenderer = remotePlayerCustomHead.AddComponent<MeshRenderer>();
-        mesh.mesh = remotePlayerHeadRenderer.sharedMesh;
-        meshRenderer.materials = remotePlayerHeadRenderer.materials;
-        remotePlayerCustomHead.SetActive(false);
+        //MeshFilter mesh = remotePlayerCustomHead.AddComponent<MeshFilter>();
+        //MeshRenderer meshRenderer = remotePlayerCustomHead.AddComponent<MeshRenderer>();
+        //mesh.mesh = remotePlayerHeadRenderer.sharedMesh;
+        //meshRenderer.materials = remotePlayerHeadRenderer.materials;
+        //remotePlayerCustomHead.SetActive(false);
 
-        bool isLeftPlayer = NitroxServiceLocator.Cache<LocalPlayer>.Value.PlayerId < Partner.PlayerId;
-        introEndTarget = EscapePod.main.transform.Find("EscapePodCinematics/intro_end");
-        Vector3 introEndDiff = isLeftPlayer ? new Vector3(0, 0, 0.3f) : new Vector3(0, 0, -0.3f);
-        introRemoteEndPosition = introEndTarget.position - introEndDiff;
-        introEndTarget.position += introEndDiff;
+        //bool isLeftPlayer = NitroxServiceLocator.Cache<LocalPlayer>.Value.PlayerId < Partner.PlayerId;
+        //introEndTarget = EscapePod.main.transform.Find("EscapePodCinematics/intro_end");
+        //Vector3 introEndDiff = isLeftPlayer ? new Vector3(0, 0, 0.3f) : new Vector3(0, 0, -0.3f);
+        //introRemoteEndPosition = introEndTarget.position - introEndDiff;
+        //introEndTarget.position += introEndDiff;
     }
 
     private Vector3 remotePlayerDestinationPos;

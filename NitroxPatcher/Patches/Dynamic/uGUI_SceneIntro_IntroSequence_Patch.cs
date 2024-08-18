@@ -1,3 +1,5 @@
+// TODO: Look at a replacement for this
+#if SUBNAUTICA
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -239,3 +241,4 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
     }
 }
+#endif

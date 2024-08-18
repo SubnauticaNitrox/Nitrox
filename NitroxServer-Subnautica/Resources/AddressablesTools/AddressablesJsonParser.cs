@@ -20,7 +20,7 @@ namespace AddressablesTools
 
             return catalogData;
         }
-
+        
         public static string ToJson(ContentCatalogData ccd)
         {
             ContentCatalogDataJson ccdJson = new ContentCatalogDataJson();

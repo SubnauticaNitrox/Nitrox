@@ -1,4 +1,4 @@
-#if DEBUG
+﻿#if DEBUG
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;

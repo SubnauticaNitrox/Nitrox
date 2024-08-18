@@ -27,39 +27,39 @@ namespace AddressablesTools.Catalog
             switch (type)
             {
                 case ObjectType.AsciiString:
-                    {
-                        string str = ReadString4(br);
-                        return str;
-                    }
+                {
+                    string str = ReadString4(br);
+                    return str;
+                }
 
                 case ObjectType.UnicodeString:
-                    {
-                        string str = ReadString4Unicode(br);
-                        return str;
-                    }
+                {
+                    string str = ReadString4Unicode(br);
+                    return str;
+                }
 
                 case ObjectType.UInt16:
-                    {
-                        return br.ReadUInt16();
-                    }
+                {
+                    return br.ReadUInt16();
+                }
 
                 case ObjectType.UInt32:
-                    {
-                        return br.ReadUInt32();
-                    }
+                {
+                    return br.ReadUInt32();
+                }
 
                 case ObjectType.Int32:
-                    {
-                        return br.ReadInt32();
-                    }
+                {
+                    return br.ReadInt32();
+                }
 
                 case ObjectType.Hash128:
-                    {
-                        // read as string for now
-                        string str = ReadString1(br);
-                        Hash128 hash = new Hash128(str);
-                        return hash;
-                    }
+                {
+                    // read as string for now
+                    string str = ReadString1(br);
+                    Hash128 hash = new Hash128(str);
+                    return hash;
+                }
 
                 case ObjectType.Type:
                 {
@@ -72,18 +72,18 @@ namespace AddressablesTools.Catalog
                 }
 
                 case ObjectType.JsonObject:
-                    {
-                        string assemblyName = ReadString1(br);
-                        string className = ReadString1(br);
-                        string jsonText = ReadString4Unicode(br);
-                        ClassJsonObject jsonObj = new ClassJsonObject(assemblyName, className, jsonText);
-                        return jsonObj;
-                    }
+                {
+                    string assemblyName = ReadString1(br);
+                    string className = ReadString1(br);
+                    string jsonText = ReadString4Unicode(br);
+                    ClassJsonObject jsonObj = new ClassJsonObject(assemblyName, className, jsonText);
+                    return jsonObj;
+                }
 
                 default:
-                    {
-                        return null;
-                    }
+                {
+                    return null;
+                }
             }
         }
 
@@ -92,70 +92,70 @@ namespace AddressablesTools.Catalog
             switch (ob)
             {
                 case string str:
+                {
+                    byte[] asciiEncoding = Encoding.ASCII.GetBytes(str);
+                    string asciiText = Encoding.ASCII.GetString(asciiEncoding);
+                    if (str != asciiText)
                     {
-                        byte[] asciiEncoding = Encoding.ASCII.GetBytes(str);
-                        string asciiText = Encoding.ASCII.GetString(asciiEncoding);
-                        if (str != asciiText)
-                        {
-                            bw.Write((byte)ObjectType.UnicodeString);
-                            WriteString4Unicode(bw, str);
-                        }
-                        else
-                        {
-                            bw.Write((byte)ObjectType.AsciiString);
-                            WriteString4(bw, str);
-                        }
-                        break;
+                        bw.Write((byte)ObjectType.UnicodeString);
+                        WriteString4Unicode(bw, str);
                     }
+                    else
+                    {
+                        bw.Write((byte)ObjectType.AsciiString);
+                        WriteString4(bw, str);
+                    }
+                    break;
+                }
 
                 case ushort ush:
-                    {
-                        bw.Write((byte)ObjectType.UInt16);
-                        bw.Write(ush);
-                        break;
-                    }
+                {
+                    bw.Write((byte)ObjectType.UInt16);
+                    bw.Write(ush);
+                    break;
+                }
 
                 case uint uin:
-                    {
-                        bw.Write((byte)ObjectType.UInt32);
-                        bw.Write(uin);
-                        break;
-                    }
+                {
+                    bw.Write((byte)ObjectType.UInt32);
+                    bw.Write(uin);
+                    break;
+                }
 
                 case int i:
-                    {
-                        bw.Write((byte)ObjectType.Int32);
-                        bw.Write(i);
-                        break;
-                    }
+                {
+                    bw.Write((byte)ObjectType.Int32);
+                    bw.Write(i);
+                    break;
+                }
 
                 case Hash128 hash:
-                    {
-                        bw.Write((byte)ObjectType.Hash128);
-                        bw.Write(hash.Value);
-                        break;
-                    }
+                {
+                    bw.Write((byte)ObjectType.Hash128);
+                    bw.Write(hash.Value);
+                    break;
+                }
 
                 case TypeReference type:
-                    {
-                        bw.Write((byte)ObjectType.Type);
-                        WriteString1(bw, type.Clsid);
-                        break;
-                    }
+                {
+                    bw.Write((byte)ObjectType.Type);
+                    WriteString1(bw, type.Clsid);
+                    break;
+                }
 
                 case ClassJsonObject jsonObject:
-                    {
-                        bw.Write((byte)ObjectType.JsonObject);
-                        WriteString1(bw, jsonObject.AssemblyName);
-                        WriteString1(bw, jsonObject.ClassName);
-                        WriteString4Unicode(bw, jsonObject.JsonText);
-                        break;
-                    }
+                {
+                    bw.Write((byte)ObjectType.JsonObject);
+                    WriteString1(bw, jsonObject.AssemblyName);
+                    WriteString1(bw, jsonObject.ClassName);
+                    WriteString4Unicode(bw, jsonObject.JsonText);
+                    break;
+                }
 
                 default:
-                    {
-                        throw new Exception($"Type {ob.GetType().FullName} not supported!");
-                    }
+                {
+                    throw new Exception($"Type {ob.GetType().FullName} not supported!");
+                }
             }
         }
 

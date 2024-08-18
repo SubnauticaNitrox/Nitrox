@@ -23,7 +23,11 @@ public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
             vitals.SetHealth(playerStats.Health);
             vitals.SetFood(playerStats.Food);
             vitals.SetWater(playerStats.Water);
+#if SUBNAUTICA
             remotePlayer.UpdateHealthAndInfection(playerStats.Health, playerStats.InfectionAmount);
+#elif BELOWZERO
+            remotePlayer.UpdateHealth(playerStats.Health);
+#endif
         }
     }
 }

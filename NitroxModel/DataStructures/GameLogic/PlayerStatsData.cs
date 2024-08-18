@@ -32,6 +32,7 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
+
 #if SUBNAUTICA
         public PlayerStatsData(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
 #elif BELOWZERO

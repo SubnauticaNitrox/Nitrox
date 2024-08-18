@@ -19,7 +19,9 @@ public class FootstepPacket : Packet
 
     public enum StepSounds : byte
     {
+#if SUBNAUTICA
         PRECURSOR,
+#endif
         METAL,
         LAND
     }

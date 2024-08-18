@@ -1,4 +1,3 @@
-//TODO: Find replacement for this, maybe the old ToggleLights_SetLightsActive_Patch?
 #if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.GameLogic;

@@ -33,19 +33,7 @@ public sealed partial class SubNameInput_OnNameChange_Patch : NitroxPatch, IDyna
             targetId = null;
             return false;
         }
-        //TODO: remove log once debugging is done
-        try
-        {
-            var b = subName as ColorNameControl;
-            b.TryGetComponent(out Vehicle vehicle);
-            //Log.Debug($"SubName is {subName.GetName()} {subName.GetType()} {b.GetName()} {vehicle.colorNameControl.namePlate.text}");
-            Log.Debug($"SubName is {subName.GetName()} {subName.GetType()} {subName.GetName()} {vehicle.colorNameControl.namePlate.text}");
-        }
-        catch (Exception)
-        {
-            // Catch any exception with trying to get a component
-        }
-        //TODO: work out how to get the vehicle object from the ICustomizeable
+        //TODO: work out if we need to/how to get the vehicle object from the ICustomizeable
 #if SUBNAUTICA
         if (subName.TryGetComponent(out Vehicle vehicle))
         {

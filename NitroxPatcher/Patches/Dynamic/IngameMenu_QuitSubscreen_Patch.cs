@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -19,8 +19,11 @@ public sealed partial class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynam
             {
                 yield return instruction;
             }
-
+#if SUBNAUTICA
             if (instruction.opcode == OpCodes.Ret)
+#elif BELOWZERO
+            if (instruction.opcode == OpCodes.Br)
+#endif
             {
                 foundRet = true;
             }

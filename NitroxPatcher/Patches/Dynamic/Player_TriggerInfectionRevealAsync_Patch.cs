@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -42,3 +43,4 @@ To:
         Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.ON);    
     }
 }
+#endif

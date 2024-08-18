@@ -22,6 +22,7 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
 
+#if SUBNAUTICA
     public static readonly InstructionsPattern AddInstructionPattern1 = new()
     {
         Ldloc_0,
@@ -40,9 +41,7 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
     public static readonly InstructionsPattern AddInstructionPattern2 = new()
     {
         Ldloc_S,
-#if SUBNAUTICA
         Ldloc_3,
-#endif
         Ldloc_S,
         Or,
         { new() { OpCode = Callvirt, Operand = new(nameof(Constructable), nameof(Constructable.SetIsInside)) }, "Insert2" }
@@ -50,12 +49,11 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
 
     public static readonly List<CodeInstruction> InstructionsToAdd2 = new()
     {
-#if SUBNAUTICA
         TARGET_METHOD.Ldloc<Constructable>(),
-#endif
         new(Call, Reflect.Method(() => GhostCreated(default)))
     };
-#if SUBNAUTICA
+
+
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
         instructions.Transform(AddInstructionPattern1, (label, instruction) =>
         {
