@@ -1,5 +1,6 @@
 {
     "Nitrox_AddServer": "Dodaj serwer",
+    "Nitrox_AddServer_NameDescription": "Nazwa:",
     "Nitrox_BuildingDesyncDetected": "Serwer wykrył desynchronizacje względem budynków lokalnego klienta (idź do ustawień Nitrox aby wysłać prośbę o ponowną synchronizacje )",
     "Nitrox_BuildingSettings": "Budowanie Bazy",
     "Nitrox_Cancel": "Anuluj",
