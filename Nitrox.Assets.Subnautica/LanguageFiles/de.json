@@ -1,5 +1,6 @@
 {
     "Nitrox_AddServer": "Server hinzufügen",
+    "Nitrox_AddServer_AddressDescription": "Gastgeber:",
     "Nitrox_AddServer_AddressPlaceholder": "Gib die IP-Adresse oder die Domain des Servers ein",
     "Nitrox_AddServer_Confirm": "Server erstellen",
     "Nitrox_AddServer_InvalidInput": "Die Eingabe ist ungültig. Bitte überprüfe, ob alle Boxen ausgefüllt sind.",
