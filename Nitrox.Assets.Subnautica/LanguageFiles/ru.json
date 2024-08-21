@@ -1,6 +1,6 @@
 {
     "Nitrox_AddServer": "Добавить сервер",
-    "Nitrox_AddServer_AddressDescription": "Ведущий:",
+    "Nitrox_AddServer_AddressDescription": "Хост:",
     "Nitrox_AddServer_AddressPlaceholder": "Введите IP-адрес или адрес сервера",
     "Nitrox_AddServer_Confirm": "Создать сервер",
     "Nitrox_AddServer_InvalidInput": "Введенные вами данные недействительны. Пожалуйста, проверьте, все ли текстовые поля заполнены.",
@@ -34,7 +34,7 @@
     "Nitrox_HidePing": "Скрыть Пинг",
     "Nitrox_IntroUWEPresents": "UNKNOWN WORLDS ENTERTAINMENT\n&\nКоманда NITROX\n\nпредставляет",
     "Nitrox_IntroWaitingPartner": "Ожидание присоединения других игроков\n\nНажмите {0}, чтобы пропустить ожидание",
-    "Nitrox_InvalidUserName": "Пожалуйста введите корректное имя!\n\nОн не может содержать пробелов или сомнительных символов\nДоступные символы: A-Z a-z 0-9 _ . -\nДлинна: [3, 25]",
+    "Nitrox_InvalidUserName": "Пожалуйста введите корректное имя!\n\nОн не может содержать пробелов или сомнительных символов\nДоступные символы: A-Z a-z 0-9 _ . -\nДлина: [3, 25]",
     "Nitrox_Join": "Войти",
     "Nitrox_JoinServer": "Присоединение:",
     "Nitrox_JoinServerPassword": "Пароль:",
