@@ -71,10 +71,6 @@ public abstract class Modal
     /// </summary>
     public void Show()
     {
-        if (FreezeGame)
-        {
-            FreezeTime.Begin(FreezeTime.Id.Quit);
-        }
         CurrentModal?.Hide();
         CurrentModal = this;
         CoroutineHost.StartCoroutine(Show_Impl());
@@ -181,6 +177,11 @@ public abstract class Modal
         IngameMenu.main.Open();
         yield return new WaitForEndOfFrame();
         IngameMenu.main.ChangeSubscreen(SubWindowName);
+        yield return new WaitForEndOfFrame();
+        if (FreezeGame)
+        {
+            FreezeTime.Begin(FreezeTime.Id.Quit);
+        }
     }
 
     /// <summary>
