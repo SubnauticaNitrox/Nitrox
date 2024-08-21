@@ -7,6 +7,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent;
 
+// TODO: Rework this to be less ad hoc and more robust with command line arguments
 public sealed partial class uGUI_MainMenu_Start_Patch : NitroxPatch, IPersistentPatch
 {
     private static readonly MethodInfo TARGET_METHOD_ENUMERATOR = Reflect.Method((uGUI_MainMenu t) => t.Start());
