@@ -73,7 +73,7 @@ public abstract class Modal
     {
         CurrentModal?.Hide();
         CurrentModal = this;
-        CoroutineHost.StartCoroutine(Show_Impl());
+        CoroutineHost.StartCoroutine(ShowImplementation());
     }
 
     /// <summary>
@@ -169,7 +169,7 @@ public abstract class Modal
     public virtual void ClickYes() { }
     public virtual void ClickNo() { }
 
-    private IEnumerator Show_Impl()
+    private IEnumerator ShowImplementation()
     {
         // Execute frame-by-frame to allow UI scripts to initialize.
         InitSubWindow();
