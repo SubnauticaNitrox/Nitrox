@@ -1,6 +1,6 @@
 {
     "Nitrox_AddServer": "Lägg till server",
-    "Nitrox_AddServer_AddressDescription": "Värd",
+    "Nitrox_AddServer_AddressDescription": "Värd:",
     "Nitrox_AddServer_AddressPlaceholder": "Ange serverns IP eller adress",
     "Nitrox_AddServer_NameDescription": "Namn:",
     "Nitrox_AddServer_NamePlaceholder": "Ange ett namn för servern",
