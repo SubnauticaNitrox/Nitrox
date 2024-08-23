@@ -43,7 +43,7 @@ public class DiscordClient : MonoBehaviour
             discord = new DiscordGameSDKWrapper.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
             discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, $"[Discord] {message}"));
             activityManager = discord.GetActivityManager();
-            
+
             activityManager.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
             activityManager.OnActivityJoinRequest += ActivityJoinRequest;
             activityManager.OnActivityJoin += ActivityJoin;

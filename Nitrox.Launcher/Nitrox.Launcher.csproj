@@ -8,8 +8,6 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
         <ApplicationIcon>Assets\Images\nitrox-icon.ico</ApplicationIcon>
-        <Authors>Nitrox</Authors>
-        <Company>Nitrox</Company>
         <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
 
@@ -89,5 +87,4 @@
         <!-- MSBuild project build target with OutputPath somehow doesn't work -->
         <Exec Command="dotnet msbuild ..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj /t:Build /p:Configuration=$(Configuration) /p:OutputPath=$(OutputDirectory)" />
     </Target>
-
 </Project>

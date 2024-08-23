@@ -24,12 +24,12 @@ public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<Entit
     {
         entitySimulation.EntityDestroyed(packet.Id);
 
-        if (worldEntityManager.TryDestroyEntity(packet.Id, out Optional<Entity> entity))
+        if (worldEntityManager.TryDestroyEntity(packet.Id, out Entity entity))
         {
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = player != destroyingPlayer;
-                if (isOtherPlayer && player.CanSee(entity.Value))
+                if (isOtherPlayer && player.CanSee(entity))
                 {
                     player.SendPacket(packet);
                 }

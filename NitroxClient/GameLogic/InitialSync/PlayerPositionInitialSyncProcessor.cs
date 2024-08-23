@@ -71,20 +71,9 @@ public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         }
 
         Player.main.SetCurrentSub(subRoot, true);
-        if (subRoot.isBase)
-        {
-            // If the player's in a base, we don't need to wait for the world to load
-            Player.main.cinematicModeActive = false;
-            yield break;
-        }
-
-        Transform rootTransform = subRoot.transform;
-        Quaternion vehicleAngle = rootTransform.rotation;
-        // "position" is a relative position and "positionInVehicle" an absolute position
-        Vector3 positionInVehicle = vehicleAngle * position + rootTransform.position;
-        Player.main.SetPosition(positionInVehicle, rotation * vehicleAngle);
-        Player.main.cinematicModeActive = false;
+        // If the player's in a base/cyclops we don't need to wait for the world to load
         Player.main.UpdateIsUnderwater();
+        Player.main.cinematicModeActive = false;
     }
 
     private void AttachPlayerToEscapePod(NitroxId escapePodId)

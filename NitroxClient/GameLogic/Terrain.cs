@@ -19,7 +19,7 @@ public class Terrain
 
     private readonly List<AbsoluteEntityCell> addedCells = [];
     private readonly List<AbsoluteEntityCell> removedCells = [];
-    
+
     private bool cellsPendingSync;
     private float bufferedTime = 0f;
     private const float TIME_BUFFER = 0.05f;

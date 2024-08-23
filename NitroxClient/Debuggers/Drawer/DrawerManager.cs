@@ -65,6 +65,7 @@ public class DrawerManager
         AddDrawer<UnityEventDrawer, UnityEvent>(unityEventDrawer);
         AddDrawer<UnityEventDrawer, UnityEvent<bool>>(unityEventDrawer);
         AddDrawer<AnimatorDrawer, Animator>();
+        AddDrawer<CharacterControllerDrawer, CharacterController>(new(vectorDrawer));
 
         AddEditor<VectorDrawer, Vector2>(vectorDrawer);
         AddEditor<VectorDrawer, Vector3>(vectorDrawer);

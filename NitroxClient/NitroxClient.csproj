@@ -14,9 +14,6 @@
             <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
             <Private>false</Private>
         </Reference>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-        </Reference>
     </ItemGroup>
 
     <ItemGroup>

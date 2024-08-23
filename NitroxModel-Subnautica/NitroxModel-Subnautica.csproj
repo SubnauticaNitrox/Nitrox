@@ -6,12 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 

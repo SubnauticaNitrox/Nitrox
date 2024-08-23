@@ -1,4 +1,4 @@
-﻿using NitroxModel.Helper;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
@@ -104,6 +104,15 @@ public class RigidbodyDrawer : IDrawer<Rigidbody>
             GUILayout.Label("Angular Velocity", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
             NitroxGUILayout.Separator();
             vectorDrawer.Draw(rb.angularVelocity, new VectorDrawer.DrawOptions(VALUE_MAX_WIDTH));
+        }
+
+        GUILayout.Space(10);
+
+        using (new GUILayout.HorizontalScope())
+        {
+            GUILayout.Label("Detect Collisions", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
+            NitroxGUILayout.Separator();
+            rb.detectCollisions = NitroxGUILayout.BoolField(rb.detectCollisions, NitroxGUILayout.VALUE_WIDTH);
         }
     }
 }

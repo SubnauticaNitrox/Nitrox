@@ -9,9 +9,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
     </ItemGroup>
-
 </Project>

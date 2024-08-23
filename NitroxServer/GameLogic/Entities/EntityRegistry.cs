@@ -152,6 +152,10 @@ namespace NitroxServer.GameLogic.Entities
             {
                 parentEntity.ChildEntities.RemoveAll(childEntity => childEntity.Id.Equals(entity.Id));
                 entity.ParentId = null;
+                if (entity is WorldEntity worldEntity)
+                {
+                    worldEntity.Transform.SetParent(null, true);
+                }
             }
         }
 
@@ -187,6 +191,10 @@ namespace NitroxServer.GameLogic.Entities
             if (newParent == null)
             {
                 return;
+            }
+            if (entity is WorldEntity worldEntity && newParent is WorldEntity parentWorldEntity)
+            {
+                worldEntity.Transform.SetParent(parentWorldEntity.Transform, true);
             }
             entity.ParentId = newParent.Id;
             newParent.ChildEntities.Add(entity);
