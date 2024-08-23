@@ -23,7 +23,7 @@ public static class DesignData
 
         try
         {
-            MainWindowViewModel = new(null, null, null, null, null, null, null, null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
+            MainWindowViewModel = new(null, null, null, null, null, null, null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
             LaunchGameViewModel = new(null, null, null, null, null);
             ManageServerViewModel = new(null, null, null) { ServerName = "My fun server" };
             CreateServerViewModel = new(null) { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };

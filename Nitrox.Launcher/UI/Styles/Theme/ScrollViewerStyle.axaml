@@ -84,6 +84,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="AllowAutoHide" Value="False"/>
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">

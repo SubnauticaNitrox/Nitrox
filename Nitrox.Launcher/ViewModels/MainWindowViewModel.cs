@@ -9,7 +9,6 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
@@ -23,7 +22,6 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly BlogViewModel blogViewModel;
-    private readonly IDialogService dialogService;
     private readonly CommunityViewModel communityViewModel;
     private readonly LaunchGameViewModel launchGameViewModel;
     private readonly OptionsViewModel optionsViewModel;
@@ -45,7 +43,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel(
         IScreen screen,
-        IDialogService dialogService,
         ServersViewModel serversViewModel,
         LaunchGameViewModel launchGameViewModel,
         CommunityViewModel communityViewModel,
@@ -56,7 +53,6 @@ public partial class MainWindowViewModel : ViewModelBase
     )
     {
         this.screen = screen;
-        this.dialogService = dialogService;
         this.launchGameViewModel = launchGameViewModel;
         this.serversViewModel = serversViewModel;
         this.communityViewModel = communityViewModel;
