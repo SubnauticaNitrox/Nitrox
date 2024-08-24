@@ -54,7 +54,7 @@
             <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
         </ItemGroup>
         <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
-        <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
         <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\Resources\LanguageFiles\%(RecursiveDir)" />
         <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
