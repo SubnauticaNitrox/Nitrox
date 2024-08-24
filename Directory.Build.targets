@@ -17,8 +17,18 @@
         <Error Condition="@(GameVersion) &lt;= $(GameLegacyVersion)" Text="Subnautica must not be on legacy branch. Expected version &gt;$(GameLegacyVersion) but was @(GameVersion)" />
         <Message Importance="high" Text="Game found at: '$(GameDir)' with version @(GameVersion)" />
 
-        <!-- UnityEngine libraries to include -->
         <ItemGroup>
+            <!-- Subnautica DLLs to include -->
+            <Reference Include="Assembly-CSharp" Publicize="$(NotTestLibrary)">
+                <HintPath>$(GameManagedDir)Assembly-CSharp.dll</HintPath>
+                <Private>$(TestLibrary)</Private>
+            </Reference>
+            <Reference Include="Assembly-CSharp-firstpass" Publicize="$(NotTestLibrary)">
+                <HintPath>$(GameManagedDir)Assembly-CSharp-firstpass.dll</HintPath>
+                <Private>$(TestLibrary)</Private>
+            </Reference>
+
+            <!-- UnityEngine libraries to include -->
             <Reference Include="FMODUnity">
                 <HintPath>$(GameManagedDir)FMODUnity.dll</HintPath>
                 <Private>$(TestLibrary)</Private>
@@ -281,14 +291,6 @@
             </Reference>
             <Reference Include="UnityEngine.XRModule">
                 <HintPath>$(GameManagedDir)UnityEngine.XRModule.dll</HintPath>
-                <Private>$(TestLibrary)</Private>
-            </Reference>
-            <Reference Include="Assembly-CSharp" Publicize="$(NotTestLibrary)">
-                <HintPath>$(GameManagedDir)Assembly-CSharp.dll</HintPath>
-                <Private>$(TestLibrary)</Private>
-            </Reference>
-            <Reference Include="Assembly-CSharp-firstpass" Publicize="$(NotTestLibrary)">
-                <HintPath>$(GameManagedDir)Assembly-CSharp-firstpass.dll</HintPath>
                 <Private>$(TestLibrary)</Private>
             </Reference>
         </ItemGroup>
