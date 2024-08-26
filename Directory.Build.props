@@ -61,7 +61,7 @@
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
                 </PackageReference>
-                <PackageReference Include="Nitrox.Discovery.MSBuild" Version="0.0.3">
+                <PackageReference Include="Nitrox.Discovery.MSBuild" Version="0.0.5">
                     <PrivateAssets>all</PrivateAssets>
                     <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
                 </PackageReference>
