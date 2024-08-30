@@ -23,15 +23,13 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     private readonly PlayerManager remotePlayerManager;
     private FootstepSounds localFootstepSounds;
     private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
-    private float footstepAudioRadius = 20f;
-    private float footstepAudioMaxVolume = 1f;
-    private Dictionary<ushort, Vector3> playerPositions = new();
+    private readonly float footstepAudioRadius = 20f;
+    private readonly float footstepAudioMaxVolume = 1f;
     public FootstepPacketProcessor(float footstepAudioRange, PlayerManager remotePlayerManager)
     {
         this.footstepAudioRange = footstepAudioRange;
         this.remotePlayerManager = remotePlayerManager;
         this.localFootstepSounds = Player.mainObject.GetComponent<FootstepSounds>();
-        UWE.CoroutineHost.StartCoroutine(UpdatePlayerPositions());
     }
     public override void Process(FootstepPacket packet)
     {
@@ -44,7 +42,7 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
         }
         else
         {
-            Log.Info("Player found for footstep packet on client " + player.Value.PlayerName);
+            Log.Info($"Player found for footstep packet on client {player.Value.PlayerName}");
             FMODAsset asset;
             switch (packet.assetIndex)
             {
@@ -77,24 +75,11 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
                 }
                 ATTRIBUTES_3D attributes = player.Value.Body.To3DAttributes();
                 @event.set3DAttributes(attributes);
-                var playerVelocity = (player.Value.Body.transform.position - playerPositions[player.Value.PlayerId]) / Time.deltaTime;
-                @event.setParameterValueByIndex(fmodIndexSpeed, playerVelocity.magnitude);
+                @event.setParameterValueByIndex(fmodIndexSpeed, player.Value.AnimationController.Velocity.magnitude);
                 @event.setVolume(FMODSystem.CalculateVolume(Player.mainObject.transform.position, player.Value.Body.transform.position, footstepAudioRadius, footstepAudioMaxVolume));
                 @event.start();
                 @event.release();
             }
-        }
-    }
-    IEnumerator UpdatePlayerPositions()
-    {
-        while (true)
-        {
-            var players = remotePlayerManager.GetAll();
-            foreach(RemotePlayer player in players)
-            {
-                playerPositions[player.PlayerId] = player.Body.transform.position;
-            }
-            yield return new WaitForEndOfFrame();
         }
     }
 }
