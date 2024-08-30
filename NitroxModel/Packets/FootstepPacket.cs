@@ -8,8 +8,8 @@ namespace NitroxModel.Packets
 {
     public class FootstepPacket : Packet
     {
-        private ushort playerID;
-        byte assetIndex;
+        public readonly ushort playerID;
+        public readonly byte assetIndex;
         public FootstepPacket(ushort playerID, byte assetIndex)
         {
             Log.Info("Creating footstep packet");
