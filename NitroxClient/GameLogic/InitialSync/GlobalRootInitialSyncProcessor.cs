@@ -1,6 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -36,6 +37,7 @@ public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
         yield return Base.InitializeAsync();
         yield return BaseGhost.InitializeAsync();
         yield return BaseDeconstructable.InitializeAsync();
+        yield return VirtualCyclops.InitializeConstructablesCache();
 
         BuildingHandler.Main.InitializeOperations(packet.BuildOperationIds);
 

@@ -4,6 +4,7 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
@@ -93,6 +94,11 @@ public sealed partial class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
             module.Id = ghostId;
             module.ParentId = parentId;
             Resolve<IPacketSender>().Send(new PlaceModule(module));
+
+            if (constructable.transform.parent && constructable.transform.parent.TryGetComponent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
+            {
+                nitroxCyclops.Virtual.ReplicateConstructable(constructable);
+            }
         }
     }
 }

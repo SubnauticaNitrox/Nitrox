@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -19,6 +21,7 @@ public class Vehicles
 {
     private readonly IPacketSender packetSender;
     private readonly IMultiplayerSession multiplayerSession;
+    private readonly Dictionary<TechType, string> pilotingChairByTechType = [];
 
     public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
     {
@@ -99,9 +102,41 @@ public class Vehicles
         {
             RemotePlayer playerInstance = player.Value;
             playerInstance.SetVehicle(vehicle);
-            playerInstance.SetSubRoot(subRoot);
-            playerInstance.SetPilotingChair(subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>());
+            if (subRoot)
+            {
+                playerInstance.SetSubRoot(subRoot);
+            }
+            playerInstance.SetPilotingChair(FindPilotingChairWithCache(opGameObject.Value, vehicleModel.TechType.ToUnity()));
             playerInstance.AnimationController.UpdatePlayerAnimations = false;
+        }
+    }
+
+    private PilotingChair FindPilotingChairWithCache(GameObject parent, TechType techType)
+    {
+        if (!parent)
+        {
+            return null;
+        }
+        if (pilotingChairByTechType.TryGetValue(techType, out string path))
+        {
+            if (path == string.Empty)
+            {
+                return null;
+            }
+            return parent.transform.Find(path).GetComponent<PilotingChair>();
+        }
+        else
+        {
+            PilotingChair chair = parent.GetComponentInChildren<PilotingChair>(true);
+            if (chair)
+            {
+                pilotingChairByTechType.Add(techType, chair.gameObject.GetHierarchyPath(parent));
+            }
+            else
+            {
+                pilotingChairByTechType.Add(techType, string.Empty);
+            }
+            return chair;
         }
     }
 
@@ -109,7 +144,7 @@ public class Vehicles
     {
         using (PacketSuppressor<VehicleOnPilotModeChanged>.Suppress())
         {
-            EntityDestroyed vehicleDestroyed = new(id);
+            VehicleDestroyed vehicleDestroyed = new(id);
             packetSender.Send(vehicleDestroyed);
         }
     }

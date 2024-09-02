@@ -1,30 +1,22 @@
 using System.Reflection;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Subnautica enables high precision physics any time a player is in a cyclops that is undergoing physics and is not actively anchored to the pilot seat.
-/// This is usually rare in the base game (mostly a player disconnecting from the pilot seat); however, it is the normal case for a passanger in nitrox. We
-/// disable the switching as it causing oscillation of the interpolation.  Instead, any time someone is in the submarine we require high precision physics
-/// if there is a remote player actively piloting.
+/// Subnautica enables high precision physics any time the local player is in a moving cyclops and is not piloting it.
+/// We force a higher fixed timestep as long as the local player is inside of a Cyclops to avoid it stuttering.
 /// </summary>
 public sealed partial class Player_RequiresHighPrecisionPhysics_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.RequiresHighPrecisionPhysics());
 
-    public static bool Prefix(ref bool __result)
+    public static bool Prefix(Player __instance, ref bool __result)
     {
-        if (Player.main.currentSub)
+        if (__instance.currentSub && __instance.currentSub.isCyclops)
         {
-            MultiplayerCyclops cyclops = Player.main.currentSub.GetComponent<MultiplayerCyclops>();
-
-            if (cyclops)
-            {
-                __result = (cyclops.CurrentPlayer != null);
-                return false;
-            }
+            __result = true;
+            return false;
         }
 
         return true;

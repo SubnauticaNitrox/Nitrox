@@ -1,5 +1,9 @@
 {
     "Nitrox_AddServer": "Dodaj Server",
+    "Nitrox_AddServerAdd": "Dodaj",
+    "Nitrox_AddServerHost": "Host:",
+    "Nitrox_AddServerName": "Ime:",
+    "Nitrox_AddServerPort": "Port:",
     "Nitrox_BuildingDesyncDetected": "Server je detektovao neslogu sa građevinama lokalnog klijenta (idite u Nitrox podešavanja da zatražite usklađenje)",
     "Nitrox_BuildingSettings": "Građenje baza",
     "Nitrox_Cancel": "Poništi",
@@ -14,6 +18,7 @@
     "Nitrox_SilencedChatNotif": "Chat je sad mutiran",
     "Nitrox_StartServer": "Prvo započnite server da bi ušli u svet koji Vi hostujete",
     "Nitrox_StreamerSettings": "Mod za streamere",
+    "Nitrox_SubmitPassword": "Unesi",
     "Nitrox_TeleportTo": "Teleportuj se do {IGRAČ}",
     "Nitrox_TeleportToMe": "Teleportuj {PLAYER} do mene",
     "Nitrox_TeleportToMeQuestion": "Teleportuj {IGRAČA} do mene?",
