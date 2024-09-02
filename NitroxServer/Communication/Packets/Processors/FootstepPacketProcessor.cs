@@ -2,17 +2,15 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using System.Numerics;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPacket>
     {
-        private readonly float footstepAudioRange;
+        private readonly float footstepAudioRange = 20f;
         private readonly PlayerManager playerManager;
-        public FootstepPacketProcessor(float footstepAudioRange, PlayerManager playerManager)
+        public FootstepPacketProcessor(PlayerManager playerManager)
         {
-            this.footstepAudioRange = footstepAudioRange;
             this.playerManager = playerManager;
         }
         public override void Process(FootstepPacket footstepPacket, Player sendingPlayer)
