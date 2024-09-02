@@ -19,15 +19,13 @@ using System.Collections;
 namespace NitroxClient.Communication.Packets.Processors;
 public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
 {
-    private readonly float footstepAudioRange;
     private readonly PlayerManager remotePlayerManager;
-    private FootstepSounds localFootstepSounds;
+    private readonly FootstepSounds localFootstepSounds;
     private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
     private readonly float footstepAudioRadius = 20f;
     private readonly float footstepAudioMaxVolume = 1f;
-    public FootstepPacketProcessor(float footstepAudioRange, PlayerManager remotePlayerManager)
+    public FootstepPacketProcessor(PlayerManager remotePlayerManager)
     {
-        this.footstepAudioRange = footstepAudioRange;
         this.remotePlayerManager = remotePlayerManager;
         this.localFootstepSounds = Player.mainObject.GetComponent<FootstepSounds>();
     }
