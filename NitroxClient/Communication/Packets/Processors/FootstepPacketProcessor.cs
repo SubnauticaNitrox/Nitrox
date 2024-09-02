@@ -1,20 +1,13 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours.Gui.HUD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NitroxModel.Packets;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.GameLogic;
-using UnityEngine;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
-using NitroxClient.Unity.Helper;
-using System.Collections;
+using NitroxModel.Helper;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace NitroxClient.Communication.Packets.Processors;
 public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
@@ -44,18 +37,15 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
             FMODAsset asset;
             switch (packet.assetIndex)
             {
-                case 1:
-                    // Precursor footstep sound
+                case FootstepPacket.StepSounds.PRECURSOR_STEP_SOUND:
                     Log.Info("Precursor footstep sound identified");
                     asset = localFootstepSounds.precursorInteriorSound;
                     break;
-                case 2:
-                    // Metal footstep sound
+                case FootstepPacket.StepSounds.METAL_STEP_SOUND:
                     Log.Info("Metal footstep sound identified");
                     asset = localFootstepSounds.metalSound;
                     break;
-                case 3:
-                    // Land footstep sound
+                case FootstepPacket.StepSounds.LAND_STEP_SOUND:
                     Log.Info("Land footstep sound identified");
                     asset = localFootstepSounds.landSound;
                     break;
