@@ -16,7 +16,7 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     private readonly FootstepSounds localFootstepSounds;
     private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
     private readonly float footstepAudioRadius = 20f;
-    private readonly float footstepAudioMaxVolume = 1f;
+    private readonly float footstepAudioMaxVolume = 0.5f;
     public FootstepPacketProcessor(PlayerManager remotePlayerManager)
     {
         this.remotePlayerManager = remotePlayerManager;
