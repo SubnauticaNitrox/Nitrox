@@ -17,12 +17,13 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             Log.Info("Processing footstep packet on server from " + sendingPlayer.Name);
             var players = playerManager.GetAllPlayers();
-            foreach(Player player in players)
+            foreach (Player player in players)
             {
-                if(NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange)
+                if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange && player.SubRootId.Equals(sendingPlayer.SubRootId.Value)
+                    && player != sendingPlayer)
                 {
-                    // Forward footstep packet to players if they are within range to hear it
-                    playerManager.SendPacketToOtherPlayers(footstepPacket, sendingPlayer);
+                    // Forward footstep packet to players if they are within range to hear it and are in the same structure / submarine
+                    player.SendPacket(footstepPacket);
                 }
             }
         }
