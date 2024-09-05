@@ -37,7 +37,6 @@ public sealed class GameInstallationFinder
         {
             yield break;
         }
-        Console.WriteLine($"GameInstallationFinder: {gameLibraries}");
         foreach (GameLibraries wantedFinder in gameLibraries.GetUniqueNonCombinatoryFlags())
         {
             if (!finders.TryGetValue(wantedFinder, out IGameFinder finder))
