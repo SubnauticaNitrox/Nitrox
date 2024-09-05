@@ -37,7 +37,7 @@ public sealed class GameInstallationFinder
         {
             yield break;
         }
-
+        Console.WriteLine($"GameInstallationFinder: {gameLibraries}");
         foreach (GameLibraries wantedFinder in gameLibraries.GetUniqueNonCombinatoryFlags())
         {
             if (!finders.TryGetValue(wantedFinder, out IGameFinder finder))
@@ -54,7 +54,11 @@ public sealed class GameInstallationFinder
             {
                 result = result with { Origin = wantedFinder };
             }
-            yield return result with { Path = Path.GetFullPath(result.Path) };
+            if (result.IsOk)
+            {
+                yield return result with { Path = Path.GetFullPath(result.Path) };
+                yield break;
+            }
         }
     }
 }
