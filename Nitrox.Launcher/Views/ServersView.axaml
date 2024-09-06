@@ -78,9 +78,10 @@
                                             </StackPanel>
                                         </StackPanel>
                                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                                            <Button Content="Open world folder" Command="{Binding OpenSaveFolderCommand}" />
+                                            <Button Content="Manage" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}" CommandParameter="{Binding}" />
                                             <Button Classes="abort" IsVisible="{Binding IsOnline}" Content="Stop" Command="{Binding StopCommand}" />
-                                            <Button IsVisible="{Binding !IsOnline}" Content="Start" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}" CommandParameter="{Binding}" />
-                                            <Button Classes="primary" Content="Manage" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}" CommandParameter="{Binding}" />
+                                            <Button IsVisible="{Binding !IsOnline}" Classes="primary" Content="Start" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}" CommandParameter="{Binding}" />
                                         </StackPanel>
                                     </DockPanel>
                                 </Border>

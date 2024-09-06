@@ -175,6 +175,17 @@ public partial class ServerEntry : ObservableObject
         return false;
     }
 
+    [RelayCommand]
+    public void OpenSaveFolder()
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name),
+            Verb = "open",
+            UseShellExecute = true
+        })?.Dispose();
+    }
+
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
 
     private class ServerProcess : IDisposable
