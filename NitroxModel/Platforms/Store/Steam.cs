@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -138,20 +138,45 @@ public sealed class Steam : IGamePlatform
                 launchArguments
             );
         }
-
-        ProcessStartInfo startInfo = new()
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            FileName = pathToGameExe,
-            WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
-            UseShellExecute = false,
-            Environment =
+            string wineCommand = "umu-run"; // should be replaced with using umu-launcher (proton outside of steam, will need to be downloaded and bundled)
+            ProcessStartInfo startInfo = new()
+            {
+                FileName = wineCommand,
+                Arguments = $"\"{pathToGameExe}\" {launchArguments}",
+                WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
+                UseShellExecute = false,
+                Environment =
+            {
+                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
+                ["SteamGameId"] = steamAppId.ToString(),
+                ["SteamAppID"] = steamAppId.ToString(),
+                ["WINEDLLOVERRIDES"] = "winhttp=n,b",
+                ["GAMEID"] = steamAppId.ToString()
+            }
+            };
+            return new ProcessEx(Process.Start(startInfo));
+
+        }
+        else
+        {
+
+            ProcessStartInfo startInfo = new()
+            {
+                FileName = pathToGameExe,
+                WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
+                UseShellExecute = false,
+                Environment =
             {
                 [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
                 ["SteamGameId"] = steamAppId.ToString(),
                 ["SteamAppID"] = steamAppId.ToString()
             }
-        };
-        return new ProcessEx(Process.Start(startInfo));
+            };
+            Console.WriteLine($"Starting game with arguments: {startInfo.FileName} {launchArguments}");
+            return new ProcessEx(Process.Start(startInfo));
+        }
     }
 
     private DateTime GetSteamConsoleLogLastWrite(string exePath) => File.GetLastWriteTime(Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt"));
