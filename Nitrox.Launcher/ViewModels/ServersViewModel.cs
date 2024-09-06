@@ -185,7 +185,7 @@ public partial class ServersViewModel : RoutableViewModelBase
                 }
             }
 
-            Servers = new AvaloniaList<ServerEntry>(Servers.OrderByDescending(entry => entry.LastAccessedTime));
+            Servers = [..Servers.OrderByDescending(entry => entry.LastAccessedTime)];
         }
         catch (Exception ex)
         {
