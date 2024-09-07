@@ -24,34 +24,27 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     }
     public override void Process(FootstepPacket packet)
     {
-        Log.Info("Processing footstep packet on client");
         var player = remotePlayerManager.Find(packet.playerID);
         if (!player.HasValue)
         {
-            Log.Warn("Could not find player for footstep audio");
             return;
         }
         else
         {
-            Log.Info($"Player found for footstep packet on client {player.Value.PlayerName}");
             FMODAsset asset;
             switch (packet.assetIndex)
             {
                 case FootstepPacket.StepSounds.PRECURSOR_STEP_SOUND:
-                    Log.Info("Precursor footstep sound identified");
                     asset = localFootstepSounds.precursorInteriorSound;
                     break;
                 case FootstepPacket.StepSounds.METAL_STEP_SOUND:
-                    Log.Info("Metal footstep sound identified");
                     asset = localFootstepSounds.metalSound;
                     break;
                 case FootstepPacket.StepSounds.LAND_STEP_SOUND:
-                    Log.Info("Land footstep sound identified");
                     asset = localFootstepSounds.landSound;
                     break;
                 default:
                     asset = null;
-                    Log.Warn("Weird asset index for footstep audio");
                     break;
             }
             EventInstance @event = FMODUWE.GetEvent(asset);

@@ -8,7 +8,6 @@ namespace NitroxModel.Packets
         public StepSounds assetIndex { get; }
         public FootstepPacket(ushort playerID, StepSounds assetIndex)
         {
-            Log.Info("Creating footstep packet");
             this.playerID = playerID;
             this.assetIndex = assetIndex;
         }
