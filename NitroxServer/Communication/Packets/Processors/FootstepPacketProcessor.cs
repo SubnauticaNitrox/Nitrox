@@ -43,9 +43,9 @@ namespace NitroxServer.Communication.Packets.Processors
                         }
                     }
                     // If one player doesn't have an id and other does, automatically false
-            
-                    }
+
                 }
+            }
         }
     }
 }
