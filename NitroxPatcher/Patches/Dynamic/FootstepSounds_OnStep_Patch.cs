@@ -1,17 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
 using FMOD.Studio;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxPatcher.PatternMatching;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
-using NitroxClient.Communication.Abstract;
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicPatch

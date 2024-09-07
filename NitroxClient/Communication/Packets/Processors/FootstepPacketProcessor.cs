@@ -1,13 +1,10 @@
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
-using NitroxClient.GameLogic;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
-using NitroxModel.Helper;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
 public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
