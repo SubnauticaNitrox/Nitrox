@@ -140,7 +140,24 @@ public sealed class Steam : IGamePlatform
         }
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            string wineCommand = "umu-run"; // should be replaced with using umu-launcher (proton outside of steam, will need to be downloaded and bundled)
+            string wineCommand = "umu-run"; // find a way to bundle this with the launcher
+
+            string compatdatapath = "";
+
+            if (!string.IsNullOrEmpty(pathToGameExe))
+            {
+                string[] pathComponents = pathToGameExe.Split(Path.DirectorySeparatorChar);
+
+                int steamappsIndex = Array.IndexOf(pathComponents, "steamapps");
+
+                if (steamappsIndex != -1)
+                {
+                    string steamappsPath = string.Join(Path.DirectorySeparatorChar.ToString(), pathComponents, 0, steamappsIndex + 1);
+
+                    compatdatapath = Path.Combine(steamappsPath, "compatdata", steamAppId.ToString());
+                }
+            }
+
             ProcessStartInfo startInfo = new()
             {
                 FileName = wineCommand,
@@ -148,13 +165,16 @@ public sealed class Steam : IGamePlatform
                 WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
                 UseShellExecute = false,
                 Environment =
-            {
-                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
-                ["SteamGameId"] = steamAppId.ToString(),
-                ["SteamAppID"] = steamAppId.ToString(),
-                ["WINEDLLOVERRIDES"] = "winhttp=n,b",
-                ["GAMEID"] = steamAppId.ToString()
-            }
+                {
+                    [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
+                    ["SteamGameId"] = steamAppId.ToString(),
+                    ["SteamAppID"] = steamAppId.ToString(),
+                    ["GAMEID"] = "umu-" + steamAppId.ToString(),
+                    ["PROTON_LOG"] = "1",
+                    ["STORE"] = "steam",
+                    ["WINEPREFIX"] = compatdatapath,
+
+                }
             };
             return new ProcessEx(Process.Start(startInfo));
 
@@ -168,11 +188,11 @@ public sealed class Steam : IGamePlatform
                 WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
                 UseShellExecute = false,
                 Environment =
-            {
-                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
-                ["SteamGameId"] = steamAppId.ToString(),
-                ["SteamAppID"] = steamAppId.ToString()
-            }
+                {
+                    [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
+                    ["SteamGameId"] = steamAppId.ToString(),
+                    ["SteamAppID"] = steamAppId.ToString()
+                }
             };
             Console.WriteLine($"Starting game with arguments: {startInfo.FileName} {launchArguments}");
             return new ProcessEx(Process.Start(startInfo));
