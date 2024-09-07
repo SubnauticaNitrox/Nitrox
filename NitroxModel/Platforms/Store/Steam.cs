@@ -170,7 +170,6 @@ public sealed class Steam : IGamePlatform
                     ["SteamGameId"] = steamAppId.ToString(),
                     ["SteamAppID"] = steamAppId.ToString(),
                     ["GAMEID"] = "umu-" + steamAppId.ToString(),
-                    ["PROTON_LOG"] = "1",
                     ["STORE"] = "steam",
                     ["WINEPREFIX"] = compatdatapath,
 
