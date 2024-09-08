@@ -265,6 +265,11 @@ public sealed class Steam : IGamePlatform
             string protonversion = GetProtonVersion(Path.Combine(SteamPath, "config", "config.vdf"), steamAppId.ToString());
 
 
+            if (protonversion == "Proton version not found for the given appId")
+            {
+                protonversion = "proton_9";
+            }
+
             bool isValveProton = protonversion.StartsWith("proton_");
             string protonfolder = null;
 
