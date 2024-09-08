@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
@@ -140,7 +141,6 @@ public sealed class Steam : IGamePlatform
         }
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            string wineCommand = "umu-run"; // find a way to bundle this with the launcher
 
             string compatdatapath = "";
 
@@ -157,11 +157,69 @@ public sealed class Steam : IGamePlatform
                     compatdatapath = Path.Combine(steamappsPath, "compatdata", steamAppId.ToString());
                 }
             }
+            string SteamPath = Path.Combine("/home/", Environment.GetEnvironmentVariable("USER"), ".steam/steam");
+
+            // support flatpak
+            if (!Directory.Exists(SteamPath))
+            {
+                SteamPath = Path.Combine("/home/", Environment.GetEnvironmentVariable("USER"), ".var/app/com.valvesoftware.Steam/data/Steam/");
+            }
+
+            string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
+
+            // function to get library path for given game id
+            string GetLibraryPath(string steamPath, string gameId)
+            {
+                string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+                string content = File.ReadAllText(libraryFoldersPath);
+
+                // Regex to match library folder entries
+                var folderRegex = new Regex(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
+                var matches = folderRegex.Matches(content);
+
+                foreach (Match match in matches)
+                {
+                    string path = match.Groups[2].Value;
+                    string apps = match.Groups[3].Value;
+
+                    // Check if the gameId exists in the apps section
+                    if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
+                    {
+                        return path;
+                    }
+                }
+
+                return ""; // Return empty string if not found
+            }
+
+
+            string sniperappid = "1628350";
+            string sniperruntimepath = Path.Combine(GetLibraryPath(SteamPath, sniperappid), "steamapps", "common", "SteamLinuxRuntime_sniper");
+
+
+            string protonappid = "2805730"; // app id for proton 9. A graphical way to choose which proton version to use on linux should beb added
+            string protonpath = Path.Combine(GetLibraryPath(SteamPath, protonappid), "steamapps", "common");
+
+            // get all folders here and choose the one that starts with Proton 9.0
+            string protonfolder = null;
+            foreach (string dir in Directory.GetDirectories(protonpath))
+            {
+                if (dir.Contains("Proton 9.0")) // this should be changed to a more robust way to get the proton version
+                {
+                    protonfolder = dir;
+                    break;
+                }
+            }
+
+            string gamelibrary = GetLibraryPath(SteamPath, steamAppId.ToString());
+
+            string launchargs = $" --verb=waitforexitandrun -- \"{Path.Combine(protonfolder, "proton")}\" waitforexitandrun \"{pathToGameExe}\" {launchArguments}";
+
 
             ProcessStartInfo startInfo = new()
             {
-                FileName = wineCommand,
-                Arguments = $"\"{pathToGameExe}\" {launchArguments}",
+                FileName = Path.Combine(sniperruntimepath, "_v2-entry-point"),
+                Arguments = launchargs,
                 WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
                 UseShellExecute = false,
                 Environment =
@@ -169,9 +227,14 @@ public sealed class Steam : IGamePlatform
                     [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
                     ["SteamGameId"] = steamAppId.ToString(),
                     ["SteamAppID"] = steamAppId.ToString(),
-                    ["GAMEID"] = "umu-" + steamAppId.ToString(),
-                    ["STORE"] = "steam",
+                    ["STEAM_COMPAT_APP_ID"] = steamAppId.ToString(),
                     ["WINEPREFIX"] = compatdatapath,
+                    ["STEAM_COMPAT_CLIENT_INSTALL_PATH"] = SteamPath,
+                    ["STEAM_COMPAT_DATA_PATH"] = compatdatapath,
+
+
+
+
 
                 }
             };
