@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
@@ -158,12 +159,18 @@ public sealed class Steam : IGamePlatform
                 }
             }
             string SteamPath = Path.Combine("/home/", Environment.GetEnvironmentVariable("USER"), ".steam/steam");
+            string GEProtonPath = Path.Combine("/home/", Environment.GetEnvironmentVariable("USER"), ".steam/root/compatibilitytools.d/");
 
             // support flatpak
             if (!Directory.Exists(SteamPath))
             {
                 SteamPath = Path.Combine("/home/", Environment.GetEnvironmentVariable("USER"), ".var/app/com.valvesoftware.Steam/data/Steam/");
+                GEProtonPath = Path.Combine("/home/", Environment.GetEnvironmentVariable("USER"), ".var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/");
+
             }
+
+
+
 
             string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 
@@ -192,25 +199,107 @@ public sealed class Steam : IGamePlatform
                 return ""; // Return empty string if not found
             }
 
+            static List<string> GetAllLibraryPaths(string steamPath)
+            {
+                string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+                string content = File.ReadAllText(libraryFoldersPath);
+
+                List<string> libraryPaths = new List<string>();
+
+                // Regex to match library folder entries
+                var folderRegex = new Regex(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""", RegexOptions.Singleline);
+                var matches = folderRegex.Matches(content);
+
+                foreach (Match match in matches)
+                {
+                    string path = match.Groups[2].Value.Replace("\\\\", "\\");
+                    if (Directory.Exists(Path.Combine(path, "steamapps", "common")))
+                    {
+                        libraryPaths.Add(path);
+                    }
+                }
+
+                // Add the default Steam library path
+                string defaultLibraryPath = Path.Combine(steamPath);
+                if (!libraryPaths.Contains(defaultLibraryPath))
+                {
+                    libraryPaths.Add(defaultLibraryPath);
+                }
+
+                return libraryPaths;
+            }
 
             string sniperappid = "1628350";
             string sniperruntimepath = Path.Combine(GetLibraryPath(SteamPath, sniperappid), "steamapps", "common", "SteamLinuxRuntime_sniper");
 
 
-            string protonappid = "2805730"; // app id for proton 9. A graphical way to choose which proton version to use on linux should beb added
-            string protonpath = Path.Combine(GetLibraryPath(SteamPath, protonappid), "steamapps", "common");
-
-            // get all folders here and choose the one that starts with Proton 9.0
-            string protonfolder = null;
-            foreach (string dir in Directory.GetDirectories(protonpath))
+            static string GetProtonVersion(string filePath, string appId)
             {
-                if (dir.Contains("Proton 9.0")) // this should be changed to a more robust way to get the proton version
+                try
                 {
-                    protonfolder = dir;
-                    break;
+                    string fileContent = File.ReadAllText(filePath);
+                    string pattern = @"""CompatToolMapping""\s*\{([\s\S]*?)\}(?=\s*""DownloadThrottleKbps"")";
+                    Match compatToolMatch = Regex.Match(fileContent, pattern);
+
+                    if (compatToolMatch.Success)
+                    {
+                        string compatToolMapping = compatToolMatch.Groups[1].Value;
+                        string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
+                        Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
+
+                        if (appIdMatch.Success)
+                        {
+                            return appIdMatch.Groups[1].Value;
+                        }
+                    }
+
+                    return "Proton version not found for the given appId";
+                }
+                catch (Exception ex)
+                {
+                    return $"Error: {ex.Message}";
                 }
             }
 
+
+            string protonversion = GetProtonVersion(Path.Combine(SteamPath, "config", "config.vdf"), steamAppId.ToString());
+
+
+            bool isValveProton = protonversion.StartsWith("proton_");
+            string protonfolder = null;
+
+            if (isValveProton)
+            {
+
+                int index = protonversion.IndexOf("proton_");
+
+                if (index != -1)
+                {
+                    protonversion = protonversion.Substring(index + 7);
+                }
+                if (protonversion == "experimental")
+                {
+                    protonversion = "-";
+                }
+
+                List<string> librarypaths = GetAllLibraryPaths(SteamPath);
+
+                foreach (string path in librarypaths)
+                {
+                    foreach (string dir in Directory.GetDirectories(Path.Combine(path, "steamapps", "common")))
+                    {
+                        if (dir.Contains($"Proton {protonversion}"))
+                        {
+                            protonfolder = dir;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                protonfolder = Path.Combine(GEProtonPath, protonversion);
+            }
             string gamelibrary = GetLibraryPath(SteamPath, steamAppId.ToString());
 
             string launchargs = $" --verb=waitforexitandrun -- \"{Path.Combine(protonfolder, "proton")}\" waitforexitandrun \"{pathToGameExe}\" {launchArguments}";
