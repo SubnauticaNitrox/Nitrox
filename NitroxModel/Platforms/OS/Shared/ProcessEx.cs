@@ -1,704 +1,692 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Text;
-using Microsoft.Win32.SafeHandles;
-using NitroxModel.Platforms.OS.Windows.Internal;
+using System.Security.Principal;
 
-namespace NitroxModel.Platforms.OS.Shared
+public static class ProcessUtility
 {
-    /// <summary>
-    ///     Lower-level wrapper for an OS process than normal <see cref="Process" /> to support memory access, DLLs discovery and exported functions listing.
-    ///
-    ///     TODO: Turn this class into abstract that is used by OS specific implementations. Right now it's Windows only.
-    /// </summary>
-    public sealed class ProcessEx : IDisposable
+    public static bool IsElevated()
     {
-        private readonly Process optionalInnerProcess;
-        private readonly Dictionary<int, ThreadHandle> threadHandles = new();
-        private SafeHandle handle;
-
-        private int id;
-
-        private bool? is32Bit;
-        private bool isDisposed;
-        private Module mainModule;
-
-        private string mainModuleFileName;
-
-        private Dictionary<string, Module> modules;
-
-        private IntPtr pebAddress;
-
-        public SafeHandle Handle
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            get
-            {
-                if (handle != null)
-                {
-                    return handle;
-                }
+            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+        else
+        {
+            return geteuid() == 0;
+        }
+    }
 
+    [DllImport("libc")]
+    private static extern uint geteuid();
+}
+
+
+
+public enum PtraceRequest : int
+{
+    PTRACE_ATTACH = 16,
+    PTRACE_DETACH = 17,
+    PTRACE_POKEDATA = 5
+}
+
+[Flags]
+public enum ThreadAccess : int
+{
+    SUSPEND_RESUME = 0x0002
+}
+
+public class ProcessEx : IDisposable
+{
+    private readonly ProcessExBase _implementation;
+
+    public ProcessEx(int pid)
+    {
+        _implementation = ProcessExFactory.Create(pid);
+    }
+
+    public ProcessEx(System.Diagnostics.Process process)
+    {
+        _implementation = ProcessExFactory.Create(process.Id);
+    }
+
+    public int Id => _implementation.Id;
+    public string Name => _implementation.Name;
+    public IntPtr Handle => _implementation.Handle;
+    public ProcessModuleEx MainModule => _implementation.MainModule;
+    public string MainModuleFileName => _implementation.MainModuleFileName;
+    public IntPtr MainWindowHandle => _implementation.MainWindowHandle;
+
+    public byte[] ReadMemory(IntPtr address, int size)
+    {
+        return _implementation.ReadMemory(address, size);
+    }
+
+    public int WriteMemory(IntPtr address, byte[] data)
+    {
+        return _implementation.WriteMemory(address, data);
+    }
+
+    public IEnumerable<ProcessModuleEx> GetModules()
+    {
+        return _implementation.GetModules();
+    }
+
+    public void Suspend()
+    {
+        _implementation.Suspend();
+    }
+
+    public void Resume()
+    {
+        _implementation.Resume();
+    }
+
+    public void Terminate()
+    {
+        _implementation.Terminate();
+    }
+
+    public void Dispose()
+    {
+        _implementation.Dispose();
+    }
+
+    public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
+    {
+        comparer ??= StringComparer.OrdinalIgnoreCase;
+        foreach (string dir in Directory.GetDirectories("/proc"))
+        {
+            if (int.TryParse(Path.GetFileName(dir), out int pid))
+            {
                 try
                 {
-                    handle = optionalInnerProcess?.SafeHandle;
-                }
-                catch (Exception ex)
-                {
-                    if (ex is InvalidOperationException or Win32Exception)
+                    ProcessEx processEx = new ProcessEx(pid);
+                    if (comparer.Compare(procName, processEx.Name) == 0)
                     {
-                        handle = new SafeProcessHandle(IntPtr.Zero, true);
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return handle;
-            }
-            init
-            {
-                handle?.Dispose();
-                handle = value;
-            }
-        }
-
-        public IntPtr MainWindowHandle => optionalInnerProcess?.MainWindowHandle ?? IntPtr.Zero;
-
-        public string MainWindowTitle => optionalInnerProcess?.MainWindowTitle;
-
-        public SafeHandle MainThreadHandle { get; }
-        public Dictionary<string, Module> Modules => modules ?? GetModules();
-
-        public Module MainModule
-        {
-            get
-            {
-                if (mainModule != null)
-                {
-                    return mainModule;
-                }
-
-                GetModules();
-                return mainModule;
-            }
-        }
-
-        public int Id
-        {
-            get => id > 0 ? id : optionalInnerProcess?.Id ?? 0;
-            private init => id = value;
-        }
-
-        /// <summary>
-        ///     True if targeted process is 32 bit. If it fails it will default to the bitness of the OS.
-        /// </summary>
-        public bool Is32Bit => is32Bit ??= !Win32Native.IsWow64Process(Handle, out bool isWowProcess) ? !Environment.Is64BitOperatingSystem : isWowProcess;
-
-        public IntPtr PebAddress
-        {
-            get
-            {
-                if (pebAddress != IntPtr.Zero)
-                {
-                    return pebAddress;
-                }
-
-                ProcessBasicInformation pbi = default;
-                NtStatus queryStatus = Win32Native.NtQueryInformationProcess(Handle, 0, ref pbi, Marshal.SizeOf(typeof(ProcessBasicInformation)), IntPtr.Zero);
-                return pebAddress = queryStatus == NtStatus.SUCCESS ? pbi.PebBaseAddress : IntPtr.Zero;
-            }
-        }
-
-        public IntPtr this[IntPtr address] => new(BitConverter.ToInt32(ReadMemory(address, is32Bit == true ? 4 : 8), 0));
-
-        public string Name => optionalInnerProcess?.ProcessName;
-
-        /// <summary>
-        ///     Tries to get the path to main executable of the process. Returns null if insufficient access.
-        /// </summary>
-        public string MainModuleFileName
-        {
-            get
-            {
-                if (mainModuleFileName != null)
-                {
-                    return mainModuleFileName;
-                }
-                if (Handle.IsInvalid)
-                {
-                    return null;
-                }
-
-                return mainModuleFileName = Win32Native.QueryFullProcessImageName(Handle);
-            }
-        }
-
-        public string MainModuleDirectory
-        {
-            get
-            {
-                string fileName = MainModuleFileName;
-                if (fileName == null)
-                {
-                    return null;
-                }
-                return Path.GetDirectoryName(MainModuleFileName);
-            }
-        }
-
-        public ProcessEx(Process proc)
-        {
-            optionalInnerProcess = proc;
-            MainThreadHandle = new SafeProcessHandle(IntPtr.Zero, true);
-        }
-
-        private ProcessEx(IntPtr handle, int processId, IntPtr mainThreadHandle = default)
-        {
-            Handle = new SafeProcessHandle(handle, true);
-            MainThreadHandle = new SafeProcessHandle(mainThreadHandle, true);
-            Id = processId;
-        }
-
-        /// <summary>
-        /// Starts a process.
-        /// </summary>
-        /// <param name="fileName">Path to the executable file. Without any arguments.</param>
-        /// <param name="environmentVariables"></param>
-        /// <param name="workingDirectory"></param>
-        /// <param name="commandLine">Arguments for the executable.</param>
-        /// <returns></returns>
-        public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
-        {
-            return StartInternal(fileName, false, environmentVariables, workingDirectory, commandLine, createWindow);
-        }
-
-        public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
-        {
-            comparer ??= StringComparer.OrdinalIgnoreCase;
-            Process found = null;
-            Process[] processes = Process.GetProcesses();
-            try
-            {
-                foreach (Process process in processes)
-                {
-                    if (comparer.Compare(procName, process.ProcessName) == 0)
-                    {
-                        ProcessEx processEx = new(process);
                         if (predicate == null || predicate(processEx))
                         {
-                            found = process;
                             return processEx;
                         }
                     }
                 }
-                return null;
-            }
-            finally
-            {
-                foreach (Process process in processes)
+                catch (ArgumentException)
                 {
-                    if (process != found)
-                    {
-                        process.Dispose();
-                    }
-                }
-            }
-        }
-
-        public static bool ProcessExists(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
-        {
-            ProcessEx proc = null;
-            try
-            {
-                proc = GetFirstProcess(procName, predicate, comparer);
-                return proc != null;
-            }
-            finally
-            {
-                proc?.Dispose();
-            }
-        }
-
-        public IntPtr CreateThread(IntPtr start, IntPtr parameter)
-        {
-            return Win32Native.CreateRemoteThread(Handle, IntPtr.Zero, 0, start, parameter, 0, out _);
-        }
-
-        public bool Suspend()
-        {
-            if (Handle.IsInvalid)
-            {
-                return false;
-            }
-            Win32Native.NtSuspendProcess(Handle);
-            return true;
-        }
-
-        public bool Resume()
-        {
-            if (Handle.IsInvalid)
-            {
-                return false;
-            }
-            Win32Native.NtResumeProcess(Handle);
-            return true;
-        }
-
-        public void Kill()
-        {
-            if (Win32Native.TerminateProcess(Handle, 0))
-            {
-                Dispose();
-            }
-        }
-
-        public void Dispose()
-        {
-            if (isDisposed)
-            {
-                return;
-            }
-            isDisposed = true;
-
-            foreach (ThreadHandle threadHandle in threadHandles.Values)
-            {
-                threadHandle.Dispose();
-            }
-            threadHandles.Clear();
-            optionalInnerProcess?.Dispose();
-            if (!MainThreadHandle.IsInvalid && !MainThreadHandle.IsClosed)
-            {
-                MainThreadHandle.Dispose();
-            }
-            if (!Handle.IsInvalid && !Handle.IsClosed)
-            {
-                Handle.Dispose();
-            }
-        }
-
-        /// <summary>
-        ///     Gets the base address of a loaded module or an exported function if found.
-        ///     Returns <see cref="IntPtr.Zero" /> if module or exported function name was not found.
-        /// </summary>
-        /// <param name="moduleName">Name of the loaded module to get the base address from.</param>
-        /// <param name="exportedFunctionName">Name of the exported function on the module to get the address from.</param>
-        /// <returns></returns>
-        public IntPtr GetAddress(string moduleName, string exportedFunctionName = null)
-        {
-            moduleName = moduleName?.ToLowerInvariant() ?? "";
-            if (!Modules.TryGetValue(moduleName, out Module module))
-            {
-                GetModules();
-                if (!Modules.TryGetValue(moduleName, out module))
-                {
-                    return IntPtr.Zero;
-                }
-            }
-            if (exportedFunctionName == null)
-            {
-                return module.BaseAddress;
-            }
-
-            if (!module.ExportedFunctions.TryGetValue(exportedFunctionName, out ExportedFunction func))
-            {
-                module.GetExportedFunctions();
-                if (!module.ExportedFunctions.TryGetValue(exportedFunctionName, out func))
-                {
-                    return IntPtr.Zero;
-                }
-            }
-            return func.Address;
-        }
-
-        public byte[] ReadMemory(IntPtr address, int size)
-        {
-            byte[] buffer = new byte[size];
-            Win32Native.ReadProcessMemory(Handle, address, buffer, size, out _);
-            return buffer;
-        }
-
-        public byte[] ReadMemory(IntPtr address, int size, params int[] offsets)
-        {
-            IntPtr ptr = address;
-            if (offsets.Length > 1)
-            {
-                ptr = ReadPointer(address, offsets.TakeWhile((val, i) => i < offsets.Length - 1));
-            }
-            int lastOffset = offsets.Length > 0 ? offsets[offsets.Length - 1] : 0;
-            return ReadMemory(ptr + lastOffset, size);
-        }
-
-        public int WriteMemory(IntPtr address, byte[] data, bool flushInstructionCache = false)
-        {
-            Win32Native.WriteProcessMemory(Handle, address, data, data.Length, out int written);
-            if (flushInstructionCache)
-            {
-                Win32Native.FlushInstructionCache(Handle, address, (uint)written);
-            }
-            return written;
-        }
-
-        /// <summary>
-        ///     Reads the pointer, then reads again after applying an offset each time.
-        /// </summary>
-        /// <param name="basePointerAddress"></param>
-        /// <param name="offsets"></param>
-        /// <returns></returns>
-        public IntPtr ReadPointer(IntPtr basePointerAddress, params int[] offsets)
-        {
-            IntPtr address = basePointerAddress;
-            address = new IntPtr(BitConverter.ToInt64(ReadMemory(address, 8), 0));
-            foreach (int t in offsets)
-            {
-                address = new IntPtr(BitConverter.ToInt64(ReadMemory(address + t, 8), 0));
-            }
-            return address;
-        }
-
-        public IntPtr ReadPointer(IntPtr basePointerAddress, IEnumerable<int> offsets)
-        {
-            return ReadPointer(basePointerAddress, offsets.ToArray());
-        }
-
-        public string ReadString(UIntPtr address, Encoding encoding = null, int maxBytesRead = 1024)
-        {
-            return ReadString(new IntPtr((long)address.ToUInt64()), encoding, maxBytesRead);
-        }
-
-        public string ReadString(IntPtr address, Encoding encoding = null, int maxBytesRead = 1024)
-        {
-            encoding ??= Encoding.ASCII;
-            int bytesRead = 0;
-            List<byte> buffer = new(256);
-
-            bool FillBufferNext()
-            {
-                int bytesToRead = maxBytesRead - bytesRead > 256 ? 256 : maxBytesRead - bytesRead;
-                if (bytesToRead < 1)
-                {
-                    return false;
-                }
-
-                buffer.AddRange(ReadMemory(address + bytesRead, bytesToRead));
-                bytesRead += bytesToRead;
-                return true;
-            }
-
-            // Decide end-of-string pattern based on string encoding in memory.
-            string endOfStringPattern = encoding switch
-            {
-                ASCIIEncoding _ => "\0",
-                UnicodeEncoding _ => "\0\0", // UTF-16
-                UTF32Encoding _ => throw new NotImplementedException(),
-                UTF7Encoding _ => throw new NotImplementedException(),
-                UTF8Encoding _ => throw new NotImplementedException(),
-                _ => throw new ArgumentOutOfRangeException(nameof(encoding))
-            };
-
-            // Loop over string, stop on end character or when max bytes is reached.
-            int unbufferedIndex = 0;
-            bool reachedEnd = false;
-            int encodingCodePointSize = endOfStringPattern.Length; // TODO: Get from encoding instead (2 for UTF-16, 1 for ascii)
-            while (!reachedEnd && FillBufferNext())
-            {
-                for (int i = unbufferedIndex; i < buffer.Count - buffer.Count % encodingCodePointSize; i += encodingCodePointSize)
-                {
-                    for (int j = 0; j < endOfStringPattern.Length; j++)
-                    {
-                        if (i + j >= buffer.Count || buffer[i + j] != endOfStringPattern[j])
-                        {
-                            goto nextChar;
-                        }
-                    }
-                    reachedEnd = true;
-                    break;
-
-                    nextChar:
-                    unbufferedIndex += encodingCodePointSize;
-                }
-            }
-
-            return encoding.GetString(buffer.ToArray(), 0, unbufferedIndex);
-        }
-
-        private static ProcessEx StartInternal(string fileName, bool withDebugger, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
-        {
-            RuntimeHelpers.PrepareConstrainedRegions();
-            ProcessCreationFlags creationFlags = ProcessCreationFlags.CREATE_UNICODE_ENVIRONMENT;
-            if (withDebugger)
-            {
-                creationFlags |= ProcessCreationFlags.DEBUG_ONLY_THIS_PROCESS;
-            }
-            if (!createWindow)
-            {
-                creationFlags |= ProcessCreationFlags.CREATE_NO_WINDOW;
-            }
-
-            StartupInfo startupInfo = new() { cb = Marshal.SizeOf<StartupInfo>() };
-
-            // Inherit environment variables from main process
-            IDictionary newProcessEnvironment = Environment.GetEnvironmentVariables();
-            if (environmentVariables != null)
-            {
-                foreach ((string, string) pair in environmentVariables)
-                {
-                    newProcessEnvironment[pair.Item1] = pair.Item2;
-                }
-            }
-            StringBuilder sb = new();
-            foreach (DictionaryEntry entry in newProcessEnvironment)
-            {
-                sb.Append(entry.Key);
-                sb.Append('=');
-                sb.Append(entry.Value);
-                sb.Append(char.MinValue);
-            }
-            GCHandle environmentHandle = GCHandle.Alloc(Encoding.Unicode.GetBytes(sb.ToString()), GCHandleType.Pinned);
-            IntPtr environment = environmentHandle.AddrOfPinnedObject();
-
-            // Create the process.
-            bool created;
-            ProcessInfo procInfo;
-            try
-            {
-                created = Win32Native.CreateProcess(fileName, // Use this if pointing to a file
-                                                    commandLine, // Use this to run it like a shell command
-                                                    IntPtr.Zero,
-                                                    IntPtr.Zero,
-                                                    true,
-                                                    creationFlags,
-                                                    environment,
-                                                    workingDirectory,
-                                                    ref startupInfo,
-                                                    out procInfo
-                );
-            }
-            finally
-            {
-                if (environmentHandle.IsAllocated)
-                {
-                    environmentHandle.Free();
-                }
-            }
-            if (!created)
-            {
-                return null;
-            }
-
-            return new ProcessEx(procInfo.hProcess, procInfo.ProcessId, procInfo.hThread);
-        }
-
-        private SafeAccessTokenHandle OpenThread(int threadId, ThreadAccess requiredAccess)
-        {
-            if (!threadHandles.TryGetValue(threadId, out ThreadHandle thread) || !thread.Access.HasFlag(requiredAccess))
-            {
-                if (thread != null)
-                {
-                    thread.Dispose();
-                    requiredAccess |= thread.Access; // Combine access from old handle to (potentially) massively reduce handle creation.
-                }
-                threadHandles[threadId] = thread = new ThreadHandle(threadId, Win32Native.OpenThread(requiredAccess, false, (uint)threadId), requiredAccess);
-            }
-
-            return thread.Handle;
-        }
-
-        /// <summary>
-        ///     Refreshes the cached <see cref="Modules" /> with the loaded modules in the target process.
-        /// </summary>
-        /// <returns></returns>
-        private Dictionary<string, Module> GetModules()
-        {
-            (modules ??= new Dictionary<string, Module>()).Clear();
-
-            // 0x18 = LDR_DATA
-            // 0x20 = IN_MEMORY_ORDER_MODULES_LINKED_LIST
-            List<int> offsets = new() { 0x20 };
-            Module mod = Module.FromPebRecordPointer64(this, ReadPointer(PebAddress + 0x18, offsets));
-            modules[Path.GetFileName(mod.FileName).ToLowerInvariant()] = mod;
-            mainModule = mod;
-
-            // Follow the linked list of modules inside the Process Environment Block
-            while (true)
-            {
-                offsets.Add(0); // Next record in linked list (first field, so offset == 0)
-                mod = Module.FromPebRecordPointer64(this, ReadPointer(PebAddress + 0x18, offsets));
-                if (mod.BaseAddress == IntPtr.Zero)
-                {
-                    break;
-                }
-                string key = Path.GetFileName(mod.FileName).ToLowerInvariant();
-                if (Modules.ContainsKey(key))
-                {
-                    break;
-                }
-                if (mod.BaseAddress == IntPtr.Zero)
-                {
+                    // Process doesn't exist anymore, skip it
                     continue;
                 }
-
-                modules[key] = mod;
+                catch (UnauthorizedAccessException)
+                {
+                    // We don't have permission to access this process, skip it
+                    continue;
+                }
             }
+        }
+        return null;
+    }
 
-            return modules;
+    public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
+    {
+        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = fileName,
+            WorkingDirectory = workingDirectory,
+            UseShellExecute = false,
+            CreateNoWindow = !createWindow,
+        };
+
+        if (environmentVariables != null)
+        {
+            foreach (var (key, value) in environmentVariables)
+            {
+                startInfo.EnvironmentVariables[key] = value;
+            }
         }
 
-        private T ReadStruct<T>(IntPtr address, params int[] offsets) where T : struct
+        if (!string.IsNullOrEmpty(commandLine))
         {
-            int size = Marshal.SizeOf<T>();
-            IntPtr ptr = Marshal.AllocHGlobal(size);
+            startInfo.Arguments = commandLine;
+        }
+
+        System.Diagnostics.Process process = System.Diagnostics.Process.Start(startInfo);
+        return new ProcessEx(process);
+    }
+}
+
+public abstract class ProcessExBase : IDisposable
+{
+    public abstract int Id { get; }
+    public abstract string Name { get; }
+    public abstract IntPtr Handle { get; }
+    public abstract ProcessModuleEx MainModule { get; }
+    public abstract string MainModuleFileName { get; }
+    public abstract byte[] ReadMemory(IntPtr address, int size);
+    public abstract int WriteMemory(IntPtr address, byte[] data);
+    public abstract IEnumerable<ProcessModuleEx> GetModules();
+    public abstract void Suspend();
+    public abstract void Resume();
+    public abstract void Terminate();
+    public abstract void Dispose();
+    public abstract IntPtr MainWindowHandle { get; }
+
+}
+
+public class ProcessModuleEx
+{
+    public IntPtr BaseAddress { get; set; }
+    public string ModuleName { get; set; }
+    public string FileName { get; set; }
+    public int ModuleMemorySize { get; set; }
+}
+
+public class WindowsProcessEx : ProcessExBase
+{
+    private Process _process;
+    private IntPtr _handle;
+    private bool _disposed = false;
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool CloseHandle(IntPtr hObject);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern uint SuspendThread(IntPtr hThread);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern int ResumeThread(IntPtr hThread);
+
+    public WindowsProcessEx(int id)
+    {
+        if (!ProcessUtility.IsElevated())
+            throw new UnauthorizedAccessException("Elevated privileges required.");
+
+        _process = Process.GetProcessById(id);
+        _handle = OpenProcess(0x1F0FFF, false, id);
+        if (_handle == IntPtr.Zero)
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+    }
+
+    public override int Id => _process.Id;
+    public override string Name => _process.ProcessName;
+    public override IntPtr Handle => _handle;
+
+    public override byte[] ReadMemory(IntPtr address, int size)
+    {
+        byte[] buffer = new byte[size];
+        if (!ReadProcessMemory(_handle, address, buffer, size, out int bytesRead) || bytesRead != size)
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        return buffer;
+    }
+
+    public override int WriteMemory(IntPtr address, byte[] data)
+    {
+        if (!WriteProcessMemory(_handle, address, data, data.Length, out int bytesWritten))
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        return bytesWritten;
+    }
+
+    public override IEnumerable<ProcessModuleEx> GetModules()
+    {
+        return _process.Modules.Cast<ProcessModule>().Select(m => new ProcessModuleEx
+        {
+            BaseAddress = m.BaseAddress,
+            ModuleName = m.ModuleName,
+            FileName = m.FileName,
+            ModuleMemorySize = m.ModuleMemorySize
+        });
+    }
+
+    public override void Suspend()
+    {
+        foreach (ProcessThread thread in _process.Threads)
+        {
+            IntPtr threadHandle = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
+            if (threadHandle != IntPtr.Zero)
+            {
+                try
+                {
+                    if (SuspendThread(threadHandle) == uint.MaxValue)
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+                finally
+                {
+                    CloseHandle(threadHandle);
+                }
+            }
+        }
+    }
+
+    public override void Resume()
+    {
+        foreach (ProcessThread thread in _process.Threads)
+        {
+            IntPtr threadHandle = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
+            if (threadHandle != IntPtr.Zero)
+            {
+                try
+                {
+                    if (ResumeThread(threadHandle) == -1)
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+                finally
+                {
+                    CloseHandle(threadHandle);
+                }
+            }
+        }
+    }
+
+    public override void Terminate()
+    {
+        _process.Kill();
+    }
+
+    public override void Dispose()
+    {
+        if (!_disposed)
+        {
+            if (_handle != IntPtr.Zero)
+            {
+                CloseHandle(_handle);
+                _handle = IntPtr.Zero;
+            }
+            _process.Dispose();
+            _disposed = true;
+        }
+        GC.SuppressFinalize(this);
+    }
+    public override ProcessModuleEx MainModule
+    {
+        get
+        {
+            ProcessModule mainModule = _process.MainModule;
+            return new ProcessModuleEx
+            {
+                BaseAddress = mainModule.BaseAddress,
+                ModuleName = mainModule.ModuleName,
+                FileName = mainModule.FileName,
+                ModuleMemorySize = mainModule.ModuleMemorySize
+            };
+        }
+    }
+
+    public override string MainModuleFileName => _process.MainModule.FileName;
+    public override IntPtr MainWindowHandle => _process.MainWindowHandle;
+
+}
+
+public class LinuxProcessEx : ProcessExBase
+{
+    private int _pid;
+    private bool _disposed = false;
+
+    [DllImport("libc", SetLastError = true)]
+    private static extern int ptrace(PtraceRequest request, int pid, IntPtr addr, IntPtr data);
+
+    [DllImport("libc", SetLastError = true)]
+    private static extern int kill(int pid, int sig);
+
+    public LinuxProcessEx(int pid)
+    {
+        _pid = pid;
+        if (!File.Exists($"/proc/{_pid}/status"))
+            throw new ArgumentException("Process does not exist.", nameof(pid));
+    }
+
+    public override int Id => _pid;
+    public override IntPtr Handle => IntPtr.Zero; // Linux doesn't use handles
+
+    public override string Name
+    {
+        get
+        {
             try
             {
-                Marshal.Copy(ReadMemory(address, size, offsets), 0, ptr, size);
-                return Marshal.PtrToStructure<T>(ptr);
+                string status = File.ReadAllText($"/proc/{_pid}/status");
+                string[] lines = status.Split('\n');
+                return lines.FirstOrDefault(l => l.StartsWith("Name:"))?.Substring(5).Trim();
             }
-            finally
+            catch (UnauthorizedAccessException)
             {
-                Marshal.FreeHGlobal(ptr);
-            }
-        }
-
-        /// <summary>
-        ///     Represents a loaded .exe or .dll in a system process.
-        /// </summary>
-        public sealed class Module
-        {
-            private readonly ProcessEx process;
-
-            private ImageExportDirectory? exportDirectory;
-
-            private Dictionary<string, ExportedFunction> exportedFunctions;
-            public string FileName { get; }
-            public IntPtr BaseAddress { get; }
-            public IntPtr EntryPoint { get; }
-
-            private ImageExportDirectory ExportDirectory
-            {
-                get
+                // If we can't read the status file, try to get the name from the command line
+                try
                 {
-                    if (exportDirectory != null)
-                    {
-                        return exportDirectory.Value;
-                    }
-
-                    ImageDosHeader exeHeader = process.ReadStruct<ImageDosHeader>(BaseAddress);
-                    ImageNtHeader64 header = process.ReadStruct<ImageNtHeader64>(BaseAddress, exeHeader.e_lfanew);
-                    IntPtr exportTablePtr = new(BaseAddress.ToInt64() + header.OptionalHeader.ExportTable.VirtualAddress);
-                    return (exportDirectory = process.ReadStruct<ImageExportDirectory>(exportTablePtr)).Value;
+                    string cmdline = File.ReadAllText($"/proc/{_pid}/cmdline");
+                    return Path.GetFileName(cmdline.Split('\0')[0]);
+                }
+                catch
+                {
+                    return null;
                 }
             }
-
-            /// <summary>
-            ///     <a href="https://revers.engineering/custom-getprocaddress-and-getmodulehandle-implementation-x64/">source</a>
-            /// </summary>
-            public Dictionary<string, ExportedFunction> ExportedFunctions
-            {
-                get
-                {
-                    if (exportedFunctions != null)
-                    {
-                        return exportedFunctions;
-                    }
-
-                    return GetExportedFunctions();
-                }
-            }
-
-            private Module(ProcessEx process, string fileName, IntPtr baseAddress, IntPtr entryPoint)
-            {
-                this.process = process;
-                FileName = fileName;
-                BaseAddress = baseAddress;
-                EntryPoint = entryPoint;
-            }
-
-            public static Module FromPebRecordPointer64(ProcessEx process, IntPtr pebRecord)
-            {
-                IntPtr baseAdress = process.ReadPointer(pebRecord + 0x20);
-                IntPtr entryPoint = process.ReadPointer(pebRecord + 0x28);
-                IntPtr fileNamePtr = process.ReadPointer(pebRecord + 0x40);
-                string fileName = process.ReadString(fileNamePtr, Encoding.Unicode);
-
-                return new Module(process, fileName, baseAdress, entryPoint);
-            }
-
-            public Dictionary<string, ExportedFunction> GetExportedFunctions()
-            {
-                Dictionary<string, ExportedFunction> result = new();
-                IntPtr functionNamesPtr = IntPtr.Add(BaseAddress, (int)ExportDirectory.AddressOfNames);
-                IntPtr functionAddressesPtr = IntPtr.Add(BaseAddress, (int)ExportDirectory.AddressOfFunctions);
-                IntPtr functionOrdinalPtr = IntPtr.Add(BaseAddress, (int)ExportDirectory.AddressOfNameOrdinals);
-                for (int i = 0; i < ExportDirectory.NumberOfNames; i++)
-                {
-                    uint funcNameRva = process.ReadStruct<uint>(functionNamesPtr + i * 4);
-                    string name = process.ReadString(IntPtr.Add(BaseAddress, (int)funcNameRva), Encoding.ASCII);
-                    ushort ordinal = process.ReadStruct<ushort>(functionOrdinalPtr + i * 2);
-                    IntPtr functionAddress = new(process.ReadStruct<uint>(functionAddressesPtr, ordinal * 4));
-                    result[name] = new ExportedFunction(this, (ushort)(ExportDirectory.Base + ordinal), name, functionAddress);
-                }
-                exportedFunctions = result;
-                return result;
-            }
-
-            public override string ToString()
-            {
-                return $"{nameof(FileName)}: {FileName}, {nameof(BaseAddress)}: 0x{BaseAddress.ToString("X")}, {nameof(EntryPoint)}: 0x{EntryPoint.ToString("X")}";
-            }
         }
+    }
 
-        public sealed class ExportedFunction
+    public override byte[] ReadMemory(IntPtr address, int size)
+    {
+        byte[] buffer = new byte[size];
+        try
         {
-            private readonly Module module;
-            public string Name { get; private set; }
-
-            /// <summary>
-            ///     Address of the function, relative to base address of the image.
-            ///     Use <see cref="Address" /> to get the computed (base + offset) address to function.
-            /// </summary>
-            public IntPtr Offset { get; private set; }
-
-            public ushort Ordinal { get; private set; }
-
-            public IntPtr Address => IntPtr.Add(module.BaseAddress, Offset.ToInt32());
-
-            internal ExportedFunction(Module module, ushort ordinal, string name, IntPtr offset)
-            {
-                this.module = module;
-                Ordinal = ordinal;
-                Name = name;
-                Offset = offset;
-            }
-
-            public override string ToString()
-            {
-                return $"{nameof(Ordinal)}: {Ordinal}, {nameof(Name)}: {Name}, {nameof(Offset)}: 0x{Offset.ToInt64():X}, {nameof(Address)}: 0x{Address.ToInt64():X}";
-            }
+            using FileStream fs = new FileStream($"/proc/{_pid}/mem", FileMode.Open, FileAccess.Read);
+            fs.Seek((long)address, SeekOrigin.Begin);
+            if (fs.Read(buffer, 0, size) != size)
+                throw new IOException("Failed to read the specified amount of memory.");
         }
-
-        private sealed class ThreadHandle : IDisposable
+        catch (Exception ex)
         {
-            public int Id { get; }
-            public SafeAccessTokenHandle Handle { get; }
-            public ThreadAccess Access { get; }
+            throw new InvalidOperationException("Failed to read process memory.", ex);
+        }
+        return buffer;
+    }
 
-            public ThreadHandle(int id, SafeAccessTokenHandle handle, ThreadAccess access)
-            {
-                Id = id;
-                Handle = handle;
-                Access = access;
-            }
+    public override int WriteMemory(IntPtr address, byte[] data)
+    {
+        int result = ptrace(PtraceRequest.PTRACE_ATTACH, _pid, IntPtr.Zero, IntPtr.Zero);
+        if (result < 0)
+            throw new InvalidOperationException("Failed to attach to the process.");
 
-            public void Dispose()
+        try
+        {
+            for (int i = 0; i < data.Length; i += sizeof(long))
             {
-                Handle?.Dispose();
+                long value = BitConverter.ToInt64(data, i);
+                if (ptrace(PtraceRequest.PTRACE_POKEDATA, _pid, address + i, (IntPtr)value) < 0)
+                    throw new InvalidOperationException("Failed to write memory.");
             }
         }
+        finally
+        {
+            ptrace(PtraceRequest.PTRACE_DETACH, _pid, IntPtr.Zero, IntPtr.Zero);
+        }
+        return data.Length;
+    }
+
+    public override IEnumerable<ProcessModuleEx> GetModules()
+    {
+        List<ProcessModuleEx> modules = new List<ProcessModuleEx>();
+        string[] lines = File.ReadAllLines($"/proc/{_pid}/maps");
+        foreach (string line in lines)
+        {
+            string[] parts = line.Split(' ');
+            if (parts.Length >= 6)
+            {
+                string[] addresses = parts[0].Split('-');
+                modules.Add(new ProcessModuleEx
+                {
+                    BaseAddress = (IntPtr)long.Parse(addresses[0], System.Globalization.NumberStyles.HexNumber),
+                    ModuleName = parts[5],
+                    FileName = parts[5],
+                    ModuleMemorySize = (int)(long.Parse(addresses[1], System.Globalization.NumberStyles.HexNumber) - long.Parse(addresses[0], System.Globalization.NumberStyles.HexNumber))
+                });
+            }
+        }
+        return modules;
+    }
+
+    public override void Suspend()
+    {
+        if (kill(_pid, 19) != 0) // SIGSTOP
+            throw new InvalidOperationException("Failed to suspend the process.");
+    }
+
+    public override void Resume()
+    {
+        if (kill(_pid, 18) != 0) // SIGCONT
+            throw new InvalidOperationException("Failed to resume the process.");
+    }
+
+    public override void Terminate()
+    {
+        if (kill(_pid, 9) != 0) // SIGKILL
+            throw new InvalidOperationException("Failed to terminate the process.");
+    }
+
+    public override void Dispose()
+    {
+        _disposed = true;
+        GC.SuppressFinalize(this);
+    }
+    public override ProcessModuleEx MainModule
+    {
+        get
+        {
+            // This is a simplified implementation. You might need to parse /proc/{pid}/maps
+            // to get more accurate information about the main module.
+            return new ProcessModuleEx
+            {
+                BaseAddress = IntPtr.Zero,
+                ModuleName = Name,
+                FileName = MainModuleFileName,
+                ModuleMemorySize = 0
+            };
+        }
+    }
+
+    public override string MainModuleFileName
+    {
+        get
+        {
+            try
+            {
+                return ReadSymbolicLink($"/proc/{_pid}/exe");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // If we don't have permission to read the symlink, return null
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
+
+    private string ReadSymbolicLink(string path)
+    {
+        const int BUFFER_SIZE = 1024;
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = readlink(path, buffer, BUFFER_SIZE);
+        if (bytesRead < 0)
+        {
+            throw new IOException("Failed to read symbolic link.");
+        }
+        return System.Text.Encoding.UTF8.GetString(buffer, 0, bytesRead);
+    }
+
+    [DllImport("libc")]
+    private static extern int readlink(string path, byte[] buf, int bufsiz);
+
+    public override IntPtr MainWindowHandle
+    {
+        get
+        {
+            // Linux doesn't have a direct equivalent to Windows' MainWindowHandle.
+            // This is a placeholder implementation.
+            throw new PlatformNotSupportedException("MainWindowHandle is not supported on Linux.");
+        }
+    }
+
+}
+
+public class MacOSProcessEx : ProcessExBase
+{
+    private int _pid;
+    private IntPtr _task;
+    private bool _disposed = false;
+
+    [DllImport("libSystem.dylib")]
+    private static extern int task_for_pid(IntPtr target_tport, int pid, out IntPtr t);
+
+    [DllImport("libSystem.dylib")]
+    private static extern IntPtr mach_task_self();
+
+    [DllImport("libSystem.dylib")]
+    private static extern int vm_read_overwrite(IntPtr target_task, IntPtr address, IntPtr size, IntPtr data, out IntPtr outsize);
+
+    [DllImport("libSystem.dylib")]
+    private static extern int vm_write(IntPtr target_task, IntPtr address, IntPtr data, IntPtr size);
+
+    [DllImport("libSystem.dylib")]
+    private static extern int task_suspend(IntPtr task);
+
+    [DllImport("libSystem.dylib")]
+    private static extern int task_resume(IntPtr task);
+
+    [DllImport("libSystem.dylib")]
+    private static extern int task_terminate(IntPtr task);
+
+    public MacOSProcessEx(int pid)
+    {
+        if (!ProcessUtility.IsElevated())
+            throw new UnauthorizedAccessException("Root privileges required.");
+
+        _pid = pid;
+        if (task_for_pid(mach_task_self(), pid, out _task) != 0)
+            throw new InvalidOperationException("Failed to get task for pid.");
+    }
+
+    public override int Id => _pid;
+    public override IntPtr Handle => _task;
+
+    public override string Name
+    {
+        get
+        {
+            // This is a simplified implementation. In a real scenario, you'd use sysctl to get the process name.
+            throw new NotImplementedException("Getting process name is not implemented for macOS.");
+        }
+    }
+
+    public override byte[] ReadMemory(IntPtr address, int size)
+    {
+        byte[] buffer = new byte[size];
+        IntPtr outSize;
+        GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+        try
+        {
+            if (vm_read_overwrite(_task, address, (IntPtr)size, handle.AddrOfPinnedObject(), out outSize) != 0)
+                throw new InvalidOperationException("Failed to read process memory.");
+        }
+        finally
+        {
+            handle.Free();
+        }
+        return buffer;
+    }
+
+    public override int WriteMemory(IntPtr address, byte[] data)
+    {
+        GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+        try
+        {
+            if (vm_write(_task, address, handle.AddrOfPinnedObject(), (IntPtr)data.Length) != 0)
+                throw new InvalidOperationException("Failed to write process memory.");
+        }
+        finally
+        {
+            handle.Free();
+        }
+        return data.Length;
+    }
+
+    public override IEnumerable<ProcessModuleEx> GetModules()
+    {
+        // This is a simplified implementation. In a real scenario, you'd use dyld APIs to get the loaded modules.
+        throw new NotImplementedException("Getting modules is not implemented for macOS.");
+    }
+
+    public override void Suspend()
+    {
+        if (task_suspend(_task) != 0)
+            throw new InvalidOperationException("Failed to suspend the process.");
+    }
+
+    public override void Resume()
+    {
+        if (task_resume(_task) != 0)
+            throw new InvalidOperationException("Failed to resume the process.");
+    }
+
+    public override void Terminate()
+    {
+        if (task_terminate(_task) != 0)
+            throw new InvalidOperationException("Failed to terminate the process.");
+    }
+
+    public override void Dispose()
+    {
+        if (!_disposed)
+        {
+            // In a real implementation, you'd release the task port here
+            _disposed = true;
+        }
+        GC.SuppressFinalize(this);
+    }
+    public override ProcessModuleEx MainModule
+    {
+        get
+        {
+            // This is a placeholder implementation. You'll need to use macOS-specific APIs
+            // to get accurate information about the main module.
+            return new ProcessModuleEx
+            {
+                BaseAddress = IntPtr.Zero,
+                ModuleName = Name,
+                FileName = MainModuleFileName,
+                ModuleMemorySize = 0
+            };
+        }
+    }
+
+    public override string MainModuleFileName
+    {
+        get
+        {
+            // This is a placeholder implementation. You'll need to use macOS-specific APIs
+            // to get the main module file name.
+            throw new NotImplementedException("Getting main module file name is not implemented for macOS.");
+        }
+    }
+
+    public override IntPtr MainWindowHandle
+    {
+        get
+        {
+            // macOS doesn't have a direct equivalent to Windows' MainWindowHandle.
+            // This is a placeholder implementation.
+            throw new PlatformNotSupportedException("MainWindowHandle is not supported on macOS.");
+        }
+    }
+
+}
+
+public static class ProcessExFactory
+{
+    public static ProcessExBase Create(int pid)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return new WindowsProcessEx(pid);
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            return new LinuxProcessEx(pid);
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            return new MacOSProcessEx(pid);
+        else
+            throw new PlatformNotSupportedException();
     }
 }
