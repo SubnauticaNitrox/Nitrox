@@ -7,12 +7,12 @@
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
-        <ApplicationIcon>Assets/Images/nitrox-icon.ico</ApplicationIcon>
+        <ApplicationIcon>Assets\Images\nitrox-icon.ico</ApplicationIcon>
         <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets/**" />
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -37,26 +37,26 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../NitroxModel/NitroxModel.csproj" />
-        <ProjectReference Include="../NitroxServer/NitroxServer.csproj" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+        <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
     <!-- Generate lib folders for project dependencies -->
-    <Import Project="../GenerateLibFolder.props" />
+    <Import Project="..\GenerateLibFolder.props" />
 
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
         <Message Importance="High" Text="Running MoveNitroxAssetsToLauncherOutput" />
 
         <ItemGroup>
-            <NitroxSubnauticaAssets Include="../Nitrox.Assets.Subnautica/**/*." />
-            <NitroxSubnauticaStaticDlls Include="../Nitrox.Assets.Subnautica/**/*.dll" />
-            <NitroxSubnauticaLanguageFiles Include="../Nitrox.Assets.Subnautica/LanguageFiles/*.json" />
-            <NitroxSubnauticaResources Include="../Nitrox.Assets.Subnautica/Resources/*.*" />
+            <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
+            <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
+            <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
+            <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
         </ItemGroup>
-        <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)/Resources/%(RecursiveDir)" />
-        <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)/lib/%(RecursiveDir)" SkipUnchangedFiles="true" />
-        <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)/Resources/LanguageFiles/%(RecursiveDir)" />
-        <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)/Resources/%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\Resources\LanguageFiles\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
 
     <!-- Build dependencies that will be loaded by the game, which must be net472 compatible -->
@@ -64,14 +64,14 @@
         <Message Importance="High" Text="Running BuildNet472BinariesForGame" />
 
         <PropertyGroup>
-            <OutputDirectory>$(TargetDir)lib/net472</OutputDirectory>
+            <OutputDirectory>$(TargetDir)lib\net472</OutputDirectory>
         </PropertyGroup>
 
         <!-- Create directory if it doesn't exist -->
         <MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')" ContinueOnError="WarnAndContinue" />
 
          <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Command="dotnet msbuild ../NitroxPatcher/NitroxPatcher.csproj /t:Build /p:Configuration=$(Configuration) /p:TargetFramework=net472 /p:OutputPath=$(OutputDirectory)" />
+        <Exec Command="dotnet msbuild ..\NitroxPatcher\NitroxPatcher.csproj /t:Build /p:Configuration=$(Configuration) /p:TargetFramework=net472 /p:OutputPath=$(OutputDirectory)" />
     </Target>
 
     <Target Name="BuildServer" AfterTargets="Build" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
