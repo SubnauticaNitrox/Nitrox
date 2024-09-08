@@ -54,7 +54,11 @@ public sealed class GameInstallationFinder
             {
                 result = result with { Origin = wantedFinder };
             }
-            yield return result with { Path = Path.GetFullPath(result.Path) };
+            if (result.Path != null)
+            {
+                result = result with { Path = Path.GetFullPath(result.Path) };
+            }
+            yield return result;
         }
     }
 }
