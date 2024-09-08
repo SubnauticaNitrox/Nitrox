@@ -33,6 +33,9 @@
         <Setter Property="FontFamily" Value="/Assets/Fonts/Inter-Black.ttf" />
         <!-- Disables window border but allow resizing -->
         <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+        <Setter Property="SystemDecorations" Value="None" />
+        <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+        <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
         <Setter Property="Padding" Value="{Binding $self.OffScreenMargin}" />
     </Style>
 
