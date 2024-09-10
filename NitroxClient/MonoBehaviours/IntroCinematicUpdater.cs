@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -20,11 +19,11 @@ public class IntroCinematicUpdater : MonoBehaviour
     private Transform[] seatPartsRight;
     private Transform seatArmRestLeft;
     private Transform seatArmRestRight;
-    private SkinnedMeshRenderer[] seatBarRendererRight = Array.Empty<SkinnedMeshRenderer>();
+    private SkinnedMeshRenderer[] seatBarRendererRight = [];
 
     private SkinnedMeshRenderer remotePlayerHeadRenderer;
     private GameObject remotePlayerCustomHead;
-    private SkinnedMeshRenderer[] remoteRenders = Array.Empty<SkinnedMeshRenderer>();
+    private SkinnedMeshRenderer[] remoteRenders = [];
 
     public void Awake()
     {
@@ -158,8 +157,22 @@ public class IntroCinematicUpdater : MonoBehaviour
 
     private void OnDestroy()
     {
-        remoteRenders.ForEach(smr => smr.enabled = true);
-        seatBarRendererRight.ForEach(smr => smr.updateWhenOffscreen = false);
+        foreach (SkinnedMeshRenderer renderer in remoteRenders)
+        {
+            if (renderer)
+            {
+                renderer.enabled = true;
+            }
+        }
+
+        foreach (SkinnedMeshRenderer renderer in seatBarRendererRight)
+        {
+            if (renderer)
+            {
+                renderer.updateWhenOffscreen = false;
+            }
+        }
+
         transform.position = introRemoteEndPosition;
     }
 }
