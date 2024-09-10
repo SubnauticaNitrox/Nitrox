@@ -35,10 +35,7 @@ public class PlayerManager
         return Optional.OfNullable(player);
     }
 
-    public bool TryFind(ushort playerId, out RemotePlayer remotePlayer)
-    {
-        return playersById.TryGetValue(playerId, out remotePlayer);
-    }
+    public bool TryFind(ushort playerId, out RemotePlayer remotePlayer) => playersById.TryGetValue(playerId, out remotePlayer);
 
     public Optional<RemotePlayer> Find(NitroxId playerNitroxId)
     {
