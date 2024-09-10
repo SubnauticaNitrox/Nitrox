@@ -11,6 +11,8 @@ public class PlayerCinematics
     private readonly IPacketSender packetSender;
     private readonly LocalPlayer localPlayer;
 
+    public ushort? IntroCinematicPartnerId = null;
+
     /// <summary>
     /// Some cinematics should not be played. Example the intro as it's completely handled by a dedicated system.
     /// </summary>
