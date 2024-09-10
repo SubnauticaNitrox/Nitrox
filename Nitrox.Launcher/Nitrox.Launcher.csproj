@@ -71,7 +71,7 @@
         <MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')" ContinueOnError="WarnAndContinue" />
 
          <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Command="dotnet msbuild ..\NitroxPatcher\NitroxPatcher.csproj /t:Build /p:Configuration=$(Configuration) /p:TargetFramework=net472 /p:OutputPath=$(OutputDirectory)" />
+        <Exec Command="dotnet msbuild ../NitroxPatcher/NitroxPatcher.csproj -t:Build -p:Configuration=$(Configuration) -p:TargetFramework=net472 -p:OutputPath=$(OutputDirectory)" />
     </Target>
 
     <Target Name="BuildServer" AfterTargets="Build" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
@@ -85,6 +85,6 @@
         <MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')" ContinueOnError="WarnAndContinue" />
 
         <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Command="dotnet msbuild ..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj /t:Build /p:Configuration=$(Configuration) /p:OutputPath=$(OutputDirectory)" />
+        <Exec Command="dotnet msbuild ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -t:Build -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
     </Target>
 </Project>
