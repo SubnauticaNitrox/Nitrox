@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -122,13 +121,15 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             return false;
         }
 
-        // See NitroxServer.Communication.Packets.Processors.SetIntroCinematicModeProcessor
-        RemotePlayer firstWaitingRemotePlayer = Resolve<PlayerManager>().GetAll().FirstOrDefault(r => r.PlayerContext.IntroCinematicMode is IntroCinematicMode.START);
-        if (firstWaitingRemotePlayer != null)
+        ushort? opPartnerId = Resolve<PlayerCinematics>().IntroCinematicPartnerId;
+
+        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.WAITING &&
+            opPartnerId.HasValue && Resolve<PlayerManager>().TryFind(opPartnerId.Value, out RemotePlayer newPartner))
         {
-            partner = firstWaitingRemotePlayer;
+            partner = newPartner;
             EnqueueStartCinematic(uGuiSceneIntro);
             Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.PLAYING);
+            Resolve<PlayerCinematics>().IntroCinematicPartnerId = null;
         }
 
         return false;
