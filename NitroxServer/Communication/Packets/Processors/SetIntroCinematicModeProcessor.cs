@@ -32,7 +32,7 @@ public class SetIntroCinematicModeProcessor : AuthenticatedPacketProcessor<SetIn
         player.PlayerContext.IntroCinematicMode = packet.Mode;
         playerManager.SendPacketToOtherPlayers(packet, player);
 
-        Player[] allWaitingPlayers = playerManager.ConnectedPlayers().Where(p => p.PlayerContext.IntroCinematicMode == IntroCinematicMode.WAITING).ToArray();
+        Player[] allWaitingPlayers = playerManager.ConnectedPlayers().Where(p => p.JoinState == NitroxConnectionState.InGame && p.PlayerContext.IntroCinematicMode == IntroCinematicMode.WAITING).ToArray();
         if (allWaitingPlayers.Length >= 2)
         {
             Log.Info($"Starting IntroCinematic for {allWaitingPlayers[0].PlayerContext.PlayerName} and {allWaitingPlayers[1].PlayerContext.PlayerName}");

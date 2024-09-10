@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
@@ -76,6 +77,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
     private static RemotePlayer partner;
     private static bool callbackRun;
+    private static bool readyToSend;
     private static bool packetSend;
 
     private static bool AnyKeyDownOrModeCompleted()
@@ -102,16 +104,13 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             EndRemoteCinematic();
         }
 
-        // See NitroxServer.Communication.Packets.Processors.SetIntroCinematicModeProcessor
-        RemotePlayer firstWaitingRemotePlayer = Resolve<PlayerManager>().GetAll().FirstOrDefault(r => r.PlayerContext.IntroCinematicMode is IntroCinematicMode.START);
-        if (firstWaitingRemotePlayer != null)
+        if (!packetSend && !readyToSend && Resolve<LocalPlayer>().CurrentConnectionState?.GetType() == typeof(SessionJoined))
         {
-            partner = firstWaitingRemotePlayer;
-            EnqueueStartCinematic(uGuiSceneIntro);
-            Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.PLAYING);
+            readyToSend = true;
+            return false;
         }
 
-        if (!packetSend)
+        if (!packetSend && readyToSend)
         {
             uGuiSceneIntro.skipHintStartTime = Time.time;
             uGuiSceneIntro.mainText.SetText(Language.main.GetFormat("Nitrox_IntroWaitingPartner", uGUI.FormatButton(GameInput.Button.UIMenu)));
@@ -120,6 +119,16 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.WAITING);
             packetSend = true;
             IsWaitingForPartner = true;
+            return false;
+        }
+
+        // See NitroxServer.Communication.Packets.Processors.SetIntroCinematicModeProcessor
+        RemotePlayer firstWaitingRemotePlayer = Resolve<PlayerManager>().GetAll().FirstOrDefault(r => r.PlayerContext.IntroCinematicMode is IntroCinematicMode.START);
+        if (firstWaitingRemotePlayer != null)
+        {
+            partner = firstWaitingRemotePlayer;
+            EnqueueStartCinematic(uGuiSceneIntro);
+            Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.PLAYING);
         }
 
         return false;
