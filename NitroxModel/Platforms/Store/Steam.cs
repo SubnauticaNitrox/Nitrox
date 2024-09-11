@@ -325,11 +325,6 @@ public sealed class Steam : IGamePlatform
                     ["WINEPREFIX"] = compatdatapath,
                     ["STEAM_COMPAT_CLIENT_INSTALL_PATH"] = SteamPath,
                     ["STEAM_COMPAT_DATA_PATH"] = compatdatapath,
-
-
-
-
-
                 }
             };
             return new ProcessEx(Process.Start(startInfo));

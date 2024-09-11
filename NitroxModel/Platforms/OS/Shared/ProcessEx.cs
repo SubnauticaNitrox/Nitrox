@@ -87,6 +87,51 @@ public class ProcessEx : IDisposable
     public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
     {
         comparer ??= StringComparer.OrdinalIgnoreCase;
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return GetFirstProcessWindows(procName, predicate, comparer);
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return GetFirstProcessLinux(procName, predicate, comparer);
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return GetFirstProcessMacOS(procName, predicate, comparer);
+        }
+        else
+        {
+            throw new PlatformNotSupportedException("Unsupported operating system.");
+        }
+    }
+
+    private static ProcessEx GetFirstProcessWindows(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer)
+    {
+        foreach (Process process in Process.GetProcesses())
+        {
+            try
+            {
+                if (comparer.Compare(procName, process.ProcessName) == 0)
+                {
+                    ProcessEx processEx = new ProcessEx(process.Id);
+                    if (predicate == null || predicate(processEx))
+                    {
+                        return processEx;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Process doesn't exist anymore or we don't have access, skip it
+                continue;
+            }
+        }
+        return null;
+    }
+
+    private static ProcessEx GetFirstProcessLinux(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer)
+    {
         foreach (string dir in Directory.GetDirectories("/proc"))
         {
             if (int.TryParse(Path.GetFileName(dir), out int pid))
@@ -102,20 +147,54 @@ public class ProcessEx : IDisposable
                         }
                     }
                 }
-                catch (ArgumentException)
+                catch (Exception)
                 {
-                    // Process doesn't exist anymore, skip it
-                    continue;
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    // We don't have permission to access this process, skip it
+                    // Process doesn't exist anymore or we don't have access, skip it
                     continue;
                 }
             }
         }
         return null;
     }
+
+    private static ProcessEx GetFirstProcessMacOS(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer)
+    {
+        // Use process_listpids to get all PIDs
+        int[] pids = new int[1024];
+        int bytesNeeded = 0;
+        if (process_listpids(PROC_ALL_PIDS, 0, pids, pids.Length * sizeof(int), ref bytesNeeded) > 0)
+        {
+            int numProcesses = bytesNeeded / sizeof(int);
+            for (int i = 0; i < numProcesses; i++)
+            {
+                int pid = pids[i];
+                if (pid == 0) continue;
+
+                try
+                {
+                    ProcessEx processEx = new ProcessEx(pid);
+                    if (comparer.Compare(procName, processEx.Name) == 0)
+                    {
+                        if (predicate == null || predicate(processEx))
+                        {
+                            return processEx;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // Process doesn't exist anymore or we don't have access, skip it
+                    continue;
+                }
+            }
+        }
+        return null;
+    }
+
+    [DllImport("libproc.dylib")]
+    private static extern int process_listpids(int type, uint typeinfo, int[] buffer, int buffersize, ref int retbufsize);
+
+    private const int PROC_ALL_PIDS = 1;
 
     public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
     {
