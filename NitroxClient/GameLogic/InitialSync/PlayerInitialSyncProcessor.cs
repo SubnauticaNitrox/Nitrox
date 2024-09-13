@@ -42,8 +42,11 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
 
     private void SetPlayerIntroCinematicMode(IntroCinematicMode introCinematicMode)
     {
-        localPlayer.IntroCinematicMode = introCinematicMode;
-        Log.Info($"Received initial sync player IntroCinematicMode: {introCinematicMode}");
+        if (localPlayer.IntroCinematicMode < introCinematicMode)
+        {
+            localPlayer.IntroCinematicMode = introCinematicMode;
+            Log.Info($"Received initial sync player IntroCinematicMode: {introCinematicMode}");
+        }
     }
 
     private void SetPlayerGameObjectId(NitroxId id)

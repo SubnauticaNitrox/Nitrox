@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
@@ -101,9 +100,10 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         {
             uGuiSceneIntro.Stop(true);
             EndRemoteCinematic();
+            return false;
         }
 
-        if (!packetSend && !readyToSend && Resolve<LocalPlayer>().CurrentConnectionState?.GetType() == typeof(SessionJoined))
+        if (!packetSend && !readyToSend && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
         {
             readyToSend = true;
             return false;
@@ -123,7 +123,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
         ushort? opPartnerId = Resolve<PlayerCinematics>().IntroCinematicPartnerId;
 
-        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.WAITING &&
+        if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.START &&
             opPartnerId.HasValue && Resolve<PlayerManager>().TryFind(opPartnerId.Value, out RemotePlayer newPartner))
         {
             partner = newPartner;
