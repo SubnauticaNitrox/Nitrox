@@ -18,7 +18,14 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         return new CodeMatcher(instructions)
-               // Override AnyKeyDown check
+               // Replace LargeWorldStreamer.Main.IsWorldSettled() check with IsWorldSettledAndInitialSyncCompleted()
+               .MatchStartForward(
+                   new CodeMatch(OpCodes.Ldsfld, Reflect.Field(() => LargeWorldStreamer.main)),
+                   new CodeMatch(OpCodes.Callvirt, Reflect.Method((LargeWorldStreamer lws) => lws.IsWorldSettled()))
+               )
+               .SetAndAdvance(OpCodes.Call, Reflect.Method(() => IsWorldSettledAndInitialSyncCompleted()))
+               .RemoveInstruction()
+               // Replace GameInput.AnyKeyDown() check with AnyKeyDownOrModeCompleted()
                .MatchEndForward(
                    new CodeMatch(OpCodes.Call, Reflect.Method(() => GameInput.AnyKeyDown()))
                )
@@ -75,8 +82,12 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
     private static RemotePlayer partner;
     private static bool callbackRun;
-    private static bool readyToSend;
     private static bool packetSend;
+
+    private static bool IsWorldSettledAndInitialSyncCompleted()
+    {
+        return LargeWorldStreamer.main.IsWorldSettled() && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted;
+    }
 
     private static bool AnyKeyDownOrModeCompleted()
     {
@@ -103,13 +114,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
             return false;
         }
 
-        if (!packetSend && !readyToSend && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
-        {
-            readyToSend = true;
-            return false;
-        }
-
-        if (!packetSend && readyToSend)
+        if (!packetSend)
         {
             uGuiSceneIntro.skipHintStartTime = Time.time;
             uGuiSceneIntro.mainText.SetText(Language.main.GetFormat("Nitrox_IntroWaitingPartner", uGUI.FormatButton(GameInput.Button.UIMenu)));
