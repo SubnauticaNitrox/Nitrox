@@ -36,9 +36,9 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
 
         instance.confirmObject.SetActive(false);
         instance.loadingCircle.gameObject.SetActive(true);
-        instance.text.text = "Loading";
+        instance.text.text = Language.main.Get("Nitrox_Loading");
         MainMenuRightSide.main.OpenGroup(NAME);
-        instance.confirmButtonLegend.legendButtonConfiguration = Array.Empty<LegendButtonData>();
+        instance.confirmButtonLegend.legendButtonConfiguration = [];
     }
 
     public static void ShowMessage(string message, string returningMenuPanel, Action continuationAction = null)
@@ -112,7 +112,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         if (loadingCircle)
         {
             loadingCircle.transform.localRotation = Quaternion.Euler(0, 0, Time.time % 360 * 250); // 250 is the speed
-            loadingCircle.fillAmount = Mathf.Lerp(0.05f, 0.95f, Math.Abs(Time.time % 6 - 3) * 0.333f); // Lerps t fades from 0 to 1 and back to 0
+            loadingCircle.fillAmount = Mathf.Lerp(0.05f, 0.95f, Math.Abs(Time.time % 6 - 3) * 0.333f); // Lerp t fades from 0 to 1 and back to 0
             uGUI_LegendBar.ClearButtons();
         }
     }
