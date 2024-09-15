@@ -1,23 +1,16 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.Unity;
 
-public class RectDrawer : IStructDrawer
+public class RectDrawer : IEditorDrawer<Rect, RectDrawer.DrawOptions>, IEditorDrawer<RectOffset>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Rect) };
+    private const float MAX_WIDTH = 400;
 
-    public object Draw(object target)
+    public Rect Draw(Rect rect, DrawOptions options)
     {
-        return target switch
-        {
-            Rect rect => DrawRect(rect),
-            _ => null
-        };
-    }
+        options ??= new DrawOptions();
+        var (valueWidth, maxWidth) = (options.Width, options.MaxWidth);
 
-    public static Rect DrawRect(Rect rect, float valueWidth = 100, float maxWidth = 215)
-    {
         using (new GUILayout.HorizontalScope(GUILayout.MaxWidth(maxWidth)))
         {
             using (new GUILayout.VerticalScope())
@@ -53,4 +46,34 @@ public class RectDrawer : IStructDrawer
 
         return rect;
     }
+
+    public Rect Draw(Rect rect)
+    {
+        return Draw(rect, null);
+    }
+
+    public RectOffset Draw(RectOffset rect, DrawOptions options)
+    {
+        options ??= new DrawOptions(Width: MAX_WIDTH);
+
+        float valueWidth = options.MaxWidth / 4 - 6;
+        using (new GUILayout.HorizontalScope(GUILayout.MaxWidth(options.MaxWidth)))
+        {
+            rect.left = NitroxGUILayout.IntField(rect.left, valueWidth);
+            NitroxGUILayout.Separator();
+            rect.right = NitroxGUILayout.IntField(rect.right, valueWidth);
+            NitroxGUILayout.Separator();
+            rect.top = NitroxGUILayout.IntField(rect.top, valueWidth);
+            NitroxGUILayout.Separator();
+            rect.bottom = NitroxGUILayout.IntField(rect.bottom, valueWidth);
+        }
+        return rect;
+    }
+
+    public RectOffset Draw(RectOffset rect)
+    {
+        return Draw(rect, null);
+    }
+
+    public record DrawOptions(float Width = 100, float MaxWidth = 215);
 }

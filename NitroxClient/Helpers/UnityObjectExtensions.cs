@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using NitroxModel.Core;
+using UnityEngine;
 
 namespace NitroxClient.Helpers;
 
@@ -16,5 +20,30 @@ public static class UnityObjectExtensions
     public static T Resolve<T>(this UnityEngine.Object _, bool prelifeTime = false) where T : class
     {
         return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePreLifetime : NitroxServiceLocator.Cache<T>.Value;
+    }
+
+    /// <summary>
+    /// Copies a whole component by using reflection. Please note this takes considerable time and every use of this should be thoughtful.
+    /// </summary>
+    public static Component CopyComponent(this Component original, GameObject destination)
+    {
+        Type type = original.GetType();
+        Component copy = destination.AddComponent(type);
+
+        FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (FieldInfo field in fields)
+        {
+            field.SetValue(copy, field.GetValue(original));
+        }
+
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (PropertyInfo property in properties)
+        {
+            if (property.GetSetMethod(true) != null)
+            {
+                property.SetValue(copy, property.GetValue(original));
+            }
+        }
+        return copy;
     }
 }

@@ -1,27 +1,28 @@
 ﻿using System;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class DropdownDrawer : IDrawer
+public class DropdownDrawer : IDrawer<Dropdown>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Dropdown) };
+    private readonly SelectableDrawer selectableDrawer;
+    private readonly SceneDebugger sceneDebugger;
 
-    public void Draw(object target)
+    public DropdownDrawer(SceneDebugger sceneDebugger, SelectableDrawer selectableDrawer)
     {
-        switch (target)
-        {
-            case Dropdown dropdown:
-                DrawDropdown(dropdown);
-                break;
-        }
+        Validate.NotNull(sceneDebugger);
+        Validate.NotNull(selectableDrawer);
+
+        this.selectableDrawer = selectableDrawer;
+        this.sceneDebugger = sceneDebugger;
     }
 
-    private static void DrawDropdown(Dropdown dropdown)
+    public void Draw(Dropdown dropdown)
     {
-        SelectableDrawer.DrawSelectable(dropdown);
+        selectableDrawer.Draw(dropdown);
 
         GUILayout.Space(NitroxGUILayout.DEFAULT_SPACE);
 
@@ -31,7 +32,7 @@ public class DropdownDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(dropdown.template);
+                sceneDebugger.JumpToComponent(dropdown.template);
             }
         }
 
@@ -41,7 +42,7 @@ public class DropdownDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(dropdown.captionText);
+                sceneDebugger.JumpToComponent(dropdown.captionText);
             }
         }
 
@@ -51,7 +52,7 @@ public class DropdownDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(dropdown.captionImage);
+                sceneDebugger.JumpToComponent(dropdown.captionImage);
             }
         }
 
@@ -63,7 +64,7 @@ public class DropdownDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(dropdown.itemText);
+                sceneDebugger.JumpToComponent(dropdown.itemText);
             }
         }
 
@@ -73,7 +74,7 @@ public class DropdownDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(dropdown.itemImage);
+                sceneDebugger.JumpToComponent(dropdown.itemImage);
             }
         }
 

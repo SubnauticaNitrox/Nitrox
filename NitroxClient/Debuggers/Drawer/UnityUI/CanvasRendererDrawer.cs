@@ -1,23 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class CanvasRendererDrawer : IDrawer
+public class CanvasRendererDrawer : IDrawer<CanvasRenderer>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(CanvasRenderer) };
-
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case CanvasRenderer canvasRenderer:
-                DrawCanvasRenderer(canvasRenderer);
-                break;
-        }
-    }
-
-    private static void DrawCanvasRenderer(CanvasRenderer canvasRenderer)
+    public void Draw(CanvasRenderer canvasRenderer)
     {
         using (new GUILayout.HorizontalScope())
         {

@@ -25,6 +25,8 @@ public static class JoinServerBackend
     private static string serverIp;
     private static int serverPort;
 
+    public static bool InstantLaunch;
+
     public static void RequestSessionReservation(string playerName, Color playerColor)
     {
         preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, playerColor));
@@ -45,6 +47,12 @@ public static class JoinServerBackend
                 break;
 
             case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
+                if (InstantLaunch)
+                {
+                    RequestSessionReservation(activePlayerPreference.PlayerName, activePlayerPreference.PreferredColor());
+                    break;
+                }
+
                 Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out float saturation, out float brightness); // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
                 MainMenuJoinServerPanel.Instance.UpdatePanelValues(serverIp, activePlayerPreference.PlayerName, new Vector3(hue, saturation, brightness));
 

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;

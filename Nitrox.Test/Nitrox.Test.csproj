@@ -1,9 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
         <Nullable>disable</Nullable>
         <IsPackable>false</IsPackable>
+        <!-- Suppress warning for DI container being instanciated and used on the fly -->
+        <NoWarn>DIMA001</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

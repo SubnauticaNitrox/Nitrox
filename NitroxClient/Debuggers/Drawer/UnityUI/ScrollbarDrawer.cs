@@ -1,27 +1,22 @@
-﻿using System;
-using NitroxModel.Core;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ScrollbarDrawer : IDrawer
+public class ScrollbarDrawer : IDrawer<Scrollbar>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Scrollbar) };
+    private readonly SceneDebugger sceneDebugger;
+    private readonly SelectableDrawer selectableDrawer;
 
-    public void Draw(object target)
+    public ScrollbarDrawer(SceneDebugger sceneDebugger, SelectableDrawer selectableDrawer)
     {
-        switch (target)
-        {
-            case Scrollbar scrollbar:
-                DrawScrollbar(scrollbar);
-                break;
-        }
+        this.sceneDebugger = sceneDebugger;
+        this.selectableDrawer = selectableDrawer;
     }
 
-    private static void DrawScrollbar(Scrollbar scrollbar)
+    public void Draw(Scrollbar scrollbar)
     {
-        SelectableDrawer.DrawSelectable(scrollbar);
+        selectableDrawer.Draw(scrollbar);
 
         GUILayout.Space(10);
 
@@ -31,7 +26,7 @@ public class ScrollbarDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(scrollbar.handleRect);
+                sceneDebugger.JumpToComponent(scrollbar.handleRect);
             }
         }
 

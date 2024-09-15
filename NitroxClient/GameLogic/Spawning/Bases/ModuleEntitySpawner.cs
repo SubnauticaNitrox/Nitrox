@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -80,6 +81,12 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         moduleTransform.localRotation = moduleEntity.Transform.LocalRotation.ToUnity();
         moduleTransform.localScale = moduleEntity.Transform.LocalScale.ToUnity();
         ApplyModuleData(moduleEntity, moduleObject, result);
+
+        if (parent && parent.TryGetComponent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
+        {
+            nitroxCyclops.Virtual.ReplicateConstructable(moduleObject.GetComponent<Constructable>());
+        }
+
         yield return BuildingPostSpawner.ApplyPostSpawner(moduleObject, moduleEntity.Id);
     }
 
@@ -99,6 +106,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
         constructable.UpdateMaterial();
         NitroxEntity.SetNewId(moduleObject, moduleEntity.Id);
+
         result?.Set(moduleObject);
     }
 

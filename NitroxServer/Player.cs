@@ -29,7 +29,7 @@ namespace NitroxServer
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
         public NitroxQuaternion Rotation { get; set; }
-        public NitroxId GameObjectId { get; }
+        public NitroxId GameObjectId { get; set; }
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }

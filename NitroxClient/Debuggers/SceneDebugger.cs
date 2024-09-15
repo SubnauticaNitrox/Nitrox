@@ -16,6 +16,7 @@ namespace NitroxClient.Debuggers;
 [ExcludeFromCodeCoverage]
 public class SceneDebugger : BaseDebugger
 {
+    private readonly DrawerManager drawerManager;
     public GameObject SelectedObject { get; private set; }
     private int selectedComponentID;
     private Scene selectedScene;
@@ -26,35 +27,17 @@ public class SceneDebugger : BaseDebugger
     private Vector2 gameObjectScrollPos;
     private Vector2 hierarchyScrollPos;
 
-    private readonly Dictionary<Type, IDrawer> debuggerDrawers = new();
-    private readonly Dictionary<Type, IStructDrawer> structDebuggerDrawers = new();
-
     private readonly Dictionary<int, bool> componentsVisibilityByID = new();
     private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = new();
     private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = new();
     private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = new();
 
-    public SceneDebugger(IEnumerable<IDrawer> drawers, IEnumerable<IStructDrawer> structDrawers) : base(650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+    public SceneDebugger() : base(650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
+        drawerManager = new DrawerManager(this);
         ActiveTab = AddTab("Scenes", RenderTabScenes);
         AddTab("Hierarchy", RenderTabHierarchy);
         AddTab("GameObject", RenderTabGameObject);
-
-        foreach (IDrawer drawer in drawers)
-        {
-            foreach (Type type in drawer.ApplicableTypes)
-            {
-                debuggerDrawers.Add(type, drawer);
-            }
-        }
-
-        foreach (IStructDrawer structDrawer in structDrawers)
-        {
-            foreach (Type type in structDrawer.ApplicableTypes)
-            {
-                structDebuggerDrawers.Add(type, structDrawer);
-            }
-        }
     }
 
     protected override void OnSetSkin(GUISkin skin)
@@ -276,21 +259,20 @@ public class SceneDebugger : BaseDebugger
                     if (visible)
                     {
                         GUILayout.Space(10);
-                        if (debuggerDrawers.TryGetValue(componentType, out IDrawer drawer))
+                        if (!drawerManager.TryDraw(component))
                         {
-                            drawer.Draw(component);
-                        }
-                        else if (monoBehaviour)
-                        {
-                            DrawFields(monoBehaviour);
-                            GUILayout.Space(20);
-                            DrawMonoBehaviourMethods(monoBehaviour);
-                        }
-                        else
-                        {
-                            NitroxGUILayout.Separator();
-                            GUILayout.Label("This component is not yet supported");
-                            GUILayout.Space(10);
+                            if (monoBehaviour)
+                            {
+                                DrawFields(monoBehaviour);
+                                GUILayout.Space(20);
+                                DrawMonoBehaviourMethods(monoBehaviour);
+                            }
+                            else
+                            {
+                                NitroxGUILayout.Separator();
+                                GUILayout.Label("This component is not yet supported");
+                                GUILayout.Space(10);
+                            }
                         }
                     }
 
@@ -323,14 +305,6 @@ public class SceneDebugger : BaseDebugger
                         JumpToComponent(component);
                     }
                 }
-                else if (debuggerDrawers.TryGetValue(field.FieldType, out IDrawer drawer))
-                {
-                    drawer.Draw(fieldValue);
-                }
-                else if (structDebuggerDrawers.TryGetValue(field.FieldType, out IStructDrawer structDrawer))
-                {
-                    field.SetValue(target, structDrawer.Draw(fieldValue));
-                }
                 else if(fieldValue != null && (field.FieldType.IsArray || typeof(IList).IsAssignableFrom(field.FieldType)))
                 {
                     IList list = (IList)field.GetValue(target);
@@ -341,7 +315,11 @@ public class SceneDebugger : BaseDebugger
                     IDictionary dict = (IDictionary)field.GetValue(target);
                     GUILayout.Box($"Length: {dict.Count}" , GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
                 }
-                else
+                else if (drawerManager.TryDrawEditor(fieldValue, out object editedValue))
+                {
+                    field.SetValue(target, editedValue);
+                }
+                else if (!drawerManager.TryDraw(fieldValue))
                 {
                     GUILayout.FlexibleSpace();
 

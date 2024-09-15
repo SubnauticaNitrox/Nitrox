@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -248,7 +248,7 @@ namespace NitroxLauncher
         private async Task<ProcessEx> StartSubnauticaAsync()
         {
             string subnauticaPath = Config.SubnauticaPath;
-            string subnauticaLaunchArguments = Config.SubnauticaLaunchArguments;
+            string subnauticaLaunchArguments = $"{Config.SubnauticaLaunchArguments} {string.Join(" ", Environment.GetCommandLineArgs())}";
             string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
             IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
             

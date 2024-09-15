@@ -43,7 +43,8 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
     public static readonly List<CodeInstruction> InstructionsToAdd = new()
     {
         new(Ldarg_0),
-        new(Call, Reflect.Method(() => ConstructionAmountModified(default)))
+        new(Ldc_I4_1), // True for "constructing"
+        new(Call, Reflect.Method(() => ConstructionAmountModified(default, default)))
     };
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
@@ -56,7 +57,7 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
             return null;
         });
 
-    public static void ConstructionAmountModified(Constructable constructable)
+    public static void ConstructionAmountModified(Constructable constructable, bool constructing)
     {
         // We only manage the amount change, not the deconstruction/construction action
         if (!constructable.TryGetNitroxId(out NitroxId entityId))
@@ -65,6 +66,14 @@ public sealed partial class Constructable_Construct_Patch : NitroxPatch, IDynami
             return;
         }
         float amount = NitroxModel.Helper.Mathf.Clamp01(constructable.constructedAmount);
+
+        // An object is destroyed when amount = 0 AND if we are destructing
+        // so we don't need the broadcast if we are trying to construct with not enough resources (amount = 0)
+        if (amount == 0f && constructing)
+        {
+            return;
+        }
+
         /*
          * Different cases:
          * - Normal module (only Constructable), just let it go to 1.0f normally

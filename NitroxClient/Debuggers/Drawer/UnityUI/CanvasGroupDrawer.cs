@@ -1,23 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class CanvasGroupDrawer : IDrawer
+public class CanvasGroupDrawer : IDrawer<CanvasGroup>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(CanvasGroup) };
-
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case CanvasGroup canvasGroup:
-                DrawCanvasGroup(canvasGroup);
-                break;
-        }
-    }
-
-    private static void DrawCanvasGroup(CanvasGroup canvasGroup)
+    public void Draw(CanvasGroup canvasGroup)
     {
         using (new GUILayout.HorizontalScope())
         {

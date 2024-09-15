@@ -71,13 +71,9 @@ public abstract class Modal
     /// </summary>
     public void Show()
     {
-        if (FreezeGame)
-        {
-            FreezeTime.Begin(FreezeTime.Id.Quit);
-        }
         CurrentModal?.Hide();
         CurrentModal = this;
-        CoroutineHost.StartCoroutine(Show_Impl());
+        CoroutineHost.StartCoroutine(ShowImplementation());
     }
 
     /// <summary>
@@ -173,7 +169,7 @@ public abstract class Modal
     public virtual void ClickYes() { }
     public virtual void ClickNo() { }
 
-    private IEnumerator Show_Impl()
+    private IEnumerator ShowImplementation()
     {
         // Execute frame-by-frame to allow UI scripts to initialize.
         InitSubWindow();
@@ -181,6 +177,11 @@ public abstract class Modal
         IngameMenu.main.Open();
         yield return new WaitForEndOfFrame();
         IngameMenu.main.ChangeSubscreen(SubWindowName);
+        yield return new WaitForEndOfFrame();
+        if (FreezeGame)
+        {
+            FreezeTime.Begin(FreezeTime.Id.Quit);
+        }
     }
 
     /// <summary>

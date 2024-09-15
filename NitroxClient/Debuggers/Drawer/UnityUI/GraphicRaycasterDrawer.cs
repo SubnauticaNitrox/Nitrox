@@ -1,24 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class GraphicRaycasterDrawer : IDrawer
+public class GraphicRaycasterDrawer : IDrawer<GraphicRaycaster>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(GraphicRaycaster) };
-
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case GraphicRaycaster graphicRaycaster:
-                DrawGraphicRaycaster(graphicRaycaster);
-                break;
-        }
-    }
-
-    private static void DrawGraphicRaycaster(GraphicRaycaster graphicRaycaster)
+    public void Draw(GraphicRaycaster graphicRaycaster)
     {
         using (new GUILayout.HorizontalScope())
         {
