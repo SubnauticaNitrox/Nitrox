@@ -307,6 +307,13 @@ public sealed class Steam : IGamePlatform
             }
             string gamelibrary = GetLibraryPath(SteamPath, steamAppId.ToString());
 
+            if (protonfolder == null)
+            {
+                Console.WriteLine("Proton not found");
+                throw new Exception("Proton not found");
+
+            }
+
             string launchargs = $" --verb=waitforexitandrun -- \"{Path.Combine(protonfolder, "proton")}\" waitforexitandrun \"{pathToGameExe}\" {launchArguments}";
 
 
