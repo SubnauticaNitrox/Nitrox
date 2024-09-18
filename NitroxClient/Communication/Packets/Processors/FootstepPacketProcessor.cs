@@ -13,8 +13,8 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     private readonly PlayerManager remotePlayerManager;
     private readonly FootstepSounds localFootstepSounds;
     private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
-    private readonly float footstepAudioRadius = 20f;
-    private readonly float footstepAudioMaxVolume = 0.5f;
+    private const float footstepAudioRadius = 20f;
+    private const float footstepAudioMaxVolume = 0.5f;
 
     public FootstepPacketProcessor(PlayerManager remotePlayerManager)
     {
@@ -24,42 +24,29 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
 
     public override void Process(FootstepPacket packet)
     {
-        var player = remotePlayerManager.Find(packet.playerID);
-        if (!player.HasValue)
+        var player = remotePlayerManager.Find(packet.PlayerID);
+        if (player.HasValue)
         {
-            return;
-        }
-        else
-        {
-            FMODAsset asset;
-            switch (packet.assetIndex)
+            FMODAsset asset = packet.AssetIndex switch
             {
-                case FootstepPacket.StepSounds.PRECURSOR_STEP_SOUND:
-                    asset = localFootstepSounds.precursorInteriorSound;
-                    break;
-                case FootstepPacket.StepSounds.METAL_STEP_SOUND:
-                    asset = localFootstepSounds.metalSound;
-                    break;
-                case FootstepPacket.StepSounds.LAND_STEP_SOUND:
-                    asset = localFootstepSounds.landSound;
-                    break;
-                default:
-                    asset = null;
-                    break;
-            }
-            EventInstance @event = FMODUWE.GetEvent(asset);
-            if (@event.isValid())
+                FootstepPacket.StepSounds.PRECURSOR_STEP_SOUND => localFootstepSounds.precursorInteriorSound,
+                FootstepPacket.StepSounds.METAL_STEP_SOUND => localFootstepSounds.metalSound,
+                FootstepPacket.StepSounds.LAND_STEP_SOUND => localFootstepSounds.landSound,
+                _ => null
+            };
+            EventInstance evt = FMODUWE.GetEvent(asset);
+            if (evt.isValid())
             {
                 if (FMODUWE.IsInvalidParameterId(fmodIndexSpeed))
                 {
-                    fmodIndexSpeed = FMODUWE.GetEventInstanceParameterIndex(@event, "speed");
+                    fmodIndexSpeed = FMODUWE.GetEventInstanceParameterIndex(evt, "speed");
                 }
                 ATTRIBUTES_3D attributes = player.Value.Body.To3DAttributes();
-                @event.set3DAttributes(attributes);
-                @event.setParameterValueByIndex(fmodIndexSpeed, player.Value.AnimationController.Velocity.magnitude);
-                @event.setVolume(FMODSystem.CalculateVolume(Player.mainObject.transform.position, player.Value.Body.transform.position, footstepAudioRadius, footstepAudioMaxVolume));
-                @event.start();
-                @event.release();
+                evt.set3DAttributes(attributes);
+                evt.setParameterValueByIndex(fmodIndexSpeed, player.Value.AnimationController.Velocity.magnitude);
+                evt.setVolume(FMODSystem.CalculateVolume(Player.mainObject.transform.position, player.Value.Body.transform.position, footstepAudioRadius, footstepAudioMaxVolume));
+                evt.start();
+                evt.release();
             }
         }
     }

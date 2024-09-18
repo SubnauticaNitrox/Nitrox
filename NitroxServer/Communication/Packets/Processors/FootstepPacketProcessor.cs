@@ -3,48 +3,32 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
-namespace NitroxServer.Communication.Packets.Processors
+namespace NitroxServer.Communication.Packets.Processors;
+public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPacket>
 {
-    public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPacket>
+    private readonly float footstepAudioRange = 20f;
+    private readonly PlayerManager playerManager;
+
+    public FootstepPacketProcessor(PlayerManager playerManager)
     {
-        private readonly float footstepAudioRange = 20f;
-        private readonly PlayerManager playerManager;
+        this.playerManager = playerManager;
+    }
 
-        public FootstepPacketProcessor(PlayerManager playerManager)
+    public override void Process(FootstepPacket footstepPacket, Player sendingPlayer)
+    {
+        foreach (Player player in playerManager.GetAllPlayers())
         {
-            this.playerManager = playerManager;
-        }
-
-        public override void Process(FootstepPacket footstepPacket, Player sendingPlayer)
-        {
-            var players = playerManager.GetAllPlayers();
-            foreach (Player player in players)
+            if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange && player != sendingPlayer)
             {
-                if (sendingPlayer.SubRootId.HasValue)
+                // Forward footstep packet to players if they are within range to hear it and are in the same structure / submarine
+                if (sendingPlayer.SubRootId.HasValue && player.SubRootId.HasValue &&
+                    sendingPlayer.SubRootId.Value == player.SubRootId.Value)
                 {
-                    if (player.SubRootId.HasValue)
-                    {
-                        // If both players have id's, check if they are the same
-                        if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange && player != sendingPlayer && player.SubRootId.Value == sendingPlayer.SubRootId.Value)
-                        {
-                            // Forward footstep packet to players if they are within range to hear it and are in the same structure / submarine
-                            player.SendPacket(footstepPacket);
-                        }
-                    }
-                    // If one player has an id and the other doesn't, automatically false
+                    player.SendPacket(footstepPacket);
                 }
-                else
+                else if (!sendingPlayer.SubRootId.HasValue && !player.SubRootId.HasValue)
                 {
-                    // if both player's don't have SubRootIds
-                    if (!player.SubRootId.HasValue)
-                    {
-                        if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange && player != sendingPlayer)
-                        {
-                            // Forward footstep packet to players if they are within range to hear it and are in the same structure / submarine
-                            player.SendPacket(footstepPacket);
-                        }
-                    }
-                    // If one player doesn't have an id and other does, automatically false
+                    player.SendPacket(footstepPacket);
                 }
             }
         }

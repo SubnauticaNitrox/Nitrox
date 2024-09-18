@@ -1,24 +1,22 @@
 using System;
 
-namespace NitroxModel.Packets
+namespace NitroxModel.Packets;
+[Serializable]
+public class FootstepPacket : Packet
 {
-    [Serializable]
-    public class FootstepPacket : Packet
+    public ushort PlayerID { get; }
+    public StepSounds AssetIndex { get; }
+
+    public FootstepPacket(ushort playerID, StepSounds assetIndex)
     {
-        public ushort playerID { get; }
-        public StepSounds assetIndex { get; }
+        this.PlayerID = playerID;
+        this.AssetIndex = assetIndex;
+    }
 
-        public FootstepPacket(ushort playerID, StepSounds assetIndex)
-        {
-            this.playerID = playerID;
-            this.assetIndex = assetIndex;
-        }
-
-        public enum StepSounds : byte
-        {
-            PRECURSOR_STEP_SOUND,
-            METAL_STEP_SOUND,
-            LAND_STEP_SOUND
-        }
+    public enum StepSounds : byte
+    {
+        PRECURSOR_STEP_SOUND,
+        METAL_STEP_SOUND,
+        LAND_STEP_SOUND
     }
 }
