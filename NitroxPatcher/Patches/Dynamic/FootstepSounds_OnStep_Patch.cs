@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using FMOD.Studio;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
@@ -6,11 +10,8 @@ using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
 using UnityEngine;
+
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicPatch
@@ -19,19 +20,24 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
     private const string PRECURSOR_STEP_SOUND_PATH = "event:/player/footstep_precursor_base";
     private const string METAL_STEP_SOUND_PATH = "event:/player/footstep_metal";
 
-
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((FootstepSounds t) => t.OnStep(default));
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         /*
         From:
-
             evt.setVolume(volume);
 
         To:
-
             evt.setVolume(CalculateVolume(volume, this, asset, xform));
+
+
+        From:
+            event.release();
+
+        To:
+            event.release();
+            SendFootstepPacket(asset);
          */
 
         return new CodeMatcher(instructions)
@@ -44,16 +50,15 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
                    new CodeInstruction(OpCodes.Ldloc_0),
                    new CodeInstruction(OpCodes.Ldarg_1),
                    new CodeInstruction(OpCodes.Call, Reflect.Method(() => CalculateVolume(default, default, default, default)))
-               ).MatchEndForward(new CodeMatch(OpCodes.Call, Reflect.Method((FMOD.Studio.EventInstance t) => t.release())),
-                                                               new CodeMatch(OpCodes.Pop))
-                                            .Advance(1)
-                                            .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
-                                            .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => SendFootstepPacket(default))))
-                                            .InstructionEnumeration();
-        /* event.release();
-         * SendFootstepPacket(asset);
-         * asset in this case is the FMOD asset of the footstep sound that was played
-         * */
+               )
+               .MatchEndForward(
+                   new CodeMatch(OpCodes.Call, Reflect.Method((EventInstance evt) => evt.release())),
+                   new CodeMatch(OpCodes.Pop)
+               )
+               .Advance(1)
+               .InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0))
+               .Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => SendFootstepPacket(default))))
+               .InstructionEnumeration();
     }
 
     // This method is called very often and should therefore be performant
@@ -74,6 +79,7 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
         Resolve<FMODWhitelist>().TryGetSoundData(EXO_STEP_SOUND_PATH, out SoundData soundData);
         return soundData.Radius;
     });
+
     public static void SendFootstepPacket(FMODAsset asset)
     {
         // Send footstep packet with the asset
