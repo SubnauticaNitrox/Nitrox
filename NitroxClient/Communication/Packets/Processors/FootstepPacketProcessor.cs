@@ -4,6 +4,7 @@ using FMODUnity;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
+using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
@@ -13,13 +14,15 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     private readonly PlayerManager remotePlayerManager;
     private readonly FootstepSounds localFootstepSounds;
     private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
-    private const float footstepAudioRadius = 20f; // Make sure this matches the value in the server packet processor FootstepPacketProcessor.cs
+    private readonly float footstepAudioRadius; // To modify this value, modify the last value in the SoundWhitelist_Subnautica.csv file
     private const float footstepAudioMaxVolume = 0.5f;
 
-    public FootstepPacketProcessor(PlayerManager remotePlayerManager)
+    public FootstepPacketProcessor(PlayerManager remotePlayerManager, FMODWhitelist whitelist)
     {
         this.remotePlayerManager = remotePlayerManager;
         localFootstepSounds = Player.mainObject.GetComponent<FootstepSounds>();
+        whitelist.TryGetSoundData("event:/player/footstep_precursor_base", out SoundData soundData);
+        footstepAudioRadius = soundData.Radius;
     }
 
     public override void Process(FootstepPacket packet)
