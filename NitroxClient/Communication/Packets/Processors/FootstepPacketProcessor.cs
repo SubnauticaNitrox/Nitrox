@@ -19,7 +19,7 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     public FootstepPacketProcessor(PlayerManager remotePlayerManager)
     {
         this.remotePlayerManager = remotePlayerManager;
-        this.localFootstepSounds = Player.mainObject.GetComponent<FootstepSounds>();
+        localFootstepSounds = Player.mainObject.GetComponent<FootstepSounds>();
     }
 
     public override void Process(FootstepPacket packet)
