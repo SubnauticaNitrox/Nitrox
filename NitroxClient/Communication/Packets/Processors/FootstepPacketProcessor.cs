@@ -7,6 +7,7 @@ using NitroxClient.GameLogic.FMOD;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;
+
 public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
 {
     private readonly PlayerManager remotePlayerManager;
@@ -14,11 +15,13 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
     private readonly float footstepAudioRadius = 20f;
     private readonly float footstepAudioMaxVolume = 0.5f;
+
     public FootstepPacketProcessor(PlayerManager remotePlayerManager)
     {
         this.remotePlayerManager = remotePlayerManager;
         this.localFootstepSounds = Player.mainObject.GetComponent<FootstepSounds>();
     }
+
     public override void Process(FootstepPacket packet)
     {
         var player = remotePlayerManager.Find(packet.playerID);

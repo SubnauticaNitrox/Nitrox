@@ -9,10 +9,12 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly float footstepAudioRange = 20f;
         private readonly PlayerManager playerManager;
+
         public FootstepPacketProcessor(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
         }
+
         public override void Process(FootstepPacket footstepPacket, Player sendingPlayer)
         {
             var players = playerManager.GetAllPlayers();
@@ -43,7 +45,6 @@ namespace NitroxServer.Communication.Packets.Processors
                         }
                     }
                     // If one player doesn't have an id and other does, automatically false
-
                 }
             }
         }

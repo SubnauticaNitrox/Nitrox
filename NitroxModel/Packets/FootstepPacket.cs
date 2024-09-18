@@ -1,4 +1,5 @@
 using System;
+
 namespace NitroxModel.Packets
 {
     [Serializable]
@@ -6,11 +7,13 @@ namespace NitroxModel.Packets
     {
         public ushort playerID { get; }
         public StepSounds assetIndex { get; }
+
         public FootstepPacket(ushort playerID, StepSounds assetIndex)
         {
             this.playerID = playerID;
             this.assetIndex = assetIndex;
         }
+
         public enum StepSounds : byte
         {
             PRECURSOR_STEP_SOUND,
