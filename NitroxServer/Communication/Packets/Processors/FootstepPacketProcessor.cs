@@ -6,7 +6,7 @@ using NitroxServer.GameLogic;
 namespace NitroxServer.Communication.Packets.Processors;
 public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPacket>
 {
-    private readonly float footstepAudioRange = 20f;
+    private const float footstepAudioRange = 20f; // Make sure this matches the value in the client-side packet processor FootstepPacketProcessor.cs
     private readonly PlayerManager playerManager;
 
     public FootstepPacketProcessor(PlayerManager playerManager)

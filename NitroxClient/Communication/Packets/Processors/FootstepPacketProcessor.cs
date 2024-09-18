@@ -13,7 +13,7 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
     private readonly PlayerManager remotePlayerManager;
     private readonly FootstepSounds localFootstepSounds;
     private PARAMETER_ID fmodIndexSpeed = FMODUWE.invalidParameterId;
-    private const float footstepAudioRadius = 20f;
+    private const float footstepAudioRadius = 20f; // Make sure this matches the value in the server packet processor FootstepPacketProcessor.cs
     private const float footstepAudioMaxVolume = 0.5f;
 
     public FootstepPacketProcessor(PlayerManager remotePlayerManager)
