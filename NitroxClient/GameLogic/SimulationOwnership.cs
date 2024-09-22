@@ -58,6 +58,7 @@ namespace NitroxClient.GameLogic
             if (lockAquired)
             {
                 SimulateEntity(id, lockType);
+                TreatVehicleEntity(id, true);
             }
 
             if (lockRequestsById.TryGetValue(id, out LockRequestBase lockRequest))
@@ -79,7 +80,14 @@ namespace NitroxClient.GameLogic
 
         public void TreatSimulatedEntity(SimulatedEntity simulatedEntity)
         {
-            if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)
+            bool isLocalPlayerNewOwner = multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId;
+
+            if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner))
+            {
+                return;
+            }
+
+            if (isLocalPlayerNewOwner)
             {
                 if (simulatedEntity.ChangesPosition)
                 {
@@ -110,6 +118,53 @@ namespace NitroxClient.GameLogic
             {
                 GameObject.Destroy(remotelyControlled);
             }
+        }
+
+        public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
+        {
+            return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
+        }
+
+        private bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner)
+        {
+            if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject) || !IsVehicle(gameObject))
+            {
+                return false;
+            }
+            
+            MovementReplicator movementReplicator = gameObject.GetComponent<MovementReplicator>();
+            if (isLocalPlayerNewOwner)
+            {
+                if (movementReplicator)
+                {
+                    GameObject.Destroy(movementReplicator);
+                }
+                MovementBroadcaster.RegisterWatched(gameObject, entityId);
+            }
+            else
+            {
+                if (!movementReplicator)
+                {
+                    gameObject.AddComponent<MovementReplicator>();
+                }
+                MovementBroadcaster.UnregisterWatched(entityId);
+            }
+
+            return true;
+        }
+
+        public bool IsVehicle(GameObject gameObject)
+        {
+            if (gameObject.GetComponent<Vehicle>())
+            {
+                return true;
+            }
+            if (gameObject.TryGetComponent(out SubRoot subRoot) && !subRoot.isBase)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

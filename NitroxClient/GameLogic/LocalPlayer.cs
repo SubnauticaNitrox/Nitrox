@@ -62,6 +62,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         if (vehicle.HasValue)
         {
             movement = new VehicleMovement(PlayerId.Value, vehicle.Value);
+            return;
         }
         else
         {

@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -32,6 +32,8 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, packet.IsPiloting);
             }
+
+            // TODO: remake that, it does nothing
         }
     }
 }
