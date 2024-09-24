@@ -29,14 +29,11 @@ public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPack
             {
                 player.SendPacket(footstepPacket);
             }
-            else
-            {
-                if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange &&
+            else if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange &&
                     player != sendingPlayer &&
                     !player.SubRootId.HasValue)
-                {
-                    player.SendPacket(footstepPacket);
-                }
+            {
+                player.SendPacket(footstepPacket);
             }
         }
     }
