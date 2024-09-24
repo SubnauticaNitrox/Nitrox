@@ -8,7 +8,7 @@ public sealed partial class GotoConsoleCommand_GotoPosition_Patch : NitroxPatch,
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((GotoConsoleCommand t) => t.GotoPosition(default, default));
 
-    public static bool Prefix(Vector3 position, bool gotoImmediate = false)
+    public static bool Prefix(Vector3 position)
     {
         Vehicle currentMountedVehicle = Player.main.currentMountedVehicle;
         if (!currentMountedVehicle)
