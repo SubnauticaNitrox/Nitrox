@@ -5,6 +5,7 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors;
+
 public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPacket>
 {
     private readonly float footstepAudioRange; // To modify this value, modify the last value in the SoundWhitelist_Subnautica.csv file
