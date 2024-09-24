@@ -4,6 +4,7 @@ using FMODUnity;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Packets;
 
@@ -27,7 +28,7 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
 
     public override void Process(FootstepPacket packet)
     {
-        var player = remotePlayerManager.Find(packet.PlayerID);
+        Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerID);
         if (player.HasValue)
         {
             FMODAsset asset = packet.AssetIndex switch
