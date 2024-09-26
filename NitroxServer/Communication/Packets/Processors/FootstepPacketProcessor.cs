@@ -22,11 +22,8 @@ public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPack
     {
         foreach (Player player in playerManager.GetAllPlayers())
         {
-            if(NitroxVector3.Distance(player.Position, sendingPlayer.Position) >= footstepAudioRange)
-            {
-                continue;
-            }
-            if(player != sendingPlayer)
+            if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) >= footstepAudioRange ||
+                player == sendingPlayer)
             {
                 continue;
             }
