@@ -30,13 +30,7 @@ public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPack
             {
                 continue;
             }
-            if (player.SubRootId.HasValue && sendingPlayer.SubRootId.HasValue &&
-                player.SubRootId.Value == sendingPlayer.SubRootId.Value)
-            {
-                player.SendPacket(footstepPacket);
-            }
-            else if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) <= footstepAudioRange &&
-                    !player.SubRootId.HasValue)
+            if(player.SubRootId.Equals(sendingPlayer.SubRootId))
             {
                 player.SendPacket(footstepPacket);
             }
