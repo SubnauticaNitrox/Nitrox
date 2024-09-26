@@ -12,10 +12,14 @@ public class DiscordRequestIPProcessor : ClientPacketProcessor<DiscordRequestIP>
     public override async void Process(DiscordRequestIP packet)
     {
         string ipPort = await GetIpPortAsync();
+        if (ipPort == "") return;
         DiscordClient.UpdateIpPort(ipPort);
     }
 
-    /** Get the WAN IP address or the Hamachi IP address if the WAN IP address is not available. */
+    /// <summary>
+    /// Get the WAN IP address or the Hamachi IP address if the WAN IP address is not available.
+    /// </summary>
+    /// <returns>Found IP or blank string if none found</returns>
     private static async Task<string> GetIpPortAsync()
     {
         Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
@@ -24,10 +28,11 @@ public class DiscordRequestIPProcessor : ClientPacketProcessor<DiscordRequestIP>
         {
             return wanIp.Result.ToString();
         }
+
         if (await hamachiIp != null)
         {
             return hamachiIp.Result.ToString();
         }
-        return "127.0.0.1";
+        return "";
     }
 }
