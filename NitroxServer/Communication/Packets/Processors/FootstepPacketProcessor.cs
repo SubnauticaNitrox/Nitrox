@@ -20,7 +20,7 @@ public class FootstepPacketProcessor : AuthenticatedPacketProcessor<FootstepPack
 
     public override void Process(FootstepPacket footstepPacket, Player sendingPlayer)
     {
-        foreach (Player player in playerManager.GetAllPlayers())
+        foreach (Player player in playerManager.GetConnectedPlayers())
         {
             if (NitroxVector3.Distance(player.Position, sendingPlayer.Position) >= footstepAudioRange ||
                 player == sendingPlayer)
