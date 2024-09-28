@@ -33,7 +33,7 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
 
     private async Task ProcessPacketAsync(DiscordRequestIP packet, Player player)
     {
-        string result = await GetIpPortAsync();
+        string result = await GetIpAsync();
         if (result == "")
         {
             Log.Error("Couldn't get external Ip for discord request.");
@@ -48,7 +48,7 @@ public class DiscordRequestIPProcessor : AuthenticatedPacketProcessor<DiscordReq
     /// Get the WAN IP address or the Hamachi IP address if the WAN IP address is not available.
     /// </summary>
     /// <returns>Found IP or blank string if none found</returns>
-    private static async Task<string> GetIpPortAsync()
+    private static async Task<string> GetIpAsync()
     {
         Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
         Task<IPAddress> hamachiIp = Task.Run(NetHelper.GetHamachiIp);
