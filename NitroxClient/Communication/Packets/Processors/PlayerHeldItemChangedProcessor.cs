@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -14,10 +14,12 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
     private int defaultLayer;
     private int viewModelLayer;
     private readonly PlayerManager playerManager;
+    private readonly Entities entities;
 
-    public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
+    public PlayerHeldItemChangedProcessor(PlayerManager playerManager, Entities entities)
     {
         this.playerManager = playerManager;
+        this.entities = entities;
 
         if (NitroxEnvironment.IsNormal)
         {
@@ -38,6 +40,7 @@ public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldIt
 
         if (!NitroxEntity.TryGetObjectFrom(packet.ItemId, out GameObject item))
         {
+            entities.RequireResync(packet.ItemId);
             return; // Item can be not spawned yet bc async.
         }
 

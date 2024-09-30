@@ -73,13 +73,13 @@ public class EntitySimulation
 
     public SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player, bool shouldEntityMove = true)
     {
+        bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
         if (simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
         {
-            bool doesEntityMove = shouldEntityMove && entity is WorldEntity worldEntity && ShouldSimulateEntityMovement(worldEntity);
             return new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
         }
-
-        throw new Exception($"New entity was already being simulated by someone else: {entity.Id}");
+        Log.Error($"New entity was already being simulated by someone else: {entity.Id}");
+        return new(entity.Id, simulationOwnershipData.GetPlayerForLock(entity.Id).Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
     }
 
     public List<SimulatedEntity> AssignGlobalRootEntitiesAndGetData(Player player)

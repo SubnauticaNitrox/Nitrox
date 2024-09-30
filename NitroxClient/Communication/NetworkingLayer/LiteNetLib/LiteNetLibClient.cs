@@ -34,10 +34,17 @@ public class LiteNetLibClient : IClient
         client = new NetManager(listener)
         {
             UpdateTime = 15,
+            EnableStatistics = true,
+            DisconnectOnUnreachable = true,
 #if DEBUG
             DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
         };
+    }
+
+    public NetStatistics GetStatistics()
+    {
+        return client.Statistics;
     }
 
     public async Task StartAsync(string ipAddress, int serverPort)
