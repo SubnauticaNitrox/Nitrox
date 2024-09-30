@@ -33,6 +33,7 @@ namespace NitroxClient.MonoBehaviours
         private GameLogic.Terrain terrain;
 
         public bool InitialSyncCompleted { get; set; }
+        public bool TimedOut { get; set; }
 
         /// <summary>
         ///     True if multiplayer is loaded and client is connected to a server.
@@ -86,6 +87,7 @@ namespace NitroxClient.MonoBehaviours
             if (Active)
             {
                 Main.InitialSyncCompleted = false;
+                Main.TimedOut = false;
                 Main.StartCoroutine(LoadAsync());
             }
             else
@@ -105,11 +107,29 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen.Remove(worldSettleItem);
 
-            WaitScreen.ManualWaitItem item = WaitScreen.Add(Language.main.Get("Nitrox_JoiningSession"));
+            WaitScreen.ManualWaitItem joiningItem = WaitScreen.Add(Language.main.Get("Nitrox_JoiningSession"));
             yield return Main.StartCoroutine(Main.StartSession());
-            WaitScreen.Remove(item);
+            WaitScreen.Remove(joiningItem);
 
+            WaitScreen.ManualWaitItem waitingItem = WaitScreen.Add(Language.main.Get("Nitrox_Waiting"));
+            Log.InGame(Language.main.Get("Nitrox_Waiting"));
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
+            WaitScreen.Remove(waitingItem);
+
+            if (Main.TimedOut)
+            {
+                int timer = 5;
+
+                while (timer > 0)
+                {
+                    Log.InGame($"Initial sync timed out. Quitting game in {timer} second{(timer > 1 ? "s" : "")}…");
+                    yield return new WaitForSecondsRealtime(1);
+                    timer--;
+                }
+
+                IngameMenu.main.QuitGame(false);
+                yield break;
+            }
 
             SetLoadingComplete();
         }
