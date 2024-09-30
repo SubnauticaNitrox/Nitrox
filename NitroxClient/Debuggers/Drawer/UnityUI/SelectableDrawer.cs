@@ -148,28 +148,56 @@ public class SelectableDrawer : IDrawer<Selectable>
         {
             GUILayout.Label("Highlighted Sprite", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            ImageDrawer.DrawTexture(selectable.spriteState.highlightedSprite.texture);
+            if (selectable.spriteState.highlightedSprite)
+            {
+                ImageDrawer.DrawTexture(selectable.spriteState.highlightedSprite.texture);
+            }
+            else
+            {
+                GUILayout.Box("Field is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+            }
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Pressed Sprite", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            ImageDrawer.DrawTexture(selectable.spriteState.pressedSprite.texture);
+            if (selectable.spriteState.pressedSprite)
+            {
+                ImageDrawer.DrawTexture(selectable.spriteState.pressedSprite.texture);
+            }
+            else
+            {
+                GUILayout.Box("Field is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+            }
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Selected Sprite", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            ImageDrawer.DrawTexture(selectable.spriteState.selectedSprite.texture);
+            if (selectable.spriteState.selectedSprite)
+            {
+                ImageDrawer.DrawTexture(selectable.spriteState.selectedSprite.texture);
+            }
+            else
+            {
+                GUILayout.Box("Field is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+            }
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Disabled Sprite", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            ImageDrawer.DrawTexture(selectable.spriteState.disabledSprite.texture);
+            if (selectable.spriteState.disabledSprite)
+            {
+                ImageDrawer.DrawTexture(selectable.spriteState.disabledSprite.texture);
+            }
+            else
+            {
+                GUILayout.Box("Field is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
+            }
         }
     }
 

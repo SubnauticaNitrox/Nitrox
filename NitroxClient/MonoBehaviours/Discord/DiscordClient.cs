@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using DiscordGameSDKWrapper;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 using NitroxModel;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -99,7 +99,7 @@ public class DiscordClient : MonoBehaviour
     {
         Log.Info("[Discord] Joining Server");
 
-        if (SceneManager.GetActiveScene().name != "StartScreen" || !MainMenuMultiplayerPanel.Main)
+        if (SceneManager.GetActiveScene().name != "StartScreen" || !MainMenuServerListPanel.Main)
         {
             Log.InGame(Language.main.Get("Nitrox_DiscordMultiplayerMenu"));
             Log.Warn("[Discord] Can't join a server outside of the main-menu.");
@@ -109,7 +109,8 @@ public class DiscordClient : MonoBehaviour
         string[] splitSecret = secret.Split(':');
         string ip = string.Join(":", splitSecret.Take(splitSecret.Length - 1));
         string port = splitSecret.Last();
-        MainMenuMultiplayerPanel.OpenJoinServerMenuAsync(ip, port).ContinueWithHandleError();
+        int portInt = int.Parse(port);
+        MainMenuServerButton.OpenJoinServerMenuAsync(ip, portInt).ContinueWithHandleError();
     }
 
     private void ActivityJoinRequest(ref User user)

@@ -13,6 +13,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxModel.Core;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -174,16 +175,7 @@ namespace NitroxClient.MonoBehaviours
         public void StopCurrentSession()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
-            {
-                multiplayerSession.Disconnect();
-            }
-
             OnAfterMultiplayerEnd?.Invoke();
-
-            //Always do this last.
-            NitroxServiceLocator.EndCurrentLifetimeScope();
         }
 
         private static void SetLoadingComplete()
@@ -224,7 +216,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 // If we just disconnected from a multiplayer session, then we need to kill the connection here.
                 // Maybe a better place for this, but here works in a pinch.
-                StopCurrentSession();
+                JoinServerBackend.StopMultiplayerClient();
                 SceneCleaner.Open();
             }
         }
