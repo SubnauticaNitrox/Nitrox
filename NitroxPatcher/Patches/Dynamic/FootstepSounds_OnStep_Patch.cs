@@ -88,13 +88,13 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
             switch (asset.path)
             {
                 case PRECURSOR_STEP_SOUND_PATH:
-                    assetIndex = FootstepPacket.StepSounds.PRECURSOR_STEP_SOUND;
+                    assetIndex = FootstepPacket.StepSounds.PRECURSOR;
                     break;
                 case METAL_STEP_SOUND_PATH:
-                    assetIndex = FootstepPacket.StepSounds.METAL_STEP_SOUND;
+                    assetIndex = FootstepPacket.StepSounds.METAL;
                     break;
                 default:
-                    assetIndex = FootstepPacket.StepSounds.LAND_STEP_SOUND;
+                    assetIndex = FootstepPacket.StepSounds.LAND;
                     break;
             }
             FootstepPacket footstepPacket = new(Resolve<LocalPlayer>().PlayerId.Value, assetIndex);

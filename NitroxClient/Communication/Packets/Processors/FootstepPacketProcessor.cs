@@ -33,9 +33,9 @@ public class FootstepPacketProcessor : ClientPacketProcessor<FootstepPacket>
         {
             FMODAsset asset = packet.AssetIndex switch
             {
-                FootstepPacket.StepSounds.PRECURSOR_STEP_SOUND => localFootstepSounds.precursorInteriorSound,
-                FootstepPacket.StepSounds.METAL_STEP_SOUND => localFootstepSounds.metalSound,
-                FootstepPacket.StepSounds.LAND_STEP_SOUND => localFootstepSounds.landSound,
+                FootstepPacket.StepSounds.PRECURSOR => localFootstepSounds.precursorInteriorSound,
+                FootstepPacket.StepSounds.METAL => localFootstepSounds.metalSound,
+                FootstepPacket.StepSounds.LAND => localFootstepSounds.landSound,
                 _ => null
             };
             EventInstance evt = FMODUWE.GetEvent(asset);

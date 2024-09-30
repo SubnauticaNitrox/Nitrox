@@ -16,8 +16,8 @@ public class FootstepPacket : Packet
 
     public enum StepSounds : byte
     {
-        PRECURSOR_STEP_SOUND,
-        METAL_STEP_SOUND,
-        LAND_STEP_SOUND
+        PRECURSOR,
+        METAL,
+        LAND
     }
 }
