@@ -392,7 +392,7 @@ public class BatchEntitySpawner : IEntitySpawner
                     }
                     else
                     {
-                        spawnedEntity = new PrefabPlaceholderEntity(spawnedEntity, i);
+                        spawnedEntity = new PrefabPlaceholderEntity(spawnedEntity, true, i);
                     }
                     entity.ChildEntities.Add(spawnedEntity);
                 }
@@ -415,7 +415,7 @@ public class BatchEntitySpawner : IEntitySpawner
                 }
                 else
                 {
-                    spawnedEntity = new PrefabPlaceholderEntity(spawnedEntity, i);
+                    spawnedEntity = new PrefabPlaceholderEntity(spawnedEntity, false, i);
                 }
 
                 entity.ChildEntities.Add(spawnedEntity);
