@@ -10,8 +10,8 @@ public class FootstepPacket : Packet
 
     public FootstepPacket(ushort playerID, StepSounds assetIndex)
     {
-        this.PlayerID = playerID;
-        this.AssetIndex = assetIndex;
+        PlayerID = playerID;
+        AssetIndex = assetIndex;
     }
 
     public enum StepSounds : byte
