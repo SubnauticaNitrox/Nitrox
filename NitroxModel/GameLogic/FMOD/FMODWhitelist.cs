@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -11,14 +12,27 @@ public class FMODWhitelist
     private readonly HashSet<string> whitelistedPaths = new();
     private readonly Dictionary<string, SoundData> soundsWhitelist = new();
 
-    public FMODWhitelist(GameInfo game)
+    public static FMODWhitelist Load(GameInfo game)
+    {
+        return new FMODWhitelist(game);
+    }
+
+    private FMODWhitelist(GameInfo game)
     {
         string filePath = Path.Combine(NitroxUser.LauncherPath, "Resources", $"SoundWhitelist_{game.Name}.csv");
-        string fileData = File.ReadAllText(filePath);
+        string fileData = "";
+        try
+        {
+            fileData = File.ReadAllText(filePath);
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
 
         if (string.IsNullOrWhiteSpace(fileData))
         {
-            Log.Error($"[{nameof(FMODWhitelist)}]: Provided sound whitelist at {filePath} is null or whitespace");
+            Log.Error($"[{nameof(FMODWhitelist)}]: Provided sound whitelist at '{filePath}' is null or whitespace");
             return;
         }
 

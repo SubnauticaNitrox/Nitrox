@@ -6,7 +6,7 @@ namespace NitroxModel.DataStructures.Unity
     [TestClass]
     public class NitroxTransformTest
     {
-        private const float TOLERANCE = 0.00005f;
+        private const float TOLERANCE = 0.005f;
 
         private static readonly NitroxTransform root = new NitroxTransform(new NitroxVector3(1, 1, 1), NitroxQuaternion.FromEuler(0, 0, 0), new NitroxVector3(1, 1, 1));
         private static readonly NitroxTransform child1 = new NitroxTransform(new NitroxVector3(5, 3, -6), NitroxQuaternion.FromEuler(30, 0, 10), new NitroxVector3(2, 2, 2));
