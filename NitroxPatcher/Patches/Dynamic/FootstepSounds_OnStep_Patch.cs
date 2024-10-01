@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
 using FMOD.Studio;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
@@ -10,6 +6,10 @@ using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
