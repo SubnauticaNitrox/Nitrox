@@ -19,6 +19,7 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
     private const string EXO_STEP_SOUND_PATH = "event:/sub/exo/step";
     private const string PRECURSOR_STEP_SOUND_PATH = "event:/player/footstep_precursor_base";
     private const string METAL_STEP_SOUND_PATH = "event:/player/footstep_metal";
+    private const string LAND_STEP_SOUND_PATH = "event:/player/footstep_dirt";
 
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((FootstepSounds t) => t.OnStep(default));
 
@@ -93,9 +94,11 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
                 case METAL_STEP_SOUND_PATH:
                     assetIndex = FootstepPacket.StepSounds.METAL;
                     break;
-                default:
+                case LAND_STEP_SOUND_PATH:
                     assetIndex = FootstepPacket.StepSounds.LAND;
                     break;
+                default:
+                    return;
             }
             FootstepPacket footstepPacket = new(Resolve<LocalPlayer>().PlayerId.Value, assetIndex);
             Resolve<IPacketSender>().Send(footstepPacket);
