@@ -281,9 +281,9 @@ event:/player/enzyme_cure;false;false;0
 event:/player/food_critical;false;false;0
 event:/player/food_low;false;false;0
 event:/player/food_very_low;false;false;0
-event:/player/footstep_dirt;false;false;0
-event:/player/footstep_metal;false;false;0
-event:/player/footstep_precursor_base;false;false;0
+event:/player/footstep_dirt;false;false;20
+event:/player/footstep_metal;false;false;20
+event:/player/footstep_precursor_base;false;false;20
 event:/player/goal_airsack;false;false;0
 event:/player/goal_BiomeKelpForest;false;false;0
 event:/player/goal_BiomePrecursorGunUpper;false;false;0

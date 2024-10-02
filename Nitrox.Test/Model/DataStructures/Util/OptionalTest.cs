@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -99,6 +99,25 @@ namespace NitroxModel.DataStructures.Util
             Optional<object> cAsObj = Optional<object>.Of(new C());
             cAsObj.HasValue.Should().BeTrue();
             ((C)cAsObj.Value).Threshold.Should().Be(203);
+        }
+        [TestMethod]
+        public void OptionalEqualsCheck()
+        {
+            Optional<string> op = Optional.OfNullable<string>(null);
+            Optional<string> op1 = Optional.OfNullable<string>(null);
+            Optional<string> op2 = Optional.Of("Test");
+            Optional<string> op3 = Optional.Of("Test2");
+            Optional<string> op4 = Optional.Of("Test");
+
+            Assert.IsFalse(op.Equals(op2));
+            Assert.IsFalse(op.Equals(op3));
+            Assert.IsFalse(op2.Equals(op3));
+
+            Assert.IsTrue(op.Equals(op1));
+            Assert.IsTrue(op2.Equals(op4));
+
+            Assert.IsTrue(op != op2);
+            Assert.IsTrue(op2 == op4);
         }
 
         private class Base
