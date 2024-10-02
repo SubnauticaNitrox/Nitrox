@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic
         }
         public bool PlayerHasMinLockType(NitroxId id, SimulationLockType lockType)
         {
-            if (simulatedIdsByLockType.TryGetValue(id, out SimulationLockType playerLock))
+            if (id != null && simulatedIdsByLockType.TryGetValue(id, out SimulationLockType playerLock))
             {
                 return playerLock <= lockType;
             }
