@@ -15,6 +15,6 @@ public class FootstepSounds_OnStep_PatchTest
         IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(FootstepSounds_OnStep_Patch.TARGET_METHOD);
         IEnumerable<CodeInstruction> result = FootstepSounds_OnStep_Patch.Transpiler(beforeInstructions);
 
-        Assert.AreEqual(beforeInstructions.Count() + 4, result.Count());
+        Assert.AreEqual(beforeInstructions.Count() + 6, result.Count());
     }
 }
