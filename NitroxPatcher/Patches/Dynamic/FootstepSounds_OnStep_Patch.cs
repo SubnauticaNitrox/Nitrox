@@ -83,25 +83,26 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
 
     private static void SendFootstepPacket(FMODAsset asset)
     {
-        if (Resolve<LocalPlayer>().PlayerId.HasValue)
+        if (!Resolve<LocalPlayer>().PlayerId.HasValue)
         {
-            FootstepPacket.StepSounds assetIndex;
-            switch (asset.path)
-            {
-                case PRECURSOR_STEP_SOUND_PATH:
-                    assetIndex = FootstepPacket.StepSounds.PRECURSOR;
-                    break;
-                case METAL_STEP_SOUND_PATH:
-                    assetIndex = FootstepPacket.StepSounds.METAL;
-                    break;
-                case LAND_STEP_SOUND_PATH:
-                    assetIndex = FootstepPacket.StepSounds.LAND;
-                    break;
-                default:
-                    return;
-            }
-            FootstepPacket footstepPacket = new(Resolve<LocalPlayer>().PlayerId.Value, assetIndex);
-            Resolve<IPacketSender>().Send(footstepPacket);
+            return;
         }
+        FootstepPacket.StepSounds assetIndex;
+        switch (asset.path)
+        {
+            case PRECURSOR_STEP_SOUND_PATH:
+                assetIndex = FootstepPacket.StepSounds.PRECURSOR;
+                break;
+            case METAL_STEP_SOUND_PATH:
+                assetIndex = FootstepPacket.StepSounds.METAL;
+                break;
+            case LAND_STEP_SOUND_PATH:
+                assetIndex = FootstepPacket.StepSounds.LAND;
+                break;
+            default:
+                return;
+        }
+        FootstepPacket footstepPacket = new(Resolve<LocalPlayer>().PlayerId.Value, assetIndex);
+        Resolve<IPacketSender>().Send(footstepPacket);
     }
 }
