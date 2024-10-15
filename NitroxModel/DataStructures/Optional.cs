@@ -16,7 +16,7 @@ namespace NitroxModel.DataStructures.Util
     /// <typeparam name="T"></typeparam>
     [Serializable]
     [DataContract]
-    public struct Optional<T> : ISerializable where T : class
+    public struct Optional<T> : ISerializable, IEquatable<Optional<T>> where T : class
     {
         private delegate bool HasValueDelegate(T value);
 
