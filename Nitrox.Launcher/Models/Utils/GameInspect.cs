@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.ViewModels;
-using NitroxModel;
 using NitroxModel.Discovery.Models;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
@@ -55,15 +55,16 @@ internal static class GameInspect
     /// <summary>
     ///     Checks game is running and if it is, warns. Does nothing in development mode for debugging purposes.
     /// </summary>
-    public static bool IsGameRunning(GameInfo game)
+    public static bool WarnIfGameProcessExists(GameInfo game)
     {
-#if RELEASE
-        if (NitroxModel.Platforms.OS.Shared.ProcessEx.ProcessExists(game.Name))
+        if (NitroxEnvironment.IsReleaseMode)
         {
-            LauncherNotifier.Warning("An instance of Subnautica is already running");
-            return true;
+            if (NitroxModel.Platforms.OS.Shared.ProcessEx.ProcessExists(game.Name))
+            {
+                LauncherNotifier.Warning("An instance of Subnautica is already running");
+                return true;
+            }
         }
-#endif
         return false;
     }
 }

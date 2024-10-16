@@ -52,6 +52,20 @@ public class ProcessEx : IDisposable
         throw new PlatformNotSupportedException("Unsupported operating system.");
     }
 
+    public static bool ProcessExists(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
+    {
+        ProcessEx proc = null;
+        try
+        {
+            proc = GetFirstProcess(procName, predicate, comparer);
+            return proc != null;
+        }
+        finally
+        {
+            proc?.Dispose();
+        }
+    }
+
     public static ProcessEx Start(string fileName = null, IEnumerable<(string, string)> environmentVariables = null, string workingDirectory = null, string commandLine = null, bool createWindow = true)
     {
         ProcessStartInfo startInfo = new()
@@ -217,9 +231,6 @@ public abstract class ProcessExBase : IDisposable
     public abstract void Suspend();
     public abstract void Resume();
     public abstract void Terminate();
-    public virtual void Dispose()
-    {
-    }
 
     public static bool IsElevated()
     {
@@ -228,6 +239,10 @@ public abstract class ProcessExBase : IDisposable
             return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
         }
         return geteuid() == 0;
+    }
+
+    public virtual void Dispose()
+    {
     }
 
     [DllImport("libc")]
@@ -244,9 +259,9 @@ public class ProcessModuleEx
 
 public class WindowsProcessEx : ProcessExBase
 {
+    private readonly Process process;
     private bool disposed;
     private IntPtr handle;
-    private readonly Process process;
 
     public override int Id => process.Id;
     public override string Name => process.ProcessName;
@@ -608,8 +623,8 @@ public class LinuxProcessEx : ProcessExBase
 
 public class MacOSProcessEx : ProcessExBase
 {
-    private bool disposed;
     private readonly IntPtr task;
+    private bool disposed;
     public override int Id { get; }
     public override IntPtr Handle => task;
 
