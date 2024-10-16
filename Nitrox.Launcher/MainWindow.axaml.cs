@@ -28,6 +28,21 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
     {
         this.dialogService = dialogService;
 
+
+        if (OperatingSystem.IsLinux())
+        {
+            SystemDecorations = SystemDecorations.Full;
+
+            Loaded += (sender, args) =>
+            {
+                var customTitleBar = this.FindControl<Panel>("CustomTitleBar");
+                if (customTitleBar != null)
+                {
+                    customTitleBar.IsVisible = false;
+                }
+            };
+        }
+
         // Handle thrown exceptions so they aren't hidden.
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
@@ -103,7 +118,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         string title = ex switch
         {
-            { InnerException: {} inner } => inner.Message,
+            { InnerException: { } inner } => inner.Message,
             _ => ex.Message
         };
         await dialogService.ShowErrorAsync(ex, $"Error: {title}");

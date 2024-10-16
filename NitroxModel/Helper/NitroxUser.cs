@@ -172,7 +172,7 @@ namespace NitroxModel.Helper
                 }
 
                 // File URI works different on OSX so just return path directly.
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory();
                 }

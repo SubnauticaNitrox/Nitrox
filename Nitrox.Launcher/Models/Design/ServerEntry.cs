@@ -197,7 +197,7 @@ public partial class ServerEntry : ObservableObject
         private ServerProcess(string saveDir, Action onExited)
         {
             string serverExeName = "NitroxServer-Subnautica.exe";
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 serverExeName = "NitroxServer-Subnautica";
             }

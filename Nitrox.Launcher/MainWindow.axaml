@@ -109,7 +109,7 @@
 
     <Panel>
         <!-- Title bar -->
-        <Panel Classes="titleBar">
+        <Panel Name="CustomTitleBar" Classes="titleBar">
             <Interaction.Behaviors>
                 <BehaviorCollection>
                     <EventTriggerBehavior EventName="PointerPressed">
@@ -120,7 +120,6 @@
                     </EventTriggerBehavior>
                 </BehaviorCollection>
             </Interaction.Behaviors>
-
             <StackPanel>
                 <Button Command="{Binding MinimizeCommand}">
                     <Image Source="/Assets/Images/material-design-icons/min.png" />

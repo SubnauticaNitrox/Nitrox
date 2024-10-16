@@ -1,7 +1,9 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.Discovery.Models;
@@ -17,7 +19,6 @@ public sealed class Steam : IGamePlatform
 {
     private static Steam instance;
     public static Steam Instance => instance ??= new Steam();
-
     public string Name => nameof(Steam);
     public Platform Platform => Platform.STEAM;
 
@@ -133,10 +134,14 @@ public sealed class Steam : IGamePlatform
         {
             return ProcessEx.Start(
                 pathToGameExe,
-                new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                 Path.GetDirectoryName(pathToGameExe),
                 launchArguments
             );
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return StartGameWithProton(pathToGameExe, steamAppId, launchArguments);
         }
 
         ProcessStartInfo startInfo = new()
@@ -149,6 +154,187 @@ public sealed class Steam : IGamePlatform
                 [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
                 ["SteamGameId"] = steamAppId.ToString(),
                 ["SteamAppID"] = steamAppId.ToString()
+            }
+        };
+        Log.Info($"Starting game with arguments: {startInfo.FileName} {launchArguments}");
+        return new ProcessEx(Process.Start(startInfo));
+    }
+
+    private ProcessEx StartGameWithProton(string pathToGameExe, int steamAppId, string launchArguments)
+    {
+        // function to get library path for given game id
+        static string GetLibraryPath(string steamPath, string gameId)
+        {
+            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+            string content = File.ReadAllText(libraryFoldersPath);
+
+            // Regex to match library folder entries
+            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""[^}]*""apps""\s*\{([^}]+)\}", RegexOptions.Singleline);
+            MatchCollection matches = folderRegex.Matches(content);
+
+            foreach (Match match in matches)
+            {
+                string path = match.Groups[2].Value;
+                string apps = match.Groups[3].Value;
+
+                // Check if the gameId exists in the apps section
+                if (Regex.IsMatch(apps, $@"""{gameId}""\s*""[^""]+"""))
+                {
+                    return path;
+                }
+            }
+
+            return ""; // Return empty string if not found
+        }
+
+        static List<string> GetAllLibraryPaths(string steamPath)
+        {
+            string libraryFoldersPath = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+            string content = File.ReadAllText(libraryFoldersPath);
+
+            // Regex to match library folder entries
+            Regex folderRegex = new(@"""(\d+)""\s*\{[^}]*""path""\s*""([^""]+)""", RegexOptions.Singleline);
+            MatchCollection matches = folderRegex.Matches(content);
+
+            List<string> libraryPaths = [];
+            foreach (Match match in matches)
+            {
+                string path = match.Groups[2].Value.Replace("\\\\", "\\");
+                if (Directory.Exists(Path.Combine(path, "steamapps", "common")))
+                {
+                    libraryPaths.Add(path);
+                }
+            }
+            // Add the default Steam library path
+            string defaultLibraryPath = Path.Combine(steamPath);
+            if (!libraryPaths.Contains(defaultLibraryPath))
+            {
+                libraryPaths.Add(defaultLibraryPath);
+            }
+
+            return libraryPaths;
+        }
+        
+        static string GetProtonVersionFromConfigVdf(string configVdfFile, string appId)
+        {
+            try
+            {
+                string fileContent = File.ReadAllText(configVdfFile);
+                Match compatToolMatch = Regex.Match(fileContent, @"""CompatToolMapping""\s*{((?:\s*""\d+""[^{]+[^}]+})*)\s*}");
+
+                if (compatToolMatch.Success)
+                {
+                    string compatToolMapping = compatToolMatch.Groups[1].Value;
+                    string appIdPattern = $@"""{appId}""[^{{]*\{{[^}}]*""name""\s*""([^""]+)""";
+                    Match appIdMatch = Regex.Match(compatToolMapping, appIdPattern);
+
+                    if (appIdMatch.Success)
+                    {
+                        return appIdMatch.Groups[1].Value;
+                    }
+                }
+
+                return "Proton version not found for the given appId";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+
+        string userHomePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (string.IsNullOrWhiteSpace(userHomePath))
+        {
+            userHomePath = Environment.GetEnvironmentVariable("HOME");
+        }
+        if (!Directory.Exists(userHomePath))
+        {
+            throw new Exception("User HOME is not known");
+        }
+
+        string compatdataPath = "";
+        if (!string.IsNullOrEmpty(pathToGameExe))
+        {
+            string[] pathComponents = pathToGameExe.Split(Path.DirectorySeparatorChar);
+            int steamAppsIndex = pathComponents.GetIndex("steamapps");
+            if (steamAppsIndex != -1)
+            {
+                string steamAppsPath = string.Join(Path.DirectorySeparatorChar.ToString(), pathComponents, 0, steamAppsIndex + 1);
+                compatdataPath = Path.Combine(steamAppsPath, "compatdata", steamAppId.ToString());
+            }
+        }
+        string steamPath = Path.Combine(userHomePath, ".steam/steam");
+        string geProtonPath = Path.Combine(userHomePath, ".steam/root/compatibilitytools.d/");
+        // support flatpak
+        if (!Directory.Exists(steamPath))
+        {
+            steamPath = Path.Combine(userHomePath, ".var/app/com.valvesoftware.Steam/data/Steam/");
+            geProtonPath = Path.Combine(userHomePath, ".var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/");
+        }
+
+        string sniperappid = "1628350";
+        string sniperruntimepath = Path.Combine(GetLibraryPath(steamPath, sniperappid), "steamapps", "common", "SteamLinuxRuntime_sniper");
+
+        string protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
+        if (protonVersion == "Proton version not found for the given appId")
+        {
+            protonVersion = "proton_9";
+        }
+        bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
+        string protonDir = null;
+        if (isValveProton)
+        {
+            int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
+            if (index != -1)
+            {
+                protonVersion = protonVersion.Substring(index + "proton_".Length);
+            }
+            if (protonVersion == "experimental")
+            {
+                protonVersion = "-";
+            }
+
+            foreach (string path in GetAllLibraryPaths(steamPath))
+            {
+                foreach (string dir in Directory.EnumerateDirectories(Path.Combine(path, "steamapps", "common")))
+                {
+                    if (dir.Contains($"Proton {protonVersion}"))
+                    {
+                        protonDir = dir;
+                        break;
+                    }
+                }
+                if (protonDir != null)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            protonDir = Path.Combine(geProtonPath, protonVersion);
+        }
+        if (protonDir == null)
+        {
+            throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
+        }
+
+        string launchargs = $" --verb=waitforexitandrun -- \"{Path.Combine(protonDir, "proton")}\" waitforexitandrun \"{pathToGameExe}\" {launchArguments}";
+        ProcessStartInfo startInfo = new()
+        {
+            FileName = Path.Combine(sniperruntimepath, "_v2-entry-point"),
+            Arguments = launchargs,
+            WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
+            UseShellExecute = false,
+            Environment =
+            {
+                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
+                ["SteamGameId"] = steamAppId.ToString(),
+                ["SteamAppID"] = steamAppId.ToString(),
+                ["STEAM_COMPAT_APP_ID"] = steamAppId.ToString(),
+                ["WINEPREFIX"] = compatdataPath,
+                ["STEAM_COMPAT_CLIENT_INSTALL_PATH"] = steamPath,
+                ["STEAM_COMPAT_DATA_PATH"] = compatdataPath,
             }
         };
         return new ProcessEx(Process.Start(startInfo));
