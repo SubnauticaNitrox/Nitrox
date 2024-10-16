@@ -59,7 +59,7 @@ namespace NitroxModel.Packets
 
                                                             return levels;
                                                         })
-                                                        .ThenBy(t => t.FullName)
+                                                        .ThenBy(t => t.FullName, StringComparer.Ordinal)
                                                         .ToArray());
                 }
 

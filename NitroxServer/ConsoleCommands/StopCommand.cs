@@ -14,8 +14,13 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
+            Server server = Server.Instance;
+            if (!server.IsRunning)
+            {
+                return;
+            }
             SendMessageToAllPlayers("Server is shutting down...");
-            Server.Instance.Stop(shouldSave: true);
+            server.Stop(shouldSave: true);
         }
     }
 }

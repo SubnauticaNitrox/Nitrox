@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -16,6 +17,15 @@ namespace NitroxModel.Helper
         public static Types Type { get; private set; } = Types.NORMAL;
         public static bool IsTesting => Type == Types.TESTING;
         public static bool IsNormal => Type == Types.NORMAL;
+
+        public static int CurrentProcessId
+        {
+            get
+            {
+                using Process process = Process.GetCurrentProcess();
+                return process.Id;
+            }
+        }
 
         public static bool IsReleaseMode
         {

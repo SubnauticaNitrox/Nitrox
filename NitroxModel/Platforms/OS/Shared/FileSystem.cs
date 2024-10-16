@@ -261,6 +261,7 @@ namespace NitroxModel.Platforms.OS.Shared
         }
 
         public abstract bool SetFullAccessToCurrentUser(string directory);
-        public abstract bool IsTrustedFile(string file);
+
+        public virtual bool IsTrustedFile(string file) => true;
     }
 }
