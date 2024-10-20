@@ -64,6 +64,13 @@ namespace NitroxClient.GameLogic.ChatUI
             }
         }
 
+        public void DeselectChat() => Player.main.StartCoroutine(DeselectChatAsync());
+        private IEnumerator DeselectChatAsync()
+        {
+            yield return new WaitUntil(() => PlayerChat.IsReady);
+            playerChat.Deselect();
+        }
+
         public void AddMessage(string playerName, string message, Color color) => Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
         private IEnumerator AddMessageAsync(string playerName, string message, Color color)
         {
