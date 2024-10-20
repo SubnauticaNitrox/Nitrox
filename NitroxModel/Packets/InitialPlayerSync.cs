@@ -30,6 +30,7 @@ namespace NitroxModel.Packets
         public List<SimulatedEntity> InitialSimulationOwnerships { get; }
         public NitroxGameMode GameMode { get; }
         public Perms Permissions { get; }
+        public IntroCinematicMode IntroCinematicMode { get; }
         public SubnauticaPlayerPreferences Preferences { get; }
         public TimeData TimeData { get; }
         public bool IsFirstPlayer { get; }
@@ -52,6 +53,7 @@ namespace NitroxModel.Packets
             IEnumerable<SimulatedEntity> initialSimulationOwnerships,
             NitroxGameMode gameMode,
             Perms perms,
+            IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,
             bool isFirstPlayer,
@@ -74,6 +76,7 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
             Permissions = perms;
+            IntroCinematicMode = introCinematicMode;
             Preferences = preferences;
             TimeData = timeData;
             IsFirstPlayer = isFirstPlayer;
@@ -99,6 +102,7 @@ namespace NitroxModel.Packets
             List<SimulatedEntity> initialSimulationOwnerships,
             NitroxGameMode gameMode,
             Perms permissions,
+            IntroCinematicMode introCinematicMode,
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,
             bool isFirstPlayer,
@@ -121,6 +125,7 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships;
             GameMode = gameMode;
             Permissions = permissions;
+            IntroCinematicMode = introCinematicMode;
             Preferences = preferences;
             TimeData = timeData;
             IsFirstPlayer = isFirstPlayer;

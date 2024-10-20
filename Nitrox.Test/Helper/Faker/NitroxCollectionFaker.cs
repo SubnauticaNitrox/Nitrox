@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
 namespace Nitrox.Test.Helper.Faker;
 
 public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
@@ -67,7 +61,7 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
 
         if (collectionType == CollectionType.ARRAY)
         {
-            types = new[] {type.GetElementType() };
+            types = new[] { type.GetElementType() };
             return true;
         }
 
@@ -121,7 +115,7 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
                     for (int i = 0; i < GenerateSize; i++)
                     {
                         MethodInfo castMethod = CastMethodBase.MakeGenericMethod(OutputType);
-                        dynamic castedObject = castMethod.Invoke(null, new[] { elementFaker.GenerateUnsafe(typeTree)});
+                        dynamic castedObject = castMethod.Invoke(null, new[] { elementFaker.GenerateUnsafe(typeTree) });
                         list.Add(castedObject);
                     }
 
@@ -140,10 +134,24 @@ public class NitroxCollectionFaker : NitroxFaker, INitroxFaker
                 {
                     typeTree.Add(dicType[0]);
                     typeTree.Add(dicType[1]);
-                    IDictionary dict = (IDictionary) Activator.CreateInstance(type);
+                    IDictionary dict = (IDictionary)Activator.CreateInstance(type);
                     for (int i = 0; i < GenerateSize; i++)
                     {
-                        dict.Add(keyFaker.GenerateUnsafe(typeTree), valueFaker.GenerateUnsafe(typeTree));
+                        for (int tries = 0; tries < 10; tries++)
+                        {
+                            object key = keyFaker.GenerateUnsafe(typeTree);
+
+                            if (!dict.Contains(key))
+                            {
+                                dict.Add(key, valueFaker.GenerateUnsafe(typeTree));
+                                break;
+                            }
+
+                            if (tries == 9)
+                            {
+                                throw new InvalidOperationException($"While generating action for filling Dictionary an unique key of {dicType[0]} couldn't be generated even after 10 tries");
+                            }
+                        }
                     }
 
                     typeTree.Remove(dicType[0]);
