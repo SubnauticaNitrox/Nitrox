@@ -28,21 +28,6 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
     {
         this.dialogService = dialogService;
 
-
-        if (OperatingSystem.IsLinux())
-        {
-            SystemDecorations = SystemDecorations.Full;
-
-            Loaded += (sender, args) =>
-            {
-                var customTitleBar = this.FindControl<Panel>("CustomTitleBar");
-                if (customTitleBar != null)
-                {
-                    customTitleBar.IsVisible = false;
-                }
-            };
-        }
-
         // Handle thrown exceptions so they aren't hidden.
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
@@ -62,6 +47,17 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         this.WhenActivated(d =>
         {
+            // On Linux systems, Avalonia has trouble allowing windows to resize without "decorations". So we enable it in full, but hide the custom titlebar as it'll look bad. 
+            if (OperatingSystem.IsLinux())
+            {
+                // TODO: Fix scrollbar not going all the way to the top when titlebar is hidden.
+                SystemDecorations = SystemDecorations.Full;
+                if (CustomTitleBar != null)
+                {
+                    CustomTitleBar.IsVisible = false;
+                }
+            }
+            
             // Set clicked nav item as selected (and deselect the others).
             Button lastClickedNav = OpenLaunchGameViewButton;
             d(Button.ClickEvent.Raised.Subscribe(args =>

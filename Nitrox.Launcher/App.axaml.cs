@@ -32,14 +32,6 @@ public class App : Application
 
         MainWindow mainWindow = services.GetRequiredService<MainWindow>();
 
-        // use native titlebar on linux
-        if (!OperatingSystem.IsLinux())
-        {
-            mainWindow.ExtendClientAreaToDecorationsHint = true;
-            mainWindow.ExtendClientAreaTitleBarHeightHint = -99;
-            mainWindow.SystemDecorations = SystemDecorations.None;
-        }
-
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
