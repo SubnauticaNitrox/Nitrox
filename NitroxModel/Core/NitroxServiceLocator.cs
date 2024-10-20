@@ -132,15 +132,28 @@ public static class NitroxServiceLocator
     public static class Cache<T> where T : class
     {
         private static T value;
-        public static T Value => value ??= LocateService<T>();
-        public static T ValuePreLifetime => value ??= LocateServicePreLifetime<T>();
+        public static T Value => value ??= LocateServiceAndRegister();
+        public static T ValuePreLifetime => value ??= LocateServicePreLifetimeAndRegister();
+
+        private static T LocateServiceAndRegister()
+        {
+            LifetimeScopeEnded += Invalidate;
+            return LocateService<T>();
+        }
+
+        private static T LocateServicePreLifetimeAndRegister()
+        {
+            LifetimeScopeEnded += Invalidate;
+            return LocateServicePreLifetime<T>();
+        }
 
         /// <summary>
         ///     Invalidates the cache for type <see cref="T" />. The next <see cref="Value" /> access will request from <see cref="NitroxServiceLocator" /> again.
         /// </summary>
-        public static void Invalidate()
+        private static void Invalidate(object _, EventArgs __)
         {
             value = null;
+            LifetimeScopeEnded -= Invalidate;
         }
     }
 }
