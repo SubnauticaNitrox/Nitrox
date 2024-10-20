@@ -16,7 +16,6 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicPatch
 {
-    private const string EXO_STEP_SOUND_PATH = "event:/sub/exo/step";
     private const string PRECURSOR_STEP_SOUND_PATH = "event:/player/footstep_precursor_base";
     private const string METAL_STEP_SOUND_PATH = "event:/player/footstep_metal";
     private const string LAND_STEP_SOUND_PATH = "event:/player/footstep_dirt";
@@ -66,7 +65,7 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
     private static float CalculateVolume(float originalVolume, FootstepSounds instance, FMODAsset asset, Transform xform)
     {
         // For exosuits only "event:/sub/exo/step" is used inside FootstepSounds
-        if (asset.path.Equals(EXO_STEP_SOUND_PATH, StringComparison.Ordinal) && (!Player.main.currentMountedVehicle || Player.main.currentMountedVehicle.gameObject != instance.gameObject))
+        if (asset.path.Equals(LAND_STEP_SOUND_PATH, StringComparison.Ordinal) && (!Player.main.currentMountedVehicle || Player.main.currentMountedVehicle.gameObject != instance.gameObject))
         {
             // Origin is Exosuit which is controlled by remote player
             return FMODSystem.CalculateVolume(xform.position, Player.main.transform.position, stepSoundRadius.Value, originalVolume);
@@ -77,7 +76,7 @@ public sealed partial class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicP
 
     private static readonly Lazy<float> stepSoundRadius = new(() =>
     {
-        Resolve<FMODWhitelist>().TryGetSoundData(EXO_STEP_SOUND_PATH, out SoundData soundData);
+        Resolve<FMODWhitelist>().TryGetSoundData(LAND_STEP_SOUND_PATH, out SoundData soundData);
         return soundData.Radius;
     });
 
