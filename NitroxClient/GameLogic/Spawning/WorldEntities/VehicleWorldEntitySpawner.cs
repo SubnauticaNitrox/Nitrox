@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Linq;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -46,7 +48,9 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             }
         }
 
-        yield return SpawnInWorld(vehicleEntity, result, parent);            
+        yield return SpawnInWorld(vehicleEntity, result, parent);
+
+        yield return entities.SpawnBatchAsync(entity.ChildEntities);
     }
 
     private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)
@@ -192,7 +196,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
     public bool SpawnsOwnChildren()
     {
-        return false;
+        return true;
     }
     
     private float GetCraftDuration(TechType techType)

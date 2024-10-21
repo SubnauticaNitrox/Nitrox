@@ -52,18 +52,19 @@ public class WorldEntityManager
 
     public List<GlobalRootEntity> GetGlobalRootEntities(bool rootOnly = false)
     {
-        if (rootOnly)
-        {
-            return GetGlobalRootEntities<GlobalRootEntity>().Where(entity => entity.ParentId == null).ToList();
-        }
-        return GetGlobalRootEntities<GlobalRootEntity>();
+        return GetGlobalRootEntities<GlobalRootEntity>(rootOnly);
     }
 
-    public List<T> GetGlobalRootEntities<T>() where T : GlobalRootEntity
+    public List<T> GetGlobalRootEntities<T>(bool rootOnly = false) where T : GlobalRootEntity
     {
         lock (globalRootEntitiesLock)
         {
-            return new(globalRootEntitiesById.Values.OfType<T>());
+            IEnumerable<T> entities = globalRootEntitiesById.Values.OfType<T>();
+            if (rootOnly)
+            {
+                return entities.Where(entity => entity.ParentId == null).ToList();
+            }
+            return entities.ToList();
         }
     }
 
