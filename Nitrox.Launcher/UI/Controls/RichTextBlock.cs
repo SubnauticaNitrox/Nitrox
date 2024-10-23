@@ -61,14 +61,14 @@ public partial class RichTextBlock : TextBlock
         {
             ValueMatch range = matchEnumerator.Current;
 
-            // Handle text that's in front of current tag (and after last tag).
+            // Handle text in-between previous and current tag.
             ReadOnlySpan<char> textPart = text[(lastRange.Index + lastRange.Length)..range.Index];
             if (!textPart.IsEmpty)
             {
                 Inlines.Add(CreateRunWithTags(textPart.ToString(), activeTags));
             }
 
-            // Handle current matched tag
+            // Handle current tag (this tracks state of active tags at current text position)
             ReadOnlySpan<char> match = text.Slice(range.Index, range.Length);
             switch (match)
             {
@@ -76,15 +76,15 @@ public partial class RichTextBlock : TextBlock
                     activeTags.Remove(match[2..^1].ToString());
                     break;
                 case "[b]":
-                    activeTags["b"] = run => run.FontWeight = FontWeight.Bold;
+                    activeTags["b"] = static run => run.FontWeight = FontWeight.Bold;
                     break;
                 case "[u]":
-                    activeTags["u"] = run => run.TextDecorations = underlineTextDecoration;
+                    activeTags["u"] = static run => run.TextDecorations = underlineTextDecoration;
                     break;
                 case "[i]":
-                    activeTags["i"] = run => run.FontStyle = FontStyle.Italic;
+                    activeTags["i"] = static run => run.FontStyle = FontStyle.Italic;
                     break;
-                case ['[', ..] when match.IndexOf("](") > -1:
+                case ['[', ..] when match.IndexOf("](", StringComparison.OrdinalIgnoreCase) > -1:
                     TextBlock textBlock = new();
                     textBlock.Classes.Add("link");
                     textBlock.Text = match[1..match.IndexOfAny("]")].ToString();
@@ -100,7 +100,7 @@ public partial class RichTextBlock : TextBlock
             lastRange = range;
         } while (matchEnumerator.MoveNext());
 
-        // Handle ending of text (i.e. after last tag).
+        // Handle any final text (after the last tag).
         ReadOnlySpan<char> lastPart = text[(lastRange.Index + lastRange.Length)..];
         if (!lastPart.IsEmpty)
         {
