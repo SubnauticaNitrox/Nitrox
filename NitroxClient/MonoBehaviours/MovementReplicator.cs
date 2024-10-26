@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -12,21 +15,19 @@ public class MovementReplicator : MonoBehaviour
 {
     public const float MAX_POSITION_ERROR = 10;
     public const float MAX_ROTATION_ERROR = 20; // °
-    public const float INTERPOLATION_TIME = 4 * MovementBroadcaster.TIME_PER_TICK;
+    public const float INTERPOLATION_TIME = 4 * MovementBroadcaster.BROADCAST_PERIOD;
     public const float SNAPSHOT_EXPIRATION_TIME = 5f * INTERPOLATION_TIME;
     private const int BUFFER_SIZE = 10;
 
-    private readonly CircularBuffer<Snapshot> bufferedSnapshots = new(BUFFER_SIZE);
+    private readonly LinkedList<Snapshot> buffer = new();
 
     public Rigidbody rigidbody;
     public NitroxId objectId;
 
     public void AddSnapshot(MovementData movementData, float time)
     {
-        bufferedSnapshots.Add(new(movementData, time));
+        buffer.AddLast(new Snapshot(movementData, time + INTERPOLATION_TIME + NitroxPrefs.MovementLatency.Value));
     }
-
-    // TODO: add interpolation time (probably like 2 frames)
 
     public void Start()
     {
@@ -63,70 +64,96 @@ public class MovementReplicator : MonoBehaviour
         MovementBroadcaster.UnregisterReplicator(this);
     }
 
-    public void ReplicatorFixedUpdate(float time, float deltaTime)
+    public void Update()
     {
-        if (bufferedSnapshots.Count == 0)
+        if (buffer.Count == 0)
         {
             return;
         }
 
-        float renderTime = time - INTERPOLATION_TIME;
+        float currentTime = DayNightCycle.main.timePassedAsFloat;
 
-        bool isSnapshotExpired(Snapshot snapshot)
+        // Sorting out invalid nodes
+        while (buffer.First != null && buffer.First.Value.IsExpired(currentTime))
         {
-            return snapshot.Time + SNAPSHOT_EXPIRATION_TIME < renderTime;
+            // Log.Debug($"Invalid node: {currentTime} > {buffer.First.Value.Time + SNAPSHOT_EXPIRATION_TIME}");
+            buffer.RemoveFirst();
         }
 
-        List<Snapshot> orderedSnapshots = [.. bufferedSnapshots.OrderBy(s => s.Time)];
-        if (orderedSnapshots.Count == 0)
+        LinkedListNode<Snapshot> firstNode = buffer.First;
+        if (firstNode == null)
         {
+            // Log.Debug("nothing next");
             return;
         }
-        if (orderedSnapshots.Count == 1)
-        {
-            // We just wait for another snapshot if the only one we got is not treatable yet
-            if (renderTime < orderedSnapshots[0].Time)
-            {
-                return;
-            }
 
-            // If we've gone past our only snapshot, we'll extrapolate unless the snapshot has expired
-            // in which case extrapolation might not be relevant
-            if (isSnapshotExpired(orderedSnapshots[0]))
-            {
-                bufferedSnapshots.RemoveAt(0);
-                return;
-            }
-            Extrapolate(orderedSnapshots[0], time, deltaTime);
+        // Current node is not useable yet
+        if (firstNode.Value.IsOlderThan(currentTime))
+        {
+            // Log.Debug($"too early {currentTime} < {firstNode.Value.Time}");
+            return;
         }
-        else // At least 2 valid snapshots
-        {
-            Snapshot firstBefore = default;
-            Snapshot firstAfter = default;
-            foreach (Snapshot snapshot in orderedSnapshots)
-            {
-                if (firstBefore == default && renderTime >= snapshot.Time)
-                {
-                    firstBefore = snapshot;
-                }
-                else if (firstAfter == default && renderTime < snapshot.Time)
-                {
-                    firstAfter = snapshot;
-                    break;
-                }
-            }
-            if (firstBefore == default)
-            {
 
-                // Do something
-                return;
-            }
-            if (firstAfter == default)
-            {
-                // Do something
-                return;
-            }
-            Interpolate(firstBefore, firstAfter, time);
+        while (firstNode.Next != null && !firstNode.Next.Value.IsOlderThan(currentTime))
+        {
+            firstNode = firstNode.Next;
+            buffer.RemoveFirst();
+        }
+
+        LinkedListNode<Snapshot> nextNode = firstNode.Next;
+
+        // No next node but current node is fine
+        if (nextNode == null)
+        {
+            // Log.Debug("waiting for next node");
+            return;
+        }
+
+        // Interpolation
+
+        float t = (currentTime - firstNode.Value.Time) / (nextNode.Value.Time - firstNode.Value.Time);
+        Vector3 position = Vector3.Lerp(firstNode.Value.Data.Position.ToUnity(), nextNode.Value.Data.Position.ToUnity(), t);
+
+        Quaternion rotation = Quaternion.Lerp(firstNode.Value.Data.Rotation.ToUnity(), nextNode.Value.Data.Rotation.ToUnity(), t);
+
+        transform.position = position;
+        transform.rotation = rotation;
+        // TODO: fix remote players being able to go through the object
+        // Log.Debug($"moved {t} to {nextNode.Value.Data.Position.ToUnity()}");
+    }
+
+    public void DebugForward()
+    {
+        float currentTime = DayNightCycle.main.timePassedAsFloat;
+
+        int count = 90;
+        Log.Debug($"Adding {count} snapshots from {currentTime}");
+        float delta = 10f / count;
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 result = transform.position + new Vector3(delta * i, 0, 0);
+
+            MovementData movementData = new(result.ToDto(), NitroxVector3.Zero, transform.rotation.ToDto(), NitroxVector3.Zero);
+
+            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
+        }
+    }
+
+    public void DebugForwardRight()
+    {
+        float currentTime = (float)this.Resolve<TimeManager>().CurrentTime;
+
+        int count = 90;
+        float delta = 10f / 90f;
+        float qDelta = 180f / 90f;
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 offset = new(delta * i, 0, 0);
+            Quaternion qOffset = Quaternion.AngleAxis(qDelta * i, transform.up);
+
+            MovementData movementData = new((transform.position + offset).ToDto(), NitroxVector3.Zero, (transform.rotation * qOffset).ToDto(), NitroxVector3.Zero);
+ 
+            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
         }
     }
 
@@ -164,5 +191,10 @@ public class MovementReplicator : MonoBehaviour
         rigidbody.angularVelocity = snapshot.Data.AngularVelocity.ToUnity();
     }
 
-    private record struct Snapshot(MovementData Data, float Time);
+    private record struct Snapshot(MovementData Data, float Time)
+    {
+        public bool IsOlderThan(float currentTime) => currentTime < Time;
+        
+        public bool IsExpired(float currentTime) => currentTime > Time + SNAPSHOT_EXPIRATION_TIME;
+    }
 }

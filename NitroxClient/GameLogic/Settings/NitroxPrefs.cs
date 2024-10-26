@@ -11,6 +11,7 @@ namespace NitroxClient.GameLogic.Settings
         public static readonly NitroxPref<bool> ChatUsed = new("Nitrox.chatUsed");
         public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding", true);
         public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog", true);
+        public static readonly NitroxPref<float> MovementLatency = new("Nitrox.movementLatency", 0.1f);
     }
 
     public abstract class NitroxPref { }

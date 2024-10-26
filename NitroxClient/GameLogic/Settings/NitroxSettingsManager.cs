@@ -51,6 +51,8 @@ public class NitroxSettingsManager
 
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
+
+        AddSetting("Nitrox_BandwithSettings", new Setting("Nitrox_MovementLatency", NitroxPrefs.MovementLatency, movementLatency => NitroxPrefs.MovementLatency.Value = movementLatency, 0, 1, 0.1f, 0.05f));
     }
 
     /// <summary>Adds a setting to the list under a certain heading</summary>

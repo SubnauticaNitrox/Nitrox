@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -13,13 +9,12 @@ namespace NitroxClient.MonoBehaviours;
 
 public class MovementBroadcaster : MonoBehaviour
 {
-    public const int FIXED_TICK_RATE_MS = 50;
-    public const float TIME_PER_TICK = 1 / FIXED_TICK_RATE_MS;
-    private float latestUpdateTime;
-    public static int Tick;
+    public const int BROADCAST_FREQUENCY = 30;
+    public const float BROADCAST_PERIOD = 1f / BROADCAST_FREQUENCY;
 
     private readonly Dictionary<NitroxId, WatchedEntry> watchedEntries = [];
     public Dictionary<NitroxId, MovementReplicator> Replicators = [];
+    private float latestBroadcastTime;
     public static MovementBroadcaster Instance;
 
     public void Start()
@@ -31,8 +26,6 @@ public class MovementBroadcaster : MonoBehaviour
             return;
         }
         Instance = this;
-        StartCoroutine(BroadcastLoop());
-        //GameLoop().ContinueWithHandleError(Log.Error);
     }
 
     public void OnDestroy()
@@ -40,53 +33,15 @@ public class MovementBroadcaster : MonoBehaviour
         Instance = null;
     }
 
-    // TODO: actually no need for ticks: https://www.youtube.com/watch?v=YR6Bc0-6YJA
-
-    private double TickDouble => this.Resolve<TimeManager>().RealTimeElapsed / (FIXED_TICK_RATE_MS * 0.001d);
-    private int CurrentTick => (int)Math.Floor(TickDouble);
-
-    private int TimeBeforeNextTick()
+    public void Update()
     {
-        // ex: tickDouble = 3487.2
-        // tickDouble -   Mathf.Floor(tickDouble) = 0.2
-        // 1          -   0.2                     = 0.8
-        double tickDouble = TickDouble;
-        return (int)Math.Round(1000 * (1 - (tickDouble - Math.Floor(tickDouble))) / FIXED_TICK_RATE_MS);
-    }
-
-    public async Task GameLoop()
-    {
-        while (true)
+        float currentTime = DayNightCycle.main.timePassedAsFloat;
+        if (currentTime < latestBroadcastTime + BROADCAST_PERIOD)
         {
-            await Task.Delay(TimeBeforeNextTick());
-            Tick++;
+            return;
         }
-    }
-
-    // TODO: if this eventually works, deprecate RemotelyControlled and move everything to this system
-    public IEnumerator BroadcastLoop()
-    {
-        while (true)
-        {
-            float time = (float)this.Resolve<TimeManager>().RealTimeElapsed;
-            float deltaTime = time - latestUpdateTime;
-
-            // Happens during loading and freezes
-            if (deltaTime == 0)
-            {
-                yield return null;
-                continue;
-            }
-
-            if (deltaTime < TIME_PER_TICK)
-            {
-                yield return new WaitForSeconds((float)deltaTime);
-            }
-            latestUpdateTime = time;
-
-            BroadcastLocalData(time);
-            ProcessReplicators(time, deltaTime);
-        }
+        latestBroadcastTime = currentTime;
+        BroadcastLocalData(currentTime);
     }
 
     public void BroadcastLocalData(float time)
@@ -101,14 +56,6 @@ public class MovementBroadcaster : MonoBehaviour
         if (data.Count > 0)
         {
             this.Resolve<IPacketSender>().Send(new VehicleMovements(data, time));
-        }
-    }
-
-    public void ProcessReplicators(float time, float deltaTime)
-    {
-        foreach (MovementReplicator movementReplicator in Replicators.Values)
-        {
-            //movementReplicator.ReplicatorFixedUpdate(time, deltaTime);
         }
     }
 
