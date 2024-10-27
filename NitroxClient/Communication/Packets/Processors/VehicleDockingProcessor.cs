@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
@@ -32,8 +32,8 @@ namespace NitroxClient.Communication.Packets.Processors
             using (PacketSuppressor<VehicleDocking>.Suppress())
             {
                 Log.Debug($"Set vehicle docked for {vehicleDockingBay.gameObject.name}");
-                vehicle.GetComponent<MultiplayerVehicleControl>().SetPositionVelocityRotation(vehicle.transform.position, Vector3.zero, vehicle.transform.rotation, Vector3.zero);
-                vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
+                //vehicle.GetComponent<MultiplayerVehicleControl>().SetPositionVelocityRotation(vehicle.transform.position, Vector3.zero, vehicle.transform.rotation, Vector3.zero);
+                //vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
             }
             vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleDockingBay, packet.VehicleId, packet.PlayerId));
         }

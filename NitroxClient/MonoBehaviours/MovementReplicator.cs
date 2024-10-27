@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -13,8 +11,6 @@ namespace NitroxClient.MonoBehaviours;
 
 public class MovementReplicator : MonoBehaviour
 {
-    public const float MAX_POSITION_ERROR = 10;
-    public const float MAX_ROTATION_ERROR = 20; // °
     public const float INTERPOLATION_TIME = 4 * MovementBroadcaster.BROADCAST_PERIOD;
     public const float SNAPSHOT_EXPIRATION_TIME = 5f * INTERPOLATION_TIME;
     private const int BUFFER_SIZE = 10;
@@ -37,15 +33,20 @@ public class MovementReplicator : MonoBehaviour
             return;
         }
 
+        rigidbody = GetComponent<Rigidbody>();
         if (gameObject.TryGetComponent(out NitroxCyclops nitroxCyclops))
         {
             nitroxCyclops.SetReceiving();
         }
-        else if (gameObject.TryGetComponent(out WorldForces worldForces))
+        else
         {
-            worldForces.enabled = false;
+            if (gameObject.TryGetComponent(out WorldForces worldForces))
+            {
+                worldForces.enabled = false;
+            }
+            rigidbody.isKinematic = true;
+            rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
         }
-        rigidbody = GetComponent<Rigidbody>();
         
         MovementBroadcaster.RegisterReplicator(this);
     }
@@ -56,9 +57,14 @@ public class MovementReplicator : MonoBehaviour
         {
             nitroxCyclops.SetBroadcasting();
         }
-        else if (gameObject.TryGetComponent(out WorldForces worldForces))
+        else
         {
-            worldForces.enabled = false;
+            if (gameObject.TryGetComponent(out WorldForces worldForces))
+            {
+                worldForces.enabled = true;
+            }
+            rigidbody.isKinematic = false;
+            rigidbody.interpolation = RigidbodyInterpolation.None;
         }
 
         MovementBroadcaster.UnregisterReplicator(this);
@@ -73,7 +79,7 @@ public class MovementReplicator : MonoBehaviour
 
         float currentTime = DayNightCycle.main.timePassedAsFloat;
 
-        // Sorting out invalid nodes
+        // Sorting out expired nodes
         while (buffer.First != null && buffer.First.Value.IsExpired(currentTime))
         {
             // Log.Debug($"Invalid node: {currentTime} > {buffer.First.Value.Time + SNAPSHOT_EXPIRATION_TIME}");
@@ -119,6 +125,7 @@ public class MovementReplicator : MonoBehaviour
         transform.position = position;
         transform.rotation = rotation;
         // TODO: fix remote players being able to go through the object
+
         // Log.Debug($"moved {t} to {nextNode.Value.Data.Position.ToUnity()}");
     }
 
@@ -128,12 +135,12 @@ public class MovementReplicator : MonoBehaviour
 
         int count = 90;
         Log.Debug($"Adding {count} snapshots from {currentTime}");
-        float delta = 10f / count;
+        float delta = 20f / count;
         for (int i = 0; i < count; i++)
         {
             Vector3 result = transform.position + new Vector3(delta * i, 0, 0);
 
-            MovementData movementData = new(result.ToDto(), NitroxVector3.Zero, transform.rotation.ToDto(), NitroxVector3.Zero);
+            MovementData movementData = new(null, result.ToDto(), transform.rotation.ToDto());
 
             AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
         }
@@ -144,51 +151,17 @@ public class MovementReplicator : MonoBehaviour
         float currentTime = (float)this.Resolve<TimeManager>().CurrentTime;
 
         int count = 90;
-        float delta = 10f / 90f;
+        float delta = 20f / 90f;
         float qDelta = 180f / 90f;
         for (int i = 0; i < count; i++)
         {
             Vector3 offset = new(delta * i, 0, 0);
             Quaternion qOffset = Quaternion.AngleAxis(qDelta * i, transform.up);
 
-            MovementData movementData = new((transform.position + offset).ToDto(), NitroxVector3.Zero, (transform.rotation * qOffset).ToDto(), NitroxVector3.Zero);
+            MovementData movementData = new(null, (transform.position + offset).ToDto(), (transform.rotation * qOffset).ToDto());
  
             AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
         }
-    }
-
-    private void Interpolate(Snapshot prevSnapshot, Snapshot nextSnapshot, float time)
-    {
-        float deltaTime = nextSnapshot.Time - prevSnapshot.Time;
-        float t = (time - prevSnapshot.Time) / deltaTime;
-
-        rigidbody.position = Vector3.Lerp(prevSnapshot.Data.Position.ToUnity(), nextSnapshot.Data.Position.ToUnity(), t);
-    }
-
-    private void Extrapolate(Snapshot snapshot, float time, float deltaTime)
-    {
-        float movementDeltaTime = (float)(time - snapshot.Time);
-        Vector3 estimatedPosition = snapshot.Data.Position.ToUnity() + movementDeltaTime * snapshot.Data.Velocity.ToUnity();
-
-        Vector3 positionError = estimatedPosition - rigidbody.position;
-
-        if (positionError.magnitude > MAX_POSITION_ERROR)
-        {
-            rigidbody.position = Vector3.Lerp(rigidbody.position, estimatedPosition, (float)deltaTime * 10);
-            Log.InGame($"MAX POS ERR: {positionError.magnitude}");
-        }
-
-        Quaternion estimatedRotation = snapshot.Data.Rotation.ToUnity() * Quaternion.Euler(snapshot.Data.AngularVelocity.ToUnity() * movementDeltaTime);
-
-        float rotationError = Quaternion.Angle(estimatedRotation, rigidbody.rotation);
-        if (rotationError > MAX_ROTATION_ERROR)
-        {
-            rigidbody.rotation = Quaternion.Lerp(rigidbody.rotation, estimatedRotation, (float)deltaTime * 10);
-            Log.InGame($"MAX ROT ERR: {rotationError}");
-        }
-
-        rigidbody.velocity = snapshot.Data.Velocity.ToUnity();
-        rigidbody.angularVelocity = snapshot.Data.AngularVelocity.ToUnity();
     }
 
     private record struct Snapshot(MovementData Data, float Time)

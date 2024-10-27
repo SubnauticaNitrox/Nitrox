@@ -19,7 +19,6 @@ public class NitroxCyclops : MonoBehaviour
     private WorldForces worldForces;
     private Stabilizer stabilizer;
     private CharacterController controller;
-    private int ballasts;
 
     public readonly Dictionary<INitroxPlayer, CyclopsPawn> Pawns = [];
 
@@ -32,11 +31,8 @@ public class NitroxCyclops : MonoBehaviour
         worldForces = GetComponent<WorldForces>();
         stabilizer = GetComponent<Stabilizer>();
         controller = cyclopsMotor.controller;
-        ballasts = GetComponentsInChildren<BallastWeight>(true).Length;
 
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, false, true);
-
-        GetComponent<SubFire>().enabled = false;
 
         WorkaroundColliders();
     }

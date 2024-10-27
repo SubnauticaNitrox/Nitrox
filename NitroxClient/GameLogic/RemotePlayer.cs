@@ -284,7 +284,7 @@ public class RemotePlayer : INitroxPlayer
                 Detach();
                 ArmsController.SetWorldIKTarget(null, null);
 
-                Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
+                //Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
             }
 
             if (newVehicle)
@@ -298,7 +298,7 @@ public class RemotePlayer : INitroxPlayer
                 // When a vehicle is docked since we joined a game and another player undocks him before the local player does,
                 // no MultiplayerVehicleControl can be found on the vehicle because they are only created when receiving VehicleMovement packets
                 // Therefore we need to make sure that the MultiplayerVehicleControl component exists before using it
-                switch (newVehicle)
+                /*switch (newVehicle)
                 {
                     case SeaMoth:
                         newVehicle.gameObject.EnsureComponent<MultiplayerSeaMoth>().Enter();
@@ -306,7 +306,7 @@ public class RemotePlayer : INitroxPlayer
                     case Exosuit:
                         newVehicle.gameObject.EnsureComponent<MultiplayerExosuit>().Enter();
                         break;
-                }
+                }*/
             }
 
             bool isKinematic = newVehicle;

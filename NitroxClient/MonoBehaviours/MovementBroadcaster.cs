@@ -9,7 +9,7 @@ namespace NitroxClient.MonoBehaviours;
 
 public class MovementBroadcaster : MonoBehaviour
 {
-    public const int BROADCAST_FREQUENCY = 30;
+    public const int BROADCAST_FREQUENCY = 30; // TODO: try with even lower frequency than 30
     public const float BROADCAST_PERIOD = 1f / BROADCAST_FREQUENCY;
 
     private readonly Dictionary<NitroxId, WatchedEntry> watchedEntries = [];
@@ -46,11 +46,11 @@ public class MovementBroadcaster : MonoBehaviour
 
     public void BroadcastLocalData(float time)
     {
-        Dictionary<NitroxId, MovementData> data = [];
+        List<MovementData> data = [];
         foreach (KeyValuePair<NitroxId, WatchedEntry> entry in watchedEntries)
         {
             // TODO: Don't broadcast at certain times: while docking, while docked ...
-            data.Add(entry.Key, entry.Value.GetMovementData());
+            data.Add(entry.Value.GetMovementData(entry.Key));
         }
 
         if (data.Count > 0)
@@ -68,7 +68,7 @@ public class MovementBroadcaster : MonoBehaviour
 
         if (!Instance.watchedEntries.ContainsKey(entityId))
         {
-            Instance.watchedEntries.Add(entityId, new(gameObject));
+            Instance.watchedEntries.Add(entityId, new(gameObject.transform));
         }
     }
 
@@ -96,27 +96,8 @@ public class MovementBroadcaster : MonoBehaviour
         }
     }
 
-    private record struct WatchedEntry
+    private record struct WatchedEntry(Transform transform)
     {
-        private Vehicle vehicle;
-        private SubRoot subRoot;
-        private Rigidbody rigidbody;
-
-        public WatchedEntry(GameObject gameObject)
-        {
-            if (gameObject.TryGetComponent(out vehicle))
-            {
-                rigidbody = vehicle.GetComponent<Rigidbody>();
-            }
-            else if (gameObject.TryGetComponent(out SubRoot subRoot))
-            {
-                rigidbody = subRoot.GetComponent<Rigidbody>();
-            }
-        }
-
-        public MovementData GetMovementData()
-        {
-            return new(rigidbody.position.ToDto(), rigidbody.velocity.ToDto(), rigidbody.rotation.ToDto(), rigidbody.angularVelocity.ToDto());
-        }
-    }    
+        public MovementData GetMovementData(NitroxId id) => new(id, transform.position.ToDto(), transform.rotation.ToDto());
+    }
 }
