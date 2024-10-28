@@ -45,14 +45,7 @@ public class Vehicles
         else
         {
             PilotingChair chair = parent.GetComponentInChildren<PilotingChair>(true);
-            if (chair)
-            {
-                pilotingChairByTechType.Add(techType, chair.gameObject.GetHierarchyPath(parent));
-            }
-            else
-            {
-                pilotingChairByTechType.Add(techType, string.Empty);
-            }
+            pilotingChairByTechType.Add(techType, chair ? chair.gameObject.GetHierarchyPath(parent) : string.Empty);
             return chair;
         }
     }
@@ -176,7 +169,7 @@ public class Vehicles
         foreach (NitroxEntity nitroxEntity in nitroxEntities)
         {
             nitroxEntity.Remove();
-            UnityEngine.Object.DestroyImmediate(nitroxEntity);
+            Object.DestroyImmediate(nitroxEntity);
         }
     }
 

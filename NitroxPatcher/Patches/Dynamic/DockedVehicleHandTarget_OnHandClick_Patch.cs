@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -9,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((DockedVehicleHandTarget t) => t.OnHandClick(default(GUIHand)));
+    private static readonly MethodInfo targetMethod = Reflect.Method((DockedVehicleHandTarget t) => t.OnHandClick(default(GUIHand)));
 
     private static bool skipPrefix;
 
@@ -30,18 +29,17 @@ public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPa
 
         HandInteraction<DockedVehicleHandTarget> context = new(__instance, hand);
         LockRequest<HandInteraction<DockedVehicleHandTarget>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
-
         Resolve<SimulationOwnership>().RequestSimulationLock(lockRequest);
 
         return false;
     }
 
-    private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, HandInteraction<DockedVehicleHandTarget> context)
+    private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAcquired, HandInteraction<DockedVehicleHandTarget> context)
     {
-        if (lockAquired)
+        if (lockAcquired)
         {
             VehicleDockingBay dockingBay = context.Target.dockingBay;
-            NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(dockingBay, dockingBay.GetDockedVehicle(), true);
+            Resolve<Vehicles>().BroadcastVehicleUndocking(dockingBay, dockingBay.GetDockedVehicle(), true);
 
             skipPrefix = true;
             context.Target.OnHandClick(context.GuiHand);

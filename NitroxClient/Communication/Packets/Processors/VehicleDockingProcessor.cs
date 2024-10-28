@@ -1,5 +1,4 @@
 using System.Collections;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -8,49 +7,72 @@ using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
 {
-    public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
+    private readonly Vehicles vehicles;
+
+    public VehicleDockingProcessor(Vehicles vehicles)
     {
-        private readonly IPacketSender packetSender;
-        private readonly Vehicles vehicles;
+        this.vehicles = vehicles;
+    }
 
-        public VehicleDockingProcessor(IPacketSender packetSender, Vehicles vehicles)
+    public override void Process(VehicleDocking packet)
+    {
+        if (!NitroxEntity.TryGetComponentFrom(packet.VehicleId, out Vehicle vehicle))
         {
-            this.packetSender = packetSender;
-            this.vehicles = vehicles;
+            Log.Error($"[{nameof(VehicleDockingProcessor)}] could not find Vehicle component on {packet.VehicleId}");
+            return;
         }
 
-        public override void Process(VehicleDocking packet)
+        if (!NitroxEntity.TryGetComponentFrom(packet.DockId, out VehicleDockingBay dockingBay))
         {
-            GameObject vehicleGo = NitroxEntity.RequireObjectFrom(packet.VehicleId);
-            GameObject vehicleDockingBayGo = NitroxEntity.RequireObjectFrom(packet.DockId);
-
-            Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
-            VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponent<VehicleDockingBay>();
-
-            using (PacketSuppressor<VehicleDocking>.Suppress())
-            {
-                Log.Debug($"Set vehicle docked for {vehicleDockingBay.gameObject.name}");
-                //vehicle.GetComponent<MultiplayerVehicleControl>().SetPositionVelocityRotation(vehicle.transform.position, Vector3.zero, vehicle.transform.rotation, Vector3.zero);
-                //vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
-            }
-            vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleDockingBay, packet.VehicleId, packet.PlayerId));
+            Log.Error($"[{nameof(VehicleDockingProcessor)}] could not find VehicleDockingBay component on {packet.DockId}");
+            return;
         }
 
-        IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
+        if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
         {
-            yield return Yielders.WaitFor1Second;
-            // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
-            // Therefore disable kinematic (again) to remove the bouncing behavior
-            vehicleDockingBay.DockVehicle(vehicle);
-            vehicle.useRigidbody.isKinematic = false;
-            yield return Yielders.WaitFor2Seconds;
-            vehicles.SetOnPilotMode(vehicleId, playerId, false);
-            if (!vehicle.docked)
-            {
-                Log.Error($"Vehicle {vehicleId} not docked after docking process");
-            }
+                Object.Destroy(vehicleMovementReplicator);
+                Log.Debug($"[{nameof(VehicleDockingProcessor)}] Destroyed MovementReplicator on {packet.VehicleId}");
+        }
+
+        //vehicleMovementReplicator.enabled = false;
+        DockRemoteVehicle(dockingBay, vehicle);
+        //vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, dockingBay, packet.VehicleId, packet.PlayerId));
+        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, false);
+    }
+
+    /// Copy of <see cref="VehicleDockingBay.DockVehicle"/> without the player centric bits
+    private void DockRemoteVehicle(VehicleDockingBay bay, Vehicle vehicle)
+    {
+        bay.dockedVehicle = vehicle;
+        LargeWorldStreamer.main.cellManager.UnregisterEntity(bay.dockedVehicle.gameObject);
+        bay.dockedVehicle.transform.parent = bay.GetSubRoot().transform;
+        vehicle.docked = true;
+        bay.vehicle_docked_param = true;
+        bay.GetSubRoot().BroadcastMessage("UnlockDoors", SendMessageOptions.DontRequireReceiver);
+
+        if (false) // TODO: Should be executed when sym lock on vehicle or cyclops or both, idk
+        {
+            bay.CancelInvoke("RepairVehicle");
+            bay.InvokeRepeating("RepairVehicle", 0.0f, 5f);
+        }
+    }
+
+    IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
+    {
+        yield return Yielders.WaitFor1Second;
+        // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
+        // Therefore disable kinematic (again) to remove the bouncing behavior
+        vehicleDockingBay.DockVehicle(vehicle);
+        vehicle.useRigidbody.isKinematic = false;
+        yield return Yielders.WaitFor2Seconds;
+        vehicles.SetOnPilotMode(vehicleId, playerId, false);
+        if (!vehicle.docked)
+        {
+            Log.Error($"Vehicle {vehicleId} not docked after docking process");
         }
     }
 }
