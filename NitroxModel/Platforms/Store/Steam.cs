@@ -280,8 +280,8 @@ public sealed class Steam : IGamePlatform
         {
             protonVersion = "proton_9";
         }
-        bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
         string protonDir = null;
+        bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
         if (isValveProton)
         {
             int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
@@ -319,11 +319,10 @@ public sealed class Steam : IGamePlatform
             throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
         }
 
-        string launchargs = $" --verb=waitforexitandrun -- \"{Path.Combine(protonDir, "proton")}\" waitforexitandrun \"{pathToGameExe}\" {launchArguments}";
         ProcessStartInfo startInfo = new()
         {
             FileName = Path.Combine(sniperruntimepath, "_v2-entry-point"),
-            Arguments = launchargs,
+            Arguments = $" --verb=run -- \"{Path.Combine(protonDir, "proton")}\" run \"{pathToGameExe}\" {launchArguments}",
             WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
             UseShellExecute = false,
             Environment =
