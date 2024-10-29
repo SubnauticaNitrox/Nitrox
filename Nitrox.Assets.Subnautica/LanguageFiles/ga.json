@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "Óstach:",
     "Nitrox_AddServer_AddressPlaceholder": "Cuir isteach an IP nó seoladh an fhreastalaí",
     "Nitrox_AddServer_Confirm": "Cruthaigh freastalaí",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Tá an t-ionchur neamhbhailí. Seiceáil le do thoil an bhfuil na boscaí téacs ar fad comhlánaithe.",
     "Nitrox_AddServer_NameDescription": "Ainm:",
     "Nitrox_AddServer_NamePlaceholder": "Cuir isteach ainm don fhreastalaí",
