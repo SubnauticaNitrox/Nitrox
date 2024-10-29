@@ -1,4 +1,6 @@
+using System;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using FMODUnity;
 using NitroxClient.Communication;
@@ -242,14 +244,22 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
     public void CreateServerButton(string serverName, string address, int port, bool isReadOnly = false)
     {
-        string HideIfNecessary(object text) => NitroxPrefs.HideIp.Value ? "****" : $"{text}";
-
         GameObject multiplayerButtonInst = Instantiate(multiplayerButtonRef, serverAreaContent, false);
         multiplayerButtonInst.name = $"NitroxServer_{serverAreaContent.childCount - 1}";
 
-        string text = $"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverName}</b>\n{HideIfNecessary(address)}:{HideIfNecessary(port)}";
+        StringBuilder buttonText = new();
+        buttonText.Append(Language.main.Get("Nitrox_ConnectTo")).Append(" <b>").Append(serverName).AppendLine("</b>");
+        if (NitroxPrefs.HideIp.Value)
+        {
+            buttonText.AppendLine("***.***.***.***").AppendLine("*****");
+        }
+        else
+        {
+            buttonText.Append(address[^Math.Min(address.Length, 25)..]).Append(':').Append(port);
+        }
+
         MainMenuServerButton serverButton = multiplayerButtonInst.AddComponent<MainMenuServerButton>();
-        serverButton.Init(text, address, port, isReadOnly);
+        serverButton.Init(buttonText.ToString(), address, port, isReadOnly);
 
         EventTrigger[] eventTriggers = multiplayerButtonInst.GetComponentsInChildren<EventTrigger>(true); // One from the normal and one from the delete button
         ForwardTriggerScrollToScrollRect(eventTriggers[0]);
