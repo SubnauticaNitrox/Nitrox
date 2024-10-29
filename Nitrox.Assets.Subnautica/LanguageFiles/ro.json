@@ -1,5 +1,6 @@
 {
     "Nitrox_AddServer": "Adaugă server",
+    "Nitrox_AddServer_NamePlaceholder": "",
     "Nitrox_Cancel": "Anulare",
     "Nitrox_CommandNotAvailable": "Acestă comandă nu este disponibilă în Nitrox",
     "Nitrox_ConnectTo": "Conectează-te la",
