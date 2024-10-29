@@ -1,5 +1,6 @@
 {
     "Nitrox_AddServer": "Sunucu Ekle",
+    "Nitrox_AddServer_NamePlaceholder": "",
     "Nitrox_BuildingDesyncDetected": "Sunucu, yerel istemcinin yapılarıyla uyumsuzluk tespit etti (Nitrox ayarlarına giderek yeniden senkronizasyon isteği gönderin)",
     "Nitrox_BuildingSettings": "Üs İnşası",
     "Nitrox_Cancel": "İptal",
