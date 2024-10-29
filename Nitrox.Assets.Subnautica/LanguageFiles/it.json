@@ -3,7 +3,6 @@
     "Nitrox_AddServer_AddressDescription": "Host:",
     "Nitrox_AddServer_AddressPlaceholder": "Inserisci l'indirizzo IP o dominio del server",
     "Nitrox_AddServer_Confirm": "Crea un server",
-    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Input invalido. Controlla che tutti i campi di testo siano riempiti.",
     "Nitrox_AddServer_NameDescription": "Nome:",
     "Nitrox_AddServer_NamePlaceholder": "Inserisci un nome per il server",
