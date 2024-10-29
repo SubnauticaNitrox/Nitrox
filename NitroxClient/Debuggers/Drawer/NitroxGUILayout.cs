@@ -21,7 +21,7 @@ public static class NitroxGUILayout
 
     public static void Separator()
     {
-        GUILayout.Box(GUIContent.none, separatorStyle, GUILayout.Height(1));
+        GUILayout.Box(GUIContent.none, separatorStyle, GUILayout.Height(5));
     }
 
     public static int IntField(int value, float valueWidth = VALUE_WIDTH) => ConvertibleField(value, valueWidth).ToInt32(CultureInfo.CurrentCulture);

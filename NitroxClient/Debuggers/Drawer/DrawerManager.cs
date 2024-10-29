@@ -10,6 +10,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer;
@@ -47,6 +48,7 @@ public class DrawerManager
         AddDrawer<CanvasScalerDrawer, CanvasScaler>(new(vectorDrawer));
         AddDrawer<ContentSizeFitterDrawer, ContentSizeFitter>();
         AddDrawer<DropdownDrawer, Dropdown>(new(sceneDebugger, selectableDrawer));
+        AddDrawer<EventTriggerDrawer, EventTrigger>(new(sceneDebugger));
         AddDrawer<GraphicRaycasterDrawer, GraphicRaycaster>();
         AddDrawer<GridLayoutGroupDrawer, GridLayoutGroup>(new(vectorDrawer, rectDrawer));
         AddDrawer<LayoutGroupDrawer, HorizontalLayoutGroup>(layoutGroupDrawer);
