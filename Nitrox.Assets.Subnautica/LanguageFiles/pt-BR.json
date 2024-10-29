@@ -6,6 +6,7 @@
     "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "",
     "Nitrox_AddServer_NameDescription": "",
+    "Nitrox_AddServer_NamePlaceholder": "",
     "Nitrox_AddServer_PortDescription": "",
     "Nitrox_AddServer_PortPlaceholder": "",
     "Nitrox_BuildingDesyncDetected": "O servidor detectou uma dessincronização com as construções do cliente local (vá para as configurações do Nitrox para solicitar uma ressincronização)",
