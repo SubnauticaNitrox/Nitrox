@@ -11,7 +11,6 @@
         Title="Nitrox Launcher"
         Width="1200" Height="720"
         MinWidth="800" MinHeight="600"
-        SystemDecorations="None"
         WindowStartupLocation="CenterScreen"
         RequestedThemeVariant="Dark">
 
