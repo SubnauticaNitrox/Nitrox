@@ -6,6 +6,7 @@
     "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "",
     "Nitrox_AddServer_NameDescription": "",
+    "Nitrox_AddServer_NamePlaceholder": "",
     "Nitrox_AddServer_PortDescription": "",
     "Nitrox_AddServer_PortPlaceholder": "",
     "Nitrox_BuildingDesyncDetected": "サーバーがローカルクライアントの建物との非同期を検出しました(Nitroxの設定で再同期をしてください)",
