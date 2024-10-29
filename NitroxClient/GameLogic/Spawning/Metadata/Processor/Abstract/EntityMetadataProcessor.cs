@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
 
-public abstract class EntityMetadataProcessor<T> : IEntityMetadataProcessor where T : EntityMetadata
+public abstract class EntityMetadataProcessor<TMetadata> : IEntityMetadataProcessor where TMetadata : EntityMetadata
 {
-    public abstract void ProcessMetadata(GameObject gameObject, T metadata);
+    public abstract void ProcessMetadata(GameObject gameObject, TMetadata metadata);
 
     public void ProcessMetadata(GameObject gameObject, EntityMetadata metadata)
     {
-        ProcessMetadata(gameObject, (T)metadata);
+        ProcessMetadata(gameObject, (TMetadata)metadata);
     }
 
     protected T Resolve<T>() where T : class
