@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading.Tasks;
 using FMODUnity;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
@@ -6,6 +7,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
@@ -22,6 +24,8 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     private GameObject multiplayerButtonRef;
     private Transform serverAreaContent;
     private GameObject selectedServerItem;
+    private ScrollRect scrollRect;
+    private GameObject scrollBar;
 
     public bool IsJoining { get; set; }
 
@@ -37,6 +41,9 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         multiplayerButtonRef = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
         serverAreaContent = transform.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
         serverAreaContent.gameObject.name = "ServerAreaContent";
+
+        scrollRect = transform.RequireGameObject("Scroll View").GetComponent<ScrollRect>();
+        scrollBar = scrollRect.RequireGameObject("Scrollbar");
 
         MainMenuLoadButton loadButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>();
         MainMenuServerButton.Setup(loadButtonRef);
@@ -105,7 +112,6 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     object uGUI_INavigableIconGrid.GetSelectedItem() => selectedServerItem;
 
     bool uGUI_INavigableIconGrid.ShowSelector => false;
-
     bool uGUI_INavigableIconGrid.EmulateRaycast => false;
     bool uGUI_INavigableIconGrid.SelectItemClosestToPosition(Vector3 worldPos) => false;
     uGUI_INavigableIconGrid uGUI_INavigableIconGrid.GetNavigableGridInDirection(int dirX, int dirY) => null;
@@ -220,7 +226,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
     }
 
-    private async System.Threading.Tasks.Task FindLANServersAsync()
+    private async Task FindLANServersAsync()
     {
         void AddButton(IPEndPoint serverEndPoint)
         {
@@ -244,6 +250,12 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         string text = $"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverName}</b>\n{HideIfNecessary(address)}:{HideIfNecessary(port)}";
         MainMenuServerButton serverButton = multiplayerButtonInst.AddComponent<MainMenuServerButton>();
         serverButton.Init(text, address, port, isReadOnly);
+
+        EventTrigger[] eventTriggers = multiplayerButtonInst.GetComponentsInChildren<EventTrigger>(true); // One from the normal and one from the delete button
+        ForwardTriggerScrollToScrollRect(eventTriggers[0]);
+        ForwardTriggerScrollToScrollRect(eventTriggers[1]);
+
+        scrollBar.SetActive(serverAreaContent.childCount >= 5);
     }
 
     private void CreateAddServerButton()
@@ -256,6 +268,20 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
         multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
         multiplayerButtonButton.onClick.AddListener(OpenAddServerGroup);
+
+        ForwardTriggerScrollToScrollRect(multiplayerButtonButton.GetComponent<EventTrigger>());
+    }
+
+    private void ForwardTriggerScrollToScrollRect(EventTrigger trigger)
+    {
+        EventTrigger.TriggerEvent callback = new();
+        callback.AddListener(x => scrollRect.Scroll(((PointerEventData)x).scrollDelta.y, 5f));
+
+        trigger.triggers.Add(new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.Scroll,
+            callback = callback
+        });
     }
 
     public void OpenAddServerGroup()
