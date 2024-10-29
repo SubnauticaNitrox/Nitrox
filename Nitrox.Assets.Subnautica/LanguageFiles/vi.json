@@ -2,6 +2,7 @@
     "Nitrox_AddServer": "Thêm Server",
     "Nitrox_AddServer_AddressDescription": "Máy chủ:",
     "Nitrox_AddServer_AddressPlaceholder": "Nhập địa chỉ hoặc IP của máy chủ",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Không hợp lệ. Hãy kiểm tra xem bạn đã điền hết các ô chưa.",
     "Nitrox_AddServer_NameDescription": "Tên:",
     "Nitrox_AddServer_NamePlaceholder": "Nhập tên cho máy chủ",
