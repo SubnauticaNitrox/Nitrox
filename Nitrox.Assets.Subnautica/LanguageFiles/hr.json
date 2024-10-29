@@ -1,5 +1,6 @@
 {
     "Nitrox_AddServer": "Dodaj poslužitelja",
+    "Nitrox_AddServer_NamePlaceholder": "",
     "Nitrox_BuildingDesyncDetected": "Poslužitelj je otkrio nesinkronizaciju s lokalnim korisničkim građevinama(idi na Nitrox postavke kako bi zatražio/a ponovnu sinkronizaciju)",
     "Nitrox_BuildingSettings": "Izgradnja baze",
     "Nitrox_Cancel": "Odustani",
