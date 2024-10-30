@@ -31,12 +31,11 @@ public class LiteNetLibClient : IClient
         listener.PeerDisconnectedEvent += Disconnected;
         listener.NetworkReceiveEvent += ReceivedNetworkData;
 
-        byte channelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length;
-        
+
         client = new NetManager(listener)
         {
             UpdateTime = 15,
-            ChannelsCount = channelsCount,
+            ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length,
 #if DEBUG
             DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif

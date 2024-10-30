@@ -17,6 +17,7 @@ public class VehicleMovements : Packet
         Data = data;
         RealTime = realTime;
         DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
+        UdpChannel = UdpChannelId.MOVEMENTS;
     }
 }
 

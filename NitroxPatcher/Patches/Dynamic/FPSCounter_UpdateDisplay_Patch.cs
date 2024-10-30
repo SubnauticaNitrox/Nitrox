@@ -18,8 +18,6 @@ public sealed partial class FPSCounter_UpdateDisplay_Patch : NitroxPatch, IDynam
         }
         __instance.strBuffer.Append("Loading entities: ").AppendLine(Resolve<Entities>().EntitiesToSpawn.Count.ToString());
         __instance.strBuffer.Append("Real time elapsed: ").AppendLine(Resolve<TimeManager>().RealTimeElapsed.ToString());
-        __instance.strBuffer.Append("R LAT: ").AppendLine(MovementReplicator.R.ToString());
-        __instance.strBuffer.Append("V LAT: ").AppendLine(MovementReplicator.V.ToString());
         __instance.text.SetText(__instance.strBuffer);
     }
 }

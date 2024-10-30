@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -18,10 +15,24 @@ public class MovementReplicator : MonoBehaviour
     public const float SNAPSHOT_EXPIRATION_TIME = 5f * INTERPOLATION_TIME;
 
     private readonly LinkedList<Snapshot> buffer = new();
-    private float variableLatency;
-    private float latestLatencyBumpTime;
+    /// <summary>
+    /// To ensure a smooth experience, we need a max allowed latency value which should top the incoming latencies at all times.
+    /// Big increments and any decrements of this value will likely cause stutter, so we try to avoid changing this value too much.
+    /// But it is required that after a lag spike, we eventually lower down that value, which is done periodically <see cref="NitroxPrefs.LatencyUpdatePeriod"/>.
+    /// </summary>
+    private float maxAllowedLatency;
 
-    private float maxLatencyDetectedRecently = NitroxPrefs.MovementLatency.Value;
+    private float latestLatencyBumpTime;
+    private float maxLatencyDetectedRecently;
+
+    /// <summary>
+    /// When encountering a latency bump, we must expect worse happening right after, so we add this margin to our new <see cref="maxAllowedLatency"/>.
+    /// After each periodical latency update (<see cref="LatencyUpdatePeriod"/>), we only want to lower the latency if it's way smaller than the current variable latency.
+    /// The safety threshold is defined 
+    /// </summary>
+    private float SafetyLatencyMargin => NitroxPrefs.SafetyLatencyMargin.Value;
+
+    private float LatencyUpdatePeriod => NitroxPrefs.LatencyUpdatePeriod.Value;
 
     private Rigidbody rigidbody;
     public NitroxId objectId;
@@ -31,94 +42,41 @@ public class MovementReplicator : MonoBehaviour
     /// </summary>
     private float CurrentTime => (float)this.Resolve<TimeManager>().RealTimeElapsed;
 
-    public static float R, V;
-
-    private const float SAFETY_LATENCY_MARGIN = 0.05f; // 50ms is a safe margin to avoid future smaller bumps
-
-    private string path;
-    private StringBuilder csv;
-    private bool writingCsv;
-    private float timeStartCSV;
-    private float dataGatherDuration = 30f;
-
-    private void InitCSV()
-    {
-        path = Path.Combine(NitroxUser.LauncherPath, $"latency-{objectId}.csv");
-        CSVStart();
-    }
-
-    public void CSVStart()
-    {
-        writingCsv = true;
-        csv = new StringBuilder();
-        csv.AppendLine("Real Time;Real Latency;Max Latency Allowed");
-        timeStartCSV = (float)this.Resolve<TimeManager>().RealTimeElapsed;
-        Log.Debug("CSV Start");
-    }
-
-    public void CSVSave()
-    {
-        if (!writingCsv)
-        {
-            return;
-        }
-        writingCsv = false;
-        File.WriteAllText(path, csv.ToString());
-        Log.Debug("CSV Saved");
-    }
-
     public void AddSnapshot(MovementData movementData, float time)
     {
         float currentTime = CurrentTime;
         float latency = currentTime - time;
-        R = latency;
 
-        if (latency > variableLatency)
+        if (latency > maxAllowedLatency)
         {
-            variableLatency = latency + SAFETY_LATENCY_MARGIN;
+            maxAllowedLatency = latency + SafetyLatencyMargin;
             latestLatencyBumpTime = currentTime;
             maxLatencyDetectedRecently = 0;
-            Log.InGame($"Latency [+]: {variableLatency*1000:F3}ms");
-            Log.Debug($"Latency [+]: {variableLatency*1000:F3}ms");
         }
         else
         {
-            maxLatencyDetectedRecently = UnityEngine.Mathf.Max(latency, maxLatencyDetectedRecently);
+            maxLatencyDetectedRecently = Mathf.Max(latency, maxLatencyDetectedRecently);
 
-            if (currentTime - latestLatencyBumpTime >= 4f) // 4s is arbitrary
+            if (currentTime - latestLatencyBumpTime >= LatencyUpdatePeriod)
             {
-                if (maxLatencyDetectedRecently < variableLatency - 2 * SAFETY_LATENCY_MARGIN) // If max latency is in the safety range
+                if (maxLatencyDetectedRecently < maxAllowedLatency - 2 * SafetyLatencyMargin)
                 {
-                    variableLatency = maxLatencyDetectedRecently + SAFETY_LATENCY_MARGIN; // regular gameplay latency variation
-                    Log.InGame($"Latency [-]: {variableLatency * 1000:F3}ms");
-                    Log.Debug($"Latency [-]: {variableLatency * 1000:F3}ms");
+                    maxAllowedLatency = maxLatencyDetectedRecently + SafetyLatencyMargin; // regular gameplay latency variation
                 }
                 latestLatencyBumpTime = currentTime;
                 maxLatencyDetectedRecently = 0;
             }
         }
-        V = variableLatency;
-        if (writingCsv)
-        {
-            if (currentTime > timeStartCSV + dataGatherDuration)
-            {
-                CSVSave();
-            }
-            else
-            {
-                csv.AppendLine($"{currentTime};{latency};{variableLatency}");
-            }
-        }
 
-        float occurenceTime = time + INTERPOLATION_TIME + variableLatency;
+        float occurrenceTime = time + INTERPOLATION_TIME + maxAllowedLatency;
 
         // Cleaning any previous value change that would occur later than the newly received snapshot
-        while (buffer.Last != null && buffer.Last.Value.IsOlderThan(occurenceTime))
+        while (buffer.Last != null && buffer.Last.Value.IsOlderThan(occurrenceTime))
         {
             buffer.RemoveLast();
         }
 
-        buffer.AddLast(new Snapshot(movementData, occurenceTime));
+        buffer.AddLast(new Snapshot(movementData, occurrenceTime));
     }
 
     public void Start()
@@ -140,11 +98,9 @@ public class MovementReplicator : MonoBehaviour
             {
                 worldForces.enabled = false;
             }
-            rigidbody.isKinematic = false;// true;
-            //rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            rigidbody.isKinematic = false;
         }
 
-        InitCSV();
         MovementBroadcaster.RegisterReplicator(this);
     }
 
@@ -160,8 +116,6 @@ public class MovementReplicator : MonoBehaviour
             {
                 worldForces.enabled = true;
             }
-            //rigidbody.isKinematic = false;
-            //rigidbody.interpolation = RigidbodyInterpolation.None;
         }
 
         MovementBroadcaster.UnregisterReplicator(this);
@@ -179,24 +133,22 @@ public class MovementReplicator : MonoBehaviour
         // Sorting out expired nodes
         while (buffer.First != null && buffer.First.Value.IsExpired(currentTime))
         {
-            // Log.Debug($"Invalid node: {currentTime} > {buffer.First.Value.Time + SNAPSHOT_EXPIRATION_TIME}");
             buffer.RemoveFirst();
         }
 
         LinkedListNode<Snapshot> firstNode = buffer.First;
         if (firstNode == null)
         {
-            // Log.Debug("nothing next");
             return;
         }
 
         // Current node is not useable yet
         if (firstNode.Value.IsOlderThan(currentTime))
         {
-            // Log.Debug($"too early {currentTime} < {firstNode.Value.Time}");
             return;
         }
-
+        
+        // Purging the next nodes if they should have already happened (we still have an expiration margin for the first node so it's fine)
         while (firstNode.Next != null && !firstNode.Next.Value.IsOlderThan(currentTime))
         {
             firstNode = firstNode.Next;
@@ -204,11 +156,10 @@ public class MovementReplicator : MonoBehaviour
         }
 
         LinkedListNode<Snapshot> nextNode = firstNode.Next;
-
-        // No next node but current node is fine
+        
+        // Current node is fine but there's no next node (waiting for it without dropping current)
         if (nextNode == null)
         {
-            // Log.Debug("waiting for next node");
             return;
         }
 
@@ -221,68 +172,8 @@ public class MovementReplicator : MonoBehaviour
 
         transform.position = position;
         transform.rotation = rotation;
-        // TODO: fix remote players being able to go through the object
-
-        // Log.Debug($"moved {t} to {nextNode.Value.Data.Position.ToUnity()}");
-    }
-
-    public void DebugForward()
-    {
-        float currentTime = CurrentTime;
-
-        int count = 90;
-        Log.Debug($"Adding {count} snapshots from {currentTime}");
-        float delta = 20f / count;
-        for (int i = 0; i < count; i++)
-        {
-            Vector3 result = transform.position + new Vector3(delta * i, 0, 0);
-
-            MovementData movementData = new(null, result.ToDto(), transform.rotation.ToDto());
-
-            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
-        }
-    }
-
-    public void DebugForwardRight()
-    {
-        float currentTime = CurrentTime;
-
-        int count = 90;
-        float delta = 20f / 90f;
-        float qDelta = 180f / 90f;
-        for (int i = 0; i < count; i++)
-        {
-            Vector3 offset = new(delta * i, 0, 0);
-            Quaternion qOffset = Quaternion.AngleAxis(qDelta * i, transform.up);
-
-            MovementData movementData = new(null, (transform.position + offset).ToDto(), (transform.rotation * qOffset).ToDto());
- 
-            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
-        }
-    }
-
-    public void DebugLatencyVariation()
-    {
-        float currentTime = CurrentTime;
-
-        float delta = 10f / 60f;
-        for (int i = 0; i < 60; i++)
-        {
-            Vector3 result = transform.position + new Vector3(delta * i, 0, 0);
-
-            MovementData movementData = new(null, result.ToDto(), transform.rotation.ToDto());
-
-            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
-        }
-
-        for (int i = 0; i < 60; i++)
-        {
-            Vector3 result = transform.position + new Vector3(10 + delta * i, 0, 0);
-
-            MovementData movementData = new(null, result.ToDto(), transform.rotation.ToDto());
-
-            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
-        }
+        
+        // TODO: fix remote players being able to go through the object (ex: cyclops)
     }
 
     private record struct Snapshot(MovementData Data, float Time)
