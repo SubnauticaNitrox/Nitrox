@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using FMODUnity;
 using NitroxClient.Unity.Helper;
@@ -116,6 +116,25 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private void Update()
+    {
+        if (GameInput.GetKeyDown(KeyCode.Tab))
+        {
+            if (GameInput.GetKey(KeyCode.LeftShift))
+            {
+                SelectItemInDirection(-1, 0);
+            }
+            else
+            {
+                SelectItemInDirection(1, 0);
+            }
+        }
+        else if (selectedItem && GameInput.GetKeyDown(KeyCode.Return))
+        {
+            OnConfirm();
         }
     }
 

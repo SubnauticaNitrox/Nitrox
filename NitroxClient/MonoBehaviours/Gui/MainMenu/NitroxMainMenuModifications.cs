@@ -40,7 +40,7 @@ public class NitroxMainMenuModifications : MonoBehaviour
 
         Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
         showLoadedMultiplayerButton.onClick = new Button.ButtonClickedEvent();
-        showLoadedMultiplayerButton.onClick.AddListener(ShowMultiplayerServerList);
+        showLoadedMultiplayerButton.onClick.AddListener(() => rightSide.OpenGroup(MainMenuServerListPanel.NAME));
 
         GameObject savedGamesRef = rightSide.gameObject.RequireGameObject("SavedGames");
 
@@ -79,10 +79,5 @@ public class NitroxMainMenuModifications : MonoBehaviour
             // TODO: Allow SP to work and co-exist with Nitrox MP in the future
             startButton.SetActive(false);
 #endif
-    }
-
-    private void ShowMultiplayerServerList()
-    {
-        rightSide.OpenGroup(MainMenuServerListPanel.NAME);
     }
 }
