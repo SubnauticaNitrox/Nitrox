@@ -23,7 +23,6 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(FMODCustomLoopingEmitterPacket),
         typeof(FMODStudioEmitterPacket),
         typeof(PlayerCinematicControllerCall),
-        typeof(VehicleMovements)
     };
 
     /// <summary>

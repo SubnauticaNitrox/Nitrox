@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -35,7 +36,7 @@ public class MovementBroadcaster : MonoBehaviour
 
     public void Update()
     {
-        float currentTime = DayNightCycle.main.timePassedAsFloat;
+        float currentTime = (float)this.Resolve<TimeManager>().RealTimeElapsed;
         if (currentTime < latestBroadcastTime + BROADCAST_PERIOD)
         {
             return;

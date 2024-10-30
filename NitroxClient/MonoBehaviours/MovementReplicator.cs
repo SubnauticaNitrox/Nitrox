@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -13,16 +16,109 @@ public class MovementReplicator : MonoBehaviour
 {
     public const float INTERPOLATION_TIME = 4 * MovementBroadcaster.BROADCAST_PERIOD;
     public const float SNAPSHOT_EXPIRATION_TIME = 5f * INTERPOLATION_TIME;
-    private const int BUFFER_SIZE = 10;
 
     private readonly LinkedList<Snapshot> buffer = new();
+    private float variableLatency;
+    private float latestLatencyBumpTime;
 
-    public Rigidbody rigidbody;
+    private float maxLatencyDetectedRecently = NitroxPrefs.MovementLatency.Value;
+
+    private Rigidbody rigidbody;
     public NitroxId objectId;
+
+    /// <summary>
+    /// Current time must be based on real time to avoid effects from time changes/speed.
+    /// </summary>
+    private float CurrentTime => (float)this.Resolve<TimeManager>().RealTimeElapsed;
+
+    public static float R, V;
+
+    private const float SAFETY_LATENCY_MARGIN = 0.05f; // 50ms is a safe margin to avoid future smaller bumps
+
+    private string path;
+    private StringBuilder csv;
+    private bool writingCsv;
+    private float timeStartCSV;
+    private float dataGatherDuration = 30f;
+
+    private void InitCSV()
+    {
+        path = Path.Combine(NitroxUser.LauncherPath, $"latency-{objectId}.csv");
+        CSVStart();
+    }
+
+    public void CSVStart()
+    {
+        writingCsv = true;
+        csv = new StringBuilder();
+        csv.AppendLine("Real Time;Real Latency;Max Latency Allowed");
+        timeStartCSV = (float)this.Resolve<TimeManager>().RealTimeElapsed;
+        Log.Debug("CSV Start");
+    }
+
+    public void CSVSave()
+    {
+        if (!writingCsv)
+        {
+            return;
+        }
+        writingCsv = false;
+        File.WriteAllText(path, csv.ToString());
+        Log.Debug("CSV Saved");
+    }
 
     public void AddSnapshot(MovementData movementData, float time)
     {
-        buffer.AddLast(new Snapshot(movementData, time + INTERPOLATION_TIME + NitroxPrefs.MovementLatency.Value));
+        float currentTime = CurrentTime;
+        float latency = currentTime - time;
+        R = latency;
+
+        if (latency > variableLatency)
+        {
+            variableLatency = latency + SAFETY_LATENCY_MARGIN;
+            latestLatencyBumpTime = currentTime;
+            maxLatencyDetectedRecently = 0;
+            Log.InGame($"Latency [+]: {variableLatency*1000:F3}ms");
+            Log.Debug($"Latency [+]: {variableLatency*1000:F3}ms");
+        }
+        else
+        {
+            maxLatencyDetectedRecently = UnityEngine.Mathf.Max(latency, maxLatencyDetectedRecently);
+
+            if (currentTime - latestLatencyBumpTime >= 4f) // 4s is arbitrary
+            {
+                if (maxLatencyDetectedRecently < variableLatency - 2 * SAFETY_LATENCY_MARGIN) // If max latency is in the safety range
+                {
+                    variableLatency = maxLatencyDetectedRecently + SAFETY_LATENCY_MARGIN; // regular gameplay latency variation
+                    Log.InGame($"Latency [-]: {variableLatency * 1000:F3}ms");
+                    Log.Debug($"Latency [-]: {variableLatency * 1000:F3}ms");
+                }
+                latestLatencyBumpTime = currentTime;
+                maxLatencyDetectedRecently = 0;
+            }
+        }
+        V = variableLatency;
+        if (writingCsv)
+        {
+            if (currentTime > timeStartCSV + dataGatherDuration)
+            {
+                CSVSave();
+            }
+            else
+            {
+                csv.AppendLine($"{currentTime};{latency};{variableLatency}");
+            }
+        }
+
+        float occurenceTime = time + INTERPOLATION_TIME + variableLatency;
+
+        // Cleaning any previous value change that would occur later than the newly received snapshot
+        while (buffer.Last != null && buffer.Last.Value.IsOlderThan(occurenceTime))
+        {
+            buffer.RemoveLast();
+        }
+
+        buffer.AddLast(new Snapshot(movementData, occurenceTime));
     }
 
     public void Start()
@@ -44,10 +140,11 @@ public class MovementReplicator : MonoBehaviour
             {
                 worldForces.enabled = false;
             }
-            rigidbody.isKinematic = true;
-            rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            rigidbody.isKinematic = false;// true;
+            //rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
         }
-        
+
+        InitCSV();
         MovementBroadcaster.RegisterReplicator(this);
     }
 
@@ -63,8 +160,8 @@ public class MovementReplicator : MonoBehaviour
             {
                 worldForces.enabled = true;
             }
-            rigidbody.isKinematic = false;
-            rigidbody.interpolation = RigidbodyInterpolation.None;
+            //rigidbody.isKinematic = false;
+            //rigidbody.interpolation = RigidbodyInterpolation.None;
         }
 
         MovementBroadcaster.UnregisterReplicator(this);
@@ -77,7 +174,7 @@ public class MovementReplicator : MonoBehaviour
             return;
         }
 
-        float currentTime = DayNightCycle.main.timePassedAsFloat;
+        float currentTime = CurrentTime;
 
         // Sorting out expired nodes
         while (buffer.First != null && buffer.First.Value.IsExpired(currentTime))
@@ -131,7 +228,7 @@ public class MovementReplicator : MonoBehaviour
 
     public void DebugForward()
     {
-        float currentTime = DayNightCycle.main.timePassedAsFloat;
+        float currentTime = CurrentTime;
 
         int count = 90;
         Log.Debug($"Adding {count} snapshots from {currentTime}");
@@ -148,7 +245,7 @@ public class MovementReplicator : MonoBehaviour
 
     public void DebugForwardRight()
     {
-        float currentTime = (float)this.Resolve<TimeManager>().CurrentTime;
+        float currentTime = CurrentTime;
 
         int count = 90;
         float delta = 20f / 90f;
@@ -160,6 +257,30 @@ public class MovementReplicator : MonoBehaviour
 
             MovementData movementData = new(null, (transform.position + offset).ToDto(), (transform.rotation * qOffset).ToDto());
  
+            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
+        }
+    }
+
+    public void DebugLatencyVariation()
+    {
+        float currentTime = CurrentTime;
+
+        float delta = 10f / 60f;
+        for (int i = 0; i < 60; i++)
+        {
+            Vector3 result = transform.position + new Vector3(delta * i, 0, 0);
+
+            MovementData movementData = new(null, result.ToDto(), transform.rotation.ToDto());
+
+            AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
+        }
+
+        for (int i = 0; i < 60; i++)
+        {
+            Vector3 result = transform.position + new Vector3(10 + delta * i, 0, 0);
+
+            MovementData movementData = new(null, result.ToDto(), transform.rotation.ToDto());
+
             AddSnapshot(movementData, currentTime + i * MovementBroadcaster.BROADCAST_PERIOD);
         }
     }
