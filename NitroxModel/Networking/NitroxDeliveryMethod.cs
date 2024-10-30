@@ -1,11 +1,17 @@
-﻿namespace NitroxModel.Networking
+namespace NitroxModel.Networking
 {
 
     public class NitroxDeliveryMethod
     {
         public enum DeliveryMethod
         {
+            /// <summary>
+            /// <inheritdoc cref="LiteNetLib.DeliveryMethod.Sequenced"/>
+            /// </summary>
             UNRELIABLE_SEQUENCED,
+            /// <summary>
+            /// <inheritdoc cref="LiteNetLib.DeliveryMethod.ReliableOrdered"/>
+            /// </summary>
             RELIABLE_ORDERED
         }
 

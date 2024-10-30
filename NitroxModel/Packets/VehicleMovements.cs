@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Networking;
 
 namespace NitroxModel.Packets;
 
@@ -15,6 +16,7 @@ public class VehicleMovements : Packet
     {
         Data = data;
         RealTime = realTime;
+        DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
     }
 }
 

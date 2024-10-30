@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,13 +73,11 @@ namespace NitroxModel.Packets
 
         [IgnoredMember]
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
-
-        public enum UdpChannelId
+        
+        public enum UdpChannelId : byte
         {
             DEFAULT = 0,
-            PLAYER_MOVEMENT = 1,
-            VEHICLE_MOVEMENT = 2,
-            PLAYER_STATS = 3
+            MOVEMENTS = 1,
         }
 
         public byte[] Serialize()

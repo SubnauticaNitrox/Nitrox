@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -26,7 +26,7 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             VehicleMovementData = vehicleMovementData;
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
-            UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;
+            UdpChannel = UdpChannelId.MOVEMENTS;
         }
     }
 }
