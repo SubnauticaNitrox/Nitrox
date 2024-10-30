@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using FMODUnity;
 using NitroxClient.Unity.Helper;
@@ -91,17 +92,26 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
 
         if (string.IsNullOrWhiteSpace(serverNameText) ||
             string.IsNullOrWhiteSpace(serverHostText) ||
-            string.IsNullOrWhiteSpace(serverPortText))
+            string.IsNullOrWhiteSpace(serverPortText) ||
+            !int.TryParse(serverPortText, out int serverPort))
         {
             Log.InGame(Language.main.Get("Nitrox_AddServer_InvalidInput"));
             return;
         }
 
-        int serverPort = int.Parse(serverPortText);
-        MainMenuServerListPanel.Main.CreateServerButton(serverNameText, serverHostText, serverPort);
+        GameObject newEntry = MainMenuServerListPanel.Main.CreateServerButton(serverNameText, serverHostText, serverPort);
         ServerList.Instance.Add(new ServerList.Entry(serverNameText, serverHostText, serverPort));
         ServerList.Instance.Save();
         OnBack();
+        MainMenuServerListPanel.Main.StartCoroutine(DelayedScrollToNewEntry());
+        Log.InGame(Language.main.Get("Nitrox_AddServer_CreatedSuccessful"));
+        return;
+
+        IEnumerator DelayedScrollToNewEntry()
+        {
+            yield return new WaitForEndOfFrame();
+            UIUtils.ScrollToShowItemInCenter(newEntry.transform);
+        }
     }
 
     public bool OnButtonDown(GameInput.Button button)

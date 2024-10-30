@@ -242,7 +242,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         LANBroadcastClient.ServerFound -= AddButton;
     }
 
-    public void CreateServerButton(string serverName, string address, int port, bool isReadOnly = false)
+    public GameObject CreateServerButton(string serverName, string address, int port, bool isReadOnly = false)
     {
         GameObject multiplayerButtonInst = Instantiate(multiplayerButtonRef, serverAreaContent, false);
         multiplayerButtonInst.name = $"NitroxServer_{serverAreaContent.childCount - 1}";
@@ -266,6 +266,8 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         ForwardTriggerScrollToScrollRect(eventTriggers[1]);
 
         scrollBar.SetActive(serverAreaContent.childCount >= 5);
+
+        return multiplayerButtonInst;
     }
 
     private void CreateAddServerButton()
