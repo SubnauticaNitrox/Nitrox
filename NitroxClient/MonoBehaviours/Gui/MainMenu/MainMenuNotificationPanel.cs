@@ -36,7 +36,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
 
         instance.confirmObject.SetActive(false);
         instance.loadingCircle.gameObject.SetActive(true);
-        instance.text.text = "Loading";
+        instance.text.text = Language.main.Get("Nitrox_Loading");
         MainMenuRightSide.main.OpenGroup(NAME);
         instance.confirmButtonLegend.legendButtonConfiguration = Array.Empty<LegendButtonData>();
     }
