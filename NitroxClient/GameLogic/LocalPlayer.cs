@@ -51,25 +51,16 @@ public class LocalPlayer : ILocalNitroxPlayer
         Permissions = Perms.PLAYER;
     }
 
-    public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
+    public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
     {
         if (!PlayerId.HasValue)
         {
             return;
         }
 
-        Movement movement;
-        if (vehicle.HasValue)
-        {
-            movement = new VehicleMovement(PlayerId.Value, vehicle.Value);
-            return;
-        }
-        else
-        {
-            movement = new PlayerMovement(PlayerId.Value, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
-        }
+        PlayerMovement playerMovement = new(PlayerId.Value, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
 
-        packetSender.Send(movement);
+        packetSender.Send(playerMovement);
     }
 
     public void AnimationChange(AnimChangeType type, AnimChangeState state)

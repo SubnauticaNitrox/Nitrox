@@ -1,4 +1,5 @@
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -10,32 +11,52 @@ public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<Vehi
 {
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
+    private readonly SimulationOwnershipData simulationOwnershipData;
 
-    public VehicleMovementsPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+    public VehicleMovementsPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData)
     {
         this.playerManager = playerManager;
         this.entityRegistry = entityRegistry;
+        this.simulationOwnershipData = simulationOwnershipData;
     }
 
     public override void Process(VehicleMovements packet, Player player)
     {
-        foreach (MovementData movementData in packet.Data)
+        for (int i = packet.Data.Count - 1; i >= 0; i--)
         {
+            MovementData movementData = packet.Data[i];
+            if (simulationOwnershipData.GetPlayerForLock(movementData.Id) != player)
+            {
+                packet.Data.RemoveAt(i);
+                Log.WarnOnce($"Player {player.Name} tried updating {movementData.Id}'s position but they don't have the lock on it");
+                continue;
+            }
+
             if (entityRegistry.TryGetEntityById(movementData.Id, out WorldEntity worldEntity))
             {
                 worldEntity.Transform.Position = movementData.Position;
                 worldEntity.Transform.Rotation = movementData.Rotation;
+
+                if (movementData is DrivenVehicleMovementData)
+                {
+                    // Cyclops' driving wheel is not at relative 0,0,0
+                    if (worldEntity.TechType.Name.Equals("Cyclops"))
+                    {
+                        player.Entity.Transform.LocalPosition = NitroxVector3.Zero; // TODO: set the right position offset in the cyclops
+                        player.Position = player.Entity.Transform.Position;
+                    }
+                    else
+                    {
+                        player.Position = movementData.Position;
+                        player.Rotation = movementData.Rotation;
+                    }
+                }
             }
         }
 
-        // TODO: sync driving player movement without adding much more data (maybe have a nullable DriverPosition field in there)
-        
-
-        /*if (player.Id == packet.PlayerId)
+        if (packet.Data.Count > 0)
         {
-            player.Position = packet.VehicleMovementData.DriverPosition ?? packet.Position;
-        }*/
-
-        playerManager.SendPacketToOtherPlayers(packet, player);
+            playerManager.SendPacketToOtherPlayers(packet, player);
+        }
     }
 }

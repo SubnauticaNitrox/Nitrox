@@ -14,7 +14,6 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
     {
         typeof(AnimationChangeEvent),
         typeof(PlayerMovement),
-        typeof(VehicleMovement),
         typeof(ItemPosition),
         typeof(PlayerStats),
         typeof(StoryGoalExecuted),

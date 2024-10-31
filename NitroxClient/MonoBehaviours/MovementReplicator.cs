@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Cyclops;
+using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -9,7 +10,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
-public class MovementReplicator : MonoBehaviour
+public abstract class MovementReplicator : MonoBehaviour
 {
     public const float INTERPOLATION_TIME = 4 * MovementBroadcaster.BROADCAST_PERIOD;
     public const float SNAPSHOT_EXPIRATION_TIME = 5f * INTERPOLATION_TIME;
@@ -28,7 +29,7 @@ public class MovementReplicator : MonoBehaviour
     /// <summary>
     /// When encountering a latency bump, we must expect worse happening right after, so we add this margin to our new <see cref="maxAllowedLatency"/>.
     /// After each periodical latency update (<see cref="LatencyUpdatePeriod"/>), we only want to lower the latency if it's way smaller than the current variable latency.
-    /// The safety threshold is defined 
+    /// The safety threshold is defined by this value.
     /// </summary>
     private float SafetyLatencyMargin => NitroxPrefs.SafetyLatencyMargin.Value;
 
@@ -165,21 +166,45 @@ public class MovementReplicator : MonoBehaviour
 
         // Interpolation
 
-        float t = (currentTime - firstNode.Value.Time) / (nextNode.Value.Time - firstNode.Value.Time);
-        Vector3 position = Vector3.Lerp(firstNode.Value.Data.Position.ToUnity(), nextNode.Value.Data.Position.ToUnity(), t);
+        MovementData prevData = firstNode.Value.Data;
+        MovementData nextData = nextNode.Value.Data;
 
-        Quaternion rotation = Quaternion.Lerp(firstNode.Value.Data.Rotation.ToUnity(), nextNode.Value.Data.Rotation.ToUnity(), t);
+        float t = (currentTime - firstNode.Value.Time) / (nextNode.Value.Time - firstNode.Value.Time);
+        Vector3 position = Vector3.Lerp(prevData.Position.ToUnity(), nextData.Position.ToUnity(), t);
+
+        Quaternion rotation = Quaternion.Lerp(prevData.Rotation.ToUnity(), nextData.Rotation.ToUnity(), t);
 
         transform.position = position;
         transform.rotation = rotation;
-        
+
+        ApplyNewMovementData(nextData);
+
         // TODO: fix remote players being able to go through the object (ex: cyclops)
     }
 
-    private record struct Snapshot(MovementData Data, float Time)
+    public abstract void ApplyNewMovementData(MovementData newMovementData);
+
+    public record struct Snapshot(MovementData Data, float Time)
     {
         public bool IsOlderThan(float currentTime) => currentTime < Time;
         
         public bool IsExpired(float currentTime) => currentTime > Time + SNAPSHOT_EXPIRATION_TIME;
+    }
+
+    public static MovementReplicator AddReplicatorToObject(GameObject gameObject)
+    {
+        if (gameObject.GetComponent<SeaMoth>())
+        {
+            return gameObject.AddComponent<SeamothMovementReplicator>();
+        }
+        if (gameObject.GetComponent<Exosuit>())
+        {
+            return gameObject.AddComponent<ExosuitMovementReplicator>();
+        }
+        if (gameObject.GetComponent<SubControl>())
+        {
+            return gameObject.AddComponent<CyclopsMovementReplicator>();
+        }
+        return gameObject.AddComponent<MovementReplicator>();
     }
 }

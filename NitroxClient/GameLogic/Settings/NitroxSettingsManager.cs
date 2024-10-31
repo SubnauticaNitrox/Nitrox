@@ -52,8 +52,8 @@ public class NitroxSettingsManager
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuilding", NitroxPrefs.SafeBuilding, safe => NitroxPrefs.SafeBuilding.Value = safe));
         AddSetting("Nitrox_BuildingSettings", new Setting("Nitrox_SafeBuildingLog", NitroxPrefs.SafeBuildingLog, safeLog => NitroxPrefs.SafeBuildingLog.Value = safeLog));
 
-        AddSetting("Nitrox_BandwidthSettings", new Setting("Nitrox_LatencyUpdatePeriod", NitroxPrefs.LatencyUpdatePeriod, latencyUpdatePeriod => NitroxPrefs.LatencyUpdatePeriod.Value = (int)latencyUpdatePeriod, 1, 60, NitroxPrefs.LatencyUpdatePeriod.DefaultValue, 1, SliderLabelMode.Int, tooltip: "Nitrox_HigherForUnstable"));
-        AddSetting("Nitrox_BandwidthSettings", new Setting("Nitrox_SafetyLatencyMargin", NitroxPrefs.SafetyLatencyMargin, safetyLatencyMargin => NitroxPrefs.SafetyLatencyMargin.Value = safetyLatencyMargin, 0.01f, 0.5f, NitroxPrefs.SafetyLatencyMargin.DefaultValue, 0.01f, SliderLabelMode.Float, "0.00", "Nitrox_HigherForUnstable"));
+        AddSetting("NitroxBandwidthSettings", new Setting("NitroxSettingsLatencyUpdatePeriod", NitroxPrefs.LatencyUpdatePeriod, latencyUpdatePeriod => NitroxPrefs.LatencyUpdatePeriod.Value = (int)latencyUpdatePeriod, 1, 60, NitroxPrefs.LatencyUpdatePeriod.DefaultValue, 1, SliderLabelMode.Int, tooltip: "NitroxHigherForUnstable_Tooltip"));
+        AddSetting("NitroxBandwidthSettings", new Setting("NitroxSettingsSafetyLatencyMargin", NitroxPrefs.SafetyLatencyMargin, safetyLatencyMargin => NitroxPrefs.SafetyLatencyMargin.Value = safetyLatencyMargin, 0.01f, 0.5f, NitroxPrefs.SafetyLatencyMargin.DefaultValue, 0.01f, SliderLabelMode.Float, "0.00", "NitroxHigherForUnstable_Tooltip"));
     }
 
     /// <summary>Adds a setting to the list under a certain heading</summary>

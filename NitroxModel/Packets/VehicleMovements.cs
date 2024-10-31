@@ -21,4 +21,8 @@ public class VehicleMovements : Packet
     }
 }
 
-public record struct MovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation);
+public abstract record class MovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation) { }
+
+public record class SimpleMovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation) : MovementData(Id, Position, Rotation) { }
+
+public record class DrivenVehicleMovementData(NitroxId Id, NitroxVector3 Position, NitroxQuaternion Rotation, sbyte SteeringWheelYaw, sbyte SteeringWheelPitch, bool ThrottleApplied) : MovementData(Id, Position, Rotation) { }

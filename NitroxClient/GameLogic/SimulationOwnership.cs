@@ -145,7 +145,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!movementReplicator)
                 {
-                    gameObject.AddComponent<MovementReplicator>();
+                    MovementReplicator.AddReplicatorToObject(gameObject);
                 }
                 MovementBroadcaster.UnregisterWatched(entityId);
             }
