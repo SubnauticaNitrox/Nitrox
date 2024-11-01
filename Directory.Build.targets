@@ -7,8 +7,14 @@
         <Error Condition="'$(GameDir)' == ''" Text="Failed to find the game 'Subnautica' on your machine" />
         <PropertyGroup>
             <GameDir>$(GameDir)\</GameDir>
-            <GameManagedDir>$(GameDir)Subnautica_Data\Managed\</GameManagedDir>
-            <GameVersionFile>$(GameDir)Subnautica_Data\StreamingAssets\SNUnmanagedData\plastic_status.ignore</GameVersionFile>
+            <GameDataFolder>Subnautica_Data</GameDataFolder>
+        </PropertyGroup>
+        <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+            <GameDataFolder>Resources\Data</GameDataFolder>
+        </PropertyGroup>
+        <PropertyGroup>
+            <GameManagedDir>$(GameDir)$(GameDataFolder)\Managed\</GameManagedDir>
+            <GameVersionFile>$(GameDir)$(GameDataFolder)\StreamingAssets\SNUnmanagedData\plastic_status.ignore</GameVersionFile>
             <GameLegacyVersion>68598</GameLegacyVersion>
         </PropertyGroup>
         <ReadLinesFromFile File="$(GameVersionFile)">

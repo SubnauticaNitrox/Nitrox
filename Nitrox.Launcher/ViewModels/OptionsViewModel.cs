@@ -44,11 +44,13 @@ public partial class OptionsViewModel : RoutableViewModelBase
         SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
         LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
         SavesFolderDir = keyValueStore.GetSavesFolderDir();
+
+        _ = SetTargetedSubnauticaPath(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
     public async Task SetTargetedSubnauticaPath(string path)
     {
-        if ((string.IsNullOrWhiteSpace(NitroxUser.GamePath) && NitroxUser.GamePath == path) || !Directory.Exists(path))
+        if (!Directory.Exists(path))
         {
             return;
         }
@@ -68,27 +70,17 @@ public partial class OptionsViewModel : RoutableViewModelBase
                 // TODO: Move this check to another place where Nitrox installation can be verified. (i.e: another page on the launcher in order to check permissions, network setup, ...)
                 if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
                 {
-                    Dispatcher.UIThread.Invoke(() =>
-                    {
-                        //MessageBox.Show(Application.Current.MainWindow!, "Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.", "Required file permission error", MessageBoxButton.OK,
-                        //                MessageBoxImage.Error);
-                        Environment.Exit(1);
-                    }, DispatcherPriority.ApplicationIdle);
+                    LauncherNotifier.Error("Restart Nitrox Launcher as admin to allow Nitrox to change permissions as needed. This is only needed once. Nitrox will close after this message.");
+                    return null;
                 }
             }
 
             // Save game path as preferred for future sessions.
             NitroxUser.PreferredGamePath = path;
-
             if (NitroxEntryPatch.IsPatchApplied(NitroxUser.GamePath))
             {
                 NitroxEntryPatch.Remove(NitroxUser.GamePath);
             }
-
-            //if (Path.GetFullPath(path).StartsWith(WindowsHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
-            //{
-            //    WindowsHelper.RestartAsAdmin();
-            //}
 
             return path;
         }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
