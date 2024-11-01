@@ -33,12 +33,12 @@ public class ProcessEx : IDisposable
         implementation = ProcessExFactory.Create(process.Id);
     }
 
-    public static bool ProcessExists(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
+    public static bool ProcessExists(string procName, Func<ProcessEx, bool> predicate = null)
     {
         ProcessEx proc = null;
         try
         {
-            proc = GetFirstProcess(procName, predicate, comparer);
+            proc = GetFirstProcess(procName, predicate);
             return proc != null;
         }
         finally
@@ -109,11 +109,10 @@ public class ProcessEx : IDisposable
         implementation.Dispose();
     }
     
-    public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
+    public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null)
     {
-        comparer ??= StringComparer.OrdinalIgnoreCase;
         ProcessEx found = null;
-        foreach (Process proc in Process.GetProcesses())
+        foreach (Process proc in Process.GetProcessesByName(procName))
         {
             // Already found, dispose all other resources to processes.
             if (found != null)
@@ -122,11 +121,6 @@ public class ProcessEx : IDisposable
                 continue;
             }
 
-            if (comparer.Compare(procName, proc.ProcessName) != 0)
-            {
-                proc.Dispose();
-                continue;
-            }
             ProcessEx procEx = new(proc);
             if (predicate != null && !predicate(procEx))
             {
