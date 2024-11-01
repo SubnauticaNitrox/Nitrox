@@ -21,10 +21,11 @@ public class Vehicles
 
     private readonly Dictionary<TechType, string> pilotingChairByTechType = [];
 
-    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
+    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession, PlayerManager playerManager)
     {
         this.packetSender = packetSender;
         this.multiplayerSession = multiplayerSession;
+        this.playerManager = playerManager;
     }
 
     private PilotingChair FindPilotingChairWithCache(GameObject parent, TechType techType)

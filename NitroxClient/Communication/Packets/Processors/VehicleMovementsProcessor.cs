@@ -1,6 +1,5 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors;

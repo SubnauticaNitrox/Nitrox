@@ -50,10 +50,6 @@ public sealed partial class PilotingChair_OnHandClick_Patch : NitroxPatch, IDyna
         {
             skipPrefix = true;
             pilotingChair.OnHandClick(context.GuiHand);
-            if (pilotingChair.subRoot)
-            {
-                Resolve<Vehicles>().BroadcastOnPilotModeChanged(pilotingChair.subRoot.gameObject, true);
-            }
             skipPrefix = false;
         }
         else

@@ -13,8 +13,12 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
 
     private FMOD_CustomLoopingEmitter rpmSound;
     private FMOD_CustomEmitter revSound;
+    private FMOD_CustomEmitter enterSeamoth;
+
     private float radiusRpmSound;
     private float radiusRevSound;
+    private float radiusEnterSound;
+    
     private bool throttleApplied;
 
     public void Awake()
@@ -29,12 +33,6 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
         base.Update();
         Vector3 positionAfter = transform.position;
         velocity = (positionAfter - positionBefore) / Time.deltaTime;
-
-        // TODO: find out if this is necessary        
-        if (seaMoth.ambienceSound && seaMoth.ambienceSound.GetIsPlaying())
-        {
-            seaMoth.ambienceSound.SetParameterValue(seaMoth.fmodIndexSpeed, velocity.magnitude);
-        }
 
         if (throttleApplied)
         {
@@ -75,17 +73,23 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
     {
         rpmSound = seaMoth.engineSound.engineRpmSFX;
         revSound = seaMoth.engineSound.engineRevUp;
+        enterSeamoth = seaMoth.enterSeamoth;
 
         rpmSound.followParent = true;
         revSound.followParent = true;
 
         this.Resolve<FMODWhitelist>().IsWhitelisted(rpmSound.asset.path, out radiusRpmSound);
         this.Resolve<FMODWhitelist>().IsWhitelisted(revSound.asset.path, out radiusRevSound);
+        this.Resolve<FMODWhitelist>().IsWhitelisted(seaMoth.enterSeamoth.asset.path, out radiusEnterSound);
 
         rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
         revSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+
         rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusRpmSound);
         revSound.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusRevSound);
+
+        enterSeamoth.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+        enterSeamoth.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusEnterSound);
 
         if (FMODUWE.IsInvalidParameterId(seaMoth.fmodIndexSpeed))
         {
@@ -97,18 +101,25 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
     {
         seaMoth.mainAnimator.SetBool("player_in", true);
         seaMoth.bubbles.Play();
-        if (seaMoth.enterSeamoth)
+        if (enterSeamoth)
         {
-            seaMoth.enterSeamoth.Play(); // TODO: find out if this is required
+            // After first run, this sound will still be in "playing" mode so we need to release it by hand
+            enterSeamoth.Stop();
+            enterSeamoth.ReleaseEvent();
+            enterSeamoth.CacheEventInstance();
+
+            float distanceToPlayer = Vector3.Distance(Player.main.transform.position, transform.position);
+            float sound = SoundHelper.CalculateVolume(distanceToPlayer, radiusEnterSound, 1f);
+            enterSeamoth.evt.setVolume(sound);
+
+            enterSeamoth.Play();
         }
-        seaMoth.ambienceSound.PlayUI(); // TODO: find out if this is required
     }
 
     public override void Exit()
     {
         seaMoth.mainAnimator.SetBool("player_in", false);
         seaMoth.bubbles.Stop();
-        seaMoth.ambienceSound.Stop(true); // TODO: find out if this is required
 
         throttleApplied = false;
     }

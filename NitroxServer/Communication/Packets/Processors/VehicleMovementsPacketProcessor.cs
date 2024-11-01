@@ -9,6 +9,8 @@ namespace NitroxServer.Communication.Packets.Processors;
 
 public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<VehicleMovements>
 {
+    private static readonly NitroxVector3 CyclopsSteeringWheelRelativePosition = new(-0.05f, 0.97f, -23.54f);
+
     private readonly PlayerManager playerManager;
     private readonly EntityRegistry entityRegistry;
     private readonly SimulationOwnershipData simulationOwnershipData;
@@ -27,9 +29,8 @@ public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<Vehi
             MovementData movementData = packet.Data[i];
             if (simulationOwnershipData.GetPlayerForLock(movementData.Id) != player)
             {
-                packet.Data.RemoveAt(i);
                 Log.WarnOnce($"Player {player.Name} tried updating {movementData.Id}'s position but they don't have the lock on it");
-                continue;
+                // In the future, add "packet.Data.RemoveAt(i);" and "continue;" to prevent those abnormal situations
             }
 
             if (entityRegistry.TryGetEntityById(movementData.Id, out WorldEntity worldEntity))
@@ -39,10 +40,10 @@ public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<Vehi
 
                 if (movementData is DrivenVehicleMovementData)
                 {
-                    // Cyclops' driving wheel is not at relative 0,0,0
+                    // Cyclops' driving wheel is at a known position so we need to adapt the position of the player accordingly
                     if (worldEntity.TechType.Name.Equals("Cyclops"))
                     {
-                        player.Entity.Transform.LocalPosition = NitroxVector3.Zero; // TODO: set the right position offset in the cyclops
+                        player.Entity.Transform.LocalPosition = CyclopsSteeringWheelRelativePosition;
                         player.Position = player.Entity.Transform.Position;
                     }
                     else

@@ -18,7 +18,7 @@ public sealed partial class PilotingChair_ReleaseBy_Patch : NitroxPatch, IDynami
         {
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
-            Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance.gameObject, false);
+            Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance.subRoot.gameObject, false);
         }
     }
 }
