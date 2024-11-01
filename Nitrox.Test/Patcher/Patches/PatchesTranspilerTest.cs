@@ -2,6 +2,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxPatcher.Patches;
 using NitroxPatcher.Patches.Dynamic;
+using NitroxPatcher.Patches.Persistent;
 using NitroxTest.Patcher;
 
 namespace Nitrox.Test.Patcher.Patches;
@@ -15,32 +16,49 @@ public class PatchesTranspilerTest
         [typeof(BaseHullStrength_CrushDamageUpdate_Patch), 3],
         [typeof(BreakableResource_SpawnResourceFromPrefab_Patch), 2],
         [typeof(Builder_TryPlace_Patch), Builder_TryPlace_Patch.InstructionsToAdd1.Count + Builder_TryPlace_Patch.InstructionsToAdd2.Count],
+        [typeof(CellManager_TryLoadCacheBatchCells_Patch), 4],
         [typeof(Constructable_Construct_Patch), Constructable_Construct_Patch.InstructionsToAdd.Count],
         [typeof(Constructable_DeconstructAsync_Patch), Constructable_DeconstructAsync_Patch.InstructionsToAdd.Count],
         [typeof(ConstructableBase_SetState_Patch), ConstructableBase_SetState_Patch.InstructionsToAdd.Count],
         [typeof(ConstructorInput_OnCraftingBegin_Patch), 7],
+        [typeof(CrafterLogic_TryPickupSingleAsync_Patch), 4],
         [typeof(CrashHome_Spawn_Patch), 2],
         [typeof(CrashHome_Update_Patch), -5],
         [typeof(CreatureDeath_OnKillAsync_Patch), 9],
         [typeof(CreatureDeath_SpawnRespawner_Patch), 2],
+        [typeof(CyclopsShieldButton_OnClick_Patch), -6],
         [typeof(CyclopsSonarButton_Update_Patch), 3],
         [typeof(CyclopsSonarDisplay_NewEntityOnSonar_Patch), 3],
         [typeof(DevConsole_Update_Patch), 0],
         [typeof(Eatable_IterateDespawn_Patch), 2],
+        [typeof(EnergyMixin_SpawnDefaultAsync_Patch), -64],
+        [typeof(EntityCell_SleepAsync_Patch), 2],
         [typeof(Equipment_RemoveItem_Patch), 7],
+        [typeof(FireExtinguisherHolder_TakeTankAsync_Patch), 2],
+        [typeof(FireExtinguisherHolder_TryStoreTank_Patch), 3],
         [typeof(Flare_Update_Patch), 0],
         [typeof(FootstepSounds_OnStep_Patch), 6],
+        [typeof(GameInput_Initialize_Patch), 5],
+        [typeof(IngameMenu_OnSelect_Patch), -2],
+        [typeof(IngameMenu_QuitGameAsync_Patch), 0],
         [typeof(Inventory_LoseItems_Patch), -2],
         [typeof(ItemsContainer_DestroyItem_Patch), 2],
         [typeof(LaunchRocket_OnHandClick_Patch), -9],
+        [typeof(LeakingRadiation_Update_Patch), 0],
+        [typeof(MainGameController_StartGame_Patch), 1],
         [typeof(PDAScanner_Scan_Patch), 3],
+        [typeof(Player_OnKill_Patch), 0],
         [typeof(Respawn_Start_Patch), 3],
+        [typeof(RocketConstructor_StartRocketConstruction_Patch), 3],
+        [typeof(SpawnConsoleCommand_SpawnAsync_Patch), 2],
         [typeof(SpawnOnKill_OnKill_Patch), 3],
         [typeof(SubConsoleCommand_OnConsoleCommand_sub_Patch), 0],
+        [typeof(SubRoot_OnPlayerEntered_Patch), 5],
         [typeof(uGUI_PDA_Initialize_Patch), 2],
         [typeof(uGUI_PDA_SetTabs_Patch), 3],
         [typeof(uGUI_Pings_IsVisibleNow_Patch), 0],
         [typeof(uSkyManager_SetVaryingMaterialProperties_Patch), 0],
+        [typeof(Welder_Weld_Patch), 1],
     ];
 
     [TestMethod]
