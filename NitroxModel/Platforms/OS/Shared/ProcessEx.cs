@@ -33,25 +33,6 @@ public class ProcessEx : IDisposable
         implementation = ProcessExFactory.Create(process.Id);
     }
 
-    public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
-    {
-        comparer ??= StringComparer.OrdinalIgnoreCase;
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return GetFirstProcessWindows(procName, predicate, comparer);
-        }
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            return GetFirstProcessLinux(procName, predicate, comparer);
-        }
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return GetFirstProcessMacOS(procName, predicate, comparer);
-        }
-        throw new PlatformNotSupportedException("Unsupported operating system.");
-    }
-
     public static bool ProcessExists(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
     {
         ProcessEx proc = null;
@@ -127,94 +108,37 @@ public class ProcessEx : IDisposable
     {
         implementation.Dispose();
     }
-
-    private static ProcessEx GetFirstProcessWindows(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer)
+    
+    public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null, StringComparer comparer = null)
     {
-        foreach (Process process in Process.GetProcesses())
+        comparer ??= StringComparer.OrdinalIgnoreCase;
+        ProcessEx found = null;
+        foreach (Process proc in Process.GetProcesses())
         {
-            try
+            // Already found, dispose all other resources to processes.
+            if (found != null)
             {
-                if (comparer.Compare(procName, process.ProcessName) == 0)
-                {
-                    ProcessEx processEx = new ProcessEx(process.Id);
-                    if (predicate == null || predicate(processEx))
-                    {
-                        return processEx;
-                    }
-                }
+                proc.Dispose();
+                continue;
             }
-            catch (Exception)
+
+            if (comparer.Compare(procName, proc.ProcessName) != 0)
             {
-                // Process doesn't exist anymore or we don't have access, skip it
+                proc.Dispose();
+                continue;
             }
+            ProcessEx procEx = new(proc);
+            if (predicate != null && !predicate(procEx))
+            {
+                procEx.Dispose();
+                continue;
+            }
+
+            found = procEx;
         }
-        return null;
+
+        return found;
     }
-
-    private static ProcessEx GetFirstProcessLinux(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer)
-    {
-        foreach (string dir in Directory.GetDirectories("/proc"))
-        {
-            if (int.TryParse(Path.GetFileName(dir), out int pid))
-            {
-                try
-                {
-                    ProcessEx processEx = new ProcessEx(pid);
-                    if (comparer.Compare(procName, processEx.Name) == 0)
-                    {
-                        if (predicate == null || predicate(processEx))
-                        {
-                            return processEx;
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    // Process doesn't exist anymore or we don't have access, skip it
-                }
-            }
-        }
-        return null;
-    }
-
-    private static ProcessEx GetFirstProcessMacOS(string procName, Func<ProcessEx, bool> predicate, StringComparer comparer)
-    {
-        // Use process_listpids to get all PIDs
-        int[] pids = new int[1024];
-        int bytesNeeded = 0;
-        if (process_listpids(PROC_ALL_PIDS, 0, pids, pids.Length * sizeof(int), ref bytesNeeded) > 0)
-        {
-            int numProcesses = bytesNeeded / sizeof(int);
-            for (int i = 0; i < numProcesses; i++)
-            {
-                int pid = pids[i];
-                if (pid == 0)
-                {
-                    continue;
-                }
-
-                try
-                {
-                    ProcessEx processEx = new ProcessEx(pid);
-                    if (comparer.Compare(procName, processEx.Name) == 0)
-                    {
-                        if (predicate == null || predicate(processEx))
-                        {
-                            return processEx;
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    // Process doesn't exist anymore or we don't have access, skip it
-                }
-            }
-        }
-        return null;
-    }
-
-    [DllImport("libproc.dylib")]
-    private static extern int process_listpids(int type, uint typeinfo, int[] buffer, int buffersize, ref int retbufsize);
 }
 
 public abstract class ProcessExBase : IDisposable
@@ -555,7 +479,7 @@ public class LinuxProcessEx : ProcessExBase
 
     public override IEnumerable<ProcessModuleEx> GetModules()
     {
-        List<ProcessModuleEx> modules = new List<ProcessModuleEx>();
+        List<ProcessModuleEx> modules = new();
         string[] lines = File.ReadAllLines($"/proc/{pid}/maps");
         foreach (string line in lines)
         {
