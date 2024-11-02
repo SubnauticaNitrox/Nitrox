@@ -65,7 +65,7 @@ public class PatchesTranspilerTest
     [TestMethod]
     public void AllTranspilerPatchesHaveSanityTest()
     {
-        Type[] allPatchesWithTranspiler = typeof(NitroxPatcher.Patcher).Assembly.GetTypes().Where(p => typeof(NitroxPatch).IsAssignableFrom(p) && p.IsClass).Where(x => x.GetMethod("Transpiler") != null).ToArray();
+        Type[] allPatchesWithTranspiler = typeof(NitroxPatcher.Main).Assembly.GetTypes().Where(p => typeof(NitroxPatch).IsAssignableFrom(p) && p.IsClass).Where(x => x.GetMethod("Transpiler") != null).ToArray();
 
         foreach (Type patch in allPatchesWithTranspiler)
         {

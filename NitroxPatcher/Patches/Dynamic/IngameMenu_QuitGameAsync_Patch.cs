@@ -13,8 +13,8 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo targetMethodIEnumerator = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
-    private static readonly MethodInfo targetMethod = AccessTools.EnumeratorMoveNext(targetMethodIEnumerator);
+    private static readonly MethodInfo enumeratorMethod = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
+    private static readonly MethodInfo targetMethod = AccessTools.EnumeratorMoveNext(enumeratorMethod);
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
