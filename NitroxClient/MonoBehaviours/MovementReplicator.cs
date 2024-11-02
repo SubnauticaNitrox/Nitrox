@@ -80,6 +80,8 @@ public abstract class MovementReplicator : MonoBehaviour
         buffer.AddLast(new Snapshot(movementData, occurrenceTime));
     }
 
+    public void ClearBuffer() => buffer.Clear();
+
     public void Start()
     {
         if (!gameObject.TryGetNitroxId(out objectId))
@@ -148,7 +150,7 @@ public abstract class MovementReplicator : MonoBehaviour
         {
             return;
         }
-        
+
         // Purging the next nodes if they should have already happened (we still have an expiration margin for the first node so it's fine)
         while (firstNode.Next != null && !firstNode.Next.Value.IsOlderThan(currentTime))
         {
@@ -157,7 +159,7 @@ public abstract class MovementReplicator : MonoBehaviour
         }
 
         LinkedListNode<Snapshot> nextNode = firstNode.Next;
-        
+
         // Current node is fine but there's no next node (waiting for it without dropping current)
         if (nextNode == null)
         {
@@ -187,7 +189,7 @@ public abstract class MovementReplicator : MonoBehaviour
     public record struct Snapshot(MovementData Data, float Time)
     {
         public bool IsOlderThan(float currentTime) => currentTime < Time;
-        
+
         public bool IsExpired(float currentTime) => currentTime > Time + SNAPSHOT_EXPIRATION_TIME;
     }
 

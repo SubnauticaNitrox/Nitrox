@@ -34,11 +34,11 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
 
         if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
         {
-                Object.Destroy(vehicleMovementReplicator);
-                Log.Debug($"[{nameof(VehicleDockingProcessor)}] Destroyed MovementReplicator on {packet.VehicleId}");
+            vehicleMovementReplicator.enabled = false;
+            Log.Debug($"[{nameof(VehicleDockingProcessor)}] Disabled MovementReplicator on {packet.VehicleId}");
         }
 
-        //vehicleMovementReplicator.enabled = false;
+        //DockRemoteVehicle(dockingBay, vehicle);
         DockRemoteVehicle(dockingBay, vehicle);
         //vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, dockingBay, packet.VehicleId, packet.PlayerId));
         vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, false);

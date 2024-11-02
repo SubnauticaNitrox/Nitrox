@@ -58,6 +58,12 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
             player.AnimationController.UpdatePlayerAnimations = false;
         }
         vehicleDockingBay.StartCoroutine(StartUndockingAnimation(vehicleDockingBay));
+
+        if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
+        {
+            vehicleMovementReplicator.ClearBuffer();
+            Log.Debug($"[{nameof(VehicleDockingProcessor)}] Clear MovementReplicator on {packet.VehicleId}");
+        }
     }
 
     private static IEnumerator StartUndockingAnimation(VehicleDockingBay vehicleDockingBay)
@@ -84,6 +90,13 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
             player.SetVehicle(vehicle);
         }
         vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
+
+        if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
+        {
+            vehicleMovementReplicator.enabled = true;
+            Log.Debug($"[{nameof(VehicleDockingProcessor)}] Enabled MovementReplicator on {packet.VehicleId}");
+        }
+
         Log.Debug("Set vehicle undocking complete");
     }
 }
