@@ -35,6 +35,7 @@ public sealed partial class VehicleDockingBay_OnTriggerEnter : NitroxPatch, IDyn
             Resolve<SimulationOwnership>().HasAnyLockType(vehicleId))
         {
             Log.Debug($"Will send vehicle docking for {vehicleId}"); //TODO: Debug logging
+            Vehicles.EngagePlayerMovementProcessor(interpolatingVehicle);
             Resolve<IPacketSender>().Send(new VehicleDocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId));
         }
     }

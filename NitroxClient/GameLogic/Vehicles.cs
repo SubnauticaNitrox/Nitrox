@@ -59,64 +59,31 @@ public class Vehicles
         }
     }
 
-    public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
+    public static void EngagePlayerMovementProcessor(Vehicle vehicle)
     {
-        if (!dockingBay.gameObject.TryGetIdOrWarn(out NitroxId dockId))
-        {
-            return;
-        }
-        if (!vehicle.gameObject.TryGetIdOrWarn(out NitroxId vehicleId))
-        {
-            return;
-        }
-
-        VehicleDocking packet = new VehicleDocking(vehicleId, dockId, multiplayerSession.Reservation.PlayerId);
-        packetSender.Send(packet);
-
+        // TODO: Properly prevent the vehicle from sending position update as long as it's not free from the animation
         PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
-        // TODO: Properly prevent the vehicle from sending position update as long as it's not free from the animation
-        vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor));
-    }
+        vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation());
+        return;
 
-    public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
-    {
-        if (!dockingBay.TryGetIdOrWarn(out NitroxId dockId))
+        /*
+         A poorly timed movement packet will cause major problems when docking because the remote
+         player will think that the player is no longer in a vehicle.  Unfortunately, the game calls
+         the vehicle exit code before the animation completes so we need to suppress any side effects.
+         Two thing we want to protect against:
+
+             1) If a movement packet is received when docking, the player might exit the vehicle early,
+                and it will show them sitting outside the vehicle during the docking animation.
+
+             2) If a movement packet is received when undocking, the player game object will be stuck in
+                place until after the player exits the vehicle.  This causes the player body to stretch to
+                the current cyclops position.
+        */
+        IEnumerator AllowMovementPacketsAfterDockingAnimation()
         {
-            return;
+            yield return Yielders.WaitFor3Seconds;
+            playerMovementSuppressor.Dispose();
         }
-        if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
-        {
-            return;
-        }
-
-        PacketSuppressor<PlayerMovement> movementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
-        // TODO: Properly prevent the vehicle from sending position update as long as it's not free from the animation
-        if (!undockingStart)
-        {
-            movementSuppressor.Dispose();
-        }
-
-        VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, multiplayerSession.Reservation.PlayerId, undockingStart);
-        packetSender.Send(packet);
-    }
-
-    /*
-     A poorly timed movement packet will cause major problems when docking because the remote
-     player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
-     the vehicle exit code before the animation completes so we need to suppress any side affects.
-     Two thing we want to protect against:
-
-         1) If a movement packet is received when docking, the player might exit the vehicle early
-            and it will show them sitting outside the vehicle during the docking animation.
-
-         2) If a movement packet is received when undocking, the player game object will be stuck in
-            place until after the player exits the vehicle.  This causes the player body to strech to
-            the current cyclops position.
-    */
-    public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<PlayerMovement> playerMovementSuppressor)
-    {
-        yield return Yielders.WaitFor3Seconds;
-        playerMovementSuppressor.Dispose();
     }
 
     public void BroadcastOnPilotModeChanged(GameObject gameObject, bool isPiloting)
