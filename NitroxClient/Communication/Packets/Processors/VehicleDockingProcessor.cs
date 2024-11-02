@@ -38,14 +38,22 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
             Log.Debug($"[{nameof(VehicleDockingProcessor)}] Disabled MovementReplicator on {packet.VehicleId}");
         }
 
-        //DockRemoteVehicle(dockingBay, vehicle);
-        DockRemoteVehicle(dockingBay, vehicle);
-        //vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, dockingBay, packet.VehicleId, packet.PlayerId));
-        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, false);
+        vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, dockingBay, packet.VehicleId, packet.PlayerId));
+    }
+
+    private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
+    {
+        yield return Yielders.WaitFor1Second;
+        // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
+        // Therefore disable kinematic (again) to remove the bouncing behavior
+        DockRemoteVehicle(vehicleDockingBay, vehicle);
+        vehicle.useRigidbody.isKinematic = false;
+        yield return Yielders.WaitFor2Seconds;
+        vehicles.SetOnPilotMode(vehicleId, playerId, false);
     }
 
     /// Copy of <see cref="VehicleDockingBay.DockVehicle"/> without the player centric bits
-    private void DockRemoteVehicle(VehicleDockingBay bay, Vehicle vehicle)
+    private static void DockRemoteVehicle(VehicleDockingBay bay, Vehicle vehicle)
     {
         bay.dockedVehicle = vehicle;
         LargeWorldStreamer.main.cellManager.UnregisterEntity(bay.dockedVehicle.gameObject);
@@ -58,21 +66,6 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
         {
             bay.CancelInvoke("RepairVehicle");
             bay.InvokeRepeating("RepairVehicle", 0.0f, 5f);
-        }
-    }
-
-    IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
-    {
-        yield return Yielders.WaitFor1Second;
-        // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
-        // Therefore disable kinematic (again) to remove the bouncing behavior
-        vehicleDockingBay.DockVehicle(vehicle);
-        vehicle.useRigidbody.isKinematic = false;
-        yield return Yielders.WaitFor2Seconds;
-        vehicles.SetOnPilotMode(vehicleId, playerId, false);
-        if (!vehicle.docked)
-        {
-            Log.Error($"Vehicle {vehicleId} not docked after docking process");
         }
     }
 }
