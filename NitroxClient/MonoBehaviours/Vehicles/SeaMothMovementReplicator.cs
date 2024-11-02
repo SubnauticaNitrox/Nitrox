@@ -99,7 +99,6 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
 
     public override void Enter(RemotePlayer remotePlayer)
     {
-        seaMoth.mainAnimator.SetBool("player_in", true);
         seaMoth.bubbles.Play();
         if (enterSeamoth)
         {
@@ -118,7 +117,6 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
 
     public override void Exit()
     {
-        seaMoth.mainAnimator.SetBool("player_in", false);
         seaMoth.bubbles.Stop();
 
         throttleApplied = false;

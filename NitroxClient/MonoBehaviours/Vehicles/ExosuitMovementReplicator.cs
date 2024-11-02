@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.GameLogic.FMOD;
@@ -11,10 +12,10 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
     private Exosuit exosuit;
 
     public Vector3 velocity;
-    public Vector3 angularVelocity;
     private float jetLoopingSoundDistance;
-    private float timeJetsChanged;
-    private bool lastThrottle;
+    private float thrustPower;
+    private bool jetsActive;
+    private float timeJetsActiveChanged;
 
     public void Awake()
     {
@@ -25,13 +26,10 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
     public new void Update()
     {
         Vector3 positionBefore = transform.position;
-        Vector3 rotationBefore = transform.rotation.eulerAngles;
         base.Update();
         Vector3 positionAfter = transform.position;
-        Vector3 rotationAfter = transform.rotation.eulerAngles;
 
         velocity = (positionAfter - positionBefore) / Time.deltaTime;
-        angularVelocity = (rotationAfter - rotationBefore) / Time.deltaTime;
 
         if (exosuit.loopingJetSound.playing)
         {
@@ -50,9 +48,40 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
             }
         }
 
-        // TODO: find out if this is necessary
-        exosuit.ambienceSound.SetParameterValue(exosuit.fmodIndexSpeed, velocity.magnitude);
-        exosuit.ambienceSound.SetParameterValue(exosuit.fmodIndexRotate, angularVelocity.magnitude);
+        // See Exosuit.Update, thrust power simulation
+
+        if (jetsActive)
+        {
+            thrustPower = Mathf.Clamp01(thrustPower - Time.deltaTime * exosuit.thrustConsumption);
+            exosuit.thrustIntensity += Time.deltaTime / exosuit.timeForFullVirbation;
+        }
+        else
+        {
+            float num = Time.deltaTime * exosuit.thrustConsumption * 0.7f;
+            if (exosuit.onGround)
+            {
+                num = Time.deltaTime * exosuit.thrustConsumption * 4f;
+            }
+            thrustPower = Mathf.Clamp01(thrustPower + num);
+            exosuit.thrustIntensity -= Time.deltaTime * 10f;
+        }
+        exosuit.thrustIntensity = Mathf.Clamp01(exosuit.thrustIntensity);
+
+        if (timeJetsActiveChanged + 0.3f <= DayNightCycle.main.timePassedAsFloat)
+        {
+            if (jetsActive && thrustPower > 0f)
+            {
+                exosuit.loopingJetSound.Play();
+                exosuit.fxcontrol.Play(0);
+                exosuit.areFXPlaying = true;
+            }
+            else
+            {
+                exosuit.loopingJetSound.Stop();
+                exosuit.fxcontrol.Stop(0);
+                exosuit.areFXPlaying = false;
+            }
+        }
     }
 
     public override void ApplyNewMovementData(MovementData newMovementData)
@@ -74,23 +103,11 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
             exosuit.mainAnimator.SetFloat("view_pitch", steeringWheelPitch);
         }
 
-        // See Exosuit.Update
-        if (timeJetsChanged + 0.3f <= Time.time && lastThrottle != vehicleMovementData.ThrottleApplied)
+        // See Exosuit.jetsActive setter
+        if (jetsActive != vehicleMovementData.ThrottleApplied)
         {
-            timeJetsChanged = Time.time;
-            lastThrottle = vehicleMovementData.ThrottleApplied;
-            if (vehicleMovementData.ThrottleApplied)
-            {
-                exosuit.loopingJetSound.Play();
-                exosuit.fxcontrol.Play(0);
-                exosuit.areFXPlaying = true;
-            }
-            else
-            {
-                exosuit.loopingJetSound.Stop();
-                exosuit.fxcontrol.Stop(0);
-                exosuit.areFXPlaying = false;
-            }
+            jetsActive = vehicleMovementData.ThrottleApplied;
+            timeJetsActiveChanged = DayNightCycle.main.timePassedAsFloat;
         }
     }
 
@@ -111,18 +128,16 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
     public override void Enter(RemotePlayer remotePlayer)
     {
-        exosuit.mainAnimator.SetBool("player_in", true);
-        // TODO: see if required: GetComponent<Rigidbody>().freezeRotation = false;
         exosuit.SetIKEnabled(true);
         exosuit.thrustIntensity = 0;
     }
 
     public override void Exit()
     {
-        exosuit.mainAnimator.SetBool("player_in", false);
-        // TODO: see if required: GetComponent<Rigidbody>().freezeRotation = true;
         exosuit.SetIKEnabled(false);
-        exosuit.loopingJetSound.Stop();
+        exosuit.loopingJetSound.Stop(STOP_MODE.ALLOWFADEOUT);
         exosuit.fxcontrol.Stop(0);
+
+        jetsActive = false;
     }
 }

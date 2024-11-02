@@ -73,7 +73,6 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
         }
 
         throttleApplied = vehicleMovementData.ThrottleApplied;
-
     }
     
     public override void Enter(RemotePlayer drivingPlayer)
