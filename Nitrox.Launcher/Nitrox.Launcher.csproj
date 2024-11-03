@@ -1,16 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
+    <Import Project="..\Release.targets" />
+    
     <PropertyGroup>
+        <!-- OutputType for Windows, MacOS & Linux -->
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
-        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
         <ApplicationIcon>Assets\Images\nitrox-icon.ico</ApplicationIcon>
         <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
@@ -24,7 +27,6 @@
         <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.3" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
-        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.3" />
         <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.1.0" />
         <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.1.0" />
@@ -42,7 +44,7 @@
     </ItemGroup>
 
     <!-- Generate lib folders for project dependencies -->
-    <Import Project="..\GenerateLibFolder.props" />
+    <Import Project="..\GenerateLibFolder.targets" />
 
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
         <Message Importance="High" Text="Running MoveNitroxAssetsToLauncherOutput" />
@@ -68,8 +70,10 @@
         </PropertyGroup>
 
         <!-- Create directory if it doesn't exist -->
-        <MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')" ContinueOnError="WarnAndContinue" />
-
+        <MakeDir Directories="$(OutputDirectory)"
+                 Condition="!Exists('$(OutputDirectory)')"
+                 ContinueOnError="WarnAndContinue" />
+        
          <!-- MSBuild project build target with OutputPath somehow doesn't work -->
         <Exec Command="dotnet msbuild ../NitroxPatcher/NitroxPatcher.csproj -t:Build -p:Configuration=$(Configuration) -p:TargetFramework=net472 -p:OutputPath=$(OutputDirectory)" />
     </Target>

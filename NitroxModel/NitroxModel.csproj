@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="8.0.4" />
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
         <PackageReference Include="Autofac" Version="[4.9.4]" />
         <PackageReference Include="LiteNetLib" Version="1.2.0" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />

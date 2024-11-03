@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleIconFile</key>
+        <string>Nitrox.icns</string>
+        <key>CFBundleIdentifier</key>
+        <string>com.nitrox.launcher</string>
+        <key>CFBundleName</key>
+        <string>Nitrox</string>
+        <key>CFBundleDisplayName</key>
+        <string>Nitrox</string>
+        <key>CFBundleVersion</key>
+        <string>1.8.0</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>12.0</string>
+        <key>CFBundleExecutable</key>
+        <string>Nitrox.Launcher</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>1.8</string>
+        <key>NSPrincipalClass</key>
+        <string>NSApplication</string>
+        <key>NSHighResolutionCapable</key>
+        <true/>
+    </dict>
+</plist>

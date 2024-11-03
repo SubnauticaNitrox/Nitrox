@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- General build properties -->
+    <PropertyGroup>
+        <!-- Current machine operating system -->
+        <_OSArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)</_OSArchitecture>
+        <_IsWindows>$([System.OperatingSystem]::IsWindows())</_IsWindows>
+        <_IsLinux>$([System.OperatingSystem]::IsLinux())</_IsLinux>
+        <_IsMacOS>$([System.OperatingSystem]::IsMacOS())</_IsMacOS>
+        
+        <!-- Current project build configuration -->
+        <_IsRelease>$([System.String]::Equals($(Configuration), 'Release'))</_IsRelease>
+        <_IsDebug>$([System.String]::Equals($(Configuration), 'Debug'))</_IsDebug>
+        
+        <!-- Current RID build configuration -->
+        <_IsWindowsTarget>false</_IsWindowsTarget>
+        <_IsWindowsTarget Condition="'$(RuntimeIdentifier)' == 'win-x64'">true</_IsWindowsTarget>
+
+        <_IsLinuxTarget>false</_IsLinuxTarget>
+        <_IsLinuxTarget Condition="'$(RuntimeIdentifier)' == 'linux-x64' Or '$(RuntimeIdentifier)' == 'linux-arm64'">true</_IsLinuxTarget>
+
+        <_IsMacOSTarget>false</_IsMacOSTarget>
+        <_IsMacOSTarget Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">true</_IsMacOSTarget>
+    </PropertyGroup>
+    
+    <!-- Task names, make sure that they match the real name in <Target /> since Name doesn't allow expressions -->
+    <PropertyGroup>
+        <_ReleaseTaskName>_NitroxRelease</_ReleaseTaskName>
+        <_ReleaseMacOSTaskName>_NitroxMacOSRelease</_ReleaseMacOSTaskName>
+        <_VerifyMacOSFiles>_VerifyMacOSFiles</_VerifyMacOSFiles>
+        <_CreateMacOSAppBundle>_CreateMacOSAppBundle</_CreateMacOSAppBundle>
+    </PropertyGroup>
+    
+    <!-- Overridable properties -->
+    <PropertyGroup>
+        <CreateAppBundle Condition="'$(CreateAppBundle)' == ''">false</CreateAppBundle>
+        <AppBundleName Condition="'$(AppBundleName)' == ''">Nitrox.app</AppBundleName>
+        <PlatformFolder Condition="'$(PlatformFolder)' == ''" />
+    </PropertyGroup>
+
+    <Target Name="_NitroxRelease" Condition="$(_IsRelease)" AfterTargets="Publish" />
+    
+    <!-- Windows -->
+    <PropertyGroup Condition="$(_IsWindowsTarget)">
+        
+    </PropertyGroup>
+    
+    <!-- Linux -->
+    <PropertyGroup Condition="$(_IsLinuxTarget)">
+        
+    </PropertyGroup>
+    
+    <!-- MacOS -->
+    <PropertyGroup Condition="$(_IsMacOSTarget)">
+        <UseAppHost>true</UseAppHost>
+        <PlatformFolder>$(MSBuildProjectDirectory)\Platforms\MacOS</PlatformFolder>
+    </PropertyGroup>
+    
+    <Target Name="_NitroxMacOSRelease" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_ReleaseTaskName)" />
+
+    <Target Name="_VerifyMacOSFiles" AfterTargets="$(_ReleaseMacOSTaskName)">
+
+        <Message Importance="High"
+                 Text="Running $(_NitroxMacOSRelease) on $(MSBuildProjectName)" />
+
+        <Error Code="NX-201"
+               Condition="'$(AppBundleName.Trim())' == ''"
+               Text="AppBundleName cannot be null or empty, project must specify it in order to produce a bundle" />
+
+        <Error Code="NX-202"
+               Condition="!Exists($(PlatformFolder))"
+               Text="Folder '$(PlatformFolder)' must exist in the project, in order to produce a MacOS bundle" />
+    </Target>
+
+    <Target Name="_CreateMacOSAppBundle" AfterTargets="$(_VerifyMacOSFiles)">
+        
+        <Message Importance="High"
+                 Text="Running $(_NitroxMacOSRelease) on $(MSBuildProjectName)" />
+        
+        <PropertyGroup>
+            <_AppBundleDir>$(TargetDir)$(AppBundleName)\Contents</_AppBundleDir>
+            <_MacOSDir>$(_AppBundleDir)\MacOS</_MacOSDir>
+            <_ResourcesDir>$(_AppBundleDir)\Resources</_ResourcesDir>
+        </PropertyGroup>
+        
+        <ItemGroup>
+            <_BundleFolders Include="
+                $(_AppBundleDir);
+                $(_MacOSDir);
+                $(_ResourcesDir)
+            " />
+
+            <_PlatformFiles Include="$(PlatformFolder)\**\*" />
+        </ItemGroup>
+        
+        <MakeDir Directories="@(_BundleFolders)"
+                 ContinueOnError="WarnAndContinue" />
+
+        <Copy SourceFiles="@(_PlatformFiles)"
+              DestinationFiles="@(_PlatformFiles->'$(_AppBundleDir)\%(RecursiveDir)%(Filename)%(Extension)')"
+              ContinueOnError="ErrorAndStop" />
+        
+    </Target>
+
+</Project>

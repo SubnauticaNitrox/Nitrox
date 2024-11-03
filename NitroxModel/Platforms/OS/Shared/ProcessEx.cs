@@ -59,7 +59,7 @@ public class ProcessEx : IDisposable
 
         if (environmentVariables != null)
         {
-            foreach (var (key, value) in environmentVariables)
+            foreach ((string key, string value) in environmentVariables)
             {
                 startInfo.EnvironmentVariables[key] = value;
             }
@@ -108,7 +108,7 @@ public class ProcessEx : IDisposable
     {
         implementation.Dispose();
     }
-    
+
     public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null)
     {
         ProcessEx found = null;
@@ -225,7 +225,7 @@ public class WindowsProcessEx : ProcessExBase
         {
             throw new UnauthorizedAccessException("Elevated privileges required.");
         }
-        
+
         handle = OpenProcess(0x1F0FFF, false, id);
         if (handle == IntPtr.Zero)
         {
@@ -382,21 +382,16 @@ public class LinuxProcessEx : ProcessExBase
         }
     }
 
-    public override ProcessModuleEx MainModule
-    {
-        get
-        {
+    public override ProcessModuleEx MainModule =>
             // This is a simplified implementation. You might need to parse /proc/{pid}/maps
             // to get more accurate information about the main module.
-            return new ProcessModuleEx
+            new()
             {
                 BaseAddress = IntPtr.Zero,
                 ModuleName = Name,
                 FileName = MainModuleFileName,
                 ModuleMemorySize = 0
             };
-        }
-    }
 
     public override string MainModuleFileName
     {
@@ -432,7 +427,7 @@ public class LinuxProcessEx : ProcessExBase
         byte[] buffer = new byte[size];
         try
         {
-            using FileStream fs = new FileStream($"/proc/{pid}/mem", FileMode.Open, FileAccess.Read);
+            using FileStream fs = new($"/proc/{pid}/mem", FileMode.Open, FileAccess.Read);
             fs.Seek((long)address, SeekOrigin.Begin);
             if (fs.Read(buffer, 0, size) != size)
             {
@@ -474,7 +469,7 @@ public class LinuxProcessEx : ProcessExBase
 
     public override IEnumerable<ProcessModuleEx> GetModules()
     {
-        List<ProcessModuleEx> modules = new();
+        List<ProcessModuleEx> modules = [];
         string[] lines = File.ReadAllLines($"/proc/{pid}/maps");
         foreach (string line in lines)
         {
@@ -547,30 +542,20 @@ public class MacOSProcessEx : ProcessExBase
     public override int Id { get; }
     public override IntPtr Handle => task;
 
-    public override string Name
-    {
-        get
-        {
+    public override string Name =>
             // This is a simplified implementation. In a real scenario, you'd use sysctl to get the process name.
             throw new NotImplementedException("Getting process name is not implemented for macOS.");
-        }
-    }
 
-    public override ProcessModuleEx MainModule
-    {
-        get
-        {
+    public override ProcessModuleEx MainModule =>
             // This is a placeholder implementation. You'll need to use macOS-specific APIs
             // to get accurate information about the main module.
-            return new ProcessModuleEx
+            new()
             {
                 BaseAddress = IntPtr.Zero,
                 ModuleName = Name,
                 FileName = MainModuleFileName,
                 ModuleMemorySize = 0
             };
-        }
-    }
 
     public MacOSProcessEx(int pid) : base(pid)
     {

@@ -6,24 +6,24 @@
         <_NitroxOutputFolder>lib\</_NitroxOutputFolder>
     </PropertyGroup>
 
-    <Target Name="MoveDependenciesToLib" AfterTargets="Build">
+    <Target Name="MoveDependenciesToLib" AfterTargets="Publish">
         <Message Importance="High"
                  Text="Running $(_NitroxMoveDependenciesToLibTaskName) on $(MSBuildProjectName)" />
-
+        
         <PropertyGroup>
-            <OutputDirectory>$(TargetDir)$(_NitroxOutputFolder)</OutputDirectory>
+            <OutputDirectory>$(PublishDir)$(_NitroxOutputFolder)</OutputDirectory>
         </PropertyGroup>
 
         <ItemGroup>
-            <ExecutableFiles Include="$(TargetDir)*.exe" />
+            <ExecutableFiles Include="$(PublishDir)*.exe" />
             <DependenciesFile
-                Include="$(TargetDir)*.dll;$(TargetDir)*.dll.config;$(TargetDir)*.deps.json"
-                Exclude="$(TargetDir)*.exe;$(TargetDir)*.runtimeconfig.json"
+                Include="$(PublishDir)*.dll;$(PublishDir)*.dll.config;$(PublishDir)*.deps.json"
+                Exclude="$(PublishDir)*.exe;$(PublishDir)*.runtimeconfig.json"
             />
             <!-- Makes sure that the main dll of the executable files are next to each other -->
-            <DependenciesFile Remove="$(TargetDir)%(ExecutableFiles.Filename).dll" />
+            <DependenciesFile Remove="$(PublishDir)%(ExecutableFiles.Filename).dll" />
             <!-- Makes sure that the native dependency json files of the executable files are next to each other -->
-            <DependenciesFile Remove="$(TargetDir)%(ExecutableFiles.Filename).deps.json" />
+            <DependenciesFile Remove="$(PublishDir)%(ExecutableFiles.Filename).deps.json" />
         </ItemGroup>
 
         <!-- Create directory if it doesn't exist -->

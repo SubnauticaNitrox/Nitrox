@@ -27,13 +27,13 @@
     </ItemGroup>
 
     <!-- Generate lib folders for project dependencies -->
-    <Import Project="..\GenerateLibFolder.props" />
+    <Import Project="..\GenerateLibFolder.targets" />
 
     <Target Name="MoveNitroxAssetsToServerOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
         <ItemGroup>
             <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
         </ItemGroup>
-        <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
+        <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(PublishDir)\%(RecursiveDir)" />
     </Target>
 
 </Project>
