@@ -88,8 +88,12 @@ public class EntitySimulation
         foreach (GlobalRootEntity entity in worldEntityManager.GetGlobalRootEntities())
         {
             simulationOwnershipData.TryToAcquire(entity.Id, player, SimulationLockType.TRANSIENT);
+            if (!simulationOwnershipData.TryGetLock(entity.Id, out SimulationOwnershipData.PlayerLock playerLock))
+            {
+                continue;
+            }
             bool doesEntityMove = ShouldSimulateEntityMovement(entity);
-            SimulatedEntity simulatedEntity = new(entity.Id, simulationOwnershipData.GetPlayerForLock(entity.Id).Id, doesEntityMove, SimulationLockType.TRANSIENT);
+            SimulatedEntity simulatedEntity = new(entity.Id, playerLock.Player.Id, doesEntityMove, playerLock.LockType);
             simulatedEntities.Add(simulatedEntity);
         }
         return simulatedEntities;

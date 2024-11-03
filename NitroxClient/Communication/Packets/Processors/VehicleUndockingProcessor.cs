@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -47,15 +47,9 @@ public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
 
         if (remotePlayerManager.TryFind(packet.PlayerId, out RemotePlayer player))
         {
-            vehicle.mainAnimator.SetBool("player_in", true);
-            player.Attach(vehicle.playerPosition.transform);
             // It can happen that the player turns in circles around himself in the vehicle. This stops it.
             player.RigidBody.angularVelocity = Vector3.zero;
-            player.ArmsController.SetWorldIKTarget(vehicle.leftHandPlug, vehicle.rightHandPlug);
-            player.AnimationController["in_seamoth"] = vehicle is SeaMoth;
-            player.AnimationController["in_exosuit"] = player.AnimationController["using_mechsuit"] = vehicle is Exosuit;
             vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
-            player.AnimationController.UpdatePlayerAnimations = false;
         }
         vehicleDockingBay.StartCoroutine(StartUndockingAnimation(vehicleDockingBay));
 

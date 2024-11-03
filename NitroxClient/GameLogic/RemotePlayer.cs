@@ -213,6 +213,8 @@ public class RemotePlayer : INitroxPlayer
                 {
                     SkyEnvironmentChanged.Broadcast(Body, SubRoot);
                 }
+
+                AnimationController.UpdatePlayerAnimations = false;
             }
             else
             {
@@ -312,6 +314,8 @@ public class RemotePlayer : INitroxPlayer
                         newVehicle.gameObject.EnsureComponent<ExosuitMovementReplicator>().Enter(this);
                         break;
                 }
+
+                AnimationController.UpdatePlayerAnimations = false;
             }
 
             bool isKinematic = newVehicle;

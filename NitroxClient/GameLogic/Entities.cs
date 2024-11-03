@@ -29,6 +29,7 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly ThrottledPacketSender throttledPacketSender;
         private readonly EntityMetadataManager entityMetadataManager;
+        private readonly SimulationOwnership simulationOwnership;
 
         private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
@@ -39,12 +40,14 @@ namespace NitroxClient.GameLogic
         private bool spawningEntities;
 
         private readonly HashSet<NitroxId> deletedEntitiesIds = new();
+        private readonly List<SimulatedEntity> pendingSimulatedEntities = new();
 
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, EntityMetadataManager entityMetadataManager, PlayerManager playerManager, ILocalNitroxPlayer localPlayer, LiveMixinManager liveMixinManager, TimeManager timeManager, SimulationOwnership simulationOwnership)
         {
             this.packetSender = packetSender;
             this.throttledPacketSender = throttledPacketSender;
             this.entityMetadataManager = entityMetadataManager;
+            this.simulationOwnership = simulationOwnership;
             EntitiesToSpawn = new();
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
@@ -133,6 +136,7 @@ namespace NitroxClient.GameLogic
             {
                 entityMetadataManager.ClearNewerMetadata();
                 deletedEntitiesIds.Clear();
+                simulationOwnership.ClearNewerSimulations();
             }
         }
 
@@ -209,6 +213,7 @@ namespace NitroxClient.GameLogic
                 }
 
                 entityMetadataManager.ApplyMetadata(entityResult.Get().Value, entity.Metadata);
+                simulationOwnership.ApplyNewerSimulation(entity.Id);
 
                 MarkAsSpawned(entity);
 

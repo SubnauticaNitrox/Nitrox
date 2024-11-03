@@ -15,6 +15,8 @@ namespace NitroxClient.GameLogic
         private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
         private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = new Dictionary<NitroxId, LockRequestBase>();
 
+        private readonly Dictionary<NitroxId, SimulatedEntity> newerSimulationById = [];
+
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
             this.multiplayerSession = muliplayerSession;
@@ -58,7 +60,7 @@ namespace NitroxClient.GameLogic
             if (lockAquired)
             {
                 SimulateEntity(id, lockType);
-                TreatVehicleEntity(id, true);
+                TreatVehicleEntity(id, true, lockType);
             }
 
             if (lockRequestsById.TryGetValue(id, out LockRequestBase lockRequest))
@@ -82,7 +84,7 @@ namespace NitroxClient.GameLogic
         {
             bool isLocalPlayerNewOwner = multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId;
 
-            if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner))
+            if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType))
             {
                 return;
             }
@@ -125,7 +127,7 @@ namespace NitroxClient.GameLogic
             return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
         }
 
-        private bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner)
+        private bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)
         {
             if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject) || !IsVehicle(gameObject))
             {
@@ -140,6 +142,7 @@ namespace NitroxClient.GameLogic
                     GameObject.Destroy(movementReplicator);
                 }
                 MovementBroadcaster.RegisterWatched(gameObject, entityId);
+                SimulateEntity(entityId, simulationLockType);
             }
             else
             {
@@ -148,6 +151,7 @@ namespace NitroxClient.GameLogic
                     MovementReplicator.AddReplicatorToObject(gameObject);
                 }
                 MovementBroadcaster.UnregisterWatched(entityId);
+                StopSimulatingEntity(entityId);
             }
 
             return true;
@@ -165,6 +169,25 @@ namespace NitroxClient.GameLogic
             }
 
             return false;
+        }
+
+        public void RegisterNewerSimulation(NitroxId entityId, SimulatedEntity simulatedEntity)
+        {
+            newerSimulationById[entityId] = simulatedEntity;
+        }
+
+        public void ApplyNewerSimulation(NitroxId nitroxId)
+        {
+            if (newerSimulationById.TryGetValue(nitroxId, out SimulatedEntity simulatedEntity))
+            {
+                TreatSimulatedEntity(simulatedEntity);
+                newerSimulationById.Remove(nitroxId);
+            }
+        }
+
+        public void ClearNewerSimulations()
+        {
+            newerSimulationById.Clear();
         }
     }
 }

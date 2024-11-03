@@ -21,7 +21,7 @@ public abstract class MovementReplicator : MonoBehaviour
     /// Big increments and any decrements of this value will likely cause stutter, so we try to avoid changing this value too much.
     /// But it is required that after a lag spike, we eventually lower down that value, which is done periodically <see cref="NitroxPrefs.LatencyUpdatePeriod"/>.
     /// </summary>
-    private float maxAllowedLatency;
+    public float maxAllowedLatency;
 
     private float latestLatencyBumpTime;
     private float maxLatencyDetectedRecently;
