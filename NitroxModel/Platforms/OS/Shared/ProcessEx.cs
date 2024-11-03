@@ -13,7 +13,6 @@ namespace NitroxModel.Platforms.OS.Shared;
 
 public class ProcessEx : IDisposable
 {
-    private const int PROC_ALL_PIDS = 1;
     private readonly ProcessExBase implementation;
 
     public int Id => implementation.Id;
@@ -22,6 +21,7 @@ public class ProcessEx : IDisposable
     public ProcessModuleEx MainModule => implementation.MainModule;
     public string MainModuleFileName => implementation.MainModuleFileName;
     public IntPtr MainWindowHandle => implementation.MainWindowHandle;
+    public string MainWindowTitle => implementation.MainWindowTitle;
 
     public ProcessEx(int pid)
     {
@@ -137,18 +137,32 @@ public class ProcessEx : IDisposable
 
 public abstract class ProcessExBase : IDisposable
 {
-    public abstract int Id { get; }
-    public abstract string Name { get; }
-    public abstract IntPtr Handle { get; }
+    protected readonly Process Process;
+    public virtual int Id => Process?.Id ?? -1;
+    public virtual string Name => Process?.ProcessName;
+    public virtual IntPtr Handle => Process?.Handle ?? IntPtr.Zero;
     public abstract ProcessModuleEx MainModule { get; }
-    public abstract string MainModuleFileName { get; }
-    public abstract IntPtr MainWindowHandle { get; }
+    public virtual string MainModuleFileName => Process?.MainModule?.FileName;
+    public virtual IntPtr MainWindowHandle => Process?.MainWindowHandle ?? IntPtr.Zero;
+    public virtual string MainWindowTitle => Process?.MainWindowTitle;
     public abstract byte[] ReadMemory(IntPtr address, int size);
     public abstract int WriteMemory(IntPtr address, byte[] data);
     public abstract IEnumerable<ProcessModuleEx> GetModules();
     public abstract void Suspend();
     public abstract void Resume();
     public abstract void Terminate();
+
+    protected ProcessExBase(int id)
+    {
+        try
+        {
+            Process = Process.GetProcessById(id);
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
 
     public static bool IsElevated()
     {
@@ -177,19 +191,16 @@ public class ProcessModuleEx
 
 public class WindowsProcessEx : ProcessExBase
 {
-    private readonly Process process;
     private bool disposed;
     private IntPtr handle;
 
-    public override int Id => process.Id;
-    public override string Name => process.ProcessName;
     public override IntPtr Handle => handle;
 
     public override ProcessModuleEx MainModule
     {
         get
         {
-            ProcessModule mainModule = process.MainModule;
+            ProcessModule mainModule = Process.MainModule;
             if (mainModule == null)
             {
                 return null;
@@ -204,17 +215,17 @@ public class WindowsProcessEx : ProcessExBase
         }
     }
 
-    public override string MainModuleFileName => process.MainModule?.FileName;
-    public override IntPtr MainWindowHandle => process.MainWindowHandle;
+    public override string MainModuleFileName => Process.MainModule?.FileName;
+    public override IntPtr MainWindowHandle => Process.MainWindowHandle;
+    public override string MainWindowTitle => Process.MainWindowTitle;
 
-    public WindowsProcessEx(int id)
+    public WindowsProcessEx(int id) : base(id)
     {
         if (!IsElevated())
         {
             throw new UnauthorizedAccessException("Elevated privileges required.");
         }
-
-        process = Process.GetProcessById(id);
+        
         handle = OpenProcess(0x1F0FFF, false, id);
         if (handle == IntPtr.Zero)
         {
@@ -243,7 +254,7 @@ public class WindowsProcessEx : ProcessExBase
 
     public override IEnumerable<ProcessModuleEx> GetModules()
     {
-        return process.Modules.Cast<ProcessModule>().Select(m => new ProcessModuleEx
+        return Process.Modules.Cast<ProcessModule>().Select(m => new ProcessModuleEx
         {
             BaseAddress = m.BaseAddress,
             ModuleName = m.ModuleName,
@@ -254,7 +265,7 @@ public class WindowsProcessEx : ProcessExBase
 
     public override void Suspend()
     {
-        foreach (ProcessThread thread in process.Threads)
+        foreach (ProcessThread thread in Process.Threads)
         {
             IntPtr threadHandle = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
             if (threadHandle != IntPtr.Zero)
@@ -276,7 +287,7 @@ public class WindowsProcessEx : ProcessExBase
 
     public override void Resume()
     {
-        foreach (ProcessThread thread in process.Threads)
+        foreach (ProcessThread thread in Process.Threads)
         {
             IntPtr threadHandle = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)thread.Id);
             if (threadHandle != IntPtr.Zero)
@@ -298,7 +309,7 @@ public class WindowsProcessEx : ProcessExBase
 
     public override void Terminate()
     {
-        process.Kill();
+        Process.Kill();
     }
 
     public override void Dispose()
@@ -310,7 +321,7 @@ public class WindowsProcessEx : ProcessExBase
                 CloseHandle(handle);
                 handle = IntPtr.Zero;
             }
-            process.Dispose();
+            Process.Dispose();
             disposed = true;
         }
         GC.SuppressFinalize(this);
@@ -407,17 +418,7 @@ public class LinuxProcessEx : ProcessExBase
         }
     }
 
-    public override IntPtr MainWindowHandle
-    {
-        get
-        {
-            // Linux doesn't have a direct equivalent to Windows' MainWindowHandle.
-            // This is a placeholder implementation.
-            throw new PlatformNotSupportedException("MainWindowHandle is not supported on Linux.");
-        }
-    }
-
-    public LinuxProcessEx(int pid)
+    public LinuxProcessEx(int pid) : base(pid)
     {
         this.pid = pid;
         if (!File.Exists($"/proc/{this.pid}/status"))
@@ -571,27 +572,7 @@ public class MacOSProcessEx : ProcessExBase
         }
     }
 
-    public override string MainModuleFileName
-    {
-        get
-        {
-            // This is a placeholder implementation. You'll need to use macOS-specific APIs
-            // to get the main module file name.
-            throw new NotImplementedException("Getting main module file name is not implemented for macOS.");
-        }
-    }
-
-    public override IntPtr MainWindowHandle
-    {
-        get
-        {
-            // macOS doesn't have a direct equivalent to Windows' MainWindowHandle.
-            // This is a placeholder implementation.
-            throw new PlatformNotSupportedException("MainWindowHandle is not supported on macOS.");
-        }
-    }
-
-    public MacOSProcessEx(int pid)
+    public MacOSProcessEx(int pid) : base(pid)
     {
         if (!IsElevated())
         {
