@@ -65,6 +65,8 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         Destroy(GetComponentInChildren<TranslationLiveUpdate>());
 
         text = GetComponentInChildren<TextMeshProUGUI>();
+        text.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        text.verticalAlignment = VerticalAlignmentOptions.Top;
         text.transform.localPosition = new Vector3(-375, 350, 0);
         text.GetComponent<RectTransform>().sizeDelta = new Vector2(350, 280);
 
