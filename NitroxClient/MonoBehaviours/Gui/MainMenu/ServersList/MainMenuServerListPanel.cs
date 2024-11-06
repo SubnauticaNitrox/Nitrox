@@ -43,6 +43,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         multiplayerButtonRef = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
         serverAreaContent = transform.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
         serverAreaContent.gameObject.name = "ServerAreaContent";
+        serverAreaContent.GetComponent<GridLayoutGroup>().spacing = new Vector2(0, 5);
 
         scrollRect = transform.RequireGameObject("Scroll View").GetComponent<ScrollRect>();
         scrollBar = scrollRect.RequireGameObject("Scrollbar");
@@ -265,7 +266,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         ForwardTriggerScrollToScrollRect(eventTriggers[0]);
         ForwardTriggerScrollToScrollRect(eventTriggers[1]);
 
-        scrollBar.SetActive(serverAreaContent.childCount >= 5);
+        scrollBar.SetActive(serverAreaContent.childCount >= 4);
 
         return multiplayerButtonInst;
     }
