@@ -23,7 +23,8 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     public static Sprite SelectedSprite;
     public static FMODAsset HoverSound;
 
-    private GameObject multiplayerButtonRef;
+    private GameObject multiplayerNewServerButtonRef;
+    private GameObject multiplayerServerButtonRef;
     private Transform serverAreaContent;
     private GameObject selectedServerItem;
     private ScrollRect scrollRect;
@@ -40,7 +41,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         SelectedSprite = loadMenu.selectedSprite;
         HoverSound = loadMenu.hoverSound;
 
-        multiplayerButtonRef = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
+        multiplayerNewServerButtonRef = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
         serverAreaContent = transform.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
         serverAreaContent.gameObject.name = "ServerAreaContent";
         serverAreaContent.GetComponent<GridLayoutGroup>().spacing = new Vector2(0, 5);
@@ -48,8 +49,8 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         scrollRect = transform.RequireGameObject("Scroll View").GetComponent<ScrollRect>();
         scrollBar = scrollRect.RequireGameObject("Scrollbar");
 
-        MainMenuLoadButton loadButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>();
-        MainMenuServerButton.Setup(loadButtonRef);
+        multiplayerServerButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance;
+        MainMenuServerButton.Setup(multiplayerServerButtonRef.GetComponent<MainMenuLoadButton>());
 
         CreateAddServerButton();
         LoadSavedServers();
@@ -209,7 +210,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         return false;
     }
 
-    private bool SelectItemByIndex(int selectedIndex)
+    public bool SelectItemByIndex(int selectedIndex)
     {
         if (selectedIndex < serverAreaContent.childCount && selectedIndex >= 0)
         {
@@ -245,8 +246,13 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
     public GameObject CreateServerButton(string serverName, string address, int port, bool isReadOnly = false)
     {
-        GameObject multiplayerButtonInst = Instantiate(multiplayerButtonRef, serverAreaContent, false);
-        multiplayerButtonInst.name = $"NitroxServer_{serverAreaContent.childCount - 1}";
+        GameObject multiplayerButtonInst = Instantiate(multiplayerServerButtonRef, serverAreaContent, false);
+        multiplayerButtonInst.name = $"NitroxServer_{serverAreaContent.childCount - 2}";
+        DestroyImmediate(multiplayerButtonInst.RequireGameObject("Load")); // Needs to be deleted before MainMenuServerButton.Init() below
+        Destroy(multiplayerButtonInst.GetComponent<MainMenuLoadButton>());
+
+        GameObject multiplayerLoadButtonInst = Instantiate(multiplayerNewServerButtonRef, multiplayerButtonInst.transform, false);
+        multiplayerLoadButtonInst.name = "Load";
 
         StringBuilder buttonText = new();
         buttonText.Append(Language.main.Get("Nitrox_ConnectTo")).Append(" <b>").Append(serverName).AppendLine("</b>");
@@ -262,18 +268,18 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         MainMenuServerButton serverButton = multiplayerButtonInst.AddComponent<MainMenuServerButton>();
         serverButton.Init(buttonText.ToString(), address, port, isReadOnly);
 
-        EventTrigger[] eventTriggers = multiplayerButtonInst.GetComponentsInChildren<EventTrigger>(true); // One from the normal and one from the delete button
-        ForwardTriggerScrollToScrollRect(eventTriggers[0]);
-        ForwardTriggerScrollToScrollRect(eventTriggers[1]);
-
         scrollBar.SetActive(serverAreaContent.childCount >= 4);
+        foreach (EventTrigger eventTrigger in multiplayerButtonInst.GetComponentsInChildren<EventTrigger>(true))
+        {
+            ForwardTriggerScrollToScrollRect(eventTrigger);
+        }
 
         return multiplayerButtonInst;
     }
 
     private void CreateAddServerButton()
     {
-        GameObject multiplayerButtonInst = Instantiate(multiplayerButtonRef, serverAreaContent, false);
+        GameObject multiplayerButtonInst = Instantiate(multiplayerNewServerButtonRef, serverAreaContent, false);
         multiplayerButtonInst.name = "NewServer"; // "NewServer" is important, see OnConfirm()
         Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
         txt.GetComponent<TextMeshProUGUI>().text = "Nitrox_AddServer";
@@ -285,12 +291,14 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         ForwardTriggerScrollToScrollRect(multiplayerButtonButton.GetComponent<EventTrigger>());
     }
 
-    private void ForwardTriggerScrollToScrollRect(EventTrigger trigger)
+    private void ForwardTriggerScrollToScrollRect(EventTrigger eventTrigger)
     {
+        eventTrigger.triggers.RemoveAll(trigger => trigger.eventID == EventTriggerType.Scroll);
+
         EventTrigger.TriggerEvent callback = new();
         callback.AddListener(x => scrollRect.Scroll(((PointerEventData)x).scrollDelta.y, 5f));
 
-        trigger.triggers.Add(new EventTrigger.Entry
+        eventTrigger.triggers.Add(new EventTrigger.Entry
         {
             eventID = EventTriggerType.Scroll,
             callback = callback

@@ -12,16 +12,22 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 
 public class MainMenuServerButton : MonoBehaviour
 {
+    private static MainMenuLoadButton loadButtonRef;
     private static LegendButtonData[] confirmButtonLegendData;
     private static GameObject deleteButtonRef;
+
+    private CanvasGroup loadCg;
+    private CanvasGroup deleteCg;
+    private Button cancelDeleteButton;
 
     private string joinIp;
     private int joinPort;
 
-    public static void Setup(MainMenuLoadButton loadButtonRef)
+    public static void Setup(MainMenuLoadButton _loadButtonRef)
     {
-        confirmButtonLegendData = loadButtonRef.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration;
-        deleteButtonRef = loadButtonRef.deleteButton;
+        loadButtonRef = _loadButtonRef;
+        confirmButtonLegendData = _loadButtonRef.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration;
+        deleteButtonRef = _loadButtonRef.deleteButton;
     }
 
     public void Init(string text, string ip, int port, bool isReadOnly)
@@ -29,7 +35,9 @@ public class MainMenuServerButton : MonoBehaviour
         joinIp = ip;
         joinPort = port;
 
-        Transform newGameButtonTransform = this.RequireTransform("NewGameButton");
+        Transform loadTransform = this.RequireTransform("Load");
+        loadCg = loadTransform.gameObject.AddComponent<CanvasGroup>();
+        Transform newGameButtonTransform = loadTransform.RequireTransform("NewGameButton");
 
         TextMeshProUGUI tmp = newGameButtonTransform.RequireTransform("Text").GetComponent<TextMeshProUGUI>();
         tmp.text = text;
@@ -39,28 +47,69 @@ public class MainMenuServerButton : MonoBehaviour
         multiplayerJoinButton.onClick = new Button.ButtonClickedEvent();
         multiplayerJoinButton.onClick.AddListener(OnJoinButtonClicked);
 
-        gameObject.AddComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = confirmButtonLegendData;
-
         // We don't want servers that are discovered automatically to be deleted
         if (!isReadOnly)
         {
-            GameObject delete = Instantiate(deleteButtonRef, transform, false);
+            GameObject delete = Instantiate(deleteButtonRef, loadTransform, false);
             Button deleteButtonButton = delete.GetComponent<Button>();
             deleteButtonButton.onClick = new Button.ButtonClickedEvent();
             deleteButtonButton.onClick.AddListener(RequestDelete);
         }
+
+        Transform deleteTransform = this.RequireTransform("Delete");
+        Destroy(deleteTransform.GetComponent<MainMenuDeleteGame>());
+        Destroy(deleteTransform.GetComponent<TranslationLiveUpdate>());
+        deleteCg = deleteTransform.GetComponent<CanvasGroup>();
+        cancelDeleteButton = deleteTransform.RequireTransform("DeleteCancelButton").GetComponent<Button>();
+        cancelDeleteButton.onClick = new Button.ButtonClickedEvent();
+        cancelDeleteButton.onClick.AddListener(CancelDelete);
+        Button confirmDeleteButton = deleteTransform.RequireTransform("DeleteConfirmButton").GetComponent<Button>();
+        confirmDeleteButton.onClick = new Button.ButtonClickedEvent();
+        confirmDeleteButton.onClick.AddListener(Delete);
+
+        deleteTransform.gameObject.AddComponent<MainMenuDeleteServer>().serverButton = this;
+        TextMeshProUGUI warningTmp = deleteTransform.RequireTransform("DeleteWarningText").GetComponent<TextMeshProUGUI>();
+        warningTmp.text = Language.main.Get("Nitrox_ServerEntry_DeleteWarning");
+
+        gameObject.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = confirmButtonLegendData;
     }
 
     public void RequestDelete()
     {
-        ServerList.Instance.RemoveAt(transform.GetSiblingIndex() - 1);
-        ServerList.Instance.Save();
+        uGUI_MainMenu.main.OnRightSideOpened(deleteCg.gameObject);
+        uGUI_LegendBar.ClearButtons();
+        uGUI_LegendBar.ChangeButton(0, uGUI.FormatButton(GameInput.Button.UICancel, gamePadOnly: true), Language.main.GetFormat("Back"));
+        uGUI_LegendBar.ChangeButton(1, uGUI.FormatButton(GameInput.Button.UISubmit, gamePadOnly: true), Language.main.GetFormat("ItemSelectorSelect"));
+        StartCoroutine(loadButtonRef.ShiftAlpha(loadCg, 0.0f, loadButtonRef.animTime, loadButtonRef.alphaPower, false));
+        StartCoroutine(loadButtonRef.ShiftAlpha(deleteCg, 1f, loadButtonRef.animTime, loadButtonRef.alphaPower, true, cancelDeleteButton));
+        StartCoroutine(loadButtonRef.ShiftPos(loadCg, MainMenuLoadButton.target.left, MainMenuLoadButton.target.centre, loadButtonRef.animTime, loadButtonRef.posPower));
+        StartCoroutine(loadButtonRef.ShiftPos(deleteCg, MainMenuLoadButton.target.centre, MainMenuLoadButton.target.right, loadButtonRef.animTime, loadButtonRef.posPower));
+    }
 
+    public void CancelDelete()
+    {
+        MainMenuRightSide.main.OpenGroup(MainMenuServerListPanel.NAME);
+        if (GameInput.IsPrimaryDeviceGamepad())
+            MainMenuServerListPanel.Main.SelectItemByIndex(MainMenuServerListPanel.Main.GetSelectedIndex());
+        StartCoroutine(loadButtonRef.ShiftAlpha(loadCg, 1f, loadButtonRef.animTime, loadButtonRef.alphaPower, true));
+        StartCoroutine(loadButtonRef.ShiftAlpha(deleteCg, 0.0f, loadButtonRef.animTime, loadButtonRef.alphaPower, false));
+        StartCoroutine(loadButtonRef.ShiftPos(loadCg, MainMenuLoadButton.target.centre, MainMenuLoadButton.target.left, loadButtonRef.animTime, loadButtonRef.posPower));
+        StartCoroutine(loadButtonRef.ShiftPos(deleteCg, MainMenuLoadButton.target.right, MainMenuLoadButton.target.centre, loadButtonRef.animTime, loadButtonRef.posPower));
+    }
+
+    public void Delete()
+    {
+        MainMenuRightSide.main.OpenGroup(MainMenuServerListPanel.NAME);
         int scrollIndex = MainMenuServerListPanel.Main.GetSelectedIndex();
         if (GameInput.IsPrimaryDeviceGamepad() && !MainMenuServerListPanel.Main.SelectItemInYDirection(scrollIndex, 1))
         {
             MainMenuServerListPanel.Main.SelectItemInYDirection(scrollIndex, -1);
         }
+        StartCoroutine(loadButtonRef.ShiftPos(deleteCg, MainMenuLoadButton.target.left, MainMenuLoadButton.target.centre, loadButtonRef.animTime, loadButtonRef.posPower));
+        StartCoroutine(loadButtonRef.ShiftAlpha(deleteCg, 0.0f, loadButtonRef.animTime, loadButtonRef.alphaPower, false));
+
+        ServerList.Instance.RemoveAt(transform.GetSiblingIndex() - 1);
+        ServerList.Instance.Save();
 
         Destroy(gameObject);
     }
