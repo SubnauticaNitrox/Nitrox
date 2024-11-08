@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
@@ -21,7 +21,7 @@ public class LiteNetLibServer : NitroxServer
     public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
     {
         listener = new EventBasedNetListener();
-        server = new NetManager(listener);
+        server = new NetManager(listener, new PortCheckerSupport());
     }
 
     public override bool Start()
