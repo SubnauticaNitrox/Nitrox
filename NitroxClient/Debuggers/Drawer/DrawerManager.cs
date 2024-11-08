@@ -35,6 +35,7 @@ public class DrawerManager
         RectDrawer rectDrawer = new();
         LayoutGroupDrawer layoutGroupDrawer = new(rectDrawer);
         MaterialDrawer materialDrawer = new();
+        ImageDrawer imageDrawer = new(colorDrawer, materialDrawer, rectDrawer);
         NitroxEntityDrawer nitroxEntityDrawer = new();
 
         AddDrawer<NitroxEntityDrawer, NitroxEntity>(nitroxEntityDrawer);
@@ -52,6 +53,8 @@ public class DrawerManager
         AddDrawer<GraphicRaycasterDrawer, GraphicRaycaster>();
         AddDrawer<GridLayoutGroupDrawer, GridLayoutGroup>(new(vectorDrawer, rectDrawer));
         AddDrawer<LayoutGroupDrawer, HorizontalLayoutGroup>(layoutGroupDrawer);
+        AddDrawer<ImageDrawer, Image>(imageDrawer);
+        AddDrawer<ImageDrawer, RawImage>(imageDrawer);
         AddDrawer<LayoutGroupDrawer, VerticalLayoutGroup>(layoutGroupDrawer);
         AddDrawer<MaskDrawer, Mask>();
         AddDrawer<RectTransformDrawer, RectTransform>(new(vectorDrawer));
