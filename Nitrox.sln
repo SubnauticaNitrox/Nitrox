@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
+# 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel", "NitroxModel\NitroxModel.csproj", "{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}"
@@ -9,8 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
-		GenerateLibFolder.targets = GenerateLibFolder.targets
-		Release.targets = Release.targets
+		Nitrox.Shared.props = Nitrox.Shared.props
+		Nitrox.Shared.targets = Nitrox.Shared.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{39E377AD-2163-4428-952D-EBECD402C8F3}"
@@ -25,14 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxServer", "NitroxServe
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Assets.Subnautica", "Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.shproj", "{79E92B6D-5D25-4254-AC9F-FA9A1CD3CBC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Launcher", "Nitrox.Launcher\Nitrox.Launcher.csproj", "{30493A43-7EB3-4898-A82F-98A387284EB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Launcher", "Nitrox.Launcher\Nitrox.Launcher.csproj", "{30493A43-7EB3-4898-A82F-98A387284EB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Test", "Nitrox.Test\Nitrox.Test.csproj", "{B4C9C786-10A1-4091-A88F-C22AA14C05D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Test", "Nitrox.Test\Nitrox.Test.csproj", "{B4C9C786-10A1-4091-A88F-C22AA14C05D4}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.projitems*{79e92b6d-5d25-4254-ac9f-fa9a1cd3cbc6}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -76,5 +73,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC56EA37-FBBC-4D19-8796-29A42A2331A2}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.projitems*{79e92b6d-5d25-4254-ac9f-fa9a1cd3cbc6}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

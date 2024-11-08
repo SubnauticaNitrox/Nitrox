@@ -1,11 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\Release.targets" />
-    
     <PropertyGroup>
         <!-- OutputType for Windows, MacOS & Linux -->
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
+        <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -43,8 +42,11 @@
         <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
-    <!-- Generate lib folders for project dependencies -->
-    <Import Project="..\GenerateLibFolder.targets" />
+    <PropertyGroup>
+        <AppBundleName>Nitrox.app</AppBundleName>
+    </PropertyGroup>
+
+    <Import Project="..\Nitrox.Shared.targets" />
 
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
         <Message Importance="High" Text="Running MoveNitroxAssetsToLauncherOutput" />
