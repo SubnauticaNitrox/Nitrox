@@ -168,17 +168,23 @@ public abstract class ProcessExBase : IDisposable
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+            return WindowsProcessEx.IsElevated();
         }
-        return geteuid() == 0;
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return LinuxProcessEx.IsElevated();
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return MacOSProcessEx.IsElevated();
+        }
+
+        return false;
     }
 
     public virtual void Dispose()
     {
     }
-
-    [DllImport("libc")]
-    private static extern uint geteuid();
 }
 
 public class ProcessModuleEx
@@ -230,6 +236,29 @@ public class WindowsProcessEx : ProcessExBase
         if (handle == IntPtr.Zero)
         {
             throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+    }
+
+    public static new bool IsElevated()
+    {
+        try
+        {
+            using WindowsIdentity identity = WindowsIdentity.GetCurrent();
+
+            WindowsPrincipal principal = new(identity);
+            // If process has explicit admin privileges
+            if (principal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                return true;
+            }
+
+            // Otherwise check if user is in admin group (https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers)
+            string admininistratorSID = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null).Value;
+            return principal.Claims.Any(claim => claim.Value == admininistratorSID);
+        }
+        catch (Exception)
+        {
+            return false;
         }
     }
 
@@ -422,6 +451,11 @@ public class LinuxProcessEx : ProcessExBase
         }
     }
 
+    public static new bool IsElevated()
+    {
+        return geteuid() == 0;
+    }
+
     public override byte[] ReadMemory(IntPtr address, int size)
     {
         byte[] buffer = new byte[size];
@@ -514,15 +548,18 @@ public class LinuxProcessEx : ProcessExBase
     }
 
     [DllImport("libc", SetLastError = true)]
+    private static extern uint geteuid();
+
+    [DllImport("libc", SetLastError = true)]
     private static extern int ptrace(PtraceRequest request, int pid, IntPtr addr, IntPtr data);
 
     [DllImport("libc", SetLastError = true)]
     private static extern int kill(int pid, int sig);
 
-    [DllImport("libc")]
+    [DllImport("libc", SetLastError = true)]
     private static extern int readlink(string path, byte[] buf, int bufsiz);
 
-    private string ReadSymbolicLink(string path)
+    private static string ReadSymbolicLink(string path)
     {
         const int BUFFER_SIZE = 1024;
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -569,6 +606,11 @@ public class MacOSProcessEx : ProcessExBase
         {
             throw new InvalidOperationException("Failed to get task for pid.");
         }
+    }
+
+    public static new bool IsElevated()
+    {
+        return geteuid() == 0;
     }
 
     public override byte[] ReadMemory(IntPtr address, int size)
@@ -645,6 +687,9 @@ public class MacOSProcessEx : ProcessExBase
         }
         GC.SuppressFinalize(this);
     }
+
+    [DllImport("libc", SetLastError = true)]
+    private static extern uint geteuid();
 
     [DllImport("libSystem.dylib")]
     private static extern int task_for_pid(IntPtr targetTport, int pid, out IntPtr t);
