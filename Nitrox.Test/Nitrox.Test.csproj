@@ -9,12 +9,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="34.0.2" />
-        <PackageReference Include="CompareNETObjects" Version="4.78.0" />
-        <PackageReference Include="coverlet.collector" Version="3.1.0" />
-        <PackageReference Include="FluentAssertions" Version="6.12.0" />
-        <PackageReference Include="MSTest" Version="3.2.0" />
-        <PackageReference Include="NSubstitute" Version="4.2.2" />
+        <PackageReference Include="Bogus" Version="35.6.1" />
+        <PackageReference Include="CompareNETObjects" Version="4.83.0" />
+        <PackageReference Include="coverlet.collector" Version="6.0.2">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="FluentAssertions" Version="6.12.2" />
+        <PackageReference Include="FluentAssertions.Analyzers" Version="0.34.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="MSTest" Version="3.6.2" />
+        <PackageReference Include="NSubstitute" Version="5.3.0" />
     </ItemGroup>
 
     <ItemGroup>
