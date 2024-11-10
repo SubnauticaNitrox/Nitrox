@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.MonoBehaviours.Vehicles;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -9,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Exosuit_GetVelocity_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = typeof(Exosuit).GetMethod("IGroundMoveable.GetVelocity", BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo targetMethod = Reflect.Method((Exosuit t) => ((IGroundMoveable)t).GetVelocity());
 
     public static bool Prefix(Exosuit __instance, ref Vector3 __result)
     {

@@ -12,8 +12,8 @@ namespace NitroxClient.GameLogic
     {
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
-        private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
-        private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = new Dictionary<NitroxId, LockRequestBase>();
+        private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = [];
+        private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = [];
 
         private readonly Dictionary<NitroxId, SimulatedEntity> newerSimulationById = [];
 
@@ -118,7 +118,7 @@ namespace NitroxClient.GameLogic
             // Avoid keeping artifacts of the entity's previous ChangesPosition state
             if (!simulatedEntity.ChangesPosition && NitroxEntity.TryGetComponentFrom(simulatedEntity.Id, out RemotelyControlled remotelyControlled))
             {
-                GameObject.Destroy(remotelyControlled);
+                Object.Destroy(remotelyControlled);
             }
         }
 
@@ -139,7 +139,7 @@ namespace NitroxClient.GameLogic
             {
                 if (movementReplicator)
                 {
-                    GameObject.Destroy(movementReplicator);
+                    Object.Destroy(movementReplicator);
                 }
                 MovementBroadcaster.RegisterWatched(gameObject, entityId);
                 SimulateEntity(entityId, simulationLockType);

@@ -19,20 +19,24 @@ namespace NitroxModel.Packets
             ForceRespawn = false;
         }
 
-        public SpawnEntities(Entity entity, bool forceRespawn = false, SimulatedEntity simulatedEntity = null)
+        public SpawnEntities(Entity entity, SimulatedEntity simulatedEntity = null, bool forceRespawn = false)
         {
             Entities = [entity];
-            Simulations = [simulatedEntity];
+            Simulations = [];
+            if (simulatedEntity != null)
+            {
+                Simulations.Add(simulatedEntity);
+            }
 
             ForceRespawn = forceRespawn;
         }
 
         // Constructor for serialization. 
-        public SpawnEntities(List<Entity> entities, bool forceRespawn, List<SimulatedEntity> simulations)
+        public SpawnEntities(List<Entity> entities, List<SimulatedEntity> simulations, bool forceRespawn)
         {
             Entities = entities;
-            ForceRespawn = forceRespawn;
             Simulations = simulations;
+            ForceRespawn = forceRespawn;
         }
     }
 }

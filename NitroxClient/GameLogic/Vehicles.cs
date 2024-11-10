@@ -59,7 +59,7 @@ public class Vehicles
         }
     }
 
-    public static void EngagePlayerMovementProcessor(Vehicle vehicle)
+    public static void EngagePlayerMovementSuppressor(Vehicle vehicle)
     {
         // TODO: Properly prevent the vehicle from sending position update as long as it's not free from the animation
         PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();

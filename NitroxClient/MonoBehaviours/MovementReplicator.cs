@@ -36,7 +36,7 @@ public abstract class MovementReplicator : MonoBehaviour
     private float LatencyUpdatePeriod => NitroxPrefs.LatencyUpdatePeriod.Value;
 
     private Rigidbody rigidbody;
-    public NitroxId objectId;
+    public NitroxId objectId { get; private set; }
 
     /// <summary>
     /// Current time must be based on real time to avoid effects from time changes/speed.
@@ -72,7 +72,7 @@ public abstract class MovementReplicator : MonoBehaviour
         float occurrenceTime = time + INTERPOLATION_TIME + maxAllowedLatency;
 
         // Cleaning any previous value change that would occur later than the newly received snapshot
-        while (buffer.Last != null && buffer.Last.Value.IsOlderThan(occurrenceTime))
+        while (buffer.Last != null && buffer.Last.Value.IsSnapshotNewer(occurrenceTime))
         {
             buffer.RemoveLast();
         }
@@ -84,11 +84,13 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public void Start()
     {
-        if (!gameObject.TryGetNitroxId(out objectId))
+        if (!gameObject.TryGetNitroxId(out NitroxId _objectId))
         {
             Log.Error($"Can't start a {nameof(MovementReplicator)} on {name} because it doesn't have an attached: {nameof(NitroxEntity)}");
+            Destroy(this);
             return;
         }
+        objectId = _objectId;
 
         rigidbody = GetComponent<Rigidbody>();
         if (gameObject.TryGetComponent(out NitroxCyclops nitroxCyclops))
@@ -146,13 +148,13 @@ public abstract class MovementReplicator : MonoBehaviour
         }
 
         // Current node is not useable yet
-        if (firstNode.Value.IsOlderThan(currentTime))
+        if (firstNode.Value.IsSnapshotNewer(currentTime))
         {
             return;
         }
 
         // Purging the next nodes if they should have already happened (we still have an expiration margin for the first node so it's fine)
-        while (firstNode.Next != null && !firstNode.Next.Value.IsOlderThan(currentTime))
+        while (firstNode.Next != null && !firstNode.Next.Value.IsSnapshotNewer(currentTime))
         {
             firstNode = firstNode.Next;
             buffer.RemoveFirst();
@@ -172,12 +174,10 @@ public abstract class MovementReplicator : MonoBehaviour
         MovementData nextData = nextNode.Value.Data;
 
         float t = (currentTime - firstNode.Value.Time) / (nextNode.Value.Time - firstNode.Value.Time);
-        Vector3 position = Vector3.Lerp(prevData.Position.ToUnity(), nextData.Position.ToUnity(), t);
 
-        Quaternion rotation = Quaternion.Lerp(prevData.Rotation.ToUnity(), nextData.Rotation.ToUnity(), t);
+        transform.position = Vector3.Lerp(prevData.Position.ToUnity(), nextData.Position.ToUnity(), t);
 
-        transform.position = position;
-        transform.rotation = rotation;
+        transform.rotation = Quaternion.Lerp(prevData.Rotation.ToUnity(), nextData.Rotation.ToUnity(), t);
 
         ApplyNewMovementData(nextData);
 
@@ -188,7 +188,7 @@ public abstract class MovementReplicator : MonoBehaviour
 
     public record struct Snapshot(MovementData Data, float Time)
     {
-        public bool IsOlderThan(float currentTime) => currentTime < Time;
+        public bool IsSnapshotNewer(float currentTime) => currentTime < Time;
 
         public bool IsExpired(float currentTime) => currentTime > Time + SNAPSHOT_EXPIRATION_TIME;
     }

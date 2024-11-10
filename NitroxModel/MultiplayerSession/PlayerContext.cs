@@ -14,6 +14,9 @@ public class PlayerContext
     public PlayerSettings PlayerSettings { get; }
     public bool IsMuted { get; set; }
     public NitroxGameMode GameMode { get; set; }
+    /// <summary>
+    /// Not null if the player is currently driving a vehicle.
+    /// </summary>
     public NitroxId DrivingVehicle { get; set; }
 
     public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted, NitroxGameMode gameMode, NitroxId drivingVehicle)

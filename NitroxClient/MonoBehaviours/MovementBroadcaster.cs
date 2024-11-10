@@ -13,10 +13,11 @@ public class MovementBroadcaster : MonoBehaviour
     public const int BROADCAST_FREQUENCY = 30;
     public const float BROADCAST_PERIOD = 1f / BROADCAST_FREQUENCY;
 
-    private readonly Dictionary<NitroxId, WatchedEntry> watchedEntries = [];
-    public Dictionary<NitroxId, MovementReplicator> Replicators = [];
-    private float latestBroadcastTime;
     public static MovementBroadcaster Instance;
+
+    public Dictionary<NitroxId, MovementReplicator> Replicators = [];
+    private readonly Dictionary<NitroxId, WatchedEntry> watchedEntries = [];
+    private float latestBroadcastTime;
 
     public void Start()
     {
@@ -118,8 +119,8 @@ public class MovementBroadcaster : MonoBehaviour
             if (vehicle && Player.main.currentMountedVehicle == vehicle)
             {
                 // Those two values are set between -1 and 1 so we can easily scale them up while still in range for sbyte
-                sbyte steeringWheelYaw = (sbyte)(vehicle.steeringWheelYaw * 70f);
-                sbyte steeringWheelPitch = (sbyte)(vehicle.steeringWheelPitch * 45f);
+                sbyte steeringWheelYaw = (sbyte)(Mathf.Clamp(vehicle.steeringWheelYaw, -1, 1) * 70f);
+                sbyte steeringWheelPitch = (sbyte)(Mathf.Clamp(vehicle.steeringWheelPitch, -1, 1) * 45f);
 
                 bool throttleApplied = false;
 
@@ -142,8 +143,8 @@ public class MovementBroadcaster : MonoBehaviour
             if (subControl && Player.main.currentSub == subControl.sub && Player.main.mode == Player.Mode.Piloting)
             {
                 // Cyclop steering wheel's yaw and pitch are between -90 and 90 so they're already in range for sbyte
-                sbyte steeringWheelYaw = (sbyte)subControl.steeringWheelYaw;
-                sbyte steeringWheelPitch = (sbyte)subControl.steeringWheelPitch;
+                sbyte steeringWheelYaw = (sbyte)Mathf.Clamp(subControl.steeringWheelYaw, -90, 90);
+                sbyte steeringWheelPitch = (sbyte)Mathf.Clamp(subControl.steeringWheelPitch, -90, 90);
                 
                 // See SubControl.Update
                 bool throttleApplied = subControl.throttle.magnitude > 0.0001f;

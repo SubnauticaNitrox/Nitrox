@@ -9,7 +9,6 @@ namespace NitroxClient.MonoBehaviours.Vehicles;
 public class SeamothMovementReplicator : VehicleMovementReplicator
 {
     private SeaMoth seaMoth;
-    public Vector3 velocity;
 
     private FMOD_CustomLoopingEmitter rpmSound;
     private FMOD_CustomEmitter revSound;
@@ -29,10 +28,7 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
 
     public new void Update()
     {
-        Vector3 positionBefore = transform.position;
         base.Update();
-        Vector3 positionAfter = transform.position;
-        velocity = (positionAfter - positionBefore) / Time.deltaTime;
 
         if (throttleApplied)
         {
@@ -50,13 +46,13 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
         float steeringWheelPitch = vehicleMovementData.SteeringWheelPitch;
 
         // See Vehicle.Update (reverse operation for vehicle.steeringWheel... = ...)
-        seaMoth.steeringWheelYaw = steeringWheelPitch / 70f;
+        seaMoth.steeringWheelYaw = steeringWheelYaw / 70f;
         seaMoth.steeringWheelPitch = steeringWheelPitch / 45f;
 
         if (seaMoth.mainAnimator)
         {
-            seaMoth.mainAnimator.SetFloat("view_yaw", steeringWheelYaw);
-            seaMoth.mainAnimator.SetFloat("view_pitch", steeringWheelPitch);
+            seaMoth.mainAnimator.SetFloat(VIEW_YAW, steeringWheelYaw);
+            seaMoth.mainAnimator.SetFloat(VIEW_PITCH, steeringWheelPitch);
         }
 
         // Adjusting volume for the engine Sound
@@ -84,12 +80,12 @@ public class SeamothMovementReplicator : VehicleMovementReplicator
 
         rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
         revSound.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+        enterSeamoth.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
 
         rpmSound.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusRpmSound);
         revSound.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusRevSound);
-
-        enterSeamoth.GetEventInstance().setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
         enterSeamoth.GetEventInstance().setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radiusEnterSound);
+
 
         if (FMODUWE.IsInvalidParameterId(seaMoth.fmodIndexSpeed))
         {

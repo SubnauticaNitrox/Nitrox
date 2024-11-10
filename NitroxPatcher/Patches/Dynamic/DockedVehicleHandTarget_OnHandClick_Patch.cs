@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
@@ -48,7 +48,7 @@ public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPa
                 return;
             }
 
-            Vehicles.EngagePlayerMovementProcessor(vehicle);
+            Vehicles.EngagePlayerMovementSuppressor(vehicle);
             Resolve<IPacketSender>().Send(new VehicleUndocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId, true));
 
             skipPrefix = true;

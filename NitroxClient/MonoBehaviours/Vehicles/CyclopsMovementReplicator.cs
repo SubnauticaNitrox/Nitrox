@@ -6,6 +6,9 @@ namespace NitroxClient.MonoBehaviours.Vehicles;
 
 public class CyclopsMovementReplicator : VehicleMovementReplicator
 {
+    protected static readonly int CYCLOPS_YAW = Animator.StringToHash("cyclops_yaw");
+    protected static readonly int CYCLOPS_PITCH = Animator.StringToHash("cyclops_pitch");
+
     private SubControl subControl;
 
     private RemotePlayer drivingPlayer;
@@ -62,13 +65,13 @@ public class CyclopsMovementReplicator : VehicleMovementReplicator
         subControl.steeringWheelPitch = steeringWheelPitch;
         if (subControl.mainAnimator)
         {
-            subControl.mainAnimator.SetFloat("view_yaw", subControl.steeringWheelYaw);
-            subControl.mainAnimator.SetFloat("view_pitch", subControl.steeringWheelPitch);
+            subControl.mainAnimator.SetFloat(VIEW_YAW, subControl.steeringWheelYaw);
+            subControl.mainAnimator.SetFloat(VIEW_PITCH, subControl.steeringWheelPitch);
 
             if (drivingPlayer != null)
             {
-                drivingPlayer.AnimationController.SetFloat("cyclops_yaw", subControl.steeringWheelYaw);
-                drivingPlayer.AnimationController.SetFloat("cyclops_pitch", subControl.steeringWheelPitch);
+                drivingPlayer.AnimationController.SetFloat(CYCLOPS_YAW, subControl.steeringWheelYaw);
+                drivingPlayer.AnimationController.SetFloat(CYCLOPS_PITCH, subControl.steeringWheelPitch);
             }
         }
 

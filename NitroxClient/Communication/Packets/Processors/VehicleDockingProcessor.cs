@@ -33,19 +33,19 @@ public class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
             return;
         }
 
-        if (vehicle.TryGetComponent(out MovementReplicator vehicleMovementReplicator))
+        if (vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
         {
             vehicleMovementReplicator.enabled = false;
-            Log.Debug($"[{nameof(VehicleDockingProcessor)}] Disabled MovementReplicator on {packet.VehicleId}");
+            Log.Debug($"[{nameof(VehicleDockingProcessor)}] Disabled VehicleMovementReplicator on {packet.VehicleId}");
         }
 
-        vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, dockingBay, packet.VehicleId, packet.PlayerId));
+        vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleMovementReplicator, dockingBay, packet.VehicleId, packet.PlayerId));
     }
 
-    private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
+    private IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleMovementReplicator vehicleMovementReplicator, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
     {
         // Consider the vehicle movement latency (we don't teleport the vehicle to the docking position)
-        if (vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
+        if (vehicleMovementReplicator)
         {
             // NB: We don't have a lifetime ahead of us
             float waitTime = Mathf.Clamp(vehicleMovementReplicator.maxAllowedLatency, 0f, 2f);

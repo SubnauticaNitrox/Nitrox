@@ -45,7 +45,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 }
             }
 
-            SpawnEntities spawnEntities = new(entity, packet.RequireRespawn, simulatedEntity);
+            SpawnEntities spawnEntities = new(entity, simulatedEntity, packet.RequireRespawn);
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = player != playerWhoSpawned;

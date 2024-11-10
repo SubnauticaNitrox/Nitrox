@@ -30,7 +30,7 @@ public class VehicleMovementsPacketProcessor : AuthenticatedPacketProcessor<Vehi
             if (simulationOwnershipData.GetPlayerForLock(movementData.Id) != player)
             {
                 Log.WarnOnce($"Player {player.Name} tried updating {movementData.Id}'s position but they don't have the lock on it");
-                // In the future, add "packet.Data.RemoveAt(i);" and "continue;" to prevent those abnormal situations
+                // TODO: In the future, add "packet.Data.RemoveAt(i);" and "continue;" to prevent those abnormal situations
             }
 
             if (entityRegistry.TryGetEntityById(movementData.Id, out WorldEntity worldEntity))

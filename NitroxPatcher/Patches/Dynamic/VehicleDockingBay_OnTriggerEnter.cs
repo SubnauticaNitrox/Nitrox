@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
@@ -34,8 +34,7 @@ public sealed partial class VehicleDockingBay_OnTriggerEnter : NitroxPatch, IDyn
             interpolatingVehicle.TryGetIdOrWarn(out NitroxId vehicleId) &&
             Resolve<SimulationOwnership>().HasAnyLockType(vehicleId))
         {
-            Log.Debug($"Will send vehicle docking for {vehicleId}"); //TODO: Debug logging
-            Vehicles.EngagePlayerMovementProcessor(interpolatingVehicle);
+            Vehicles.EngagePlayerMovementSuppressor(interpolatingVehicle);
             Resolve<IPacketSender>().Send(new VehicleDocking(vehicleId, dockId, Resolve<IMultiplayerSession>().Reservation.PlayerId));
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using NitroxModel.Networking;
 
 namespace NitroxModel.Packets;
 
@@ -22,5 +23,7 @@ public class PlayerStats : Packet
         Food = food;
         Water = water;
         InfectionAmount = infectionAmount;
+
+        DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED_LAST;
     }
 }

@@ -31,21 +31,12 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
         velocity = (positionAfter - positionBefore) / Time.deltaTime;
 
-        if (exosuit.loopingJetSound.playing)
+
+        float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
+        EventInstance soundHandle = exosuit.loopingJetSound.playing ? exosuit.loopingJetSound.evt : exosuit.loopingJetSound.evtStop;
+        if (soundHandle.hasHandle())
         {
-            if (exosuit.loopingJetSound.evt.hasHandle())
-            {
-                float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
-                exosuit.loopingJetSound.evt.setVolume(volume);
-            }
-        }
-        else
-        {
-            if (exosuit.loopingJetSound.evtStop.hasHandle())
-            {
-                float volume = FMODSystem.CalculateVolume(transform.position, Player.main.transform.position, jetLoopingSoundDistance, 1f);
-                exosuit.loopingJetSound.evtStop.setVolume(volume);
-            }
+            soundHandle.setVolume(volume);
         }
 
         // See Exosuit.Update, thrust power simulation
@@ -67,7 +58,7 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
         }
         exosuit.thrustIntensity = Mathf.Clamp01(exosuit.thrustIntensity);
 
-        if (timeJetsActiveChanged + 0.3f <= DayNightCycle.main.timePassedAsFloat)
+        if (timeJetsActiveChanged + 0.3f <= Time.time)
         {
             if (jetsActive && thrustPower > 0f)
             {
@@ -99,15 +90,15 @@ public class ExosuitMovementReplicator : VehicleMovementReplicator
 
         if (exosuit.mainAnimator)
         {
-            exosuit.mainAnimator.SetFloat("view_yaw", steeringWheelYaw);
-            exosuit.mainAnimator.SetFloat("view_pitch", steeringWheelPitch);
+            exosuit.mainAnimator.SetFloat(VIEW_YAW, steeringWheelYaw);
+            exosuit.mainAnimator.SetFloat(VIEW_PITCH, steeringWheelPitch);
         }
 
         // See Exosuit.jetsActive setter
         if (jetsActive != vehicleMovementData.ThrottleApplied)
         {
             jetsActive = vehicleMovementData.ThrottleApplied;
-            timeJetsActiveChanged = DayNightCycle.main.timePassedAsFloat;
+            timeJetsActiveChanged = Time.time;
         }
     }
 

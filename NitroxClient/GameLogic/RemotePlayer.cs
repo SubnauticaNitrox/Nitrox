@@ -176,9 +176,6 @@ public class RemotePlayer : INitroxPlayer
 
         Pawn.Handle.transform.localPosition = localPosition;
         Pawn.Handle.transform.localRotation = localRotation;
-
-        AnimationController.UpdatePlayerAnimations = true;
-        AnimationController.AimingRotation = localRotation;
     }
 
     public void SetPilotingChair(PilotingChair newPilotingChair)
