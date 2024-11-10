@@ -37,7 +37,7 @@ internal static class Program
                                        .UseReactiveUI();
 
         // The Wayland renderer on Linux using GPU rendering is not (yet) supported by Avalonia
-        // Waiting on PR: https://github.com/AvaloniaUI/Avalonia/pull/11546 to enable rendering on GPU
+        // Waiting on issue: https://github.com/AvaloniaUI/Avalonia/issues/1243 to enable rendering on GPU
         if (Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is not null)
         {
             builder = builder.With(new X11PlatformOptions { RenderingMode = [X11RenderingMode.Software] });

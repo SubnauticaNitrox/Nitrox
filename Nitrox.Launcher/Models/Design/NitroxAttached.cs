@@ -17,9 +17,20 @@ public class NitroxAttached : AvaloniaObject
     public static readonly AttachedProperty<bool> AutoScrollToHomeProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, ScrollViewer, bool>("AutoScrollToHome");
     public static readonly AttachedProperty<Orientation> PrimaryScrollWheelDirectionProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, ScrollViewer, Orientation>("PrimaryScrollWheelDirection", Orientation.Vertical);
     public static readonly AttachedProperty<bool> IsNumericInputProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("IsNumericInput");
+    public static readonly AttachedProperty<bool> HasUserInteracted = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("HasUserInteracted");
 
     static NitroxAttached()
     {
+        InputElement.LostFocusEvent.Raised.Subscribe(HasUserInteractedOnNext);
+        InputElement.TextInputEvent.Raised.Subscribe(HasUserInteractedOnNext);
+
+        void HasUserInteractedOnNext((object Sender, RoutedEventArgs EventArgs) args)
+        {
+            if (args.Sender is InputElement element)
+            {
+                SetHasUserInteracted(element, true);
+            }
+        }
     }
 
     /// <summary>
@@ -160,4 +171,8 @@ public class NitroxAttached : AvaloniaObject
             inputElement.KeyDown -= OnKeyDown;
         }
     }
+
+    public static bool GetHasUserInteracted(InputElement input) => input.GetValue(HasUserInteracted);
+    
+    public static void SetHasUserInteracted(InputElement input, bool value) => input.SetValue(HasUserInteracted, value);
 }

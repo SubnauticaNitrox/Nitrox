@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
-using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
@@ -24,7 +22,7 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
 
     protected ModalViewModelBase()
     {
-        // Always run validation first so HasErrors is set (i.e. trigger CanExecute logic). Downside is that this will show field errors immediately (depending on field validators and their initial values).
+        // Always run validation first so HasErrors is set (i.e. trigger CanExecute logic).
         ValidateAllProperties();
     }
 

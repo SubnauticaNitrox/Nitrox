@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
     <!-- Code from: https://docs.avaloniaui.net/docs/data-binding/data-validation (except for colors) -->
     <Style Selector="DataValidationErrors">
         <Setter Property="Template">
@@ -8,8 +9,15 @@
                     <ContentControl DockPanel.Dock="Right"
                                     ContentTemplate="{TemplateBinding ErrorTemplate}"
                                     DataContext="{TemplateBinding Owner}"
-                                    Content="{Binding (DataValidationErrors.Errors)}"
-                                    IsVisible="{Binding (DataValidationErrors.HasErrors)}" />
+                                    Content="{Binding (DataValidationErrors.Errors)}">
+                        <!-- Don't show error on fields immediately on load, wait for user input (e.g. user is trying to skip a field with invalid value) -->
+                        <ContentControl.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="(DataValidationErrors.HasErrors)" />
+                                <Binding Path="(design:NitroxAttached.HasUserInteracted)" />
+                            </MultiBinding>
+                        </ContentControl.IsVisible>
+                    </ContentControl>
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Background="{TemplateBinding Background}"
                                       BorderBrush="{TemplateBinding BorderBrush}"
