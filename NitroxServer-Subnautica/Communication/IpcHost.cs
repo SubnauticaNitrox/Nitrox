@@ -53,12 +53,19 @@ public class IpcHost : IDisposable
             return "";
         }
 
-        byte[] sizeBytes = new byte[4];
-        await server.ReadExactlyAsync(sizeBytes, cancellationToken);
-        byte[] stringBytes = new byte[BitConverter.ToUInt32(sizeBytes)];
-        await server.ReadExactlyAsync(stringBytes, cancellationToken);
+        try
+        {
+            byte[] sizeBytes = new byte[4];
+            await server.ReadExactlyAsync(sizeBytes, cancellationToken);
+            byte[] stringBytes = new byte[BitConverter.ToUInt32(sizeBytes)];
+            await server.ReadExactlyAsync(stringBytes, cancellationToken);
 
-        return Encoding.UTF8.GetString(stringBytes);
+            return Encoding.UTF8.GetString(stringBytes);
+        }
+        catch (Exception)
+        {
+            return "";
+        }
     }
 
     public void Dispose()
