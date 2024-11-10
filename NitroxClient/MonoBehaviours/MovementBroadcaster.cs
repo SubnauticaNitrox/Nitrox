@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -51,8 +51,11 @@ public class MovementBroadcaster : MonoBehaviour
         List<MovementData> data = [];
         foreach (KeyValuePair<NitroxId, WatchedEntry> entry in watchedEntries)
         {
-            // TODO: Don't broadcast at certain times: while docking, while docked ...
-            data.Add(entry.Value.GetMovementData(entry.Key));
+            if (entry.Value.ShouldBroadcastMovement())
+            {
+                data.Add(entry.Value.GetMovementData(entry.Key));
+                entry.Value.OnBroadcastPosition();
+            }
         }
 
         if (data.Count > 0)
@@ -95,65 +98,6 @@ public class MovementBroadcaster : MonoBehaviour
         if (Instance)
         {
             Instance.Replicators.Remove(movementReplicator.objectId);
-        }
-    }
-
-    private readonly record struct WatchedEntry
-    {
-        // TODO: eventually add a detector for multiple broadcast in a row where the watched entry has almost not moved
-        // in this case, only send the data once every 5 second or as soon as new movement is detected
-        private readonly Transform transform;
-        private readonly Vehicle vehicle;
-        private readonly SubControl subControl;
-
-        public WatchedEntry(Transform transform)
-        {
-            this.transform = transform;
-            vehicle = transform.GetComponent<Vehicle>();
-            subControl = transform.GetComponent<SubControl>();
-        }
-
-        public MovementData GetMovementData(NitroxId id)
-        {
-            // Packets should be filled with more data if the vehicle is being driven by the local player
-            if (vehicle && Player.main.currentMountedVehicle == vehicle)
-            {
-                // Those two values are set between -1 and 1 so we can easily scale them up while still in range for sbyte
-                sbyte steeringWheelYaw = (sbyte)(Mathf.Clamp(vehicle.steeringWheelYaw, -1, 1) * 70f);
-                sbyte steeringWheelPitch = (sbyte)(Mathf.Clamp(vehicle.steeringWheelPitch, -1, 1) * 45f);
-
-                bool throttleApplied = false;
-
-                Vector3 input = AvatarInputHandler.main.IsEnabled() ? GameInput.GetMoveDirection() : Vector3.zero;
-                // See SeaMoth.UpdateSounds
-                if (vehicle is SeaMoth)
-                {
-                    throttleApplied = input.magnitude > 0f;
-                }
-                // See Exosuit.Update
-                else if (vehicle is Exosuit)
-                {
-                    throttleApplied = input.y > 0f;
-                }
-
-                return new DrivenVehicleMovementData(id, transform.position.ToDto(), transform.rotation.ToDto(), steeringWheelYaw, steeringWheelPitch, throttleApplied);
-            }
-
-            // TODO: find out if this is enough to ensure local player is piloting the said cyclops
-            if (subControl && Player.main.currentSub == subControl.sub && Player.main.mode == Player.Mode.Piloting)
-            {
-                // Cyclop steering wheel's yaw and pitch are between -90 and 90 so they're already in range for sbyte
-                sbyte steeringWheelYaw = (sbyte)Mathf.Clamp(subControl.steeringWheelYaw, -90, 90);
-                sbyte steeringWheelPitch = (sbyte)Mathf.Clamp(subControl.steeringWheelPitch, -90, 90);
-                
-                // See SubControl.Update
-                bool throttleApplied = subControl.throttle.magnitude > 0.0001f;
-
-                return new DrivenVehicleMovementData(id, transform.position.ToDto(), transform.rotation.ToDto(), steeringWheelYaw, steeringWheelPitch, throttleApplied);
-            }
-
-            // Normal case in which the vehicule isn't driven by the local player
-            return new SimpleMovementData(id, transform.position.ToDto(), transform.rotation.ToDto());
         }
     }
 }
