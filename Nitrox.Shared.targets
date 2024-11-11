@@ -32,8 +32,6 @@
 
     <Target Name="_NitroxAfterBuild" AfterTargets="$(_NitroxBuildTaskName)" />
 
-    <Target Name="_NitroxRelease" Condition="$(_IsRelease)" AfterTargets="$(_NitroxAfterBuildTaskName)" />
-
     <Target Name="_NitroxBeforePublish" BeforeTargets="BeforePublish">
         <Error Code="NX-001"
                Text="Nitrox does not support publishing"
@@ -68,7 +66,6 @@
         </PropertyGroup>
 
         <ItemGroup>
-
             <AllFiles Include="$(TargetDir)*" />
 
             <ExecutablesBaseName Include="%(AllFiles.Filename)"
@@ -79,17 +76,10 @@
             <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).dll;$(TargetDir)%(ExecutablesBaseName.Identity).dll.config" />
             <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).runtimeconfig.json" />
             <ExcludeFiles Include="$(TargetDir)%(ExecutablesBaseName.Identity).deps.json" />
+            <ExcludeFiles Include="$(TargetDir)*.dylib;$(TargetDir)*.so" />
 
             <FilesToMove Include="@(AllFiles)" Exclude="@(ExcludeFiles)" />
         </ItemGroup>
-
-        <Message Importance="High"
-                 IsCritical="True"
-                 Text="@(ExecutablesBaseName)" />
-
-        <Message Importance="High"
-                 IsCritical="True"
-                 Text="@(ExcludeFiles)" />
 
         <!-- Create directory if it doesn't exist -->
         <MakeDir Directories="$(OutputDirectory)"
@@ -109,19 +99,27 @@
         <!-- Move every matching files to OutputDirectory -->
         <Move SourceFiles="@(FilesToMove)"
               DestinationFolder="$(OutputDirectory)"
-              OverwriteReadOnlyFiles="True"
+              OverwriteReadOnlyFiles="True" 
               Condition="'$(Configuration)' == 'Release'"
               ContinueOnError="ErrorAndContinue" />
     </Target>
 
+    <!-- Remove our lib folder when we're using the solution/project clean -->
+    <Target Name="_NitroxClean" AfterTargets="Clean">
+        <Message Importance="High"
+                 Text="Running NitroxClean on $(MSBuildProjectName)" />
+    </Target>
+
     <!-- *************** RELEASE *************** -->
+
+    <Target Name="_NitroxRelease" Condition="$(_IsRelease)" AfterTargets="$(_NitroxAfterBuildTaskName)" />
 
     <Target Name="_NitroxMacOSRelease" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_NitroxReleaseTaskName)" />
 
-    <Target Name="_VerifyMacOSFiles" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_ReleaseMacOSTaskName)">
+    <Target Name="_VerifyMacOSFiles" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_ReleaseMacOSTaskName)" DependsOnTargets="$(_NitroxMoveDependenciesToLibTaskName)">
 
         <Message Importance="High"
-                 Text="Running $(_NitroxMacOSRelease) on $(MSBuildProjectName)" />
+                 Text="Running $(_VerifyMacOSFilesTaskName) on $(MSBuildProjectName)" />
 
         <Error Code="NX-201"
                Condition="'$(AppBundleName.Trim())' == ''"
@@ -135,26 +133,50 @@
     <Target Name="_CreateMacOSAppBundle" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_VerifyMacOSFilesTaskName)">
         
         <Message Importance="High"
-                 Text="Running $(_NitroxMacOSRelease) on $(MSBuildProjectName)" />
+                 Text="Running $(_CreateMacOSAppBundleTaskName) on $(MSBuildProjectName)" />
         
         <PropertyGroup>
-            <_AppBundleDir>$(TargetDir)$(AppBundleName)\Contents</_AppBundleDir>
-            <_MacOSDir>$(_AppBundleDir)\MacOS</_MacOSDir>
-            <_ResourcesDir>$(_AppBundleDir)\Resources</_ResourcesDir>
+            <_ZipDir>$(TargetDir)bundle\</_ZipDir>
+            <_AppBundleDir>$(_ZipDir)$(AppBundleName)\</_AppBundleDir>
+            <_ContentDir>$(_AppBundleDir)Contents\</_ContentDir>
+            <_MacOSDir>$(_ContentDir)MacOS\</_MacOSDir>
+            <_ResourcesDir>$(_ContentDir)Resources\</_ResourcesDir>
+
+            <_ZipFilePath>$(TargetDir)$(AppBundleName).zip</_ZipFilePath>
         </PropertyGroup>
         
         <ItemGroup>
-            <_BundleFolders Include="$(_AppBundleDir);$(_MacOSDir);$(_ResourcesDir)" />
+            <_AllFiles Include="$(TargetDir)\**\*" Exclude="$(_ZipFilePath);$(_AppBundleDir)\**\*" />
+            <_BundleFolders Include="$(_ContentDir);$(_MacOSDir);$(_ResourcesDir)" />
             <_PlatformFiles Include="$(PlatformFolder)\**\*" />
         </ItemGroup>
         
+        <!-- Create the whole OSX bundle tree -->
         <MakeDir Directories="@(_BundleFolders)"
                  ContinueOnError="WarnAndContinue" />
 
+        <!-- Copy custom nitrox ressources -->
         <Copy SourceFiles="@(_PlatformFiles)"
-              DestinationFiles="@(_PlatformFiles->'$(_AppBundleDir)\%(RecursiveDir)%(Filename)%(Extension)')"
+              DestinationFiles="@(_PlatformFiles->'$(_ContentDir)%(RecursiveDir)%(Filename)%(Extension)')"
+              Retries="3"
+              RetryDelayMilliseconds="150"
+              SkipUnchangedFiles="True"
               ContinueOnError="ErrorAndStop" />
-        
+
+        <!-- Copy whole app -->
+        <Copy SourceFiles="@(_AllFiles)"
+              DestinationFiles="@(_AllFiles->'$(_MacOSDir)%(RecursiveDir)%(Filename)%(Extension)')"
+              Retries="3"
+              RetryDelayMilliseconds="150"
+              SkipUnchangedFiles="True"
+              ContinueOnError="ErrorAndStop" />
+
+        <!-- Remove quarantine that prevents app from being run after download -->
+        <Exec Condition="$(_IsMacOS)" Command="xattr -r -d com.apple.quarantine $(_AppBundleDir)" />
+
+        <ZipDirectory SourceDirectory="$(_ZipDir)"
+                      DestinationFile="$(_ZipFilePath)"
+                      Overwrite="True" />
     </Target>
 
 </Project>

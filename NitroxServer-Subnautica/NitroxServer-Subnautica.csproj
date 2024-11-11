@@ -28,7 +28,7 @@
 
     <Import Project="..\Nitrox.Shared.targets" />
 
-    <Target Name="_NitroxMoveAssetsToServerOutput" AfterTargets="$(_NitroxBeforeBuildTaskName)">
+    <Target Name="NitroxMoveAssetsToServerOutput" AfterTargets="$(_NitroxBeforeBuildTaskName)">
         <ItemGroup>
             <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
         </ItemGroup>
@@ -36,7 +36,7 @@
         <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)"
               DestinationFolder="$(TargetDir)\%(RecursiveDir)"
               Retries="3"
-              RetryDelayMilliseconds="100"
+              RetryDelayMilliseconds="150"
               SkipUnchangedFiles="True" />
     </Target>
 

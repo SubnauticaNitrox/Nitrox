@@ -52,8 +52,7 @@ internal static class Program
 
     private static void CheckForRunningInstance()
     {
-        // This feature is windows only
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             return;
         }

@@ -12,7 +12,7 @@
         <!-- Current project build configuration -->
         <_IsRelease>$([System.String]::Equals($(Configuration), 'Release'))</_IsRelease>
         <_IsDebug>$([System.String]::Equals($(Configuration), 'Debug'))</_IsDebug>
-        
+         
         <!-- Current RID build configuration -->
         <_IsWindowsTarget>false</_IsWindowsTarget>
         <_IsWindowsTarget Condition="'$(RuntimeIdentifier)' == 'win-x64'">true</_IsWindowsTarget>
@@ -22,13 +22,6 @@
 
         <_IsMacOSTarget>false</_IsMacOSTarget>
         <_IsMacOSTarget Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">true</_IsMacOSTarget>
-
-        <NoSpecificTarget>false</NoSpecificTarget>
-        <NoSpecificTarget Condition="!$(_IsWindowsTarget) And !$(_IsLinuxTarget) And !$(_IsMacOSTarget)">true</NoSpecificTarget>
-    </PropertyGroup>
-
-    <PropertyGroup>
-
     </PropertyGroup>
 
 </Project>

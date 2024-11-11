@@ -4,7 +4,6 @@
         <!-- OutputType for Windows, MacOS & Linux -->
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
-        <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -49,7 +48,7 @@
     <Import Project="..\Nitrox.Shared.targets" />
 
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
-        <Message Importance="High" Text="Running MoveNitroxAssetsToLauncherOutput" />
+        <Message Importance="High" Text="Running MoveNitroxAssetsToLauncherOutput" /> 
 
         <ItemGroup>
             <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
@@ -57,14 +56,32 @@
             <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
             <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
         </ItemGroup>
+
         <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
         <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
         <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\Resources\LanguageFiles\%(RecursiveDir)" />
         <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
     </Target>
 
+    <Target Name="BuildServer" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+        <Message Importance="High" Text="Running BuildServer" />
+
+        <PropertyGroup>
+            <OutputDirectory>$(TargetDir)</OutputDirectory>
+        </PropertyGroup>
+
+        <!-- Create directory if it doesn't exist -->
+        <MakeDir Directories="$(OutputDirectory)"
+                 Condition="!Exists('$(OutputDirectory)')"
+                 ContinueOnError="WarnAndContinue" />
+
+        <!-- MSBuild project build target with OutputPath somehow doesn't work -->
+        <Exec Condition="'$(RuntimeIdentifier)' != ''" Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) -r $(RuntimeIdentifier) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
+        <Exec Condition="'$(RuntimeIdentifier)' == ''" Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
+    </Target>
+    
     <!-- Build dependencies that will be loaded by the game, which must be net472 compatible -->
-    <Target Name="BuildNet472BinariesForGame" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
+    <Target Name="BuildNet472BinariesForGame" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
         <Message Importance="High" Text="Running BuildNet472BinariesForGame" />
 
         <PropertyGroup>
@@ -77,20 +94,6 @@
                  ContinueOnError="WarnAndContinue" />
         
          <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Command="dotnet msbuild ../NitroxPatcher/NitroxPatcher.csproj -t:Build -p:Configuration=$(Configuration) -p:TargetFramework=net472 -p:OutputPath=$(OutputDirectory)" />
-    </Target>
-
-    <Target Name="BuildServer" AfterTargets="Build" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
-        <Message Importance="High" Text="Running BuildServer" />
-
-        <PropertyGroup>
-            <OutputDirectory>$(TargetDir)</OutputDirectory>
-        </PropertyGroup>
-
-        <!-- Create directory if it doesn't exist -->
-        <MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')" ContinueOnError="WarnAndContinue" />
-
-        <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Command="dotnet msbuild ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -t:Build -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
+        <Exec Command="dotnet build ../NitroxPatcher/NitroxPatcher.csproj -c $(Configuration) -f net472 -p:OutputPath=$(OutputDirectory)" />
     </Target>
 </Project>
