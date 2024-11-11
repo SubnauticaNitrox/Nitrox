@@ -574,14 +574,7 @@ public class LinuxProcessEx : ProcessExBase
 
 public class MacOSProcessEx : ProcessExBase
 {
-    private readonly IntPtr task;
-    private bool disposed;
-    public override int Id { get; }
-    public override IntPtr Handle => task;
-
-    public override string Name =>
-            // This is a simplified implementation. In a real scenario, you'd use sysctl to get the process name.
-            throw new NotImplementedException("Getting process name is not implemented for macOS.");
+    public override IntPtr Handle => IntPtr.Zero;
 
     public override ProcessModuleEx MainModule =>
             // This is a placeholder implementation. You'll need to use macOS-specific APIs
@@ -594,18 +587,11 @@ public class MacOSProcessEx : ProcessExBase
                 ModuleMemorySize = 0
             };
 
+    private bool disposed;
+
     public MacOSProcessEx(int pid) : base(pid)
     {
-        if (!IsElevated())
-        {
-            throw new UnauthorizedAccessException("Root privileges required.");
-        }
 
-        Id = pid;
-        if (task_for_pid(mach_task_self(), pid, out task) != 0)
-        {
-            throw new InvalidOperationException("Failed to get task for pid.");
-        }
     }
 
     public static new bool IsElevated()
@@ -619,7 +605,7 @@ public class MacOSProcessEx : ProcessExBase
         GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
         try
         {
-            if (vm_read_overwrite(task, address, (IntPtr)size, handle.AddrOfPinnedObject(), out IntPtr _) != 0)
+            if (vm_read_overwrite(Handle, address, (IntPtr)size, handle.AddrOfPinnedObject(), out IntPtr _) != 0)
             {
                 throw new InvalidOperationException("Failed to read process memory.");
             }
@@ -636,7 +622,7 @@ public class MacOSProcessEx : ProcessExBase
         GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         try
         {
-            if (vm_write(task, address, handle.AddrOfPinnedObject(), (IntPtr)data.Length) != 0)
+            if (vm_write(Handle, address, handle.AddrOfPinnedObject(), (IntPtr)data.Length) != 0)
             {
                 throw new InvalidOperationException("Failed to write process memory.");
             }
@@ -656,7 +642,7 @@ public class MacOSProcessEx : ProcessExBase
 
     public override void Suspend()
     {
-        if (task_suspend(task) != 0)
+        if (task_suspend(Handle) != 0)
         {
             throw new InvalidOperationException("Failed to suspend the process.");
         }
@@ -664,7 +650,7 @@ public class MacOSProcessEx : ProcessExBase
 
     public override void Resume()
     {
-        if (task_resume(task) != 0)
+        if (task_resume(Handle) != 0)
         {
             throw new InvalidOperationException("Failed to resume the process.");
         }
@@ -672,7 +658,7 @@ public class MacOSProcessEx : ProcessExBase
 
     public override void Terminate()
     {
-        if (task_terminate(task) != 0)
+        if (task_terminate(Handle) != 0)
         {
             throw new InvalidOperationException("Failed to terminate the process.");
         }
@@ -690,12 +676,6 @@ public class MacOSProcessEx : ProcessExBase
 
     [DllImport("libc", SetLastError = true)]
     private static extern uint geteuid();
-
-    [DllImport("libSystem.dylib")]
-    private static extern int task_for_pid(IntPtr targetTport, int pid, out IntPtr t);
-
-    [DllImport("libSystem.dylib")]
-    private static extern IntPtr mach_task_self();
 
     [DllImport("libSystem.dylib")]
     private static extern int vm_read_overwrite(IntPtr targetTask, IntPtr address, IntPtr size, IntPtr data, out IntPtr outsize);
