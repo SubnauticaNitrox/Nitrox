@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-    <Import Project="Nitrox.Shared.props" />
-    
+  
     <!-- Task names, make sure that they match the real name in <Target /> since Name doesn't allow expressions -->
     <PropertyGroup>
         <_NitroxBeforePublishTaskName>_NitroxBeforePublish</_NitroxBeforePublishTaskName>

@@ -12,6 +12,10 @@
         <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
     
+    <PropertyGroup>
+        <AppBundleName>Nitrox.app</AppBundleName>
+    </PropertyGroup>
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
@@ -41,10 +45,6 @@
         <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
-    <PropertyGroup>
-        <AppBundleName>Nitrox.app</AppBundleName>
-    </PropertyGroup>
-
     <Import Project="..\Nitrox.Shared.targets" />
 
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
@@ -68,6 +68,8 @@
 
         <PropertyGroup>
             <OutputDirectory>$(TargetDir)</OutputDirectory>
+            <SpecificBuildProperty></SpecificBuildProperty>
+            <SpecificBuildProperty Condition="'$(RuntimeIdentifier)' != ''">-r $(RuntimeIdentifier)</SpecificBuildProperty>
         </PropertyGroup>
 
         <!-- Create directory if it doesn't exist -->
@@ -76,8 +78,8 @@
                  ContinueOnError="WarnAndContinue" />
 
         <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Condition="'$(RuntimeIdentifier)' != ''" Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) -r $(RuntimeIdentifier) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
-        <Exec Condition="'$(RuntimeIdentifier)' == ''" Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
+        <Exec Condition="'$(RuntimeIdentifier)' != ''"
+              Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) $(SpecificBuildProperty) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
     </Target>
     
     <!-- Build dependencies that will be loaded by the game, which must be net472 compatible -->

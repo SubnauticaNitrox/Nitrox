@@ -27,6 +27,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
+            // TODO: Remove this once .NET Generic Host is implemented
             containerBuilder.Register(c => Server.CreateOrLoadConfig()).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
@@ -42,6 +43,7 @@ namespace NitroxServer
         {
             containerBuilder.RegisterType<WorldPersistence>().SingleInstance();
 
+            // TODO: Remove this once .NET Generic Host is implemented
             containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load(Server.GetSaveName(Environment.GetCommandLineArgs()))).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BuildingManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();

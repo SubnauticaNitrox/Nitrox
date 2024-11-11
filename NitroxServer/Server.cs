@@ -89,7 +89,7 @@ public class Server
         return builder.ToString();
     }
 
-    [Obsolete("Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)")]
+    // TODO : Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)
     public static SubnauticaServerConfig CreateOrLoadConfig()
     {
         string saveDir = null;
@@ -360,7 +360,7 @@ public class Server
     /// <summary>
     ///     Parses the save name from the given command line arguments or defaults to the standard save name.
     /// </summary>
-    [Obsolete("Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)")]
+    // TODO : Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)
     public static string GetSaveName(string[] args)
     {
         if (args.Length == 1 && IsValidSaveName(args[0]))
