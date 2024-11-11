@@ -33,18 +33,19 @@ public sealed partial class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynam
             if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
             {
                 // We must transfer the labels from the previous instruction
-                CodeInstruction loadInstruction = new(OpCodes.Ldarg_0);
-                loadInstruction.labels = instruction.labels;
-                yield return loadInstruction;
-                yield return new(OpCodes.Call, ((Action<LaunchRocket>)RequestRocketLaunch).Method);
-                yield return new(OpCodes.Ret);
+                yield return new CodeInstruction(OpCodes.Ldarg_0)
+                {
+                    labels = instruction.labels
+                };
+                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => RequestRocketLaunch(default)));
+                yield return new CodeInstruction(OpCodes.Ret);
                 break;
             }
             yield return instruction;
         }
     }
 
-    public static void RequestRocketLaunch(LaunchRocket launchRocket)
+    private static void RequestRocketLaunch(LaunchRocket launchRocket)
     {
         Rocket rocket = launchRocket.RequireComponentInParent<Rocket>();
         Resolve<Rockets>().RequestRocketLaunch(rocket);
