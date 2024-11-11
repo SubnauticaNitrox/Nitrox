@@ -105,6 +105,11 @@ public class Vehicles
             }
             else if (gameObject.GetComponent<SubRoot>())
             {
+                if (!isPiloting)
+                {
+                    remotePlayer.SetPilotingChair(null);
+                    return;
+                }
                 PilotingChair pilotingChair = FindPilotingChairWithCache(gameObject, TechType.Cyclops);
                 remotePlayer.SetPilotingChair(pilotingChair);
             }

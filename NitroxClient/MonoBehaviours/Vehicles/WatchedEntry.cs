@@ -22,6 +22,7 @@ public class WatchedEntry
     /// <inheritdoc cref="MAX_TIME_WITHOUT_BROADCAST"/>
     private const float SAFETY_BROADCAST_WINDOW = 0.2f;
 
+    private readonly NitroxId Id;
     private readonly Transform transform;
     private readonly Vehicle vehicle;
     private readonly SubControl subControl;
@@ -30,8 +31,9 @@ public class WatchedEntry
     private Vector3 latestLocalPositionSent;
     private Quaternion latestLocalRotationSent;
 
-    public WatchedEntry(Transform transform)
+    public WatchedEntry(NitroxId Id, Transform transform)
     {
+        this.Id = Id;
         this.transform = transform;
         vehicle = transform.GetComponent<Vehicle>();
         subControl = transform.GetComponent<SubControl>();
@@ -114,6 +116,13 @@ public class WatchedEntry
     /// </remarks>
     public bool ShouldBroadcastMovement()
     {
+        // Watched entry validity check (e.g. for vehicle death)
+        if (!transform)
+        {
+            MovementBroadcaster.UnregisterWatched(Id);
+            return false;
+        }
+
         float deltaTimeSinceBroadcast = DayNightCycle.main.timePassedAsFloat - latestBroadcastTime;
 
         if (IsDrivenCyclops() || IsDrivenVehicle() || deltaTimeSinceBroadcast < 0 || HasVehicleMoved())

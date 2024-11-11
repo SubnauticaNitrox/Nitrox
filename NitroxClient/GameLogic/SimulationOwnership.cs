@@ -84,7 +84,8 @@ namespace NitroxClient.GameLogic
         {
             bool isLocalPlayerNewOwner = multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId;
 
-            if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType))
+            if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType) ||
+                newerSimulationById.ContainsKey(simulatedEntity.Id))
             {
                 return;
             }
@@ -127,7 +128,7 @@ namespace NitroxClient.GameLogic
             return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
         }
 
-        private bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)
+        public bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)
         {
             if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject) || !IsVehicle(gameObject))
             {
@@ -180,8 +181,8 @@ namespace NitroxClient.GameLogic
         {
             if (newerSimulationById.TryGetValue(nitroxId, out SimulatedEntity simulatedEntity))
             {
-                TreatSimulatedEntity(simulatedEntity);
                 newerSimulationById.Remove(nitroxId);
+                TreatSimulatedEntity(simulatedEntity);
             }
         }
 

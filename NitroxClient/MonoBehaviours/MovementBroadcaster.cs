@@ -73,7 +73,7 @@ public class MovementBroadcaster : MonoBehaviour
 
         if (!Instance.watchedEntries.ContainsKey(entityId))
         {
-            Instance.watchedEntries.Add(entityId, new(gameObject.transform));
+            Instance.watchedEntries.Add(entityId, new(entityId, gameObject.transform));
         }
     }
 

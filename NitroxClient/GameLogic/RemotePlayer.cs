@@ -147,7 +147,7 @@ public class RemotePlayer : INitroxPlayer
         AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
 
         // If in a subroot the position will be relative to the subroot
-        if (SubRoot && !SubRoot.isBase)
+        if (SubRoot && SubRoot.isBase)
         {
             Quaternion vehicleAngle = SubRoot.transform.rotation;
             position = vehicleAngle * position;
@@ -162,13 +162,12 @@ public class RemotePlayer : INitroxPlayer
 
     public void UpdatePositionInCyclops(Vector3 localPosition, Quaternion localRotation)
     {
-        if (Pawn == null)
+        if (Pawn == null || PilotingChair)
         {
             return;
         }
 
         SetVehicle(null);
-        SetPilotingChair(null);
 
         AnimationController.AimingRotation = localRotation;
         AnimationController.UpdatePlayerAnimations = true;
