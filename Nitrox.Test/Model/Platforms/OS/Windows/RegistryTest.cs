@@ -1,31 +1,23 @@
-﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Platforms.OS.Windows.Internal;
+using Nitrox.Test.Model.Platforms;
 
 namespace NitroxModel.Platforms.OS.Windows;
 
 [TestClass]
 public class RegistryTest
 {
-    [TestMethod]
+    [OSTestMethod("WINDOWS")]
     public async Task WaitsForRegistryKeyToExist()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            // TODO: Make work on Linux/OSX (e.g. use TestContainers)
-            return;
-        }
+        const string PATH_TO_KEY = @"SOFTWARE\Nitrox\test";
         
-        const string pathToKey = @"SOFTWARE\Nitrox\test";
-            
-        RegistryEx.Write(pathToKey, 0);
+        RegistryEx.Write(PATH_TO_KEY, 0);
         Task<bool> readTask = Task.Run(async () =>
         {
             try
             {
-                await RegistryEx.CompareAsync<int>(pathToKey,
+                await RegistryEx.CompareAsync<int>(PATH_TO_KEY,
                                                    v => v == 1337,
                                                    TimeSpan.FromSeconds(5));
                 return true;
@@ -35,12 +27,12 @@ public class RegistryTest
                 return false;
             }
         });
-            
-        RegistryEx.Write(pathToKey, 1337);
+        
+        RegistryEx.Write(PATH_TO_KEY, 1337);
         Assert.IsTrue(await readTask);
-            
+        
         // Cleanup (we can keep "Nitrox" key intact).
-        RegistryEx.Delete(pathToKey);
-        Assert.IsNull(RegistryEx.Read<string>(pathToKey));
+        RegistryEx.Delete(PATH_TO_KEY);
+        Assert.IsNull(RegistryEx.Read<string>(PATH_TO_KEY));
     }
 }
