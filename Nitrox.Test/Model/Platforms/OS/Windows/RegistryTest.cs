@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Nitrox.Test.Model.Platforms;
 
