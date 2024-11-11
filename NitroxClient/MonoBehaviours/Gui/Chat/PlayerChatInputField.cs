@@ -82,9 +82,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (selected)
             {
-                if (!string.IsNullOrEmpty(InputField.text))
+                if (!string.IsNullOrEmpty(InputField.text) && !string.IsNullOrWhiteSpace(InputField.text))
                 {
-                    ResetTimer();
                     if (UnityEngine.Input.GetKey(KeyCode.Return))
                     {
                         if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
@@ -115,6 +114,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                             playerChatManager.SendMessage();
                             playerChatManager.DeselectChat(); // return to game after message sent
                         }
+                    }
+                }
+                else
+                {
+                    if (UnityEngine.Input.GetKey(KeyCode.Return))
+                    {
+                        ResetTimer();
+                        playerChatManager.DeselectChat();
                     }
                 }
 
@@ -153,12 +160,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                     playerChatManager.HideChat();
                     FreezeTime = true;
                 }
-            }
-
-            // Reselect chat if Y is pressed
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Y))
-            {
-                playerChatManager.SelectChat();
             }
         }
 
