@@ -9,7 +9,7 @@
         DataContext="{x:Static design:DesignData.ObjectPropertyEditorViewModel}"
         x:Class="Nitrox.Launcher.Views.ObjectPropertyEditorModal"
         SizeToContent="Width"
-        RequestedThemeVariant="Light"
+        RequestedThemeVariant="Dark"
         Title="{Binding Title}">
 
     <Grid RowDefinitions="Auto, *, Auto">

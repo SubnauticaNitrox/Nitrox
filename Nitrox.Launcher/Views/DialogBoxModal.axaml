@@ -11,7 +11,7 @@
         SizeToContent="WidthAndHeight"
         CanResize="False"
         Title="{Binding WindowTitle, TargetNullValue='Dialog Window'}"
-        RequestedThemeVariant="Light">
+        RequestedThemeVariant="Dark">
     <Grid RowDefinitions="Auto,*,Auto">
         <!-- Title bar -->
         <Panel Grid.RowSpan="2" Classes="titleBar">

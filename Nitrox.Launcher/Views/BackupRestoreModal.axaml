@@ -7,7 +7,7 @@
         DataContext="{x:Static design:DesignData.BackupRestoreViewModel}"
         x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
         SizeToContent="WidthAndHeight"
-        RequestedThemeVariant="Light"
+        RequestedThemeVariant="Dark"
         Title="{Binding Title}">
     <Grid RowDefinitions="Auto, *, Auto">
         <!-- Title bar -->

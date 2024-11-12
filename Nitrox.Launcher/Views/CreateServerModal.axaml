@@ -12,7 +12,7 @@
         SizeToContent="WidthAndHeight"
         CanResize="False"
         Title="Create a server"
-        RequestedThemeVariant="Light">
+        RequestedThemeVariant="Dark">
     <Grid>
         <!-- Title bar -->
         <Panel Grid.RowSpan="2" Classes="titleBar">
