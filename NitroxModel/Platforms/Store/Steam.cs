@@ -21,54 +21,55 @@ public sealed class Steam : IGamePlatform
     public static Steam Instance => instance ??= new Steam();
     public string Name => nameof(Steam);
     public Platform Platform => Platform.STEAM;
+    
+    private string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
 
     public bool OwnsGame(string gameDirectory)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            if (Directory.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle")))
-            {
-                return true;
-            }
+            return Directory.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle"));
         }
-        else
+        
+        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")))
         {
-            if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")))
-            {
-                return true;
-            }
-            if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll")))
-            {
-                return true;
-            }
+            return true;
         }
-        return false;
+        
+        return File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll"));
     }
 
     public async Task<ProcessEx> StartPlatformAsync()
     {
         // If steam is already running, do not start it.
-        // TODO: fix this for macos p => p.MainModuleDirectory != null && File.Exists(Path.Combine(p.MainModuleDirectory, "steamclient.dll"))
-        ProcessEx steam = ProcessEx.GetFirstProcess("steam");
-        if (steam != null)
+        ProcessEx steam = ProcessEx.GetFirstProcess(SteamProcessName);
+        if (steam is not null)
         {
             return steam;
         }
-
+        
         // Steam is not running, start it.
         string exe = GetExeFile();
-        if (exe == null)
+        if (exe is null)
         {
             return null;
         }
-        steam = new ProcessEx(Process.Start(new ProcessStartInfo
+
+        Process process = Process.Start(new ProcessStartInfo
         {
             WorkingDirectory = Path.GetDirectoryName(exe) ?? Directory.GetCurrentDirectory(),
             FileName = exe,
             WindowStyle = ProcessWindowStyle.Minimized,
+            UseShellExecute = true,
             Arguments = "-silent" // Don't show Steam window
-        }));
+        });
 
+        if (process is not { HasExited: false })
+        {
+            return null;
+        }
+        
+        steam = new ProcessEx(process);
         // Wait for steam to write to its log file, which indicates it's ready to start games.
         using CancellationTokenSource steamReadyCts = new(TimeSpan.FromSeconds(30));
         try
@@ -103,6 +104,7 @@ public sealed class Steam : IGamePlatform
     public string GetExeFile()
     {
         string exe = "";
+        
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             exe = Path.Combine(RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", ""), "steam.exe");
@@ -139,28 +141,26 @@ public sealed class Steam : IGamePlatform
                 launchArguments
             );
         }
+        
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             return StartGameWithProton(pathToGameExe, steamAppId, launchArguments);
         }
 
-        ProcessStartInfo startInfo = new()
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            FileName = pathToGameExe,
-            WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
-            UseShellExecute = false,
-            Environment =
-            {
-                [NitroxUser.LAUNCHER_PATH_ENV_KEY] = NitroxUser.LauncherPath,
-                ["SteamGameId"] = steamAppId.ToString(),
-                ["SteamAppID"] = steamAppId.ToString()
-            }
-        };
-        Log.Info($"Starting game with arguments: {startInfo.FileName} {launchArguments}");
-        return new ProcessEx(Process.Start(startInfo));
+            return ProcessEx.Start(
+                pathToGameExe,
+                [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
+                Path.GetDirectoryName(pathToGameExe),
+                launchArguments
+            );
+        }
+        
+        throw new PlatformException(Instance, "Platform is not supported.");
     }
 
-    private ProcessEx StartGameWithProton(string pathToGameExe, int steamAppId, string launchArguments)
+    private static ProcessEx StartGameWithProton(string pathToGameExe, int steamAppId, string launchArguments)
     {
         // function to get library path for given game id
         static string GetLibraryPath(string steamPath, string gameId)
@@ -336,8 +336,23 @@ public sealed class Steam : IGamePlatform
                 ["STEAM_COMPAT_DATA_PATH"] = compatdataPath,
             }
         };
+        
         return new ProcessEx(Process.Start(startInfo));
     }
 
-    private DateTime GetSteamConsoleLogLastWrite(string exePath) => File.GetLastWriteTime(Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt"));
+    private static DateTime GetSteamConsoleLogLastWrite(string exePath)
+    {
+        string path;
+        
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs", "console_log.txt");
+        }
+        else
+        {
+            path = Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt");
+        }
+
+        return File.GetLastWriteTime(path);
+    }
 }

@@ -6,6 +6,7 @@ using Nitrox.Launcher.ViewModels;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
 
@@ -21,24 +22,20 @@ internal static class GameInspect
         try
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallDir);
-
-            IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(gameInstallDir);
-            if (platform?.Platform == Platform.STEAM)
+            
+            string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+            if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 68598)
             {
-                string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
-                if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 68598)
+                if (dialogService != null)
                 {
-                    if (dialogService != null)
+                    await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                     {
-                        await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-                        {
-                            model.Title = "Legacy Game Detected";
-                            model.Description = $"Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version to run the Subnautica with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
-                            model.ButtonOptions = ButtonOptions.Ok;
-                        });
-                    }
-                    return true;
+                        model.Title = "Legacy Game Detected";
+                        model.Description = $"Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version to run the Subnautica with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
+                        model.ButtonOptions = ButtonOptions.Ok;
+                    });
                 }
+                return true;
             }
         }
         catch (Exception ex)
@@ -57,14 +54,17 @@ internal static class GameInspect
     /// </summary>
     public static bool WarnIfGameProcessExists(GameInfo game)
     {
-        if (NitroxEnvironment.IsReleaseMode)
+        if (!NitroxEnvironment.IsReleaseMode)
         {
-            if (NitroxModel.Platforms.OS.Shared.ProcessEx.ProcessExists(game.Name))
-            {
-                LauncherNotifier.Warning("An instance of Subnautica is already running");
-                return true;
-            }
+            return false;
         }
-        return false;
+
+        if (!ProcessEx.ProcessExists(game.Name))
+        {
+            return false;
+        }
+        
+        LauncherNotifier.Warning("An instance of Subnautica is already running");
+        return true;
     }
 }

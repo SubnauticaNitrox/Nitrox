@@ -230,6 +230,12 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         {
             subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
         }
+
+        if (!File.Exists(subnauticaExe))
+        {
+            throw new FileNotFoundException("Unable to find Subnautica executable");
+        }
+        
         IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
 
         // Start game & gaming platform if needed.

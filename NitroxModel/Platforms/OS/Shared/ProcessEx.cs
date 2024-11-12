@@ -41,6 +41,10 @@ public class ProcessEx : IDisposable
             proc = GetFirstProcess(procName, predicate);
             return proc != null;
         }
+        catch (Exception)
+        {
+            return false;
+        }
         finally
         {
             proc?.Dispose();
