@@ -12,8 +12,10 @@ namespace NitroxClient.GameLogic
     {
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
-        private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
-        private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = new Dictionary<NitroxId, LockRequestBase>();
+        private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = [];
+        private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = [];
+
+        private readonly Dictionary<NitroxId, SimulatedEntity> newerSimulationById = [];
 
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
@@ -58,6 +60,7 @@ namespace NitroxClient.GameLogic
             if (lockAquired)
             {
                 SimulateEntity(id, lockType);
+                TreatVehicleEntity(id, true, lockType);
             }
 
             if (lockRequestsById.TryGetValue(id, out LockRequestBase lockRequest))
@@ -79,7 +82,15 @@ namespace NitroxClient.GameLogic
 
         public void TreatSimulatedEntity(SimulatedEntity simulatedEntity)
         {
-            if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)
+            bool isLocalPlayerNewOwner = multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId;
+
+            if (TreatVehicleEntity(simulatedEntity.Id, isLocalPlayerNewOwner, simulatedEntity.LockType) ||
+                newerSimulationById.ContainsKey(simulatedEntity.Id))
+            {
+                return;
+            }
+
+            if (isLocalPlayerNewOwner)
             {
                 if (simulatedEntity.ChangesPosition)
                 {
@@ -108,8 +119,76 @@ namespace NitroxClient.GameLogic
             // Avoid keeping artifacts of the entity's previous ChangesPosition state
             if (!simulatedEntity.ChangesPosition && NitroxEntity.TryGetComponentFrom(simulatedEntity.Id, out RemotelyControlled remotelyControlled))
             {
-                GameObject.Destroy(remotelyControlled);
+                Object.Destroy(remotelyControlled);
             }
+        }
+
+        public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
+        {
+            return simulatedIdsByLockType.TryGetValue(nitroxId, out simulationLockType);
+        }
+
+        public bool TreatVehicleEntity(NitroxId entityId, bool isLocalPlayerNewOwner, SimulationLockType simulationLockType)
+        {
+            if (!NitroxEntity.TryGetObjectFrom(entityId, out GameObject gameObject) || !IsVehicle(gameObject))
+            {
+                return false;
+            }
+            
+            MovementReplicator movementReplicator = gameObject.GetComponent<MovementReplicator>();
+            if (isLocalPlayerNewOwner)
+            {
+                if (movementReplicator)
+                {
+                    Object.Destroy(movementReplicator);
+                }
+                MovementBroadcaster.RegisterWatched(gameObject, entityId);
+                SimulateEntity(entityId, simulationLockType);
+            }
+            else
+            {
+                if (!movementReplicator)
+                {
+                    MovementReplicator.AddReplicatorToObject(gameObject);
+                }
+                MovementBroadcaster.UnregisterWatched(entityId);
+                StopSimulatingEntity(entityId);
+            }
+
+            return true;
+        }
+
+        public bool IsVehicle(GameObject gameObject)
+        {
+            if (gameObject.GetComponent<Vehicle>())
+            {
+                return true;
+            }
+            if (gameObject.TryGetComponent(out SubRoot subRoot) && !subRoot.isBase)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void RegisterNewerSimulation(NitroxId entityId, SimulatedEntity simulatedEntity)
+        {
+            newerSimulationById[entityId] = simulatedEntity;
+        }
+
+        public void ApplyNewerSimulation(NitroxId nitroxId)
+        {
+            if (newerSimulationById.TryGetValue(nitroxId, out SimulatedEntity simulatedEntity))
+            {
+                newerSimulationById.Remove(nitroxId);
+                TreatSimulatedEntity(simulatedEntity);
+            }
+        }
+
+        public void ClearNewerSimulations()
+        {
+            newerSimulationById.Clear();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours.Gui.HUD;

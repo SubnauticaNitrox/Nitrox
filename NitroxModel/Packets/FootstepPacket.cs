@@ -12,6 +12,9 @@ public class FootstepPacket : Packet
     {
         PlayerID = playerID;
         AssetIndex = assetIndex;
+
+        DeliveryMethod = Networking.NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
+        UdpChannel = UdpChannelId.MOVEMENTS;
     }
 
     public enum StepSounds : byte
