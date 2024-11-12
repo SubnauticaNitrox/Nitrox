@@ -1,4 +1,4 @@
-namespace NitroxModel.DataStructures.Util;
+﻿namespace NitroxModel.DataStructures.Util;
 
 [TestClass]
 public class OptionalTest
@@ -8,7 +8,7 @@ public class OptionalTest
     ///     reuses instances which causes <see cref="Optional{T}.HasValue">Optional{T}.HasValue</see> to be called before the new conditions are added.
     /// </summary>
     [ClassInitialize]
-    public static void Init(TestContext content)
+    public static void Init(TestContext _)
     {
         Optional.ApplyHasValueCondition<Base>(v => v.GetType() == typeof(A) || v.Threshold > 200); // Cheat: allow check if type A to do more complex tests on Optional<T>.HasValue
         Optional.ApplyHasValueCondition<A>(v => v.Threshold <= 200);
