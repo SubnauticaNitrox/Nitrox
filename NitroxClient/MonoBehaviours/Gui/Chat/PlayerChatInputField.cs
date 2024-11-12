@@ -82,7 +82,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (selected)
             {
-                if (!string.IsNullOrEmpty(InputField.text) && !string.IsNullOrWhiteSpace(InputField.text))
+                if (!string.IsNullOrWhiteSpace(InputField.text))
                 {
                     if (UnityEngine.Input.GetKey(KeyCode.Return))
                     {
