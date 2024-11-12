@@ -78,8 +78,7 @@
                  ContinueOnError="WarnAndContinue" />
 
         <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Condition="'$(RuntimeIdentifier)' != ''"
-              Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) $(SpecificBuildProperty) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
+        <Exec Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) $(SpecificBuildProperty) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
     </Target>
     
     <!-- Build dependencies that will be loaded by the game, which must be net472 compatible -->
