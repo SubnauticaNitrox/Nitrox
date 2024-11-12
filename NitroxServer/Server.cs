@@ -189,13 +189,7 @@ namespace NitroxServer
                 return false;
             }
 
-            LogHowToConnectAsync().ContinueWith(t =>
-            {
-                if (t is { IsFaulted: true, Exception: {} ex})
-                {
-                    Log.Warn($"Failed to show how to connect: {ex.GetFirstNonAggregateMessage()}");
-                }
-            });
+            LogHowToConnectAsync().ContinueWithHandleError(ex => Log.Warn($"Failed to show how to connect: {ex.GetFirstNonAggregateMessage()}"));
             Log.Info($"Server is listening on port {Port} UDP");
             Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);

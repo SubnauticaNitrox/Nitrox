@@ -1,44 +1,35 @@
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
 
 public class PlayerMovementBroadcaster : MonoBehaviour
 {
-    /// <summary>
-    ///     Amount of physics updates to skip for sending location broadcasts.
-    ///     TODO: Allow servers to set this value for clients. With many clients connected to the server, a higher value can be preferred.
-    /// </summary>
-    public const int LOCATION_BROADCAST_TICK_SKIPS = 1;
-
     private LocalPlayer localPlayer;
-    private int locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
 
     public void Awake()
     {
-        localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        localPlayer = this.Resolve<LocalPlayer>();
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
-        // Throttle location broadcasts to not run on every physics tick.
-        if (locationBroadcastSkipThreshold-- > 0)
-        {
-            return;
-        }
-        // Reset skip threshold.
-        locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
-
         // Freecam does disable main camera control
         // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
         if (!MainCameraControl.main.isActiveAndEnabled &&
             !uGUI_CameraCyclops.main.content.activeSelf)
+        {
+            return;
+        }
+
+        if (BroadcastPlayerInCyclopsMovement())
         {
             return;
         }
@@ -54,7 +45,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         SubRoot subRoot = Player.main.GetCurrentSub();
 
         // If in a subroot the position will be relative to the subroot
-        if (subRoot && !subRoot.isBase)
+        if (subRoot)
         {
             // Rotate relative player position relative to the subroot (else there are problems with respawning)
             Transform subRootTransform = subRoot.transform;
@@ -63,6 +54,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             currentPosition = undoVehicleAngle * currentPosition;
             bodyRotation = undoVehicleAngle * bodyRotation;
             aimingRotation = undoVehicleAngle * aimingRotation;
+            currentPosition = subRootTransform.TransformPoint(currentPosition);
 
             if (Player.main.isPiloting && subRoot.isCyclops)
             {
@@ -72,6 +64,18 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         }
 
         localPlayer.BroadcastLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
+    }
+
+    private bool BroadcastPlayerInCyclopsMovement()
+    {
+        if (!Player.main.isPiloting && Player.main.TryGetComponent(out CyclopsMotor cyclopsMotor) && cyclopsMotor.Pawn != null)
+        {
+            Transform pawnTransform = cyclopsMotor.Pawn.Handle.transform;
+            PlayerInCyclopsMovement packet = new(this.Resolve<LocalPlayer>().PlayerId.Value, pawnTransform.localPosition.ToDto(), pawnTransform.localRotation.ToDto());
+            this.Resolve<IPacketSender>().Send(packet);
+            return true;
+        }
+        return false;
     }
 
     private Optional<VehicleMovementData> GetVehicleMovement()

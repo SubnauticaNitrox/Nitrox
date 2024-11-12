@@ -111,7 +111,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        public static async System.Threading.Tasks.Task OpenJoinServerMenuAsync(string serverIp, string serverPort)
+        public static async System.Threading.Tasks.Task OpenJoinServerMenuAsync(string serverIp, string serverPort, bool instantLaunch = false)
         {
             if (Main == null)
             {
@@ -126,7 +126,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            await Main.JoinServer.ShowAsync(endpoint.Address.ToString(), endpoint.Port);
+            await Main.JoinServer.ShowAsync(endpoint.Address.ToString(), endpoint.Port, instantLaunch);
         }
 
         private void ShowAddServerWindow()

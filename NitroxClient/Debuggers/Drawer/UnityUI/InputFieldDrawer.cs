@@ -1,28 +1,30 @@
-﻿using System;
-using NitroxClient.Debuggers.Drawer.Unity;
-using NitroxModel.Core;
+﻿using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class InputFieldDrawer : IDrawer
+public class InputFieldDrawer : IDrawer<InputField>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(InputField) };
+    private readonly SceneDebugger sceneDebugger;
+    private readonly SelectableDrawer selectableDrawer;
+    private readonly ColorDrawer colorDrawer;
 
-    public void Draw(object target)
+    public InputFieldDrawer(SceneDebugger sceneDebugger, SelectableDrawer selectableDrawer, ColorDrawer colorDrawer)
     {
-        switch (target)
-        {
-            case InputField inputField:
-                DrawInputField(inputField);
-                break;
-        }
+        Validate.NotNull(sceneDebugger);
+        Validate.NotNull(selectableDrawer);
+        Validate.NotNull(colorDrawer);
+
+        this.sceneDebugger = sceneDebugger;
+        this.selectableDrawer = selectableDrawer;
+        this.colorDrawer = colorDrawer;
     }
 
-    private static void DrawInputField(InputField inputField)
+    public void Draw(InputField inputField)
     {
-        SelectableDrawer.DrawSelectable(inputField);
+        selectableDrawer.Draw(inputField);
 
         GUILayout.Space(NitroxGUILayout.DEFAULT_SPACE);
 
@@ -32,7 +34,7 @@ public class InputFieldDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(inputField.textComponent);
+                sceneDebugger.JumpToComponent(inputField.textComponent);
             }
         }
 
@@ -74,7 +76,7 @@ public class InputFieldDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.JumpToComponent(inputField.placeholder);
+                sceneDebugger.JumpToComponent(inputField.placeholder);
             }
         }
 
@@ -105,7 +107,7 @@ public class InputFieldDrawer : IDrawer
             {
                 GUILayout.Label("Caret Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
                 NitroxGUILayout.Separator();
-                inputField.caretColor = ColorDrawer.Draw(inputField.caretColor);
+                inputField.caretColor = colorDrawer.Draw(inputField.caretColor);
             }
         }
 
@@ -113,7 +115,7 @@ public class InputFieldDrawer : IDrawer
         {
             GUILayout.Label("Selection Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            inputField.selectionColor = ColorDrawer.Draw(inputField.selectionColor);
+            inputField.selectionColor = colorDrawer.Draw(inputField.selectionColor);
         }
 
         using (new GUILayout.HorizontalScope())

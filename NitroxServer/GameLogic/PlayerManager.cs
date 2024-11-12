@@ -257,7 +257,7 @@ namespace NitroxServer.GameLogic
                 NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
                 PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, []);
-                world.EntityRegistry.AddEntity(playerEntity);
+                world.EntityRegistry.AddOrUpdate(playerEntity);
                 world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
                 return playerEntity;
             }
@@ -295,6 +295,7 @@ namespace NitroxServer.GameLogic
 
             player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player);
 
+            List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
             bool isFirstPlayer = GetConnectedPlayers().Count == 1;
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
@@ -310,14 +311,14 @@ namespace NitroxServer.GameLogic
                 player.SubRootId,
                 player.Stats,
                 GetOtherPlayers(player),
-                world.WorldEntityManager.GetGlobalRootEntities(),
+                globalRootEntities,
                 simulations,
                 world.GameMode,
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
                 world.StoryManager.GetTimeData(),
                 isFirstPlayer,
-            BuildingManager.GetEntitiesOperations(world.WorldEntityManager.GetGlobalRootEntities(true))
+                BuildingManager.GetEntitiesOperations(globalRootEntities)
             );
 
             player.SendPacket(initialPlayerSync);

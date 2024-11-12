@@ -43,7 +43,7 @@ public class DiscordClient : MonoBehaviour
             discord = new DiscordGameSDKWrapper.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
             discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, $"[Discord] {message}"));
             activityManager = discord.GetActivityManager();
-            
+
             activityManager.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
             activityManager.OnActivityJoinRequest += ActivityJoinRequest;
             activityManager.OnActivityJoin += ActivityJoin;
@@ -109,7 +109,7 @@ public class DiscordClient : MonoBehaviour
         string[] splitSecret = secret.Split(':');
         string ip = string.Join(":", splitSecret.Take(splitSecret.Length - 1));
         string port = splitSecret.Last();
-        _ = MainMenuMultiplayerPanel.OpenJoinServerMenuAsync(ip, port);
+        MainMenuMultiplayerPanel.OpenJoinServerMenuAsync(ip, port).ContinueWithHandleError();
     }
 
     private void ActivityJoinRequest(ref User user)

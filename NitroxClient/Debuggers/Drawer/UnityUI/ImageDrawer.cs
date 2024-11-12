@@ -1,25 +1,26 @@
 ﻿using System;
 using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ImageDrawer : IDrawer
+public class ImageDrawer : IDrawer<Image>, IDrawer<RawImage>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Image), typeof(RawImage) };
+    private readonly ColorDrawer colorDrawer;
+    private readonly MaterialDrawer materialDrawer;
+    private readonly RectDrawer rectDrawer;
 
-    public void Draw(object target)
+    public ImageDrawer(ColorDrawer colorDrawer, MaterialDrawer materialDrawer, RectDrawer rectDrawer)
     {
-        switch (target)
-        {
-            case Image image:
-                DrawImage(image);
-                break;
-            case RawImage rawImage:
-                DrawRawTexture(rawImage);
-                break;
-        }
+        Validate.NotNull(colorDrawer);
+        Validate.NotNull(materialDrawer);
+        Validate.NotNull(rectDrawer);
+
+        this.colorDrawer = colorDrawer;
+        this.materialDrawer = materialDrawer;
+        this.rectDrawer = rectDrawer;
     }
 
     public static void DrawTexture(Texture texture)
@@ -28,7 +29,7 @@ public class ImageDrawer : IDrawer
         GUILayout.Box(texture, style);
     }
 
-    private static void DrawImage(Image image)
+    public void Draw(Image image)
     {
         using (new GUILayout.HorizontalScope())
         {
@@ -41,14 +42,14 @@ public class ImageDrawer : IDrawer
         {
             GUILayout.Label("Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            image.color = ColorDrawer.Draw(image.color);
+            image.color = colorDrawer.Draw(image.color);
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Material", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            image.material = MaterialDrawer.Draw(image.material);
+            image.material = materialDrawer.Draw(image.material);
         }
 
         using (new GUILayout.HorizontalScope())
@@ -59,7 +60,7 @@ public class ImageDrawer : IDrawer
         }
     }
 
-    private static void DrawRawTexture(RawImage rawImage)
+    public void Draw(RawImage rawImage)
     {
         using (new GUILayout.HorizontalScope())
         {
@@ -72,14 +73,14 @@ public class ImageDrawer : IDrawer
         {
             GUILayout.Label("Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            rawImage.color = ColorDrawer.Draw(rawImage.color);
+            rawImage.color = colorDrawer.Draw(rawImage.color);
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Material", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            rawImage.material = MaterialDrawer.Draw(rawImage.material);
+            rawImage.material = materialDrawer.Draw(rawImage.material);
         }
 
         using (new GUILayout.HorizontalScope())
@@ -93,7 +94,7 @@ public class ImageDrawer : IDrawer
         {
             GUILayout.Label("UV Rect", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            rawImage.uvRect = RectDrawer.DrawRect(rawImage.uvRect);
+            rawImage.uvRect = rectDrawer.Draw(rawImage.uvRect);
         }
     }
 }

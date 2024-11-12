@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -16,7 +16,7 @@ namespace NitroxModel.DataStructures.Util
     /// <typeparam name="T"></typeparam>
     [Serializable]
     [DataContract]
-    public struct Optional<T> : ISerializable where T : class
+    public struct Optional<T> : ISerializable, IEquatable<Optional<T>> where T : class
     {
         private delegate bool HasValueDelegate(T value);
 
@@ -149,6 +149,30 @@ namespace NitroxModel.DataStructures.Util
         public static explicit operator T(Optional<T> value)
         {
             return value.Value;
+        }
+        public bool Equals(Optional<T> other)
+        {
+            return EqualityComparer<T>.Default.Equals(Value, other.Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Optional<T> other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return EqualityComparer<T>.Default.GetHashCode(Value);
+        }
+
+        public static bool operator ==(Optional<T> left, Optional<T> right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Optional<T> left, Optional<T> right)
+        {
+            return !left.Equals(right);
         }
     }
 

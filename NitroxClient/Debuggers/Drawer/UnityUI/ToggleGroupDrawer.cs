@@ -1,24 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class ToggleGroupDrawer : IDrawer
+public class ToggleGroupDrawer : IDrawer<ToggleGroup>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(ToggleGroup) };
-
-    public void Draw(object target)
-    {
-        switch (target)
-        {
-            case ToggleGroup toggleGroup:
-                DrawToggleGroup(toggleGroup);
-                break;
-        }
-    }
-
-    private static void DrawToggleGroup(ToggleGroup toggleGroup)
+    public void Draw(ToggleGroup toggleGroup)
     {
         using (new GUILayout.HorizontalScope())
         {

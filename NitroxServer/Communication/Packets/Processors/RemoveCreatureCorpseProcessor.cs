@@ -26,12 +26,12 @@ public class RemoveCreatureCorpseProcessor : AuthenticatedPacketProcessor<Remove
         // So that even players rejoining can see it (before it despawns)
         entitySimulation.EntityDestroyed(packet.CreatureId);
 
-        if (worldEntityManager.TryDestroyEntity(packet.CreatureId, out Optional<Entity> entity))
+        if (worldEntityManager.TryDestroyEntity(packet.CreatureId, out Entity entity))
         {
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = player != destroyingPlayer;
-                if (isOtherPlayer && player.CanSee(entity.Value))
+                if (isOtherPlayer && player.CanSee(entity))
                 {
                     player.SendPacket(packet);
                 }

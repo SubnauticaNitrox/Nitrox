@@ -1,15 +1,11 @@
-using System;
-
 namespace NitroxClient.Debuggers.Drawer;
 
-public interface IDrawer
+public interface IDrawer<in T>
 {
-    public Type[] ApplicableTypes { get; }
-    public void Draw(object target);
+    void Draw(T target);
 }
 
-public interface IStructDrawer
+public interface IDrawer<in T, in TDrawOptions> : IDrawer<T> where TDrawOptions : class
 {
-    public Type[] ApplicableTypes { get; }
-    public object Draw(object target);
+    void Draw(T target, TDrawOptions options);
 }

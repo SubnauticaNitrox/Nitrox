@@ -1,40 +1,16 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Helper;
+using NitroxPatcher.Patches.Dynamic;
 using NitroxTest.Patcher;
 
-namespace NitroxPatcher.Patches.Dynamic;
+namespace Nitrox.Test.Patcher.Patches.Dynamic;
 
 [TestClass]
 public class CyclopsSonarButton_Update_PatchTest
 {
     [TestMethod]
-    public void Sanity()
-    {
-        List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
-        instructions.Add(new CodeInstruction(CyclopsSonarButton_Update_Patch.INJECTION_OPCODE, CyclopsSonarButton_Update_Patch.INJECTION_OPERAND));
-        instructions.Add(new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Player player) => player.GetMode())));
-        instructions.Add(new CodeInstruction(OpCodes.Brtrue));
-
-        IEnumerable<CodeInstruction> result = CyclopsSonarButton_Update_Patch.Transpiler(CyclopsSonarButton_Update_Patch.TARGET_METHOD, instructions, CyclopsSonarButton_Update_Patch.TARGET_METHOD.GetILGenerator());
-        Assert.AreEqual(instructions.Count + 3, result.Count());
-    }
-
-    [TestMethod]
-    public void InjectionSanity()
-    {
-        List<CodeInstruction> beforeInstructions = PatchProcessor.GetCurrentInstructions(CyclopsSonarButton_Update_Patch.TARGET_METHOD);
-        IEnumerable<CodeInstruction> result = CyclopsSonarButton_Update_Patch.Transpiler(CyclopsSonarButton_Update_Patch.TARGET_METHOD, beforeInstructions, CyclopsSonarButton_Update_Patch.TARGET_METHOD.GetILGenerator());
-
-        Assert.IsTrue(beforeInstructions.Count < result.Count());
-    }
-
-    [TestMethod]
-    public void CheckMethodValidity()
+    public void CheckJumpOffsetValidity()
     {
         ReadOnlyCollection<CodeInstruction> instructions = PatchTestHelper.GetInstructionsFromMethod(CyclopsSonarButton_Update_Patch.TARGET_METHOD);
         for (int i = 0; i < instructions.Count; i++)

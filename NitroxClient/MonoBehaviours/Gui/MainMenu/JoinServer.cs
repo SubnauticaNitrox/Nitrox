@@ -38,6 +38,8 @@ public class JoinServer : MonoBehaviour
     private GameObject joinServerMenu;
     public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
 
+    public bool InstantLaunch;
+
     public void Setup(GameObject saveGameMenu)
     {
         JoinServerServerList.InitializeServerList(saveGameMenu, out joinServerMenu, out RectTransform joinServerBackground);
@@ -47,7 +49,7 @@ public class JoinServer : MonoBehaviour
         Hide();
     }
 
-    public async Task ShowAsync(string ip, int port)
+    public async Task ShowAsync(string ip, int port, bool instantLaunch = false)
     {
         NitroxServiceLocator.BeginNewLifetimeScope();
         multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
@@ -58,6 +60,7 @@ public class JoinServer : MonoBehaviour
         gameObject.SetActive(true);
         serverIp = ip;
         serverPort = port;
+        InstantLaunch = instantLaunch;
 
         //Set Server IP in info label
         joinWindow.SetIP(serverIp);
@@ -209,6 +212,10 @@ public class JoinServer : MonoBehaviour
                 Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
                 MainMenuRightSide.main.OpenGroup("Join Server");
                 FocusPlayerNameTextBox();
+                if (InstantLaunch)
+                {
+                    OnJoinClick();
+                }
                 break;
 
             case MultiplayerSessionConnectionStage.SESSION_RESERVED:

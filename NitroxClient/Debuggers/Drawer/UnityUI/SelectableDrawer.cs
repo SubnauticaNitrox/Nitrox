@@ -1,26 +1,25 @@
-﻿using System;
-using NitroxClient.Debuggers.Drawer.Unity;
-using NitroxModel.Core;
+﻿using NitroxClient.Debuggers.Drawer.Unity;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer.UnityUI;
 
-public class SelectableDrawer : IDrawer
+public class SelectableDrawer : IDrawer<Selectable>
 {
-    public Type[] ApplicableTypes { get; } = { typeof(Selectable) };
+    private readonly SceneDebugger sceneDebugger;
+    private readonly ColorDrawer colorDrawer;
 
-    public void Draw(object target)
+    public SelectableDrawer(SceneDebugger sceneDebugger, ColorDrawer colorDrawer)
     {
-        switch (target)
-        {
-            case Selectable selectable:
-                DrawSelectable(selectable);
-                break;
-        }
+        Validate.NotNull(sceneDebugger);
+        Validate.NotNull(colorDrawer);
+
+        this.sceneDebugger = sceneDebugger;
+        this.colorDrawer = colorDrawer;
     }
 
-    public static void DrawSelectable(Selectable selectable)
+    public void Draw(Selectable selectable)
     {
         using (new GUILayout.HorizontalScope())
         {
@@ -57,7 +56,7 @@ public class SelectableDrawer : IDrawer
         }
     }
 
-    private static void DrawTransitionColorTint(Selectable selectable)
+    private void DrawTransitionColorTint(Selectable selectable)
     {
         using (new GUILayout.HorizontalScope())
         {
@@ -65,7 +64,7 @@ public class SelectableDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.UpdateSelectedObject(selectable.targetGraphic.gameObject);
+                sceneDebugger.UpdateSelectedObject(selectable.targetGraphic.gameObject);
             }
         }
 
@@ -76,35 +75,35 @@ public class SelectableDrawer : IDrawer
         {
             GUILayout.Label("Normal Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            normalColor = ColorDrawer.Draw(selectable.colors.normalColor);
+            normalColor = colorDrawer.Draw(selectable.colors.normalColor);
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Highlighted Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            highlightedColor = ColorDrawer.Draw(selectable.colors.highlightedColor);
+            highlightedColor = colorDrawer.Draw(selectable.colors.highlightedColor);
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Pressed Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            pressedColor = ColorDrawer.Draw(selectable.colors.pressedColor);
+            pressedColor = colorDrawer.Draw(selectable.colors.pressedColor);
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Selected Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            selectedColor = ColorDrawer.Draw(selectable.colors.selectedColor);
+            selectedColor = colorDrawer.Draw(selectable.colors.selectedColor);
         }
 
         using (new GUILayout.HorizontalScope())
         {
             GUILayout.Label("Disabled Color", NitroxGUILayout.DrawerLabel, GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH));
             NitroxGUILayout.Separator();
-            disabledColor = ColorDrawer.Draw(selectable.colors.disabledColor);
+            disabledColor = colorDrawer.Draw(selectable.colors.disabledColor);
         }
 
         using (new GUILayout.HorizontalScope())
@@ -133,7 +132,7 @@ public class SelectableDrawer : IDrawer
         };
     }
 
-    private static void DrawTransitionSpriteSwap(Selectable selectable)
+    private void DrawTransitionSpriteSwap(Selectable selectable)
     {
         using (new GUILayout.HorizontalScope())
         {
@@ -141,7 +140,7 @@ public class SelectableDrawer : IDrawer
             NitroxGUILayout.Separator();
             if (GUILayout.Button("Jump to", GUILayout.Width(NitroxGUILayout.DEFAULT_LABEL_WIDTH)))
             {
-                NitroxServiceLocator.Cache<SceneDebugger>.Value.UpdateSelectedObject(selectable.targetGraphic.gameObject);
+                sceneDebugger.UpdateSelectedObject(selectable.targetGraphic.gameObject);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -57,6 +57,12 @@ namespace NitroxClient.MonoBehaviours
         internal void SetFloat(string name, float value)
         {
             animator.SetFloat(name, value);
+        }
+
+        public void Reset()
+        {
+            animator.Rebind();
+            animator.Update(0f);
         }
     }
 }
