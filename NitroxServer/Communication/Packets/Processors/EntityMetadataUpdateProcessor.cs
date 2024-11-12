@@ -1,9 +1,11 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
+using System.Linq;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -26,6 +28,8 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 entity.Value.Metadata = packet.NewValue;
                 SendUpdateToVisiblePlayers(packet, sendingPlayer, entity.Value);
+
+                ProcessMetadata(entity.Value, packet.NewValue);
             }
             else
             {
@@ -42,6 +46,23 @@ namespace NitroxServer.Communication.Packets.Processors
                 if (player != sendingPlayer && updateVisibleToPlayer)
                 {
                     player.SendPacket(packet);
+                }
+            }
+        }
+
+        // TODO: replace temporary code with a serious implementation
+        private void ProcessMetadata(Entity entity, EntityMetadata metadata)
+        {
+            if (metadata is PlayerMetadata playerMetadata)
+            {
+                Player player = playerManager.GetConnectedPlayers().Where(p => p.GameObjectId == entity.Id).FirstOrDefault();
+                if (player != null)
+                {
+                    player.EquippedItems.Clear();
+                    foreach (PlayerMetadata.EquippedItem item in playerMetadata.EquippedItems)
+                    {
+                        player.EquippedItems.Add(item.Slot, item.Id);
+                    }
                 }
             }
         }

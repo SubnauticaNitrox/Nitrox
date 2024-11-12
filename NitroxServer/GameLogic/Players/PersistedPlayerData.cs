@@ -23,7 +23,7 @@ public class PersistedPlayerData
     public Optional<NitroxId>[] QuickSlotsBindingIds { get; set; } = Array.Empty<Optional<NitroxId>>();
 
     [DataMember(Order = 4)]
-    public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
+    public Dictionary<string, NitroxId> EquippedItems { get; set; } = new Dictionary<string, NitroxId>();
 
     [DataMember(Order = 5)]
     public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
@@ -94,7 +94,7 @@ public class PersistedPlayerData
             Name = player.Name,
             UsedItems = player.UsedItems?.ToList(),
             QuickSlotsBindingIds = player.QuickSlotsBindingIds,
-            EquippedItems = player.GetEquipment(),
+            EquippedItems = new(player.EquippedItems),
             Modules = player.GetModules(),
             Id = player.Id,
             SpawnPosition = player.Position,

@@ -206,7 +206,7 @@ namespace NitroxServer.GameLogic
                     serverConfig.GameMode,
                     new List<NitroxTechType>(),
                     Array.Empty<Optional<NitroxId>>(),
-                    new List<EquippedItemData>(),
+                    new Dictionary<string, NitroxId>(),
                     new List<EquippedItemData>(),
                     new Dictionary<string, float>(),
                     new Dictionary<string, PingInstancePreference>(),
