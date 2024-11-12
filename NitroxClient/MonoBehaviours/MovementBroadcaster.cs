@@ -49,12 +49,17 @@ public class MovementBroadcaster : MonoBehaviour
     public void BroadcastLocalData(float time)
     {
         List<MovementData> data = [];
-        foreach (KeyValuePair<NitroxId, WatchedEntry> entry in watchedEntries)
+        List<NitroxId> watchedIds = [..watchedEntries.Keys];
+
+        for (int i = watchedIds.Count - 1; i >= 0; i--)
         {
-            if (entry.Value.ShouldBroadcastMovement())
+            NitroxId entryId = watchedIds[i];
+            WatchedEntry entry = watchedEntries[entryId];
+            
+            if (entry.ShouldBroadcastMovement())
             {
-                data.Add(entry.Value.GetMovementData(entry.Key));
-                entry.Value.OnBroadcastPosition();
+                data.Add(entry.GetMovementData(entryId));
+                entry.OnBroadcastPosition();
             }
         }
 
