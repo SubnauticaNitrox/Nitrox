@@ -31,12 +31,12 @@
                 </Rectangle>
             </Button>
         </Panel>
-        <TextBlock Grid.Row="0" Text="{Binding Title}" Margin="24 20 24 -10" Foreground="{Binding TitleForeground}"
+        <TextBlock Grid.Row="0" Text="{Binding Title}" Margin="24 20 24 -10"
                    FontWeight="{Binding TitleFontWeight}" FontSize="{Binding TitleFontSize}"
                    IsVisible="{Binding !Title, Converter={converters:EqualityConverter}}" />
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="24 20 10 20">
-            <SelectableTextBlock Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0" Foreground="{Binding DescriptionForeground}"
+            <SelectableTextBlock Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0"
                                  FontWeight="{Binding DescriptionFontWeight}" FontSize="{Binding DescriptionFontSize}"
                                  IsVisible="{Binding !Description, Converter={converters:EqualityConverter}}" />
         </ScrollViewer>

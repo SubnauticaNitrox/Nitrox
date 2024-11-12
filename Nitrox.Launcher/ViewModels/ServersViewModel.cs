@@ -200,7 +200,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
             model.DescriptionFontSize = 24;
-            model.DescriptionFontWeight = FontWeight.ExtraBold;
+            model.DescriptionFontWeight = FontWeight.Bold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
     }

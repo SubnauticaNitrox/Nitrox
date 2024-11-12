@@ -388,7 +388,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         {
             model.Description = $"Are you sure you want to delete the server '{ServerName}'?";
             model.DescriptionFontSize = 24;
-            model.DescriptionFontWeight = FontWeight.ExtraBold;
+            model.DescriptionFontWeight = FontWeight.Bold;
             model.ButtonOptions = ButtonOptions.YesNo;
         });
         if (!modalViewModel)

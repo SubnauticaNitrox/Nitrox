@@ -21,12 +21,10 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     [ObservableProperty] private string windowTitle;
 
     [ObservableProperty] private string title;
-    [ObservableProperty] private IBrush titleForeground = Brushes.Black;
     [ObservableProperty] private double titleFontSize = 24;
     [ObservableProperty] private FontWeight titleFontWeight = FontWeight.Bold;
 
     [ObservableProperty] private string description;
-    [ObservableProperty] private IBrush descriptionForeground = Brushes.Black;
     [ObservableProperty] private double descriptionFontSize = 14;
     [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
 

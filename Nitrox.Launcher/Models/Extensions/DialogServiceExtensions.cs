@@ -49,7 +49,6 @@ public static class DialogServiceExtensions
         {
             model.Title = title ?? "Error";
             model.Description = string.IsNullOrWhiteSpace(description) ? exception.ToString() : $"{description}{Environment.NewLine}{exception}";
-            model.DescriptionForeground = new SolidColorBrush(Colors.Red);
             model.ButtonOptions = ButtonOptions.OkClipboard;
         });
 }
