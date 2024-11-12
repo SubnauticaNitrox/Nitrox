@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -57,9 +58,9 @@ public partial class CreateServerViewModel : ModalViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanCreate))]
-    private void Create()
+    private async Task CreateAsync()
     {
-        CreateEmptySave(Name, SelectedGameMode);
+        await Task.Run(() => CreateEmptySave(Name, SelectedGameMode));
         Close();
     }
 

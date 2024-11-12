@@ -83,11 +83,30 @@
             <Setter Property="Opacity" Value="0.6" />
         </Style>
 
-        <Style Selector="^:disabled /template/ ContentPresenter">
-            <!-- TODO: Nice disabled style (loading indicator?) -->
-            <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
-            <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
-            <Setter Property="Opacity" Value="0.25" />
+        <Style Selector="^:disabled:not(.busy)">
+            <Style Selector="^ /template/ ContentPresenter">
+                <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
+                <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+                <Setter Property="Opacity" Value="0.25" />
+            </Style>
+        </Style>
+        
+        <!-- TODO: Pretty animations -->
+        <Style Selector="^.busy">
+            <Style Selector="^ /template/ ContentPresenter">
+                <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
+                <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+                <Style.Animations>
+                    <Animation Duration="0:0:.75" IterationCount="INFINITE" PlaybackDirection="Alternate" Easing="SineEaseInOut">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="1" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="0.3" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
         </Style>
 
         <Style Selector="^.primary">

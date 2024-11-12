@@ -17,12 +17,14 @@ public class NitroxAttached : AvaloniaObject
     public static readonly AttachedProperty<bool> AutoScrollToHomeProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, ScrollViewer, bool>("AutoScrollToHome");
     public static readonly AttachedProperty<Orientation> PrimaryScrollWheelDirectionProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, ScrollViewer, Orientation>("PrimaryScrollWheelDirection", Orientation.Vertical);
     public static readonly AttachedProperty<bool> IsNumericInputProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("IsNumericInput");
-    public static readonly AttachedProperty<bool> HasUserInteracted = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("HasUserInteracted");
+    public static readonly AttachedProperty<bool> HasUserInteractedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("HasUserInteracted");
+    private static AsyncCommandButtonTagger asyncCommandButtonTagger;
 
     static NitroxAttached()
     {
         InputElement.LostFocusEvent.Raised.Subscribe(HasUserInteractedOnNext);
         InputElement.TextInputEvent.Raised.Subscribe(HasUserInteractedOnNext);
+        asyncCommandButtonTagger = new AsyncCommandButtonTagger("busy");
 
         void HasUserInteractedOnNext((object Sender, RoutedEventArgs EventArgs) args)
         {
@@ -172,7 +174,7 @@ public class NitroxAttached : AvaloniaObject
         }
     }
 
-    public static bool GetHasUserInteracted(InputElement input) => input.GetValue(HasUserInteracted);
+    public static bool GetHasUserInteracted(InputElement input) => input.GetValue(HasUserInteractedProperty);
     
-    public static void SetHasUserInteracted(InputElement input, bool value) => input.SetValue(HasUserInteracted, value);
+    public static void SetHasUserInteracted(InputElement input, bool value) => input.SetValue(HasUserInteractedProperty, value);
 }
