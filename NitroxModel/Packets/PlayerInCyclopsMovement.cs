@@ -17,6 +17,6 @@ public class PlayerInCyclopsMovement : Packet
         LocalPosition = localPosition;
         LocalRotation = localRotation;
         DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
-        UdpChannel = UdpChannelId.PLAYER_MOVEMENT;
+        UdpChannel = UdpChannelId.MOVEMENTS;
     }
 }

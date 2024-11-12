@@ -29,7 +29,7 @@ public class LiteNetLibConnection : INitroxConnection, IEquatable<LiteNetLibConn
             dataWriter.Put(packetData.Length);
             dataWriter.Put(packetData);
 
-            peer.Send(dataWriter, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
+            peer.Send(dataWriter, (byte)packet.UdpChannel, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
         }
         else
         {

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -18,6 +18,7 @@ public sealed partial class PilotingChair_ReleaseBy_Patch : NitroxPatch, IDynami
         {
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance.subRoot.gameObject, false);
         }
     }
 }

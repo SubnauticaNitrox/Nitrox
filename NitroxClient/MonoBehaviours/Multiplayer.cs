@@ -168,6 +168,7 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
             gameObject.AddComponent<BuildingHandler>();
+            gameObject.AddComponent<MovementBroadcaster>();
             VirtualCyclops.Initialize();
         }
 

@@ -27,7 +27,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (UpdatePlayerAnimations)
             {
-                Vector3 rotationCorrectedVelocity = gameObject.transform.rotation.GetInverse() * Velocity;
+                Vector3 rotationCorrectedVelocity = transform.rotation.GetInverse() * Velocity;
 
                 smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, rotationCorrectedVelocity, Vector3.Normalize(rotationCorrectedVelocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
 
@@ -57,6 +57,11 @@ namespace NitroxClient.MonoBehaviours
         internal void SetFloat(string name, float value)
         {
             animator.SetFloat(name, value);
+        }
+
+        internal void SetFloat(int id, float value)
+        {
+            animator.SetFloat(id, value);
         }
 
         public void Reset()
