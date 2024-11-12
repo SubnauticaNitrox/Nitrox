@@ -1,4 +1,5 @@
 ﻿using LitJson;
+using NitroxModel.Helper;
 
 namespace Nitrox.Test.Patcher.Patches.Persistent;
 
@@ -8,7 +9,7 @@ public class Language_LoadLanguageFile_PatchTest
     [TestMethod]
     public void DefaultLanguageSanity()
     {
-        string languageFolder = Path.Combine(".", "LanguageFiles");
+        string languageFolder = Path.Combine(NitroxUser.AssetsPath, "LanguageFiles");
         Assert.IsTrue(Directory.Exists(languageFolder), $"The language files folder does not exist at {languageFolder}.");
 
         string defaultLanguageFilePath = Path.Combine(languageFolder, "en.json");

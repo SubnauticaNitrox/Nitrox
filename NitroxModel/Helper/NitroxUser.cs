@@ -20,6 +20,7 @@ namespace NitroxModel.Helper
         private static string launcherPath;
         private static string gamePath;
         private static string currentExecutablePath;
+        private static string assetsPath;
 
         private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
         {
@@ -92,7 +93,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static string AssetsPath => Path.Combine(LauncherPath, "Resources", "AssetBundles");
+        public static string AssetBundlePath => Path.Combine(LauncherPath, "Resources", "AssetBundles");
         public static string LanguageFilesPath => Path.Combine(LauncherPath, "Resources", "LanguageFiles");
 
         public static string PreferredGamePath
@@ -171,12 +172,42 @@ namespace NitroxModel.Helper
                     return currentExecutablePath;
                 }
 
-                // File URI works different on OSX so just return path directly.
+                // File URI works different on Linux/OSX so just return path directly.
                 if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory();
                 }
                 return currentExecutablePath = new Uri(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
+            }
+        }
+
+        public static string AssetsPath
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(assetsPath))
+                {
+                    return assetsPath;
+                }
+                
+                string nitroxAssets;
+                if (NitroxEnvironment.IsTesting)
+                {
+                    nitroxAssets = Directory.GetCurrentDirectory();
+                    while (nitroxAssets != null && Path.GetFileName(nitroxAssets) != "Nitrox.Test")
+                    {
+                        nitroxAssets = Directory.GetParent(nitroxAssets)?.FullName;
+                    }
+                    if (nitroxAssets != null)
+                    {
+                        nitroxAssets = Path.Combine(Directory.GetParent(nitroxAssets)?.FullName ?? throw new Exception("Failed to get Nitrox assets during tests"), "Nitrox.Assets.Subnautica");
+                    }
+                }
+                else
+                {
+                    nitroxAssets = LauncherPath ?? CurrentExecutablePath;
+                }
+                return assetsPath = nitroxAssets;
             }
         }
     }

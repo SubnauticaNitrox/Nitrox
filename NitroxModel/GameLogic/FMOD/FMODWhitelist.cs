@@ -19,7 +19,7 @@ public class FMODWhitelist
 
     private FMODWhitelist(GameInfo game)
     {
-        string filePath = Path.Combine(NitroxUser.LauncherPath, "Resources", $"SoundWhitelist_{game.Name}.csv");
+        string filePath = Path.Combine(NitroxUser.AssetsPath, "Resources", $"SoundWhitelist_{game.Name}.csv");
         string fileData = "";
         try
         {

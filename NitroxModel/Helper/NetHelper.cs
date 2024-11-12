@@ -37,8 +37,8 @@ namespace NitroxModel.Helper
         public static IEnumerable<NetworkInterface> GetInternetInterfaces()
         {
             return NetworkInterface.GetAllNetworkInterfaces()
-                                   .Where(n => n.Name is "Ethernet" or "Wi-Fi" && n.OperationalStatus is OperationalStatus.Up && n.NetworkInterfaceType is NetworkInterfaceType.Wireless80211 or NetworkInterfaceType.Ethernet)
-                                   .OrderBy(n => n.Name == "Ethernet" ? 1 : 0)
+                                   .Where(n => n.OperationalStatus is OperationalStatus.Up && n.NetworkInterfaceType is NetworkInterfaceType.Wireless80211 or NetworkInterfaceType.Ethernet)
+                                   .OrderBy(n => n.NetworkInterfaceType == NetworkInterfaceType.Ethernet ? 1 : 0)
                                    .ThenBy(n => n.Name);
         }
 
