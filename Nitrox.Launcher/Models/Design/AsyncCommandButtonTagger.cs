@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Reactive.Disposables;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -10,15 +11,16 @@ namespace Nitrox.Launcher.Models.Design;
 /// <summary>
 ///     Listens for async command changes on buttons to add the chosen classname to, for use with styling.
 /// </summary>
-public class AsyncCommandButtonTagger
+public class AsyncCommandButtonTagger : IDisposable
 {
     public string ClassName { get; init; }
     private readonly ConcurrentDictionary<ICommand, BusyState> states = [];
+    private readonly IDisposable commandChangeSubscription;
 
     public AsyncCommandButtonTagger(string className)
     {
         ClassName = className;
-        Button.CommandProperty.Changed.Subscribe(ButtonCommandChangedOnNext);
+        commandChangeSubscription = Button.CommandProperty.Changed.Subscribe(ButtonCommandChangedOnNext);
 
         void ButtonCommandChangedOnNext(AvaloniaPropertyChangedEventArgs<ICommand> args)
         {
@@ -64,5 +66,10 @@ public class AsyncCommandButtonTagger
                 Button.Classes.Set(ClassName, asyncCommand.IsRunning);
             }
         }
+    }
+
+    public void Dispose()
+    {
+        commandChangeSubscription.Dispose();
     }
 }
