@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Path = System.IO.Path;
@@ -14,7 +15,7 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>
 {
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
     private static readonly Dictionary<string, Bitmap> assetCache = [];
-    private static readonly object assetCacheLock = new();
+    private static readonly Lock assetCacheLock = new();
 
     public static Bitmap GetBitmapFromPath(string rawUri)
     {

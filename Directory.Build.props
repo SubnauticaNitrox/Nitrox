@@ -5,7 +5,7 @@
 
     <!-- Framework properties -->
     <PropertyGroup>
-        <LangVersion>12</LangVersion>
+        <LangVersion>13</LangVersion>
         <Version>1.8.0.0</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Prefer32Bit>false</Prefer32Bit>

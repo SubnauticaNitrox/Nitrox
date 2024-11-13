@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 
 namespace Nitrox.Launcher.Models.Converters;
 
@@ -13,6 +14,7 @@ namespace Nitrox.Launcher.Models.Converters;
 /// </remarks>
 public class TrimConverter : Converter<TrimConverter>
 {
+    private readonly Lock inOutCacheLock = new();
     /// <summary>
     ///     Cache to remember the last known untrimmed value (here, the value) for trimmed values (here, the key).
     /// </summary>
@@ -27,7 +29,7 @@ public class TrimConverter : Converter<TrimConverter>
         {
             return value;
         }
-        lock (inOutCache)
+        lock (inOutCacheLock)
         {
             if (inOutCache.TryGetValue(strValue.Trim(), out string untrimmedValue))
             {
@@ -49,14 +51,14 @@ public class TrimConverter : Converter<TrimConverter>
         if (!strValue.StartsWith(' ') && !strValue.EndsWith(' '))
         {
             // It's safe to reset cache now.
-            lock (inOutCache)
+            lock (inOutCacheLock)
             {
                 inOutCache.Clear();
             }
             return strValue;
         }
         string trim = strValue.Trim();
-        lock (inOutCache)
+        lock (inOutCacheLock)
         {
             inOutCache[trim] = strValue;
         }

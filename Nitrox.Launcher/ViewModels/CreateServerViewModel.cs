@@ -49,7 +49,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
             fileEnding = "nitrox";
         }
 
-        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).Dispose();
+        File.WriteAllText(Path.Combine(saveDir, $"Version.{fileEnding}"), null);
 
         using (config.Update(saveDir))
         {
