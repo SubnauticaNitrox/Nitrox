@@ -36,7 +36,7 @@ public static class DialogServiceExtensions
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Failed to show dialog");
+            Log.Error(ex, $"Failed to show dialog for ViewModel {typeof(T).FullName}");
             LauncherNotifier.Error(ex.Message);
             return default;
         }

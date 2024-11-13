@@ -118,7 +118,7 @@ public class ProcessEx : IDisposable
         ProcessEx found = null;
         foreach (Process proc in Process.GetProcessesByName(procName))
         {
-            // Already found, dispose all other resources to processes.
+            // Already found, dispose all other process handles.
             if (found != null)
             {
                 proc.Dispose();
