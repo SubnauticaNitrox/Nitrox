@@ -30,12 +30,16 @@
             </ControlTemplate>
         </Setter>
         <Setter Property="ErrorTemplate">
-            <DataTemplate>
+            <DataTemplate x:DataType="{x:Type x:Object}">
                 <Canvas Width="14" Height="14" Margin="4 0" Background="Transparent">
                     <Canvas.Styles>
                         <Style Selector="ToolTip">
                             <Setter Property="Background" Value="{DynamicResource BrandAbortBackgroundBrush}" />
                             <Setter Property="BorderBrush" Value="{DynamicResource BrandAbortBrush}" />
+                            
+                            <Style Selector="^ TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
+                            </Style>
                         </Style>
                     </Canvas.Styles>
                     <ToolTip.Tip>
