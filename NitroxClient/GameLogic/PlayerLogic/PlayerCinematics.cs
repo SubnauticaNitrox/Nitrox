@@ -51,7 +51,7 @@ public class PlayerCinematics
         if (localPlayer.IntroCinematicMode != introCinematicMode)
         {
             localPlayer.IntroCinematicMode = introCinematicMode;
-            packetSender.Send(new SetIntroCinematicMode(localPlayer.PlayerId!.Value, introCinematicMode));
+            packetSender.Send(new SetIntroCinematicMode(localPlayer.PlayerId.Value, introCinematicMode));
         }
     }
 }

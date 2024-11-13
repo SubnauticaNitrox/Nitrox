@@ -20,12 +20,6 @@ public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCine
 
     public override void Process(SetIntroCinematicMode packet)
     {
-        if (!packet.PlayerId.HasValue)
-        {
-            Log.Error("playerId of SetIntroCinematicMode packet is null which is not expected.");
-            return;
-        }
-
         if (localPlayer.PlayerId == packet.PlayerId)
         {
             if (packet.PartnerId.HasValue)
@@ -37,7 +31,7 @@ public class SetIntroCinematicModeProcessor : ClientPacketProcessor<SetIntroCine
             return;
         }
 
-        if (playerManager.TryFind(packet.PlayerId.Value, out RemotePlayer remotePlayer))
+        if (playerManager.TryFind(packet.PlayerId, out RemotePlayer remotePlayer))
         {
             remotePlayer.PlayerContext.IntroCinematicMode = packet.Mode;
             return;
