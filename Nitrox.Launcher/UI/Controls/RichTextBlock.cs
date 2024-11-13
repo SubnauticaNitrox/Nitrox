@@ -40,7 +40,7 @@ public partial class RichTextBlock : TextBlock
     }
 
     [GeneratedRegex(@"\[\/?([^]]+)\](?:\(([^\)]*)\))?")]
-    private static partial Regex TagParserRegex();
+    private static partial Regex TagParserRegex { get; }
 
     private void ParseTextAndAddInlines(ReadOnlySpan<char> text)
     {
@@ -48,7 +48,7 @@ public partial class RichTextBlock : TextBlock
         {
             return;
         }
-        Regex.ValueMatchEnumerator matchEnumerator = TagParserRegex().EnumerateMatches(text);
+        Regex.ValueMatchEnumerator matchEnumerator = TagParserRegex.EnumerateMatches(text);
         if (!matchEnumerator.MoveNext())
         {
             Inlines.Add(new Run(text.ToString()));
