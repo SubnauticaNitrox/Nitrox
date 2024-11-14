@@ -31,12 +31,12 @@
                     <ItemsControl ItemsSource="{Binding Servers}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Spacing="26" />
+                                <VirtualizingStackPanel Margin="0 -13" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Classes="serverEntry">
+                                <Border Classes="serverEntry" Margin="0 13">
                                     <DockPanel VerticalAlignment="Center">
                                         <Border DockPanel.Dock="Left" CornerRadius="12" ClipToBounds="True">
                                             <Grid>
@@ -69,12 +69,12 @@
                                                     </StackPanel>
                                                 </Panel>
                                                 <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Players}" />
-                                                    <TextBlock Text="/" />
-                                                    <TextBlock Text="{Binding MaxPlayers}" />
-                                                    <TextBlock Margin="6 0 0 0" Text="playing" />
-                                                </StackPanel>
+                                                <TextBlock>
+                                                    <Run Text="{Binding Players}" />
+                                                    <Run Text="/" />
+                                                    <Run Text="{Binding MaxPlayers}" />
+                                                    <Run Text=" playing" />
+                                                </TextBlock>
                                             </StackPanel>
                                         </StackPanel>
                                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
