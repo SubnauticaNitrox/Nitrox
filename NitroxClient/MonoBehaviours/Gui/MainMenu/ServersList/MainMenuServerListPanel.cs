@@ -52,15 +52,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         multiplayerServerButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance;
         MainMenuServerButton.Setup(multiplayerServerButtonRef.GetComponent<MainMenuLoadButton>());
 
-        CreateAddServerButton();
-        LoadSavedServers();
-        FindLANServersAsync().ContinueWith(t =>
-        {
-            if (t is { IsFaulted: true, Exception: { } ex })
-            {
-                Log.Warn($"Failed to execute FindLANServersAsync: {ex.GetFirstNonAggregateMessage()}");
-            }
-        });
+        RefreshServerEntries();
     }
 
     public bool OnButtonDown(GameInput.Button button)
@@ -137,10 +129,18 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             componentInChildren.SyncLegendBarToGUISelection();
         }
 
-        UIUtils.ScrollToShowItemInCenter(selectedServerItem.transform);
+        if (selectedServerItem == serverAreaContent.GetChild(0).gameObject) // Server Create Button
+        {
+            selectedServerItem.transform.Find("NewGameButton").GetComponent<Image>().sprite = SelectedSprite;
+        }
+        else
+        {
+            selectedServerItem.transform.Find("Load/NewGameButton").GetComponent<Image>().sprite = SelectedSprite;
+        }
 
-        selectedServerItem.transform.Find("Load/NewGameButton").GetComponent<Image>().sprite = SelectedSprite;
-        selectedServerItem.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextBlack();
+        selectedServerItem.GetComponentInChildren<uGUI_BasicColorSwap>();
+
+        UIUtils.ScrollToShowItemInCenter(selectedServerItem.transform);
         RuntimeManager.PlayOneShot(HoverSound.path);
     }
 
@@ -151,7 +151,15 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             return;
         }
 
-        selectedServerItem.transform.Find("Load/NewGameButton").GetComponent<Image>().sprite = NormalSprite;
+        if (selectedServerItem == serverAreaContent.GetChild(0).gameObject) // Server Create Button
+        {
+            selectedServerItem.transform.Find("NewGameButton").GetComponent<Image>().sprite = NormalSprite;
+        }
+        else
+        {
+            selectedServerItem.transform.Find("Load/NewGameButton").GetComponent<Image>().sprite = NormalSprite;
+        }
+
         selectedServerItem.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextWhite();
         selectedServerItem = null;
     }

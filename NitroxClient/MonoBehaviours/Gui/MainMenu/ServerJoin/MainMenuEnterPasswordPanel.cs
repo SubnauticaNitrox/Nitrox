@@ -140,6 +140,7 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         }
         else // Buttons
         {
+            selectedItem.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextBlack();
             selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuServerListPanel.SelectedSprite;
         }
 
@@ -148,7 +149,6 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
             EventSystem.current.SetSelectedGameObject(selectedItem);
         }
 
-        selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.black);
         RuntimeManager.PlayOneShot(MainMenuServerListPanel.HoverSound.path);
     }
 
@@ -166,6 +166,7 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
         }
         else // Buttons
         {
+            selectedItem.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextWhite();
             selectedItem.transform.GetChild(0).GetComponent<Image>().sprite = MainMenuServerListPanel.NormalSprite;
         }
 
@@ -174,7 +175,6 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
             EventSystem.current.SetSelectedGameObject(null);
         }
 
-        selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.white);
         selectedItem = null;
     }
 
@@ -182,7 +182,8 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
     {
         foreach (GameObject child in selectableItems)
         {
-            child.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+            selectedItem = child;
+            DeselectItem();
         }
     }
 
@@ -204,7 +205,7 @@ public class MainMenuEnterPasswordPanel : MonoBehaviour, uGUI_INavigableIconGrid
             return false;
         }
 
-        int dir = (dirX + dirY) > 0 ? 1 : -1;
+        int dir = dirX + dirY > 0 ? 1 : -1;
         for (int newIndex = GetSelectedIndex() + dir; newIndex >= 0 && newIndex < selectableItems.Length; newIndex += dir)
         {
             if (SelectItemByIndex(newIndex))

@@ -86,6 +86,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         Button cancelButton = buttonLeft.GetComponent<Button>();
         cancelButton.onClick = new Button.ButtonClickedEvent();
         cancelButton.onClick.AddListener(OnCancelClick);
+        cancelButton.onClick.AddListener(DeselectAllItems);
 
         //Prepares join button
         buttonRight.transform.localPosition = new Vector3(-115, 40, 0);
@@ -93,6 +94,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         Button joinButton = buttonRight.GetComponent<Button>();
         joinButton.onClick = new Button.ButtonClickedEvent();
         joinButton.onClick.AddListener(OnJoinClick);
+        joinButton.onClick.AddListener(DeselectAllItems);
 
         selectableItems = [inputField, colorPicker.gameObject, saturationSlider.gameObject, buttonLeft, buttonRight];
         Destroy(playerSettingsPanel);
@@ -103,7 +105,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         string playerName = playerNameInputField.text;
 
         //https://regex101.com/r/eTWiEs/2/
-        if (!Regex.IsMatch(playerName, @"^[a-zA-Z0-9._-]{3,25}$"))
+        if (!Regex.IsMatch(playerName, "^[a-zA-Z0-9._-]{3,25}$"))
         {
             MainMenuNotificationPanel.ShowMessage(Language.main.Get("Nitrox_InvalidUserName"), NAME);
             return;
@@ -194,13 +196,13 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             uGUI_LegendBar.ClearButtons();
         }
 
-        if (selectedItem == selectableItems[0])
-        {
-            selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.black);
-        }
-        else if (selectedItem == selectableItems[1])
+        if (selectedItem == selectableItems[1])
         {
             colorPicker.pointer.GetComponent<Image>().color = Color.cyan;
+        }
+        else if (selectedItem == selectableItems[3] || selectedItem == selectableItems[4])
+        {
+            selectedItem.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextBlack();
         }
 
         if (selectedItem.TryGetComponentInChildren(out Selectable selectable))
@@ -226,13 +228,16 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         if (selectedItem.TryGetComponent(out TMP_InputField selectedInputField))
         {
             //This line need to be before selectedInputField.ReleaseSelection() as it will call this method recursive leading to NRE
-            selectedItem.GetComponentsInChildren<TextMeshProUGUI>().ForEach(txt => txt.color = Color.white);
             selectedInputField.DeactivateInputField();
             selectedInputField.ReleaseSelection();
         }
         else if (selectedItem.TryGetComponent(out uGUI_ColorPicker selectedColorPicker))
         {
             selectedColorPicker.pointer.GetComponent<Image>().color = Color.white;
+        }
+        else if (selectedItem.TryGetComponentInChildren(out uGUI_BasicColorSwap colorSwap))
+        {
+            colorSwap.makeTextWhite();
         }
 
         if (!EventSystem.current.alreadySelecting)
@@ -241,6 +246,15 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
 
         selectedItem = null;
+    }
+
+    public void DeselectAllItems()
+    {
+        foreach (GameObject item in selectableItems)
+        {
+            selectedItem = item;
+            DeselectItem();
+        }
     }
 
     public bool SelectFirstItem()

@@ -157,6 +157,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         if (confirmObject)
         {
             EventSystem.current.SetSelectedGameObject(null);
+            confirmObject.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextWhite();
         }
         uGUI_LegendBar.ClearButtons();
     }

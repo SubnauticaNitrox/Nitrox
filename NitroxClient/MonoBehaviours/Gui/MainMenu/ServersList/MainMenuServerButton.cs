@@ -47,14 +47,19 @@ public class MainMenuServerButton : MonoBehaviour
         multiplayerJoinButton.onClick = new Button.ButtonClickedEvent();
         multiplayerJoinButton.onClick.AddListener(OnJoinButtonClicked);
 
+        gameObject.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = confirmButtonLegendData;
+
         // We don't want servers that are discovered automatically to be deleted
-        if (!isReadOnly)
+        if (isReadOnly)
         {
-            GameObject delete = Instantiate(deleteButtonRef, loadTransform, false);
-            Button deleteButtonButton = delete.GetComponent<Button>();
-            deleteButtonButton.onClick = new Button.ButtonClickedEvent();
-            deleteButtonButton.onClick.AddListener(RequestDelete);
+            Destroy(transform.Find("Delete").gameObject);
+            return;
         }
+
+        GameObject delete = Instantiate(deleteButtonRef, loadTransform, false);
+        Button deleteButtonButton = delete.GetComponent<Button>();
+        deleteButtonButton.onClick = new Button.ButtonClickedEvent();
+        deleteButtonButton.onClick.AddListener(RequestDelete);
 
         Transform deleteTransform = this.RequireTransform("Delete");
         Destroy(deleteTransform.GetComponent<MainMenuDeleteGame>());
@@ -70,8 +75,6 @@ public class MainMenuServerButton : MonoBehaviour
         deleteTransform.gameObject.AddComponent<MainMenuDeleteServer>().serverButton = this;
         TextMeshProUGUI warningTmp = deleteTransform.RequireTransform("DeleteWarningText").GetComponent<TextMeshProUGUI>();
         warningTmp.text = Language.main.Get("Nitrox_ServerEntry_DeleteWarning");
-
-        gameObject.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = confirmButtonLegendData;
     }
 
     public void RequestDelete()
@@ -95,6 +98,26 @@ public class MainMenuServerButton : MonoBehaviour
         StartCoroutine(loadButtonRef.ShiftAlpha(deleteCg, 0.0f, loadButtonRef.animTime, loadButtonRef.alphaPower, false));
         StartCoroutine(loadButtonRef.ShiftPos(loadCg, MainMenuLoadButton.target.centre, MainMenuLoadButton.target.left, loadButtonRef.animTime, loadButtonRef.posPower));
         StartCoroutine(loadButtonRef.ShiftPos(deleteCg, MainMenuLoadButton.target.right, MainMenuLoadButton.target.centre, loadButtonRef.animTime, loadButtonRef.posPower));
+    }
+
+    public void ResetLoadDeleteView()
+    {
+        loadCg.alpha = 1;
+        loadCg.interactable = loadCg.blocksRaycasts = true;
+
+        RectTransform loadTransform = loadCg.GetComponent<RectTransform>();
+        float loadPosX = loadTransform.sizeDelta.x * 0.5f;
+        loadTransform.localPosition = new Vector3(loadPosX, loadTransform.localPosition.y, 0);
+
+        if (deleteCg) // Read only server entries
+        {
+            RectTransform deleteTransform = deleteCg.GetComponent<RectTransform>();
+            float deletePosX = deleteTransform.sizeDelta.x * 0.5f;
+            deleteTransform.localPosition = new Vector3(deletePosX, deleteTransform.localPosition.y, 0);
+
+            deleteCg.alpha = 0;
+            deleteCg.interactable = deleteCg.blocksRaycasts = false;
+        }
     }
 
     public void Delete()
@@ -122,7 +145,7 @@ public class MainMenuServerButton : MonoBehaviour
         }
 
         MainMenuServerListPanel.Main.IsJoining = true;
-
+        MainMenuServerListPanel.Main.DeselectAllItems();
         await OpenJoinServerMenuAsync(joinIp, joinPort).ContinueWith(_ => { MainMenuServerListPanel.Main.IsJoining = false; });
     }
 
