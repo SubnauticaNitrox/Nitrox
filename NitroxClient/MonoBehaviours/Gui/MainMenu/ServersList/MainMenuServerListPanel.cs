@@ -139,8 +139,8 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
         UIUtils.ScrollToShowItemInCenter(selectedServerItem.transform);
 
-        selectedServerItem.transform.GetChild(0).GetComponent<Image>().sprite = SelectedSprite;
-        selectedServerItem.GetComponentInChildren<TextMeshProUGUI>().color = Color.black;
+        selectedServerItem.transform.Find("Load/NewGameButton").GetComponent<Image>().sprite = SelectedSprite;
+        selectedServerItem.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextBlack();
         RuntimeManager.PlayOneShot(HoverSound.path);
     }
 
@@ -151,17 +151,24 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             return;
         }
 
-        selectedServerItem.transform.GetChild(0).GetComponent<Image>().sprite = NormalSprite;
-        selectedServerItem.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+        selectedServerItem.transform.Find("Load/NewGameButton").GetComponent<Image>().sprite = NormalSprite;
+        selectedServerItem.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextWhite();
         selectedServerItem = null;
     }
 
     public void DeselectAllItems()
     {
-        foreach (Transform child in serverAreaContent)
+        // Create ServerEntry button
+        serverAreaContent.GetChild(0).Find("NewGameButton").GetComponent<Image>().sprite = NormalSprite;
+        serverAreaContent.GetChild(0).GetComponentInChildren<uGUI_BasicColorSwap>().makeTextWhite();
+
+        // Server buttons
+        for (int i = 1; i < serverAreaContent.childCount; i++)
         {
-            child.GetChild(0).GetComponent<Image>().sprite = NormalSprite;
-            child.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+            Transform child = serverAreaContent.GetChild(i);
+            child.Find("Load/NewGameButton").GetComponent<Image>().sprite = NormalSprite;
+            child.GetComponentInChildren<uGUI_BasicColorSwap>().makeTextWhite();
+            child.GetComponent<MainMenuServerButton>().ResetLoadDeleteView();
         }
     }
 
@@ -258,7 +265,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         buttonText.Append(Language.main.Get("Nitrox_ConnectTo")).Append(" <b>").Append(serverName).AppendLine("</b>");
         if (NitroxPrefs.HideIp.Value)
         {
-            buttonText.AppendLine("***.***.***.***").AppendLine("*****");
+            buttonText.AppendLine("***.***.***.***:*****");
         }
         else
         {
