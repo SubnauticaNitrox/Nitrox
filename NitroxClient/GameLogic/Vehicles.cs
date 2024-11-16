@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -18,14 +21,18 @@ public class Vehicles
     private readonly IPacketSender packetSender;
     private readonly IMultiplayerSession multiplayerSession;
     private readonly PlayerManager playerManager;
+    private readonly EntityMetadataManager entityMetadataManager;
+    private readonly Entities entities;
 
     private readonly Dictionary<TechType, string> pilotingChairByTechType = [];
 
-    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession, PlayerManager playerManager)
+    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession, PlayerManager playerManager, EntityMetadataManager entityMetadataManager, Entities entities)
     {
         this.packetSender = packetSender;
         this.multiplayerSession = multiplayerSession;
         this.playerManager = playerManager;
+        this.entityMetadataManager = entityMetadataManager;
+        this.entities = entities;
     }
 
     private PilotingChair FindPilotingChairWithCache(GameObject parent, TechType techType)
@@ -56,6 +63,16 @@ public class Vehicles
         {
             EntityDestroyed entityDestroyed = new(id);
             packetSender.Send(entityDestroyed);
+        }
+    }
+
+    public void BroadcastDestroyedCyclops(GameObject cyclops, NitroxId id)
+    {
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(cyclops);
+        if (metadata.Value is CyclopsMetadata cyclopsMetadata)
+        {
+            cyclopsMetadata.IsDestroyed = true;
+            entities.BroadcastMetadataUpdate(id, cyclopsMetadata);
         }
     }
 

@@ -30,7 +30,7 @@ public sealed class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch
     {
         if (__state && __instance.TryGetIdOrWarn(out NitroxId id))
         {
-            Resolve<Entities>().EntityMetadataChanged(__instance.gameObject, id);
+            Resolve<Vehicles>().BroadcastDestroyedCyclops(__instance.gameObject, id);
         }
     }
 
