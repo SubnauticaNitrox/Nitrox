@@ -296,8 +296,10 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     {
         GameObject multiplayerButtonInst = Instantiate(multiplayerNewServerButtonRef, serverAreaContent, false);
         multiplayerButtonInst.name = "NewServer"; // "NewServer" is important, see OnConfirm()
-        Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
-        txt.GetComponent<TextMeshProUGUI>().text = "Nitrox_AddServer";
+        TextMeshProUGUI txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text").GetComponent<TextMeshProUGUI>();
+        txt.text = "Nitrox_AddServer";
+        txt.fontSize *= 1.5f;
+        txt.fontStyle = FontStyles.Bold;
 
         Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
         multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
