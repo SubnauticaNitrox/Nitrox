@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Cyclops;
+using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -55,12 +56,9 @@ public sealed partial class CyclopsSonarButton_Update_Patch : NitroxPatch, IDyna
         }
     }
 
+    /// <returns>true (sonar should be turned off) if local player is simulating the cyclops (there's no replicator in this case)</returns>
     public static bool ShouldTurnoff(CyclopsSonarButton cyclopsSonarButton)
     {
-        if (cyclopsSonarButton.subRoot.TryGetComponent(out MultiplayerCyclops multiplayerCyclops))
-        {
-            return !multiplayerCyclops.enabled;
-        }
-        return true;
+        return !cyclopsSonarButton.subRoot.GetComponent<CyclopsMovementReplicator>();
     }
 }

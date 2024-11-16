@@ -7,6 +7,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.MonoBehaviours.Gui.HUD;
+using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxClient.Unity.Helper;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.MultiplayerSession;
@@ -146,7 +147,7 @@ public class RemotePlayer : INitroxPlayer
         AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
 
         // If in a subroot the position will be relative to the subroot
-        if (SubRoot && !SubRoot.isBase)
+        if (SubRoot && SubRoot.isBase)
         {
             Quaternion vehicleAngle = SubRoot.transform.rotation;
             position = vehicleAngle * position;
@@ -161,13 +162,12 @@ public class RemotePlayer : INitroxPlayer
 
     public void UpdatePositionInCyclops(Vector3 localPosition, Quaternion localRotation)
     {
-        if (Pawn == null)
+        if (Pawn == null || PilotingChair)
         {
             return;
         }
 
         SetVehicle(null);
-        SetPilotingChair(null);
 
         AnimationController.AimingRotation = localRotation;
         AnimationController.UpdatePlayerAnimations = true;
@@ -175,9 +175,6 @@ public class RemotePlayer : INitroxPlayer
 
         Pawn.Handle.transform.localPosition = localPosition;
         Pawn.Handle.transform.localRotation = localRotation;
-
-        AnimationController.UpdatePlayerAnimations = true;
-        AnimationController.AimingRotation = localRotation;
     }
 
     public void SetPilotingChair(PilotingChair newPilotingChair)
@@ -186,7 +183,7 @@ public class RemotePlayer : INitroxPlayer
         {
             PilotingChair = newPilotingChair;
 
-            MultiplayerCyclops mpCyclops = null;
+            CyclopsMovementReplicator cyclopsMovementReplicator = null;
 
             // For unexpected and expected cases, for example when a player is driving a cyclops but the cyclops is destroyed
             if (!SubRoot)
@@ -195,7 +192,7 @@ public class RemotePlayer : INitroxPlayer
             }
             else
             {
-                mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
+                cyclopsMovementReplicator = SubRoot.GetComponent<CyclopsMovementReplicator>();
             }
 
             if (PilotingChair)
@@ -203,23 +200,26 @@ public class RemotePlayer : INitroxPlayer
                 Attach(PilotingChair.sittingPosition.transform);
                 ArmsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
 
-                mpCyclops.CurrentPlayer = this;
-                mpCyclops.Enter();
+                if (cyclopsMovementReplicator)
+                {
+                    cyclopsMovementReplicator.Enter(this);
+                }
 
                 if (SubRoot)
                 {
                     SkyEnvironmentChanged.Broadcast(Body, SubRoot);
                 }
+
+                AnimationController.UpdatePlayerAnimations = false;
             }
             else
             {
                 SetSubRoot(SubRoot, true);
                 ArmsController.SetWorldIKTarget(null, null);
 
-                if (mpCyclops)
+                if (cyclopsMovementReplicator)
                 {
-                    mpCyclops.CurrentPlayer = null;
-                    mpCyclops.Exit();
+                    cyclopsMovementReplicator.Exit();
                 }
             }
 
@@ -284,7 +284,10 @@ public class RemotePlayer : INitroxPlayer
                 Detach();
                 ArmsController.SetWorldIKTarget(null, null);
 
-                Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
+                if (Vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
+                {
+                    vehicleMovementReplicator.Exit();
+                }
             }
 
             if (newVehicle)
@@ -296,17 +299,19 @@ public class RemotePlayer : INitroxPlayer
 
                 // From here, a basic issue can happen.
                 // When a vehicle is docked since we joined a game and another player undocks him before the local player does,
-                // no MultiplayerVehicleControl can be found on the vehicle because they are only created when receiving VehicleMovement packets
-                // Therefore we need to make sure that the MultiplayerVehicleControl component exists before using it
+                // no VehicleMovementReplicator can be found on the vehicle because they are only created when receiving SimulationOwnership packets
+                // Therefore we need to make sure that the VehicleMovementReplicator component exists before using it
                 switch (newVehicle)
                 {
                     case SeaMoth:
-                        newVehicle.gameObject.EnsureComponent<MultiplayerSeaMoth>().Enter();
+                        newVehicle.gameObject.EnsureComponent<SeamothMovementReplicator>().Enter(this);
                         break;
                     case Exosuit:
-                        newVehicle.gameObject.EnsureComponent<MultiplayerExosuit>().Enter();
+                        newVehicle.gameObject.EnsureComponent<ExosuitMovementReplicator>().Enter(this);
                         break;
                 }
+
+                AnimationController.UpdatePlayerAnimations = false;
             }
 
             bool isKinematic = newVehicle;

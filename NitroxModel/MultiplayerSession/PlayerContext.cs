@@ -14,8 +14,12 @@ public class PlayerContext
     public PlayerSettings PlayerSettings { get; }
     public bool IsMuted { get; set; }
     public NitroxGameMode GameMode { get; set; }
+    /// <summary>
+    /// Not null if the player is currently driving a vehicle.
+    /// </summary>
+    public NitroxId DrivingVehicle { get; set; }
 
-    public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted, NitroxGameMode gameMode)
+    public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted, NitroxGameMode gameMode, NitroxId drivingVehicle)
     {
         PlayerName = playerName;
         PlayerId = playerId;
@@ -24,10 +28,11 @@ public class PlayerContext
         PlayerSettings = playerSettings;
         IsMuted = isMuted;
         GameMode = gameMode;
+        DrivingVehicle = drivingVehicle;
     }
 
     public override string ToString()
     {
-        return $"[PlayerContext - PlayerName: {PlayerName}, PlayerId: {PlayerId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}]";
+        return $"[PlayerContext - PlayerName: {PlayerName}, PlayerId: {PlayerId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}, GameMode: {GameMode}, DrivingVehicle: {DrivingVehicle}]";
     }
 }

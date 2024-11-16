@@ -13,8 +13,8 @@ public sealed partial class Constructable_ProgressDeconstruction_Patch : NitroxP
 
     public static void Prefix(Constructable __instance)
     {
-        if (__instance.constructedAmount <= 0f &&
-            __instance.transform.parent && __instance.transform.parent.TryGetComponent(out NitroxCyclops nitroxCyclops))
+        if (__instance.constructedAmount <= 0f && __instance.transform.parent &&
+            __instance.transform.parent.TryGetComponent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Virtual)
         {
             nitroxCyclops.Virtual.UnregisterConstructable(__instance.gameObject);
         }

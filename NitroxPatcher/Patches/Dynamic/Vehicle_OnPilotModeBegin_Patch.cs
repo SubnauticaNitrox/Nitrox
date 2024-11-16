@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
@@ -10,6 +10,6 @@ public sealed partial class Vehicle_OnPilotModeBegin_Patch : NitroxPatch, IDynam
 
     public static void Prefix(Vehicle __instance)
     {
-        Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance, true);
+        Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance.gameObject, true);
     }
 }

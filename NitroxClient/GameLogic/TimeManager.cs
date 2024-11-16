@@ -111,10 +111,11 @@ public class TimeManager
 
         latestRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(packet.UpdateTime);
         latestRegisteredTime = packet.CurrentTime;
-        
+
+        // We don't want to have a big DeltaTime when processing a time skip so we calculate it beforehands
+        float deltaTimeBefore = DeltaTime;
         DayNightCycle.main.timePassedAsDouble = CalculateCurrentTime();
-        // We don't want to have a big DeltaTime when processing a time skip
-        DeltaTime = 0;
+        DeltaTime = deltaTimeBefore;
 
         DayNightCycle.main.StopSkipTimeMode();
     }
@@ -127,6 +128,11 @@ public class TimeManager
     {
         double currentTime = CurrentTime;
         DeltaTime = (float)(currentTime - DayNightCycle.main.timePassedAsDouble);
+        // DeltaTime = 0 might end up causing a divide by 0 => NaN in some scripts
+        if (DeltaTime == 0f)
+        {
+            DeltaTime = 0.00001f;
+        }
         return currentTime;
     }
 

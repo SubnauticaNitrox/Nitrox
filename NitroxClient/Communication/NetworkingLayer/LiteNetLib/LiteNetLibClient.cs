@@ -31,9 +31,11 @@ public class LiteNetLibClient : IClient
         listener.PeerDisconnectedEvent += Disconnected;
         listener.NetworkReceiveEvent += ReceivedNetworkData;
 
+
         client = new NetManager(listener)
         {
             UpdateTime = 15,
+            ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length,
 #if DEBUG
             DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
@@ -64,7 +66,7 @@ public class LiteNetLibClient : IClient
         dataWriter.Put(packetData);
 
         networkDebugger?.PacketSent(packet, dataWriter.Length);
-        client.SendToAll(dataWriter, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
+        client.SendToAll(dataWriter, (byte)packet.UdpChannel, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
     }
 
     public void Stop()
