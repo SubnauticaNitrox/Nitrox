@@ -31,7 +31,7 @@ namespace NitroxServer.Serialization.World
                     Seed = world.Seed
                 },
                 PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
-                GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetGlobalRootEntities(true)),
+                GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetPersistentGlobalRootEntities()),
                 EntityData = EntityData.From(world.EntityRegistry.GetAllEntities(true))
             };
         }

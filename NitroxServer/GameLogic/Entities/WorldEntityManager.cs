@@ -4,6 +4,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -65,6 +66,21 @@ public class WorldEntityManager
         {
             return new(globalRootEntitiesById.Values.OfType<T>());
         }
+    }
+
+    public List<GlobalRootEntity> GetPersistentGlobalRootEntities()
+    {
+        // TODO: refactor if there are more entities that should not be persisted
+        return GetGlobalRootEntities(true).Where(entity =>
+        {
+            if (entity.Metadata is CyclopsMetadata cyclopsMetadata)
+            {
+                // Do not save cyclops wrecks
+                return !cyclopsMetadata.IsDestroyed;
+            }
+
+            return true;
+        }).ToList();
     }
 
     public List<WorldEntity> GetEntities(AbsoluteEntityCell cell)
