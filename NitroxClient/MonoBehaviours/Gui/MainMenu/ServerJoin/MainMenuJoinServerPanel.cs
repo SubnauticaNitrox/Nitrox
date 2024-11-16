@@ -22,6 +22,7 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
     private GameObject playerSettingsPanel;
     private TextMeshProUGUI header;
     private uGUI_ColorPicker colorPicker;
+    private MainMenuColorPickerPreview colorPickerPreview;
     private Slider saturationSlider;
     private uGUI_InputField playerNameInputField;
 
@@ -73,6 +74,8 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         colorPicker.pointer.localScale = new Vector3(1f, 1.46f, 1);
         saturationSlider = colorPicker.saturationSlider;
         saturationSlider.transform.localPosition = new Vector3(197, 0, 0);
+        colorPickerPreview = colorPicker.gameObject.AddComponent<MainMenuColorPickerPreview>();
+        colorPickerPreview.Init(colorPicker);
 
         GameObject buttonLeft = Instantiate(newGameButtonRef, parent);
         buttonLeft.GetComponent<RectTransform>().sizeDelta = new Vector2(160, 45);
@@ -199,6 +202,10 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         if (selectedItem == selectableItems[1])
         {
             colorPicker.pointer.GetComponent<Image>().color = Color.cyan;
+            if (GameInput.GetPrimaryDevice() == GameInput.Device.Controller)
+            {
+                colorPickerPreview.OnPointerDown(null);
+            }
         }
         else if (selectedItem == selectableItems[3] || selectedItem == selectableItems[4])
         {
@@ -233,7 +240,14 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
         else if (selectedItem.TryGetComponent(out uGUI_ColorPicker selectedColorPicker))
         {
-            selectedColorPicker.pointer.GetComponent<Image>().color = Color.white;
+            Image colorPickerPointer = selectedColorPicker.pointer.GetComponent<Image>();
+
+            if (colorPickerPointer.color != Color.white &&
+                GameInput.GetPrimaryDevice() == GameInput.Device.Controller)
+            {
+                colorPickerPreview.OnPointerUp(null);
+            }
+            colorPickerPointer.color = Color.white;
         }
         else if (selectedItem.TryGetComponentInChildren(out uGUI_BasicColorSwap colorSwap))
         {
