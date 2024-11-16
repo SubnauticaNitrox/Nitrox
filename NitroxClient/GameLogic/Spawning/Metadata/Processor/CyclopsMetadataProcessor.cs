@@ -29,6 +29,7 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
             ChangeSonarMode(cyclops, metadata.SonarOn);
             SetEngineState(cyclops, metadata.EngineOn);
             SetHealth(cyclops, metadata.Health);
+            SetDestroyed(cyclops, metadata.IsDestroyed);
         }
     }
 
@@ -148,5 +149,18 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
     {
         LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>(true);
         liveMixinManager.SyncRemoteHealth(liveMixin, health);
+    }
+
+    private void SetDestroyed(GameObject gameObject, bool isDestroyed)
+    {
+        CyclopsDestructionEvent destructionEvent = gameObject.RequireComponentInChildren<CyclopsDestructionEvent>(true);
+        if (isDestroyed)
+        {
+            destructionEvent.DestroyCyclops();
+        }
+        else
+        {
+            destructionEvent.RestoreCyclops();
+        }
     }
 }
