@@ -26,15 +26,11 @@ public sealed class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch
         return __state;
     }
 
-    /// <remarks>
-    /// This must happen at postfix so that the SubRootChanged packet are sent before the destroyed vehicle one,
-    /// thus saving player entities from deletion.
-    /// </remarks>
     public static void PostfixDestroy(CyclopsDestructionEvent __instance, bool __state)
     {
         if (__state && __instance.TryGetIdOrWarn(out NitroxId id))
         {
-            Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
+            Resolve<Entities>().EntityMetadataChanged(__instance.gameObject, id);
         }
     }
 

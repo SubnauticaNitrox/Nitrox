@@ -33,12 +33,12 @@ public sealed partial class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPa
 
     public static void Postfix(bool __runOriginal, SubRoot __instance, DamageInfo damageInfo)
     {
-        // If we have lock on it, we'll notify the server that this cyclops must be destroyed
-        if (__runOriginal && __instance.live.health <= 0f &&
+        // If we have lock on it, we'll notify the server that this cyclops took damage
+        if (__runOriginal &&
             damageInfo.type != EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL &&
             __instance.TryGetIdOrWarn(out NitroxId id))
         {
-            Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
+            Resolve<Entities>().EntityMetadataChanged(__instance.gameObject, id);
         }
     }
 }
