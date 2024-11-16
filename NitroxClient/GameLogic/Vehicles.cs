@@ -4,6 +4,7 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -68,8 +69,10 @@ public class Vehicles
 
     public void BroadcastDestroyedCyclops(GameObject cyclops, NitroxId id)
     {
-        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(cyclops);
-        if (metadata.Value is CyclopsMetadata cyclopsMetadata)
+        CyclopsMetadataExtractor.CyclopsGameObject cyclopsGameObject = new() { GameObject = cyclops };
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(cyclopsGameObject);
+
+        if (metadata.HasValue && metadata.Value is CyclopsMetadata cyclopsMetadata)
         {
             cyclopsMetadata.IsDestroyed = true;
             entities.BroadcastMetadataUpdate(id, cyclopsMetadata);
