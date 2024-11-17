@@ -61,7 +61,9 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         inputField.AddComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = defaultLegend;
         playerNameInputField = inputField.GetComponent<uGUI_InputField>();
         ((TextMeshProUGUI)playerNameInputField.placeholder).text = Language.main.Get("Nitrox_EnterName");
-        playerNameInputField.textComponent.fontSizeMax = 15;
+        playerNameInputField.textComponent.fontSizeMin = 17;
+        playerNameInputField.textComponent.fontSizeMax = 21;
+        playerNameInputField.textComponent.GetComponent<RectTransform>().sizeDelta = new Vector2(-20, 42);
         playerNameInputField.characterLimit = 25; // See this.OnJoinClick()
         playerNameInputField.ActivateInputField();
 
