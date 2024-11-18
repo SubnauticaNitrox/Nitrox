@@ -35,19 +35,18 @@ public class EquippedItemInitialSyncProcessor : InitialSyncProcessor
 
         using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
         {
-            foreach (var pair in packet.EquippedItems)
+            foreach (KeyValuePair<string, NitroxId> equippedItem in packet.EquippedItems)
             {
-                string slot = pair.Key;
-                NitroxId id = pair.Value;
+                string slot = equippedItem.Key;
+                NitroxId id = equippedItem.Value;
 
                 waitScreenItem.SetProgress(totalEquippedItemsDone, packet.EquippedItems.Count);
 
                 GameObject gameObject = NitroxEntity.RequireObjectFrom(id);
-
                 Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-                GameObject owner = Player.main.gameObject;
 
-                Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
+                GameObject player = Player.mainObject;
+                Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(player);
 
                 if (opEquipment.HasValue)
                 {
@@ -60,7 +59,7 @@ public class EquippedItemInitialSyncProcessor : InitialSyncProcessor
                     itemsBySlot[slot] = inventoryItem;
 
                     equipment.UpdateCount(pickupable.GetTechType(), true);
-                    Equipment.SendEquipmentEvent(pickupable, 0, owner, slot);
+                    Equipment.SendEquipmentEvent(pickupable, 0, player, slot);
                     equipment.NotifyEquip(slot, inventoryItem);
                 }
                 else
