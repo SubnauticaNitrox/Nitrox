@@ -22,7 +22,7 @@ public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<Entity
     {
         if (!entityRegistry.TryGetEntityById(packet.Id, out Entity entity))
         {
-            Log.Error($"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
+            Log.Error($"Entity metadata {packet.NewValue.GetType()} updated on an entity unknown to the server {packet.Id}");
             return;
         }
 
