@@ -1,70 +1,76 @@
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using System.Linq;
 
-namespace NitroxServer.Communication.Packets.Processors
+namespace NitroxServer.Communication.Packets.Processors;
+
+public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
 {
-    public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
+    private readonly PlayerManager playerManager;
+    private readonly EntityRegistry entityRegistry;
+
+    public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
     {
-        private readonly PlayerManager playerManager;
-        private readonly EntityRegistry entityRegistry;
+        this.playerManager = playerManager;
+        this.entityRegistry = entityRegistry;
+    }
 
-        public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
+    public override void Process(EntityMetadataUpdate packet, Player sendingPlayer)
+    {
+        if (!entityRegistry.TryGetEntityById(packet.Id, out Entity entity))
         {
-            this.playerManager = playerManager;
-            this.entityRegistry = entityRegistry;
+            Log.Error($"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
+            return;
         }
 
-        public override void Process(EntityMetadataUpdate packet, Player sendingPlayer)
+        if (ProcessMetadata(sendingPlayer, entity, packet.NewValue))
         {
-            Optional<Entity> entity = entityRegistry.GetEntityById(packet.Id);
+            entity.Metadata = packet.NewValue;
+            SendUpdateToVisiblePlayers(packet, sendingPlayer, entity);
+        }
+    }
 
-            if (entity.HasValue)
-            {
-                entity.Value.Metadata = packet.NewValue;
-                SendUpdateToVisiblePlayers(packet, sendingPlayer, entity.Value);
+    private void SendUpdateToVisiblePlayers(EntityMetadataUpdate packet, Player sendingPlayer, Entity entity)
+    {
+        foreach (Player player in playerManager.GetConnectedPlayers())
+        {
+            bool updateVisibleToPlayer = player.CanSee(entity);
 
-                ProcessMetadata(entity.Value, packet.NewValue);
-            }
-            else
+            if (player != sendingPlayer && updateVisibleToPlayer)
             {
-                Log.Error($"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
+                player.SendPacket(packet);
             }
         }
+    }
 
-        private void SendUpdateToVisiblePlayers(EntityMetadataUpdate packet, Player sendingPlayer, Entity entity)
+    private bool ProcessMetadata(Player sendingPlayer, Entity entity, EntityMetadata metadata)
+    {
+        return metadata switch
         {
-            foreach (Player player in playerManager.GetConnectedPlayers())
-            {
-                bool updateVisibleToPlayer = player.CanSee(entity);
+            PlayerMetadata playerMetadata => ProcessPlayerMetadata(sendingPlayer, entity, playerMetadata),
 
-                if (player != sendingPlayer && updateVisibleToPlayer)
-                {
-                    player.SendPacket(packet);
-                }
+            // Allow metadata updates from any player by default
+            _ => true
+        };
+    }
+
+    private bool ProcessPlayerMetadata(Player sendingPlayer, Entity entity, PlayerMetadata metadata)
+    {
+        if (sendingPlayer.GameObjectId == entity.Id)
+        {
+            sendingPlayer.EquippedItems.Clear();
+            foreach (PlayerMetadata.EquippedItem item in metadata.EquippedItems)
+            {
+                sendingPlayer.EquippedItems.Add(item.Slot, item.Id);
             }
+
+            return true;
         }
 
-        // TODO: replace temporary code with a serious implementation
-        private void ProcessMetadata(Entity entity, EntityMetadata metadata)
-        {
-            if (metadata is PlayerMetadata playerMetadata)
-            {
-                Player player = playerManager.GetConnectedPlayers().Where(p => p.GameObjectId == entity.Id).FirstOrDefault();
-                if (player != null)
-                {
-                    player.EquippedItems.Clear();
-                    foreach (PlayerMetadata.EquippedItem item in playerMetadata.EquippedItems)
-                    {
-                        player.EquippedItems.Add(item.Slot, item.Id);
-                    }
-                }
-            }
-        }
+        Log.WarnOnce($"Player {sendingPlayer.Name} tried updating metadata of another player's entity {entity.Id}");
+        return false;
     }
 }
