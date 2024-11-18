@@ -154,6 +154,10 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
     private void SetDestroyed(GameObject gameObject, bool isDestroyed)
     {
         CyclopsDestructionEvent destructionEvent = gameObject.RequireComponentInChildren<CyclopsDestructionEvent>(true);
+
+        // Don't play VFX and SFX if the Cyclops is already destroyed or was spawned in as destroyed
+        if (destructionEvent.subRoot.subDestroyed == isDestroyed) return;
+
         if (isDestroyed)
         {
             destructionEvent.DestroyCyclops();
