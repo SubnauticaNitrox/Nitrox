@@ -160,7 +160,11 @@ public class CyclopsMetadataProcessor : EntityMetadataProcessor<CyclopsMetadata>
 
         if (isDestroyed)
         {
-            destructionEvent.DestroyCyclops();
+            // Use packet suppressor as sentinel so the patch callback knows not to spawn loot
+            using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
+            {
+                destructionEvent.DestroyCyclops();
+            }
         }
         else
         {

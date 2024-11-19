@@ -8,12 +8,11 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -28,14 +27,18 @@ public sealed partial class CyclopsDestructionEvent_SpawnLootAsync_Patch : Nitro
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        return instructions.InsertAfterMarker(PATTERN, "SpawnObject", [
-            new(OpCodes.Dup),
-            new(OpCodes.Ldloc_1),
-            new(OpCodes.Call, ((Action<GameObject, CyclopsDestructionEvent>)Callback).Method)
-        ]);
+        return new CodeMatcher(instructions)
+               .MatchStartForward(new CodeMatch(OpCodes.Switch))
+               .InsertAndAdvance(new CodeInstruction(OpCodes.Call, Reflect.Method(() => PrefixCallback(default))))
+               .InstructionEnumeration()
+               .InsertAfterMarker(PATTERN, "SpawnObject", [
+                    new(OpCodes.Dup),
+                    new(OpCodes.Ldloc_1),
+                    new(OpCodes.Call, ((Action<GameObject, CyclopsDestructionEvent>)SpawnObjectCallback).Method)
+                ]);
     }
 
-    public static void Callback(GameObject gameObject, CyclopsDestructionEvent __instance)
+    public static void SpawnObjectCallback(GameObject gameObject, CyclopsDestructionEvent __instance)
     {
         NitroxId lootId = NitroxEntity.GenerateNewId(gameObject);
 
@@ -45,5 +48,11 @@ public sealed partial class CyclopsDestructionEvent_SpawnLootAsync_Patch : Nitro
 
         WorldEntity lootEntity = new(gameObject.transform.ToWorldDto(), (int)largeWorldEntity.cellLevel, prefabIdentifier.classId, false, lootId, pickupable.GetTechType().ToDto(), null, null, []);
         Resolve<Entities>().BroadcastEntitySpawnedByClient(lootEntity);
+    }
+
+    public static int PrefixCallback(int originalIndex)
+    {
+        // Immediately return from iterator block if called from within CyclopsMetadataProcessor
+        return PacketSuppressor<EntitySpawnedByClient>.IsSuppressed ? int.MaxValue : originalIndex;
     }
 }
