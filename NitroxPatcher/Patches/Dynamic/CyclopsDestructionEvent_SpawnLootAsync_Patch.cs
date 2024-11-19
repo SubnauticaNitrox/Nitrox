@@ -1,23 +1,54 @@
-using System.Collections;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
+using HarmonyLib;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Helper;
+using NitroxPatcher.PatternMatching;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class CyclopsDestructionEvent_SpawnLootAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsDestructionEvent t) => t.SpawnLootAsync());
+    public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((CyclopsDestructionEvent t) => t.SpawnLootAsync()));
 
-    public static bool Prefix(ref IEnumerator __result)
+    public static readonly InstructionsPattern PATTERN = new()
     {
-        // TODO: sync loot spawned by Cyclops destruction
-        __result = EmptyEnumerator();
-        return false;
+        { Reflect.Method(() => UnityEngine.Object.Instantiate(default(GameObject), default(Vector3), default(Quaternion))), "SpawnObject" }
+    };
+
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    {
+        return instructions.InsertAfterMarker(PATTERN, "SpawnObject", [
+            new(OpCodes.Dup),
+            new(OpCodes.Ldloc_1),
+            new(OpCodes.Call, ((Action<GameObject, CyclopsDestructionEvent>)Callback).Method)
+        ]);
     }
 
-    private static IEnumerator EmptyEnumerator()
+    public static void Callback(GameObject gameObject, CyclopsDestructionEvent __instance)
     {
-        yield break;
+        NitroxEntity cyclopsEntity = __instance.GetComponent<NitroxEntity>();
+
+        if (Resolve<SimulationOwnership>().HasAnyLockType(cyclopsEntity.Id))
+        {
+            Log.Debug("Spawning Cyclops loot");
+
+            NitroxId lootId = NitroxEntity.GenerateNewId(gameObject);
+
+            LargeWorldEntity largeWorldEntity = gameObject.GetComponent<LargeWorldEntity>();
+            PrefabIdentifier prefabIdentifier = gameObject.GetComponent<PrefabIdentifier>();
+            Pickupable pickupable = gameObject.GetComponent<Pickupable>();
+
+            WorldEntity lootEntity = new(gameObject.transform.ToWorldDto(), (int)largeWorldEntity.cellLevel, prefabIdentifier.classId, false, lootId, pickupable.GetTechType().ToDto(), null, null, []);
+            Resolve<Entities>().BroadcastEntitySpawnedByClient(lootEntity);
+        }
     }
 }
