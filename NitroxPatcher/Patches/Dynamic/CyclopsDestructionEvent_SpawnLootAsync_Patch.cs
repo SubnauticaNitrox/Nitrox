@@ -6,13 +6,13 @@ using HarmonyLib;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
-using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -20,6 +20,7 @@ public sealed partial class CyclopsDestructionEvent_SpawnLootAsync_Patch : Nitro
 {
     public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((CyclopsDestructionEvent t) => t.SpawnLootAsync()));
 
+    // Matches twice, once for scrap metal and once for computer chips
     public static readonly InstructionsPattern PATTERN = new(expectedMatches: 2)
     {
         { Reflect.Method(() => UnityEngine.Object.Instantiate(default(GameObject), default(Vector3), default(Quaternion))), "SpawnObject" }

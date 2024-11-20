@@ -15,19 +15,18 @@ public sealed partial class SubRoot_SetCyclopsUpgrades_Patch : NitroxPatch, IDyn
 
     public static void Postfix(SubRoot __instance)
     {
-        if (__instance.upgradeConsole != null)
-        {
-            __instance.decoyTubeSizeIncreaseUpgrade = false;
+        if (__instance.upgradeConsole == null) return;
 
-            Equipment modules = __instance.upgradeConsole.modules;
-            foreach (string slot in SubRoot.slotNames)
+        __instance.decoyTubeSizeIncreaseUpgrade = false;
+
+        Equipment modules = __instance.upgradeConsole.modules;
+        foreach (string slot in SubRoot.slotNames)
+        {
+            TechType techTypeInSlot = modules.GetTechTypeInSlot(slot);
+            if (techTypeInSlot == TechType.CyclopsDecoyModule)
             {
-                TechType techTypeInSlot = modules.GetTechTypeInSlot(slot);
-                if (techTypeInSlot == TechType.CyclopsDecoyModule)
-                {
-                    __instance.decoyTubeSizeIncreaseUpgrade = true;
-                    break;
-                }
+                __instance.decoyTubeSizeIncreaseUpgrade = true;
+                break;
             }
         }
     }

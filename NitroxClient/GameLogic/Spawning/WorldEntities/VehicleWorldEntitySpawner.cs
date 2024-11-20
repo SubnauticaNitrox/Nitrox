@@ -3,10 +3,10 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
