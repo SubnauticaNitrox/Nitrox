@@ -151,7 +151,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
     private static void StartRemoteCinematic()
     {
-        if (partner != null) // Is null when RunCinematicSingleplayer() is called
+        if (IsPartnerValid()) // Is null when RunCinematicSingleplayer() is called
         {
             partner.PlayerModel.transform.localScale = new Vector3(-1, 1, 1);
             partner.ArmsController.enabled = false;
@@ -166,7 +166,7 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
 
     private static void EndRemoteCinematic()
     {
-        if (partner != null)
+        if (IsPartnerValid())
         {
             IntroCinematicUpdater introCinematicUpdater = partner.Body.GetComponent<IntroCinematicUpdater>();
             if (introCinematicUpdater)
@@ -183,5 +183,10 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         }
 
         Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
+    }
+
+    private static bool IsPartnerValid()
+    {
+        return partner != null && Resolve<PlayerManager>().Find(partner.PlayerId).HasValue;
     }
 }
