@@ -15,7 +15,10 @@ public sealed partial class SubRoot_SetCyclopsUpgrades_Patch : NitroxPatch, IDyn
 
     public static void Postfix(SubRoot __instance)
     {
-        if (__instance.upgradeConsole == null) return;
+        if (__instance.upgradeConsole == null)
+        {
+            return;
+        }
 
         __instance.decoyTubeSizeIncreaseUpgrade = false;
 
