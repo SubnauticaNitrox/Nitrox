@@ -36,7 +36,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
         {
             try
             {
-                nitroxChangelogs.AddRange(await Downloader.GetChangeLogs());
+                nitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync());
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
         try
         {
             Version currentVersion = NitroxEnvironment.Version;
-            Version latestVersion = await Downloader.GetNitroxLatestVersion();
+            Version latestVersion = await Downloader.GetNitroxLatestVersionAsync();
 
             newUpdateAvailable = latestVersion > currentVersion;
 #if DEBUG

@@ -22,9 +22,9 @@ public partial class Downloader
     public const string RELEASES_URL = "https://nitrox.rux.gg/api/version/releases";
 
     [GeneratedRegex(@"""version"":""([^""]*)""")]
-    private static partial Regex JsonVersionFieldRegex();
+    private static partial Regex JsonVersionFieldRegex { get; }
 
-    public static async Task<IList<NitroxBlog>> GetBlogs()
+    public static async Task<IList<NitroxBlog>> GetBlogsAsync()
     {
         IList<NitroxBlog> blogs = new List<NitroxBlog>();
 
@@ -35,7 +35,7 @@ public partial class Downloader
                                                                       (w, v) => w.Write(v),
                                                                       async () =>
                                                                       {
-                                                                          using HttpResponseMessage response = await GetResponseFromCache(BLOGS_URL);
+                                                                          using HttpResponseMessage response = await GetResponseFromCacheAsync(BLOGS_URL);
                                                                           return await response.Content.ReadAsStringAsync();
                                                                       });
 
@@ -68,7 +68,7 @@ public partial class Downloader
                                                                      },
                                                                      async () =>
                                                                      {
-                                                                         HttpResponseMessage imageResponse = await GetResponseFromCache(imageUrl);
+                                                                         HttpResponseMessage imageResponse = await GetResponseFromCacheAsync(imageUrl);
                                                                          return await imageResponse.Content.ReadAsByteArrayAsync();
                                                                      });
                 using MemoryStream imageMemoryStream = new(imageData);
@@ -86,7 +86,7 @@ public partial class Downloader
         return blogs;
     }
 
-    public static async Task<IList<NitroxChangelog>> GetChangeLogs()
+    public static async Task<IList<NitroxChangelog>> GetChangeLogsAsync()
     {
         IList<NitroxChangelog> changelogs = new List<NitroxChangelog>();
 
@@ -98,7 +98,7 @@ public partial class Downloader
                                                                   (w, v) => w.Write(v),
                                                                   async () =>
                                                                   {
-                                                                      using HttpResponseMessage response = await GetResponseFromCache(CHANGELOGS_URL);
+                                                                      using HttpResponseMessage response = await GetResponseFromCacheAsync(CHANGELOGS_URL);
                                                                       return await response.Content.ReadAsStringAsync();
                                                                   });
             StringBuilder builder = new();
@@ -142,7 +142,7 @@ public partial class Downloader
         return changelogs;
     }
 
-    public static async Task<Version> GetNitroxLatestVersion()
+    public static async Task<Version> GetNitroxLatestVersionAsync()
     {
         try
         {
@@ -151,11 +151,11 @@ public partial class Downloader
                                                                   (w, v) => w.Write(v),
                                                                   async () =>
                                                                   {
-                                                                      using HttpResponseMessage response = await GetResponseFromCache(LATEST_VERSION_URL);
+                                                                      using HttpResponseMessage response = await GetResponseFromCacheAsync(LATEST_VERSION_URL);
                                                                       return await response.Content.ReadAsStringAsync();
                                                                   });
 
-            Match match = JsonVersionFieldRegex().Match(jsonString);
+            Match match = JsonVersionFieldRegex.Match(jsonString);
             if (match.Success && match.Groups.Count > 1)
             {
                 return new Version(match.Groups[1].Value);
@@ -171,7 +171,7 @@ public partial class Downloader
         return new Version();
     }
 
-    private static async Task<HttpResponseMessage> GetResponseFromCache(string url)
+    private static async Task<HttpResponseMessage> GetResponseFromCacheAsync(string url)
     {
         Log.Info($"Trying to request data from {url}");
 

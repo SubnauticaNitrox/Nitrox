@@ -10,7 +10,7 @@ namespace Nitrox.Launcher.Models.Converters;
 public partial class IntToStringConverter : Converter<IntToStringConverter>
 {
     [GeneratedRegex("[^0-9]")]
-    private static partial Regex DigitReplaceRegex();
+    private static partial Regex DigitReplaceRegex { get; }
 
     public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -33,7 +33,7 @@ public partial class IntToStringConverter : Converter<IntToStringConverter>
             }
         }
 
-        str = DigitReplaceRegex().Replace(str, "");
+        str = DigitReplaceRegex.Replace(str, "");
         if (int.TryParse(str, out int result))
         {
             return result;

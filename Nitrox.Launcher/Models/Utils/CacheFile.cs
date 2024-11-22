@@ -55,7 +55,7 @@ public class CacheFile
             return newValue;
         }
 
-        using ValueReader valueReader = new(await file.GetStream());
+        using ValueReader valueReader = new(file.GetStream());
         T readerResult = reader(valueReader);
         if (valueReader.ReachedEarlyEnd)
         {
@@ -64,11 +64,11 @@ public class CacheFile
         return readerResult;
     }
 
-    private Task<BinaryReader> GetStream()
+    private BinaryReader GetStream()
     {
         BinaryReader reader = new(File.OpenRead(TempFilePath));
-        reader.ReadInt64();
-        return Task.FromResult(reader);
+        reader.ReadInt64(); // file creation in unix time
+        return reader;
     }
 
     public class ValueReader : IDisposable

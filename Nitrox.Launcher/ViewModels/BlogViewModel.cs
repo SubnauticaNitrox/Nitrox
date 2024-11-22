@@ -16,7 +16,7 @@ namespace Nitrox.Launcher.ViewModels;
 
 public partial class BlogViewModel : RoutableViewModelBase
 {
-    public Bitmap FallbackImage { get; set; } = BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/blog/vines.png");
+    public static Bitmap FallbackImage { get; } = BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/blog/vines.png");
 
     [ObservableProperty]
     private AvaloniaList<NitroxBlog> nitroxBlogs = [];
@@ -29,7 +29,7 @@ public partial class BlogViewModel : RoutableViewModelBase
             try
             {
                 nitroxBlogs.Clear();
-                nitroxBlogs.AddRange(await Downloader.GetBlogs());
+                nitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
             }
             catch (Exception ex)
             {
