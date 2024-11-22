@@ -28,7 +28,10 @@ public class CyclopsMetadataExtractor : EntityMetadataExtractor<CyclopsGameObjec
         LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>();
         float health = liveMixin.health;
 
-        return new(silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health);
+        SubRoot subRoot = gameObject.RequireComponentInChildren<SubRoot>();
+        bool isDestroyed = subRoot.subDestroyed || health <= 0f;
+
+        return new(silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health, isDestroyed);
     }
 
     public struct CyclopsGameObject

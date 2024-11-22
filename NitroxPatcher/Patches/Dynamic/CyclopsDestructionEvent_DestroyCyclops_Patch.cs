@@ -8,7 +8,7 @@ using NitroxModel.Helper;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Broadcasts the cyclops destruction by calling <see cref="LiveMixin.Kill"/>, and safely remove every player from it.
+/// Broadcasts the cyclops destruction, and safely removes every player from it.
 /// </summary>
 public sealed partial class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynamicPatch
 {
@@ -37,5 +37,13 @@ public sealed partial class CyclopsDestructionEvent_DestroyCyclops_Patch : Nitro
         }
 
         __instance.subLiveMixin.Kill();
+    }
+
+    public static void Postfix(CyclopsDestructionEvent __instance)
+    {
+        if (__instance.TryGetNitroxId(out NitroxId nitroxId))
+        {
+            Resolve<Vehicles>().BroadcastDestroyedCyclops(__instance.gameObject, nitroxId);
+        }
     }
 }

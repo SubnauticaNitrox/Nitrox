@@ -3,6 +3,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.CinematicController;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
@@ -98,6 +99,14 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         Vehicles.RemoveNitroxEntitiesTagging(gameObject);
 
         NitroxEntity.SetNewId(gameObject, vehicleEntity.Id);
+
+        if (vehicleEntity.Metadata is CyclopsMetadata cyclopsMetadata && cyclopsMetadata.IsDestroyed)
+        {
+            // Swap to destroyed look without triggering animations / effects
+            gameObject.BroadcastMessage("SwapToDamagedModels");
+            gameObject.BroadcastMessage("OnKill");
+            gameObject.BroadcastMessage("CyclopsDeathEvent", SendMessageOptions.DontRequireReceiver);
+        }
 
         if (parent.HasValue)
         {
