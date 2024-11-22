@@ -10,9 +10,6 @@ namespace NitroxModel.Platforms.Store;
 
 public sealed class MSStore : IGamePlatform
 {
-    private static MSStore instance;
-    public static MSStore Instance => instance ??= new MSStore();
-
     public string Name => "Microsoft Store";
     public Platform Platform => Platform.MICROSOFT;
 

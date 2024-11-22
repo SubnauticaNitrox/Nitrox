@@ -17,8 +17,6 @@ namespace NitroxModel.Platforms.Store;
 
 public sealed class Steam : IGamePlatform
 {
-    private static Steam instance;
-    public static Steam Instance => instance ??= new Steam();
     public string Name => nameof(Steam);
     public Platform Platform => Platform.STEAM;
     
@@ -55,13 +53,20 @@ public sealed class Steam : IGamePlatform
             return null;
         }
 
+        string launchExe = exe;
+        string launchArgs = "-silent"; // Don't show Steam window
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            launchExe = "/bin/sh";
+            launchArgs = $@"-c ""nohup '{exe}' {launchArgs}"" &";
+        }
         Process process = Process.Start(new ProcessStartInfo
         {
             WorkingDirectory = Path.GetDirectoryName(exe) ?? Directory.GetCurrentDirectory(),
-            FileName = exe,
+            FileName = launchExe,
             WindowStyle = ProcessWindowStyle.Minimized,
             UseShellExecute = true,
-            Arguments = "-silent" // Don't show Steam window
+            Arguments = launchArgs
         });
 
         if (process is not { HasExited: false })
@@ -113,6 +118,27 @@ public sealed class Steam : IGamePlatform
         {
             exe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx");
         }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            string userHomePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrWhiteSpace(userHomePath))
+            {
+                userHomePath = Environment.GetEnvironmentVariable("HOME");
+            }
+            if (!Directory.Exists(userHomePath))
+            {
+                return null;
+            }
+            
+            string steamPath = Path.Combine(userHomePath, ".steam", "steam");
+            // support flatpak
+            if (!Directory.Exists(steamPath))
+            {
+                steamPath = Path.Combine(userHomePath, ".var", "app", "com.valvesoftware.Steam", "data", "Steam");
+            }
+
+            exe = Path.Combine(steamPath, "steam.sh");
+        }
 
         return File.Exists(exe) ? Path.GetFullPath(exe) : null;
     }
@@ -124,12 +150,12 @@ public sealed class Steam : IGamePlatform
             using ProcessEx steam = await StartPlatformAsync();
             if (steam == null)
             {
-                throw new PlatformException(Instance, "Steam is not running and could not be found.");
+                throw new PlatformException(this, "Steam is not running and could not be found.");
             }
         }
         catch (OperationCanceledException ex)
         {
-            throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+            throw new PlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -144,7 +170,8 @@ public sealed class Steam : IGamePlatform
         
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return StartGameWithProton(pathToGameExe, steamAppId, launchArguments);
+            string steamPath = Path.GetDirectoryName(GetExeFile());
+            return StartGameWithProton(steamPath, pathToGameExe, steamAppId, launchArguments);
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -157,10 +184,10 @@ public sealed class Steam : IGamePlatform
             );
         }
         
-        throw new PlatformException(Instance, "Platform is not supported.");
+        throw new PlatformException(this, "Platform is not supported.");
     }
 
-    private static ProcessEx StartGameWithProton(string pathToGameExe, int steamAppId, string launchArguments)
+    private static ProcessEx StartGameWithProton(string steamPath, string pathToGameExe, int steamAppId, string launchArguments)
     {
         // function to get library path for given game id
         static string GetLibraryPath(string steamPath, string gameId)
@@ -234,24 +261,15 @@ public sealed class Steam : IGamePlatform
                     }
                 }
 
-                return "Proton version not found for the given appId";
+                return null;
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                Log.Debug(ex);
+                return null;
             }
         }
-
-        string userHomePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        if (string.IsNullOrWhiteSpace(userHomePath))
-        {
-            userHomePath = Environment.GetEnvironmentVariable("HOME");
-        }
-        if (!Directory.Exists(userHomePath))
-        {
-            throw new Exception("User HOME is not known");
-        }
-
+        
         string compatdataPath = "";
         if (!string.IsNullOrEmpty(pathToGameExe))
         {
@@ -263,31 +281,20 @@ public sealed class Steam : IGamePlatform
                 compatdataPath = Path.Combine(steamAppsPath, "compatdata", steamAppId.ToString());
             }
         }
-        string steamPath = Path.Combine(userHomePath, ".steam/steam");
-        string geProtonPath = Path.Combine(userHomePath, ".steam/root/compatibilitytools.d/");
-        // support flatpak
-        if (!Directory.Exists(steamPath))
-        {
-            steamPath = Path.Combine(userHomePath, ".var/app/com.valvesoftware.Steam/data/Steam/");
-            geProtonPath = Path.Combine(userHomePath, ".var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/");
-        }
 
         string sniperappid = "1628350";
         string sniperruntimepath = Path.Combine(GetLibraryPath(steamPath, sniperappid), "steamapps", "common", "SteamLinuxRuntime_sniper");
 
-        string protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString());
-        if (protonVersion == "Proton version not found for the given appId")
-        {
-            protonVersion = "proton_9";
-        }
         string protonDir = null;
+        string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
+        string protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString()) ?? "proton_9";
         bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
         if (isValveProton)
         {
             int index = protonVersion.IndexOf("proton_", StringComparison.OrdinalIgnoreCase);
             if (index != -1)
             {
-                protonVersion = protonVersion.Substring(index + "proton_".Length);
+                protonVersion = protonVersion[(index + "proton_".Length)..];
             }
             if (protonVersion == "experimental")
             {
@@ -312,7 +319,7 @@ public sealed class Steam : IGamePlatform
         }
         else
         {
-            protonDir = Path.Combine(geProtonPath, protonVersion);
+            protonDir = Path.Combine(protonRoot, protonVersion);
         }
         if (protonDir == null)
         {
@@ -336,23 +343,21 @@ public sealed class Steam : IGamePlatform
                 ["STEAM_COMPAT_DATA_PATH"] = compatdataPath,
             }
         };
-        
         return new ProcessEx(Process.Start(startInfo));
     }
 
     private static DateTime GetSteamConsoleLogLastWrite(string exePath)
     {
-        string path;
-        
+        string logPath;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs", "console_log.txt");
+            logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs", "console_log.txt");
         }
         else
         {
-            path = Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt");
+            logPath = Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt");
         }
 
-        return File.GetLastWriteTime(path);
+        return File.GetLastWriteTime(logPath);
     }
 }
