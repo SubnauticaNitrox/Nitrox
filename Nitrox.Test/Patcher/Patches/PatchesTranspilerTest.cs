@@ -34,6 +34,7 @@ public class PatchesTranspilerTest
         [typeof(EnergyMixin_SpawnDefaultAsync_Patch), -64],
         [typeof(EntityCell_SleepAsync_Patch), 2],
         [typeof(Equipment_RemoveItem_Patch), 7],
+        [typeof(EscapePod_Start_Patch), 43],
         [typeof(FireExtinguisherHolder_TakeTankAsync_Patch), 2],
         [typeof(FireExtinguisherHolder_TryStoreTank_Patch), 3],
         [typeof(Flare_Update_Patch), 0],
@@ -58,6 +59,7 @@ public class PatchesTranspilerTest
         [typeof(uGUI_PDA_Initialize_Patch), 2],
         [typeof(uGUI_PDA_SetTabs_Patch), 3],
         [typeof(uGUI_Pings_IsVisibleNow_Patch), 0],
+        [typeof(uGUI_SceneIntro_IntroSequence_Patch), 8],
         [typeof(uSkyManager_SetVaryingMaterialProperties_Patch), 0],
         [typeof(Welder_Weld_Patch), 1],
     ];
@@ -109,7 +111,7 @@ public class PatchesTranspilerTest
             }
             else if (parameterInfo.ParameterType == typeof(ILGenerator))
             {
-                injectionParameters.Add(targetMethod.GetILGenerator());
+                injectionParameters.Add(GetILGenerator(targetMethod, patchClassType));
             }
             else
             {
@@ -125,6 +127,25 @@ public class PatchesTranspilerTest
 
         originalIlCopy.Count.Should().Be(transformedIl.Count - ilDifference);
         Assert.IsFalse(originalIlCopy.SequenceEqual(transformedIl, new CodeInstructionComparer()), $"The transpiler patch of {patchClassType.Name} did not change the IL");
+    }
+
+    private static readonly ModuleBuilder patchTestModule;
+
+    static PatchesTranspilerTest()
+    {
+        AssemblyName asmName = new();
+        asmName.Name = "PatchTestAssembly";
+
+        AssemblyBuilder myAsmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave);
+        patchTestModule = myAsmBuilder.DefineDynamicModule( asmName.Name, $"{asmName.Name}.dll", true);
+    }
+
+    /// This complicated generation is required for ILGenerator.DeclareLocal to work
+    private static ILGenerator GetILGenerator(MethodInfo method, Type generatingType)
+    {
+        TypeBuilder myTypeBld = patchTestModule.DefineType($"{generatingType}_PatchTestType", TypeAttributes.Public);
+
+        return myTypeBld.DefineMethod(method.Name, MethodAttributes.Public,  method.ReturnType, method.GetParameters().Types()).GetILGenerator();
     }
 }
 

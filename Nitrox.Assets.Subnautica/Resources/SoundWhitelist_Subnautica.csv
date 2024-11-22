@@ -678,7 +678,7 @@ event:/sub/seamoth/crush_depth_warning;false;false;0
 event:/sub/seamoth/depth_update;false;false;0
 event:/sub/seamoth/dock;false;false;0
 event:/sub/seamoth/dock_seamoth_cyclops;false;false;0
-event:/sub/seamoth/enter_seamoth;false;false;0
+event:/sub/seamoth/enter_seamoth;false;false;50
 event:/sub/seamoth/impact_solid_hard;false;false;0
 event:/sub/seamoth/impact_solid_medium;false;false;0
 event:/sub/seamoth/impact_solid_soft;false;false;0

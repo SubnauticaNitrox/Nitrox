@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
@@ -31,6 +31,7 @@ public class LiteNetLibServer : NitroxServer
         listener.NetworkReceiveEvent += NetworkDataReceived;
         listener.ConnectionRequestEvent += OnConnectionRequest;
 
+        server.ChannelsCount = (byte)typeof(Packet.UdpChannelId).GetEnumValues().Length;
         server.BroadcastReceiveEnabled = true;
         server.UnconnectedMessagesEnabled = true;
         server.UpdateTime = 15;

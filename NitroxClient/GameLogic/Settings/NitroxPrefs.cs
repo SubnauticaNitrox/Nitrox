@@ -11,6 +11,14 @@ namespace NitroxClient.GameLogic.Settings
         public static readonly NitroxPref<bool> ChatUsed = new("Nitrox.chatUsed");
         public static readonly NitroxPref<bool> SafeBuilding = new("Nitrox.safeBuilding", true);
         public static readonly NitroxPref<bool> SafeBuildingLog = new("Nitrox.safeBuildingLog", true);
+        /// <summary>
+        /// In seconds. <see cref="MonoBehaviours.Vehicles.MovementReplicator"/>
+        /// </summary>
+        public static readonly NitroxPref<float> LatencyUpdatePeriod = new("Nitrox.latencyUpdatePeriod", 10);
+        /// <summary>
+        /// In milliseconds. <see cref="MonoBehaviours.Vehicles.MovementReplicator"/>
+        /// </summary>
+        public static readonly NitroxPref<float> SafetyLatencyMargin = new("Nitrox.safetyLatencyMargin", 0.05f);
     }
 
     public abstract class NitroxPref { }

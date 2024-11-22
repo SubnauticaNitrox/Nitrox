@@ -1,5 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using UnityEngine;
 
@@ -20,6 +22,22 @@ public class NitroxEntityDrawer : IDrawer<NitroxEntity>, IDrawer<NitroxId>
             GUILayout.Label("GameObject with IDs", GUILayout.Width(LABEL_WIDTH));
             NitroxGUILayout.Separator();
             GUILayout.TextField(NitroxEntity.GetGameObjects().Count().ToString());
+        }
+
+        GUILayout.Space(8);
+
+        using (new GUILayout.HorizontalScope())
+        {
+            GUILayout.Label("Simulating state", GUILayout.Width(LABEL_WIDTH));
+            NitroxGUILayout.Separator();
+            if (NitroxServiceLocator.Cache<SimulationOwnership>.Value.TryGetLockType(nitroxEntity.Id, out SimulationLockType simulationLockType))
+            {
+                GUILayout.TextField(simulationLockType.ToString());
+            }
+            else
+            {
+                GUILayout.TextField("NONE");
+            }
         }
     }
 

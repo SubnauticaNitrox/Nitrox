@@ -1,3 +1,4 @@
+#if DEBUG
 using System.Reflection;
 using NitroxModel.Helper;
 
@@ -12,3 +13,4 @@ public partial class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IPe
         __result = false;
     }
 }
+#endif
