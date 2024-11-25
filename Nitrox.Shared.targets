@@ -20,7 +20,7 @@
     <PropertyGroup>
         <CreateAppBundle Condition="'$(CreateAppBundle)' == ''">false</CreateAppBundle>
         <AppBundleName Condition="'$(AppBundleName)' == ''">Nitrox.app</AppBundleName>
-        <PlatformFolder Condition="'$(PlatformFolder)' == ''" />
+        <MacOSAssetsPath Condition="'$(MacOSAssetsPath)' == ''" />
     </PropertyGroup>
 
     <!-- Common targets -->
@@ -49,7 +49,7 @@
     <!-- MacOS specific properties -->
     <PropertyGroup Condition="$(_IsMacOSTarget)">
         <UseAppHost>true</UseAppHost>
-        <PlatformFolder>$(MSBuildProjectDirectory)\Platforms\MacOS</PlatformFolder>
+        <MacOSAssetsPath>$(MSBuildProjectDirectory)\Assets\MacOS</MacOSAssetsPath>
     </PropertyGroup>
 
     <!-- *************** BUILD *************** -->
@@ -124,8 +124,8 @@
                Text="AppBundleName cannot be null or empty, project must specify it in order to produce a bundle" />
 
         <Error Code="NX-202"
-               Condition="!Exists($(PlatformFolder))"
-               Text="Folder '$(PlatformFolder)' must exist in the project, in order to produce a MacOS bundle" />
+               Condition="!Exists($(MacOSAssetsPath))"
+               Text="Folder '$(MacOSAssetsPath)' must exist in the project, in order to produce a MacOS bundle" />
     </Target>
 
     <Target Name="_CreateMacOSAppBundle" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_VerifyMacOSFilesTaskName)">
@@ -146,7 +146,7 @@
         <ItemGroup>
             <_AllFiles Include="$(TargetDir)\**\*" Exclude="$(_ZipFilePath);$(_AppBundleDir)\**\*" />
             <_BundleFolders Include="$(_ContentDir);$(_MacOSDir);$(_ResourcesDir)" />
-            <_PlatformFiles Include="$(PlatformFolder)\**\*" />
+            <_PlatformFiles Include="$(MacOSAssetsPath)\**\*" />
         </ItemGroup>
         
         <!-- Create the whole OSX bundle tree -->
