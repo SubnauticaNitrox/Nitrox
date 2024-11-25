@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
-using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
 using ProtoBufNet;
@@ -74,28 +73,27 @@ namespace NitroxServer.Serialization
          */
         private void ParseCacheCells(NitroxInt3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
         {
-            using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+            CellsFileHeader cellsFileHeader = serializer.Deserialize<CellsFileHeader>(stream);
+
+            for (int cellCounter = 0; cellCounter < cellsFileHeader.NumCells; cellCounter++)
             {
-                CellsFileHeader cellsFileHeader = serializer.Deserialize<CellsFileHeader>(stream);
+                CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
 
-                for (int cellCounter = 0; cellCounter < cellsFileHeader.NumCells; cellCounter++)
+                byte[] serialData = new byte[cellHeader.DataLength];
+                stream.ReadStreamExactly(serialData, serialData.Length);
+                ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out bool wasLegacy);
+
+                if (!wasLegacy)
                 {
-                    CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
+                    byte[] legacyData = new byte[cellHeader.LegacyDataLength];
+                    stream.ReadStreamExactly(legacyData, legacyData.Length);
+                    ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out _);
 
-                    byte[] serialData = new byte[cellHeader.DataLength];
-                    stream.Read(serialData, 0, cellHeader.DataLength);
-                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out bool wasLegacy);
-
-                    if (!wasLegacy)
-                    {
-                        byte[] legacyData = new byte[cellHeader.LegacyDataLength];
-                        stream.Read(legacyData, 0, cellHeader.LegacyDataLength);
-                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out _);
-
-                        byte[] waiterData = new byte[cellHeader.WaiterDataLength];
-                        stream.Read(waiterData, 0, cellHeader.WaiterDataLength);
-                        ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.CellId, cellHeader.Level, spawnPoints);
-                    }
+                    byte[] waiterData = new byte[cellHeader.WaiterDataLength];
+                    stream.ReadStreamExactly(waiterData, waiterData.Length);
+                    ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.CellId, cellHeader.Level, spawnPoints);
                 }
             }
         }
@@ -109,8 +107,7 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            Stream stream = new MemoryStream(data);
-
+            using Stream stream = new MemoryStream(data);
             StreamHeader header = serializer.Deserialize<StreamHeader>(stream);
 
             if (ReferenceEquals(header, null))
@@ -120,9 +117,7 @@ namespace NitroxServer.Serialization
 
             ParseGameObjectsFromStream(stream, batchId, cellId, level, spawnPoints);
 
-            wasLegacy = (header.Version < 9);
-
-            return;
+            wasLegacy = header.Version < 9;
         }
 
         private void ParseGameObjectsFromStream(Stream stream, NitroxInt3 batchId, NitroxInt3 cellId, int level, List<EntitySpawnPoint> spawnPoints)
