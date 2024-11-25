@@ -7,7 +7,7 @@
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" d:DataContext="{x:Static design:DesignData.MainWindowViewModel}"
-        x:Class="Nitrox.Launcher.MainWindow"
+        x:Class="Nitrox.Launcher.Views.MainWindow"
         Title="Nitrox Launcher"
         Width="1200" Height="720"
         MinWidth="800" MinHeight="600"

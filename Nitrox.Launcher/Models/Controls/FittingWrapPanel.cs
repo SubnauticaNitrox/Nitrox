@@ -4,7 +4,7 @@ using Avalonia.Input;
 using Avalonia.Utilities;
 using static System.Math;
 
-namespace Nitrox.Launcher.UI.Controls;
+namespace Nitrox.Launcher.Models.UI.Controls;
 
 /// <summary>
 ///     Panel that arranges stretchable child controls to fit min width, up to the limit of <see cref="MinItemWidth" />.

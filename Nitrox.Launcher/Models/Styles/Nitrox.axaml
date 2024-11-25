@@ -197,15 +197,15 @@
         </Style>
     </Style>
 
-    <StyleInclude Source="/UI/Styles/Theme/ValidationErrorsStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/TextBoxStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/TextBlockStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/ToolTipStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/ButtonStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/ComboBoxStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/CheckBoxStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/RadioButtonGroupStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/RadioButtonStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/ScrollViewerStyle.axaml" />
-    <StyleInclude Source="/UI/Styles/Theme/ExpanderStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ValidationErrorsStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/TextBoxStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/TextBlockStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ToolTipStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ButtonStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ComboBoxStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/CheckBoxStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/RadioButtonGroupStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/RadioButtonStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ScrollViewerStyle.axaml" />
+    <StyleInclude Source="/Models/Styles/Theme/ExpanderStyle.axaml" />
 </Styles>

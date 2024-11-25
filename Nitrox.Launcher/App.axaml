@@ -4,12 +4,12 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <MergeResourceInclude Source="/UI/Styles/Palette/Nitrox.axaml"/>
+                <MergeResourceInclude Source="/Models/Styles/Palette/Nitrox.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="/UI/Styles/Nitrox.axaml"/>
+        <StyleInclude Source="/Models/Styles/Nitrox.axaml"/>
     </Application.Styles>
 </Application>

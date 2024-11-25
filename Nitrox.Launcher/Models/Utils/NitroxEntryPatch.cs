@@ -5,10 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
-using NitroxModel;
 using NitroxModel.Platforms.OS.Shared;
 
-namespace Nitrox.Launcher.Models.Patching;
+namespace Nitrox.Launcher.Models.Utils;
 
 public static class NitroxEntryPatch
 {

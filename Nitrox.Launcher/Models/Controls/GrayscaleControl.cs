@@ -1,4 +1,5 @@
-﻿using System;
+extern alias JB;
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -7,52 +8,46 @@ using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using SkiaSharp;
 
-namespace Nitrox.Launcher.UI.Controls;
+namespace Nitrox.Launcher.Models.UI.Controls;
 
 /// <summary>
-///     Draws a blur filter over the already rendered content.
+/// Draws a grayscale filter over the already rendered content.
 /// </summary>
 /// <remarks>
-///     Based off of GrayscaleControl
+/// Code from:<br/>
+///  - Draw-on-top logic: https://gist.github.com/kekekeks/ac06098a74fe87d49a9ff9ea37fa67bc <br/>
+///  - Grayscale logic: https://learn.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/effects/color-filters <br/>
 /// </remarks>
-public sealed class BlurControl : Decorator
+public class GrayscaleControl : Decorator
 {
-    public static readonly StyledProperty<float> BlurStrengthProperty =
-        AvaloniaProperty.Register<BlurControl, float>(nameof(BlurStrength), 5);
-
-    /// <summary>
-    ///     Sets or gets how strong the blur should be. Defaults to 5.
-    /// </summary>
-    public float BlurStrength
+    static GrayscaleControl()
     {
-        get => GetValue(BlurStrengthProperty);
-        set => SetValue(BlurStrengthProperty, value);
-    }
-
-    static BlurControl()
-    {
-        ClipToBoundsProperty.OverrideDefaultValue<BlurControl>(true);
-        AffectsRender<BlurControl>(OpacityProperty);
-        AffectsRender<BlurControl>(BlurStrengthProperty);
+        AffectsRender<GrayscaleControl>(OpacityProperty);
     }
 
     public override void Render(DrawingContext context)
     {
-        context.Custom(new BlurBehindRenderOperation((byte)Math.Round(byte.MaxValue * Opacity), BlurStrength, new Rect(default, Bounds.Size)));
+        context.Custom(new GrayscaleBehindRenderOperation((byte)Math.Round(byte.MaxValue * Opacity), new Rect(default, Bounds.Size)));
     }
 
-    private sealed record BlurBehindRenderOperation : ICustomDrawOperation
+    private class GrayscaleBehindRenderOperation : ICustomDrawOperation
     {
-        private readonly Rect bounds;
+        private static readonly float[] grayscaleColorFilterMatrix =
+        {
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0.21f, 0.72f, 0.07f, 0, 0,
+            0, 0, 0, 1, 0
+        };
+
         private readonly byte opacity;
-        private readonly float strength;
+        private readonly Rect bounds;
 
         public Rect Bounds => bounds;
 
-        public BlurBehindRenderOperation(byte opacity, float strength, Rect bounds)
+        public GrayscaleBehindRenderOperation(byte opacity, Rect bounds)
         {
             this.opacity = opacity;
-            this.strength = strength;
             this.bounds = bounds;
         }
 
@@ -81,16 +76,18 @@ public sealed class BlurControl : Decorator
 
             using SKImage backgroundSnapshot = skia.SkSurface.Snapshot();
             using SKShader backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, currentInvertedTransform);
-            using SKImageFilter blurFilter = SKImageFilter.CreateBlur(strength, strength);
+            using SKImageFilter grayscaleFilter = SKImageFilter.CreateColorFilter(CreateGrayscaleColorFilter());
             using SKPaint paint = new()
             {
                 Shader = backdropShader,
-                ImageFilter = blurFilter,
+                ImageFilter = grayscaleFilter,
                 Color = new SKColor(0, 0, 0, opacity)
             };
             skia.SkCanvas.DrawRect(0, 0, (float)bounds.Width, (float)bounds.Height, paint);
         }
 
-        public bool Equals(ICustomDrawOperation other) => Equals(other as BlurBehindRenderOperation);
+        public bool Equals(ICustomDrawOperation other) => other is GrayscaleBehindRenderOperation op && op.bounds == bounds;
+
+        private static SKColorFilter CreateGrayscaleColorFilter() => SKColorFilter.CreateColorMatrix(grayscaleColorFilterMatrix);
     }
 }

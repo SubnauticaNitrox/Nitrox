@@ -45,6 +45,29 @@
         <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <UpToDateCheckInput Remove="UI\Styles\Nitrox.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Palette\Nitrox.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\ButtonStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\CheckBoxStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\ComboBoxStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\ExpanderStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\RadioButtonGroupStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\RadioButtonStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\ScrollViewerStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\TextBlockStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\TextBoxStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\ToolTipStyle.axaml" />
+      <UpToDateCheckInput Remove="UI\Styles\Theme\ValidationErrorsStyle.axaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
     <Import Project="..\Nitrox.Shared.targets" />
 
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">

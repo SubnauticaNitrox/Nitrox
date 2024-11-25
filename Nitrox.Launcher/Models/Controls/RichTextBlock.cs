@@ -6,7 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 
-namespace Nitrox.Launcher.UI.Controls;
+namespace Nitrox.Launcher.Models.UI.Controls;
 
 /// <summary>
 ///     A basic Rich Textbox. Supports bold, italic, underline and hyperlinks.

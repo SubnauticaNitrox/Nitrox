@@ -5,6 +5,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using Nitrox.Launcher.Views;
 using NitroxModel.Logger;
 
 namespace Nitrox.Launcher;

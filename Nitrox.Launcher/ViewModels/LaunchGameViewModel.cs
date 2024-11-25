@@ -12,7 +12,6 @@ using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Converters;
 using Nitrox.Launcher.Models.Design;
-using Nitrox.Launcher.Models.Patching;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery.Models;

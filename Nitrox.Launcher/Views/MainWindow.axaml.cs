@@ -11,7 +11,7 @@ using Nitrox.Launcher.Views.Abstract;
 using ReactiveUI;
 using Serilog;
 
-namespace Nitrox.Launcher;
+namespace Nitrox.Launcher.Views;
 
 public partial class MainWindow : WindowBase<MainWindowViewModel>
 {
