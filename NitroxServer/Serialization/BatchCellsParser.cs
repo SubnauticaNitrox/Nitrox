@@ -175,10 +175,9 @@ namespace NitroxServer.Serialization
                 // SerializedComponents only matter if this is an "Empty" GameObject
                 if (gameObject.CreateEmptyObject && !type.Name.Equals(nameof(NitroxTransform)) && !type.Name.Equals("LargeWorldEntity"))
                 {
-                    int length = (int)(stream.Position - startPosition);
-                    byte[] data = new byte[length];
+                    byte[] data = new byte[(int)(stream.Position - startPosition)];
                     stream.Position = startPosition;
-                    stream.Read(data, 0, length);
+                    stream.ReadStreamExactly(data, data.Length);
                     SerializedComponent serializedComponent = new(componentHeader.TypeName, componentHeader.IsEnabled, data);
                     gameObject.SerializedComponents.Add(serializedComponent);
                 }
