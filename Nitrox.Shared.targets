@@ -134,7 +134,7 @@
         &lt;key>LSMinimumSystemVersion&lt;/key&gt;
         &lt;string>12.0&lt;/string&gt;
         &lt;key>CFBundleExecutable&lt;/key&gt;
-        &lt;string>$(RootNamespace)&lt;/string&gt;
+        &lt;string>$(AssemblyName)&lt;/string&gt;
         &lt;key>CFBundleInfoDictionaryVersion&lt;/key&gt;
         &lt;string>6.0&lt;/string&gt;
         &lt;key>CFBundlePackageType&lt;/key&gt;
