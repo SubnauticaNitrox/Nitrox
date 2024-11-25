@@ -117,36 +117,38 @@
     <Target Name="_NitroxMacOSGenerateInfoPlist" BeforeTargets="BeforeBuild;BeforeRebuild" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)">
         <PropertyGroup>
             <InfoPlistContent>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
-&lt;plist version="1.0"&gt;
-    &lt;dict&gt;
-        &lt;key>CFBundleIconFile&lt;/key&gt;
-        &lt;string>Nitrox.icns&lt;/string&gt;
-        &lt;key>CFBundleIdentifier&lt;/key&gt;
-        &lt;string>com.$(RootNamespace.ToLower())&lt;/string&gt;
-        &lt;key>CFBundleName&lt;/key&gt;
-        &lt;string>Nitrox&lt;/string&gt;
-        &lt;key>CFBundleDisplayName&lt;/key&gt;
-        &lt;string>Nitrox&lt;/string&gt;
-        &lt;key>CFBundleVersion&lt;/key&gt;
-        &lt;string>$([System.Version]::Parse($(Version)).ToString(3))&lt;/string&gt;
-        &lt;key>LSMinimumSystemVersion&lt;/key&gt;
-        &lt;string>12.0&lt;/string&gt;
-        &lt;key>CFBundleExecutable&lt;/key&gt;
-        &lt;string>$(AssemblyName)&lt;/string&gt;
-        &lt;key>CFBundleInfoDictionaryVersion&lt;/key&gt;
-        &lt;string>6.0&lt;/string&gt;
-        &lt;key>CFBundlePackageType&lt;/key&gt;
-        &lt;string>APPL&lt;/string&gt;
-        &lt;key>CFBundleShortVersionString&lt;/key&gt;
-        &lt;string>$([System.Version]::Parse($(Version)).ToString(2))&lt;/string&gt;
-        &lt;key>NSPrincipalClass&lt;/key&gt;
-        &lt;string>NSApplication&lt;/string&gt;
-        &lt;key>NSHighResolutionCapable&lt;/key&gt;
-        &lt;true/&gt;
-    &lt;/dict&gt;
-&lt;/plist&gt;
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleIconFile</key>
+        <string>Nitrox.icns</string>
+        <key>CFBundleIdentifier</key>
+        <string>com.$(RootNamespace.ToLower())</string>
+        <key>CFBundleName</key>
+        <string>Nitrox</string>
+        <key>CFBundleDisplayName</key>
+        <string>Nitrox</string>
+        <key>CFBundleVersion</key>
+        <string>$([System.Version]::Parse($(Version)).ToString(3))</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>12.0</string>
+        <key>CFBundleExecutable</key>
+        <string>$(AssemblyName)</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>$([System.Version]::Parse($(Version)).ToString(2))</string>
+        <key>NSPrincipalClass</key>
+        <string>NSApplication</string>
+        <key>NSHighResolutionCapable</key>
+        <true/>
+    </dict>
+</plist>
+]]>
             </InfoPlistContent>
         </PropertyGroup>
 
