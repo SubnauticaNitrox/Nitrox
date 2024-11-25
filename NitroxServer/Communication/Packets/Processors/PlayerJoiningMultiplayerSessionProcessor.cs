@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -24,18 +25,18 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
-        private readonly BuildingManager buildingManager;
         private readonly ServerConfig serverConfig;
+        private readonly NtpSyncer ntpSyncer;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, BuildingManager buildingManager, ServerConfig serverConfig)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, ServerConfig serverConfig, NtpSyncer ntpSyncer)
         {
             this.scheduleKeeper = scheduleKeeper;
             this.storyManager = storyManager;
             this.playerManager = playerManager;
             this.world = world;
             this.entityRegistry = entityRegistry;
-            this.buildingManager = buildingManager;
             this.serverConfig = serverConfig;
+            this.ntpSyncer = ntpSyncer;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
@@ -63,6 +64,7 @@ namespace NitroxServer.Communication.Packets.Processors
             List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
             bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
 
+            Log.Debug($"onlinemode: {ntpSyncer.OnlineMode}, {ntpSyncer.CorrectionOffset}");
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
                 assignedEscapePodId,
@@ -85,7 +87,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 storyManager.GetTimeData(),
                 isFirstPlayer,
                 BuildingManager.GetEntitiesOperations(globalRootEntities),
-                serverConfig.KeepInventoryOnDeath
+                serverConfig.KeepInventoryOnDeath,
+                ntpSyncer.OnlineMode
             );
 
             player.SendPacket(initialPlayerSync);

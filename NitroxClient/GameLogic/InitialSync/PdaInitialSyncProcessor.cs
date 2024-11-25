@@ -13,6 +13,11 @@ namespace NitroxClient.GameLogic.InitialSync;
 
 public sealed class PdaInitialSyncProcessor : InitialSyncProcessor
 {
+    public PdaInitialSyncProcessor()
+    {
+        AddDependency<ClockSyncProcessor>();
+    }
+
     // The steps are ordered like their call order in Player.OnProtoDeserialize
     public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } =
     [

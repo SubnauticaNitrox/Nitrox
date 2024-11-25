@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Timers;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 using static NitroxServer.GameLogic.StoryManager;
 
@@ -9,6 +10,7 @@ namespace NitroxServer.GameLogic;
 public class TimeKeeper
 {
     private readonly PlayerManager playerManager;
+    private readonly NtpSyncer ntpSyncer;
 
     private readonly Stopwatch stopWatch = new();
 
@@ -72,9 +74,30 @@ public class TimeKeeper
 
     public TimeSkippedEventHandler TimeSkipped;
 
-    public TimeKeeper(PlayerManager playerManager, double elapsedSeconds, double realTimeElapsed)
+    /// <summary>
+    /// Time in seconds between each ntp connection attempt.
+    /// </summary>
+    private const int NTP_RETRY_INTERVAL = 60;
+
+    public TimeKeeper(PlayerManager playerManager, NtpSyncer ntpSyncer, double elapsedSeconds, double realTimeElapsed)
     {
         this.playerManager = playerManager;
+        this.ntpSyncer = ntpSyncer;
+
+        // We only need the correction offset to be calculated once
+        ntpSyncer.Setup(true, (onlineMode, correctionOffset) => // TODO: set to false after tests
+        {
+            if (onlineMode)
+            {
+                SetCorrectionOffset(correctionOffset);
+            }
+            else
+            {
+                // until we get online even once, we'll retry the ntp sync sequence every NTP_RETRY_INTERVAL
+                StartNtpTimer();
+            }
+        });
+        ntpSyncer.RequestNtpService();
 
         elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(DEFAULT_TIME).TotalMilliseconds : elapsedSeconds * 1000;
         this.realTimeElapsed = realTimeElapsed;
@@ -96,6 +119,36 @@ public class TimeKeeper
             playerManager.SendPacketToAllPlayers(MakeTimePacket());
         };
         return resyncTimer;
+    }
+
+    private void StartNtpTimer()
+    {
+        Timer retryTimer = new(TimeSpan.FromSeconds(NTP_RETRY_INTERVAL).TotalMilliseconds)
+        {
+            AutoReset = true,
+        };
+        
+        retryTimer.Elapsed += delegate
+        {
+            // Reset the syncer before starting another round of it
+            ntpSyncer.Dispose();
+            ntpSyncer.Setup(true, (onlineMode, correctionOffset) =>  // TODO: set to false after tests
+            {
+                if (onlineMode)
+                {
+                    retryTimer.Close();
+                    SetCorrectionOffset(correctionOffset);
+                }
+            });
+            ntpSyncer.RequestNtpService();
+        };
+
+        retryTimer.Start();
+    }
+
+    private void SetCorrectionOffset(TimeSpan correctionOffset)
+    {
+        // TODO: Send connected players a delta correction offset so they can update their local correctionOffset
     }
 
     public void StartCounting()
