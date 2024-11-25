@@ -71,9 +71,15 @@ public abstract class Modal
     /// </summary>
     public void Show()
     {
+        CoroutineHost.StartCoroutine(ShowAsync());
+    }
+
+    public IEnumerator ShowAsync()
+    {
+
         CurrentModal?.Hide();
         CurrentModal = this;
-        CoroutineHost.StartCoroutine(ShowImplementation());
+        yield return ShowImplementation();
     }
 
     /// <summary>

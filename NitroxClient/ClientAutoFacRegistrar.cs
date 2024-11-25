@@ -10,7 +10,6 @@ using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
-using NitroxClient.Debuggers.Drawer;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.FMOD;
@@ -29,6 +28,7 @@ using NitroxModel;
 using NitroxModel.Core;
 using NitroxModel.GameLogic.FMOD;
 using NitroxModel.Helper;
+using NitroxModel.Networking;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient
@@ -125,6 +125,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<TimeManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<NtpSyncer>().InstancePerLifetimeScope();
         }
 
         private void RegisterMetadataDependencies(ContainerBuilder containerBuilder)

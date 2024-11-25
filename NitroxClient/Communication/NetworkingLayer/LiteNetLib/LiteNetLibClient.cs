@@ -1,3 +1,4 @@
+using System;
 using System.Buffers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,12 @@ public class LiteNetLibClient : IClient
     private readonly INetworkDebugger networkDebugger;
     private readonly PacketReceiver packetReceiver;
     public bool IsConnected { get; private set; }
+    public int PingInterval
+    {
+        get => client.PingInterval;
+        set => client.PingInterval = value;
+    }
+    public Action<long> LatencyUpdateCallback;
 
     public LiteNetLibClient(PacketReceiver packetReceiver, INetworkDebugger networkDebugger = null)
     {
@@ -30,6 +37,10 @@ public class LiteNetLibClient : IClient
         listener.PeerConnectedEvent += Connected;
         listener.PeerDisconnectedEvent += Disconnected;
         listener.NetworkReceiveEvent += ReceivedNetworkData;
+        listener.NetworkLatencyUpdateEvent += (peer, _) =>
+        {
+            LatencyUpdateCallback?.Invoke(peer.RemoteTimeDelta);
+        };
 
 
         client = new NetManager(listener)

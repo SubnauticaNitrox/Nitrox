@@ -142,4 +142,14 @@ public class TimeManager
         realTimeElapsedRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(registrationTime);
         freezeTime = isFirstPlayer;
     }
+
+    public void SetClockCorrection(long remoteTimeDelta)
+    {
+        
+    }
+
+    public void SetClockCorrection(TimeSpan correctionOffset)
+    {
+
+    }
 }
