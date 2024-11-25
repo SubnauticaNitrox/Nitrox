@@ -5,7 +5,7 @@
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.UI.Controls"
+        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         DataContext="{x:Static design:DesignData.CreateServerViewModel}"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"

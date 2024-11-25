@@ -4,7 +4,7 @@
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.UI.Controls">
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">

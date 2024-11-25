@@ -4,7 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using ReactiveUI;
 
-namespace Nitrox.Launcher.Models.UI.Controls;
+namespace Nitrox.Launcher.Models.Controls;
 
 public class RadioButtonGroup : ItemsControl
 {

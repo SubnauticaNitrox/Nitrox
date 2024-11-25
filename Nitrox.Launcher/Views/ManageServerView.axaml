@@ -6,7 +6,7 @@
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:server="clr-namespace:NitroxModel.Server;assembly=NitroxModel"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.UI.Controls"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
              mc:Ignorable="d" d:DesignWidth="700"
              DataContext="{x:Static design:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">

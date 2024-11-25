@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.UI.Controls"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
              x:Class="Nitrox.Launcher.Views.ServersView"
              DataContext="{x:Static design:DesignData.ServersViewModel}">
     <ThemeVariantScope RequestedThemeVariant="Dark">

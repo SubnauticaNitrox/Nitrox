@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.UI.Controls"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
              DataContext="{x:Static design:DesignData.CommunityViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.CommunityView">

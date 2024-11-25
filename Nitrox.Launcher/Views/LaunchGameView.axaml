@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.UI.Controls"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
              DataContext="{x:Static design:DesignData.LaunchGameViewModel}"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="Nitrox.Launcher.Views.LaunchGameView">
