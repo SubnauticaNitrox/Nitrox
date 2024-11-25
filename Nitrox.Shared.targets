@@ -49,7 +49,7 @@
     <!-- MacOS specific properties -->
     <PropertyGroup Condition="$(_IsMacOSTarget)">
         <UseAppHost>true</UseAppHost>
-        <MacOSAssetsPath>$(MSBuildProjectDirectory)\Assets\MacOS</MacOSAssetsPath>
+        <PlatformAssetsPath>$(MSBuildProjectDirectory)\Assets\MacOS</PlatformAssetsPath>
     </PropertyGroup>
 
     <!-- *************** BUILD *************** -->
@@ -113,6 +113,45 @@
     <Target Name="_NitroxRelease" Condition="$(_IsRelease)" AfterTargets="$(_NitroxAfterBuildTaskName)" />
 
     <Target Name="_NitroxMacOSRelease" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_NitroxReleaseTaskName)" />
+    
+    <Target Name="_NitroxMacOSGenerateInfoPlist" BeforeTargets="BeforeBuild;BeforeRebuild" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)">
+        <PropertyGroup>
+            <InfoPlistContent>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+    &lt;dict&gt;
+        &lt;key>CFBundleIconFile&lt;/key&gt;
+        &lt;string>Nitrox.icns&lt;/string&gt;
+        &lt;key>CFBundleIdentifier&lt;/key&gt;
+        &lt;string>com.$(RootNamespace.ToLower())&lt;/string&gt;
+        &lt;key>CFBundleName&lt;/key&gt;
+        &lt;string>Nitrox&lt;/string&gt;
+        &lt;key>CFBundleDisplayName&lt;/key&gt;
+        &lt;string>Nitrox&lt;/string&gt;
+        &lt;key>CFBundleVersion&lt;/key&gt;
+        &lt;string>$([System.Version]::Parse($(Version)).ToString(3))&lt;/string&gt;
+        &lt;key>LSMinimumSystemVersion&lt;/key&gt;
+        &lt;string>12.0&lt;/string&gt;
+        &lt;key>CFBundleExecutable&lt;/key&gt;
+        &lt;string>$(RootNamespace)&lt;/string&gt;
+        &lt;key>CFBundleInfoDictionaryVersion&lt;/key&gt;
+        &lt;string>6.0&lt;/string&gt;
+        &lt;key>CFBundlePackageType&lt;/key&gt;
+        &lt;string>APPL&lt;/string&gt;
+        &lt;key>CFBundleShortVersionString&lt;/key&gt;
+        &lt;string>$([System.Version]::Parse($(Version)).ToString(2))&lt;/string&gt;
+        &lt;key>NSPrincipalClass&lt;/key&gt;
+        &lt;string>NSApplication&lt;/string&gt;
+        &lt;key>NSHighResolutionCapable&lt;/key&gt;
+        &lt;true/&gt;
+    &lt;/dict&gt;
+&lt;/plist&gt;
+            </InfoPlistContent>
+        </PropertyGroup>
+
+        <WriteLinesToFile File="$(PlatformAssetsPath)\Info.plist" Lines="$(InfoPlistContent)" Overwrite="true" />
+    </Target>
 
     <Target Name="_VerifyMacOSFiles" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_ReleaseMacOSTaskName)" DependsOnTargets="$(_NitroxMoveDependenciesToLibTaskName)">
 
@@ -124,8 +163,8 @@
                Text="AppBundleName cannot be null or empty, project must specify it in order to produce a bundle" />
 
         <Error Code="NX-202"
-               Condition="!Exists($(MacOSAssetsPath))"
-               Text="Folder '$(MacOSAssetsPath)' must exist in the project, in order to produce a MacOS bundle" />
+               Condition="!Exists($(PlatformAssetsPath))"
+               Text="Folder '$(PlatformAssetsPath)' must exist in the project, in order to produce a MacOS bundle" />
     </Target>
 
     <Target Name="_CreateMacOSAppBundle" Condition="$(_IsMacOSTarget) And $(CreateAppBundle)" AfterTargets="$(_VerifyMacOSFilesTaskName)">
@@ -146,7 +185,7 @@
         <ItemGroup>
             <_AllFiles Include="$(TargetDir)\**\*" Exclude="$(_ZipFilePath);$(_AppBundleDir)\**\*" />
             <_BundleFolders Include="$(_ContentDir);$(_MacOSDir);$(_ResourcesDir)" />
-            <_PlatformFiles Include="$(MacOSAssetsPath)\**\*" />
+            <_PlatformFiles Include="$(PlatformAssetsPath)\**\*" />
         </ItemGroup>
         
         <!-- Create the whole OSX bundle tree -->
