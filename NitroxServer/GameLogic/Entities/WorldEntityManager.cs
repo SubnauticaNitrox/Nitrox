@@ -82,15 +82,12 @@ public class WorldEntityManager
 
     public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
     {
-        Optional<WorldEntity> opEntity = entityRegistry.GetEntityById<WorldEntity>(id);
-
-        if (!opEntity.HasValue)
+        if (!entityRegistry.TryGetEntityById(id, out WorldEntity entity))
         {
-            Log.Debug("Could not update entity position because it was not found (maybe it was recently picked up)");
+            Log.WarnOnce($"[{nameof(WorldEntityManager)}] Can't update entity position of {entity.Id} because it isn't registered");
             return Optional.Empty;
         }
 
-        WorldEntity entity = opEntity.Value;
         AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
 
         entity.Transform.Position = position;
