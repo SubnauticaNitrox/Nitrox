@@ -8,7 +8,7 @@ using NitroxModel.Packets;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Prevents non simulating players from running locally <see cref="RangedAttackLastTarget.StartCasting"/>.
+/// Prevents non simulating players from running locally <see cref="RangedAttackLastTarget.StartCharging"/>.
 /// Broadcasts this event on the simulating player.
 /// </summary>
 public sealed partial class RangedAttackLastTarget_StartCharging_Patch : NitroxPatch, IDynamicPatch
@@ -17,18 +17,42 @@ public sealed partial class RangedAttackLastTarget_StartCharging_Patch : NitroxP
 
     public static void Prefix(RangedAttackLastTarget __instance)
     {
-        if (!Resolve<AI>().IsCreatureWhitelisted(__instance.creature) ||
-            !__instance.TryGetNitroxId(out NitroxId creatureId) ||
-            !Resolve<SimulationOwnership>().HasAnyLockType(creatureId) ||
-            !__instance.currentTarget || !__instance.currentTarget.TryGetNitroxId(out NitroxId targetId))
+        if (BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CHARGING))
         {
-            return;
+            ErrorMessage.AddMessage($"[SEND] {__instance.name} charges against {__instance.currentTarget.name}");
+        }
+    }
+
+    /// <summary>
+    /// Broadcasts a range attack CHARGING or CASTING state if the attacking creature is whitelisted, valid and if the target is valid.
+    /// </summary>
+    /// <returns>
+    /// true if the broadcast was done (all conditions met)
+    /// </returns>
+    internal static bool BroadcastRangedAttack(RangedAttackLastTarget attackBehaviour, RangedAttackLastTargetUpdate.ActionState actionState)
+    {
+        // should action be broadcasted
+        if (!Resolve<AI>().IsCreatureWhitelisted(attackBehaviour.creature))
+        {
+            return false;
         }
 
-        int attackTypeIndex = __instance.attackTypes.GetIndex(__instance.currentAttack);
+        // Attacker object validity
+        if (!attackBehaviour.TryGetNitroxId(out NitroxId creatureId) || !Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
+        {
+            return false;
+        }
 
-        Resolve<IPacketSender>().Send(new RangedAttackLastTargetUpdate(creatureId, targetId, attackTypeIndex, RangedAttackLastTargetUpdate.ActionState.CHARGING));
-        ErrorMessage.AddMessage($"[SEND] {__instance.name} charges against {__instance.currentTarget.name}");
+        // Target validity
+        if (!attackBehaviour.currentTarget || !attackBehaviour.currentTarget.TryGetNitroxId(out NitroxId targetId))
+        {
+            return false;
+        }
+
+        int attackTypeIndex = attackBehaviour.attackTypes.GetIndex(attackBehaviour.currentAttack);
+
+        Resolve<IPacketSender>().Send(new RangedAttackLastTargetUpdate(creatureId, targetId, attackTypeIndex, actionState));
+        return true;
     }
 }
 

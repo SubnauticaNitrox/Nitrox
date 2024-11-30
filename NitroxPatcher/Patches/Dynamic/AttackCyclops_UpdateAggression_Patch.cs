@@ -4,7 +4,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.PlayerLogic;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -58,9 +58,8 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
 
     public static void Postfix(AttackCyclops __instance)
     {
-        if (__instance.currentTarget && __instance.TryGetNitroxId(out NitroxId creatureId) &&
-            __instance.currentTarget.TryGetNitroxId(out NitroxId targetId) &&
-            Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
+        if (__instance.currentTarget && __instance.currentTarget.TryGetNitroxId(out NitroxId targetId) &&
+            __instance.TryGetNitroxId(out NitroxId creatureId) && Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
         {
             float aggressiveToNoise = __instance.aggressiveToNoise.Value;
 
@@ -87,19 +86,6 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
 
     public static bool IsTargetAValidInhabitedCyclops(GameObject targetObject)
     {
-        // Is a Cyclops
-        if (!targetObject.TryGetComponent(out SubRoot subRoot) || !subRoot.isCyclops)
-        {
-            return false;
-        }
-
-        // Has the local player inside
-        if (Player.main && Player.main.currentSub == subRoot)
-        {
-            return true;
-        }
-
-        // Has a remote player inside
-        return targetObject.GetComponentInChildren<RemotePlayerIdentifier>(true);
+        return targetObject.TryGetComponent(out NitroxCyclops nitroxCyclops) && nitroxCyclops.Pawns.Count > 0;
     }
 }
