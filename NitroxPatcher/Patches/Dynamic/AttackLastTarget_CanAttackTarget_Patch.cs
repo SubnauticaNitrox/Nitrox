@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Allows creatures to chose remote players as targets only if they can be attacked (<see cref="RemotePlayer.CanBeAttacked"/>)
+/// Allows creatures to choose remote players as targets only if they can be attacked (<see cref="RemotePlayer.CanBeAttacked"/>)
 /// </summary>
 public sealed partial class AttackLastTarget_CanAttackTarget_Patch : NitroxPatch, IDynamicPatch
 {
@@ -19,7 +19,7 @@ public sealed partial class AttackLastTarget_CanAttackTarget_Patch : NitroxPatch
         {
             return false;
         }
-        // We only want to cancel if the target is a remote player which can't attacked
+        // We only want to cancel if the target is a remote player which can't be attacked
         if (target.TryGetComponent(out RemotePlayerIdentifier remotePlayerIdentifier) &&
             !remotePlayerIdentifier.RemotePlayer.CanBeAttacked())
         {
