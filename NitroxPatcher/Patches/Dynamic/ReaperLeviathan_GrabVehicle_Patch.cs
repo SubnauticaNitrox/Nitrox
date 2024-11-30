@@ -1,5 +1,5 @@
 using System.Reflection;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -13,9 +13,9 @@ public sealed partial class ReaperLeviathan_GrabVehicle_Patch : NitroxPatch, IDy
 
     public static void Prefix(Vehicle vehicle)
     {
-        if (vehicle.TryGetComponent(out RemotelyControlled remotelyControlled))
+        if (vehicle.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
         {
-            remotelyControlled.enabled = false;
+            vehicleMovementReplicator.enabled = false;
         }
     }
 }

@@ -1,7 +1,4 @@
 using System.Reflection;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 
@@ -17,18 +14,10 @@ public sealed partial class RangedAttackLastTarget_StartCasting_Patch : NitroxPa
 
     public static void Prefix(RangedAttackLastTarget __instance)
     {
-        if (!Resolve<AI>().IsCreatureWhitelisted(__instance.creature) ||
-            !__instance.TryGetNitroxId(out NitroxId creatureId) ||
-            !Resolve<SimulationOwnership>().HasAnyLockType(creatureId) ||
-            !__instance.currentTarget || !__instance.currentTarget.TryGetNitroxId(out NitroxId targetId))
+        if (RangedAttackLastTarget_StartCharging_Patch.BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CASTING))
         {
-            return;
+            ErrorMessage.AddMessage($"[SEND] {__instance.name} casts against {__instance.currentTarget.name}");
         }
-
-        int attackTypeIndex = __instance.attackTypes.GetIndex(__instance.currentAttack);
-
-        Resolve<IPacketSender>().Send(new RangedAttackLastTargetUpdate(creatureId, targetId, attackTypeIndex, RangedAttackLastTargetUpdate.ActionState.CASTING));
-        ErrorMessage.AddMessage($"[SEND] {__instance.name} casts against {__instance.currentTarget.name}");
     }
 }
 

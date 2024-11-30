@@ -1,6 +1,7 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours.Vehicles;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -8,7 +9,7 @@ using NitroxModel.Packets;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Broadcasts the exosuit grab by Sea Dragons and temporarily disables exosuit's position sync while they're grabbed.
+/// Broadcasts the exosuit grab by Sea Dragons (if local player has remote control of them) and temporarily disables exosuit's position sync while they're grabbed.
 /// </summary>
 public sealed partial class SeaDragon_GrabExosuit_Patch : NitroxPatch, IDynamicPatch
 {
@@ -16,12 +17,13 @@ public sealed partial class SeaDragon_GrabExosuit_Patch : NitroxPatch, IDynamicP
 
     public static void Prefix(SeaDragon __instance, Exosuit exosuit)
     {
-        if (exosuit.TryGetComponent(out RemotelyControlled remotelyControlled))
+        if (exosuit.TryGetComponent(out VehicleMovementReplicator vehicleMovementReplicator))
         {
-            remotelyControlled.enabled = false;
+            vehicleMovementReplicator.enabled = false;
         }
 
-        if (__instance.TryGetNitroxId(out NitroxId seaDragonId) && exosuit.TryGetNitroxId(out NitroxId targetId))
+        if (__instance.TryGetNitroxId(out NitroxId seaDragonId) && Resolve<SimulationOwnership>().HasAnyLockType(seaDragonId) &&
+            exosuit.TryGetNitroxId(out NitroxId targetId))
         {
             Resolve<IPacketSender>().Send(new SeaDragonGrabExosuit(seaDragonId, targetId));
         }

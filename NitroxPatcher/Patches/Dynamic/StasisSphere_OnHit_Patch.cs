@@ -23,13 +23,18 @@ public sealed partial class StasisSphere_OnHit_Patch : NitroxPatch, IDynamicPatc
             return false;
         }
 
-        ushort localPlayerId = Resolve<LocalPlayer>().PlayerId;
+        ushort? localPlayerId = Resolve<LocalPlayer>().PlayerId;
+        // If the lcoal player id isn't set then there's already a bigger problem/no problem and we can ignore that
+        if (!localPlayerId.HasValue)
+        {
+            return true;
+        }
         NitroxVector3 position = __instance.tr.position.ToDto();
         NitroxQuaternion rotation = __instance.tr.rotation.ToDto();
         // Calculate the chargeNormalized value which was passed to StasisSphere.Shoot
         float chargeNormalized = Mathf.Unlerp(__instance.minRadius, __instance.maxRadius, __instance.radius);
 
-        Resolve<IPacketSender>().Send(new StasisSphereHit(localPlayerId, position, rotation, chargeNormalized, __instance._consumption));
+        Resolve<IPacketSender>().Send(new StasisSphereHit(localPlayerId.Value, position, rotation, chargeNormalized, __instance._consumption));
         return true;
     }
 }

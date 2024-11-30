@@ -89,7 +89,7 @@ public class AI
         lastTarget.SetTargetInternal(targetObject);
         lastTarget.targetLocked = locked;
 
-        if (aggressiveWhenSeeTarget.sightedSound != null && !aggressiveWhenSeeTarget.sightedSound.GetIsPlaying())
+        if (aggressiveWhenSeeTarget.sightedSound && !aggressiveWhenSeeTarget.sightedSound.GetIsPlaying())
         {
             // TODO: Adapt this code when #1780 is merged
             aggressiveWhenSeeTarget.sightedSound.StartEvent();

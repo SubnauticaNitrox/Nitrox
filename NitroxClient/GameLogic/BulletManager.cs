@@ -55,6 +55,8 @@ public class BulletManager
 
     public void TorpedoHit(NitroxId bulletId, Vector3 position, Quaternion rotation)
     {
+        // On the local player, the torpedo might have already exploded while the packet is received with latency.
+        // Therefore we don't need to log a failed query of bulletId
         if (NitroxEntity.TryGetComponentFrom(bulletId, out SeamothTorpedo torpedo))
         {
             torpedo.tr.position = position;
@@ -111,6 +113,7 @@ public class BulletManager
         
         // It should be set to inactive automatically in Bullet.Awake
         GameObject playerSphereClone = GameObject.Instantiate(stasisSpherePrefab);
+        playerSphereClone.name = $"remote-{playerId}-{playerSphereClone.name}";
         // We mark it to be able to ignore events from remote bullets
         playerSphereClone.AddComponent<RemotePlayerBullet>();
         StasisSphere stasisSphere = playerSphereClone.GetComponent<StasisSphere>();
@@ -159,8 +162,8 @@ public class BulletManager
             EnsurePlayerHasSphere(remotePlayer.PlayerId);
         }
 
-        playerManager.onCreate += (playerId, _) => { EnsurePlayerHasSphere(playerId); };
-        playerManager.onRemove += (playerId, _) => { DestroyPlayerSphere(playerId); };
+        playerManager.OnCreate += (playerId, _) => { EnsurePlayerHasSphere(playerId); };
+        playerManager.OnRemove += (playerId, _) => { DestroyPlayerSphere(playerId); };
     }
 
     public class RemotePlayerBullet : MonoBehaviour { }

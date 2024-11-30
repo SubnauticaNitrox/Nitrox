@@ -78,7 +78,7 @@ public class PlayerManager
         {
             player.Destroy();
             playersById.Remove(playerId);
-            OnRemove(playerId, opPlayer.Value);
+            OnRemove(playerId, player);
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
         }
     }
