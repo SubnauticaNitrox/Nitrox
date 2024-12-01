@@ -108,7 +108,7 @@
 
     <Panel>
         <!-- Title bar -->
-        <Panel Name="CustomTitleBar" Classes="titleBar">
+        <Panel Classes="titleBar">
             <Interaction.Behaviors>
                 <BehaviorCollection>
                     <EventTriggerBehavior EventName="PointerPressed">

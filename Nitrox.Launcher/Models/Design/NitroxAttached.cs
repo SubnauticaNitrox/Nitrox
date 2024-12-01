@@ -18,6 +18,7 @@ public class NitroxAttached : AvaloniaObject
     public static readonly AttachedProperty<Orientation> PrimaryScrollWheelDirectionProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, ScrollViewer, Orientation>("PrimaryScrollWheelDirection", Orientation.Vertical);
     public static readonly AttachedProperty<bool> IsNumericInputProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("IsNumericInput");
     public static readonly AttachedProperty<bool> HasUserInteractedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("HasUserInteracted");
+    public static readonly AttachedProperty<bool> UseCustomTitleBarProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Window, bool>("UseCustomTitleBar", true);
     private static AsyncCommandButtonTagger asyncCommandButtonTagger;
 
     static NitroxAttached()
@@ -177,4 +178,8 @@ public class NitroxAttached : AvaloniaObject
     public static bool GetHasUserInteracted(InputElement input) => input.GetValue(HasUserInteractedProperty);
     
     public static void SetHasUserInteracted(InputElement input, bool value) => input.SetValue(HasUserInteractedProperty, value);
+    
+    public static bool GetUseCustomTitleBar(Window window) => window.GetValue(UseCustomTitleBarProperty);
+    
+    public static void SetUseCustomTitleBar(Window window, bool value) => window.SetValue(UseCustomTitleBarProperty, value);
 }

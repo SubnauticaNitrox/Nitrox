@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -175,44 +176,33 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     {
         Task.Run(async () =>
         {
-            string[] launchArgs = Environment.GetCommandLineArgs();
-            for (int i = 0; i < launchArgs.Length; i++)
+            string[] launchArgs = Environment.GetCommandLineArgs().GetCommandArgs("--instantlaunch").ToArray();
+            if (launchArgs is [])
             {
-                if (!launchArgs[i].Equals("--instantlaunch", StringComparison.OrdinalIgnoreCase) || launchArgs.Length <= i + 1)
-                {
-                    continue;
-                }
-                List<string> playerNames = [];
-                for (int j = i + 2; j < launchArgs.Length; j++)
-                {
-                    if (launchArgs[j].StartsWith("--", StringComparison.OrdinalIgnoreCase))
-                    {
-                        break;
-                    }
-                    playerNames.Add(launchArgs[j]);
-                }
-                if (playerNames is [])
-                {
-                    string error = "--instantlaunch requires at least one player name";
-                    Log.Error(error);
-                    LauncherNotifier.Error(error);
-                    return;
-                }
-
-                // Start the server
-                string serverName = launchArgs[i + 1];
-                string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
-                ServerEntry server = ServerEntry.FromDirectory(serverPath);
-                server.Name = serverName;
-                Task serverStartTask = serversViewModel.StartServerAsync(server).ContinueWithHandleError();
-                // Start a game in multiplayer for each player
-                foreach (string playerName in playerNames)
-                {
-                    await StartMultiplayerAsync(["--instantlaunch", playerName]).ContinueWithHandleError();
-                }
-
-                await serverStartTask;
+                return;
             }
+            string[] playerNames = launchArgs.Skip(1).ToArray();
+            if (playerNames is [])
+            {
+                string error = "--instantlaunch requires at least one player name";
+                Log.Error(error);
+                LauncherNotifier.Error(error);
+                return;
+            }
+
+            // Start the server
+            string serverName = launchArgs.First();
+            string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
+            ServerEntry server = ServerEntry.FromDirectory(serverPath);
+            server.Name = serverName;
+            Task serverStartTask = serversViewModel.StartServerAsync(server).ContinueWithHandleError();
+            // Start a game in multiplayer for each player
+            foreach (string playerName in playerNames)
+            {
+                await StartMultiplayerAsync(["--instantlaunch", playerName]).ContinueWithHandleError();
+            }
+
+            await serverStartTask;
         });
     }
 

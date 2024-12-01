@@ -63,7 +63,6 @@ public partial class MainWindowViewModel : ViewModelBase
         DefaultViewCommand = OpenLaunchGameViewCommand;
         Notifications = notifications == null ? [] : [.. notifications];
 
-
         WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
         {
             Notifications.Add(message.Item);

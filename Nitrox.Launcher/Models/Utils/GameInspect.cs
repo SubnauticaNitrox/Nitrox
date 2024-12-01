@@ -31,7 +31,7 @@ internal static class GameInspect
                     await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                     {
                         model.Title = "Legacy Game Detected";
-                        model.Description = $"Nitrox does not support the legacy version of Subnautica. Please update your game to the latest version to run the Subnautica with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
+                        model.Description = $"Nitrox does not support the legacy version of {GameInfo.Subnautica.FullName}. Please update your game to the latest version to run the {GameInfo.Subnautica.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
                         model.ButtonOptions = ButtonOptions.Ok;
                     });
                 }
@@ -64,7 +64,7 @@ internal static class GameInspect
             return false;
         }
         
-        LauncherNotifier.Warning("An instance of Subnautica is already running");
+        LauncherNotifier.Warning($"An instance of {game.FullName} is already running");
         return true;
     }
 }

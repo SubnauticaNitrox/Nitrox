@@ -111,34 +111,35 @@
                 </Grid>
             </ControlTemplate>
         </Setter>
+        
+        <Style Selector="^.main">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid>
+                        <ScrollContentPresenter Name="PART_ContentPresenter"
+                                                Background="{TemplateBinding Background}"
+                                                HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+                                                VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
+                                                HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
+                                                VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
+                                                Padding="{TemplateBinding Padding}"
+                                                ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                            <ScrollContentPresenter.GestureRecognizers>
+                                <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                                         CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+                                                         IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"/>
+                            </ScrollContentPresenter.GestureRecognizers>
+                        </ScrollContentPresenter>
+                        <ScrollBar Name="PART_VerticalScrollBar" HorizontalAlignment="Right" Orientation="Vertical" Margin="0 0 0 6" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+        </Style>
     </Style>
     
-    <Style Selector="ScrollViewer.main">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Grid>
-                    <ScrollContentPresenter Name="PART_ContentPresenter"
-                                            Background="{TemplateBinding Background}"
-                                            HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
-                                            VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
-                                            HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
-                                            VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
-                                            Padding="{TemplateBinding Padding}"
-                                            ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
-                        <ScrollContentPresenter.GestureRecognizers>
-                             <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
-                                                      CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
-                                                      IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"/>
-                        </ScrollContentPresenter.GestureRecognizers>
-                    </ScrollContentPresenter>
-                    <ScrollBar Name="PART_VerticalScrollBar" HorizontalAlignment="Right"
-                               Orientation="Vertical" Margin="0 26 0 6" />
-                </Grid>
-            </ControlTemplate>
-        </Setter>
+    <Style Selector="Window[(design|NitroxAttached.UseCustomTitleBar)=True] ScrollViewer.main /template/ ScrollBar#PART_VerticalScrollBar">
+        <Setter Property="Margin" Value="0 26 0 6" />
     </Style>
     
     <Style Selector="ScrollBar">

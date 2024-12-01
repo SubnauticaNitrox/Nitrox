@@ -47,33 +47,20 @@ public partial class ServersViewModel : RoutableViewModelBase
         this.dialogService = dialogService;
         this.manageServerViewModel = manageServerViewModel;
 
-        if (!Design.IsDesignMode)
-        {
-            Task.Run(GetSavesOnDisk);
-        }
-
-        WeakReferenceMessenger.Default.Register<ServerEntryPropertyChangedMessage>(this, (sender, message) =>
-        {
-            if (message.PropertyName == nameof(ServerEntry.IsOnline))
-            {
-                ManageServerCommand.NotifyCanExecuteChanged();
-            }
-        });
-        WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
-        {
-            for (int i = Servers.Count - 1; i >= 0; i--)
-            {
-                if (Servers[i].Name == message.SaveName)
-                {
-                    Servers.RemoveAt(i);
-                }
-            }
-        });
-
         this.WhenActivated(disposables =>
         {
             // Activation
             serverRefreshCts = new();
+            WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
+            {
+                for (int i = Servers.Count - 1; i >= 0; i--)
+                {
+                    if (Servers[i].Name == message.SaveName)
+                    {
+                        Servers.RemoveAt(i);
+                    }
+                }
+            });
             GetSavesOnDisk();
             InitializeWatcher();
 
@@ -81,6 +68,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             Disposable
                 .Create(this, vm =>
                 {
+                    WeakReferenceMessenger.Default.UnregisterAll(vm);
                     vm.watcher?.Dispose();
                     vm.serverRefreshCts.Cancel();
                 })
@@ -118,6 +106,10 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             server.Start(keyValueStore.GetSavesFolderDir());
             server.Version = NitroxEnvironment.Version;
+            if (server.IsEmbedded)
+            {
+                HostScreen.Show(new EmbeddedServerViewModel(HostScreen, server));
+            }
             return true;
         }
         catch (Exception ex)
@@ -131,6 +123,11 @@ public partial class ServersViewModel : RoutableViewModelBase
     [RelayCommand]
     public async Task ManageServer(ServerEntry server)
     {
+        if (server.IsOnline && server.IsEmbedded)
+        {
+            HostScreen.Show(new EmbeddedServerViewModel(HostScreen, server));
+            return;
+        }
         if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
         {
             return;

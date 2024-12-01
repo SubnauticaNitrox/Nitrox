@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net472;net9.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -44,7 +44,7 @@
         </When>
         <Otherwise>
             <ItemGroup>
-                <!-- netstandard 2.0 specific references -->
+                <!-- Modern .NET specific references -->
             </ItemGroup>
         </Otherwise>
     </Choose>

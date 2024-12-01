@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -36,15 +37,25 @@ internal static class Program
                                        .UsePlatformDetect()
                                        .LogToTrace()
                                        .UseReactiveUI();
-
-        // The Wayland renderer on Linux using GPU rendering is not (yet) supported by Avalonia
-        // Waiting on issue: https://github.com/AvaloniaUI/Avalonia/issues/1243 to enable rendering on GPU
-        if (Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is not null)
-        {
-            builder = builder.With(new X11PlatformOptions { RenderingMode = [X11RenderingMode.Software] });
-        }
-
+        builder = WithRenderingMode(builder, Environment.GetCommandLineArgs());
         return builder;
+        
+        static AppBuilder WithRenderingMode(AppBuilder builder, params string[] args)
+        {
+            if (args.GetCommandArgs("--rendering")?.FirstOrDefault()?.Equals("software", StringComparison.InvariantCultureIgnoreCase) ?? false)
+            {
+                return builder.With(new X11PlatformOptions { RenderingMode = [X11RenderingMode.Software] });
+            }
+            // The Wayland+GPU is not supported by Avalonia, but Xwayland should work.
+            if (Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is not null)
+            {
+                if (!ProcessEx.ProcessExists("Xwayland"))
+                {
+                    return builder.With(new X11PlatformOptions { RenderingMode = [X11RenderingMode.Software] });
+                }
+            }
+            return builder;
+        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

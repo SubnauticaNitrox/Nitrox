@@ -50,12 +50,8 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
             // On Linux systems, Avalonia has trouble allowing windows to resize without "decorations". So we enable it in full, but hide the custom titlebar as it'll look bad. 
             if (OperatingSystem.IsLinux())
             {
-                // TODO: Fix scrollbar not going all the way to the top when titlebar is hidden.
                 SystemDecorations = SystemDecorations.Full;
-                if (CustomTitleBar != null)
-                {
-                    CustomTitleBar.IsVisible = false;
-                }
+                NitroxAttached.SetUseCustomTitleBar(this, false);
             }
             
             // Set clicked nav item as selected (and deselect the others).

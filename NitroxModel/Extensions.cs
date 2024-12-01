@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using NitroxModel.Helper;
@@ -34,7 +35,8 @@ public static class Extensions
     }
 
     /// <summary>
-    ///     Gets only the unique flags of the given enum value that aren't part of a different flag in the same enum type, excluding the 0 flag.
+    ///     Gets only the unique flags of the given enum value that aren't part of a different flag in the same enum type,
+    ///     excluding the 0 flag.
     /// </summary>
     public static IEnumerable<T> GetUniqueNonCombinatoryFlags<T>(this T flags) where T : Enum
     {
@@ -60,13 +62,10 @@ public static class Extensions
     }
 
     /// <inheritdoc cref="Enum.IsDefined" />
-    public static bool IsDefined<TEnum>(this TEnum value) where TEnum : Enum
-    {
-        return Enum.IsDefined(typeof(TEnum), value);
-    }
+    public static bool IsDefined<TEnum>(this TEnum value) where TEnum : Enum => Enum.IsDefined(typeof(TEnum), value);
 
     /// <summary>
-    ///     Removes all items from the list when the predicate returns true.
+    ///     Removes all items from the list where the predicate returns true.
     /// </summary>
     /// <param name="list">The list to remove items from.</param>
     /// <param name="extraParameter">An extra parameter to supply to the predicate.</param>
@@ -174,7 +173,7 @@ public static class Extensions
 
     public static byte[] AsMd5Hash(this string input)
     {
-        using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
+        using MD5 md5 = MD5.Create();
         byte[] inputBytes = Encoding.ASCII.GetBytes(input);
         return md5.ComputeHash(inputBytes);
     }
@@ -195,6 +194,38 @@ public static class Extensions
             }
         }
         return buffer;
+    }
+
+    /// <summary>
+    ///     Gets the arguments passed to a command, given its name.
+    /// </summary>
+    /// <param name="args">All arguments passed to the program.</param>
+    /// <param name="name">Name of the command, include the - or -- prefix.</param>
+    /// <returns>All arguments passed to the given command name or empty if not found or no arguments passed.</returns>
+    public static IEnumerable<string> GetCommandArgs(this string[] args, string name)
+    {
+        for (int i = 0; i < args.Length; i++)
+        {
+            string arg = args[i];
+            if (!arg.StartsWith(name))
+            {
+                continue;
+            }
+            if (arg.Length > name.Length && arg[name.Length] == '=')
+            {
+                yield return arg.Substring(name.Length + 1);
+                continue;
+            }
+            for (i += 1; i < args.Length; i++)
+            {
+                arg = args[i];
+                if (arg.StartsWith("-"))
+                {
+                    break;
+                }
+                yield return arg;
+            }
+        }
     }
 
     public static bool IsHardcore(this SubnauticaServerConfig config) => config.GameMode == NitroxGameMode.HARDCORE;

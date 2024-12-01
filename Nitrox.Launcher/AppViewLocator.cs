@@ -49,6 +49,7 @@ public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
             ServersViewModel => typeof(ServersView),
             ManageServerViewModel => typeof(ManageServerView),
             CreateServerViewModel => typeof(CreateServerModal),
+            EmbeddedServerViewModel => typeof(EmbeddedServerView),
             LibraryViewModel => typeof(LibraryView),
             CommunityViewModel => typeof(CommunityView),
             BlogViewModel => typeof(BlogView),
@@ -60,7 +61,6 @@ public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
         };
 
-        // If the view type is the same as last time, return the same instance.
         Type newView = GetViewType(viewModel);
         return new ViewDefinition(newView, () => serviceProvider.GetRequiredService(newView));
     }

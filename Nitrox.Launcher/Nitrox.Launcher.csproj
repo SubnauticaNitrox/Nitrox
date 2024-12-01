@@ -66,6 +66,10 @@
         <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\EmbeddedServerView.axaml.cs">
+        <DependentUpon>EmbeddedServerView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
     <Import Project="..\Nitrox.Shared.targets" />

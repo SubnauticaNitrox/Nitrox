@@ -44,16 +44,18 @@ public static class ServiceCollectionExtensions
         collection.AddSingleton<BlogView>();
         collection.AddSingleton<CommunityView>();
         collection.AddSingleton<UpdatesView>();
+        collection.AddSingleton<EmbeddedServerView>();
 
         // ViewModels
-        collection.AddSingleton<MainWindowViewModel>();
-        collection.AddSingleton<LaunchGameViewModel>();
-        collection.AddSingleton<OptionsViewModel>();
-        collection.AddSingleton<ServersViewModel>();
-        collection.AddSingleton<ManageServerViewModel>();
-        collection.AddSingleton<BlogViewModel>();
-        collection.AddSingleton<CommunityViewModel>();
-        collection.AddSingleton<UpdatesViewModel>();
+        collection.AddTransient<MainWindowViewModel>();
+        collection.AddTransient<LaunchGameViewModel>();
+        collection.AddTransient<OptionsViewModel>();
+        collection.AddTransient<ServersViewModel>();
+        collection.AddTransient<ManageServerViewModel>();
+        collection.AddTransient<BlogViewModel>();
+        collection.AddTransient<CommunityViewModel>();
+        collection.AddTransient<UpdatesViewModel>();
+        collection.AddTransient<EmbeddedServerViewModel>();
 
         return collection;
     }

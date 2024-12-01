@@ -3,6 +3,7 @@ global using NitroxModel.Logger;
 global using static NitroxClient.Helpers.NitroxEntityExtensions;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;

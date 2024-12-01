@@ -26,6 +26,7 @@ public static class DesignData
             MainWindowViewModel = new(null, null, null, null, null, null, null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
             LaunchGameViewModel = new(null, null, null, null, null);
             ManageServerViewModel = new(null, null, null) { ServerName = "My fun server" };
+            EmbeddedServerViewModel = new(null, null);
             CreateServerViewModel = new(null) { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };
             LibraryViewModel = new(null);
             CommunityViewModel = new(null);
@@ -46,6 +47,7 @@ public static class DesignData
     public static MainWindowViewModel MainWindowViewModel { get; }
     public static LaunchGameViewModel LaunchGameViewModel { get; }
     public static ManageServerViewModel ManageServerViewModel { get; }
+    public static EmbeddedServerViewModel EmbeddedServerViewModel { get; }
     public static CreateServerViewModel CreateServerViewModel { get; }
     public static LibraryViewModel LibraryViewModel { get; }
     public static CommunityViewModel CommunityViewModel { get; }

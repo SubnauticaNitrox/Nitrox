@@ -92,6 +92,7 @@
     </Style>
 
     <Style Selector=":is(Panel).titleBar">
+        <Setter Property="IsVisible" Value="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ZIndex" Value="100" />
         <Setter Property="Height" Value="24" />
@@ -158,13 +159,13 @@
         <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Style Selector="^ > :is(UserControl) > :is(Control) > ScrollViewer.main">
+        <Style Selector="^ > :is(UserControl) > :is(Control) > :is(Control).main">
             <Setter Property="Margin" Value="-34 -45" />
             <Style Selector="^ > :is(Control)">
                 <Setter Property="Margin" Value="34 45" />
             </Style>
         </Style>
-        <Style Selector="^ > :is(UserControl) > :is(Control) > :is(Control):not(ScrollViewer.main)">
+        <Style Selector="^ > :is(UserControl) > :is(Control) > :is(Control):not(.main)">
             <Setter Property="Margin" Value="34 45" />
         </Style>
     </Style>

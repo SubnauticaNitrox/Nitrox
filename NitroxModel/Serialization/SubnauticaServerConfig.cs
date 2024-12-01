@@ -117,5 +117,8 @@ namespace NitroxModel.Serialization
 
         [PropertyDescription("When true, will reject any build actions detected as desynced")]
         public bool SafeBuilding { get; set; } = true;
+
+        [PropertyDescription("When true and started in launcher, will use launcher UI as opposed to external window")]
+        public bool IsEmbedded { get; set; } = true;
     }
 }

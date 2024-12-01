@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -40,7 +40,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private readonly IDialogService dialogService;
     private readonly IKeyValueStore keyValueStore;
-    private ServerEntry server;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
@@ -108,6 +107,10 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [NotifyDataErrorInfo]
     [NitroxWorldSeed]
     private string serverSeed;
+    
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
+    private bool serverEmbedded = true;
 
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string OriginalServerName => Server?.Name;
@@ -115,24 +118,12 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     /// <summary>
     ///     When set, navigates to the <see cref="ManageServerView" />.
     /// </summary>
-    public ServerEntry Server
-    {
-        get => server;
-        private set
-        {
-            if (server != null)
-            {
-                server.PropertyChanged -= Server_PropertyChanged;
-            }
-            SetProperty(ref server, value);
-            if (server != null)
-            {
-                server.PropertyChanged += Server_PropertyChanged;
-            }
-        }
-    }
+    [ObservableProperty]
+    private ServerEntry server;
 
-    private bool ServerIsOnline => Server.IsOnline;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
+    private bool serverIsOnline;
 
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server.Name);
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
@@ -141,6 +132,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         this.dialogService = dialogService;
         this.keyValueStore = keyValueStore;
+
+        this.WhenActivated(disposables =>
+        {
+            this.WhenAnyValue(model => model.Server.IsOnline)
+                .Subscribe(isOnline => ServerIsOnline = isOnline)
+                .DisposeWith(disposables);
+        });
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
@@ -153,13 +151,17 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
         try
         {
-            server.Start(keyValueStore.GetSavesFolderDir());
-            server.Version = NitroxEnvironment.Version;
+            Server.Start(keyValueStore.GetSavesFolderDir());
+            Server.Version = NitroxEnvironment.Version;
+            if (Server.IsEmbedded)
+            {
+                HostScreen.Show(new EmbeddedServerViewModel(HostScreen, Server));
+            }
         }
         catch (Exception ex)
         {
-            Log.Error(ex, $"Error while starting server \"{server.Name}\"");
-            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{server.Name}\""));
+            Log.Error(ex, $"Error while starting server \"{Server.Name}\"");
+            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{Server.Name}\""));
         }
     }
 
@@ -191,6 +193,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerAutoPortForward = Server.AutoPortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
+        ServerEmbedded = Server.IsEmbedded;
     }
 
     private bool HasChanges() => ServerName != Server.Name ||
@@ -205,7 +208,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerPort != Server.Port ||
                                  ServerAutoPortForward != Server.AutoPortForward ||
                                  ServerAllowLanDiscovery != Server.AllowLanDiscovery ||
-                                 ServerAllowCommands != Server.AllowCommands;
+                                 ServerAllowCommands != Server.AllowCommands ||
+                                 ServerEmbedded != Server.IsEmbedded;
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     private void Back() => HostScreen.Back();
@@ -245,6 +249,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
+        Server.IsEmbedded = ServerEmbedded;
 
         Config config = Config.Load(SaveFolderDirectory);
         using (config.Update(SaveFolderDirectory))
@@ -253,12 +258,13 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             if (Server.IsNewServer) { config.Seed = Server.Seed; }
             config.GameMode = Server.GameMode;
             config.DefaultPlayerPerm = Server.PlayerPermissions;
-            config.SaveInterval = Server.AutoSaveInterval * 1000; // Convert seconds to milliseconds
+            config.SaveInterval = (int)TimeSpan.FromSeconds(Server.AutoSaveInterval).TotalMilliseconds;
             config.MaxConnections = Server.MaxPlayers;
             config.ServerPort = Server.Port;
             config.AutoPortForward = Server.AutoPortForward;
             config.LANDiscoveryEnabled = Server.AllowLanDiscovery;
             config.DisableConsole = !Server.AllowCommands;
+            config.IsEmbedded = Server.IsEmbedded;
         }
 
         Undo(); // Used to update the UI with corrected values (Trims and ToUppers)
@@ -287,6 +293,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerAutoPortForward = Server.AutoPortForward;
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
+        ServerEmbedded = Server.IsEmbedded;
     }
 
     private bool CanUndo() => !ServerIsOnline && HasChanges();
@@ -300,15 +307,15 @@ public partial class ManageServerViewModel : RoutableViewModelBase
             {
                 Title = "Select an image",
                 AllowMultiple = false,
-                FileTypeFilter = new[]
-                {
+                FileTypeFilter =
+                [
                     new FilePickerFileType("All Images + Icons")
                     {
-                        Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.ico" },
-                        AppleUniformTypeIdentifiers = new[] { "public.image" },
-                        MimeTypes = new[] { "image/*" }
+                        Patterns = ["*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.ico"],
+                        AppleUniformTypeIdentifiers = ["public.image"],
+                        MimeTypes = ["image/*"]
                     }
-                }
+                ]
             });
             string newIconFile = files.FirstOrDefault()?.TryGetLocalPath();
             if (newIconFile == null || !File.Exists(newIconFile))
@@ -338,7 +345,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         {
             config.Serialize(SaveFolderDirectory);
         }
-        LoadFrom(server);
+        LoadFrom(Server);
     }
 
     [RelayCommand]
@@ -370,8 +377,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                 }
 
                 ZipFile.ExtractToDirectory(backupFile, SaveFolderDirectory, true);
-                server.RefreshFromDirectory(SaveFolderDirectory);
-                LoadFrom(server);
+                Server.RefreshFromDirectory(SaveFolderDirectory);
+                LoadFrom(Server);
                 LauncherNotifier.Success("Backup restored successfully.");
             }
             catch (Exception ex)
@@ -409,14 +416,4 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     private bool CanRestoreBackupAndDeleteServer() => !ServerIsOnline;
-
-    private void Server_PropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(ServerEntry.IsOnline))
-        {
-            OnPropertyChanged(nameof(ServerIsOnline));
-            RestoreBackupCommand.NotifyCanExecuteChanged();
-            DeleteServerCommand.NotifyCanExecuteChanged();
-        }
-    }
 }

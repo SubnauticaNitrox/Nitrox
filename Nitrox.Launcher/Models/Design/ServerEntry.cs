@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -6,16 +7,15 @@ using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia.Collections;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
-using Nitrox.Launcher.Models.Utils;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
@@ -78,7 +78,10 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private Bitmap serverIcon;
 
-    private ServerProcess serverProcess;
+    [ObservableProperty]
+    private bool isEmbedded;
+
+    internal ServerProcess Process { get; private set; }
 
     [ObservableProperty]
     private Version version = NitroxEnvironment.Version;
@@ -137,6 +140,7 @@ public partial class ServerEntry : ObservableObject
         AllowCommands = !config.DisableConsole;
         IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json"));
         Version = version;
+        IsEmbedded = config.IsEmbedded;
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}"))
                                                      ?
                                                      // This file is affected by server saving
@@ -152,12 +156,12 @@ public partial class ServerEntry : ObservableObject
         {
             throw new DirectoryNotFoundException($"Directory '{savesDir}' not found");
         }
-        if (serverProcess?.IsRunning ?? false)
+        if (Process?.IsRunning ?? false)
         {
             throw new DuplicateSingularApplicationException("Nitrox Server");
         }
         // Start server and add notify when server closed.
-        serverProcess = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync));
+        Process = ServerProcess.Start(Path.Combine(savesDir, Name), () => Dispatcher.UIThread.InvokeAsync(StopAsync), IsEmbedded);
 
         IsNewServer = false;
         IsOnline = true;
@@ -166,7 +170,7 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand]
     public async Task<bool> StopAsync()
     {
-        if (serverProcess == null || await serverProcess.CloseAsync())
+        if (Process == null || await Process.CloseAsync())
         {
             IsOnline = false;
             return true;
@@ -178,7 +182,7 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand]
     public void OpenSaveFolder()
     {
-        Process.Start(new ProcessStartInfo
+        System.Diagnostics.Process.Start(new ProcessStartInfo
         {
             FileName = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name),
             Verb = "open",
@@ -188,13 +192,14 @@ public partial class ServerEntry : ObservableObject
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
 
-    private class ServerProcess : IDisposable
+    internal class ServerProcess : IDisposable
     {
         private NamedPipeClientStream commandStream;
         private Process serverProcess;
         public bool IsRunning => !serverProcess?.HasExited ?? false;
+        public AvaloniaList<string> Output { get; } = new();
 
-        private ServerProcess(string saveDir, Action onExited)
+        private ServerProcess(string saveDir, Action onExited, bool captureOutput = false)
         {
             string serverExeName = "NitroxServer-Subnautica.exe";
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -205,14 +210,20 @@ public partial class ServerEntry : ObservableObject
             ProcessStartInfo startInfo = new(serverPath)
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,
-                Verb = "open",
-                Arguments = $@"""{Path.GetFileName(saveDir)}"""
+                Arguments = $@"""{Path.GetFileName(saveDir)}""",
+                RedirectStandardOutput = captureOutput,
+                UseShellExecute = false
             };
 
-            serverProcess = Process.Start(startInfo);
+            serverProcess = System.Diagnostics.Process.Start(startInfo);
             if (serverProcess != null)
             {
                 serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
+                if (captureOutput)
+                {
+                    serverProcess.OutputDataReceived += (sender, args) => Output.Add(args.Data ?? "");
+                    serverProcess.BeginOutputReadLine();
+                }
                 serverProcess.Exited += (_, _) =>
                 {
                     onExited?.Invoke();
@@ -225,7 +236,7 @@ public partial class ServerEntry : ObservableObject
             }
         }
 
-        public static ServerProcess Start(string saveDir, Action onExited) => new(saveDir, onExited);
+        public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded) => new(saveDir, onExited, isEmbedded);
 
         public async Task<bool> CloseAsync()
         {
@@ -262,6 +273,14 @@ public partial class ServerEntry : ObservableObject
 
         public void Dispose()
         {
+            try
+            {
+                commandStream?.Dispose();
+            }
+            catch
+            {
+                // ignored
+            }
             serverProcess?.Dispose();
             serverProcess = null;
         }
