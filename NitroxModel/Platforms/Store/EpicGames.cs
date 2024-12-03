@@ -10,9 +10,6 @@ namespace NitroxModel.Platforms.Store
 {
     public sealed class EpicGames : IGamePlatform
     {
-        private static EpicGames instance;
-        public static EpicGames Instance => instance ??= new EpicGames();
-
         public string Name => "Epic Games Store";
         public Platform Platform => Platform.EPIC;
 

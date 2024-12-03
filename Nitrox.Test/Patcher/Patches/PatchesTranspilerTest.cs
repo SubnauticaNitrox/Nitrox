@@ -136,8 +136,8 @@ public class PatchesTranspilerTest
         AssemblyName asmName = new();
         asmName.Name = "PatchTestAssembly";
 
-        AssemblyBuilder myAsmBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave);
-        patchTestModule = myAsmBuilder.DefineDynamicModule( asmName.Name, $"{asmName.Name}.dll", true);
+        PersistedAssemblyBuilder myAsmBuilder = new(asmName, typeof(object).Assembly);
+        patchTestModule = myAsmBuilder.DefineDynamicModule(asmName.Name);
     }
 
     /// This complicated generation is required for ILGenerator.DeclareLocal to work

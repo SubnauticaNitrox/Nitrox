@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Nitrox.Launcher": {
+      "commandName": "Project"
+    },
+    "Instant launch \"world\"": {
+      "commandName": "Project",
+      "commandLineArgs": "--instantlaunch \"world\" \"Player1\""
+    }
+  }
+}

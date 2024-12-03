@@ -1,26 +1,63 @@
 using System;
 using System.Runtime.InteropServices;
-using NitroxModel.Platforms.OS.Windows.Internal;
+using static NitroxModel.Platforms.OS.Windows.Internal.Win32Native;
 
 namespace NitroxModel.Platforms.OS.Windows;
 
 public class WindowsApi
 {
-    public static void EnableDefaultWindowAnimations(IntPtr hWnd, int nIndex = -16)
+    /// <summary>
+    ///     Applies default OS animations to the window handle.
+    /// </summary>
+    /// <remarks>
+    ///     Note on Windows OS: it will force enable resizing of a Window if <see cref="canResize"/> is true. Make sure to set it correctly.
+    /// </remarks>
+    public static void EnableDefaultWindowAnimations(nint windowHandle, bool canResize)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            IntPtr dwNewLong = new((long)(Win32Native.WS.WS_CAPTION | Win32Native.WS.WS_CLIPCHILDREN | Win32Native.WS.WS_MINIMIZEBOX | Win32Native.WS.WS_MAXIMIZEBOX | Win32Native.WS.WS_SYSMENU | Win32Native.WS.WS_SIZEBOX));
-            HandleRef handle = new(null, hWnd);
-            switch (IntPtr.Size)
-            {
-                case 8:
-                    Win32Native.SetWindowLongPtr64(handle, nIndex, dwNewLong);
-                    break;
-                default:
-                    Win32Native.SetWindowLong32(handle, nIndex, dwNewLong.ToInt32());
-                    break;
-            }
+            return;
+        }
+
+        WS dwNewLong = WS.WS_CAPTION | WS.WS_CLIPCHILDREN | WS.WS_MINIMIZEBOX | WS.WS_MAXIMIZEBOX | WS.WS_SYSMENU;
+        if (canResize)
+        {
+            dwNewLong |= WS.WS_SIZEBOX;
+        }
+
+        HandleRef handle = new(null, windowHandle);
+        switch (IntPtr.Size)
+        {
+            case 8:
+                SetWindowLongPtr64(handle, -16, (long)dwNewLong);
+                break;
+            default:
+                SetWindowLong32(handle, -16, (int)dwNewLong);
+                break;
         }
     }
+
+    public static void BringProcessToFront(IntPtr windowHandle)
+    {
+        if (windowHandle == IntPtr.Zero)
+        {
+            return;
+        }
+        const int SW_RESTORE = 9;
+        if (IsIconic(windowHandle))
+        {
+            ShowWindow(windowHandle, SW_RESTORE);
+        }
+
+        SetForegroundWindow(windowHandle);
+    }
+
+    [DllImport("User32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr handle);
+    [DllImport("User32.dll")]
+    private static extern bool ShowWindow(IntPtr handle, int nCmdShow);
+    [DllImport("User32.dll")]
+    private static extern bool IsIconic(IntPtr handle);
+    [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+    private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 }
