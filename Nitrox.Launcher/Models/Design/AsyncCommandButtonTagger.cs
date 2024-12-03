@@ -72,4 +72,16 @@ public class AsyncCommandButtonTagger : IDisposable
     {
         commandChangeSubscription.Dispose();
     }
+
+    /// <summary>
+    ///     Removes the busy states of buttons.
+    /// </summary>
+    public void Clear()
+    {
+        foreach ((ICommand _, BusyState value) in states)
+        {
+            value.Dispose();
+        }
+        states.Clear();
+    }
 }

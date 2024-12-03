@@ -19,13 +19,13 @@ public class NitroxAttached : AvaloniaObject
     public static readonly AttachedProperty<bool> IsNumericInputProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("IsNumericInput");
     public static readonly AttachedProperty<bool> HasUserInteractedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, InputElement, bool>("HasUserInteracted");
     public static readonly AttachedProperty<bool> UseCustomTitleBarProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Window, bool>("UseCustomTitleBar", true);
-    private static AsyncCommandButtonTagger asyncCommandButtonTagger;
+    internal static readonly AsyncCommandButtonTagger AsyncCommandButtonTagger;
 
     static NitroxAttached()
     {
         InputElement.LostFocusEvent.Raised.Subscribe(HasUserInteractedOnNext);
         InputElement.TextInputEvent.Raised.Subscribe(HasUserInteractedOnNext);
-        asyncCommandButtonTagger = new AsyncCommandButtonTagger("busy");
+        AsyncCommandButtonTagger = new AsyncCommandButtonTagger("busy");
 
         void HasUserInteractedOnNext((object Sender, RoutedEventArgs EventArgs) args)
         {
