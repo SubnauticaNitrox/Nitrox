@@ -27,6 +27,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     private readonly IDialogService dialogService;
     private readonly ServerService serverService;
     private readonly ManageServerViewModel manageServerViewModel;
+    private readonly Lock serversLock = new();
     private CancellationTokenSource serverRefreshCts;
 
     [ObservableProperty]
@@ -51,11 +52,14 @@ public partial class ServersViewModel : RoutableViewModelBase
             serverRefreshCts = new();
             WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
             {
-                for (int i = Servers.Count - 1; i >= 0; i--)
+                lock (serversLock)
                 {
-                    if (Servers[i].Name == message.SaveName)
+                    for (int i = Servers.Count - 1; i >= 0; i--)
                     {
-                        Servers.RemoveAt(i);
+                        if (Servers[i].Name == message.SaveName)
+                        {
+                            Servers.RemoveAt(i);
+                        }
                     }
                 }
             });
@@ -86,7 +90,10 @@ public partial class ServersViewModel : RoutableViewModelBase
         try
         {
             ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result.Name)));
-            AddServer(serverEntry);
+            lock (serversLock)
+            {
+                Servers.Insert(0, serverEntry);
+            }
         }
         catch (Exception ex)
         {
@@ -145,36 +152,34 @@ public partial class ServersViewModel : RoutableViewModelBase
                 }
             }
 
-            // Remove any servers from the Servers list that are not found in the saves folder
-            for (int i = Servers.Count - 1; i >= 0; i--)
+            lock (serversLock)
             {
-                if (serversOnDisk.All(s => s.Name != Servers[i].Name))
+                // Remove any servers from the Servers list that are not found in the saves folder
+                for (int i = Servers.Count - 1; i >= 0; i--)
                 {
-                    Servers.RemoveAt(i);
+                    if (serversOnDisk.All(s => s.Name != Servers[i].Name))
+                    {
+                        Servers.RemoveAt(i);
+                    }
                 }
-            }
 
-            // Add any new servers found on the disk to the Servers list
-            foreach (ServerEntry server in serversOnDisk)
-            {
-                if (Servers.All(s => s.Name != server.Name) && !string.IsNullOrWhiteSpace(server.Name))
+                // Add any new servers found on the disk to the Servers list
+                foreach (ServerEntry server in serversOnDisk)
                 {
-                    Servers.Add(server);
+                    if (Servers.All(s => s.Name != server.Name) && !string.IsNullOrWhiteSpace(server.Name))
+                    {
+                        Servers.Add(server);
+                    }
                 }
-            }
 
-            Servers = [..Servers.OrderByDescending(entry => entry.LastAccessedTime)];
+                Servers = [..Servers.OrderByDescending(entry => entry.LastAccessedTime)];
+            }
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Error while getting saves");
             dialogService.ShowErrorAsync(ex, "Error while getting saves");
         }
-    }
-
-    public void AddServer(ServerEntry serverEntry)
-    {
-        Servers.Insert(0, serverEntry);
     }
 
     private void InitializeWatcher()
