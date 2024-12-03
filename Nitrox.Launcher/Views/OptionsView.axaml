@@ -23,7 +23,7 @@
 
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
-            <StackPanel Orientation="Vertical" Spacing="22" Background="{DynamicResource BrandWhiteBrush}">
+            <StackPanel Classes="viewPadding" Orientation="Vertical" Spacing="22" Background="{DynamicResource BrandWhiteBrush}">
                 <TextBlock Classes="header" Text="Options" />
 
                 <!-- Subnautica Runtime Selection -->

@@ -11,8 +11,7 @@
              DataContext="{x:Static design:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
     <ThemeVariantScope RequestedThemeVariant="Dark">
-        <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhiteBrush}">
-
+        <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhiteBrush}">
             <StackPanel>
                 <Button Margin="0 0 0 26" Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">
                     <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back.png" Width="24" Height="24" />

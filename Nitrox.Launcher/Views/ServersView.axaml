@@ -8,7 +8,7 @@
              x:Class="Nitrox.Launcher.Views.ServersView"
              DataContext="{x:Static design:DesignData.ServersViewModel}">
     <ThemeVariantScope RequestedThemeVariant="Dark">
-        <Panel Background="{DynamicResource BrandWhiteBrush}">
+        <Panel Classes="viewPadding" Background="{DynamicResource BrandWhiteBrush}">
             <Panel IsVisible="{Binding !Servers.Count}">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Image Source="/Assets/Images/world-manager/server.png" Stretch="None" Margin="0 0 0 73" />

@@ -10,7 +10,7 @@
              x:Class="Nitrox.Launcher.Views.UpdatesView">
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
-            <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
+            <StackPanel Classes="viewPadding" Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
 
                 <TextBlock Classes="header" Text="Updates"/>
 

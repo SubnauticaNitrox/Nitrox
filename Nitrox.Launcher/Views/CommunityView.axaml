@@ -43,7 +43,7 @@
 
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
-            <StackPanel Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
+            <StackPanel Classes="viewPadding" Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
                 <TextBlock Classes="header" Text="Community" />
                 <Image Source="/Assets/Images/banners/community.png" MaxWidth="1580" />
                 <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="280">

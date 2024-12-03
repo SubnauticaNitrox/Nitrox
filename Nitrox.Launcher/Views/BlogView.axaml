@@ -12,7 +12,7 @@
 
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <ScrollViewer Classes="main">
-            <StackPanel Spacing="20" Background="{DynamicResource BrandWhiteBrush}">
+            <StackPanel Classes="viewPadding" Spacing="20" Background="{DynamicResource BrandWhiteBrush}">
 
                 <StackPanel Spacing="15">
                     <TextBlock Classes="header" Text="Blog"/>

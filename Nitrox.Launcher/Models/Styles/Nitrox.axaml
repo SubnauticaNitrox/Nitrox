@@ -159,15 +159,10 @@
         <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Style Selector="^ > :is(UserControl) > :is(Control) > :is(Control).main">
-            <Setter Property="Margin" Value="-34 -45" />
-            <Style Selector="^ > :is(Control)">
-                <Setter Property="Margin" Value="34 45" />
-            </Style>
-        </Style>
-        <Style Selector="^ > :is(UserControl) > :is(Control) > :is(Control):not(.main)">
-            <Setter Property="Margin" Value="34 45" />
-        </Style>
+    </Style>
+    
+    <Style Selector=":is(Layoutable).viewPadding">
+        <Setter Property="Margin" Value="34 45" />
     </Style>
 
     <Style Selector="Border.serverEntry">
