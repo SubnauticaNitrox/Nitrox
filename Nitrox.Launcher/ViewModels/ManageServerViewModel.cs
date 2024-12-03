@@ -115,9 +115,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     public static Array PlayerPerms => Enum.GetValues(typeof(Perms));
     public string OriginalServerName => Server?.Name;
 
-    /// <summary>
-    ///     When set, navigates to the <see cref="ManageServerView" />.
-    /// </summary>
     [ObservableProperty]
     private ServerEntry server;
 
@@ -142,7 +139,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    public async Task StartServer()
+    public async Task StartServerAsync()
     {
         if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
         {

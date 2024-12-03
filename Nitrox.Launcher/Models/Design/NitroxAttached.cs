@@ -41,7 +41,17 @@ public class NitroxAttached : AvaloniaObject
     /// </summary>
     public static void SetFocus(AvaloniaObject obj, object value)
     {
-        static void VisualOnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e) => (sender as IInputElement)?.Focus();
+        static void VisualOnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            if (sender is Visual visual)
+            {
+                visual.AttachedToVisualTree -= VisualOnAttachedToVisualTree;
+            }
+            if (sender is IInputElement element)
+            {
+                element.Focus();
+            }
+        }
 
         switch (obj)
         {
