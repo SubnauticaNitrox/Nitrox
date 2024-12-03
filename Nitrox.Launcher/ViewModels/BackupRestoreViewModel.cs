@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -34,27 +35,28 @@ public partial class BackupRestoreViewModel : ModalViewModelBase
 
     public BackupRestoreViewModel()
     {
-        this.WhenAnyValue(model => model.SaveFolderDirectory)
-            .Subscribe(owner =>
-            {
-                Backups.Clear();
-                Backups.AddRange(GetBackups(SaveFolderDirectory));
-            })
-            .DisposeWith(Disposables);
+        this.WhenActivated(disposables =>
+        {
+            this.WhenAnyValue(model => model.SaveFolderDirectory)
+                .Where(x => !string.IsNullOrWhiteSpace(x) && Directory.Exists(x))
+                .Subscribe(owner =>
+                {
+                    Backups.Clear();
+                    Backups.AddRange(GetBackups(SaveFolderDirectory));
+                })
+                .DisposeWith(disposables);
+        });
     }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackup))]
-    public void RestoreBackup()
-    {
-        Close();
-    }
+    public void RestoreBackup() => Close(ButtonOptions.Ok);
 
     public bool CanRestoreBackup() => !HasErrors;
 
     private static IEnumerable<BackupItem> GetBackups(string saveDirectory)
     {
         IEnumerable<string> GetBackupFilePaths(string backupRootDir) =>
-            Directory.GetFiles(backupRootDir, "*.zip")
+            Directory.EnumerateFiles(backupRootDir, "*.zip")
                      .Where(file =>
                      {
                          // Verify file name format of "Backup - {DateTime:BACKUP_DATE_TIME_FORMAT}.zip"

@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel, IActivatableViewModel
+public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
 {
     /// <summary>
     ///     Gets the unique URL for the view.
@@ -27,6 +27,4 @@ public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel,
     ///     Pass-through event from MVVM toolkit to ReactiveUI.
     /// </summary>
     public void RaisePropertyChanged(PropertyChangedEventArgs args) => OnPropertyChanged(args);
-
-    public ViewModelActivator Activator { get; } = new();
 }

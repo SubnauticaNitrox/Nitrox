@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Collections;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
@@ -32,16 +34,20 @@ public partial class UpdatesViewModel : RoutableViewModelBase
 
     public UpdatesViewModel(IScreen screen) : base(screen)
     {
-        Task.Run(async () =>
+        this.WhenActivated((CompositeDisposable disposables) =>
         {
-            try
+            Dispatcher.UIThread.Invoke(async () =>
             {
-                nitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync());
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while trying to display Nitrox changelogs");
-            }
+                try
+                {
+                    nitroxChangelogs.Clear();
+                    nitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync());
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error while trying to display Nitrox changelogs");
+                }
+            });
         });
     }
 
@@ -63,13 +69,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
             {
                 string versionMessage = $"A new version of the mod ({latestVersion}) is available.";
                 Log.Info(versionMessage);
-                LauncherNotifier.Warning(versionMessage); //, new ToastNotifications.Core.MessageOptions()   // TODO: Implement this?
-                //{
-                //    NotificationClickAction = (n) =>
-                //    {
-                //        MainViewModel.Router.Navigate.Execute(AppViewLocator.GetSharedViewModel< UpdatesViewModel>(););
-                //    },
-                //});
+                LauncherNotifier.Warning(versionMessage);
             }
 
             version = currentVersion.ToString();

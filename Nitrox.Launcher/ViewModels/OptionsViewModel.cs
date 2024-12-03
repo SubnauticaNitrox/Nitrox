@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Input;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Utils;
@@ -40,11 +40,14 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         this.keyValueStore = keyValueStore;
 
-        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-        SavesFolderDir = keyValueStore.GetSavesFolderDir();
+        this.WhenActivated((CompositeDisposable disposables) =>
+        {
+            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+            SavesFolderDir = keyValueStore.GetSavesFolderDir();
 
-        _ = SetTargetedSubnauticaPath(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+            _ = SetTargetedSubnauticaPath(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+        });
     }
 
     public async Task SetTargetedSubnauticaPath(string path)

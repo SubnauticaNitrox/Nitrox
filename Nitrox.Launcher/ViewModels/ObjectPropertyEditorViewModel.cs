@@ -36,25 +36,28 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
     /// </summary>
     public Func<PropertyInfo, bool> FieldAcceptFilter { get; set; } = _ => true;
 
-
     public ObjectPropertyEditorViewModel(IDialogService dialogService)
     {
         this.dialogService = dialogService;
-        this.WhenAnyValue(model => model.OwnerObject)
-            .Subscribe(owner =>
-            {
-                EditorFields.Clear();
-                if (owner != null)
+
+        this.WhenActivated(disposables =>
+        {
+            this.WhenAnyValue(model => model.OwnerObject)
+                .Subscribe(owner =>
                 {
-                    EditorFields.AddRange(owner
-                                          .GetType()
-                                          .GetProperties()
-                                          .Where(FieldAcceptFilter)
-                                          .Select(p => new EditorField(p, p.GetValue(owner), GetPossibleValues(p)))
-                                          .Where(editorField => editorField.Value is string or bool or int or float || editorField.PossibleValues != null));
-                }
-            })
-            .DisposeWith(Disposables);
+                    EditorFields.Clear();
+                    if (owner != null)
+                    {
+                        EditorFields.AddRange(owner
+                                              .GetType()
+                                              .GetProperties()
+                                              .Where(FieldAcceptFilter)
+                                              .Select(p => new EditorField(p, p.GetValue(owner), GetPossibleValues(p)))
+                                              .Where(editorField => editorField.Value is string or bool or int or float || editorField.PossibleValues != null));
+                    }
+                })
+                .DisposeWith(disposables);
+        });
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
@@ -76,8 +79,6 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
 
     public bool CanSave() => !HasErrors;
 
-    private static AvaloniaList<object> GetPossibleValues(PropertyInfo propertyInfo)
-    {
-        return propertyInfo.PropertyType.IsEnum ? new AvaloniaList<object>(propertyInfo.PropertyType.GetFields(BindingFlags.Static | BindingFlags.Public).Select(f => f.GetValue(propertyInfo.PropertyType))) : null;
-    }
+    private static AvaloniaList<object> GetPossibleValues(PropertyInfo propertyInfo) =>
+        propertyInfo.PropertyType.IsEnum ? new AvaloniaList<object>(propertyInfo.PropertyType.GetFields(BindingFlags.Static | BindingFlags.Public).Select(f => f.GetValue(propertyInfo.PropertyType))) : null;
 }

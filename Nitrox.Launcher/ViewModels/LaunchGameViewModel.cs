@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -57,10 +57,18 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         this.optionsViewModel = optionsViewModel;
         this.keyValueStore = keyValueStore;
 
-        NitroxUser.GamePlatformChanged += UpdateGamePlatform;
+        this.WhenActivated(disposables =>
+        {
+            NitroxUser.GamePlatformChanged += UpdateGamePlatform;
 
-        UpdateGamePlatform();
-        HandleInstantLaunchForDevelopment();
+            UpdateGamePlatform();
+            HandleInstantLaunchForDevelopment();
+
+            Disposable.Create(UpdateGamePlatform,updateGamePlatform =>
+            {
+                NitroxUser.GamePlatformChanged -= updateGamePlatform;
+            }).DisposeWith(disposables);
+        });
     }
 
     [RelayCommand]

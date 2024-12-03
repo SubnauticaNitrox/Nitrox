@@ -61,7 +61,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     private async Task CreateAsync()
     {
         await Task.Run(() => CreateEmptySave(Name, SelectedGameMode));
-        Close();
+        Close(ButtonOptions.Ok);
     }
 
     private bool CanCreate() => !HasErrors;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
@@ -63,38 +64,46 @@ public partial class MainWindowViewModel : ViewModelBase
         DefaultViewCommand = OpenLaunchGameViewCommand;
         Notifications = notifications == null ? [] : [.. notifications];
 
-        WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
+        this.WhenActivated(disposables =>
         {
-            Notifications.Add(message.Item);
+            WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
+            {
+                Notifications.Add(message.Item);
+                Task.Run(async () =>
+                {
+                    await Task.Delay(7000);
+                    WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
+                });
+            });
+            WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, async (_, message) =>
+            {
+                message.Item.Dismissed = true;
+                await Task.Delay(1000); // Wait for animations
+                if (!Design.IsDesignMode) // Prevent design preview crashes
+                {
+                    Notifications.Remove(message.Item);
+                }
+            });
+
+            if (!NitroxEnvironment.IsReleaseMode)
+            {
+                LauncherNotifier.Info("You're now using Nitrox DEV build");
+            }
+
             Task.Run(async () =>
             {
-                await Task.Delay(7000);
-                WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
+                if (!await NetHelper.HasInternetConnectivityAsync())
+                {
+                    Log.Warn("Launcher may not be connected to internet");
+                    LauncherNotifier.Warning("Launcher may not be connected to internet");
+                }
+                UpdateAvailableOrUnofficial = await UpdatesViewModel.IsNitroxUpdateAvailableAsync();
             });
-        });
-        WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, async (_, message) =>
-        {
-            message.Item.Dismissed = true;
-            await Task.Delay(1000); // Wait for animations
-            if (!Design.IsDesignMode) // Prevent design preview crashes
+            
+            Disposable.Create(this, vm =>
             {
-                Notifications.Remove(message.Item);
-            }
-        });
-
-        if (!NitroxEnvironment.IsReleaseMode)
-        {
-            LauncherNotifier.Info("You're now using Nitrox DEV build");
-        }
-
-        Task.Run(async () =>
-        {
-            if (!await NetHelper.HasInternetConnectivityAsync())
-            {
-                Log.Warn("Launcher may not be connected to internet");
-                LauncherNotifier.Warning("Launcher may not be connected to internet");
-            }
-            UpdateAvailableOrUnofficial = await UpdatesViewModel.IsNitroxUpdateAvailableAsync();
+                WeakReferenceMessenger.Default.UnregisterAll(vm);
+            }).DisposeWith(disposables);
         });
     }
 

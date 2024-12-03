@@ -37,14 +37,17 @@ public partial class DialogBoxViewModel : ModalViewModelBase
 
     public DialogBoxViewModel()
     {
-        this.WhenAnyValue(model => model.Title, model => model.Description)
-            .Subscribe(tuple =>
-            {
-                (string titleText, string descriptionText) = tuple;
-                WindowTitle ??= string.IsNullOrEmpty(titleText) ? WindowTitle : titleText;
-                WindowTitle ??= string.IsNullOrEmpty(descriptionText) ? WindowTitle : $"{descriptionText[..Math.Min(30, descriptionText.Length)]}...";
-            })
-            .DisposeWith(Disposables);
+        this.WhenActivated(disposables =>
+        {
+            this.WhenAnyValue(model => model.Title, model => model.Description)
+                .Subscribe(tuple =>
+                {
+                    (string titleText, string descriptionText) = tuple;
+                    WindowTitle ??= string.IsNullOrEmpty(titleText) ? WindowTitle : titleText;
+                    WindowTitle ??= string.IsNullOrEmpty(descriptionText) ? WindowTitle : $"{descriptionText[..Math.Min(30, descriptionText.Length)]}...";
+                })
+                .DisposeWith(disposables);
+        });
     }
 
     [RelayCommand]

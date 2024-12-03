@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Avalonia.Media;
 using Avalonia.Threading;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models.Utils;
@@ -27,12 +26,21 @@ public static class DialogServiceExtensions
 
             T viewModel = dialogService.CreateViewModel<T>();
             setup?.Invoke(viewModel, extraParameter);
-            bool? result = await dialogService.ShowDialogAsync<T>(owner, viewModel);
-            if (result == true)
+            try
             {
-                return viewModel;
+                viewModel.Activator.Activate();
+                bool? result = await dialogService.ShowDialogAsync<T>(owner, viewModel);
+                if (result == true)
+                {
+                    return viewModel;
+                }
+                return default;
             }
-            return default;
+            finally
+            {
+                viewModel.Activator.Deactivate();
+                viewModel.Activator.Dispose();
+            }
         }
         catch (Exception ex)
         {
