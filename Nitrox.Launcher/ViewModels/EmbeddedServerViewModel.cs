@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -59,7 +60,8 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     {
         if (ShouldAutoScroll && args.HeightChanged && args.Source is Visual visual)
         {
-            visual.FindAncestorOfType<ScrollViewer>()?.ScrollToEnd();
+            // Without dispatcher invoke it sometimes doesn't scroll all the way down (control measure logic bug?).
+            Dispatcher.UIThread.InvokeAsync(() => visual.FindAncestorOfType<ScrollViewer>()?.ScrollToEnd());
         }
     }
 }

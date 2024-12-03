@@ -8,7 +8,7 @@
              DataContext="{x:Static design:DesignData.EmbeddedServerViewModel}"
              x:Class="Nitrox.Launcher.Views.EmbeddedServerView">
     <ThemeVariantScope RequestedThemeVariant="Dark">
-        <Grid RowDefinitions="*,Auto">
+        <Grid RowDefinitions="*,Auto" Margin="6">
             <ScrollViewer x:Name="ScrollViewer" Grid.Row="0">
                 <ItemsControl ItemsSource="{Binding ServerOutput}">
                     <Interaction.Behaviors>
