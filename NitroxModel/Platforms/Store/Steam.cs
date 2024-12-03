@@ -60,6 +60,7 @@ public sealed class Steam : IGamePlatform
             launchExe = "/bin/sh";
             launchArgs = $@"-c ""nohup '{exe}' {launchArgs}"" &";
         }
+        Stopwatch steamReadyStopwatch = Stopwatch.StartNew();
         Process process = Process.Start(new ProcessStartInfo
         {
             WorkingDirectory = Path.GetDirectoryName(exe) ?? Directory.GetCurrentDirectory(),
@@ -79,14 +80,15 @@ public sealed class Steam : IGamePlatform
         using CancellationTokenSource steamReadyCts = new(TimeSpan.FromSeconds(30));
         try
         {
-            DateTime consoleLogFileLastWrite = GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe));
+            DateTime consoleLogFileLastWrite = GetSteamConsoleLogLastWrite(exe);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
                                                    v => v > 0,
                                                    steamReadyCts.Token);
             }
-            while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(Path.GetDirectoryName(exe)) && !steamReadyCts.IsCancellationRequested)
+            Log.Debug("Waiting for Steam to get ready...");
+            while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(exe) && !steamReadyCts.IsCancellationRequested)
             {
                 try
                 {
@@ -97,6 +99,7 @@ public sealed class Steam : IGamePlatform
                     // ignored
                 }
             }
+            Log.Debug($"Steam wait result: {(steamReadyCts.IsCancellationRequested ? "timed out" : $"startup took about {steamReadyStopwatch.Elapsed.TotalSeconds}s")}");
         }
         catch (Exception ex)
         {

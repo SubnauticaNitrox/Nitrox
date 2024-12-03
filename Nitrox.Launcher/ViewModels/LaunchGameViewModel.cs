@@ -28,6 +28,7 @@ namespace Nitrox.Launcher.ViewModels;
 public partial class LaunchGameViewModel : RoutableViewModelBase
 {
     public static Task<string> LastFindSubnauticaTask;
+    private static bool hasInstantLaunched;
 
     private readonly OptionsViewModel optionsViewModel;
     private readonly ServersViewModel serversViewModel;
@@ -182,6 +183,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [Conditional("DEBUG")]
     private void HandleInstantLaunchForDevelopment()
     {
+        if (hasInstantLaunched)
+        {
+            return;
+        }
+        hasInstantLaunched = true;
         Task.Run(async () =>
         {
             string[] launchArgs = Environment.GetCommandLineArgs().GetCommandArgs("--instantlaunch").ToArray();
@@ -203,7 +209,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
             ServerEntry server = ServerEntry.FromDirectory(serverPath);
             server.Name = serverName;
-            Task serverStartTask = serversViewModel.StartServerAsync(server).ContinueWithHandleError();
+            Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serversViewModel.StartServerAsync(server)).ContinueWithHandleError();
             // Start a game in multiplayer for each player
             foreach (string playerName in playerNames)
             {

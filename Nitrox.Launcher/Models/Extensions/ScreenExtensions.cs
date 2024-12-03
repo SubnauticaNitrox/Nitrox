@@ -20,4 +20,23 @@ public static class ScreenExtensions
     }
 
     public static void Back(this IScreen screen) => screen.Router.NavigateBack.Execute();
+
+    public static bool Back<TViewModel>(this IScreen screen) where TViewModel : IRoutableViewModel
+    {
+        if (screen.Router.FindViewModelInStack<TViewModel>() is not RoutableViewModelBase routableViewModel)
+        {
+            return false;
+        }
+        screen.Show(routableViewModel);
+        return true;
+    }
+
+    public static bool BackAny<T1, T2>(this IScreen screen) where T1 : IRoutableViewModel where T2 : IRoutableViewModel
+    {
+        if (screen.Back<T1>())
+        {
+            return true;
+        }
+        return screen.Back<T2>();
+    }
 }
