@@ -6,21 +6,17 @@ using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.Server;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -29,6 +25,7 @@ public partial class ServersViewModel : RoutableViewModelBase
 {
     private readonly IKeyValueStore keyValueStore;
     private readonly IDialogService dialogService;
+    private readonly ServerService serverService;
     private readonly ManageServerViewModel manageServerViewModel;
     private CancellationTokenSource serverRefreshCts;
 
@@ -41,10 +38,11 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     private readonly HashSet<string> loggedErrorDirectories = [];
 
-    public ServersViewModel(IScreen screen, IKeyValueStore keyValueStore, IDialogService dialogService, ManageServerViewModel manageServerViewModel) : base(screen)
+    public ServersViewModel(IScreen screen, IKeyValueStore keyValueStore, IDialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel) : base(screen)
     {
         this.keyValueStore = keyValueStore;
         this.dialogService = dialogService;
+        this.serverService = serverService;
         this.manageServerViewModel = manageServerViewModel;
 
         this.WhenActivated(disposables =>
@@ -100,31 +98,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     [RelayCommand]
     public async Task<bool> StartServerAsync(ServerEntry server)
     {
-        if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
-        {
-            return false;
-        }
-        if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
-        {
-            return false;
-        }
-
-        try
-        {
-            server.Start(keyValueStore.GetSavesFolderDir());
-            server.Version = NitroxEnvironment.Version;
-            if (server.IsEmbedded)
-            {
-                HostScreen.Show(new EmbeddedServerViewModel(HostScreen, server));
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, $"Error while starting server \"{server.Name}\"");
-            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{server.Name}\""));
-            return false;
-        }
+        return await serverService.StartServerAsync(server);
     }
 
     [RelayCommand]
@@ -135,7 +109,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             HostScreen.Show(new EmbeddedServerViewModel(HostScreen, server));
             return;
         }
-        if (server.Version != NitroxEnvironment.Version && !await ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
+        if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
         {
             return;
         }
@@ -196,17 +170,6 @@ public partial class ServersViewModel : RoutableViewModelBase
             Log.Error(ex, "Error while getting saves");
             dialogService.ShowErrorAsync(ex, "Error while getting saves");
         }
-    }
-
-    private async Task<bool> ConfirmServerVersionAsync(ServerEntry server)
-    {
-        return await dialogService.ShowAsync<DialogBoxViewModel>(model =>
-        {
-            model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
-            model.DescriptionFontSize = 24;
-            model.DescriptionFontWeight = FontWeight.Bold;
-            model.ButtonOptions = ButtonOptions.YesNo;
-        });
     }
 
     public void AddServer(ServerEntry serverEntry)

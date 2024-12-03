@@ -10,17 +10,16 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
-using Nitrox.Launcher.Views;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -40,6 +39,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
     private readonly IDialogService dialogService;
     private readonly IKeyValueStore keyValueStore;
+    private readonly ServerService serverService;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand), nameof(UndoCommand), nameof(BackCommand), nameof(StartServerCommand))]
@@ -125,10 +125,11 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server.Name);
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
 
-    public ManageServerViewModel(IScreen screen, IDialogService dialogService, IKeyValueStore keyValueStore) : base(screen)
+    public ManageServerViewModel(IScreen screen, IDialogService dialogService, IKeyValueStore keyValueStore, ServerService serverService) : base(screen)
     {
         this.dialogService = dialogService;
         this.keyValueStore = keyValueStore;
+        this.serverService = serverService;
 
         this.WhenActivated(disposables =>
         {
@@ -141,25 +142,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
     public async Task StartServerAsync()
     {
-        if (await GameInspect.IsOutdatedGameAndNotify(NitroxUser.GamePath, dialogService))
-        {
-            return;
-        }
-
-        try
-        {
-            Server.Version = NitroxEnvironment.Version;
-            Server.Start(keyValueStore.GetSavesFolderDir());
-            if (Server.IsEmbedded)
-            {
-                HostScreen.Show(new EmbeddedServerViewModel(HostScreen, Server));
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, $"Error while starting server \"{Server.Name}\"");
-            await Dispatcher.UIThread.InvokeAsync(async () => await dialogService.ShowErrorAsync(ex, $"Error while starting server \"{Server.Name}\""));
-        }
+        await serverService.StartServerAsync(Server);
     }
 
     [RelayCommand]

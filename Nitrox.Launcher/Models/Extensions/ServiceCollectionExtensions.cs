@@ -2,6 +2,7 @@ using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.Models.Services;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
 using NitroxModel.Helper;
@@ -13,11 +14,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAppServices(this IServiceCollection collection)
     {
-        // Domain services
-        collection.AddSingleton(provider => new AppViewLocator(provider));
-        collection.AddSingleton(_ => KeyValueStore.Instance);
-
         // Avalonia and Reactive services
+        collection.AddSingleton(provider => new AppViewLocator(provider));
         collection.AddSingleton<IScreen, RoutingScreen>();
         collection.AddSingleton<IDialogService>(provider => new DialogService(
                                                     new DialogManager(
@@ -25,6 +23,10 @@ public static class ServiceCollectionExtensions
                                                         new DialogFactory()),
                                                     provider.GetRequiredService));
 
+        // Domain services
+        collection.AddSingleton(_ => KeyValueStore.Instance);
+        collection.AddSingleton<ServerService>();
+        
         // Dialog ViewModels and Dialog Views
         collection.AddTransient<CreateServerViewModel>();
         collection.AddTransient<CreateServerModal>();

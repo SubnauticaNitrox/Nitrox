@@ -25,7 +25,7 @@ public static class DesignData
         {
             MainWindowViewModel = new(null, null, null, null, null, null, null, notifications: [new NotificationItem("Something bad happened :(", NotificationType.Error), new NotificationItem("You're in design mode :)")]);
             LaunchGameViewModel = new(null, null, null, null, null);
-            ManageServerViewModel = new(null, null, null) { ServerName = "My fun server" };
+            ManageServerViewModel = new(null, null, null, null) { ServerName = "My fun server" };
             EmbeddedServerViewModel = new(null, null);
             CreateServerViewModel = new(null) { Name = "My Server Name", SelectedGameMode = NitroxGameMode.CREATIVE };
             LibraryViewModel = new(null);
@@ -36,7 +36,7 @@ public static class DesignData
             DialogBoxViewModel = new() { Title = "Title Text", Description = "Description Text" };
             ObjectPropertyEditorViewModel = new(null) { OwnerObject = new SubnauticaServerConfig() };
             BackupRestoreViewModel = new();
-            ServersViewModel = new(null, null, null, null);
+            ServersViewModel = new(null, null, null, null, null);
         }
         catch (Exception ex)
         {
