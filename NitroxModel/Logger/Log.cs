@@ -1,5 +1,6 @@
 global using NitroxModel.Logger;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -24,16 +25,31 @@ namespace NitroxModel.Logger
         private static bool isSetup;
         private static string logFileName;
 
+        private static readonly object playerNameLock = new();
+        private static string playerName = "";
         public static string PlayerName
         {
+            get
+            {
+                lock (playerNameLock)
+                {
+                    return playerName;
+                }
+            }
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    LogContext.PushProperty(nameof(PlayerName), "");
+                    lock (playerNameLock)
+                    {
+                        playerName = "";
+                    }
                     return;
                 }
-                LogContext.PushProperty(nameof(PlayerName), $"[{value}]");
+                lock (playerNameLock)
+                {
+                    playerName = $"[{value}]";
+                }
 
                 if (logger != null)
                 {
@@ -42,17 +58,32 @@ namespace NitroxModel.Logger
             }
         }
 
+        private static readonly object saveNameLock = new();
+        private static string saveName = "";
         public static string SaveName
         {
+            get
+            {
+                lock (saveNameLock)
+                {
+                    return saveName;
+                }
+            }
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    LogContext.PushProperty(nameof(SaveName), "");
+                    lock (saveNameLock)
+                    {
+                        saveName = "";
+                    }
                     return;
                 }
 
-                LogContext.PushProperty(nameof(SaveName), @$"[{value}]");
+                lock (saveNameLock)
+                {
+                    saveName = $"[{value}]";
+                }
             }
         }
 
@@ -67,7 +98,6 @@ namespace NitroxModel.Logger
                 Warn($"{nameof(Log)} setup should only be executed once.");
                 return;
             }
-
             isSetup = true;
             NetDebug.Logger = new LiteNetLibLogger();
 
@@ -75,7 +105,7 @@ namespace NitroxModel.Logger
             SaveName = "";
 
             // Configure logger and create an instance of it.
-            LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug();
+            LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug().Enrich.FromLogContext().Enrich.With<NitroxPropEnricher>();
             if (useConsoleLogging)
             {
                 loggerConfig = loggerConfig.WriteTo.AppendConsoleSink(asyncConsoleWriter, isConsoleApp);
@@ -89,7 +119,7 @@ namespace NitroxModel.Logger
             if (gameLogger != null)
             {
                 inGameLogger = new LoggerConfiguration()
-                               .WriteTo.Logger(cnf => cnf.Enrich.FromLogContext().WriteTo.Message(gameLogger.Log))
+                               .WriteTo.Logger(cnf => cnf.WriteTo.Message(gameLogger.Log))
                                .CreateLogger();
             }
         }
@@ -114,8 +144,7 @@ namespace NitroxModel.Logger
                 return false;
             }
 
-            cnf.Enrich.FromLogContext()
-               .WriteTo
+            cnf.WriteTo
                .Valve(v =>
                {
                    v.Async(a =>
@@ -125,11 +154,11 @@ namespace NitroxModel.Logger
                            m.Map(nameof(PlayerName), "", (playerName, m2) =>
                            {
                                m2.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{saveName}{playerName}-.log"),
-                                      outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
-                                      rollingInterval: RollingInterval.Day,
-                                      retainedFileCountLimit: 10,
-                                      fileSizeLimitBytes: 200_000_000, // 200MB
-                                      shared: true);
+                                       outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
+                                       rollingInterval: RollingInterval.Day,
+                                       retainedFileCountLimit: 10,
+                                       fileSizeLimitBytes: 200_000_000, // 200MB
+                                       shared: true);
                            });
                        });
                    });
@@ -317,16 +346,16 @@ namespace NitroxModel.Logger
             ///     Parameters that are being logged with these names should be excluded when a log was made through the sensitive
             ///     method calls.
             /// </summary>
-            private static readonly HashSet<string> sensitiveLogParameters = new HashSet<string>
-            {
+            private static readonly HashSet<string> sensitiveLogParameters =
+            [
                 "username",
                 "password",
                 "ip",
                 "hostname",
                 "path"
-            };
+            ];
 
-            private static readonly Lazy<SensitiveEnricher> instance = new Lazy<SensitiveEnricher>(() => new SensitiveEnricher(), LazyThreadSafetyMode.PublicationOnly);
+            private static readonly Lazy<SensitiveEnricher> instance = new(() => new SensitiveEnricher(), LazyThreadSafetyMode.PublicationOnly);
             public static SensitiveEnricher Instance => instance.Value;
 
             public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propFactory)
@@ -348,6 +377,20 @@ namespace NitroxModel.Logger
 
                     yield return (prop.Key, new string('*', prop.Value.ToString().Length));
                 }
+            }
+        }
+        
+        /// <summary>
+        ///     Property enricher to be used instead of <see cref="LogContext.PushProperty"/> because the latter uses AsyncLocal for properties which will not be available in all contexts.
+        /// </summary>
+        private class NitroxPropEnricher : ILogEventEnricher
+        {
+            private readonly ConcurrentDictionary<(string, object), LogEventProperty> propCache = [];
+
+            public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+            {
+                logEvent.AddOrUpdateProperty(propCache.GetOrAdd((nameof(SaveName), SaveName), static (key, factory) => factory.CreateProperty(key.Item1, SaveName), propertyFactory));
+                logEvent.AddOrUpdateProperty(propCache.GetOrAdd((nameof(PlayerName), PlayerName), static (key, factory) => factory.CreateProperty(key.Item1, PlayerName), propertyFactory));
             }
         }
     }

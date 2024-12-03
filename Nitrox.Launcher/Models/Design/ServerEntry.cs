@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Media.Imaging;
@@ -16,6 +16,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
@@ -170,8 +171,26 @@ public partial class ServerEntry : ObservableObject
     [RelayCommand]
     public async Task<bool> StopAsync()
     {
-        if (Process == null || await Process.CloseAsync())
+        if (Process is not { IsRunning: true })
         {
+            IsOnline = false;
+            return true;
+        }
+        if (await Process.CloseAsync())
+        {
+            CancellationTokenSource ctsTimeout = new(TimeSpan.FromSeconds(10));
+            try
+            {
+                while (Process.IsRunning)
+                {
+                    ctsTimeout.Token.ThrowIfCancellationRequested();
+                    await Task.Delay(100, ctsTimeout.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
+            }
             IsOnline = false;
             return true;
         }
@@ -214,6 +233,7 @@ public partial class ServerEntry : ObservableObject
                 RedirectStandardOutput = captureOutput,
                 UseShellExecute = false
             };
+            Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {startInfo.Arguments}");
 
             serverProcess = System.Diagnostics.Process.Start(startInfo);
             if (serverProcess != null)

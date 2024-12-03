@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NitroxModel;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -82,7 +83,7 @@ public class Program
             Console.TreatControlCAsInput = true;
         }
 
-        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
+        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
 
         Task handleConsoleInputTask;
         Server server;
@@ -94,8 +95,8 @@ public class Program
             Stopwatch watch = Stopwatch.StartNew();
 
             // Allow game path to be given as command argument
-            string gameDir = "";
-            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
+            string gameDir;
+            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], GameInfo.Subnautica.ExeName)))
             {
                 gameDir = Path.GetFullPath(args[0]);
                 gameInstallDir = new Lazy<string>(() => gameDir);
@@ -175,6 +176,7 @@ public class Program
 
         if (Console.IsInputRedirected)
         {
+            Log.Info("Server input is redirected");
             _ = Task.Run(() =>
             {
                 while (!ct.IsCancellationRequested)
@@ -192,6 +194,7 @@ public class Program
         }
         else
         {
+            Log.Info("Server input is available");
             StringBuilder inputLineBuilder = new();
 
             void ClearInputLine()
@@ -370,22 +373,47 @@ public class Program
         }
 
         using IpcHost ipcHost = IpcHost.StartReadingCommands(command => commandQueue.Enqueue(command), ct);
-
-        // Important: keep command handler on the main thread (i.e. don't Task.Run)
-        while (!ct.IsCancellationRequested)
+        
+        if (!Console.IsInputRedirected)
         {
-            while (commandQueue.TryDequeue(out string command))
+            // Important to not hang process: keep command handler on the main thread when input not redirected (i.e. don't Task.Run)
+            while (!ct.IsCancellationRequested)
             {
-                submitHandler(command);
+                while (commandQueue.TryDequeue(out string command))
+                {
+                    submitHandler(command);
+                }
+                try
+                {
+                    await Task.Delay(10, ct);
+                }
+                catch (OperationCanceledException)
+                {
+                    // ignored
+                }
             }
-            try
+        }
+        else
+        {
+            // Important to not hang process (when running launcher from release exe): free main thread if input redirected
+            await Task.Run(async () =>
             {
-                await Task.Delay(10, ct);
-            }
-            catch (OperationCanceledException)
-            {
-                // ignored
-            }
+                while (!ct.IsCancellationRequested)
+                {
+                    while (commandQueue.TryDequeue(out string command))
+                    {
+                        submitHandler(command);
+                    }
+                    try
+                    {
+                        await Task.Delay(10, ct);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // ignored
+                    }
+                }
+            }, ct).ContinueWithHandleError();
         }
     }
 

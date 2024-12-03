@@ -18,9 +18,9 @@ public static class Extensions
     {
         if (store == null)
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
+            return Path.Combine(NitroxUser.AppDataPath, "saves");
         }
-        return store.GetValue("SavesFolderDir", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves"));
+        return store.GetValue("SavesFolderDir", Path.Combine(NitroxUser.AppDataPath, "saves"));
     }
 
     public static TAttribute GetAttribute<TAttribute>(this Enum value) where TAttribute : Attribute

@@ -148,8 +148,8 @@ public partial class ManageServerViewModel : RoutableViewModelBase
 
         try
         {
-            Server.Start(keyValueStore.GetSavesFolderDir());
             Server.Version = NitroxEnvironment.Version;
+            Server.Start(keyValueStore.GetSavesFolderDir());
             if (Server.IsEmbedded)
             {
                 HostScreen.Show(new EmbeddedServerViewModel(HostScreen, Server));

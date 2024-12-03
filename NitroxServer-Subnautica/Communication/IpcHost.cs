@@ -23,6 +23,7 @@ public class IpcHost : IDisposable
 
     public static IpcHost StartReadingCommands(Action<string> onCommandReceived, CancellationToken cancellationToken = default)
     {
+        Log.Info("Starting IPC host for command input");
         ArgumentNullException.ThrowIfNull(onCommandReceived);
 
         IpcHost host = new(CancellationTokenSource.CreateLinkedTokenSource(cancellationToken));
