@@ -77,17 +77,24 @@ public partial class ServersViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    public async Task CreateServer(IInputElement focusTargetOnClose = null)
+    public async Task CreateServerAsync()
     {
         CreateServerViewModel result = await dialogService.ShowAsync<CreateServerViewModel>();
-        if (result == null)
+        if (!result)
         {
-            Dispatcher.UIThread.Post(() => focusTargetOnClose?.Focus());
             return;
         }
 
-        Dispatcher.UIThread.Post(() => focusTargetOnClose?.Focus());
-        AddServer(result.Name, result.SelectedGameMode);
+        try
+        {
+            ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result.Name)));
+            AddServer(serverEntry);
+        }
+        catch (Exception ex)
+        {
+            LauncherNotifier.Error($"Server create failed: {ex.Message}");
+            Log.Error(ex);
+        }
     }
 
     [RelayCommand]
@@ -202,15 +209,9 @@ public partial class ServersViewModel : RoutableViewModelBase
         });
     }
 
-    public void AddServer(string name, NitroxGameMode gameMode)
+    public void AddServer(ServerEntry serverEntry)
     {
-        Servers.Insert(0, new ServerEntry
-        {
-            Name = name,
-            GameMode = gameMode,
-            Seed = "",
-            Version = NitroxEnvironment.Version
-        });
+        Servers.Insert(0, serverEntry);
     }
 
     private void InitializeWatcher()
