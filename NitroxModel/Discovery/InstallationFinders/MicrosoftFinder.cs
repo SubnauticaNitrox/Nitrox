@@ -1,6 +1,5 @@
 using System.IO;
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Discovery.Models;
 using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace NitroxModel.Discovery.InstallationFinders;
@@ -19,11 +18,6 @@ public sealed class MicrosoftFinder : IGameFinder
             return Error($"Game installation directory '{path}' is invalid. Please enter the path to the '{gameInfo.Name}' installation");
         }
 
-        return Ok(new GameInstallation
-        {
-            Path = path,
-            GameInfo = gameInfo,
-            Origin = GameLibraries.MICROSOFT
-        });
+        return Ok(path);
     }
 }

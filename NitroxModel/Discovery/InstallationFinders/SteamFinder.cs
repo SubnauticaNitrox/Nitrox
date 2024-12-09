@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using NitroxModel.Discovery.InstallationFinders.Core;
-using NitroxModel.Discovery.Models;
+using NitroxModel.Platforms.OS.Windows;
 using static NitroxModel.Discovery.InstallationFinders.Core.GameFinderResult;
 
 namespace NitroxModel.Discovery.InstallationFinders;
@@ -38,24 +38,23 @@ public sealed class SteamFinder : IGameFinder
             }
         }
 
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            path = Path.Combine(path, $"{gameInfo.Name}.app", "Contents");
+        }
         if (!GameInstallationHelper.HasValidGameFolder(path, gameInfo))
         {
             return Error($"Path '{path}' known by Steam for '{gameInfo.FullName}' does not point to a valid game file structure");
         }
 
-        return Ok(new GameInstallation
-        {
-            Path = path,
-            GameInfo = gameInfo,
-            Origin = GameLibraries.STEAM
-        });
+        return Ok(path);
     }
 
     private static string GetSteamPath()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            string steamPath = Platforms.OS.Windows.Internal.RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
+            string steamPath = RegistryEx.Read<string>(@"Software\Valve\Steam\SteamPath");
 
             if (string.IsNullOrWhiteSpace(steamPath))
             {
