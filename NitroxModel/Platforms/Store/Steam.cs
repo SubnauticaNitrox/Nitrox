@@ -22,20 +22,14 @@ public sealed class Steam : IGamePlatform
     
     private string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
 
-    public bool OwnsGame(string gameDirectory)
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+    public bool OwnsGame(string gameRootPath) =>
+        gameRootPath switch
         {
-            return Directory.Exists(Path.Combine(gameDirectory, "Plugins", "steam_api.bundle"));
-        }
-        
-        if (File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")))
-        {
-            return true;
-        }
-        
-        return File.Exists(Path.Combine(gameDirectory, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll"));
-    }
+            not null when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => Directory.Exists(Path.Combine(gameRootPath, "Plugins", "steam_api.bundle")),
+            not null when File.Exists(Path.Combine(gameRootPath, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll")) => true,
+            not null when File.Exists(Path.Combine(gameRootPath, GameInfo.Subnautica.DataFolder, "Plugins", "steam_api64.dll")) => true,
+            _ => false
+        };
 
     public async Task<ProcessEx> StartPlatformAsync()
     {
@@ -83,28 +77,25 @@ public sealed class Steam : IGamePlatform
             DateTime consoleLogFileLastWrite = GetSteamConsoleLogLastWrite(exe);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
-                                                   v => v > 0,
-                                                   steamReadyCts.Token);
+                await RegistryEx.CompareWaitAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
+                                                       v => v > 0,
+                                                       steamReadyCts.Token);
             }
             Log.Debug("Waiting for Steam to get ready...");
             while (consoleLogFileLastWrite == GetSteamConsoleLogLastWrite(exe) && !steamReadyCts.IsCancellationRequested)
             {
-                try
-                {
-                    await Task.Delay(250, steamReadyCts.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    // ignored
-                }
+                await Task.Delay(250, steamReadyCts.Token);
             }
-            Log.Debug($"Steam wait result: {(steamReadyCts.IsCancellationRequested ? "timed out" : $"startup took about {steamReadyStopwatch.Elapsed.TotalSeconds}s")}");
+        }
+        catch (OperationCanceledException)
+        {
+            // ignored
         }
         catch (Exception ex)
         {
             Log.Error(ex);
         }
+        Log.Debug($"Steam wait result: {(steamReadyCts.IsCancellationRequested ? "timed out" : $"startup successful and took about {steamReadyStopwatch.Elapsed.TotalSeconds}s")}");
 
         return steam;
     }
@@ -284,7 +275,7 @@ public sealed class Steam : IGamePlatform
         string sniperappid = "1628350";
         string sniperruntimepath = Path.Combine(GetLibraryPath(steamPath, sniperappid), "steamapps", "common", "SteamLinuxRuntime_sniper");
 
-        string protonDir = null;
+        string protonPath = null;
         string protonRoot = Path.Combine(steamPath, "compatibilitytools.d");
         string protonVersion = GetProtonVersionFromConfigVdf(Path.Combine(steamPath, "config", "config.vdf"), steamAppId.ToString()) ?? "proton_9";
         bool isValveProton = protonVersion.StartsWith("proton_", StringComparison.OrdinalIgnoreCase);
@@ -306,11 +297,11 @@ public sealed class Steam : IGamePlatform
                 {
                     if (dir.Contains($"Proton {protonVersion}"))
                     {
-                        protonDir = dir;
+                        protonPath = dir;
                         break;
                     }
                 }
-                if (protonDir != null)
+                if (protonPath != null)
                 {
                     break;
                 }
@@ -318,9 +309,9 @@ public sealed class Steam : IGamePlatform
         }
         else
         {
-            protonDir = Path.Combine(protonRoot, protonVersion);
+            protonPath = Path.Combine(protonRoot, protonVersion);
         }
-        if (protonDir == null)
+        if (protonPath == null)
         {
             throw new Exception("Game is not using Proton. Please change game properties in Steam to use the Proton compatibility layer.");
         }
@@ -328,7 +319,7 @@ public sealed class Steam : IGamePlatform
         ProcessStartInfo startInfo = new()
         {
             FileName = Path.Combine(sniperruntimepath, "_v2-entry-point"),
-            Arguments = $" --verb=run -- \"{Path.Combine(protonDir, "proton")}\" run \"{pathToGameExe}\" {launchArguments}",
+            Arguments = $" --verb=run -- \"{Path.Combine(protonPath, "proton")}\" run \"{pathToGameExe}\" {launchArguments}",
             WorkingDirectory = Path.GetDirectoryName(pathToGameExe) ?? "",
             UseShellExecute = false,
             Environment =
@@ -345,18 +336,14 @@ public sealed class Steam : IGamePlatform
         return new ProcessEx(Process.Start(startInfo));
     }
 
-    private static DateTime GetSteamConsoleLogLastWrite(string exePath)
+    private static DateTime GetSteamConsoleLogLastWrite(string steamExePath)
     {
-        string logPath;
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        string steamLogsPath = steamExePath switch
         {
-            logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs", "console_log.txt");
-        }
-        else
-        {
-            logPath = Path.Combine(Path.GetDirectoryName(exePath), "logs", "console_log.txt");
-        }
-
-        return File.GetLastWriteTime(logPath);
+            not null when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "logs"),
+            not null when Path.GetDirectoryName(steamExePath) is { } steamPath => Path.Combine(steamPath, "logs"),
+            _ => ""
+        };
+        return File.GetLastWriteTime(Path.Combine(steamLogsPath, "console_log.txt"));
     }
 }

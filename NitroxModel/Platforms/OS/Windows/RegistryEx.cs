@@ -59,7 +59,7 @@ public static class RegistryEx
             return false;
         }
 
-        // Try delete the key.
+        // Try to delete the key.
         RegistryKey prev = key;
         key = key.OpenSubKey(valueKey);
         if (key != null)
@@ -104,7 +104,7 @@ public static class RegistryEx
             string => RegistryValueKind.String,
             _ => null
         };
-        // If regKey already exists and we don't know how to parse the value, use existing kind.
+        // If regKey already exists, and we don't know how to parse the value, use existing kind.
         if (!kind.HasValue)
         {
             try
@@ -113,7 +113,7 @@ public static class RegistryEx
             }
             catch (Exception)
             {
-                // ignored - thrown when key does not exist..
+                // ignored - thrown when key does not exist.
             }
         }
 
@@ -135,78 +135,75 @@ public static class RegistryEx
         (RegistryKey baseKey, string valueKey) = GetKey(pathWithValue, false);
         if (baseKey == null)
         {
-            baseKey.Dispose();
             return false;
         }
-        object value = baseKey.GetValue(valueKey);
-        if (value == null)
+
+        try
+        {
+            return baseKey.GetValue(valueKey) != null;
+        }
+        finally
         {
             baseKey.Dispose();
-            return false;
         }
-        baseKey.Dispose();
-        return true;
     }
 
     /// <summary>
     ///     Waits for a registry value to have the given value.
     /// </summary>
-    public static Task CompareAsync<T>(string pathWithKey, Func<T, bool> predicate, CancellationToken token)
+    public static async Task CompareWaitAsync<T>(string pathWithKey, Func<T, bool> predicate, CancellationToken token)
     {
+        CancellationTokenSource innerCts = null;
+        if (token == default)
+        {
+            innerCts = new(TimeSpan.FromSeconds(10));
+            token = innerCts.Token;
+        }
+
+        RegistryKey baseKey = null;
+        try
+        {
+            // Test once before in-case it is already successful.
+            (baseKey, string valueKey) = GetKey(pathWithKey, false);
+            if (Test(baseKey, valueKey, predicate))
+            {
+                return;
+            }
+
+            // Wait for predicate to be successful.
+            while (true)
+            {
+                token.ThrowIfCancellationRequested();
+                // If regkey didn't exist yet it might later.
+                if (baseKey == null)
+                {
+                    (baseKey, valueKey) = GetKey(pathWithKey, false);
+                }
+
+                if (Test(baseKey, valueKey, predicate))
+                {
+                    break;
+                }
+                await Task.Delay(100, token);
+            }
+        }
+        finally
+        {
+            baseKey?.Dispose();
+            innerCts?.Dispose();
+        }
+
         static bool Test(RegistryKey regKey, string regKeyName, Func<T, bool> testPredicate)
         {
-            T preTestVal = regKey?.GetValue(regKeyName) is T typedValue ? typedValue : default(T);
+            T preTestVal = regKey?.GetValue(regKeyName) is T typedValue ? typedValue : default;
             return testPredicate(preTestVal);
         }
-
-        if (token == default(CancellationToken))
-        {
-            CancellationTokenSource source = new(TimeSpan.FromSeconds(10));
-            token = source.Token;
-        }
-
-        // Test once before in-case it is already successful.
-        (RegistryKey baseKey, string valueKey) = GetKey(pathWithKey, false);
-        if (Test(baseKey, valueKey, predicate))
-        {
-            baseKey.Dispose();
-            return Task.CompletedTask;
-        }
-
-        // Wait for predicate to be successful.
-        return Task.Run(async () =>
-                        {
-                            try
-                            {
-                                while (!token.IsCancellationRequested)
-                                {
-                                    // If regkey didn't exist yet it might later.
-                                    if (baseKey == null)
-                                    {
-                                        (baseKey, valueKey) = GetKey(pathWithKey, false);
-                                    }
-
-                                    if (!Test(baseKey, valueKey, predicate))
-                                    {
-                                        await Task.Delay(100, token);
-                                        continue;
-                                    }
-
-                                    break;
-                                }
-                            }
-                            finally
-                            {
-                                baseKey?.Dispose();
-                            }
-                        },
-                        token);
     }
 
-    public static Task CompareAsync<T>(string pathWithKey, Func<T, bool> predicate, TimeSpan timeout = default)
+    public static Task CompareWaitAsync<T>(string pathWithKey, Func<T, bool> predicate, TimeSpan timeout = default)
     {
         CancellationTokenSource source = new(timeout == default ? TimeSpan.FromSeconds(10) : timeout);
-        return CompareAsync(pathWithKey, predicate, source.Token);
+        return CompareWaitAsync(pathWithKey, predicate, source.Token);
     }
 
     private static (RegistryKey baseKey, string valueKey) GetKey(string path, bool needsWriteAccess = true, bool createIfNotExists = false)
@@ -225,13 +222,13 @@ public static class RegistryEx
         if (path.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) < 0)
         {
             partsWithoutHive = parts[..^1];
-            regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive.ToArray());
+            regPathWithoutHiveOrKey = string.Join("/", partsWithoutHive.ToArray());
         }
         else
         {
             partsWithoutHive = parts[2..^1];
-            regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive.ToArray());
-            hive = parts[1].ToLowerInvariant() switch
+            regPathWithoutHiveOrKey = string.Join("/", partsWithoutHive.ToArray());
+            hive = parts[1].ToLower() switch
             {
                 "hkey_classes_root" => RegistryHive.ClassesRoot,
                 "hkey_local_machine" => RegistryHive.LocalMachine,
@@ -251,10 +248,15 @@ public static class RegistryEx
             foreach (string part in partsWithoutHive)
             {
                 RegistryKey prev = key;
-                key = key?.OpenSubKey(part, needsWriteAccess) ?? key?.CreateSubKey(part, needsWriteAccess);
-
-                // Cleanup old/parent key reference
-                prev?.Dispose();
+                try
+                {
+                    key = key?.OpenSubKey(part, needsWriteAccess) ?? key?.CreateSubKey(part, needsWriteAccess);
+                }
+                finally
+                {
+                    // Cleanup old/parent key reference
+                    prev?.Dispose();
+                }
             }
         }
 

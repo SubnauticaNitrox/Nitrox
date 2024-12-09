@@ -16,7 +16,7 @@ public class RegistryTest
         {
             try
             {
-                await RegistryEx.CompareAsync<int>(PATH_TO_KEY,
+                await RegistryEx.CompareWaitAsync<int>(PATH_TO_KEY,
                                                    v => v == 1337,
                                                    TimeSpan.FromSeconds(5));
                 return true;

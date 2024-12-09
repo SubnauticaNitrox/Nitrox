@@ -3,12 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.ViewModels;
-using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
-using NitroxModel.Platforms.Store;
-using NitroxModel.Platforms.Store.Interfaces;
 
 namespace Nitrox.Launcher.Models.Utils;
 
@@ -31,7 +28,7 @@ internal static class GameInspect
                     await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                     {
                         model.Title = "Legacy Game Detected";
-                        model.Description = $"Nitrox does not support the legacy version of {GameInfo.Subnautica.FullName}. Please update your game to the latest version to run the {GameInfo.Subnautica.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
+                        model.Description = $"Nitrox does not support the legacy version of {GameInfo.Subnautica.FullName}. Please update your game to the latest version to run {GameInfo.Subnautica.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
                         model.ButtonOptions = ButtonOptions.Ok;
                     });
                 }
