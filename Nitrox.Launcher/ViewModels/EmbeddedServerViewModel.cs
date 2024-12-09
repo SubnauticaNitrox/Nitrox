@@ -60,8 +60,18 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     {
         if (ShouldAutoScroll && args.HeightChanged && args.Source is Visual visual)
         {
-            // Without dispatcher invoke it sometimes doesn't scroll all the way down (control measure logic bug?).
-            Dispatcher.UIThread.InvokeAsync(() => visual.FindAncestorOfType<ScrollViewer>()?.ScrollToEnd());
+            ScrollViewer scrollViewer = visual.FindAncestorOfType<ScrollViewer>();
+            if (scrollViewer is not null)
+            {
+                // TODO: ScrollToEnd for virtualized lists is not working well, see: https://github.com/AvaloniaUI/Avalonia/issues/14365 - wait for fix to clean up this code.
+                // Workaround: Run ScrollToEnd twice on the next two frames.
+                Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    scrollViewer.ScrollToEnd();
+                    // Run it again next frame
+                    Dispatcher.UIThread.InvokeAsync(() => scrollViewer.ScrollToEnd());
+                });
+            }
         }
     }
 }
