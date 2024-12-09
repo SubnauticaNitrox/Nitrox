@@ -137,23 +137,25 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             Directory.CreateDirectory(keyValueStore.GetSavesFolderDir());
 
-            Dictionary<string, ServerEntry> serversOnDisk;
+            Dictionary<string, (ServerEntry Data, bool HasFiles)> serversOnDisk;
             lock (serversLock)
             {
-                serversOnDisk = Servers.ToDictionary(entry => entry.Name, entry => entry);
+                serversOnDisk = Servers.ToDictionary(entry => entry.Name, entry => (entry, false));
             }
             foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesFolderDir()))
             {
                 try
                 {
-                    if (serversOnDisk.ContainsKey(Path.GetFileName(saveDir)))
+                    if (serversOnDisk.TryGetValue(Path.GetFileName(saveDir), out (ServerEntry Data, bool _) server))
                     {
+                        // This server has files, so don't filter it away from server list.
+                        serversOnDisk[Path.GetFileName(saveDir)] = (server.Data, true);
                         continue;
                     }
                     ServerEntry entryFromDir = await Task.Run(() => ServerEntry.FromDirectory(saveDir));
                     if (entryFromDir != null)
                     {
-                        serversOnDisk.Add(entryFromDir.Name, entryFromDir);
+                        serversOnDisk.Add(entryFromDir.Name, (entryFromDir, true));
                     }
                     loggedErrorDirectories.Remove(saveDir);
                 }
@@ -168,7 +170,7 @@ public partial class ServersViewModel : RoutableViewModelBase
 
             lock (serversLock)
             {
-                Servers = [..serversOnDisk.Values.OrderByDescending(entry => entry.LastAccessedTime)];
+                Servers = [..serversOnDisk.Values.Where(server => server.HasFiles).Select(server => server.Data).OrderByDescending(entry => entry.LastAccessedTime)];
             }
         }
         catch (Exception ex)

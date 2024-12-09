@@ -87,6 +87,7 @@ public class ExtensionsTest
     {
         Array.Empty<string>().GetCommandArgs("").Should().BeEmpty();
         Array.Empty<string>().GetCommandArgs("--something").Should().BeEmpty();
+        new[] { "/bin/nitrox.dll", "--save", "My World" }.GetCommandArgs("--save").Should().BeEquivalentTo("My World");
         new[] { "--nitrox", @"C:\a\path" }.GetCommandArgs("--nitrox").Should().BeEquivalentTo(@"C:\a\path");
         new[] { "blabla", "--other=test", "--nitrox", @"C:\a\path" }.GetCommandArgs("--nitrox").Should().BeEquivalentTo(@"C:\a\path");
         new[] { "blabla", "--other=test", "--nitrox", @"C:\a\path" }.GetCommandArgs("--other").Should().BeEquivalentTo("test");

@@ -44,7 +44,7 @@ namespace NitroxServer
             containerBuilder.RegisterType<WorldPersistence>().SingleInstance();
 
             // TODO: Remove this once .NET Generic Host is implemented
-            containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load(Server.GetSaveName(Environment.GetCommandLineArgs()))).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load(Server.GetSaveName(Environment.GetCommandLineArgs(), "My World"))).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BuildingManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();

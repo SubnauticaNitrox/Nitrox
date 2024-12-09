@@ -84,6 +84,7 @@ public class Program
         }
 
         Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
+        Log.Debug($@"Process start args: ""{string.Join(@""", """, Environment.GetCommandLineArgs())}""");
 
         Task handleConsoleInputTask;
         Server server;
@@ -176,7 +177,7 @@ public class Program
 
         if (Console.IsInputRedirected)
         {
-            Log.Info("Server input is redirected");
+            Log.Info("Server input stream is redirected");
             _ = Task.Run(() =>
             {
                 while (!ct.IsCancellationRequested)
@@ -194,7 +195,7 @@ public class Program
         }
         else
         {
-            Log.Info("Server input is available");
+            Log.Info("Server input stream is available");
             StringBuilder inputLineBuilder = new();
 
             void ClearInputLine()

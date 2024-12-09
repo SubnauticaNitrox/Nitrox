@@ -93,42 +93,39 @@ public class Server
     public static SubnauticaServerConfig CreateOrLoadConfig()
     {
         string saveDir = null;
-        string[] args = Environment.GetCommandLineArgs();
-        foreach (string arg in args)
+        if (GetSaveName(Environment.GetCommandLineArgs()) is { } saveName)
         {
-            if (arg.StartsWith(KeyValueStore.Instance.GetSavesFolderDir(), StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
-            {
-                saveDir = arg;
-                break;
-            }
+            saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), saveName);
         }
-        if (saveDir == null)
+        if (Directory.Exists(saveDir))
         {
-            // Check if there are any save files
-            List<ServerListing> saves = GetSaves();
-            if (saves.Any())
+            return SubnauticaServerConfig.Load(saveDir);
+        }
+
+        // Check if there are any save files
+        List<ServerListing> saves = GetSaves();
+        if (saves.Any())
+        {
+            // Get last save file used
+            string lastSaveAccessed = saves[0].SaveDir;
+            if (saves.Count > 1)
             {
-                // Get last save file used
-                string lastSaveAccessed = saves[0].SaveDir;
-                if (saves.Count > 1)
+                for (int i = 1; i < saves.Count; i++)
                 {
-                    for (int i = 1; i < saves.Count; i++)
+                    if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
                     {
-                        if (File.GetLastWriteTime(Path.Combine(saves[i].SaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
-                        {
-                            lastSaveAccessed = saves[i].SaveDir;
-                        }
+                        lastSaveAccessed = saves[i].SaveDir;
                     }
                 }
-                saveDir = lastSaveAccessed;
             }
-            else
-            {
-                // Create new save file
-                Log.Debug("No save file was found, creating a new one...");
-                saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), GetSaveName(args));
-                Directory.CreateDirectory(saveDir);
-            }
+            saveDir = lastSaveAccessed;
+        }
+        else
+        {
+            // Create new save file
+            Log.Debug("No save file was found, creating a new one...");
+            saveDir = Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), "My World");
+            Directory.CreateDirectory(saveDir);
         }
 
         return SubnauticaServerConfig.Load(saveDir);
@@ -361,20 +358,10 @@ public class Server
     ///     Parses the save name from the given command line arguments or defaults to the standard save name.
     /// </summary>
     // TODO : Remove this method once server hosting/loading happens as a service (see '.NET Generic Host' on msdn)
-    public static string GetSaveName(string[] args)
+    public static string GetSaveName(string[] args, string defaultValue = null)
     {
-        if (args.Length == 1 && IsValidSaveName(args[0]))
-        {
-            return args[0].Trim();
-        }
-        for (int i = 0; i < args.Length; i++)
-        {
-            if (i + 1 < args.Length && args[i] is "--save" or "--name" && IsValidSaveName(args[i + 1]))
-            {
-                return args[i + 1].Trim();
-            }
-        }
-        return "My World";
+        string result = args.GetCommandArgs("--save").FirstOrDefault() ?? args.GetCommandArgs("--name").FirstOrDefault();
+        return IsValidSaveName(result) ? result : defaultValue;
     }
 
     private static bool IsValidSaveName(string name)

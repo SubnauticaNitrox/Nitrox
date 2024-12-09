@@ -229,7 +229,7 @@ public partial class ServerEntry : ObservableObject
             ProcessStartInfo startInfo = new(serverPath)
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,
-                Arguments = $@"""{Path.GetFileName(saveDir)}""",
+                Arguments = $@"--save ""{Path.GetFileName(saveDir)}""",
                 RedirectStandardOutput = captureOutput,
                 UseShellExecute = false
             };
