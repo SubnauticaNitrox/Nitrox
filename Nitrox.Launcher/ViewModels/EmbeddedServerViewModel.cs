@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels.Abstract;
+using NitroxModel.DataStructures;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -32,6 +33,9 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
 
     public AvaloniaList<string> ServerOutput => ServerEntry.Process.Output;
 
+    private readonly CircularBuffer<string> commandHistory = new(1000);
+    private int? selectedHistoryIndex;
+
     public EmbeddedServerViewModel(IScreen screen, ServerEntry serverEntry) : base(screen)
     {
         this.serverEntry = serverEntry;
@@ -51,8 +55,43 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         {
             return;
         }
+        if (commandHistory.Count < 1 || commandHistory[commandHistory.LastChangedIndex] != ServerCommand)
+        {
+            commandHistory.Add(ServerCommand);
+        }
         await ServerEntry.Process.SendCommandAsync(ServerCommand);
+        ClearInput();
+    }
+
+    [RelayCommand]
+    private void ClearInput()
+    {
         ServerCommand = "";
+        selectedHistoryIndex = null;
+    }
+
+    [RelayCommand]
+    private void CommandHistoryGoBack()
+    {
+        if (commandHistory.Count < 1)
+        {
+            return;
+        }
+        selectedHistoryIndex ??= 0;
+        selectedHistoryIndex--;
+        ServerCommand = commandHistory[selectedHistoryIndex.Value];
+    }
+
+    [RelayCommand]
+    private void CommandHistoryGoForward()
+    {
+        if (commandHistory.Count < 1)
+        {
+            return;
+        }
+        selectedHistoryIndex ??= -1;
+        selectedHistoryIndex++;
+        ServerCommand = commandHistory[selectedHistoryIndex.Value];
     }
     
     [RelayCommand]

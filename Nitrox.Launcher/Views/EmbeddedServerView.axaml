@@ -35,6 +35,9 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6 0" Spacing="6">
                     <CheckBox Content="Auto scroll" IsChecked="{Binding ShouldAutoScroll}" />
                     <Button Classes="primary" Content="Send" Command="{Binding SendServerCommandCommand}" HotKey="Enter" />
+                    <Button IsVisible="False" Content="Clear" Command="{Binding ClearInputCommand}" HotKey="Escape" />
+                    <Button IsVisible="False" Content="History forward" Command="{Binding CommandHistoryGoForwardCommand}" HotKey="Down" />
+                    <Button IsVisible="False" Content="History back" Command="{Binding CommandHistoryGoBackCommand}" HotKey="Up" />
                 </StackPanel>
             </Grid>
         </Grid>
