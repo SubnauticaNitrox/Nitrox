@@ -111,28 +111,24 @@ public sealed class Steam : IGamePlatform
 
     public string GetExeFile()
     {
-        string exe = "";
-        
+        string steamExecutable = "";
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            exe = Path.Combine(RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", ""), "steam.exe");
+            steamExecutable = Path.Combine(RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", steamExecutable), "steam.exe");
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            exe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx");
+            steamExecutable = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS", "steam_osx");
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             string userHomePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (string.IsNullOrWhiteSpace(userHomePath))
-            {
-                userHomePath = Environment.GetEnvironmentVariable("HOME");
-            }
             if (!Directory.Exists(userHomePath))
             {
                 return null;
             }
-            
+
             string steamPath = Path.Combine(userHomePath, ".steam", "steam");
             // support flatpak
             if (!Directory.Exists(steamPath))
@@ -140,10 +136,10 @@ public sealed class Steam : IGamePlatform
                 steamPath = Path.Combine(userHomePath, ".var", "app", "com.valvesoftware.Steam", "data", "Steam");
             }
 
-            exe = Path.Combine(steamPath, "steam.sh");
+            steamExecutable = Path.Combine(steamPath, "steam.sh");
         }
 
-        return File.Exists(exe) ? Path.GetFullPath(exe) : null;
+        return File.Exists(steamExecutable) ? Path.GetFullPath(steamExecutable) : null;
     }
 
     public async Task<ProcessEx> StartGameAsync(string pathToGameExe, int steamAppId, string launchArguments)
@@ -153,12 +149,12 @@ public sealed class Steam : IGamePlatform
             using ProcessEx steam = await StartPlatformAsync();
             if (steam == null)
             {
-                throw new PlatformException(this, "Steam is not running and could not be found.");
+                throw new GamePlatformException(this, "Platform is not running and could not be found.");
             }
         }
         catch (OperationCanceledException ex)
         {
-            throw new PlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+            throw new GamePlatformException(this, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -170,7 +166,7 @@ public sealed class Steam : IGamePlatform
                 launchArguments
             );
         }
-        
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             string steamPath = Path.GetDirectoryName(GetExeFile());
@@ -186,8 +182,8 @@ public sealed class Steam : IGamePlatform
                 launchArguments
             );
         }
-        
-        throw new PlatformException(this, "Platform is not supported.");
+
+        throw new NotSupportedException("Your operating system is not supported by Nitrox");
     }
 
     private static ProcessEx StartGameWithProton(string steamPath, string pathToGameExe, int steamAppId, string launchArguments)
@@ -244,7 +240,7 @@ public sealed class Steam : IGamePlatform
 
             return libraryPaths;
         }
-        
+
         static string GetProtonVersionFromConfigVdf(string configVdfFile, string appId)
         {
             try
@@ -272,7 +268,7 @@ public sealed class Steam : IGamePlatform
                 return null;
             }
         }
-        
+
         string compatdataPath = "";
         if (!string.IsNullOrEmpty(pathToGameExe))
         {
