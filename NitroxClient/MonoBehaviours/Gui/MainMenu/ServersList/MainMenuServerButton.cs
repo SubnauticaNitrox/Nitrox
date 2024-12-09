@@ -165,7 +165,7 @@ public class MainMenuServerButton : MonoBehaviour
         }
 
         MainMenuNotificationPanel.ShowLoading();
-        await JoinServerBackend.StartMultiplayerClientAsync(endpoint.Address.ToString(), endpoint.Port);
+        await JoinServerBackend.StartMultiplayerClientAsync(endpoint.Address, endpoint.Port);
     }
 
     private static IPEndPoint ResolveIPEndPoint(string serverIp, int serverPort)

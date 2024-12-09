@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Diagnostics;
+using System.Net;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
@@ -10,6 +11,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
@@ -99,9 +101,9 @@ public static class JoinServerBackend
         }
     }
 
-    public static async Task StartMultiplayerClientAsync(string ip, int port)
+    public static async Task StartMultiplayerClientAsync(IPAddress ip, int port)
     {
-        serverIp = ip;
+        serverIp = ip.ToString();
         serverPort = port;
         NitroxServiceLocator.BeginNewLifetimeScope();
 
@@ -125,11 +127,11 @@ public static class JoinServerBackend
             Log.ErrorSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
             string msg = $"{Language.main.Get("Nitrox_UnableToConnect")} {serverIp}:{serverPort}";
 
-            if (serverIp.Equals("127.0.0.1"))
+            if (ip.IsLocalhost())
             {
                 if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
                 {
-                    Log.Error("No server process was found while address was 127.0.0.1");
+                    Log.Error("No server process was found while address was localhost");
                     msg += $"\n{Language.main.Get("Nitrox_StartServer")}";
                 }
                 else

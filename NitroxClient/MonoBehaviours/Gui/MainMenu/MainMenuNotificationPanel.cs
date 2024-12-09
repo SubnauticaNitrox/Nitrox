@@ -30,7 +30,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
     {
         if (!instance)
         {
-            Log.Error("Tried to use ShowLoading() while MainMenuJoinServerNotificationPanel was not ready");
+            Log.Error($"Tried to use {nameof(ShowLoading)} while {nameof(MainMenuNotificationPanel)} was not ready");
             return;
         }
 
@@ -38,7 +38,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         instance.loadingCircle.gameObject.SetActive(true);
         instance.text.text = Language.main.Get("Nitrox_Loading");
         MainMenuRightSide.main.OpenGroup(NAME);
-        instance.confirmButtonLegend.legendButtonConfiguration = Array.Empty<LegendButtonData>();
+        instance.confirmButtonLegend.legendButtonConfiguration = [];
     }
 
     public static void ShowMessage(string message, string returningMenuPanel, Action continuationAction = null)

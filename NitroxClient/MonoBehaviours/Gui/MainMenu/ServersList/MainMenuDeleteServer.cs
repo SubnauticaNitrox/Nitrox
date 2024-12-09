@@ -9,7 +9,10 @@ public class MainMenuDeleteServer : uGUI_NavigableControlGrid, uGUI_IButtonRecei
     public bool OnButtonDown(GameInput.Button button)
     {
         if (button != GameInput.Button.UICancel)
+        {
             return false;
+        }
+
         OnBack();
         return true;
     }

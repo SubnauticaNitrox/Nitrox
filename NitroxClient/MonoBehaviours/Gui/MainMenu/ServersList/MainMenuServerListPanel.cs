@@ -346,7 +346,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         {
             if (t is { IsFaulted: true, Exception: { } ex })
             {
-                Log.Warn($"Failed to execute FindLANServersAsync: {ex.GetFirstNonAggregateMessage()}");
+                Log.Warn($"Failed to execute {nameof(FindLANServersAsync)}: {ex.GetFirstNonAggregateMessage()}");
             }
         });
     }
