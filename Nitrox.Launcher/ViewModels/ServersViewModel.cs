@@ -28,7 +28,6 @@ public partial class ServersViewModel : RoutableViewModelBase
     private readonly ServerService serverService;
     private readonly ManageServerViewModel manageServerViewModel;
     private readonly Lock serversLock = new();
-    private CancellationTokenSource serverRefreshCts;
 
     [ObservableProperty]
     private AvaloniaList<ServerEntry> servers = [];
@@ -49,7 +48,6 @@ public partial class ServersViewModel : RoutableViewModelBase
         this.WhenActivated(disposables =>
         {
             // Activation
-            serverRefreshCts = new();
             WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
             {
                 lock (serversLock)
@@ -63,16 +61,24 @@ public partial class ServersViewModel : RoutableViewModelBase
                     }
                 }
             });
-            GetSavesOnDisk();
-            InitializeWatcher();
+            // Load server list
+            CancellationTokenSource serverRefreshCts = new();
+            _ = LoadServersAndWatchAsync(serverRefreshCts.Token).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    LauncherNotifier.Error(t.Exception.Message);
+                }
+            });
 
             // Deactivation
             Disposable
                 .Create(this, vm =>
                 {
+                    serverRefreshCts.Cancel();
+                    serverRefreshCts.Dispose();
                     WeakReferenceMessenger.Default.UnregisterAll(vm);
                     vm.watcher?.Dispose();
-                    vm.serverRefreshCts.Cancel();
                 })
                 .DisposeWith(disposables);
         });
@@ -125,21 +131,29 @@ public partial class ServersViewModel : RoutableViewModelBase
         HostScreen.Show(manageServerViewModel);
     }
 
-    public void GetSavesOnDisk()
+    private async Task GetSavesOnDiskAsync()
     {
         try
         {
             Directory.CreateDirectory(keyValueStore.GetSavesFolderDir());
 
-            List<ServerEntry> serversOnDisk = [];
+            Dictionary<string, ServerEntry> serversOnDisk;
+            lock (serversLock)
+            {
+                serversOnDisk = Servers.ToDictionary(entry => entry.Name, entry => entry);
+            }
             foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesFolderDir()))
             {
                 try
                 {
-                    ServerEntry entryFromDir = ServerEntry.FromDirectory(saveDir);
+                    if (serversOnDisk.ContainsKey(Path.GetFileName(saveDir)))
+                    {
+                        continue;
+                    }
+                    ServerEntry entryFromDir = await Task.Run(() => ServerEntry.FromDirectory(saveDir));
                     if (entryFromDir != null)
                     {
-                        serversOnDisk.Add(entryFromDir);
+                        serversOnDisk.Add(entryFromDir.Name, entryFromDir);
                     }
                     loggedErrorDirectories.Remove(saveDir);
                 }
@@ -154,35 +168,17 @@ public partial class ServersViewModel : RoutableViewModelBase
 
             lock (serversLock)
             {
-                // Remove any servers from the Servers list that are not found in the saves folder
-                for (int i = Servers.Count - 1; i >= 0; i--)
-                {
-                    if (serversOnDisk.All(s => s.Name != Servers[i].Name))
-                    {
-                        Servers.RemoveAt(i);
-                    }
-                }
-
-                // Add any new servers found on the disk to the Servers list
-                foreach (ServerEntry server in serversOnDisk)
-                {
-                    if (Servers.All(s => s.Name != server.Name) && !string.IsNullOrWhiteSpace(server.Name))
-                    {
-                        Servers.Add(server);
-                    }
-                }
-
-                Servers = [..Servers.OrderByDescending(entry => entry.LastAccessedTime)];
+                Servers = [..serversOnDisk.Values.OrderByDescending(entry => entry.LastAccessedTime)];
             }
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Error while getting saves");
-            dialogService.ShowErrorAsync(ex, "Error while getting saves");
+            await dialogService.ShowErrorAsync(ex, "Error while getting saves");
         }
     }
 
-    private void InitializeWatcher()
+    private async Task LoadServersAndWatchAsync(CancellationToken cancellationToken = default)
     {
         watcher = new FileSystemWatcher
         {
@@ -196,33 +192,29 @@ public partial class ServersViewModel : RoutableViewModelBase
         watcher.Deleted += OnDirectoryChanged;
         watcher.Renamed += OnDirectoryChanged;
 
-        Task.Run(async () =>
+        await Task.Run(async () =>
         {
             watcher.EnableRaisingEvents = true; // Slowish (~2ms) - Moved into Task.Run.
 
-            while (!serverRefreshCts.IsCancellationRequested)
+            await GetSavesOnDiskAsync(); // First time load
+            while (true)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 while (shouldRefreshServersList)
                 {
                     try
                     {
-                        GetSavesOnDisk();
+                        await GetSavesOnDiskAsync();
                         shouldRefreshServersList = false;
                     }
                     catch (IOException)
                     {
-                        await Task.Delay(500);
+                        await Task.Delay(500, cancellationToken);
                     }
                 }
-                await Task.Delay(1000);
+                await Task.Delay(1000, cancellationToken);
             }
-        }).ContinueWith(t =>
-        {
-            if (t.IsFaulted)
-            {
-                LauncherNotifier.Error(t.Exception.Message);
-            }
-        });
+        }, cancellationToken);
     }
 
     private void OnDirectoryChanged(object sender, FileSystemEventArgs e)

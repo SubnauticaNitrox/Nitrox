@@ -22,7 +22,7 @@ public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
     public static T Load(string saveDir)
     {
         T config = new();
-        config.Update(saveDir);
+        config.Deserialize(saveDir);
         return config;
     }
 
