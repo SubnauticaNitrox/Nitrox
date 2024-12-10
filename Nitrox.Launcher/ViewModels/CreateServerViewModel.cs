@@ -28,9 +28,6 @@ public partial class CreateServerViewModel : ModalViewModelBase
     [ObservableProperty]
     private NitroxGameMode selectedGameMode = NitroxGameMode.SURVIVAL;
 
-    public KeyGesture BackHotkey { get; } = new(Key.Escape);
-    public KeyGesture CreateHotkey { get; } = new(Key.Return);
-
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
 
     public CreateServerViewModel(IKeyValueStore keyValueStore)

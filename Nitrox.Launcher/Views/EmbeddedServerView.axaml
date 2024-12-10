@@ -7,6 +7,11 @@
              mc:Ignorable="d" d:DesignWidth="700"
              DataContext="{x:Static design:DesignData.EmbeddedServerViewModel}"
              x:Class="Nitrox.Launcher.Views.EmbeddedServerView">
+    <UserControl.KeyBindings>
+        <KeyBinding Gesture="Escape" Command="{Binding ClearInputCommand}" />
+        <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" />
+        <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" />
+    </UserControl.KeyBindings>
     <ThemeVariantScope RequestedThemeVariant="Dark">
         <Grid RowDefinitions="*,Auto" Margin="6">
             <ScrollViewer x:Name="ScrollViewer" Grid.Row="0">
@@ -35,9 +40,6 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6 0" Spacing="6">
                     <CheckBox Content="Auto scroll" IsChecked="{Binding ShouldAutoScroll}" />
                     <Button Classes="primary" Content="Send" Command="{Binding SendServerCommandCommand}" HotKey="Enter" />
-                    <Button IsVisible="False" Content="Clear" Command="{Binding ClearInputCommand}" HotKey="Escape" />
-                    <Button IsVisible="False" Content="History forward" Command="{Binding CommandHistoryGoForwardCommand}" HotKey="Down" />
-                    <Button IsVisible="False" Content="History back" Command="{Binding CommandHistoryGoBackCommand}" HotKey="Up" />
                 </StackPanel>
             </Grid>
         </Grid>

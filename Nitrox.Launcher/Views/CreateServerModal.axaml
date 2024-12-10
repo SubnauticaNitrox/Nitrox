@@ -46,8 +46,8 @@
             </StackPanel>
             <Border Classes="footer">
                 <Panel>
-                    <Button Content="Back" FontWeight="Bold" HotKey="{Binding BackHotkey}" Command="{Binding CloseCommand}" />
-                    <Button Classes="primary" Content="Create" HorizontalAlignment="Right" HotKey="{Binding CreateHotkey}" Command="{Binding CreateCommand}" />
+                    <Button Content="Back" FontWeight="Bold" HotKey="Escape" Command="{Binding CloseCommand}" />
+                    <Button Classes="primary" Content="Create" HorizontalAlignment="Right" HotKey="Enter" Command="{Binding CreateCommand}" />
                 </Panel>
             </Border>
         </StackPanel>
