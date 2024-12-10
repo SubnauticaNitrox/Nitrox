@@ -225,15 +225,14 @@ public partial class ServerEntry : ObservableObject
             {
                 serverExeName = "NitroxServer-Subnautica";
             }
-            string serverPath = Path.Combine(NitroxUser.CurrentExecutablePath, serverExeName);
-            ProcessStartInfo startInfo = new(serverPath)
+            string serverFile = Path.Combine(NitroxUser.CurrentExecutablePath, serverExeName);
+            ProcessStartInfo startInfo = new(serverFile)
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,
-                Arguments = $@"--save ""{Path.GetFileName(saveDir)}""",
-                RedirectStandardOutput = captureOutput,
-                UseShellExecute = false
+                ArgumentList = { "--save", Path.GetFileName(saveDir) },
+                RedirectStandardOutput = captureOutput
             };
-            Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {startInfo.Arguments}");
+            Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
             serverProcess = System.Diagnostics.Process.Start(startInfo);
             if (serverProcess != null)
