@@ -45,22 +45,22 @@
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="MinWidth" Value="100"/>
         <Setter Property="MinHeight" Value="30" />
-        <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
         <Style Selector="^ /template/ ContentPresenter">
             <Style Selector="^ TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
             </Style>
             <Style Selector="^ TextBlock#PlaceholderTextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource BrandSubTextBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource BrandSubText}" />
             </Style>
             <Style Selector="^ PathIcon">
-                <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
             </Style>
         </Style>
 
         <Style Selector="^:pointerover /template/ Border#Background">
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
         </Style>
 
         <Setter Property="Transitions">
@@ -123,7 +123,7 @@
                                InheritsTransform="True">
                             <Border x:Name="PopupBorder"
                                     Background="{TemplateBinding Background}"
-                                    BorderBrush="{DynamicResource BrandWhiteBrush}"
+                                    BorderBrush="{DynamicResource BrandWhite}"
                                     BorderThickness="1 0 2 2"
                                     Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                                     HorizontalAlignment="Stretch"

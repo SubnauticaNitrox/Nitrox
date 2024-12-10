@@ -31,7 +31,7 @@
 
     <Style Selector="RadioButton">
         <Setter Property="Background" Value="{DynamicResource RadioButtonBackground}" />
-        <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
         <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonBorderBrush}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="Padding" Value="8,0,0,0" />

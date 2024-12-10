@@ -11,7 +11,7 @@
     </Design.DataContext>
     <!-- TODO: WIP -->
     <ScrollViewer Classes="main">
-        <Grid Background="{DynamicResource BrandWhiteBrush}">
+        <Grid Background="{DynamicResource BrandWhite}">
             <TextBlock Text="Library View"/>
         </Grid>
     </ScrollViewer>

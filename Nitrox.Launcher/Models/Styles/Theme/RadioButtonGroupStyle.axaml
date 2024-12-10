@@ -24,8 +24,8 @@
 
     <!-- Base style without palette-->
     <Style Selector="ItemsControl.radioGroup">
-        <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
                 <StackPanel Spacing="8" Orientation="Horizontal" />
@@ -38,7 +38,7 @@
                             Background="Transparent"
                             CornerRadius="8"
                             BorderThickness="2"
-                            BorderBrush="{DynamicResource BrandBorderBrush}"
+                            BorderBrush="{DynamicResource BrandBorder}"
                             Padding="14 16"
                             Tag="{Binding}"
                             Command="{Binding $parent[controls:RadioButtonGroup].ItemClickCommand}"
@@ -74,9 +74,9 @@
 
     <!-- Events -->
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
-        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimary}" />
     </Style>
     <Style Selector="ItemsControl.radioGroup Button#ItemContainer[(design|NitroxAttached.Selected)=true]">
-        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandPrimary}" />
     </Style>
 </Styles>

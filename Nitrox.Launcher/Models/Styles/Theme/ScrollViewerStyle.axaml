@@ -221,7 +221,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border Background="{DynamicResource BrandScrollThumbBrush}"
+                    <Border Background="{DynamicResource BrandScrollThumb}"
                             CornerRadius="4"/>
                 </ControlTemplate>
             </Setter.Value>
@@ -234,11 +234,11 @@
                 </Transitions>
             </Setter>
             <Style Selector="^:pointerover">
-                <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPointerOverBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPointerOver}" />
             </Style>
         </Style>
         <Style Selector="^:pressed /template/ Border">
-            <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPressedBrush}" />
+            <Setter Property="Background" Value="{DynamicResource BrandScrollThumbPressed}" />
         </Style>
         
         <!--<Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">

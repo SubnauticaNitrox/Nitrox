@@ -13,11 +13,11 @@
         <vm:UpdatesViewModel />
     </Design.DataContext>
     <ScrollViewer Classes="main">
-        <StackPanel Classes="viewPadding" Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
+        <StackPanel Classes="viewPadding" Spacing="23" Background="{DynamicResource BrandWhite}">
 
             <TextBlock Classes="header" Text="Updates"/>
 
-            <Border CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}" Padding="22">
+            <Border CornerRadius="12" Background="{DynamicResource BrandPanelBackground}" Padding="22">
                 <Grid>
                     <!-- Official Version only text -->
                     <StackPanel Spacing="10" IsVisible="{Binding UsingOfficialVersion, Mode=OneWay}">

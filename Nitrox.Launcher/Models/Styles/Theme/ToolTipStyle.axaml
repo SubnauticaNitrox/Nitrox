@@ -24,7 +24,7 @@
         <Style Selector="^ TextBlock">
             <Setter Property="FontWeight" Value="600" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
         </Style>
     </Style>
 </Styles>

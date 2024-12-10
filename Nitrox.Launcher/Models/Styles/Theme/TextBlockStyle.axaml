@@ -19,7 +19,7 @@
   </Style>
 
   <Style Selector="TextBlock.link">
-    <Setter Property="Foreground" Value="{DynamicResource BrandPrimaryBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrandPrimary}" />
     <Setter Property="Cursor" Value="Hand" />
 
     <Style Selector="^:pointerover">

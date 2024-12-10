@@ -32,7 +32,7 @@
         <Setter Property="WindowStartupLocation" Value="CenterOwner" />
         <Setter Property="FontFamily" Value="/Assets/Fonts/Inter-Black.ttf" />
         <!-- Disables window border but allow resizing -->
-        <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
         <Setter Property="SystemDecorations" Value="None" />
         <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
         <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
@@ -40,14 +40,14 @@
     </Style>
 
     <Style Selector="Border">
-        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackground}" />
     </Style>
 
     <Style Selector=":is(Border).footer">
-        <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
         <Setter Property="Padding" Value="24 20" />
         <Setter Property="BorderThickness" Value="0 2 0 0" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BrandWhiteBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandWhite}" />
     </Style>
 
     <Style Selector=":is(Control)">
@@ -64,7 +64,7 @@
         <Setter Property="FocusAdorner">
             <Setter.Value>
                 <FocusAdornerTemplate>
-                    <Border Name="FocusBorder" BorderThickness="2" BorderBrush="{DynamicResource BrandFocusBorderBrush}" />
+                    <Border Name="FocusBorder" BorderThickness="2" BorderBrush="{DynamicResource BrandFocusBorder}" />
                 </FocusAdornerTemplate>
             </Setter.Value>
         </Setter>
@@ -116,7 +116,7 @@
             <Setter Property="HorizontalAlignment" Value="Right" />
 
             <Style Selector="^ Button">
-                <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
             </Style>
             <Style Selector="^ Button:nth-child(1)">
                 <Setter Property="CornerRadius" Value="0 0 0 8" />
@@ -127,13 +127,13 @@
         </Style>
 
         <Style Selector="^ > Button">
-            <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+            <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="CornerRadius" Value="0 0 0 8" />
             <Style Selector="^ > Rectangle">
                 <Setter Property="Width" Value="10" />
                 <Setter Property="Height" Value="10" />
-                <Setter Property="Fill" Value="{DynamicResource BrandBlackBrush}" />
+                <Setter Property="Fill" Value="{DynamicResource BrandBlack}" />
             </Style>
             <Style Selector="^:pointerover">
                 <Setter Property="Background" Value="Red" />
@@ -156,7 +156,7 @@
     </Style>
 
     <Style Selector=":is(ContentControl).content">
-        <Setter Property="Background" Value="{DynamicResource BrandWhiteBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>
@@ -166,7 +166,7 @@
     </Style>
 
     <Style Selector="Border.serverEntry">
-        <Setter Property="Background" Value="{DynamicResource BrandPanelBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="Padding" Value="22 20" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />

@@ -8,7 +8,7 @@
     <Design.DataContext>
         <vm:ServersViewModel />
     </Design.DataContext>
-    <Panel Classes="viewPadding" Background="{DynamicResource BrandWhiteBrush}">
+    <Panel Classes="viewPadding" Background="{DynamicResource BrandWhite}">
         <Panel IsVisible="{Binding !Servers.Count}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image Source="/Assets/Images/world-manager/server.png" Stretch="None" Margin="0 0 0 73" />
@@ -89,7 +89,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Border Grid.Row="3" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <Border Grid.Row="3" CornerRadius="12" Background="{DynamicResource BrandPanelBackground}" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                 <Button x:Name="CreateServerBtn" Classes="primary big" HotKey="Enter" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Content="CREATE NEW SERVER"
                         Command="{Binding CreateServerCommand}" />
             </Border>

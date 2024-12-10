@@ -19,7 +19,7 @@
         </vm:BlogViewModel>
     </Design.DataContext>
     <ScrollViewer Classes="main">
-        <StackPanel Classes="viewPadding" Spacing="20" Background="{DynamicResource BrandWhiteBrush}">
+        <StackPanel Classes="viewPadding" Spacing="20" Background="{DynamicResource BrandWhite}">
 
             <StackPanel Spacing="15">
                 <TextBlock Classes="header" Text="Blog"/>
@@ -64,7 +64,7 @@
                                            HorizontalAlignment="Left"
                                            FontSize="10"
                                            FontWeight="Bold"
-                                           Foreground="{DynamicResource BrandSubTextBrush}"
+                                           Foreground="{DynamicResource BrandSubText}"
                                            ToolTip.Tip="{Binding Date, Converter={converters:DateToRelativeDateConverter}}"/>
 
                             </StackPanel>

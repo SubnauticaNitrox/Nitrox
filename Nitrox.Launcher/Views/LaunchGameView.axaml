@@ -13,7 +13,7 @@
         <vm:LaunchGameViewModel />
     </Design.DataContext>
     <ScrollViewer Classes="main">
-        <StackPanel Spacing="20" Margin="20 0 20 20" Background="{DynamicResource BrandWhiteBrush}">
+        <StackPanel Spacing="20" Margin="20 0 20 20" Background="{DynamicResource BrandWhite}">
 
             <Panel Height="535" Margin="-20 0">
                 <Image Stretch="UniformToFill" Source="/Assets/Images/banners/home.png" />
@@ -27,7 +27,7 @@
                 <StackPanel Grid.Column="1" Margin="0 -110 0 0">
                     <Border CornerRadius="10" ClipToBounds="True">
                         <controls:BlurControl BlurStrength="7">
-                            <Border Background="{DynamicResource BrandPanelBackgroundBrush}" Opacity=".90">
+                            <Border Background="{DynamicResource BrandPanelBackground}" Opacity=".90">
                                 <StackPanel Orientation="Vertical" Spacing="9" Margin="24 20">
                                     <Grid Height="26" Margin="0 0 0 9" HorizontalAlignment="Stretch">
                                         <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
@@ -37,7 +37,7 @@
                                                     <Setter Property="FontSize" Value="10" />
                                                 </Style>
                                             </StackPanel.Styles>
-                                            <TextBlock Foreground="{DynamicResource BrandSubTextBrush}" Text="PLAY NITROX" />
+                                            <TextBlock Foreground="{DynamicResource BrandSubText}" Text="PLAY NITROX" />
                                             <TextBlock Text="{Binding Version, FallbackValue='PHASE x.x.x.x'}" />
                                         </StackPanel>
                                         <Image HorizontalAlignment="Right" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}}"
@@ -94,7 +94,7 @@
                     <StackPanel.Styles>
                         <Style Selector="StackPanel > TextBlock:nth-child(2n+1)">
                             <Setter Property="FontSize" Value="10" />
-                            <Setter Property="Foreground" Value="{DynamicResource BrandSubTextBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrandSubText}" />
                             <Setter Property="FontWeight" Value="Bold" />
                         </Style>
                         <Style Selector="StackPanel > TextBlock:nth-child(2n)">

@@ -14,7 +14,7 @@
         <Style Selector="controls|FittingWrapPanel">
             <Setter Property="Margin" Value="-4 0" />
             <Style Selector="^ > Border">
-                <Setter Property="Background" Value="{DynamicResource BrandPanelBackgroundBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
                 <Setter Property="CornerRadius" Value="12" />
                 <Setter Property="Padding" Value="22" />
                 <Setter Property="Margin" Value="8" />
@@ -44,7 +44,7 @@
     </UserControl.Styles>
 
     <ScrollViewer Classes="main">
-        <StackPanel Classes="viewPadding" Spacing="23" Background="{DynamicResource BrandWhiteBrush}">
+        <StackPanel Classes="viewPadding" Spacing="23" Background="{DynamicResource BrandWhite}">
             <TextBlock Classes="header" Text="Community" />
             <Image Source="/Assets/Images/banners/community.png" MaxWidth="1580" />
             <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="280">

@@ -47,7 +47,7 @@
     </Design.PreviewWith>
 
     <Style Selector="Button">
-        <Setter Property="Background" Value="{DynamicResource BrandBorderBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandBorderBackground}" />
         <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -110,12 +110,12 @@
         </Style>
 
         <Style Selector="^.primary">
-            <Setter Property="Background" Value="{DynamicResource BrandPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource BrandPrimary}" />
             <Setter Property="Foreground" Value="#ffffff" />
         </Style>
 
         <Style Selector="^.abort">
-            <Setter Property="Background" Value="{DynamicResource BrandAbortBrush}" />
+            <Setter Property="Background" Value="{DynamicResource BrandAbort}" />
             <Setter Property="Foreground" Value="#ffffff" />
         </Style>
 

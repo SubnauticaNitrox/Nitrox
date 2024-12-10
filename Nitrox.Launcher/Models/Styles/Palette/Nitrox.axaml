@@ -5,43 +5,43 @@
         <!-- Default/Light theme -->
         <ResourceDictionary x:Key="Default">
             <!-- Main colors -->
-            <SolidColorBrush Color="#007BFF" x:Key="BrandPrimaryBrush" />
-            <SolidColorBrush Color="#FFFFFF" x:Key="BrandWhiteBrush" />
-            <SolidColorBrush Color="#000000" x:Key="BrandBlackBrush" />
-            <SolidColorBrush Color="#D1D1D1" x:Key="BrandBorderBrush" />
-            <SolidColorBrush Color="#ECECEC" x:Key="BrandControlBackgroundBrush" />
-            <SolidColorBrush Color="#D9D9D9" x:Key="BrandCheckboxBackgroundBrush" />
-            <SolidColorBrush Color="#151516" x:Key="BrandPanelBackgroundBrush" />
-            <SolidColorBrush Color="#1EFFFFFF" x:Key="BrandBorderBackgroundBrush" />
-            <SolidColorBrush Color="#000000" x:Key="BrandCaretBrush"/>
-            <SolidColorBrush Color="#40000000" x:Key="BrandFocusBorderBrush"/>
-            <SolidColorBrush Color="#7F000000" x:Key="BrandSubTextBrush"/>
-            <SolidColorBrush Color="#CCCCCC" x:Key="BrandScrollThumbBrush"/>
-            <SolidColorBrush Color="#8F8F8F" x:Key="BrandScrollThumbPointerOverBrush"/>
-            <SolidColorBrush Color="#3F3F3F" x:Key="BrandScrollThumbPressedBrush"/>
-            <SolidColorBrush Color="#38C149" x:Key="BrandOnColor"/>
-            <SolidColorBrush Color="#FF5E57" x:Key="BrandOffColor"/>
+            <Color x:Key="BrandPrimary">#007BFF</Color>
+            <Color x:Key="BrandWhite">#FFFFFF</Color>
+            <Color x:Key="BrandBlack">#000000</Color>
+            <Color x:Key="BrandBorder">#D1D1D1</Color>
+            <Color x:Key="BrandControlBackground">#ECECEC</Color>
+            <Color x:Key="BrandCheckboxBackground">#D9D9D9</Color>
+            <Color x:Key="BrandPanelBackground">#151516</Color>
+            <Color x:Key="BrandBorderBackground">#1EFFFFFF</Color>
+            <Color x:Key="BrandCaret">#000000</Color>
+            <Color x:Key="BrandFocusBorder">#40000000</Color>
+            <Color x:Key="BrandSubText">#7F000000</Color>
+            <Color x:Key="BrandScrollThumb">#CCCCCC</Color>
+            <Color x:Key="BrandScrollThumbPointerOver">#8F8F8F</Color>
+            <Color x:Key="BrandScrollThumbPressed">#3F3F3F</Color>
+            <Color x:Key="BrandOnColor">#38C149</Color>
+            <Color x:Key="BrandOffColor">#FF5E57</Color>
 
             <!-- Notification colors -->
-            <SolidColorBrush Color="#FF005C" x:Key="BrandAbortBrush" />
-            <SolidColorBrush Color="#FFB3B3" x:Key="BrandAbortBackgroundBrush" />
-            <SolidColorBrush Color="#E60914" x:Key="BrandErrorBrush" />
-            <SolidColorBrush Color="#11AD45" x:Key="BrandSuccessBrush" />
-            <SolidColorBrush Color="#007BFF" x:Key="BrandInformationBrush" />
-            <SolidColorBrush Color="#F5A300" x:Key="BrandWarningBrush" />
+            <Color x:Key="BrandAbort">#FF005C</Color>
+            <Color x:Key="BrandAbortBackground">#FFB3B3</Color>
+            <Color x:Key="BrandError">#E60914</Color>
+            <Color x:Key="BrandSuccess">#11AD45</Color>
+            <Color x:Key="BrandInformation">#007BFF</Color>
+            <Color x:Key="BrandWarning">#F5A300</Color>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
-            <SolidColorBrush Color="#000000" x:Key="BrandWhiteBrush" />
-            <SolidColorBrush Color="#FFFFFF" x:Key="BrandBlackBrush" />
-            <SolidColorBrush Color="#323232" x:Key="BrandBorderBrush" />
-            <SolidColorBrush Color="#1D1D1D" x:Key="BrandControlBackgroundBrush" />
-            <SolidColorBrush Color="#333333" x:Key="BrandCheckboxBackgroundBrush" />
-            <SolidColorBrush Color="#FFFFFF" x:Key="BrandCaretBrush"/>
-            <SolidColorBrush Color="#40FFFFFF" x:Key="BrandFocusBorderBrush"/>
-            <SolidColorBrush Color="#7FFFFFFF" x:Key="BrandSubTextBrush"/>
-            <SolidColorBrush Color="#262626" x:Key="BrandScrollThumbBrush"/>
-            <SolidColorBrush Color="#3F3F3F" x:Key="BrandScrollThumbPointerOverBrush"/>
-            <SolidColorBrush Color="#8F8F8F" x:Key="BrandScrollThumbPressedBrush"/>
+            <Color x:Key="BrandWhite">#000000</Color>
+            <Color x:Key="BrandBlack">#FFFFFF</Color>
+            <Color x:Key="BrandBorder">#323232</Color>
+            <Color x:Key="BrandControlBackground">#1D1D1D</Color>
+            <Color x:Key="BrandCheckboxBackground">#333333</Color>
+            <Color x:Key="BrandCaret">#FFFFFF</Color>
+            <Color x:Key="BrandFocusBorder">#40FFFFFF</Color>
+            <Color x:Key="BrandSubText">#7FFFFFFF</Color>
+            <Color x:Key="BrandScrollThumb">#262626</Color>
+            <Color x:Key="BrandScrollThumbPointerOver">#3F3F3F</Color>
+            <Color x:Key="BrandScrollThumbPressed">#8F8F8F</Color>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

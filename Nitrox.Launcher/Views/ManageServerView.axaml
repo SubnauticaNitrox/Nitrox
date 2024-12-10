@@ -13,7 +13,7 @@
     <Design.DataContext>
         <vm:ManageServerViewModel ServerName="My fun server" />
     </Design.DataContext>
-    <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhiteBrush}">
+    <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhite}">
         <StackPanel>
             <Button Margin="0 0 0 26" Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">
                 <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back.png" Width="24" Height="24" />
@@ -47,7 +47,7 @@
                             </controls:GrayscaleControl>
                         </Grid>
                     </Border>
-                    <TextBlock Text="Click to change icon" Foreground="{DynamicResource BrandSubTextBrush}" FontSize="7.5" HorizontalAlignment="Center" />
+                    <TextBlock Text="Click to change icon" Foreground="{DynamicResource BrandSubText}" FontSize="7.5" HorizontalAlignment="Center" />
                 </StackPanel>
 
 
@@ -252,7 +252,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Row="2" Background="{DynamicResource BrandPanelBackgroundBrush}" CornerRadius="12" Padding="25 17">
+        <Border Grid.Row="2" Background="{DynamicResource BrandPanelBackground}" CornerRadius="12" Padding="25 17">
             <Grid ColumnDefinitions="*,1*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <StackPanel Grid.Column="0">
                     <RadioButton Content="External" IsChecked="{Binding !ServerEmbedded}" ToolTip.Tip="Run server in external mode as a separate command line window" />

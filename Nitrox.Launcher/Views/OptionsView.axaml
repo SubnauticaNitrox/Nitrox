@@ -29,7 +29,7 @@
     </UserControl.Resources>
 
     <ScrollViewer Classes="main">
-        <StackPanel Classes="viewPadding" Orientation="Vertical" Spacing="22" Background="{DynamicResource BrandWhiteBrush}">
+        <StackPanel Classes="viewPadding" Orientation="Vertical" Spacing="22" Background="{DynamicResource BrandWhite}">
             <TextBlock Classes="header" Text="Options" />
 
             <!-- Subnautica Runtime Selection -->
@@ -38,7 +38,7 @@
                     <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Installation" />
                     <TextBlock FontSize="12" Text="Choose which Subnautica instance to use for multiplayer" />
                 </StackPanel>
-                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
+                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackground}">
                     <Grid ColumnDefinitions=" Auto, *, Auto">
                         <Image Source="{Binding SelectedGame.Platform, Converter={converters:PlatformToIconConverter}}"
                                ToolTip.Tip="Welcome aboard, Captain!"
@@ -86,7 +86,7 @@
                     <TextBlock FontSize="20" FontWeight="Bold" Text="Subnautica Launch Arguments" />
                     <TextBlock FontSize="12" Text="Allows you to override Nitrox default launch arguments" />
                 </StackPanel>
-                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
+                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackground}">
                     <Grid ColumnDefinitions="*, Auto, 120">
                         <Panel>
                             <TextBox x:Name="LaunchArgsInput" Padding="13,12" FontSize="15" MaxLines="1"
@@ -99,7 +99,7 @@
                         <Button Grid.Column="1" Classes="icon" Margin="10 0" ToolTip.Tip="{StaticResource InfoIconTooltipText}">
                             <Path
                                 Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"
-                                Fill="{DynamicResource BrandBlackBrush}" />
+                                Fill="{DynamicResource BrandBlack}" />
 
                             <Button.Styles>
                                 <Style Selector="Button:pointerover">
@@ -121,7 +121,7 @@
                 <TextBlock FontSize="20" FontWeight="Bold" Text="Save File Location" />
                 <TextBlock FontSize="12" HorizontalAlignment="Left" Text="This is the location where your Nitrox server save files are stored" />
 
-                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackgroundBrush}">
+                <Border Padding="22 15" CornerRadius="12" Background="{DynamicResource BrandPanelBackground}">
                     <Grid ColumnDefinitions="*,Auto">
                         <TextBlock FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="{Binding SavesFolderDir}" />
                         <Button Grid.Column="1" HorizontalAlignment="Right" Classes="primary" Command="{Binding OpenSavesFolderCommand}"

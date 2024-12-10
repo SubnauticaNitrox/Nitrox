@@ -24,7 +24,7 @@
     </Design.DataContext>
     <Window.Styles>
         <Style Selector="Border.nav">
-            <Setter Property="Background" Value="{DynamicResource BrandPanelBackgroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource BrandPanelBackground}" />
 
             <Style Selector="^ TextBlock.header">
                 <Setter Property="Margin" Value="34 28 0 20" />
@@ -77,6 +77,30 @@
                     <DoubleTransition Property="Opacity" Duration="0:0:.2" />
                 </Transitions>
             </Setter>
+            <Style Selector="^.info">
+                <Setter Property="Background" Value="{DynamicResource BrandInformation}" />
+                <Style Selector="^ :is(Image).icon">
+                    <Setter Property="Source" Value="/Assets/Images/notification-icons/information.png" />
+                </Style>
+            </Style>
+            <Style Selector="^.success">
+                <Setter Property="Background" Value="{DynamicResource BrandSuccess}" />
+                <Style Selector="^ :is(Image).icon">
+                    <Setter Property="Source" Value="/Assets/Images/notification-icons/success.png" />
+                </Style>
+            </Style>
+            <Style Selector="^.warning">
+                <Setter Property="Background" Value="{DynamicResource BrandWarning}" />
+                <Style Selector="^ :is(Image).icon">
+                    <Setter Property="Source" Value="/Assets/Images/notification-icons/warning.png" />
+                </Style>
+            </Style>
+            <Style Selector="^.error">
+                <Setter Property="Background" Value="{DynamicResource BrandError}" />
+                <Style Selector="^ :is(Image).icon">
+                    <Setter Property="Source" Value="/Assets/Images/notification-icons/error.png" />
+                </Style>
+            </Style>
             <Style Selector="^:not(.dismiss)">
                 <Style Selector="^:not(:pointerover)">
                     <Setter Property="Opacity" Value=".98" />
@@ -212,10 +236,14 @@
             <ItemsControl Grid.Column="1" Margin="0 10 10 10" ItemsSource="{Binding Notifications}" VerticalAlignment="Bottom" Opacity="0.95">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Classes.dismiss="{Binding Dismissed}" Margin="5" Padding="5 10 10 10" MinHeight="60" Background="{Binding Type, Converter={converters:NotificationTypeToColorConverter}}"
-                                CornerRadius="5">
+                        <Border Classes.dismiss="{Binding Dismissed}"
+                                Classes.info="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Information}}"
+                                Classes.success="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Success}}"
+                                Classes.warning="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Warning}}"
+                                Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
+                                Margin="5" Padding="5 10 10 10" MinHeight="60" CornerRadius="5">
                             <Grid ColumnDefinitions="50,*,20">
-                                <Image Grid.Column="0" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" Source="{Binding Type, Converter={converters:NotificationTypeToIconConverter}}" />
+                                <Image Grid.Column="0" Classes="icon" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" />
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Message}" />
                                 <Button Classes="anycontent" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseCommand}">
                                     <Image Width="10" VerticalAlignment="Top" Source="/Assets/Images/material-design-icons/close.png" />

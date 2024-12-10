@@ -26,12 +26,12 @@
     </Design.PreviewWith>
 
     <Style Selector="TextBox">
-        <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandBlack}" />
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="14" />
-        <Setter Property="Background" Value="{DynamicResource BrandControlBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="CaretBrush" Value="{DynamicResource BrandCaretBrush}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandCaret}" />
 
         <Style Selector="^ /template/ Border">
             <Setter Property="Background" Value="{TemplateBinding Background}" />
