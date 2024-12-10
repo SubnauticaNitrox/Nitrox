@@ -35,7 +35,8 @@ public partial class BlogViewModel : RoutableViewModelBase
             {
                 try
                 {
-                    nitroxBlogs = [..await Downloader.GetBlogsAsync()];
+                    nitroxBlogs.Clear();
+                    nitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
                 }
                 catch (Exception ex)
                 {
