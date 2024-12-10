@@ -12,9 +12,9 @@
         <vm:EmbeddedServerViewModel />
     </Design.DataContext>
     <UserControl.KeyBindings>
-        <KeyBinding Gesture="Escape" Command="{Binding ClearInputCommand}" />
-        <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" />
-        <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" />
+        <KeyBinding Gesture="Escape" Command="{Binding ClearInputCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
+        <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
+        <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
     </UserControl.KeyBindings>
     <Grid RowDefinitions="*,Auto" Margin="6">
         <ScrollViewer x:Name="ScrollViewer" Grid.Row="0">
@@ -39,10 +39,10 @@
             </ItemsControl>
         </ScrollViewer>
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-            <TextBox Grid.Column="0" design:NitroxAttached.Focus="" Text="{Binding ServerCommand}" Watermark="A server command here" />
+            <TextBox x:Name="ServerCommandTextBox" Grid.Column="0" design:NitroxAttached.Focus="" Text="{Binding ServerCommand}" Watermark="A server command here" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6 0" Spacing="6">
                 <CheckBox Content="Auto scroll" IsChecked="{Binding ShouldAutoScroll}" />
-                <Button Classes="primary" Content="Send" Command="{Binding SendServerCommandCommand}" HotKey="Enter" />
+                <Button Classes="primary" Content="Send" Command="{Binding SendServerCommandCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" HotKey="Enter" />
             </StackPanel>
         </Grid>
     </Grid>

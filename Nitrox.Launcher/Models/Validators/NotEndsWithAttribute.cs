@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Nitrox.Launcher.Models.Validators;
 
 /// <summary>
-///     Tests that the value is doesn't end with the specified text.
+///     Tests that the value doesn't end with the specified text.
 /// </summary>
 public sealed class NotEndsWithAttribute(string text, StringComparison comparison = StringComparison.OrdinalIgnoreCase) : TypedValidationAttribute<string>
 {

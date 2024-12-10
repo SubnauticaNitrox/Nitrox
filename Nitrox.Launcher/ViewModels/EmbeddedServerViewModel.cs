@@ -21,6 +21,9 @@ namespace Nitrox.Launcher.ViewModels;
 /// </summary>
 public partial class EmbeddedServerViewModel : RoutableViewModelBase
 {
+    private readonly CircularBuffer<string> commandHistory = new(1000);
+    private int? selectedHistoryIndex;
+
     [ObservableProperty]
     private string serverCommand;
 
@@ -31,9 +34,6 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     private bool shouldAutoScroll = true;
 
     public AvaloniaList<string> ServerOutput => ServerEntry.Process.Output;
-
-    private readonly CircularBuffer<string> commandHistory = new(1000);
-    private int? selectedHistoryIndex;
 
     public EmbeddedServerViewModel()
     {
@@ -52,7 +52,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand]
-    private async Task SendServerCommandAsync()
+    private async Task SendServerCommandAsync(TextBox textBox)
     {
         if (ServerEntry.Process == null)
         {
@@ -63,18 +63,19 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
             commandHistory.Add(ServerCommand);
         }
         await ServerEntry.Process.SendCommandAsync(ServerCommand);
-        ClearInput();
+        ClearInput(textBox);
     }
 
     [RelayCommand]
-    private void ClearInput()
+    private void ClearInput(TextBox textBox)
     {
         ServerCommand = "";
         selectedHistoryIndex = null;
+        SetCaretToEnd(textBox);
     }
 
     [RelayCommand]
-    private void CommandHistoryGoBack()
+    private void CommandHistoryGoBack(TextBox textBox)
     {
         if (commandHistory.Count < 1)
         {
@@ -83,10 +84,11 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         selectedHistoryIndex ??= 0;
         selectedHistoryIndex--;
         ServerCommand = commandHistory[selectedHistoryIndex.Value];
+        SetCaretToEnd(textBox);
     }
 
     [RelayCommand]
-    private void CommandHistoryGoForward()
+    private void CommandHistoryGoForward(TextBox textBox)
     {
         if (commandHistory.Count < 1)
         {
@@ -95,8 +97,9 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         selectedHistoryIndex ??= -1;
         selectedHistoryIndex++;
         ServerCommand = commandHistory[selectedHistoryIndex.Value];
+        SetCaretToEnd(textBox);
     }
-    
+
     [RelayCommand]
     private void OutputSizeChanged(SizeChangedEventArgs args)
     {
@@ -115,5 +118,14 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
                 });
             }
         }
+    }
+
+    private void SetCaretToEnd(TextBox textBox)
+    {
+        if (textBox is not { Text: { } text })
+        {
+            return;
+        }
+        textBox.CaretIndex = text.Length;
     }
 }
