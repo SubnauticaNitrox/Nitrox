@@ -36,6 +36,10 @@ public partial class ObjectPropertyEditorViewModel : ModalViewModelBase
     /// </summary>
     public Func<PropertyInfo, bool> FieldAcceptFilter { get; set; } = _ => true;
 
+    public ObjectPropertyEditorViewModel() : this(null)
+    {
+    }
+
     public ObjectPropertyEditorViewModel(IDialogService dialogService)
     {
         this.dialogService = dialogService;

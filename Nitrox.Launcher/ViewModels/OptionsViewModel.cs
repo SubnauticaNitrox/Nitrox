@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Discovery;
@@ -36,7 +37,11 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
     private static string DefaultLaunchArg => "-vrmode none";
 
-    public OptionsViewModel(IScreen screen, IKeyValueStore keyValueStore) : base(screen)
+    public OptionsViewModel()
+    {
+    }
+
+    public OptionsViewModel(IKeyValueStore keyValueStore)
     {
         this.keyValueStore = keyValueStore;
 
@@ -145,11 +150,5 @@ public partial class OptionsViewModel : RoutableViewModelBase
             Verb = "open",
             UseShellExecute = true
         })?.Dispose();
-    }
-
-    public class KnownGame
-    {
-        public string PathToGame { get; init; }
-        public Platform Platform { get; init; }
     }
 }

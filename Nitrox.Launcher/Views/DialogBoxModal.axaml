@@ -2,16 +2,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="400" MaxWidth="1000"
-        DataContext="{x:Static design:DesignData.DialogBoxViewModel}"
         x:Class="Nitrox.Launcher.Views.DialogBoxModal"
+        x:DataType="vm:DialogBoxViewModel"
         SizeToContent="WidthAndHeight"
         CanResize="False"
-        Title="{Binding WindowTitle, TargetNullValue='Dialog Window'}"
-        RequestedThemeVariant="Dark">
+        Title="{Binding WindowTitle, TargetNullValue='Dialog Window'}">
+    <Design.DataContext>
+        <vm:DialogBoxViewModel Title="Title Text" Description="Description Text" />
+    </Design.DataContext>
     <Grid RowDefinitions="Auto,*,Auto">
         <!-- Title bar -->
         <Panel Grid.RowSpan="2" Classes="titleBar">

@@ -2,18 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:launcher="clr-namespace:Nitrox.Launcher"
-             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             DataContext="{x:Static design:DesignData.LibraryViewModel}"
+             xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1000"
-             x:Class="Nitrox.Launcher.Views.LibraryView">
+             x:Class="Nitrox.Launcher.Views.LibraryView"
+             x:DataType="vm:LibraryViewModel">
+    <Design.DataContext>
+        <vm:LibraryViewModel />
+    </Design.DataContext>
     <!-- TODO: WIP -->
-    <ThemeVariantScope RequestedThemeVariant="Dark">
-        <ScrollViewer Classes="main">
-            <Grid Background="{DynamicResource BrandWhiteBrush}">
-                <TextBlock Text="Library View"/>
-            </Grid>
-        </ScrollViewer>
-    </ThemeVariantScope>
+    <ScrollViewer Classes="main">
+        <Grid Background="{DynamicResource BrandWhiteBrush}">
+            <TextBlock Text="Library View"/>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

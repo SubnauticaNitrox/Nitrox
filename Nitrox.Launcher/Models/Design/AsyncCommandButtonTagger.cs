@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Reactive.Disposables;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;

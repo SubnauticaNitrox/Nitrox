@@ -5,13 +5,20 @@
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+        xmlns:serialization="clr-namespace:NitroxModel.Serialization;assembly=NitroxModel"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="700" MinHeight="200"
-        DataContext="{x:Static design:DesignData.ObjectPropertyEditorViewModel}"
+        x:DataType="vm:ObjectPropertyEditorViewModel"
         x:Class="Nitrox.Launcher.Views.ObjectPropertyEditorModal"
         SizeToContent="Width"
-        RequestedThemeVariant="Dark"
         Title="{Binding Title}">
-
+    <Design.DataContext>
+        <vm:ObjectPropertyEditorViewModel>
+            <vm:ObjectPropertyEditorViewModel.OwnerObject>
+                <serialization:SubnauticaServerConfig />
+            </vm:ObjectPropertyEditorViewModel.OwnerObject>
+        </vm:ObjectPropertyEditorViewModel>
+    </Design.DataContext>
     <Grid RowDefinitions="Auto, *, Auto">
         <!-- Action bar -->
         <Panel Grid.Row="0" Grid.RowSpan="2" Classes="titleBar">
@@ -32,10 +39,10 @@
             </Button>
         </Panel>
 
-      <!-- Title bar-->
+        <!-- Title bar-->
         <TextBlock Grid.Row="0" Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
 
-      <!-- Content -->
+        <!-- Content -->
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Classes="form" Margin="24">
 

@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nitrox.Launcher.Models.Validators;
@@ -29,6 +28,10 @@ public partial class CreateServerViewModel : ModalViewModelBase
     private NitroxGameMode selectedGameMode = NitroxGameMode.SURVIVAL;
 
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
+
+    public CreateServerViewModel()
+    {
+    }
 
     public CreateServerViewModel(IKeyValueStore keyValueStore)
     {

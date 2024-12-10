@@ -125,7 +125,11 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server.Name);
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
 
-    public ManageServerViewModel(IScreen screen, IDialogService dialogService, IKeyValueStore keyValueStore, ServerService serverService) : base(screen)
+    public ManageServerViewModel()
+    {
+    }
+
+    public ManageServerViewModel(IDialogService dialogService, IKeyValueStore keyValueStore, ServerService serverService)
     {
         this.dialogService = dialogService;
         this.keyValueStore = keyValueStore;

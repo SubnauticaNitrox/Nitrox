@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -26,7 +25,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly CommunityViewModel communityViewModel;
     private readonly LaunchGameViewModel launchGameViewModel;
     private readonly OptionsViewModel optionsViewModel;
-    private readonly IScreen screen;
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
 
@@ -38,22 +36,24 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ICommand DefaultViewCommand { get; }
 
-    public AvaloniaList<NotificationItem> Notifications { get; init; }
+    public AvaloniaList<NotificationItem> Notifications { get; init; } = [];
 
-    public RoutingState Router => screen.Router;
+    public RoutingState Router => Screen.Router;
+    private IScreen Screen => AppViewLocator.HostScreen;
+
+    public MainWindowViewModel()
+    {
+    }
 
     public MainWindowViewModel(
-        IScreen screen,
         ServersViewModel serversViewModel,
         LaunchGameViewModel launchGameViewModel,
         CommunityViewModel communityViewModel,
         BlogViewModel blogViewModel,
         UpdatesViewModel updatesViewModel,
-        OptionsViewModel optionsViewModel,
-        IList<NotificationItem> notifications = null
+        OptionsViewModel optionsViewModel
     )
     {
-        this.screen = screen;
         this.launchGameViewModel = launchGameViewModel;
         this.serversViewModel = serversViewModel;
         this.communityViewModel = communityViewModel;
@@ -62,7 +62,6 @@ public partial class MainWindowViewModel : ViewModelBase
         this.optionsViewModel = optionsViewModel;
 
         DefaultViewCommand = OpenLaunchGameViewCommand;
-        Notifications = notifications == null ? [] : [.. notifications];
 
         this.WhenActivated(disposables =>
         {
@@ -110,37 +109,37 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     public void OpenLaunchGameView()
     {
-        screen.Show(launchGameViewModel);
+        Screen.Show(launchGameViewModel);
     }
 
     [RelayCommand]
     public void OpenServersView()
     {
-        screen.Show(serversViewModel);
+        Screen.Show(serversViewModel);
     }
 
     [RelayCommand]
     public void OpenCommunityView()
     {
-        screen.Show(communityViewModel);
+        Screen.Show(communityViewModel);
     }
 
     [RelayCommand]
     public void OpenBlogView()
     {
-        screen.Show(blogViewModel);
+        Screen.Show(blogViewModel);
     }
 
     [RelayCommand]
     public void OpenUpdatesView()
     {
-        screen.Show(updatesViewModel);
+        Screen.Show(updatesViewModel);
     }
 
     [RelayCommand]
     public void OpenOptionsView()
     {
-        screen.Show(optionsViewModel);
+        Screen.Show(optionsViewModel);
     }
 
     [RelayCommand]

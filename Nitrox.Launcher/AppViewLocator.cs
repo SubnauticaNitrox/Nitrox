@@ -40,6 +40,8 @@ public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
         }
     }
 
+    public static IScreen HostScreen => serviceProvider.GetRequiredService<IScreen>();
+
     public override ViewDefinition Locate(object viewModel)
     {
         static Type GetViewType(object viewModel) => viewModel switch

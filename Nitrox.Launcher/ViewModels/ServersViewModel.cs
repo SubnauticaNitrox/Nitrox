@@ -38,7 +38,11 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     private readonly HashSet<string> loggedErrorDirectories = [];
 
-    public ServersViewModel(IScreen screen, IKeyValueStore keyValueStore, IDialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel) : base(screen)
+    public ServersViewModel()
+    {
+    }
+
+    public ServersViewModel(IKeyValueStore keyValueStore, IDialogService dialogService, ServerService serverService, ManageServerViewModel manageServerViewModel)
     {
         this.keyValueStore = keyValueStore;
         this.dialogService = dialogService;
@@ -119,7 +123,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         if (server.IsOnline && server.IsEmbedded)
         {
-            HostScreen.Show(new EmbeddedServerViewModel(HostScreen, server));
+            HostScreen.Show(new EmbeddedServerViewModel(server));
             return;
         }
         if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?

@@ -1,7 +1,6 @@
 using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
@@ -36,14 +35,18 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
     private readonly CircularBuffer<string> commandHistory = new(1000);
     private int? selectedHistoryIndex;
 
-    public EmbeddedServerViewModel(IScreen screen, ServerEntry serverEntry) : base(screen)
+    public EmbeddedServerViewModel()
+    {
+    }
+
+    public EmbeddedServerViewModel(ServerEntry serverEntry)
     {
         this.serverEntry = serverEntry;
         this.WhenActivated(disposables =>
         {
             this.WhenAnyValue(model => model.ServerEntry.IsOnline)
                 .Where(isOnline => !isOnline)
-                .Subscribe(_ => screen.Back())
+                .Subscribe(_ => HostScreen.Back())
                 .DisposeWith(disposables);
         });
     }

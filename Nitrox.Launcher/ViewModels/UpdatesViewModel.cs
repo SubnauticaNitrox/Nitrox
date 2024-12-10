@@ -32,7 +32,7 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     [ObservableProperty]
     private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
 
-    public UpdatesViewModel(IScreen screen) : base(screen)
+    public UpdatesViewModel()
     {
         this.WhenActivated((CompositeDisposable disposables) =>
         {

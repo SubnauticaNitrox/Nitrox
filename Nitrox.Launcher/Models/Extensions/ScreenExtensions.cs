@@ -14,6 +14,10 @@ public static class ScreenExtensions
     /// <typeparam name="TViewModel">Type of the ViewModel to show.</typeparam>
     public static void Show<TViewModel>(this IScreen screen, TViewModel routableViewModel) where TViewModel : RoutableViewModelBase
     {
+        if (screen == null)
+        {
+            return;
+        }
         // When navigating away from a view in an async button command, busy states on buttons should also reset. Otherwise, when navigating back it would still show buttons being busy.
         NitroxAttached.AsyncCommandButtonTagger.Clear();
         screen.Router.Navigate.Execute(routableViewModel);
@@ -23,6 +27,10 @@ public static class ScreenExtensions
 
     public static bool Back<TViewModel>(this IScreen screen) where TViewModel : IRoutableViewModel
     {
+        if (screen == null)
+        {
+            return false;
+        }
         if (screen.Router.FindViewModelInStack<TViewModel>() is not RoutableViewModelBase routableViewModel)
         {
             return false;

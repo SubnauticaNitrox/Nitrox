@@ -4,44 +4,46 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
              mc:Ignorable="d" d:DesignWidth="700"
-             DataContext="{x:Static design:DesignData.EmbeddedServerViewModel}"
-             x:Class="Nitrox.Launcher.Views.EmbeddedServerView">
+             x:Class="Nitrox.Launcher.Views.EmbeddedServerView"
+             x:DataType="vm:EmbeddedServerViewModel">
+    <Design.DataContext>
+        <vm:EmbeddedServerViewModel />
+    </Design.DataContext>
     <UserControl.KeyBindings>
         <KeyBinding Gesture="Escape" Command="{Binding ClearInputCommand}" />
         <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" />
         <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" />
     </UserControl.KeyBindings>
-    <ThemeVariantScope RequestedThemeVariant="Dark">
-        <Grid RowDefinitions="*,Auto" Margin="6">
-            <ScrollViewer x:Name="ScrollViewer" Grid.Row="0">
-                <ItemsControl ItemsSource="{Binding ServerOutput}">
-                    <Interaction.Behaviors>
-                        <BehaviorCollection>
-                            <EventTriggerBehavior EventName="SizeChanged">
-                                <InvokeCommandAction Command="{Binding OutputSizeChangedCommand}" PassEventArgsToCommand="True" />
-                            </EventTriggerBehavior>
-                        </BehaviorCollection>
-                    </Interaction.Behaviors>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="system:String">
-                            <TextBlock Text="{Binding}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-            <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
-                <TextBox Grid.Column="0" design:NitroxAttached.Focus="" Text="{Binding ServerCommand}" Watermark="A server command here" />
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6 0" Spacing="6">
-                    <CheckBox Content="Auto scroll" IsChecked="{Binding ShouldAutoScroll}" />
-                    <Button Classes="primary" Content="Send" Command="{Binding SendServerCommandCommand}" HotKey="Enter" />
-                </StackPanel>
-            </Grid>
+    <Grid RowDefinitions="*,Auto" Margin="6">
+        <ScrollViewer x:Name="ScrollViewer" Grid.Row="0">
+            <ItemsControl ItemsSource="{Binding ServerOutput}">
+                <Interaction.Behaviors>
+                    <BehaviorCollection>
+                        <EventTriggerBehavior EventName="SizeChanged">
+                            <InvokeCommandAction Command="{Binding OutputSizeChangedCommand}" PassEventArgsToCommand="True" />
+                        </EventTriggerBehavior>
+                    </BehaviorCollection>
+                </Interaction.Behaviors>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="system:String">
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+            <TextBox Grid.Column="0" design:NitroxAttached.Focus="" Text="{Binding ServerCommand}" Watermark="A server command here" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6 0" Spacing="6">
+                <CheckBox Content="Auto scroll" IsChecked="{Binding ShouldAutoScroll}" />
+                <Button Classes="primary" Content="Send" Command="{Binding SendServerCommandCommand}" HotKey="Enter" />
+            </StackPanel>
         </Grid>
-    </ThemeVariantScope>
+    </Grid>
 </UserControl>

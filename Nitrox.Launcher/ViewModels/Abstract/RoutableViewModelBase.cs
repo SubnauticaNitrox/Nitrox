@@ -11,12 +11,7 @@ public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
     /// </summary>
     public string UrlPathSegment => Convert.ToHexString(GetType().Name.AsMd5Hash());
 
-    public IScreen HostScreen { get; }
-
-    protected RoutableViewModelBase(IScreen screen)
-    {
-        HostScreen = screen;
-    }
+    public IScreen HostScreen { get; } = AppViewLocator.HostScreen;
 
     /// <summary>
     ///     Pass-through event from MVVM toolkit to ReactiveUI.

@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
 using Nitrox.Launcher.Views;
 using NitroxModel.Logger;
@@ -28,11 +29,13 @@ public class App : Application
             }
         }
 
+        // Set defaults
+        RequestedThemeVariant = ThemeVariant.Dark;
+
+        // Setup DI and init main window
         ServiceProvider services = new ServiceCollection().AddAppServices()
                                                           .BuildServiceProvider();
-
         MainWindow mainWindow = services.GetRequiredService<MainWindow>();
-
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:

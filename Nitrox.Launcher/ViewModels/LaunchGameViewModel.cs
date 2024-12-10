@@ -51,7 +51,11 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     public string Version => $"{NitroxEnvironment.ReleasePhase} {NitroxEnvironment.Version}";
     public string SubnauticaLaunchArguments => keyValueStore.GetSubnauticaLaunchArguments();
 
-    public LaunchGameViewModel(IScreen screen, IDialogService dialogService, ServersViewModel serversViewModel, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore) : base(screen)
+    public LaunchGameViewModel()
+    {
+    }
+
+    public LaunchGameViewModel(IDialogService dialogService, ServersViewModel serversViewModel, OptionsViewModel optionsViewModel, IKeyValueStore keyValueStore)
     {
         this.dialogService = dialogService;
         this.serversViewModel = serversViewModel;

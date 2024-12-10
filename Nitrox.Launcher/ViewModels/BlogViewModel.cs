@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Reactive.Disposables;
 using Avalonia.Collections;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,18 +23,19 @@ public partial class BlogViewModel : RoutableViewModelBase
     [ObservableProperty]
     private AvaloniaList<NitroxBlog> nitroxBlogs = [];
 
-    public BlogViewModel(IScreen screen, NitroxBlog[] blogs = null) : base(screen)
+    public BlogViewModel()
     {
-        nitroxBlogs.AddRange(blogs ?? []);
-        
         this.WhenActivated((CompositeDisposable disposables) =>
         {
+            if (Design.IsDesignMode)
+            {
+                return;
+            }
             Dispatcher.UIThread.Invoke(async () =>
             {
                 try
                 {
-                    nitroxBlogs.Clear();
-                    nitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
+                    nitroxBlogs = [..await Downloader.GetBlogsAsync()];
                 }
                 catch (Exception ex)
                 {

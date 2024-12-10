@@ -43,7 +43,7 @@ public class ServerService
             server.Start(keyValueStore.GetSavesFolderDir());
             if (server.IsEmbedded)
             {
-                screen.Show(new EmbeddedServerViewModel(screen, server));
+                screen.Show(new EmbeddedServerViewModel(server));
             }
             return true;
         }
