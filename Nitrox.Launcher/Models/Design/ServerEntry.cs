@@ -231,7 +231,9 @@ public partial class ServerEntry : ObservableObject
             {
                 WorkingDirectory = NitroxUser.CurrentExecutablePath,
                 ArgumentList = { "--save", Path.GetFileName(saveDir) },
-                RedirectStandardOutput = captureOutput
+                RedirectStandardOutput = captureOutput,
+                WindowStyle = captureOutput ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
+                CreateNoWindow = captureOutput
             };
             Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
