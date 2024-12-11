@@ -219,7 +219,7 @@ public partial class ServersViewModel : RoutableViewModelBase
                     }
                     catch (IOException)
                     {
-                        await Task.Delay(500, cancellationToken);
+                        await Task.Delay(100, cancellationToken);
                     }
                 }
                 await Task.Delay(1000, cancellationToken);
