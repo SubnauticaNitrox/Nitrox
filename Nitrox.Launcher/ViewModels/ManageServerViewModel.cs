@@ -204,20 +204,20 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private void Save()
     {
         // If world name was changed, rename save folder to match it
-        string newDir = Path.Combine(SavesFolderDir, ServerName);
-        if (SaveFolderDirectory != newDir)
+        string newPath = Path.Combine(SavesFolderDir, ServerName);
+        if (SaveFolderDirectory != newPath)
         {
             // Windows, by default, ignores case when renaming folders. We circumvent this by changing the name to a random one, and then to the desired name.
-            DirectoryInfo temp = Directory.CreateTempSubdirectory();
-            temp.Delete();
-            Directory.Move(SaveFolderDirectory, temp.FullName);
-            Directory.Move(temp.FullName, newDir);
+            // OS tmp directory is not used because on Linux this causes cross-link error, see https://github.com/dotnet/runtime/issues/31149
+            string tempSavePath = Path.Combine(SavesFolderDir, $"{Guid.NewGuid():N}_{ServerName[..Math.Min(ServerName.Length, 10)]}");
+            Directory.Move(SaveFolderDirectory, tempSavePath);
+            Directory.Move(tempSavePath, newPath);
         }
 
         // Update the servericon.png file if needed
         if (Server.ServerIcon != ServerIcon && serverIconDir != null)
         {
-            File.Copy(serverIconDir, Path.Combine(newDir, "servericon.png"), true);
+            File.Copy(serverIconDir, Path.Combine(newPath, "servericon.png"), true);
         }
 
         Server.Name = ServerName;
