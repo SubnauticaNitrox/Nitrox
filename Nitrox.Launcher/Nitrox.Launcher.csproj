@@ -61,17 +61,6 @@
       <UpToDateCheckInput Remove="UI\Styles\Theme\ValidationErrorsStyle.axaml" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Views\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\EmbeddedServerView.axaml.cs">
-        <DependentUpon>EmbeddedServerView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-    </ItemGroup>
-
     <Import Project="..\Nitrox.Shared.targets" />
 
     <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">

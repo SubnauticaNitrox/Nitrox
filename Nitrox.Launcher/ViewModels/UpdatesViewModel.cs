@@ -34,20 +34,21 @@ public partial class UpdatesViewModel : RoutableViewModelBase
 
     public UpdatesViewModel()
     {
-        this.WhenActivated((CompositeDisposable disposables) =>
+    }
+
+    internal override async Task ViewContentLoadAsync()
+    {
+        await Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            Dispatcher.UIThread.Invoke(async () =>
+            try
             {
-                try
-                {
-                    nitroxChangelogs.Clear();
-                    nitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync());
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Error while trying to display Nitrox changelogs");
-                }
-            });
+                NitroxChangelogs.Clear();
+                NitroxChangelogs.AddRange(await Downloader.GetChangeLogsAsync());
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while trying to display Nitrox changelogs");
+            }
         });
     }
 

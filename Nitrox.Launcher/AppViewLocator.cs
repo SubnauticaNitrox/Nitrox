@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
+using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
 using ReactiveUI;
@@ -40,23 +41,14 @@ public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
         }
     }
 
-    public static IScreen HostScreen => serviceProvider.GetRequiredService<IScreen>();
+    public static IRoutingScreen HostScreen => serviceProvider.GetRequiredService<IRoutingScreen>();
 
     public override ViewDefinition Locate(object viewModel)
     {
+        // Only dialogs need to be mapped here. Other views are handled in MainWindow.axaml.
         static Type GetViewType(object viewModel) => viewModel switch
         {
-            MainWindowViewModel => typeof(MainWindow),
-            LaunchGameViewModel => typeof(LaunchGameView),
-            ServersViewModel => typeof(ServersView),
-            ManageServerViewModel => typeof(ManageServerView),
             CreateServerViewModel => typeof(CreateServerModal),
-            EmbeddedServerViewModel => typeof(EmbeddedServerView),
-            LibraryViewModel => typeof(LibraryView),
-            CommunityViewModel => typeof(CommunityView),
-            BlogViewModel => typeof(BlogView),
-            UpdatesViewModel => typeof(UpdatesView),
-            OptionsViewModel => typeof(OptionsView),
             DialogBoxViewModel => typeof(DialogBoxModal),
             ObjectPropertyEditorViewModel => typeof(ObjectPropertyEditorModal),
             BackupRestoreViewModel => typeof(BackupRestoreModal),

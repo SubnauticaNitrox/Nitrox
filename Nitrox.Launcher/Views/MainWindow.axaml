@@ -2,11 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:rx="http://reactiveui.net"
-        xmlns:launcher="clr-namespace:Nitrox.Launcher"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
         xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+        xmlns:views="clr-namespace:Nitrox.Launcher.Views"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -221,14 +221,50 @@
             </Border>
 
             <!-- Right side -->
-            <rx:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
-                <rx:RoutedViewHost.DefaultContent>
-                    <TextBlock Text="No view set. You should not see this message." HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </rx:RoutedViewHost.DefaultContent>
-                <rx:RoutedViewHost.ViewLocator>
-                    <launcher:AppViewLocator />
-                </rx:RoutedViewHost.ViewLocator>
-            </rx:RoutedViewHost>
+            <ContentControl Grid.Column="1" Classes="content" Content="{Binding ActiveViewModel, TargetNullValue='No view set. You should not see this message.'}">
+                <ContentControl.ContentTemplate>
+                    <design:MultiDataTemplate>
+                        <!-- Null view (which will be a string, see TargetNullValue) -->
+                        <DataTemplate x:DataType="system:String">
+                            <TextBlock Text="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:LoadingViewModel">
+                            <views:LoadingView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:LaunchGameViewModel">
+                            <views:LaunchGameView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:ServersViewModel">
+                            <views:ServersView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:ManageServerViewModel">
+                            <views:ManageServerView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:EmbeddedServerViewModel">
+                            <views:EmbeddedServerView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:CommunityViewModel">
+                            <views:CommunityView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:BlogViewModel">
+                            <views:BlogView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:UpdatesViewModel">
+                            <views:UpdatesView />
+                        </DataTemplate>
+                        <DataTemplate x:DataType="vm:OptionsViewModel">
+                            <views:OptionsView />
+                        </DataTemplate>
+                        <!-- Fallback view. This DataTemplate must be kept at the bottom. -->
+                        <DataTemplate x:DataType="system:Object">
+                            <TextBlock>
+                                <Run Text="No view for" />
+                                <Run Text="{Binding}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </design:MultiDataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
         </Grid>
 
         <!-- Notifications -->

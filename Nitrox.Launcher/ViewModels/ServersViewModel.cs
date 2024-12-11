@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
@@ -17,7 +16,6 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -35,6 +33,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     private bool shouldRefreshServersList;
 
     private FileSystemWatcher watcher;
+    private CancellationTokenSource serverRefreshCts;
 
     private readonly HashSet<string> loggedErrorDirectories = [];
 
@@ -48,44 +47,42 @@ public partial class ServersViewModel : RoutableViewModelBase
         this.dialogService = dialogService;
         this.serverService = serverService;
         this.manageServerViewModel = manageServerViewModel;
+    }
 
-        this.WhenActivated(disposables =>
+    internal override async Task ViewContentLoadAsync()
+    {
+        WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
         {
-            // Activation
-            WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
+            lock (serversLock)
             {
-                lock (serversLock)
+                for (int i = Servers.Count - 1; i >= 0; i--)
                 {
-                    for (int i = Servers.Count - 1; i >= 0; i--)
+                    if (Servers[i].Name == message.SaveName)
                     {
-                        if (Servers[i].Name == message.SaveName)
-                        {
-                            Servers.RemoveAt(i);
-                        }
+                        Servers.RemoveAt(i);
                     }
                 }
-            });
-            // Load server list
-            CancellationTokenSource serverRefreshCts = new();
-            _ = LoadServersAndWatchAsync(serverRefreshCts.Token).ContinueWith(t =>
-            {
-                if (t.IsFaulted)
-                {
-                    LauncherNotifier.Error(t.Exception.Message);
-                }
-            });
-
-            // Deactivation
-            Disposable
-                .Create(this, vm =>
-                {
-                    serverRefreshCts.Cancel();
-                    serverRefreshCts.Dispose();
-                    WeakReferenceMessenger.Default.UnregisterAll(vm);
-                    vm.watcher?.Dispose();
-                })
-                .DisposeWith(disposables);
+            }
         });
+        // Load server list
+        serverRefreshCts = new();
+        await GetSavesOnDiskAsync();
+        _ = WatchServersAsync(serverRefreshCts.Token).ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+            {
+                LauncherNotifier.Error(t.Exception.Message);
+            }
+        });
+    }
+
+    internal override Task ViewContentUnloadAsync()
+    {
+        serverRefreshCts.Cancel();
+        serverRefreshCts.Dispose();
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        watcher?.Dispose();
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
@@ -127,7 +124,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         if (server.IsOnline && server.IsEmbedded)
         {
-            HostScreen.Show(new EmbeddedServerViewModel(server));
+            HostScreen.ShowAsync(new EmbeddedServerViewModel(server));
             return;
         }
         if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
@@ -136,7 +133,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         }
 
         manageServerViewModel.LoadFrom(server);
-        HostScreen.Show(manageServerViewModel);
+        HostScreen.ShowAsync(manageServerViewModel);
     }
 
     private async Task GetSavesOnDiskAsync()
@@ -188,7 +185,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         }
     }
 
-    private async Task LoadServersAndWatchAsync(CancellationToken cancellationToken = default)
+    private async Task WatchServersAsync(CancellationToken cancellationToken = default)
     {
         watcher = new FileSystemWatcher
         {
@@ -206,7 +203,6 @@ public partial class ServersViewModel : RoutableViewModelBase
         {
             watcher.EnableRaisingEvents = true; // Slowish (~2ms) - Moved into Task.Run.
 
-            await GetSavesOnDiskAsync(); // First time load
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();

@@ -41,6 +41,6 @@ public class MultiDataTemplate : AvaloniaList<DataTemplate>, IDataTemplate
             }
         }
 
-        return new TextBlock() { Text = "" };
+        return new TextBlock { Text = "" };
     }
 }

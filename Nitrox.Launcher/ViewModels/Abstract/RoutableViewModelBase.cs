@@ -1,25 +1,24 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.Reactive.Disposables;
+using System.Threading.Tasks;
+using Nitrox.Launcher.Models.Design;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
+public abstract class RoutableViewModelBase : ViewModelBase
 {
-    /// <summary>
-    ///     Gets the unique URL for the view.
-    /// </summary>
-    public string UrlPathSegment => Convert.ToHexString(GetType().Name.AsMd5Hash());
+    public IRoutingScreen HostScreen { get; } = AppViewLocator.HostScreen;
 
-    public IScreen HostScreen { get; } = AppViewLocator.HostScreen;
-
-    /// <summary>
-    ///     Pass-through event from MVVM toolkit to ReactiveUI.
-    /// </summary>
-    public void RaisePropertyChanging(PropertyChangingEventArgs args) => OnPropertyChanging(args);
+    protected RoutableViewModelBase()
+    {
+        this.WhenActivated(disposables => Disposable.Create(this, model => model.ViewContentUnloadAsync()).DisposeWith(disposables));
+    }
 
     /// <summary>
-    ///     Pass-through event from MVVM toolkit to ReactiveUI.
+    ///     Add content loading to this method. Before this view is shown, it will first show a loading indicator, up until the
+    ///     task completes.
     /// </summary>
-    public void RaisePropertyChanged(PropertyChangedEventArgs args) => OnPropertyChanged(args);
+    internal virtual Task ViewContentLoadAsync() => Task.CompletedTask;
+
+    internal virtual Task ViewContentUnloadAsync() => Task.CompletedTask;
 }

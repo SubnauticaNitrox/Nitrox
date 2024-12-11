@@ -46,7 +46,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         {
             this.WhenAnyValue(model => model.ServerEntry.IsOnline)
                 .Where(isOnline => !isOnline)
-                .Subscribe(_ => HostScreen.Back())
+                .Subscribe(_ => HostScreen.BackAsync())
                 .DisposeWith(disposables);
         });
     }

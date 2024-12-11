@@ -1,8 +1,10 @@
-using ReactiveUI;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Nitrox.Launcher.ViewModels.Abstract;
 
 namespace Nitrox.Launcher.Models.Design;
 
-public class RoutingScreen : IScreen
+public partial class RoutingScreen : ObservableObject, IRoutingScreen
 {
-    public RoutingState Router { get; } = new();
+    [ObservableProperty]
+    private RoutableViewModelBase activeViewModel;
 }

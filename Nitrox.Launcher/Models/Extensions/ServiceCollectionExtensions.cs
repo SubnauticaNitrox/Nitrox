@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
     {
         // Avalonia and Reactive services
         collection.AddSingleton(provider => new AppViewLocator(provider));
-        collection.AddSingleton<IScreen, RoutingScreen>();
+        collection.AddSingleton<IRoutingScreen, RoutingScreen>();
         collection.AddSingleton<IDialogService>(provider => new DialogService(
                                                     new DialogManager(
                                                         provider.GetRequiredService<AppViewLocator>(),

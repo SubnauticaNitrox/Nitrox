@@ -45,17 +45,17 @@ public partial class OptionsViewModel : RoutableViewModelBase
     {
         this.keyValueStore = keyValueStore;
 
-        this.WhenActivated((CompositeDisposable disposables) =>
-        {
-            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-            SavesFolderDir = keyValueStore.GetSavesFolderDir();
-
-            _ = SetTargetedSubnauticaPath(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
-        });
+        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+        SavesFolderDir = keyValueStore.GetSavesFolderDir();
     }
 
-    public async Task SetTargetedSubnauticaPath(string path)
+    internal override async Task ViewContentLoadAsync()
+    {
+        await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
+    }
+
+    public async Task SetTargetedSubnauticaPathAsync(string path)
     {
         if (!Directory.Exists(path))
         {
@@ -112,7 +112,7 @@ public partial class OptionsViewModel : RoutableViewModelBase
 
         if (!selectedDirectory.Equals(SelectedGame.PathToGame, StringComparison.OrdinalIgnoreCase))
         {
-            await SetTargetedSubnauticaPath(selectedDirectory);
+            await SetTargetedSubnauticaPathAsync(selectedDirectory);
             SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
             LauncherNotifier.Success("Applied changes");
         }

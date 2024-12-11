@@ -61,19 +61,22 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         this.serversViewModel = serversViewModel;
         this.optionsViewModel = optionsViewModel;
         this.keyValueStore = keyValueStore;
+    }
 
-        this.WhenActivated(disposables =>
+    internal override async Task ViewContentLoadAsync()
+    {
+        await Task.Run(() =>
         {
             NitroxUser.GamePlatformChanged += UpdateGamePlatform;
-
             UpdateGamePlatform();
             HandleInstantLaunchForDevelopment();
-
-            Disposable.Create(UpdateGamePlatform,updateGamePlatform =>
-            {
-                NitroxUser.GamePlatformChanged -= updateGamePlatform;
-            }).DisposeWith(disposables);
         });
+    }
+
+    internal override Task ViewContentUnloadAsync()
+    {
+        NitroxUser.GamePlatformChanged -= UpdateGamePlatform;
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
@@ -91,7 +94,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
         {
             if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
             {
-                HostScreen.Show(optionsViewModel);
+                await HostScreen.ShowAsync(optionsViewModel);
                 LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                 return;
             }
@@ -116,7 +119,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             {
                 if (string.IsNullOrWhiteSpace(NitroxUser.GamePath) || !Directory.Exists(NitroxUser.GamePath))
                 {
-                    await Dispatcher.UIThread.InvokeAsync(() => HostScreen.Show(optionsViewModel));
+                    await Dispatcher.UIThread.InvokeAsync(async () => await HostScreen.ShowAsync(optionsViewModel));
                     LauncherNotifier.Warning("Location of Subnautica is unknown. Set the path to it in settings");
                     return false;
                 }

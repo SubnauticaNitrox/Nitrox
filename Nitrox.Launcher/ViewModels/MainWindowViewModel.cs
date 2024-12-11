@@ -1,7 +1,6 @@
 using System;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -34,18 +33,20 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool updateAvailableOrUnofficial;
 
-    public ICommand DefaultViewCommand { get; }
-
     public AvaloniaList<NotificationItem> Notifications { get; init; } = [];
 
-    public RoutingState Router => Screen.Router;
-    private IScreen Screen => AppViewLocator.HostScreen;
+    [ObservableProperty]
+    private IRoutingScreen routingScreen;
+
+    [ObservableProperty]
+    private RoutableViewModelBase activeViewModel;
 
     public MainWindowViewModel()
     {
     }
 
     public MainWindowViewModel(
+        IRoutingScreen routingScreen,
         ServersViewModel serversViewModel,
         LaunchGameViewModel launchGameViewModel,
         CommunityViewModel communityViewModel,
@@ -60,11 +61,14 @@ public partial class MainWindowViewModel : ViewModelBase
         this.blogViewModel = blogViewModel;
         this.updatesViewModel = updatesViewModel;
         this.optionsViewModel = optionsViewModel;
-
-        DefaultViewCommand = OpenLaunchGameViewCommand;
+        this.routingScreen = routingScreen;
 
         this.WhenActivated(disposables =>
         {
+            this.WhenAnyValue(model => model.RoutingScreen.ActiveViewModel)
+                .Subscribe(viewModel => ActiveViewModel = viewModel)
+                .DisposeWith(disposables);
+
             WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
             {
                 Notifications.Add(message.Item);
@@ -104,42 +108,44 @@ public partial class MainWindowViewModel : ViewModelBase
                 WeakReferenceMessenger.Default.UnregisterAll(vm);
             }).DisposeWith(disposables);
         });
+
+        _ = RoutingScreen.ShowAsync(launchGameViewModel).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
     [RelayCommand]
-    public void OpenLaunchGameView()
+    public async Task OpenLaunchGameViewAsync()
     {
-        Screen.Show(launchGameViewModel);
+        await RoutingScreen.ShowAsync(launchGameViewModel);
     }
 
     [RelayCommand]
-    public void OpenServersView()
+    public async Task OpenServersViewAsync()
     {
-        Screen.Show(serversViewModel);
+        await RoutingScreen.ShowAsync(serversViewModel);
     }
 
     [RelayCommand]
-    public void OpenCommunityView()
+    public async Task OpenCommunityViewAsync()
     {
-        Screen.Show(communityViewModel);
+        await RoutingScreen.ShowAsync(communityViewModel);
     }
 
     [RelayCommand]
-    public void OpenBlogView()
+    public async Task OpenBlogViewAsync()
     {
-        Screen.Show(blogViewModel);
+        await RoutingScreen.ShowAsync(blogViewModel);
     }
 
     [RelayCommand]
-    public void OpenUpdatesView()
+    public async Task OpenUpdatesViewAsync()
     {
-        Screen.Show(updatesViewModel);
+        await RoutingScreen.ShowAsync(updatesViewModel);
     }
 
     [RelayCommand]
-    public void OpenOptionsView()
+    public async Task OpenOptionsViewAsync()
     {
-        Screen.Show(optionsViewModel);
+        await RoutingScreen.ShowAsync(optionsViewModel);
     }
 
     [RelayCommand]

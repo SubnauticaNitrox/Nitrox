@@ -196,7 +196,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
                                  ServerEmbedded != Server.IsEmbedded;
 
     [RelayCommand(CanExecute = nameof(CanGoBackAndStartServer))]
-    private void Back() => HostScreen.Back();
+    private void Back() => HostScreen.BackAsync();
 
     private bool CanGoBackAndStartServer() => !HasChanges();
 
@@ -391,7 +391,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         {
             Directory.Delete(SaveFolderDirectory, true);
             WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
-            HostScreen.Back();
+            HostScreen.BackAsync();
         }
         catch (Exception ex)
         {

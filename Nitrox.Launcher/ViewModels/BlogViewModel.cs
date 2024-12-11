@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
@@ -25,24 +26,25 @@ public partial class BlogViewModel : RoutableViewModelBase
 
     public BlogViewModel()
     {
-        this.WhenActivated((CompositeDisposable disposables) =>
+    }
+
+    internal override async Task ViewContentLoadAsync()
+    {
+        if (Design.IsDesignMode)
         {
-            if (Design.IsDesignMode)
+            return;
+        }
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+        {
+            try
             {
-                return;
+                NitroxBlogs.Clear();
+                NitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
             }
-            Dispatcher.UIThread.Invoke(async () =>
+            catch (Exception ex)
             {
-                try
-                {
-                    nitroxBlogs.Clear();
-                    nitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Error while trying to display nitrox blogs");
-                }
-            });
+                Log.Error(ex, "Error while trying to display nitrox blogs");
+            }
         });
     }
 

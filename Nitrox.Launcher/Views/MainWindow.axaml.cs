@@ -81,15 +81,6 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                     args.Item2.Handled = true;
                 }
             }));
-
-            try
-            {
-                ViewModel?.DefaultViewCommand.Execute(null);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, $"Failed to execute {nameof(ViewModel.DefaultViewCommand)} command");
-            }
         });
 
         InitializeComponent();

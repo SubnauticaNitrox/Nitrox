@@ -16,9 +16,9 @@ public class ServerService
 {
     private readonly IDialogService dialogService;
     private readonly IKeyValueStore keyValueStore;
-    private readonly IScreen screen;
+    private readonly IRoutingScreen screen;
 
-    public ServerService(IDialogService dialogService, IKeyValueStore keyValueStore, IScreen screen)
+    public ServerService(IDialogService dialogService, IKeyValueStore keyValueStore, IRoutingScreen screen)
     {
         this.dialogService = dialogService;
         this.keyValueStore = keyValueStore;
@@ -43,7 +43,7 @@ public class ServerService
             server.Start(keyValueStore.GetSavesFolderDir());
             if (server.IsEmbedded)
             {
-                screen.Show(new EmbeddedServerViewModel(server));
+                await screen.ShowAsync(new EmbeddedServerViewModel(server));
             }
             return true;
         }
