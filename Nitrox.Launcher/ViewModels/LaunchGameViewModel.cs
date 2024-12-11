@@ -212,6 +212,10 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             string serverName = launchArgs.First();
             string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
             ServerEntry server = ServerEntry.FromDirectory(serverPath);
+            if (server == null)
+            {
+                throw new Exception($"Failed to load save file from '{serverPath}'");
+            }
             server.Name = serverName;
             Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serversViewModel.StartServerAsync(server)).ContinueWithHandleError();
             // Start a game in multiplayer for each player

@@ -35,14 +35,14 @@ namespace NitroxServer.ConsoleCommands
             string configFile = Path.Combine(saveDir, serverConfig.FileName);
             if (!File.Exists(configFile))
             {
-                serverConfig.Serialize(configFile);
+                serverConfig.Serialize(saveDir);
             }
 
             Task.Run(async () =>
                 {
                     try
                     {
-                        await StartWithDefaultProgram(configFile);
+                        await StartWithDefaultProgramAsync(configFile);
                     }
                     finally
                     {
@@ -62,10 +62,10 @@ namespace NitroxServer.ConsoleCommands
                 });
         }
 
-        private async Task StartWithDefaultProgram(string fileToOpen)
+        private async Task StartWithDefaultProgramAsync(string fileToOpen)
         {
             using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen);
-            process.WaitForExit();
+            await process.WaitForExitAsync();
             try
             {
                 while (!process.HasExited)

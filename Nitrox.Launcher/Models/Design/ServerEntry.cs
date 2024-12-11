@@ -95,15 +95,15 @@ public partial class ServerEntry : ObservableObject
     public static ServerEntry FromDirectory(string saveDir)
     {
         ServerEntry result = new();
-        result.RefreshFromDirectory(saveDir);
-        return result;
+        return result.RefreshFromDirectory(saveDir) ? result : null;
     }
 
-    public void RefreshFromDirectory(string saveDir)
+    public bool RefreshFromDirectory(string saveDir)
     {
         if (!File.Exists(Path.Combine(saveDir, "server.cfg")) || !File.Exists(Path.Combine(saveDir, "Version.json")))
         {
-            return;
+            Log.Warn($"Tried loading invalid save directory at '{saveDir}'");
+            return false;
         }
 
         Bitmap serverIcon = null;
@@ -149,6 +149,7 @@ public partial class ServerEntry : ObservableObject
                                                      :
                                                      // If the above file doesn't exist (server was never ran), use the Version file instead
                                                      Path.Combine(saveDir, $"Version.{fileEnding}"));
+        return true;
     }
 
     public void Start(string savesDir)

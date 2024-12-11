@@ -41,7 +41,6 @@ namespace NitroxModel.Platforms.OS.Shared
             }
 
             string editorProgram = GetDefaultPrograms(file).FirstOrDefault() ?? TextEditor;
-
             // Handle special arguments for popular editors.
             string arguments = Path.GetFileName(editorProgram)?.ToLowerInvariant() switch
             {
@@ -49,15 +48,14 @@ namespace NitroxModel.Platforms.OS.Shared
                 _ => ""
             };
 
-            Process process = new();
-            process.StartInfo.UseShellExecute = false;
-            // Suppress text output by redirecting it away from main console window.
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.FileName = editorProgram;
-            process.StartInfo.Arguments = $@"{(arguments.Length > 0 ? $"{arguments} " : "")}""{file}""";
-            process.Start();
-            return process;
+            return Process.Start(new ProcessStartInfo
+            {
+                FileName = editorProgram,
+                Arguments = $@"{(arguments.Length > 0 ? $"{arguments} " : "")}""{file}""",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            });
         }
 
         /// <summary>
@@ -247,6 +245,10 @@ namespace NitroxModel.Platforms.OS.Shared
 
         public bool IsWritable(string directory)
         {
+            if (!Directory.Exists(directory))
+            {
+                return false;
+            }
             string randFileName = Path.GetRandomFileName();
             try
             {

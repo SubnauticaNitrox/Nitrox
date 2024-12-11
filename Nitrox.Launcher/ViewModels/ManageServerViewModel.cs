@@ -34,7 +34,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     private readonly string[] advancedSettingsDeniedFields =
     [
         "password", "filename", nameof(Config.ServerPort), nameof(Config.MaxConnections), nameof(Config.AutoPortForward), nameof(Config.SaveInterval), nameof(Config.Seed), nameof(Config.GameMode), nameof(Config.DisableConsole),
-        nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm)
+        nameof(Config.LANDiscoveryEnabled), nameof(Config.DefaultPlayerPerm), nameof(Config.IsEmbedded)
     ];
 
     private readonly IDialogService dialogService;

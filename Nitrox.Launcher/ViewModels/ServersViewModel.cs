@@ -100,6 +100,10 @@ public partial class ServersViewModel : RoutableViewModelBase
         try
         {
             ServerEntry serverEntry = await Task.Run(() => ServerEntry.FromDirectory(Path.Join(keyValueStore.GetSavesFolderDir(), result.Name)));
+            if (serverEntry == null)
+            {
+                throw new Exception("Failed to create save file");
+            }
             lock (serversLock)
             {
                 Servers.Insert(0, serverEntry);

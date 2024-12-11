@@ -115,7 +115,7 @@ public class Program
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
             server = NitroxServiceLocator.LocateService<Server>();
-            string serverSaveName = Server.GetSaveName(args);
+            string serverSaveName = Server.GetSaveName(args, "My World");
             Log.SaveName = serverSaveName;
 
             using (CancellationTokenSource portWaitCts = CancellationTokenSource.CreateLinkedTokenSource(serverCts.Token))
