@@ -254,10 +254,13 @@
 
         <Border Grid.Row="2" Background="{DynamicResource BrandPanelBackground}" CornerRadius="12" Padding="25 17">
             <Grid ColumnDefinitions="*,1*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel Grid.Column="0">
-                    <RadioButton Content="External" IsChecked="{Binding !ServerEmbedded}" ToolTip.Tip="Run server in external mode as a separate command line window" />
-                    <RadioButton Content="Embedded" IsChecked="{Binding ServerEmbedded}" ToolTip.Tip="Run server in embedded mode within the launcher UI" />
-                </StackPanel>
+                <Grid Grid.Column="0" HorizontalAlignment="Left" IsEnabled="{Binding !ServerIsOnline}">
+                    <Grid Background="Transparent" IsHitTestVisible="{Binding IsMacOS}" ToolTip.Tip="External server console is not available for MacOS" />
+                    <StackPanel IsEnabled="{Binding !IsMacOS}" IsHitTestVisible="{Binding !IsMacOS}">
+                        <RadioButton Content="External" IsChecked="{Binding !ServerEmbedded}" ToolTip.Tip="Run server in external mode as a separate command line window" />
+                        <RadioButton Content="Embedded" IsChecked="{Binding ServerEmbedded}" ToolTip.Tip="Run server in embedded mode within the launcher UI" />
+                    </StackPanel>
+                </Grid>
                 <Panel Grid.Column="1" HorizontalAlignment="Stretch">
                     <Button Classes="abort big" IsVisible="{Binding ServerIsOnline}" Content="STOP SERVER" Command="{Binding StopServerCommand}" HorizontalAlignment="Stretch" />
                     <Button Classes="primary big" IsVisible="{Binding !ServerIsOnline}" Command="{Binding StartServerCommand}" HorizontalAlignment="Stretch">

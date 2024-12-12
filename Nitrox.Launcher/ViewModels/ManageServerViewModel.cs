@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -121,6 +122,9 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
     private bool serverIsOnline;
+    
+    [ObservableProperty]
+    private bool isMacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server.Name);
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
@@ -178,6 +182,18 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerAllowLanDiscovery = Server.AllowLanDiscovery;
         ServerAllowCommands = Server.AllowCommands;
         ServerEmbedded = Server.IsEmbedded;
+        
+        // Force embedded on MacOS
+        if (IsMacOS)
+        {
+            Server.IsEmbedded = ServerEmbedded = true;
+            
+            Config config = Config.Load(SaveFolderDirectory);
+            using (config.Update(SaveFolderDirectory))
+            {
+                config.IsEmbedded = Server.IsEmbedded;
+            }
+        }
     }
 
     private bool HasChanges() => ServerName != Server.Name ||
@@ -233,7 +249,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
-        Server.IsEmbedded = ServerEmbedded;
+        Server.IsEmbedded = ServerEmbedded || IsMacOS; // Force embedded on MacOS;
 
         Config config = Config.Load(SaveFolderDirectory);
         using (config.Update(SaveFolderDirectory))

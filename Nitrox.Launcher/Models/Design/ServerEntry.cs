@@ -141,7 +141,7 @@ public partial class ServerEntry : ObservableObject
         AllowCommands = !config.DisableConsole;
         IsNewServer = !File.Exists(Path.Combine(saveDir, "WorldData.json"));
         Version = version;
-        IsEmbedded = config.IsEmbedded;
+        IsEmbedded = config.IsEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS
         LastAccessedTime = File.GetLastWriteTime(File.Exists(Path.Combine(saveDir, $"WorldData.{fileEnding}"))
                                                      ?
                                                      // This file is affected by server saving
