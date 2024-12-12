@@ -105,14 +105,19 @@ namespace NitroxModel.Logger
             SaveName = "";
 
             // Configure logger and create an instance of it.
-            LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug().Enrich.FromLogContext().Enrich.With<NitroxPropEnricher>();
+            LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug().Enrich.With<NitroxPropEnricher>();
             if (useConsoleLogging)
             {
                 loggerConfig = loggerConfig.WriteTo.AppendConsoleSink(asyncConsoleWriter, isConsoleApp);
             }
             if (useFileLogging)
             {
-                loggerConfig = loggerConfig.WriteTo.AppendFileSink();
+                // Wrap sink into new logger with enriching (which will redact sensitive properties only for file logs)
+                loggerConfig = loggerConfig.WriteTo.Logger(l =>
+                {
+                    l.Enrich.FromLogContext()
+                     .WriteTo.AppendFileSink();
+                });
             }
             logger = loggerConfig.CreateLogger();
 
@@ -360,7 +365,7 @@ namespace NitroxModel.Logger
 
             public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propFactory)
             {
-                foreach ((string key, string value) prop in GetPropertiesAsRedacted(logEvent.Properties.ToArray()))
+                foreach ((string key, string value) prop in GetPropertiesAsRedacted(logEvent.Properties))
                 {
                     logEvent.AddOrUpdateProperty(propFactory.CreateProperty(prop.key, prop.value));
                 }
