@@ -8,6 +8,14 @@
     <Design.DataContext>
         <vm:ServersViewModel />
     </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Button.manage">
+            <Setter Property="Content" Value="Manage" />
+            <Style Selector="^.online.embedded">
+                <Setter Property="Content" Value="Console" />
+            </Style>
+        </Style>
+    </UserControl.Styles>
     <Panel Classes="viewPadding" Background="{DynamicResource BrandWhite}">
         <Panel IsVisible="{Binding !Servers.Count}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -79,7 +87,7 @@
                                     </StackPanel>
                                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
                                         <Button Content="Open world folder" Command="{Binding OpenSaveFolderCommand}" />
-                                        <Button Content="Manage" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}" CommandParameter="{Binding}" /> <!-- TODO: Change "Manage" to "Console" (or something similar) when server is running AND is embedded -->
+                                        <Button Classes="manage" Classes.online="{Binding IsOnline}" Classes.embedded="{Binding IsEmbedded}" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ManageServerCommand}" CommandParameter="{Binding}" />
                                         <Button Classes="abort" IsVisible="{Binding IsOnline}" Content="Stop" Command="{Binding StopCommand}" />
                                         <Button IsVisible="{Binding !IsOnline}" Classes="primary" Content="Start" Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).StartServerCommand}" CommandParameter="{Binding}" />
                                     </StackPanel>

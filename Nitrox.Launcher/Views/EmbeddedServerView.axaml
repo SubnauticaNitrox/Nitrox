@@ -50,11 +50,11 @@
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12 0 0 0" Spacing="12">
                 <Button Classes="primary" Command="{Binding SendServerCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}"
                         HotKey="Enter" Cursor="Hand" ToolTip.Tip="Send command">
-                    <Image HorizontalAlignment="Left" Source="/Assets/Images/material-design-icons/server-send.png" Width="24" Height="24" />
+                    <Image Source="/Assets/Images/material-design-icons/server-send.png" Width="24" Height="24" />
                 </Button>
                 <Button Classes="primary abort" Command="{Binding StopServerCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}"
                         Cursor="Hand" ToolTip.Tip="Stop the server">
-                    <Image HorizontalAlignment="Left" Source="/Assets/Images/material-design-icons/server-stop.png" Width="24" Height="24" />
+                    <Image Source="/Assets/Images/material-design-icons/server-stop.png" Width="24" Height="24" />
                 </Button>
             </StackPanel>
         </Grid>
