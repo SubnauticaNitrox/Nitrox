@@ -16,8 +16,15 @@
         <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
         <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
     </UserControl.KeyBindings>
-    <Grid RowDefinitions="*,Auto" Margin="6">
-        <ScrollViewer x:Name="ScrollViewer" Grid.Row="0">
+    <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0">
+            <Button HorizontalAlignment="Left" Background="Transparent" Command="{Binding BackCommand}" Cursor="Hand">
+                <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back.png" Width="24" Height="24" />
+            </Button>
+            <TextBlock Classes="header" Text="{Binding ServerEntry.Name}" HorizontalAlignment="Center"/>
+            <CheckBox Content="Auto scroll" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding ShouldAutoScroll}" />
+        </Grid>
+        <ScrollViewer x:Name="ScrollViewer" Grid.Row="1" Margin="0 20 0 20">
             <ItemsControl ItemsSource="{Binding ServerOutput}">
                 <Interaction.Behaviors>
                     <BehaviorCollection>
@@ -33,16 +40,22 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="system:String">
-                        <TextBlock Text="{Binding}" />
+                        <SelectableTextBlock Text="{Binding}" /> <!-- TODO: Maybe make this a rich textblock and add bold text to timestamps, maybe also red font color to errors. ALSO: Fix highlighting only happening one line at a time -->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
             <TextBox x:Name="ServerCommandTextBox" Grid.Column="0" design:NitroxAttached.Focus="" Text="{Binding ServerCommand}" Watermark="A server command here" />
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6 0" Spacing="6">
-                <CheckBox Content="Auto scroll" IsChecked="{Binding ShouldAutoScroll}" />
-                <Button Classes="primary" Content="Send" Command="{Binding SendServerCommandCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" HotKey="Enter" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12 0 0 0" Spacing="12">
+                <Button Classes="primary" Command="{Binding SendServerCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}"
+                        HotKey="Enter" Cursor="Hand" ToolTip.Tip="Send command">
+                    <Image HorizontalAlignment="Left" Source="/Assets/Images/material-design-icons/server-send.png" Width="24" Height="24" />
+                </Button>
+                <Button Classes="primary abort" Command="{Binding StopServerCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}"
+                        Cursor="Hand" ToolTip.Tip="Stop the server">
+                    <Image HorizontalAlignment="Left" Source="/Assets/Images/material-design-icons/server-stop.png" Width="24" Height="24" />
+                </Button>
             </StackPanel>
         </Grid>
     </Grid>

@@ -50,9 +50,12 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
                 .DisposeWith(disposables);
         });
     }
+    
+    [RelayCommand]
+    private void Back() => HostScreen.BackAsync(); // TODO: Fix this to go to ServersView instead of going back (might need to do the same for ManageServerView)
 
     [RelayCommand]
-    private async Task SendServerCommandAsync(TextBox textBox)
+    private async Task SendServerAsync(TextBox textBox)
     {
         if (ServerEntry.Process == null)
         {
@@ -64,6 +67,16 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         }
         await ServerEntry.Process.SendCommandAsync(ServerCommand);
         ClearInput(textBox);
+    }
+    
+    [RelayCommand]
+    private async Task StopServerAsync()
+    {
+        if (ServerEntry.Process == null)
+        {
+            return;
+        }
+        await ServerEntry.Process.SendCommandAsync("stop");
     }
 
     [RelayCommand]
