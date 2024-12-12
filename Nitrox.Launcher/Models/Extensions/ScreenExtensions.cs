@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Nitrox.Launcher.Models.Design;
@@ -9,7 +10,7 @@ namespace Nitrox.Launcher.Models.Extensions;
 
 public static class ScreenExtensions
 {
-    private static RoutableViewModelBase previous;
+    private static readonly List<RoutableViewModelBase> navigationStack = new();
 
     /// <summary>
     ///     Navigates to a view assigned to the given ViewModel.
@@ -25,9 +26,10 @@ public static class ScreenExtensions
         }
         // When navigating away from a view in an async button command, busy states on buttons should also reset. Otherwise, when navigating back it would still show buttons being busy.
         NitroxAttached.AsyncCommandButtonTagger.Clear();
-        if (screen.ActiveViewModel is not LoadingViewModel)
+        if (screen.ActiveViewModel is not null and not LoadingViewModel)
         {
-            previous = screen.ActiveViewModel;
+            navigationStack.RemoveAllFast(screen.ActiveViewModel, (item, param) => item.GetType() == param.GetType());
+            navigationStack.Add(screen.ActiveViewModel);
         }
         Stopwatch sw = Stopwatch.StartNew();
         Task contentLoadTask = routableViewModel.ViewContentLoadAsync();
@@ -42,5 +44,40 @@ public static class ScreenExtensions
         screen.ActiveViewModel = routableViewModel;
     }
 
-    public static async Task BackAsync(this IRoutingScreen screen) => await ShowAsync(screen, previous);
+    public static async Task<bool> BackAsync(this IRoutingScreen screen)
+    {
+        if (navigationStack.Count < 1)
+        {
+            return false;
+        }
+        RoutableViewModelBase backViewModel = navigationStack[^1];
+        navigationStack.Remove(backViewModel);
+        await ShowAsync(screen, backViewModel);
+        return true;
+    }
+
+    /// <summary>
+    ///     Tries to go back to the view assigned to the given ViewModel.
+    /// </summary>
+    /// <returns>
+    ///     True if ViewModel was found in the routing navigation stack. False when the ViewModel wasn't found and routing
+    ///     failed.
+    /// </returns>
+    public static async Task<bool> BackAsync<T>(this IRoutingScreen screen) where T : RoutableViewModelBase
+    {
+        for (int i = navigationStack.Count - 1; i >= 0; i--)
+        {
+            if (navigationStack[i] is T target)
+            {
+                // Cleanup the stack up and including the back-target.
+                for (int j = i; j < navigationStack.Count; j++)
+                {
+                    navigationStack.RemoveAt(j);
+                }
+                await screen.ShowAsync(target);
+                return true;
+            }
+        }
+        return false;
+    }
 }

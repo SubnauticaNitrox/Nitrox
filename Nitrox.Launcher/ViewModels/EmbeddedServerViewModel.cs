@@ -46,13 +46,13 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         {
             this.WhenAnyValue(model => model.ServerEntry.IsOnline)
                 .Where(isOnline => !isOnline)
-                .Subscribe(_ => HostScreen.BackAsync())
+                .Subscribe(_ => HostScreen.BackAsync().ConfigureAwait(false))
                 .DisposeWith(disposables);
         });
     }
     
     [RelayCommand]
-    private void Back() => HostScreen.BackAsync(); // TODO: Fix this to go to ServersView instead of going back (might need to do the same for ManageServerView)
+    private async Task BackAsync() => await HostScreen.BackAsync<ServersViewModel>();
 
     [RelayCommand]
     private async Task SendServerAsync(TextBox textBox)
