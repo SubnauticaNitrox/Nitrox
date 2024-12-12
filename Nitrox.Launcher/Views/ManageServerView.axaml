@@ -254,7 +254,7 @@
 
         <Border Grid.Row="2" Background="{DynamicResource BrandPanelBackground}" CornerRadius="12" Padding="25 17">
             <Grid ColumnDefinitions="*,1*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <StackPanel Grid.Column="0" Background="Transparent" IsEnabled="{OnPlatform {x:True}, macOS={x:False}}" ToolTip.ShowOnDisabled="True" ToolTip.Tip="{OnPlatform {x:Null}, macOS='External server console is not available for MacOS'}">
+                <StackPanel Grid.Column="0" Background="Transparent" IsEnabled="{OnPlatform {Binding !ServerIsOnline}, macOS={x:False}}" ToolTip.ShowOnDisabled="True" ToolTip.Tip="{OnPlatform {x:Null}, macOS='External server console is not available for MacOS'}">
                     <RadioButton Content="External" IsChecked="{Binding !ServerEmbedded}" ToolTip.ShowOnDisabled="False" ToolTip.Tip="Run server in external mode as a separate command line window" />
                     <RadioButton Content="Embedded" IsChecked="{Binding ServerEmbedded}" ToolTip.ShowOnDisabled="False" ToolTip.Tip="Run server in embedded mode within the launcher UI" />
                 </StackPanel>
