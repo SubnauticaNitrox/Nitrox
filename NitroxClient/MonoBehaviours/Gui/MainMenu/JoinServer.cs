@@ -38,7 +38,7 @@ public class JoinServer : MonoBehaviour
     private GameObject joinServerMenu;
     public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
 
-    public bool InstantLaunch;
+    public string InstantLaunchPlayerName;
 
     public void Setup(GameObject saveGameMenu)
     {
@@ -49,7 +49,7 @@ public class JoinServer : MonoBehaviour
         Hide();
     }
 
-    public async Task ShowAsync(string ip, int port, bool instantLaunch = false)
+    public async Task ShowAsync(string ip, int port, string instantLaunchPlayerName = null)
     {
         NitroxServiceLocator.BeginNewLifetimeScope();
         multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
@@ -60,7 +60,7 @@ public class JoinServer : MonoBehaviour
         gameObject.SetActive(true);
         serverIp = ip;
         serverPort = port;
-        InstantLaunch = instantLaunch;
+        InstantLaunchPlayerName = instantLaunchPlayerName;
 
         //Set Server IP in info label
         joinWindow.SetIP(serverIp);
@@ -212,8 +212,15 @@ public class JoinServer : MonoBehaviour
                 Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
                 MainMenuRightSide.main.OpenGroup("Join Server");
                 FocusPlayerNameTextBox();
-                if (InstantLaunch)
+                if (!string.IsNullOrEmpty(InstantLaunchPlayerName))
                 {
+                    joinWindow.PlayerName = InstantLaunchPlayerName;
+                    byte[] nameHash = InstantLaunchPlayerName.AsMd5Hash();
+                    if (nameHash.Length >= 8)
+                    {
+                        float hue = BitConverter.ToUInt64([nameHash[0], nameHash[1], nameHash[2], nameHash[3], nameHash[4], nameHash[5], nameHash[6], nameHash[7]], 0) / (float)ulong.MaxValue;
+                        joinWindow.SetHSB(new Vector3(hue, 1, 1));
+                    }
                     OnJoinClick();
                 }
                 break;

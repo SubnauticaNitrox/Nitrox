@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Mono.Cecil;
@@ -9,7 +10,7 @@ namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 public class ThreadSafeMonoCecilTempGenerator : IMonoBehaviourTemplateGenerator, IDisposable
 {
     private readonly MonoCecilTempGenerator generator;
-    private readonly object locker = new();
+    private readonly Lock locker = new();
 
     public ThreadSafeMonoCecilTempGenerator(string managedPath)
     {
