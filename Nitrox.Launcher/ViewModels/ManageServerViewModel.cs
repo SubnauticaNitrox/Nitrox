@@ -122,9 +122,6 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RestoreBackupCommand), nameof(DeleteServerCommand))]
     private bool serverIsOnline;
-    
-    [ObservableProperty]
-    private bool isMacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
     private string SaveFolderDirectory => Path.Combine(SavesFolderDir, Server.Name);
     private string SavesFolderDir => keyValueStore.GetSavesFolderDir();
@@ -184,7 +181,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         ServerEmbedded = Server.IsEmbedded;
         
         // Force embedded on MacOS
-        if (IsMacOS)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             Server.IsEmbedded = ServerEmbedded = true;
             
@@ -249,7 +246,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         Server.AutoPortForward = ServerAutoPortForward;
         Server.AllowLanDiscovery = ServerAllowLanDiscovery;
         Server.AllowCommands = ServerAllowCommands;
-        Server.IsEmbedded = ServerEmbedded || IsMacOS; // Force embedded on MacOS;
+        Server.IsEmbedded = ServerEmbedded || RuntimeInformation.IsOSPlatform(OSPlatform.OSX); // Force embedded on MacOS;
 
         Config config = Config.Load(SaveFolderDirectory);
         using (config.Update(SaveFolderDirectory))
