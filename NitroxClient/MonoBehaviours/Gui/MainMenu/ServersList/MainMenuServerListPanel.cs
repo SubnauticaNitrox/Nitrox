@@ -1,4 +1,6 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 
@@ -245,18 +248,33 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
     }
 
-    private async Task FindLANServersAsync()
+    private IEnumerator FindLANServers()
     {
-        void AddButton(IPEndPoint serverEndPoint)
+        void LateAddButton(IPEndPoint serverEndPoint)
         {
-            // Add ServerList entry to keep indices in sync with servers UI, to enable removal by index
-            ServerList.Instance.Add(new("LAN Server", $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", false));
-            CreateServerButton("LAN Server", serverEndPoint.Address.ToString(), serverEndPoint.Port, true);
+            if (!ServerList.Instance.Entries.Any(e => e.Address == serverEndPoint.Address.ToString() && e.Port == serverEndPoint.Port))
+            {
+                Log.Info($"Adding LAN server: {serverEndPoint}");
+                // Add ServerList entry to keep indices in sync with servers UI, to enable removal by index
+                ServerList.Instance.Add(new ServerList.Entry("LAN Server", serverEndPoint.Address.ToString(), serverEndPoint.Port.ToString(), false));
+                CreateServerButton("LAN Server", serverEndPoint.Address.ToString(), serverEndPoint.Port, true);
+            }
         }
 
-        LANBroadcastClient.ServerFound += AddButton;
-        await LANBroadcastClient.SearchAsync();
-        LANBroadcastClient.ServerFound -= AddButton;
+        using Task<IEnumerable<IPEndPoint>> searchTask = LANBroadcastClient.SearchAsync();
+        while (!searchTask.IsCompleted)
+        {
+            while (LANBroadcastClient.DiscoveredServers.TryDequeue(out IPEndPoint endPoint))
+            {
+                LateAddButton(endPoint);
+            }
+            yield return null;
+        }
+        while (LANBroadcastClient.DiscoveredServers.TryDequeue(out IPEndPoint endPoint))
+        {
+            LateAddButton(endPoint);
+        }
+        ServerList.Instance.Save();
     }
 
     public GameObject CreateServerButton(string serverName, string address, int port, bool isReadOnly = false)
@@ -277,7 +295,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
         else
         {
-            buttonText.Append(address[^Math.Min(address.Length, 25)..]).Append(':').Append(port);
+            buttonText.Append(address[^System.Math.Min(address.Length, 25)..]).Append(':').Append(port);
         }
 
         MainMenuServerButton serverButton = multiplayerButtonInst.AddComponent<MainMenuServerButton>();
@@ -342,12 +360,6 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
 
         CreateAddServerButton();
         LoadSavedServers();
-        FindLANServersAsync().ContinueWith(t =>
-        {
-            if (t is { IsFaulted: true, Exception: { } ex })
-            {
-                Log.Warn($"Failed to execute {nameof(FindLANServersAsync)}: {ex.GetFirstNonAggregateMessage()}");
-            }
-        });
+        CoroutineHost.StartCoroutine(FindLANServers());
     }
 }
