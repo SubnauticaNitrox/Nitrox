@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
@@ -49,8 +52,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             deleteButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton;
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
-            LoadSavedServers();
-            _ = FindLANServersAsync();
+            LoadServerButtons();
         }
 
         private void CreateButton(string translationKey, UnityAction clickEvent, bool disableTranslation)
@@ -159,27 +161,44 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private void LoadSavedServers()
+        private void LoadServerButtons()
         {
             ServerList.Refresh();
             foreach (ServerList.Entry entry in ServerList.Instance.Entries)
             {
                 CreateServerButton(MakeButtonText(entry.Name, entry.Address, entry.Port), $"{entry.Address}", $"{entry.Port}");
             }
-        }
 
-        private async System.Threading.Tasks.Task FindLANServersAsync()
-        {
-            void AddButton(IPEndPoint serverEndPoint)
+            CoroutineHost.StartCoroutine(FindLanServers());
+
+            IEnumerator FindLanServers()
             {
-                // Add ServerList entry to keep indices in sync with servers UI, to enable removal by index
-                ServerList.Instance.Add(new("LAN Server", $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", false));
-                CreateServerButton(MakeButtonText("LAN Server", serverEndPoint.Address, serverEndPoint.Port), $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", true);
-            }
+                void AddButton(IPEndPoint serverEndPoint)
+                {
+                    if (ServerList.Instance.Entries.Any(e => e.Address == serverEndPoint.Address.ToString() && e.Port == serverEndPoint.Port))
+                    {
+                        return;
+                    }
+                    Log.Info($"Adding LAN server: {serverEndPoint}");
+                    // Add ServerList entry to keep indices in sync with servers UI, to enable removal by index
+                    ServerList.Instance.Add(new("LAN Server", $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", false));
+                    CreateServerButton(MakeButtonText("LAN Server", serverEndPoint.Address, serverEndPoint.Port), $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", true);
+                }
 
-            LANBroadcastClient.ServerFound += AddButton;
-            await LANBroadcastClient.SearchAsync();
-            LANBroadcastClient.ServerFound -= AddButton;
+                using Task<IEnumerable<IPEndPoint>> searchTask = LANBroadcastClient.SearchAsync();
+                while (!searchTask.IsCompleted)
+                {
+                    while (LANBroadcastClient.DiscoveredServers.TryDequeue(out IPEndPoint endPoint))
+                    {
+                        AddButton(endPoint);
+                    }
+                    yield return null;
+                }
+                while (LANBroadcastClient.DiscoveredServers.TryDequeue(out IPEndPoint endPoint))
+                {
+                    AddButton(endPoint);
+                }
+            }
         }
 
         private string MakeButtonText(string serverName, object address, object port)
@@ -343,8 +362,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
-            LoadSavedServers();
-            _ = FindLANServersAsync();
+            LoadServerButtons();
         }
     }
 }
