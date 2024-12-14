@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Threading;
@@ -11,30 +10,25 @@ using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
 public partial class UpdatesViewModel : RoutableViewModelBase
 {
     [ObservableProperty]
-    private static bool newUpdateAvailable;
+    private bool newUpdateAvailable;
 
     [ObservableProperty]
-    private static bool usingOfficialVersion;
+    private bool usingOfficialVersion;
 
     [ObservableProperty]
-    private static string version;
+    private string version;
 
     [ObservableProperty]
-    private static string officialVersion;
+    private string officialVersion;
 
     [ObservableProperty]
     private AvaloniaList<NitroxChangelog> nitroxChangelogs = [];
-
-    public UpdatesViewModel()
-    {
-    }
 
     internal override async Task ViewContentLoadAsync()
     {
@@ -52,21 +46,21 @@ public partial class UpdatesViewModel : RoutableViewModelBase
         });
     }
 
-    public static async Task<bool> IsNitroxUpdateAvailableAsync()
+    public async Task<bool> IsNitroxUpdateAvailableAsync()
     {
         try
         {
             Version currentVersion = NitroxEnvironment.Version;
             Version latestVersion = await Downloader.GetNitroxLatestVersionAsync();
 
-            newUpdateAvailable = latestVersion > currentVersion;
+            NewUpdateAvailable = latestVersion > currentVersion;
 #if DEBUG
-            usingOfficialVersion = false;
+            UsingOfficialVersion = false;
 #else
-            usingOfficialVersion = latestVersion >= currentVersion;
+            UsingOfficialVersion = latestVersion >= currentVersion;
 #endif
 
-            if (newUpdateAvailable)
+            if (NewUpdateAvailable)
             {
                 string versionMessage = $"A new version of the mod ({latestVersion}) is available.";
                 Log.Info(versionMessage);
@@ -78,15 +72,15 @@ public partial class UpdatesViewModel : RoutableViewModelBase
         }
         catch // If update check fails, just show "No Update Available" text unless on debug mode
         {
-            newUpdateAvailable = false;
+            NewUpdateAvailable = false;
 #if DEBUG
-            usingOfficialVersion = false;
+            UsingOfficialVersion = false;
 #else
-            usingOfficialVersion = true;
+            UsingOfficialVersion = true;
 #endif
         }
 
-        return newUpdateAvailable || !usingOfficialVersion;
+        return NewUpdateAvailable || !UsingOfficialVersion;
     }
 
     [RelayCommand]

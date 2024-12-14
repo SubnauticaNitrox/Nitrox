@@ -15,8 +15,7 @@ public abstract class RoutableViewModelBase : ViewModelBase
     }
 
     /// <summary>
-    ///     Add content loading to this method. Before this view is shown, it will first show a loading indicator, up until the
-    ///     task completes.
+    ///     Loads content that the view should show. While the returned task is running a loading indicator will be visible.
     /// </summary>
     internal virtual Task ViewContentLoadAsync() => Task.CompletedTask;
 

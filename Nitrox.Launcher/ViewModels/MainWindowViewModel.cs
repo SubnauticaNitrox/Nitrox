@@ -100,7 +100,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     Log.Warn("Launcher may not be connected to internet");
                     LauncherNotifier.Warning("Launcher may not be connected to internet");
                 }
-                UpdateAvailableOrUnofficial = await UpdatesViewModel.IsNitroxUpdateAvailableAsync();
+                UpdateAvailableOrUnofficial = await updatesViewModel.IsNitroxUpdateAvailableAsync();
             });
             
             Disposable.Create(this, vm =>
