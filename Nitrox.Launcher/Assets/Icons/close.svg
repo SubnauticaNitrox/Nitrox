@@ -1,4 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 199 198">
-    <rect width="13.8" height="274.5" x="-7" y="3" class="st0" ry="6.9" style="fill:#fff;" transform="rotate(-45)"/>
-    <rect width="13.8" height="274.5" x="133" y="-137" class="st0" ry="6.9" style="fill:#fff;" transform="rotate(45)"/>
+<svg viewBox="0 0 199 198" xmlns="http://www.w3.org/2000/svg">
+    <path style="stroke:#fff;stroke-width:20;stroke-linejoin:round" d="M11 187 188 11Zm177 0-88-88-89-88 89 88Z"/>
 </svg>
