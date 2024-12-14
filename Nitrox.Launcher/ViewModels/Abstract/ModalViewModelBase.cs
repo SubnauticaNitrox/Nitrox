@@ -45,15 +45,4 @@ public abstract partial class ModalViewModelBase : ObservableValidator, IModalDi
         }
         ((IClassicDesktopStyleApplicationLifetime)Application.Current?.ApplicationLifetime)?.Windows.FirstOrDefault(w => w.DataContext == this)?.Close();
     }
-
-    [RelayCommand]
-    public void Drag(PointerPressedEventArgs args)
-    {
-        ArgumentNullException.ThrowIfNull(args);
-
-        if (args.Source is Visual element && element.GetWindow() is { } window)
-        {
-            window.BeginMoveDrag(args);
-        }
-    }
 }

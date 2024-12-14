@@ -48,8 +48,8 @@
 
     <Style Selector="Button">
         <Setter Property="Background" Value="{DynamicResource BrandBorderBackground}" />
-        <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
 
@@ -66,7 +66,7 @@
             <Setter Property="Orientation" Value="Horizontal" />
         </Style>
 
-        <Style Selector="^ /template/ ContentPresenter">
+        <Style Selector="^:not(.close) /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Opacity" Value="1" />
             <Setter Property="Transitions">
                 <Transitions>
@@ -76,11 +76,15 @@
             </Setter>
         </Style>
 
-        <Style Selector="^:pointerover /template/ ContentPresenter">
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
             <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
             <Setter Property="Opacity" Value="0.6" />
+        </Style>
+
+        <Style Selector="^.close:pointerover">
+            <Setter Property="Background" Value="Red" />
         </Style>
 
         <Style Selector="^:disabled:not(.busy)">
@@ -90,7 +94,7 @@
                 <Setter Property="Opacity" Value="0.25" />
             </Style>
         </Style>
-        
+
         <!-- TODO: Pretty animations -->
         <Style Selector="^.busy">
             <Style Selector="^ /template/ ContentPresenter">

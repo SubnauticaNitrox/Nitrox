@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
         xmlns:views="clr-namespace:Nitrox.Launcher.Views"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -139,30 +140,7 @@
     </Window.Styles>
 
     <Panel>
-        <!-- Title bar -->
-        <Panel Classes="titleBar">
-            <Interaction.Behaviors>
-                <BehaviorCollection>
-                    <EventTriggerBehavior EventName="PointerPressed">
-                        <InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
-                    </EventTriggerBehavior>
-                    <EventTriggerBehavior EventName="DoubleTapped">
-                        <InvokeCommandAction Command="{Binding MaximizeCommand}" />
-                    </EventTriggerBehavior>
-                </BehaviorCollection>
-            </Interaction.Behaviors>
-            <StackPanel>
-                <Button Command="{Binding MinimizeCommand}">
-                    <Image Source="/Assets/Images/material-design-icons/min.png" />
-                </Button>
-                <Button Command="{Binding MaximizeCommand}">
-                    <Image Source="{Binding MaximizeButtonIcon, Converter={converters:BitmapAssetValueConverter}}" />
-                </Button>
-                <Button Command="{Binding CloseCommand}">
-                    <Image Source="/Assets/Images/material-design-icons/close.png" />
-                </Button>
-            </StackPanel>
-        </Panel>
+        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />
 
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
 
@@ -282,7 +260,7 @@
                                 <Image Grid.Column="0" Classes="icon" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" />
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Message}" />
                                 <Button Classes="anycontent" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseCommand}">
-                                    <Image Width="10" VerticalAlignment="Top" Source="/Assets/Images/material-design-icons/close.png" />
+                                    <Svg Width="10" VerticalAlignment="Top" Path="/Assets/Icons/close.svg" Css=".st0 { fill: white; }" />
                                 </Button>
                             </Grid>
                         </Border>

@@ -147,42 +147,4 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         await RoutingScreen.ShowAsync(optionsViewModel);
     }
-
-    [RelayCommand]
-    public void Minimize()
-    {
-        MainWindow.WindowState = WindowState.Minimized;
-    }
-
-    [RelayCommand]
-    public void Close()
-    {
-        MainWindow.Close();
-    }
-
-    [RelayCommand]
-    public void Maximize()
-    {
-        if (MainWindow.WindowState == WindowState.Normal)
-        {
-            MainWindow.WindowState = WindowState.Maximized;
-            MaximizeButtonIcon = "/Assets/Images/material-design-icons/restore.png";
-        }
-        else
-        {
-            MainWindow.WindowState = WindowState.Normal;
-            MaximizeButtonIcon = "/Assets/Images/material-design-icons/max.png";
-        }
-    }
-
-    [RelayCommand]
-    public void Drag(PointerPressedEventArgs args)
-    {
-        ArgumentNullException.ThrowIfNull(args);
-
-        if (args.Source is Visual element && element.GetWindow() is { } window)
-        {
-            window.BeginMoveDrag(args);
-        }
-    }
 }

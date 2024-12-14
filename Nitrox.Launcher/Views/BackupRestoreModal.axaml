@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MaxWidth="1000" MinWidth="500" MinHeight="200"
         x:Class="Nitrox.Launcher.Views.BackupRestoreModal"
         x:DataType="vm:BackupRestoreViewModel"
@@ -12,24 +13,7 @@
         <vm:BackupRestoreViewModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto, *, Auto">
-        <!-- Title bar -->
-        <Panel Grid.Row="0" Grid.RowSpan="2" Classes="titleBar">
-            <Interaction.Behaviors>
-                <BehaviorCollection>
-                    <EventTriggerBehavior EventName="PointerPressed">
-                        <InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
-                    </EventTriggerBehavior>
-                </BehaviorCollection>
-            </Interaction.Behaviors>
-
-            <Button Command="{Binding CloseCommand}">
-                <Rectangle>
-                    <Rectangle.OpacityMask>
-                        <ImageBrush Source="/Assets/Images/material-design-icons/close.png" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
-        </Panel>
+        <controls:CustomTitlebar CanMinimize="False" Grid.Row="0" />
 
         <TextBlock Grid.Row="0" Text="{Binding Title}" Classes="modalHeader" Margin="24 24 24 0" />
 

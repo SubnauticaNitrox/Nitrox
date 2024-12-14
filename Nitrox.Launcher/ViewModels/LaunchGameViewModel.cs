@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -21,7 +20,6 @@ using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 

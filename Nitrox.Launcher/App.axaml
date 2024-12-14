@@ -5,6 +5,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <MergeResourceInclude Source="/Models/Styles/Palette/Nitrox.axaml"/>
+                <MergeResourceInclude Source="/Models/Controls/CustomTitlebar.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

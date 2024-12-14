@@ -12,9 +12,9 @@
         <vm:EmbeddedServerViewModel />
     </Design.DataContext>
     <UserControl.KeyBindings>
-        <KeyBinding Gesture="Escape" Command="{Binding ClearInputCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
-        <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
-        <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}" />
+        <KeyBinding Gesture="Escape" Command="{Binding ClearInputCommand}" CommandParameter="{Binding #ServerCommandTextBox}" />
+        <KeyBinding Gesture="Down" Command="{Binding CommandHistoryGoForwardCommand}" CommandParameter="{Binding #ServerCommandTextBox}" />
+        <KeyBinding Gesture="Up" Command="{Binding CommandHistoryGoBackCommand}" CommandParameter="{Binding #ServerCommandTextBox}" />
     </UserControl.KeyBindings>
     <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto">
         <Grid Grid.Row="0">
@@ -48,13 +48,19 @@
         <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
             <TextBox x:Name="ServerCommandTextBox" Grid.Column="0" design:NitroxAttached.Focus="" Text="{Binding ServerCommand}" Watermark="A server command here" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12 0 0 0" Spacing="12">
-                <Button Classes="primary" Command="{Binding SendServerCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}"
+                <StackPanel.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="Width" Value="60" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                    </Style>
+                </StackPanel.Styles>
+                <Button Classes="primary" Command="{Binding SendServerCommand}" CommandParameter="{Binding #ServerCommandTextBox}"
                         HotKey="Enter" Cursor="Hand" ToolTip.Tip="Send command">
-                    <Image Source="/Assets/Images/material-design-icons/server-send.png" Width="24" Height="24" />
+                    <Svg Path="/Assets/Icons/send.svg" Css=".st0 { fill: white; }" />
                 </Button>
-                <Button Classes="primary abort" Command="{Binding StopServerCommand}" CommandParameter="{Binding ElementName=ServerCommandTextBox}"
+                <Button Classes="abort" Command="{Binding StopServerCommand}" CommandParameter="{Binding #ServerCommandTextBox}"
                         Cursor="Hand" ToolTip.Tip="Stop the server">
-                    <Image Source="/Assets/Images/material-design-icons/server-stop.png" Width="24" Height="24" />
+                    <Rectangle Fill="White" Width="20" Height="20" />
                 </Button>
             </StackPanel>
         </Grid>

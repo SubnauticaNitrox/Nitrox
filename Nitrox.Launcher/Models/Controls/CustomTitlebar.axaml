@@ -1,0 +1,83 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+                    xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Design.PreviewWith>
+        <StackPanel>
+            <controls:CustomTitlebar CanMinimize="False" CanMaximize="False" Background="IndianRed" Width="400" />
+            <controls:CustomTitlebar CanMinimize="False" CanMaximize="True" Background="ForestGreen" Width="400" />
+            <controls:CustomTitlebar CanMaximize="False" Background="CornflowerBlue" Width="400" />
+            <controls:CustomTitlebar Background="Violet" Width="400" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type controls:CustomTitlebar}" TargetType="controls:CustomTitlebar">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <StackPanel>
+                        <Button Classes.leftOff1="{x:True}" Classes.leftOff2="{x:True}" x:Name="PART_MinimizeButton" IsVisible="{TemplateBinding CanMinimize}" Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Image Source="/Assets/Images/material-design-icons/min.png" />
+                        </Button>
+                        <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{x:True}" x:Name="PART_MaximizeButton" Command="{Binding ToggleMaximizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Button.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <TemplateBinding Property="CanMaximize" />
+                                    <Binding Path="$parent[Window].CanResize" />
+                                </MultiBinding>
+                            </Button.IsVisible>
+                            <Image Classes.maximize="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Normal}}" Classes.restore="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Maximized}}" />
+                        </Button>
+                        <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{Binding !#PART_MaximizeButton.IsVisible}" x:Name="PART_CloseButton" Classes="close" Command="{Binding CloseCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Svg Path="/Assets/Icons/close.svg" Css=".st0 { fill: white; }" />
+                        </Button>
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Default template values -->
+        <Setter Property="Background" Value="Black" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ZIndex" Value="100" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <Style Selector="^ /template/ StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+
+            <Style Selector="^ > Button">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Width" Value="46" />
+
+                <!-- This is stupid, but it works... TODO: Why selector on "Button" doesn't override these properties (e.g. CornerRadius). Convert ButtonStyle.axaml into ControlTheme? -->
+                <Style Selector="^:nth-child(1n)">
+                    <Setter Property="CornerRadius" Value="0" />
+                    <Setter Property="Background" Value="{TemplateBinding Background}" />
+                    <Setter Property="Opacity" Value="1" />
+                </Style>
+
+                <!-- Button[IsVisible=True]:nth-child(1) doesn't work to filter only visible buttons. Here, leftOff1 is used to check if previous button is on and leftOff2 is the next one over that. -->
+                <Style Selector="^.leftOff1.leftOff2">
+                    <Setter Property="CornerRadius" Value="0 0 0 4" />
+                </Style>
+
+                <Style Selector="^ > :is(Control)">
+                    <Setter Property="Height" Value="16" />
+                    <Setter Property="IsHitTestVisible" Value="False" />
+                    <Setter Property="Opacity" Value="1" />
+                </Style>
+            </Style>
+
+            <Style Selector="^ Image.maximize">
+                <Setter Property="Source" Value="/Assets/Images/material-design-icons/max.png" />
+            </Style>
+            <Style Selector="^ Image.restore">
+                <Setter Property="Source" Value="/Assets/Images/material-design-icons/restore.png" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

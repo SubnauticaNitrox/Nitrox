@@ -91,7 +91,7 @@
                         <Panel>
                             <TextBox x:Name="LaunchArgsInput" Padding="13,12" FontSize="15" MaxLines="1"
                                      Text="{Binding LaunchArgs}" />
-                            <Button Classes="abort" Command="{Binding ResetArgumentsCommand}" CommandParameter="{Binding ElementName=LaunchArgsInput}"
+                            <Button Classes="abort" Command="{Binding ResetArgumentsCommand}" CommandParameter="{Binding #LaunchArgsInput}"
                                     Width="72" Height="28" HorizontalAlignment="Right" Padding="0" Margin="0 0 12 0"
                                     FontSize="12" ToolTip.Tip="Reset arguments" Content="Reset" IsVisible="{Binding ShowResetArgsBtn}" />
                         </Panel>

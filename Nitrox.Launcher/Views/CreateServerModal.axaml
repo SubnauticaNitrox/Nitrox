@@ -17,24 +17,7 @@
         <vm:CreateServerViewModel Name="My Server Name" SelectedGameMode="CREATIVE" />
     </Design.DataContext>
     <Grid>
-        <!-- Title bar -->
-        <Panel Grid.RowSpan="2" Classes="titleBar">
-            <Interaction.Behaviors>
-                <BehaviorCollection>
-                    <EventTriggerBehavior EventName="PointerPressed">
-                        <InvokeCommandAction Command="{Binding DragCommand}" PassEventArgsToCommand="True" />
-                    </EventTriggerBehavior>
-                </BehaviorCollection>
-            </Interaction.Behaviors>
-
-            <Button Command="{Binding CloseCommand}">
-                <Rectangle>
-                    <Rectangle.OpacityMask>
-                        <ImageBrush Source="/Assets/Images/material-design-icons/close.png" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
-        </Panel>
+        <controls:CustomTitlebar CanMinimize="False" />
         <StackPanel>
             <StackPanel Classes="form" Margin="24">
                 <TextBlock Text="Create a server" Classes="modalHeader" />
