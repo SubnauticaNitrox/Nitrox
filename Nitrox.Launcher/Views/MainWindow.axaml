@@ -260,7 +260,7 @@
                                 <Image Grid.Column="0" Classes="icon" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" />
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Message}" />
                                 <Button Classes="anycontent" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseCommand}">
-                                    <Svg Width="10" VerticalAlignment="Top" Path="/Assets/Icons/close.svg" Css=".st0 { fill: white; }" />
+                                    <Svg Width="10" VerticalAlignment="Top" Path="/Assets/Icons/close.svg" />
                                 </Button>
                             </Grid>
                         </Border>

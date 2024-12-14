@@ -17,7 +17,7 @@
                 <Panel>
                     <StackPanel>
                         <Button Classes.leftOff1="{x:True}" Classes.leftOff2="{x:True}" x:Name="PART_MinimizeButton" IsVisible="{TemplateBinding CanMinimize}" Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
-                            <Image Source="/Assets/Images/material-design-icons/min.png" />
+                            <Svg Path="/Assets/Icons/minimize.svg" />
                         </Button>
                         <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{x:True}" x:Name="PART_MaximizeButton" Command="{Binding ToggleMaximizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
                             <Button.IsVisible>
@@ -26,10 +26,10 @@
                                     <Binding Path="$parent[Window].CanResize" />
                                 </MultiBinding>
                             </Button.IsVisible>
-                            <Image Classes.maximize="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Normal}}" Classes.restore="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Maximized}}" />
+                            <Svg Classes.maximize="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Normal}}" Classes.restore="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Maximized}}" />
                         </Button>
                         <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{Binding !#PART_MaximizeButton.IsVisible}" x:Name="PART_CloseButton" Classes="close" Command="{Binding CloseCommand, RelativeSource={RelativeSource TemplatedParent}}">
-                            <Svg Path="/Assets/Icons/close.svg" Css=".st0 { fill: white; }" />
+                            <Svg Path="/Assets/Icons/close.svg" />
                         </Button>
                     </StackPanel>
                 </Panel>
@@ -72,11 +72,11 @@
                 </Style>
             </Style>
 
-            <Style Selector="^ Image.maximize">
-                <Setter Property="Source" Value="/Assets/Images/material-design-icons/max.png" />
+            <Style Selector="^ Svg.maximize">
+                <Setter Property="Path" Value="/Assets/Icons/maximize.svg" />
             </Style>
-            <Style Selector="^ Image.restore">
-                <Setter Property="Source" Value="/Assets/Images/material-design-icons/restore.png" />
+            <Style Selector="^ Svg.restore">
+                <Setter Property="Path" Value="/Assets/Icons/restore.svg" />
             </Style>
         </Style>
     </ControlTheme>
