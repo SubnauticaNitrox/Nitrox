@@ -14,7 +14,7 @@
     <ControlTheme x:Key="{x:Type controls:CustomTitlebar}" TargetType="controls:CustomTitlebar">
         <Setter Property="Template">
             <ControlTemplate>
-                <Panel>
+                <Panel Background="Transparent">
                     <StackPanel>
                         <Button Classes.leftOff1="{x:True}" Classes.leftOff2="{x:True}" x:Name="PART_MinimizeButton" IsVisible="{TemplateBinding CanMinimize}" Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
                             <Svg Path="/Assets/Icons/minimize.svg" />
