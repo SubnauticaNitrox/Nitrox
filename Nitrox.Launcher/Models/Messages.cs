@@ -7,8 +7,6 @@ namespace Nitrox.Launcher.Models;
 /// </summary>
 public record SaveDeletedMessage(string SaveName);
 
-public record ServerEntryPropertyChangedMessage(string PropertyName);
-
 public record NotificationAddMessage(NotificationItem Item);
 
 public record NotificationCloseMessage(NotificationItem Item);

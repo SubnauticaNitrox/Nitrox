@@ -87,11 +87,6 @@ public partial class ServerEntry : ObservableObject
     [ObservableProperty]
     private Version version = NitroxEnvironment.Version;
 
-    public ServerEntry()
-    {
-        PropertyChanged += OnPropertyChanged;
-    }
-
     public static ServerEntry FromDirectory(string saveDir)
     {
         ServerEntry result = new();
@@ -209,8 +204,6 @@ public partial class ServerEntry : ObservableObject
             UseShellExecute = true
         })?.Dispose();
     }
-
-    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => WeakReferenceMessenger.Default.Send(new ServerEntryPropertyChangedMessage(e.PropertyName));
 
     internal class ServerProcess : IDisposable
     {
