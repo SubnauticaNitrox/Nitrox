@@ -87,12 +87,12 @@ public static class Extensions
     }
 
     /// <summary>
-    ///     Calls an action if an error happens. If null, logs the error as-is.
+    ///     Calls an action if an error happens.
     /// </summary>
     /// <remarks>
     ///     Use this for fire-and-forget tasks so that errors aren't hidden when they happen.
     /// </remarks>
-    public static Task ContinueWithHandleError(this Task task, Action<Exception> onError = null) =>
+    public static Task ContinueWithHandleError(this Task task, Action<Exception> onError) =>
         task.ContinueWith(t =>
         {
             if (t is not { IsFaulted: true, Exception: { } ex })
@@ -100,15 +100,23 @@ public static class Extensions
                 return;
             }
 
-            if (onError != null)
-            {
-                onError(ex);
-            }
-            else
-            {
-                Log.Error(ex);
-            }
+            onError(ex);
         });
+
+    /// <summary>
+    ///    Logs any exception/error of the task.
+    /// </summary>
+    /// <remarks>
+    ///    <inheritdoc cref="ContinueWithHandleError(System.Threading.Tasks.Task,System.Action{System.Exception})"/>
+    /// </remarks>
+    public static Task ContinueWithHandleError(this Task task, bool alsoLogIngame = false) => task.ContinueWithHandleError(ex =>
+    {
+        Log.Error(ex);
+        if (alsoLogIngame)
+        {
+            Log.InGame(ex.Message);
+        }
+    });
 
     public static string GetFirstNonAggregateMessage(this Exception exception) => exception switch
     {

@@ -14,6 +14,7 @@ namespace NitroxClient.Communication;
 public static class LANBroadcastClient
 {
     private static event Action<IPEndPoint> serverFound;
+
     public static event Action<IPEndPoint> ServerFound
     {
         add
@@ -21,24 +22,29 @@ public static class LANBroadcastClient
             serverFound += value;
 
             // Trigger event for servers already found.
-            foreach (IPEndPoint server in discoveredServers)
+            foreach (IPEndPoint server in DiscoveredServers)
             {
                 value?.Invoke(server);
             }
         }
         remove => serverFound -= value;
     }
+
     private static Task<IEnumerable<IPEndPoint>> lastTask;
-    private static ConcurrentBag<IPEndPoint> discoveredServers = new();
+    public static ConcurrentQueue<IPEndPoint> DiscoveredServers = [];
 
     public static async Task<IEnumerable<IPEndPoint>> SearchAsync(bool force = false, CancellationToken cancellationToken = default)
     {
         if (!force && lastTask != null)
         {
-            return await lastTask;
+            DiscoveredServers = [];
+            foreach (IPEndPoint ipEndPoint in await lastTask)
+            {
+                DiscoveredServers.Enqueue(ipEndPoint);
+            }
+            return DiscoveredServers;
         }
 
-        discoveredServers = new ConcurrentBag<IPEndPoint>();
         return await (lastTask = SearchInternalAsync(cancellationToken));
     }
 
@@ -57,20 +63,21 @@ public static class LANBroadcastClient
             }
             int serverPort = reader.GetInt();
             IPEndPoint serverEndPoint = new(remoteEndPoint.Address, serverPort);
-            if (discoveredServers.Contains(serverEndPoint))
+            if (DiscoveredServers.Contains(serverEndPoint))
             {
                 return;
             }
-            
-            Log.Info($"Found LAN server at {serverEndPoint}.");
-            discoveredServers.Add(serverEndPoint);
+
+            Log.Debug($"Found LAN server at {serverEndPoint}.");
+            DiscoveredServers.Enqueue(serverEndPoint);
             OnServerFound(serverEndPoint);
         }
 
         cancellationToken = cancellationToken == default ? new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token : cancellationToken;
         EventBasedNetListener listener = new();
-        NetManager client = new(listener) { 
-            AutoRecycle = true, 
+        NetManager client = new(listener)
+        {
+            AutoRecycle = true,
             BroadcastReceiveEnabled = true,
             UnconnectedMessagesEnabled = true
         };
@@ -85,7 +92,7 @@ public static class LANBroadcastClient
         if (!client.IsRunning)
         {
             Log.Warn("Failed to start LAN discover client: none of the defined ports are available");
-            return Enumerable.Empty<IPEndPoint>();
+            return [];
         }
 
         Log.Info("Searching for LAN servers...");
@@ -131,7 +138,7 @@ public static class LANBroadcastClient
         listener.ClearNetworkReceiveUnconnectedEvent();
         client.Stop();
         listener.NetworkReceiveUnconnectedEvent -= ReceivedResponse;
-        return discoveredServers;
+        return DiscoveredServers;
     }
 
     private static void OnServerFound(IPEndPoint obj)
