@@ -17,7 +17,7 @@
                 <Panel Background="Transparent">
                     <StackPanel>
                         <Button Classes.leftOff1="{x:True}" Classes.leftOff2="{x:True}" x:Name="PART_MinimizeButton" IsVisible="{TemplateBinding CanMinimize}" Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
-                            <Svg Path="/Assets/Icons/minimize.svg" />
+                            <Svg Classes="theme" Path="/Assets/Icons/minimize.svg" />
                         </Button>
                         <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{x:True}" x:Name="PART_MaximizeButton" Command="{Binding ToggleMaximizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
                             <Button.IsVisible>
@@ -26,10 +26,10 @@
                                     <Binding Path="$parent[Window].CanResize" />
                                 </MultiBinding>
                             </Button.IsVisible>
-                            <Svg Classes.maximize="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Normal}}" Classes.restore="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Maximized}}" />
+                            <Svg Classes="theme" Classes.maximize="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Normal}}" Classes.restore="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Maximized}}" />
                         </Button>
                         <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{Binding !#PART_MaximizeButton.IsVisible}" x:Name="PART_CloseButton" Classes="close" Command="{Binding CloseCommand, RelativeSource={RelativeSource TemplatedParent}}">
-                            <Svg Path="/Assets/Icons/close.svg" />
+                            <Svg Classes="theme" Path="/Assets/Icons/close.svg" />
                         </Button>
                     </StackPanel>
                 </Panel>

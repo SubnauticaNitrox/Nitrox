@@ -47,7 +47,7 @@
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Opacity" Value="0.5" />
+                <Setter Property="Opacity" Value="0.7" />
                 <Setter Property="ToolTip.Placement" Value="Pointer" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
 
@@ -68,6 +68,7 @@
 
                 <Style Selector="^[(design|NitroxAttached.Selected)=True]">
                     <Setter Property="Opacity" Value="1" />
+                    <Setter Property="FontWeight" Value="Bold" />
                 </Style>
             </Style>
         </Style>

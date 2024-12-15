@@ -29,6 +29,9 @@
             <Color x:Key="BrandSuccess">#11AD45</Color>
             <Color x:Key="BrandInformation">#007BFF</Color>
             <Color x:Key="BrandWarning">#F5A300</Color>
+
+            <!-- Misc -->
+            <x:String x:Key="BrandSvgStyle">* { fill: #000; stroke: #000; }</x:String>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="BrandWhite">#000000</Color>
@@ -44,6 +47,7 @@
             <Color x:Key="BrandScrollThumb">#262626</Color>
             <Color x:Key="BrandScrollThumbPointerOver">#3F3F3F</Color>
             <Color x:Key="BrandScrollThumbPressed">#8F8F8F</Color>
+            <x:String x:Key="BrandSvgStyle">* { fill: #fff; stroke: #fff; }</x:String>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

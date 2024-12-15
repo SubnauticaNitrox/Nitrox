@@ -54,6 +54,10 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackground}" />
     </Style>
 
+    <Style Selector="Svg.theme">
+        <Setter Property="Css" Value="{DynamicResource BrandSvgStyle}" />
+    </Style>
+
     <Style Selector=":is(Border).footer">
         <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
         <Setter Property="Padding" Value="24 20" />
