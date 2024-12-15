@@ -70,7 +70,7 @@ namespace NitroxServer.Serialization
         /**
          * It is suspected that 'cache' is a misnomer carried over from when UWE was actually doing procedurally
          * generated worlds.  In the final release, this 'cache' has simply been baked into a final version that
-         * we can parse. 
+         * we can parse.
          */
         private void ParseCacheCells(NitroxInt3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
         {
@@ -83,17 +83,26 @@ namespace NitroxServer.Serialization
                     CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
 
                     byte[] serialData = new byte[cellHeader.DataLength];
-                    stream.Read(serialData, 0, cellHeader.DataLength);
+                    if (stream.Read(serialData, 0, cellHeader.DataLength) != cellHeader.DataLength)
+                    {
+                        Log.Error($"The system could not read the requested {cellHeader.DataLength} bytes defined in {nameof(cellHeader.DataLength)}");
+                    }
                     ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out bool wasLegacy);
 
                     if (!wasLegacy)
                     {
                         byte[] legacyData = new byte[cellHeader.LegacyDataLength];
-                        stream.Read(legacyData, 0, cellHeader.LegacyDataLength);
+                        if (stream.Read(legacyData, 0, cellHeader.LegacyDataLength) != cellHeader.LegacyDataLength)
+                        {
+                            Log.Error($"The system could not read the requested {cellHeader.LegacyDataLength} bytes defined in {nameof(cellHeader.LegacyDataLength)}");
+                        }
                         ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out _);
 
                         byte[] waiterData = new byte[cellHeader.WaiterDataLength];
-                        stream.Read(waiterData, 0, cellHeader.WaiterDataLength);
+                        if (stream.Read(waiterData, 0, cellHeader.WaiterDataLength) != cellHeader.WaiterDataLength)
+                        {
+                            Log.Error($"The system could not read the requested {cellHeader.WaiterDataLength} bytes defined in {nameof(cellHeader.WaiterDataLength)}");
+                        }
                         ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.CellId, cellHeader.Level, spawnPoints);
                     }
                 }
@@ -178,7 +187,10 @@ namespace NitroxServer.Serialization
                     int length = (int)(stream.Position - startPosition);
                     byte[] data = new byte[length];
                     stream.Position = startPosition;
-                    stream.Read(data, 0, length);
+                    if(stream.Read(data, 0, length) != length)
+                    {
+                        Log.Error($"The system could not read the requested {length} bytes inside {nameof(BatchCellsParser)}.{nameof(DeserializeComponents)}()");
+                    }
                     SerializedComponent serializedComponent = new(componentHeader.TypeName, componentHeader.IsEnabled, data);
                     gameObject.SerializedComponents.Add(serializedComponent);
                 }
