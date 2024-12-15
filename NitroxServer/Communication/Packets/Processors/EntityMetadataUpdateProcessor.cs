@@ -26,7 +26,7 @@ public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<Entity
             return;
         }
 
-        if (ProcessMetadata(sendingPlayer, entity, packet.NewValue))
+        if (TryProcessMetadata(sendingPlayer, entity, packet.NewValue))
         {
             entity.Metadata = packet.NewValue;
             SendUpdateToVisiblePlayers(packet, sendingPlayer, entity);
@@ -46,7 +46,7 @@ public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<Entity
         }
     }
 
-    private bool ProcessMetadata(Player sendingPlayer, Entity entity, EntityMetadata metadata)
+    private bool TryProcessMetadata(Player sendingPlayer, Entity entity, EntityMetadata metadata)
     {
         return metadata switch
         {
