@@ -87,8 +87,5 @@
             </Style>
         </Style>
         
-        <Style Selector="^.Transparent /template/ StackPanel">
-            <Setter Property="Opacity" Value="0.6" />
-        </Style>
     </ControlTheme>
 </ResourceDictionary>
