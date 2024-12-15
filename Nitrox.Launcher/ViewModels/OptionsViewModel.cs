@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Input;
@@ -14,7 +13,6 @@ using NitroxModel.Discovery;
 using NitroxModel.Discovery.Models;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -44,14 +42,16 @@ public partial class OptionsViewModel : RoutableViewModelBase
     public OptionsViewModel(IKeyValueStore keyValueStore)
     {
         this.keyValueStore = keyValueStore;
-
-        SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
-        LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
-        SavesFolderDir = keyValueStore.GetSavesFolderDir();
     }
 
     internal override async Task ViewContentLoadAsync()
     {
+        await Task.Run(() =>
+        {
+            SelectedGame = new() { PathToGame = NitroxUser.GamePath, Platform = NitroxUser.GamePlatform?.Platform ?? Platform.NONE };
+            LaunchArgs = keyValueStore.GetSubnauticaLaunchArguments(DefaultLaunchArg);
+            SavesFolderDir = keyValueStore.GetSavesFolderDir();
+        });
         await SetTargetedSubnauticaPathAsync(SelectedGame.PathToGame).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
