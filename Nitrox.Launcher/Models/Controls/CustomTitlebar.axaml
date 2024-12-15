@@ -3,11 +3,11 @@
                     xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
                     xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
     <Design.PreviewWith>
-        <StackPanel>
-            <controls:CustomTitlebar CanMinimize="False" CanMaximize="False" Background="IndianRed" Width="400" />
-            <controls:CustomTitlebar CanMinimize="False" CanMaximize="True" Background="ForestGreen" Width="400" />
-            <controls:CustomTitlebar CanMaximize="False" Background="CornflowerBlue" Width="400" />
-            <controls:CustomTitlebar Background="Violet" Width="400" />
+        <StackPanel Width="200">
+            <controls:CustomTitlebar CanMinimize="False" CanMaximize="False" Background="IndianRed" />
+            <controls:CustomTitlebar CanMinimize="False" CanMaximize="True" Background="ForestGreen" />
+            <controls:CustomTitlebar CanMaximize="False" Background="CornflowerBlue" />
+            <controls:CustomTitlebar Background="Violet" />
         </StackPanel>
     </Design.PreviewWith>
 
@@ -16,10 +16,10 @@
             <ControlTemplate>
                 <Panel Background="Transparent">
                     <StackPanel>
-                        <Button Classes.leftOff1="{x:True}" Classes.leftOff2="{x:True}" x:Name="PART_MinimizeButton" IsVisible="{TemplateBinding CanMinimize}" Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                        <Button Classes.leftOff1="{x:True}" Classes.leftOff2="{x:True}" x:Name="PART_MinimizeButton" Classes="titleBar" IsVisible="{TemplateBinding CanMinimize}" Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
                             <Svg Path="/Assets/Icons/minimize.svg" />
                         </Button>
-                        <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{x:True}" x:Name="PART_MaximizeButton" Command="{Binding ToggleMaximizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                        <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{x:True}" Classes="titleBar" x:Name="PART_MaximizeButton" Command="{Binding ToggleMaximizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
                             <Button.IsVisible>
                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                     <TemplateBinding Property="CanMaximize" />
@@ -28,7 +28,7 @@
                             </Button.IsVisible>
                             <Svg Classes.maximize="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Normal}}" Classes.restore="{Binding $parent[Window].WindowState, Converter={converters:EqualityConverter}, ConverterParameter={x:Static WindowState.Maximized}}" />
                         </Button>
-                        <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{Binding !#PART_MaximizeButton.IsVisible}" x:Name="PART_CloseButton" Classes="close" Command="{Binding CloseCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                        <Button Classes.leftOff1="{Binding !#PART_MinimizeButton.IsVisible}" Classes.leftOff2="{Binding !#PART_MaximizeButton.IsVisible}" x:Name="PART_CloseButton" Classes="titleBar close" Command="{Binding CloseCommand, RelativeSource={RelativeSource TemplatedParent}}">
                             <Svg Path="/Assets/Icons/close.svg" />
                         </Button>
                     </StackPanel>
@@ -37,10 +37,10 @@
         </Setter>
 
         <!-- Default template values -->
-        <Setter Property="Background" Value="Black" />
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ZIndex" Value="100" />
-        <Setter Property="Height" Value="24" />
+        <Setter Property="Height" Value="28" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
 
@@ -48,7 +48,7 @@
             <Setter Property="Orientation" Value="Horizontal" />
             <Setter Property="HorizontalAlignment" Value="Right" />
 
-            <Style Selector="^ > Button">
+            <Style Selector="^ > Button.titleBar">
                 <Setter Property="Opacity" Value="1" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Width" Value="46" />
@@ -62,13 +62,20 @@
 
                 <!-- Button[IsVisible=True]:nth-child(1) doesn't work to filter only visible buttons. Here, leftOff1 is used to check if previous button is on and leftOff2 is the next one over that. -->
                 <Style Selector="^.leftOff1.leftOff2">
-                    <Setter Property="CornerRadius" Value="0 0 0 4" />
+                    <Setter Property="CornerRadius" Value="0 0 0 5" />
                 </Style>
 
                 <Style Selector="^ > :is(Control)">
-                    <Setter Property="Height" Value="16" />
+                    <Setter Property="Height" Value="11" />
                     <Setter Property="IsHitTestVisible" Value="False" />
                     <Setter Property="Opacity" Value="1" />
+                </Style>
+                
+                <Style Selector="^:pointerover">
+                    <Setter Property="Background" Value="{DynamicResource BrandControlBackground}" />
+                    <Style Selector="^.close">
+                        <Setter Property="Background" Value="Red" />
+                    </Style>
                 </Style>
             </Style>
 
@@ -78,6 +85,10 @@
             <Style Selector="^ Svg.restore">
                 <Setter Property="Path" Value="/Assets/Icons/restore.svg" />
             </Style>
+        </Style>
+        
+        <Style Selector="^.Transparent /template/ StackPanel">
+            <Setter Property="Opacity" Value="0.6" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

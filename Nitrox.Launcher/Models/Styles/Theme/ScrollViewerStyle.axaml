@@ -139,7 +139,7 @@
     </Style>
     
     <Style Selector="Window[(design|NitroxAttached.UseCustomTitleBar)=True] ScrollViewer.main /template/ ScrollBar#PART_VerticalScrollBar">
-        <Setter Property="Margin" Value="0 26 0 6" />
+        <Setter Property="Margin" Value="0 30 0 6" />
     </Style>
     
     <Style Selector="ScrollBar">

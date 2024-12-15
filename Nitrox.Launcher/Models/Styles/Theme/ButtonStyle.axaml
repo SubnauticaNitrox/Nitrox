@@ -66,7 +66,7 @@
             <Setter Property="Orientation" Value="Horizontal" />
         </Style>
 
-        <Style Selector="^:not(.close) /template/ ContentPresenter#PART_ContentPresenter">
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Opacity" Value="1" />
             <Setter Property="Transitions">
                 <Transitions>
@@ -76,15 +76,16 @@
             </Setter>
         </Style>
 
-        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
-            <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
-            <Setter Property="Opacity" Value="0.6" />
-        </Style>
-
-        <Style Selector="^.close:pointerover">
-            <Setter Property="Background" Value="Red" />
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
+                <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
+            </Style>
+            
+            <Style Selector="^:not(.titleBar) /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Opacity" Value="0.6" />
+            </Style>
         </Style>
 
         <Style Selector="^:disabled:not(.busy)">

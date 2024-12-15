@@ -32,6 +32,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool updateAvailableOrUnofficial;
+    
+    [ObservableProperty]
+    private bool makeTitleBarTransparent = true;
 
     public AvaloniaList<NotificationItem> Notifications { get; init; } = [];
 
@@ -116,35 +119,41 @@ public partial class MainWindowViewModel : ViewModelBase
     public async Task OpenLaunchGameViewAsync()
     {
         await RoutingScreen.ShowAsync(launchGameViewModel);
+        MakeTitleBarTransparent = true;
     }
 
     [RelayCommand]
     public async Task OpenServersViewAsync()
     {
         await RoutingScreen.ShowAsync(serversViewModel);
+        MakeTitleBarTransparent = false;
     }
 
     [RelayCommand]
     public async Task OpenCommunityViewAsync()
     {
         await RoutingScreen.ShowAsync(communityViewModel);
+        MakeTitleBarTransparent = false;
     }
 
     [RelayCommand]
     public async Task OpenBlogViewAsync()
     {
         await RoutingScreen.ShowAsync(blogViewModel);
+        MakeTitleBarTransparent = false;
     }
 
     [RelayCommand]
     public async Task OpenUpdatesViewAsync()
     {
         await RoutingScreen.ShowAsync(updatesViewModel);
+        MakeTitleBarTransparent = false;
     }
 
     [RelayCommand]
     public async Task OpenOptionsViewAsync()
     {
         await RoutingScreen.ShowAsync(optionsViewModel);
+        MakeTitleBarTransparent = false;
     }
 }

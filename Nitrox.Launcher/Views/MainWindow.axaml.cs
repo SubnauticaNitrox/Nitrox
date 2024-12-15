@@ -9,7 +9,6 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
 using ReactiveUI;
-using Serilog;
 
 namespace Nitrox.Launcher.Views;
 

@@ -140,7 +140,7 @@
     </Window.Styles>
 
     <Panel>
-        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />
+        <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Classes.Transparent="{Binding MakeTitleBarTransparent}" />
 
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
 

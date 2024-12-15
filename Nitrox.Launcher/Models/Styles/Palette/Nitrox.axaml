@@ -11,8 +11,8 @@
             <Color x:Key="BrandBorder">#D1D1D1</Color>
             <Color x:Key="BrandControlBackground">#ECECEC</Color>
             <Color x:Key="BrandCheckboxBackground">#D9D9D9</Color>
-            <Color x:Key="BrandPanelBackground">#151516</Color>
-            <Color x:Key="BrandBorderBackground">#1EFFFFFF</Color>
+            <Color x:Key="BrandPanelBackground">#EAEAE9</Color>
+            <Color x:Key="BrandBorderBackground">#b8b8b8</Color>
             <Color x:Key="BrandCaret">#000000</Color>
             <Color x:Key="BrandFocusBorder">#40000000</Color>
             <Color x:Key="BrandSubText">#7F000000</Color>
@@ -36,6 +36,8 @@
             <Color x:Key="BrandBorder">#323232</Color>
             <Color x:Key="BrandControlBackground">#1D1D1D</Color>
             <Color x:Key="BrandCheckboxBackground">#333333</Color>
+            <Color x:Key="BrandPanelBackground">#151516</Color>
+            <Color x:Key="BrandBorderBackground">#474747</Color>
             <Color x:Key="BrandCaret">#FFFFFF</Color>
             <Color x:Key="BrandFocusBorder">#40FFFFFF</Color>
             <Color x:Key="BrandSubText">#7FFFFFFF</Color>
