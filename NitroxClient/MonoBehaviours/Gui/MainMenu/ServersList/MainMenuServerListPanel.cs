@@ -256,7 +256,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
             {
                 Log.Info($"Adding LAN server: {serverEndPoint}");
                 // Add ServerList entry to keep indices in sync with servers UI, to enable removal by index
-                ServerList.Instance.Add(new ServerList.Entry("LAN Server", serverEndPoint.Address.ToString(), serverEndPoint.Port.ToString(), false));
+                ServerList.Instance.Add(new ServerList.Entry("LAN Server", serverEndPoint.Address, serverEndPoint.Port, false));
                 CreateServerButton("LAN Server", serverEndPoint.Address.ToString(), serverEndPoint.Port, true);
             }
         }
