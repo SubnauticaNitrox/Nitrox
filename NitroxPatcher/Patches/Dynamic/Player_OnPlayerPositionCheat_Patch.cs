@@ -12,7 +12,7 @@ public sealed partial class Player_OnPlayerPositionCheat_Patch : NitroxPatch, ID
 
     public static void Prefix(Player __instance)
     {
-        if (__instance.GetCurrentSub() != null)
+        if (__instance.GetCurrentSub())
         {
             Resolve<LocalPlayer>().BroadcastSubrootChange(Optional.Empty);
         }
