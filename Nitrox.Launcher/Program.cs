@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using Avalonia.Svg.Skia;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
@@ -29,6 +30,10 @@ internal static class Program
 
     private static AppBuilder BuildAvaloniaApp()
     {
+        // https://github.com/wieslawsoltes/Svg.Skia?tab=readme-ov-file#avalonia-previewer
+        GC.KeepAlive(typeof(SvgImageExtension).Assembly);
+        GC.KeepAlive(typeof(Avalonia.Svg.Skia.Svg).Assembly);
+
         CultureManager.ConfigureCultureInfo();
         CheckForRunningInstance();
         Log.Setup();
