@@ -26,33 +26,30 @@ public class PersistedPlayerData
     public Dictionary<string, NitroxId> EquippedItems { get; set; } = new Dictionary<string, NitroxId>();
 
     [DataMember(Order = 5)]
-    public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
-
-    [DataMember(Order = 6)]
     public ushort Id { get; set; }
 
-    [DataMember(Order = 7)]
+    [DataMember(Order = 6)]
     public NitroxVector3 SpawnPosition { get; set; }
 
-    [DataMember(Order = 8)]
+    [DataMember(Order = 7)]
     public NitroxQuaternion SpawnRotation { get; set; }
 
-    [DataMember(Order = 9)]
+    [DataMember(Order = 8)]
     public PlayerStatsData CurrentStats { get; set; }
 
-    [DataMember(Order = 10)]
+    [DataMember(Order = 9)]
     public NitroxGameMode GameMode { get; set; }
 
-    [DataMember(Order = 11)]
+    [DataMember(Order = 10)]
     public NitroxId SubRootId { get; set; }
 
-    [DataMember(Order = 12)]
+    [DataMember(Order = 11)]
     public Perms Permissions { get; set; }
 
-    [DataMember(Order = 13)]
+    [DataMember(Order = 12)]
     public NitroxId NitroxId { get; set; }
 
-    [DataMember(Order = 14)]
+    [DataMember(Order = 13)]
     public bool IsPermaDeath { get; set; }
 
     /// <summary>
@@ -81,7 +78,6 @@ public class PersistedPlayerData
                           UsedItems,
                           QuickSlotsBindingIds,
                           EquippedItems,
-                          Modules,
                           PersonalCompletedGoalsWithTimestamp,
                           PlayerPreferences.PingPreferences,
                           PlayerPreferences.PinnedTechTypes);
@@ -95,7 +91,6 @@ public class PersistedPlayerData
             UsedItems = player.UsedItems?.ToList(),
             QuickSlotsBindingIds = player.QuickSlotsBindingIds,
             EquippedItems = new(player.EquippedItems),
-            Modules = player.GetModules(),
             Id = player.Id,
             SpawnPosition = player.Position,
             SpawnRotation = player.Rotation,

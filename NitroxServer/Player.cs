@@ -14,7 +14,6 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        private readonly ThreadSafeList<EquippedItemData> modules;
         private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 
         public ThreadSafeList<NitroxTechType> UsedItems { get; }
@@ -45,7 +44,7 @@ namespace NitroxServer
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
-                      IDictionary<string, NitroxId> equippedItems, IEnumerable<EquippedItemData> modules, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences)
+                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences)
         {
             Id = id;
             Name = name;
@@ -64,7 +63,6 @@ namespace NitroxServer
             UsedItems = new ThreadSafeList<NitroxTechType>(usedItems);
             QuickSlotsBindingIds = quickSlotsBindingIds;
             EquippedItems = new ThreadSafeDictionary<string, NitroxId>(equippedItems);
-            this.modules = new ThreadSafeList<EquippedItemData>(modules);
             visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
             PersonalCompletedGoalsWithTimestamp = new ThreadSafeDictionary<string, float>(personalCompletedGoalsWithTimestamp);
             PingInstancePreferences = new(pingInstancePreferences);
@@ -127,21 +125,6 @@ namespace NitroxServer
         public void ClearVisibleCells()
         {
             visibleCells.Clear();
-        }
-
-        public void AddModule(EquippedItemData module)
-        {
-            modules.Add(module);
-        }
-
-        public void RemoveModule(NitroxId id)
-        {
-            modules.RemoveAll(item => item.ItemId.Equals(id));
-        }
-
-        public List<EquippedItemData> GetModules()
-        {
-            return modules.ToList();
         }
 
         public bool CanSee(Entity entity)
