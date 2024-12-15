@@ -106,7 +106,11 @@ public class WorldPersistenceTest
 
             Assert.IsTrue(playerData.UsedItems.SequenceEqual(playerDataAfter.UsedItems));
             Assert.IsTrue(playerData.QuickSlotsBindingIds.SequenceEqual(playerDataAfter.QuickSlotsBindingIds));
-            Assert.IsTrue(playerData.EquippedItems.SequenceEqual(playerDataAfter.EquippedItems));
+            AssertHelper.IsDictionaryEqual(playerData.EquippedItems, playerDataAfter.EquippedItems, (keyValuePair, keyValuePairAfter) =>
+            {
+                Assert.AreEqual(keyValuePair.Key, keyValuePairAfter.Key);
+                Assert.AreEqual(keyValuePair.Value, keyValuePairAfter.Value);
+            });
 
             Assert.AreEqual(playerData.Id, playerDataAfter.Id);
             Assert.AreEqual(playerData.SpawnPosition, playerDataAfter.SpawnPosition);
