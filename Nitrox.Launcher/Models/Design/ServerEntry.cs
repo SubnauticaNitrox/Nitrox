@@ -1,8 +1,8 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -12,7 +12,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Nitrox.Launcher.Models.Exceptions;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
@@ -174,19 +173,6 @@ public partial class ServerEntry : ObservableObject
         }
         if (await Process.CloseAsync())
         {
-            CancellationTokenSource ctsTimeout = new(TimeSpan.FromSeconds(10));
-            try
-            {
-                while (Process.IsRunning)
-                {
-                    ctsTimeout.Token.ThrowIfCancellationRequested();
-                    await Task.Delay(100, ctsTimeout.Token);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                // ignored
-            }
             IsOnline = false;
             return true;
         }
@@ -253,18 +239,34 @@ public partial class ServerEntry : ObservableObject
 
         public static ServerProcess Start(string saveDir, Action onExited, bool isEmbedded) => new(saveDir, onExited, isEmbedded);
 
+        /// <summary>
+        ///     Tries to close the server gracefully with a timeout of 30 seconds. If it fails, returns false.
+        /// </summary>
         public async Task<bool> CloseAsync()
         {
-            try
+            bool success = false;
+            using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(30));
+            do
             {
-                // TODO: Fix the server to always handle stop command, even when it's still starting up.
-                await SendCommandAsync("stop");
-            }
-            catch (TimeoutException)
-            {
-                // server could be dead, ignore
-            }
+                try
+                {
+                    await SendCommandAsync("stop");
+                    success = true;
+                }
+                catch (TimeoutException)
+                {
+                    // ignored
+                }
+                catch (IOException ex) when (ex.InnerException is SocketException { SocketErrorCode: SocketError.Shutdown })
+                {
+                    // ignored
+                }
+            } while (IsRunning && !ctsCloseTimeout.IsCancellationRequested);
 
+            if (!success || !IsRunning)
+            {
+                return false;
+            }
             Dispose();
             return true;
         }

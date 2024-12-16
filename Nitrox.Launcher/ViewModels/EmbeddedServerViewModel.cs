@@ -76,7 +76,7 @@ public partial class EmbeddedServerViewModel : RoutableViewModelBase
         {
             return;
         }
-        await ServerEntry.Process.SendCommandAsync("stop");
+        await ServerEntry.StopAsync();
     }
 
     [RelayCommand]
