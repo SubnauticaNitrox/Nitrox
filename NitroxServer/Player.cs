@@ -14,8 +14,6 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        private readonly ThreadSafeList<EquippedItemData> equippedItems;
-        private readonly ThreadSafeList<EquippedItemData> modules;
         private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 
         public ThreadSafeList<NitroxTechType> UsedItems { get; }
@@ -39,13 +37,14 @@ namespace NitroxServer
         public ThreadSafeDictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; }
         public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
         public ThreadSafeList<int> PinnedRecipePreferences { get; set; }
+        public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set ;}
 
         public PlayerWorldEntity Entity { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
                       NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, NitroxGameMode gameMode,
                       IEnumerable<NitroxTechType> usedItems, Optional<NitroxId>[] quickSlotsBindingIds,
-                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences)
+                      IDictionary<string, NitroxId> equippedItems, IDictionary<string, float> personalCompletedGoalsWithTimestamp, IDictionary<string, PingInstancePreference> pingInstancePreferences, IList<int> pinnedRecipePreferences)
         {
             Id = id;
             Name = name;
@@ -63,8 +62,7 @@ namespace NitroxServer
             LastStoredSubRootID = Optional.Empty;
             UsedItems = new ThreadSafeList<NitroxTechType>(usedItems);
             QuickSlotsBindingIds = quickSlotsBindingIds;
-            this.equippedItems = new ThreadSafeList<EquippedItemData>(equippedItems);
-            this.modules = new ThreadSafeList<EquippedItemData>(modules);
+            EquippedItems = new ThreadSafeDictionary<string, NitroxId>(equippedItems);
             visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
             PersonalCompletedGoalsWithTimestamp = new ThreadSafeDictionary<string, float>(personalCompletedGoalsWithTimestamp);
             PingInstancePreferences = new(pingInstancePreferences);
@@ -127,36 +125,6 @@ namespace NitroxServer
         public void ClearVisibleCells()
         {
             visibleCells.Clear();
-        }
-
-        public void AddModule(EquippedItemData module)
-        {
-            modules.Add(module);
-        }
-
-        public void RemoveModule(NitroxId id)
-        {
-            modules.RemoveAll(item => item.ItemId.Equals(id));
-        }
-
-        public List<EquippedItemData> GetModules()
-        {
-            return modules.ToList();
-        }
-
-        public void AddEquipment(EquippedItemData equipment)
-        {
-            equippedItems.Add(equipment);
-        }
-
-        public void RemoveEquipment(NitroxId id)
-        {
-            equippedItems.RemoveAll(item => item.ItemId.Equals(id));
-        }
-
-        public List<EquippedItemData> GetEquipment()
-        {
-            return equippedItems.ToList();
         }
 
         public bool CanSee(Entity entity)

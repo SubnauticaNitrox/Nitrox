@@ -57,29 +57,6 @@ public class WorldPersistenceTest
         StoryTimingTest(worldData.WorldData.GameData.StoryTiming, worldDataAfter.WorldData.GameData.StoryTiming);
     }
 
-    private static void ItemDataTest(ItemData itemData, ItemData itemDataAfter)
-    {
-        Assert.AreEqual(itemData.ContainerId, itemDataAfter.ContainerId);
-        Assert.AreEqual(itemData.ItemId, itemDataAfter.ItemId);
-        Assert.IsTrue(itemData.SerializedData.SequenceEqual(itemDataAfter.SerializedData));
-
-        switch (itemData)
-        {
-            case BasicItemData _ when itemDataAfter is BasicItemData _:
-                break;
-            case EquippedItemData equippedItemData when itemDataAfter is EquippedItemData equippedItemDataAfter:
-                Assert.AreEqual(equippedItemData.Slot, equippedItemDataAfter.Slot);
-                Assert.AreEqual(equippedItemData.TechType, equippedItemDataAfter.TechType);
-                break;
-            case PlantableItemData plantableItemData when itemDataAfter is PlantableItemData plantableItemDataAfter:
-                Assert.AreEqual(plantableItemData.PlantedGameTime, plantableItemDataAfter.PlantedGameTime);
-                break;
-            default:
-                Assert.Fail($"Runtime types of {nameof(ItemData)} where not equal");
-                break;
-        }
-    }
-
     private static void PDAStateTest(PDAStateData pdaState, PDAStateData pdaStateAfter)
     {
         Assert.IsTrue(pdaState.KnownTechTypes.SequenceEqual(pdaStateAfter.KnownTechTypes));
@@ -129,8 +106,11 @@ public class WorldPersistenceTest
 
             Assert.IsTrue(playerData.UsedItems.SequenceEqual(playerDataAfter.UsedItems));
             Assert.IsTrue(playerData.QuickSlotsBindingIds.SequenceEqual(playerDataAfter.QuickSlotsBindingIds));
-            AssertHelper.IsListEqual(playerData.EquippedItems.OrderBy(x => x.ItemId), playerDataAfter.EquippedItems.OrderBy(x => x.ItemId), ItemDataTest);
-            AssertHelper.IsListEqual(playerData.Modules.OrderBy(x => x.ItemId), playerDataAfter.Modules.OrderBy(x => x.ItemId), ItemDataTest);
+            AssertHelper.IsDictionaryEqual(playerData.EquippedItems, playerDataAfter.EquippedItems, (keyValuePair, keyValuePairAfter) =>
+            {
+                Assert.AreEqual(keyValuePair.Key, keyValuePairAfter.Key);
+                Assert.AreEqual(keyValuePair.Value, keyValuePairAfter.Value);
+            });
 
             Assert.AreEqual(playerData.Id, playerDataAfter.Id);
             Assert.AreEqual(playerData.SpawnPosition, playerDataAfter.SpawnPosition);
