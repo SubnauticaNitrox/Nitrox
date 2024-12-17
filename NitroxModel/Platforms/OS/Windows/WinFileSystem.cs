@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.Win32;
@@ -12,7 +11,7 @@ namespace NitroxModel.Platforms.OS.Windows
 {
     internal class WinFileSystem : FileSystem
     {
-        public override IEnumerable<string> ExecutableFileExtensions { get; } = new[] { "exe", "cmd", "bat" };
+        public override IEnumerable<string> ExecutableFileExtensions { get; } = ["exe", "cmd", "bat"];
         public override string TextEditor => GetFullPath("notepad.exe");
 
         public override IEnumerable<string> GetDefaultPrograms(string file)
