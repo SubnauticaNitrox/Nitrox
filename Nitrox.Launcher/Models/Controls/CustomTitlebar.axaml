@@ -37,7 +37,7 @@
         </Setter>
 
         <!-- Default template values -->
-        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
+        <Setter Property="Background" Value="Black" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ZIndex" Value="100" />
         <Setter Property="Height" Value="28" />

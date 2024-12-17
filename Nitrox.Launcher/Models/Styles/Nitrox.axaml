@@ -1,7 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+        xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
@@ -52,6 +52,10 @@
 
     <Style Selector="Border">
         <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackground}" />
+    </Style>
+
+    <Style Selector="controls|CustomTitlebar">
+        <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
     </Style>
 
     <Style Selector="Svg.theme">
