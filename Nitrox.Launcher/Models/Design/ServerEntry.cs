@@ -261,7 +261,7 @@ public partial class ServerEntry : ObservableObject
                 }
             } while (IsRunning && !ctsCloseTimeout.IsCancellationRequested);
 
-            if (!IsRunning)
+            if (IsRunning)
             {
                 return false;
             }
