@@ -1,13 +1,13 @@
 using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
-using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using HanumanInstitute.MvvmDialogs;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
@@ -26,6 +26,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly OptionsViewModel optionsViewModel;
     private readonly ServersViewModel serversViewModel;
     private readonly UpdatesViewModel updatesViewModel;
+    private readonly IDialogService dialogService;
 
     [ObservableProperty]
     private string maximizeButtonIcon = "/Assets/Images/material-design-icons/max.png";
@@ -52,7 +53,8 @@ public partial class MainWindowViewModel : ViewModelBase
         CommunityViewModel communityViewModel,
         BlogViewModel blogViewModel,
         UpdatesViewModel updatesViewModel,
-        OptionsViewModel optionsViewModel
+        OptionsViewModel optionsViewModel,
+        IDialogService dialogService
     )
     {
         this.launchGameViewModel = launchGameViewModel;
@@ -62,6 +64,7 @@ public partial class MainWindowViewModel : ViewModelBase
         this.updatesViewModel = updatesViewModel;
         this.optionsViewModel = optionsViewModel;
         this.routingScreen = routingScreen;
+        this.dialogService = dialogService;
 
         this.WhenActivated(disposables =>
         {
@@ -146,5 +149,53 @@ public partial class MainWindowViewModel : ViewModelBase
     public async Task OpenOptionsViewAsync()
     {
         await RoutingScreen.ShowAsync(optionsViewModel);
+    }
+
+    [RelayCommand]
+    public async Task ClosingAsync(WindowClosingEventArgs args)
+    {
+        ServerEntry[] onlineServers = serversViewModel.Servers.Where(s => s.IsOnline).ToArray();
+        if (onlineServers.Length > 0)
+        {
+            DialogBoxViewModel result = await ShowDialogAsync(dialogService, args, "Do you want to stop all online servers?");
+            if (result)
+            {
+                // Closing servers can take a while: hide the main window.
+                MainWindow.Hide();
+                try
+                {
+                    await Task.WhenAll(onlineServers.Select(s => s.StopAsync()));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                }
+            }
+        }
+
+        // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
+        if (args is { Cancel: false, IsProgrammatic: false })
+        {
+            MainWindow.Close();
+        }
+
+        static async Task<DialogBoxViewModel> ShowDialogAsync(IDialogService dialogService, WindowClosingEventArgs args, string title)
+        {
+            // Showing dialogs doesn't work if closing isn't set as 'cancelled'.
+            bool prevCancelFlag = args.Cancel;
+            args.Cancel = true;
+            try
+            {
+                return await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+                {
+                    model.Title = title;
+                    model.ButtonOptions = ButtonOptions.YesNo;
+                });
+            }
+            finally
+            {
+                args.Cancel = prevCancelFlag;
+            }
+        }
     }
 }

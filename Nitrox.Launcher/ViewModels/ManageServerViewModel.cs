@@ -390,9 +390,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     {
         DialogBoxViewModel modalViewModel = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
-            model.Description = $"Are you sure you want to delete the server '{ServerName}'?";
-            model.DescriptionFontSize = 24;
-            model.DescriptionFontWeight = FontWeight.Bold;
+            model.Title = $"Are you sure you want to delete the server '{ServerName}'?";
             model.ButtonOptions = ButtonOptions.YesNo;
         });
         if (!modalViewModel)
@@ -404,7 +402,7 @@ public partial class ManageServerViewModel : RoutableViewModelBase
         {
             Directory.Delete(SaveFolderDirectory, true);
             WeakReferenceMessenger.Default.Send(new SaveDeletedMessage(ServerName));
-            HostScreen.BackAsync();
+            await HostScreen.BackAsync();
         }
         catch (Exception ex)
         {

@@ -18,12 +18,12 @@
         <controls:CustomTitlebar CanMinimize="False" Grid.RowSpan="2" />
         <TextBlock Grid.Row="0" Text="{Binding Title}" Margin="24 20 24 -10"
                    FontWeight="{Binding TitleFontWeight}" FontSize="{Binding TitleFontSize}"
-                   IsVisible="{Binding !Title, Converter={converters:EqualityConverter}}" />
+                   IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="24 20 10 20">
             <SelectableTextBlock Text="{Binding Description, FallbackValue=Dialog Description}" Margin="0 0 14 0"
                                  FontWeight="{Binding DescriptionFontWeight}" FontSize="{Binding DescriptionFontSize}"
-                                 IsVisible="{Binding !Description, Converter={converters:EqualityConverter}}" />
+                                 IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
         </ScrollViewer>
 
         <Border Grid.Row="2" Classes="footer">

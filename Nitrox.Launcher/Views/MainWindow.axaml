@@ -139,6 +139,13 @@
             </Style>
         </Style>
     </Window.Styles>
+    <Interaction.Behaviors>
+        <BehaviorCollection>
+            <EventTriggerBehavior EventName="Closing">
+                <InvokeCommandAction Command="{Binding ClosingCommand}" PassEventArgsToCommand="True" />
+            </EventTriggerBehavior>
+        </BehaviorCollection>
+    </Interaction.Behaviors>
 
     <Panel>
         <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />

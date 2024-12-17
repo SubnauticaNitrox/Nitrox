@@ -244,14 +244,12 @@ public partial class ServerEntry : ObservableObject
         /// </summary>
         public async Task<bool> CloseAsync()
         {
-            bool success = false;
             using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(30));
             do
             {
                 try
                 {
                     await SendCommandAsync("stop");
-                    success = true;
                 }
                 catch (TimeoutException)
                 {
@@ -263,7 +261,7 @@ public partial class ServerEntry : ObservableObject
                 }
             } while (IsRunning && !ctsCloseTimeout.IsCancellationRequested);
 
-            if (!success || !IsRunning)
+            if (!IsRunning)
             {
                 return false;
             }
