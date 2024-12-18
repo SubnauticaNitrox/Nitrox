@@ -14,7 +14,7 @@ public sealed partial class Player_WarpForward_Patch : NitroxPatch, IDynamicPatc
         DevConsole.ParseFloat(n, 0, out num, 3f);
         Vector3 newPosition = __instance.transform.position + __instance.camRoot.GetAimingTransform().forward * num;
 
-        if (__instance.currentMountedVehicle == null)
+        if (!__instance.currentMountedVehicle)
         {
             return true;
         }

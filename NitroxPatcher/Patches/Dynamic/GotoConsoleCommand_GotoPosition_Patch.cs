@@ -15,7 +15,7 @@ public sealed partial class GotoConsoleCommand_GotoPosition_Patch : NitroxPatch,
         {
             return true; // Normal GoTo behaviour if not in vehicle
         }
-        currentMountedVehicle.TeleportVehicle(position, currentMountedVehicle.transform.rotation); // handle GoTo with a vehicle teleport, which takes player too
+        currentMountedVehicle.TeleportVehicle(position, currentMountedVehicle.transform.rotation); // Handle GoTo with a vehicle teleport, which takes player too
         return false;
     }
 }
