@@ -21,7 +21,7 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
             if (subRoot.isCyclops)
             {
                 // Reversing calculations from PlayerMovementBroadcaster.Update()
-                Vector3 position = subRoot.transform.rotation * packet.DestinationTo.ToUnity() + subRoot.transform.position;
+                Vector3 position = (subRoot.transform.rotation * packet.DestinationTo.ToUnity()) + subRoot.transform.position;
 
                 Player.main.SetPosition(position);
                 Player.main.SetCurrentSub(subRoot);
