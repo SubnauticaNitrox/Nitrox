@@ -56,7 +56,7 @@
                 </StackPanel.Styles>
                 <Button Classes="primary" Command="{Binding SendServerCommand}" CommandParameter="{Binding #ServerCommandTextBox}"
                         HotKey="Enter" Cursor="Hand" ToolTip.Tip="Send command">
-                    <Svg Path="/Assets/Icons/send.svg" />
+                    <Svg Height="20" Classes="theme" Path="/Assets/Icons/send.svg" />
                 </Button>
                 <Button Classes="abort" Command="{Binding StopServerCommand}" CommandParameter="{Binding #ServerCommandTextBox}"
                         Cursor="Hand" ToolTip.Tip="Stop the server">
