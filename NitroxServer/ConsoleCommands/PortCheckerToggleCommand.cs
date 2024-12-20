@@ -7,7 +7,7 @@ using NitroxServer.ConsoleCommands.Abstract.Type;
 namespace NitroxServer.ConsoleCommands;
 public class PortCheckerToggleCommand : Command
 {
-    public PortCheckerToggleCommand() : base("toggleportchecker", Perms.CONSOLE, "Enable the port forwarding tester")
+    public PortCheckerToggleCommand() : base("toggleportchecker", Perms.CONSOLE, "Enable/Disable the port forwarding tester")
     {
         
     }
