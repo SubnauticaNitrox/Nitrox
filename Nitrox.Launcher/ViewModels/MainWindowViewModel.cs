@@ -40,7 +40,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private IRoutingScreen routingScreen;
 
     [ObservableProperty]
-    private RoutableViewModelBase activeViewModel;
+    private object activeViewModel;
 
     public MainWindowViewModel()
     {

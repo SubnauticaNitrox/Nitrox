@@ -212,10 +212,7 @@
                     <design:MultiDataTemplate>
                         <!-- Null view (which will be a string, see TargetNullValue) -->
                         <DataTemplate x:DataType="system:String">
-                            <TextBlock Text="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" />
-                        </DataTemplate>
-                        <DataTemplate x:DataType="vm:LoadingViewModel">
-                            <views:LoadingView />
+                            <TextBox Text="Content is loading.. please wait" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:LaunchGameViewModel">
                             <views:LaunchGameView />

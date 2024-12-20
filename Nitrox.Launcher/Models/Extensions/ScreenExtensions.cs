@@ -26,10 +26,10 @@ public static class ScreenExtensions
         }
         // When navigating away from a view in an async button command, busy states on buttons should also reset. Otherwise, when navigating back it would still show buttons being busy.
         NitroxAttached.AsyncCommandButtonTagger.Clear();
-        if (screen.ActiveViewModel is not null and not LoadingViewModel)
+        if (screen.ActiveViewModel is RoutableViewModelBase routableViewModelBase)
         {
             navigationStack.RemoveAllFast(screen.ActiveViewModel, (item, param) => item.GetType() == param.GetType());
-            navigationStack.Add(screen.ActiveViewModel);
+            navigationStack.Add(routableViewModelBase);
         }
         Stopwatch sw = Stopwatch.StartNew();
         Task contentLoadTask = routableViewModel.ViewContentLoadAsync();
@@ -37,7 +37,7 @@ public static class ScreenExtensions
         await Task.Delay(50);
         if (!contentLoadTask.IsCompleted)
         {
-            screen.ActiveViewModel = new LoadingViewModel();
+            screen.ActiveViewModel = "Content is loading.. please wait";
             await Task.Delay((int)Math.Max(0, 500 - sw.Elapsed.TotalMilliseconds));
         }
         await contentLoadTask;
