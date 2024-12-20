@@ -7,21 +7,20 @@ using NitroxServer.ConsoleCommands.Abstract.Type;
 namespace NitroxServer.ConsoleCommands;
 public class PortCheckerToggleCommand : Command
 {
-    PortCheckerSupport packetLayer;
-    public PortCheckerToggleCommand() : base("toggleportchecker", Perms.ADMIN, PermsFlag.NO_CONSOLE, "Enable the port forwarding tester")
+    public PortCheckerToggleCommand() : base("toggleportchecker", Perms.CONSOLE, "Enable the port forwarding tester")
     {
         
     }
 
     protected override void Execute(CallArgs args)
     {
-        Log.Info("Command executed");
-        if (packetLayer.active)
+        Log.Info("Togggled port checker " + (!PortCheckerSupport.active).ToString());
+        if (PortCheckerSupport.active)
         {
-            packetLayer.Deactivate();
+            PortCheckerSupport.active = false;
             return;
         }
-        packetLayer.Activate();
+        PortCheckerSupport.active = true;
         return;
     }
 }
