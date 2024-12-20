@@ -21,9 +21,7 @@ public class PortCheckerSupport : PacketLayerBase
         if (active)
         {
             Log.Info("Incoming packet");
-            UdpClient client = new();
-            client.Send(data, length, endPoint);
-            client.Dispose();
+            netManager.SendUnconnectedMessage(data, endPoint);
         }
         
     }
