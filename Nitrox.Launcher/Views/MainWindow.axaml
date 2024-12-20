@@ -8,6 +8,7 @@
         xmlns:views="clr-namespace:Nitrox.Launcher.Views"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
+        xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -16,12 +17,7 @@
         MinWidth="800" MinHeight="600"
         WindowStartupLocation="CenterScreen">
     <Design.DataContext>
-        <vm:MainWindowViewModel>
-            <vm:MainWindowViewModel.Notifications>
-                <design:NotificationItem Message="Something bad happened :(" Type="Error" />
-                <design:NotificationItem Message="You're in design mode :)" />
-            </vm:MainWindowViewModel.Notifications>
-        </vm:MainWindowViewModel>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
     <Window.Styles>
         <Style Selector="Border.nav">
@@ -39,25 +35,26 @@
                 <Setter Property="Opacity" Value="0.5" />
             </Style>
 
-            <Style Selector="^ Button">
-                <Setter Property="CornerRadius" Value="0" />
-                <Setter Property="BorderThickness" Value="0" />
+            <Style Selector="^ RadioButton">
+                <Setter Property="GroupName" Value="nav" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="Padding" Value="34 10 10 10" />
-                <!-- Scale button to max horizontal so user can more easily click the navigation. -->
+                <!-- Scale to max horizontal so user can more easily click the navigation. -->
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="Cursor" Value="Hand" />
-                <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Opacity" Value="0.7" />
                 <Setter Property="ToolTip.Placement" Value="Pointer" />
-                <Setter Property="HorizontalContentAlignment" Value="Left" />
-
-                <Style Selector="^ StackPanel">
-                    <Setter Property="Spacing" Value="10" />
-                </Style>
-
-                <Style Selector="^ TextBlock">
-                    <Setter Property="FontSize" Value="16" />
-                </Style>
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel HorizontalAlignment="Stretch" Background="{TemplateBinding Background}">
+                            <StackPanel Orientation="Horizontal" Margin="{TemplateBinding Padding}" Spacing="10">
+                                <Image Source="{TemplateBinding Tag, Converter={converters:BitmapAssetValueConverter}}" />
+                                <TextBlock Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" />
+                            </StackPanel>
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
 
                 <Style Selector="^ Image">
                     <Setter Property="Width" Value="24" />
@@ -66,7 +63,7 @@
                     <Setter Property="VerticalAlignment" Value="Center" />
                 </Style>
 
-                <Style Selector="^[(design|NitroxAttached.Selected)=True]">
+                <Style Selector="^[IsChecked=True]">
                     <Setter Property="Opacity" Value="1" />
                     <Setter Property="FontWeight" Value="Bold" />
                 </Style>
@@ -151,62 +148,28 @@
         <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" Opacity="0.6" />
 
         <Grid ColumnDefinitions="274,*" RowDefinitions="*">
-
-            <!-- Left side -->
+            <!-- Navigation (left side) -->
             <Border Grid.Column="0" Classes="nav">
                 <Grid RowDefinitions="80,*">
-                    <!-- The "NITROX" header. -->
                     <TextBlock Classes="header">NITROX</TextBlock>
-                    <!-- Navigation items -->
                     <Panel Grid.Row="1">
                         <StackPanel Classes="nav">
                             <TextBlock Classes="subheader">PLAY</TextBlock>
-                            <Button Command="{Binding OpenLaunchGameViewCommand}" ToolTip.Tip="Play game" design:NitroxAttached.Selected="True" x:Name="OpenLaunchGameViewButton">
-                                <StackPanel>
-                                    <Image Source="/Assets/Images/tabs-icons/play.png" />
-                                    <TextBlock Text="Play game" />
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding OpenServersViewCommand}" ToolTip.Tip="Configure and start servers">
-                                <StackPanel>
-                                    <Image Source="/Assets/Images/tabs-icons/server.png" />
-                                    <TextBlock Text="Servers" />
-                                </StackPanel>
-                            </Button>
+                            <RadioButton Content="Play game" Tag="/Assets/Images/tabs-icons/play.png" Command="{Binding OpenLaunchGameViewCommand}" ToolTip.Tip="Play game" IsChecked="True" />
+                            <RadioButton Content="Servers" Tag="/Assets/Images/tabs-icons/server.png" Command="{Binding OpenServersViewCommand}" ToolTip.Tip="Configure and start servers" />
                             <TextBlock Classes="subheader">EXPLORE</TextBlock>
-                            <Button Command="{Binding OpenCommunityViewCommand}" ToolTip.Tip="Join Nitrox community">
-                                <StackPanel>
-                                    <Image Source="/Assets/Images/tabs-icons/community.png" />
-                                    <TextBlock Text="Community" />
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding OpenBlogViewCommand}" ToolTip.Tip="Read latest news from the Dev Blog">
-                                <StackPanel>
-                                    <Image Source="/Assets/Images/tabs-icons/blog.png" />
-                                    <TextBlock Text="Blog" />
-                                </StackPanel>
-                            </Button>
+                            <RadioButton Content="Community" Tag="/Assets/Images/tabs-icons/community.png" Command="{Binding OpenCommunityViewCommand}" ToolTip.Tip="Join Nitrox community" />
+                            <RadioButton Content="Blog" Tag="/Assets/Images/tabs-icons/blog.png" Command="{Binding OpenBlogViewCommand}" ToolTip.Tip="Read latest news from the Dev Blog" />
                         </StackPanel>
-                        <!-- Footer navigation items -->
                         <StackPanel Classes="nav" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                            <Button Command="{Binding OpenUpdatesViewCommand}" ToolTip.Tip="Check latest updates from Nitrox">
-                                <StackPanel>
-                                    <Image Source="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}" />
-                                    <TextBlock Text="Updates" />
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding OpenOptionsViewCommand}" ToolTip.Tip="Configure your Nitrox setup">
-                                <StackPanel>
-                                    <Image Source="/Assets/Images/tabs-icons/options.png" />
-                                    <TextBlock Text="Options" />
-                                </StackPanel>
-                            </Button>
+                            <RadioButton Content="Updates" Tag="{Binding UpdateAvailableOrUnofficial, Converter={converters:BoolToIconConverter True='/Assets/Images/tabs-icons/update-available.png', False='/Assets/Images/tabs-icons/update.png'}}" Command="{Binding OpenUpdatesViewCommand}" ToolTip.Tip="Check latest updates from Nitrox" />
+                            <RadioButton Content="Options" Tag="/Assets/Images/tabs-icons/options.png" Command="{Binding OpenOptionsViewCommand}" ToolTip.Tip="Configure your Nitrox setup" />
                         </StackPanel>
                     </Panel>
                 </Grid>
             </Border>
 
-            <!-- Right side -->
+            <!-- Navigated content (right side) -->
             <ContentControl Grid.Column="1" Classes="content" Content="{Binding ActiveViewModel, TargetNullValue='No view set. You should not see this message.'}">
                 <ContentControl.ContentTemplate>
                     <design:MultiDataTemplate>

@@ -46,18 +46,14 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>
         return bitmap;
     }
 
-    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value == null)
+    public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value switch
         {
-            return null;
-        }
-        if (value is not string rawUri || !targetType.IsAssignableFrom(typeof(Bitmap)))
-        {
-            throw new NotSupportedException();
-        }
-        return GetBitmapFromPath(rawUri);
-    }
+            null => null,
+            Bitmap when targetType.IsAssignableFrom(typeof(Bitmap)) => value,
+            string s when targetType.IsAssignableFrom(typeof(Bitmap)) => GetBitmapFromPath(s),
+            _ => throw new NotSupportedException()
+        };
 
     private static Bitmap TryLoadFromLocalFileSystem(string fileUri)
     {

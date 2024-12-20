@@ -53,9 +53,8 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}">
-                    <Grid ColumnDefinitions="20,*">
+                    <StackPanel Orientation="Horizontal">
                         <Grid Height="32" VerticalAlignment="Top">
-
                             <Ellipse Name="OuterEllipse"
                                      Width="20"
                                      Height="20"
@@ -63,7 +62,6 @@
                                      Stroke="{TemplateBinding Foreground}"
                                      StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                      UseLayoutRounding="False" />
-
                             <Ellipse Name="CheckOuterEllipse"
                                      Width="20"
                                      Height="20"
@@ -72,7 +70,6 @@
                                      Stroke="{DynamicResource RadioButtonOuterEllipseCheckedStroke}"
                                      StrokeThickness="{DynamicResource RadioButtonBorderThemeThickness}"
                                      UseLayoutRounding="False" />
-
                             <Ellipse Name="CheckGlyph"
                                      Width="8"
                                      Height="8"
@@ -80,11 +77,9 @@
                                      Opacity="0"
                                      Stroke="{DynamicResource RadioButtonCheckGlyphStroke}"
                                      UseLayoutRounding="False" />
-
                         </Grid>
 
                         <ContentPresenter Name="PART_ContentPresenter"
-                                          Grid.Column="1"
                                           Margin="{TemplateBinding Padding}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -92,7 +87,7 @@
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           Foreground="{TemplateBinding Foreground}"
                                           RecognizesAccessKey="True" />
-                    </Grid>
+                    </StackPanel>
                 </Border>
             </ControlTemplate>
         </Setter>

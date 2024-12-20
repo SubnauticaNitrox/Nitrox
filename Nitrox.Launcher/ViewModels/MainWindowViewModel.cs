@@ -154,7 +154,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     public async Task ClosingAsync(WindowClosingEventArgs args)
     {
-        ServerEntry[] onlineServers = serversViewModel.Servers.Where(s => s.IsOnline).ToArray();
+        ServerEntry[] onlineServers = serversViewModel?.Servers.Where(s => s.IsOnline).ToArray() ?? [];
         if (onlineServers.Length > 0)
         {
             DialogBoxViewModel result = await ShowDialogAsync(dialogService, args, "Do you want to stop all online servers?");

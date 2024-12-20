@@ -1,6 +1,7 @@
 using System.Windows.Input;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ReactiveUI;
 
@@ -23,6 +24,6 @@ public partial class NotificationItem : ObservableObject
     {
         Message = message;
         Type = type;
-        CloseCommand = closeCommand ?? ReactiveCommand.Create(() => WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(this)));
+        CloseCommand = closeCommand ?? new RelayCommand(() => WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(this)));
     }
 }

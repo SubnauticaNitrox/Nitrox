@@ -52,18 +52,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 SystemDecorations = SystemDecorations.Full;
                 NitroxAttached.SetUseCustomTitleBar(this, false);
             }
-            
-            // Set clicked nav item as selected (and deselect the others).
-            Button lastClickedNav = OpenLaunchGameViewButton;
-            d(Button.ClickEvent.Raised.Subscribe(args =>
-            {
-                if (args.Item2 is { Source: Button btn } && btn.Parent?.Classes.Contains("nav") == true && btn.GetValue(NitroxAttached.SelectedProperty) == false)
-                {
-                    lastClickedNav?.SetValue(NitroxAttached.SelectedProperty, false);
-                    lastClickedNav = btn;
-                    btn.SetValue(NitroxAttached.SelectedProperty, true);
-                }
-            }));
+
             d(PointerPressedEvent.Raised.Subscribe(args =>
             {
                 if (args.Item2 is { Handled: false, Source: Control { Tag: string url } control } && control.Classes.Contains("link"))
