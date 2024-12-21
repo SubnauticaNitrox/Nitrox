@@ -1,4 +1,5 @@
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace NitroxModel.Discovery;
 
@@ -9,6 +10,10 @@ public static class GameInstallationHelper
         if (string.IsNullOrWhiteSpace(path))
         {
             return false;
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return File.Exists(Path.Combine(path, "MacOS", gameInfo.ExeName));
         }
         return File.Exists(Path.Combine(path, gameInfo.ExeName));
     }

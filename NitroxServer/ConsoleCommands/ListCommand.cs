@@ -2,18 +2,18 @@
 using System.Linq;
 using System.Text;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class ListCommand : Command
     {
         private readonly PlayerManager playerManager;
-        private readonly ServerConfig serverConfig;
+        private readonly SubnauticaServerConfig serverConfig;
 
-        public ListCommand(ServerConfig serverConfig, PlayerManager playerManager) : base("list", Perms.PLAYER, "Shows who's online")
+        public ListCommand(SubnauticaServerConfig serverConfig, PlayerManager playerManager) : base("list", Perms.PLAYER, "Shows who's online")
         {
             this.playerManager = playerManager;
             this.serverConfig = serverConfig;

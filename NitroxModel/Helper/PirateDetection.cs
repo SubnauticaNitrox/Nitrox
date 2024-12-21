@@ -42,7 +42,7 @@ namespace NitroxModel.Helper
 
         private static bool IsPirateByDirectory(string subnauticaRoot)
         {
-            string subdirDll = Path.Combine(subnauticaRoot, "Subnautica_Data", "Plugins", "x86_64", "steam_api64.dll");
+            string subdirDll = Path.Combine(subnauticaRoot, GameInfo.Subnautica.DataFolder, "Plugins", "x86_64", "steam_api64.dll");
             if (File.Exists(subdirDll) && !FileSystem.Instance.IsTrustedFile(subdirDll))
             {
                 return true;
