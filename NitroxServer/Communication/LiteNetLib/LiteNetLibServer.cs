@@ -21,9 +21,7 @@ public class LiteNetLibServer : NitroxServer
     public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
     {
         listener = new EventBasedNetListener();
-        PortCheckerSupport portChecker = new PortCheckerSupport();
-        server = new NetManager(listener, portChecker);
-        portChecker.netManager = server;
+        server = new NetManager(listener, new PortCheckerSupport());
     }
 
     public override bool Start()
