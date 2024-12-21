@@ -64,26 +64,33 @@
                 </StackPanel>
             </Grid>
 
-            <ScrollViewer HorizontalAlignment="Center" Height="175" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                <ItemsControl ItemsSource="{Binding GalleryImageSources, Mode=OneTime}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="12" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Width="282" CornerRadius="12">
-                                <Border.Background>
-                                    <ImageBrush Stretch="UniformToFill" Source="{Binding .}" />
-                                </Border.Background>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <!-- TODO: Fix height of the Viewbox not changing correctly -->
+                <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <ItemsControl ItemsSource="{Binding GalleryImageSources, Mode=OneTime}">
+            
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="12" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+            
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="12"
+                                        ClipToBounds="True">
+                                    <Panel HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Stretch"
+                                           Width="282"
+                                           Height="175">
+                                        <Image Stretch="UniformToFill" Source="{Binding .}" />
+                                    </Panel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+            
+                    </ItemsControl>
+                </Viewbox>
             </ScrollViewer>
 
             <StackPanel Orientation="Vertical">
