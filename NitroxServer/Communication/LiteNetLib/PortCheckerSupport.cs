@@ -20,7 +20,9 @@ public class PortCheckerSupport : PacketLayerBase
     {
         if (active)
         {
-            Log.Info("Incoming packet");
+            Log.Warn("WARNING: Port Checker must be disabled to allow players to join the server");
+            byte[] datacopy = data;
+            data = [];
             netManager.SendUnconnectedMessage(data, endPoint);
         }
         
