@@ -225,10 +225,10 @@
                                 Classes.error="{Binding Type, Converter={converters:EqualityConverter}, ConverterParameter={x:Static NotificationType.Error}}"
                                 Margin="5" Padding="5 10 10 10" MinHeight="60" CornerRadius="5">
                             <Grid ColumnDefinitions="50,*,20">
-                                <Svg Grid.Column="0" Classes="icon" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" />
+                                <Svg Grid.Column="0" Classes="theme icon" Width="25" VerticalAlignment="Center" Margin="0 0 5 0" />
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Message}" />
                                 <Button Classes="anycontent" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseCommand}">
-                                    <Svg Width="10" VerticalAlignment="Top" Path="/Assets/Icons/close.svg" />
+                                    <Svg Width="10" Classes="theme" VerticalAlignment="Top" Path="/Assets/Icons/close.svg" />
                                 </Button>
                             </Grid>
                         </Border>

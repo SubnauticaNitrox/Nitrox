@@ -271,7 +271,7 @@ public partial class ServerEntry : ObservableObject
 
         public async Task SendCommandAsync(string command)
         {
-            if (!IsRunning)
+            if (!IsRunning || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }
