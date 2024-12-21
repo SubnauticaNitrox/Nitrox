@@ -14,13 +14,7 @@ public class PortCheckerToggleCommand : Command
 
     protected override void Execute(CallArgs args)
     {
-        Log.Info("Togggled port checker " + (!PortCheckerSupport.active).ToString());
-        if (PortCheckerSupport.active)
-        {
-            PortCheckerSupport.active = false;
-            return;
-        }
-        PortCheckerSupport.active = true;
-        return;
+        PortCheckerSupport.active = !PortCheckerSupport.active;
+        Log.Info("Togggled port checker " + PortCheckerSupport.active);
     }
 }
