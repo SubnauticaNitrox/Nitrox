@@ -3,15 +3,20 @@ using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 
-public class PlantableMetadataExtractor : EntityMetadataExtractor<Plantable, PlantableMetadata>
+public class PlantableMetadataExtractor(FruitPlantMetadataExtractor fruitPlantMetadataExtractor) : EntityMetadataExtractor<Plantable, PlantableMetadata>
 {
-    public override PlantableMetadata Extract(Plantable entity)
+    private readonly FruitPlantMetadataExtractor fruitPlantMetadataExtractor = fruitPlantMetadataExtractor;
+
+    public override PlantableMetadata Extract(Plantable plantable)
     {
-        GrowingPlant growingPlant = entity.growingPlant;
+        PlantableMetadata metadata = new(plantable.growingPlant ? plantable.growingPlant.timeStartGrowth : 0, plantable.GetSlotID());
 
-        // The growing plant will only spawn in the proper container. In other containers, just consider progress as 0.
-        float progress = (growingPlant != null) ? growingPlant.GetProgress() : 0; 
+        // TODO: Refer to the TODO in PlantableMetadata
+        if (plantable.linkedGrownPlant && plantable.linkedGrownPlant.TryGetComponent(out FruitPlant fruitPlant))
+        {
+            metadata.FruitPlantMetadata = fruitPlantMetadataExtractor.Extract(fruitPlant);
+        }
 
-        return new(progress);
+        return metadata;
     }
 }
