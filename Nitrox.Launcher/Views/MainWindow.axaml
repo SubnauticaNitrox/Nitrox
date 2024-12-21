@@ -175,7 +175,7 @@
                     <design:MultiDataTemplate>
                         <!-- Null view (which will be a string, see TargetNullValue) -->
                         <DataTemplate x:DataType="system:String">
-                            <TextBox Text="Content is loading.. please wait" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" />
+                            <TextBox Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:LaunchGameViewModel">
                             <views:LaunchGameView />
