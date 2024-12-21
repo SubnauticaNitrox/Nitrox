@@ -41,7 +41,8 @@ internal static class Program
         AppBuilder builder = AppBuilder.Configure<App>()
                                        .UsePlatformDetect()
                                        .LogToTrace()
-                                       .UseReactiveUI();
+                                       .UseReactiveUI()
+                                       .With(new SkiaOptions { UseOpacitySaveLayer = true });
         builder = WithRenderingMode(builder, Environment.GetCommandLineArgs());
         return builder;
         
