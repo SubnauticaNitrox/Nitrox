@@ -245,21 +245,20 @@ public partial class ServerEntry : ObservableObject
         public async Task<bool> CloseAsync()
         {
             using CancellationTokenSource ctsCloseTimeout = new(TimeSpan.FromSeconds(30));
-            do
+            try
             {
-                try
+                do
                 {
-                    await SendCommandAsync("stop");
-                }
-                catch (TimeoutException)
-                {
-                    // ignored
-                }
-                catch (IOException ex) when (ex.InnerException is SocketException { SocketErrorCode: SocketError.Shutdown })
-                {
-                    // ignored
-                }
-            } while (IsRunning && !ctsCloseTimeout.IsCancellationRequested);
+                    if (!await SendCommandAsync("stop"))
+                    {
+                        await Task.Delay(100, ctsCloseTimeout.Token);
+                    }
+                } while (IsRunning && !ctsCloseTimeout.IsCancellationRequested);
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
+            }
 
             if (IsRunning)
             {
@@ -269,21 +268,34 @@ public partial class ServerEntry : ObservableObject
             return true;
         }
 
-        public async Task SendCommandAsync(string command)
+        public async Task<bool> SendCommandAsync(string command)
         {
             if (!IsRunning || string.IsNullOrWhiteSpace(command))
             {
-                return;
+                return false;
             }
 
-            commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous);
-            if (!commandStream.IsConnected)
+            try
             {
-                await commandStream.ConnectAsync(5000);
+                commandStream ??= new NamedPipeClientStream(".", $"Nitrox Server {serverProcess.Id}", PipeDirection.Out, PipeOptions.Asynchronous);
+                if (!commandStream.IsConnected)
+                {
+                    await commandStream.ConnectAsync(5000);
+                }
+                byte[] commandBytes = Encoding.UTF8.GetBytes(command);
+                await commandStream.WriteAsync(BitConverter.GetBytes((uint)commandBytes.Length));
+                await commandStream.WriteAsync(commandBytes);
+                return true;
             }
-            byte[] commandBytes = Encoding.UTF8.GetBytes(command);
-            await commandStream.WriteAsync(BitConverter.GetBytes((uint)commandBytes.Length));
-            await commandStream.WriteAsync(commandBytes);
+            catch (TimeoutException)
+            {
+                // ignored
+            }
+            catch (IOException)
+            {
+                // ignored - "broken pipe" or "socket shutdown"
+            }
+            return false;
         }
 
         public void Dispose()
