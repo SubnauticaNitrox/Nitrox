@@ -18,7 +18,7 @@ public class PortCheckerSupport : PacketLayerBase
         {
             Log.Warn("WARNING: Port Checker must be disabled to allow players to join the server");
             byte[] datacopy = (byte[])data.Clone();
-            data = [];
+            length = 0; // Set length to 0 so NetManager stops processing packet immediately
             udpClient.Send(datacopy, datacopy.Length, endPoint);
         }
         
