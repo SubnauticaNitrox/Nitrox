@@ -175,7 +175,7 @@
                     <design:MultiDataTemplate>
                         <!-- Null view (which will be a string, see TargetNullValue) -->
                         <DataTemplate x:DataType="system:String">
-                            <TextBox Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
+                            <TextBox Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" IsReadOnly="True" IsHitTestVisible="False" Focusable="False" />
                         </DataTemplate>
                         <DataTemplate x:DataType="vm:LaunchGameViewModel">
                             <views:LaunchGameView />

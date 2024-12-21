@@ -23,6 +23,11 @@ public class ProcessEx : IDisposable
     public IntPtr MainWindowHandle => implementation.MainWindowHandle;
     public string MainWindowTitle => implementation.MainWindowTitle;
 
+    /// <summary>
+    ///     True if process is running and in a recoverable state.
+    /// </summary>
+    public bool IsRunning => implementation.IsRunning;
+
     public ProcessEx(int pid)
     {
         implementation = ProcessExFactory.Create(pid);
@@ -58,7 +63,7 @@ public class ProcessEx : IDisposable
             FileName = fileName,
             WorkingDirectory = workingDirectory,
             UseShellExecute = false,
-            CreateNoWindow = !createWindow,
+            CreateNoWindow = !createWindow
         };
 
         if (environmentVariables != null)
@@ -76,41 +81,6 @@ public class ProcessEx : IDisposable
 
         Process process = Process.Start(startInfo);
         return new ProcessEx(process);
-    }
-
-    public byte[] ReadMemory(IntPtr address, int size)
-    {
-        return implementation.ReadMemory(address, size);
-    }
-
-    public int WriteMemory(IntPtr address, byte[] data)
-    {
-        return implementation.WriteMemory(address, data);
-    }
-
-    public IEnumerable<ProcessModuleEx> GetModules()
-    {
-        return implementation.GetModules();
-    }
-
-    public void Suspend()
-    {
-        implementation.Suspend();
-    }
-
-    public void Resume()
-    {
-        implementation.Resume();
-    }
-
-    public void Terminate()
-    {
-        implementation.Terminate();
-    }
-
-    public void Dispose()
-    {
-        implementation.Dispose();
     }
 
     public static ProcessEx GetFirstProcess(string procName, Func<ProcessEx, bool> predicate = null)
@@ -137,6 +107,20 @@ public class ProcessEx : IDisposable
 
         return found;
     }
+
+    public byte[] ReadMemory(IntPtr address, int size) => implementation.ReadMemory(address, size);
+
+    public int WriteMemory(IntPtr address, byte[] data) => implementation.WriteMemory(address, data);
+
+    public IEnumerable<ProcessModuleEx> GetModules() => implementation.GetModules();
+
+    public void Suspend() => implementation.Suspend();
+
+    public void Resume() => implementation.Resume();
+
+    public void Terminate() => implementation.Terminate();
+
+    public void Dispose() => implementation.Dispose();
 }
 
 public abstract class ProcessExBase : IDisposable
@@ -149,12 +133,23 @@ public abstract class ProcessExBase : IDisposable
     public virtual string MainModuleFileName => Process?.MainModule?.FileName;
     public virtual IntPtr MainWindowHandle => Process?.MainWindowHandle ?? IntPtr.Zero;
     public virtual string MainWindowTitle => Process?.MainWindowTitle;
-    public abstract byte[] ReadMemory(IntPtr address, int size);
-    public abstract int WriteMemory(IntPtr address, byte[] data);
-    public abstract IEnumerable<ProcessModuleEx> GetModules();
-    public abstract void Suspend();
-    public abstract void Resume();
-    public abstract void Terminate();
+
+    public virtual bool IsRunning
+    {
+        get
+        {
+            if (Process == null)
+            {
+                return true;
+            }
+            Process.Refresh();
+            if (!Process.HasExited || Process.Responding)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
 
     protected ProcessExBase(int id)
     {
@@ -168,17 +163,24 @@ public abstract class ProcessExBase : IDisposable
         }
     }
 
+    public abstract byte[] ReadMemory(IntPtr address, int size);
+    public abstract int WriteMemory(IntPtr address, byte[] data);
+    public abstract IEnumerable<ProcessModuleEx> GetModules();
+    public abstract void Suspend();
+    public abstract void Resume();
+    public abstract void Terminate();
+
     public static bool IsElevated()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             return WindowsProcessEx.IsElevated();
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             return LinuxProcessEx.IsElevated();
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             return MacOSProcessEx.IsElevated();
         }
@@ -243,7 +245,7 @@ public class WindowsProcessEx : ProcessExBase
         }
     }
 
-    public static new bool IsElevated()
+    public new static bool IsElevated()
     {
         try
         {
@@ -340,10 +342,7 @@ public class WindowsProcessEx : ProcessExBase
         }
     }
 
-    public override void Terminate()
-    {
-        Process.Kill();
-    }
+    public override void Terminate() => Process.Kill();
 
     public override void Dispose()
     {
@@ -397,7 +396,7 @@ public class LinuxProcessEx : ProcessExBase
             {
                 string status = File.ReadAllText($"/proc/{pid}/status");
                 string[] lines = status.Split('\n');
-                return lines.FirstOrDefault(l => l.StartsWith("Name:"))?.Substring(5).Trim();
+                return lines.FirstOrDefault(l => l.StartsWith("Name:", StringComparison.OrdinalIgnoreCase))?.Substring("Name:".Length).Trim();
             }
             catch (UnauthorizedAccessException)
             {
@@ -415,16 +414,42 @@ public class LinuxProcessEx : ProcessExBase
         }
     }
 
-    public override ProcessModuleEx MainModule =>
-            // This is a simplified implementation. You might need to parse /proc/{pid}/maps
-            // to get more accurate information about the main module.
-            new()
+    public override bool IsRunning
+    {
+        get
+        {
+            if (!base.IsRunning)
             {
-                BaseAddress = IntPtr.Zero,
-                ModuleName = Name,
-                FileName = MainModuleFileName,
-                ModuleMemorySize = 0
-            };
+                return false;
+            }
+            try
+            {
+                string[] lines = File.ReadAllLines($"/proc/{pid}/status");
+                string procState = lines.FirstOrDefault(l => l.StartsWith("State:", StringComparison.OrdinalIgnoreCase))?.Substring("State:".Length).Trim();
+                return procState?.FirstOrDefault() switch
+                {
+                    'Z' => false, // Zombie process
+                    _ => true
+                };
+            }
+            catch
+            {
+                // ignored
+            }
+            return false;
+        }
+    }
+
+    public override ProcessModuleEx MainModule =>
+        // This is a simplified implementation. You might need to parse /proc/{pid}/maps
+        // to get more accurate information about the main module.
+        new()
+        {
+            BaseAddress = IntPtr.Zero,
+            ModuleName = Name,
+            FileName = MainModuleFileName,
+            ModuleMemorySize = 0
+        };
 
     public override string MainModuleFileName
     {
@@ -455,10 +480,7 @@ public class LinuxProcessEx : ProcessExBase
         }
     }
 
-    public static new bool IsElevated()
-    {
-        return geteuid() == 0;
-    }
+    public new static bool IsElevated() => geteuid() == 0;
 
     public override byte[] ReadMemory(IntPtr address, int size)
     {
@@ -466,7 +488,7 @@ public class LinuxProcessEx : ProcessExBase
         try
         {
             using FileStream fs = new($"/proc/{pid}/mem", FileMode.Open, FileAccess.Read);
-            fs.Seek((long)address, SeekOrigin.Begin);
+            fs.Seek(address.ToInt64(), SeekOrigin.Begin);
             if (fs.Read(buffer, 0, size) != size)
             {
                 throw new IOException("Failed to read the specified amount of memory.");
@@ -578,30 +600,25 @@ public class LinuxProcessEx : ProcessExBase
 
 public class MacOSProcessEx : ProcessExBase
 {
+    private bool disposed;
     public override IntPtr Handle => IntPtr.Zero;
 
     public override ProcessModuleEx MainModule =>
-            // This is a placeholder implementation. You'll need to use macOS-specific APIs
-            // to get accurate information about the main module.
-            new()
-            {
-                BaseAddress = IntPtr.Zero,
-                ModuleName = Name,
-                FileName = MainModuleFileName,
-                ModuleMemorySize = 0
-            };
-
-    private bool disposed;
+        // This is a placeholder implementation. You'll need to use macOS-specific APIs
+        // to get accurate information about the main module.
+        new()
+        {
+            BaseAddress = IntPtr.Zero,
+            ModuleName = Name,
+            FileName = MainModuleFileName,
+            ModuleMemorySize = 0
+        };
 
     public MacOSProcessEx(int pid) : base(pid)
     {
-
     }
 
-    public static new bool IsElevated()
-    {
-        return geteuid() == 0;
-    }
+    public new static bool IsElevated() => geteuid() == 0;
 
     public override byte[] ReadMemory(IntPtr address, int size)
     {
@@ -609,7 +626,7 @@ public class MacOSProcessEx : ProcessExBase
         GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
         try
         {
-            if (vm_read_overwrite(Handle, address, (IntPtr)size, handle.AddrOfPinnedObject(), out IntPtr _) != 0)
+            if (vm_read_overwrite(Handle, address, new IntPtr(size), handle.AddrOfPinnedObject(), out IntPtr _) != 0)
             {
                 throw new InvalidOperationException("Failed to read process memory.");
             }
@@ -626,7 +643,7 @@ public class MacOSProcessEx : ProcessExBase
         GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         try
         {
-            if (vm_write(Handle, address, handle.AddrOfPinnedObject(), (IntPtr)data.Length) != 0)
+            if (vm_write(Handle, address, handle.AddrOfPinnedObject(), new IntPtr(data.Length)) != 0)
             {
                 throw new InvalidOperationException("Failed to write process memory.");
             }

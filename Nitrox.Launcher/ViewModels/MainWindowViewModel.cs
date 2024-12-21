@@ -105,7 +105,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 UpdateAvailableOrUnofficial = await updatesViewModel.IsNitroxUpdateAvailableAsync();
             });
-            
+
             Disposable.Create(this, vm =>
             {
                 WeakReferenceMessenger.Default.UnregisterAll(vm);

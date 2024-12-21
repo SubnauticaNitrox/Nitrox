@@ -9,7 +9,7 @@ namespace Nitrox.Launcher.Models.Validators;
 /// </summary>
 public sealed class FileNameAttribute : TypedValidationAttribute<string>
 {
-    private static readonly char[] invalidPathCharacters = Path.GetInvalidFileNameChars();
+    internal static readonly char[] InvalidPathCharacters = Path.GetInvalidFileNameChars();
 
     protected override ValidationResult IsValid(string value, ValidationContext context)
     {
@@ -17,10 +17,10 @@ public sealed class FileNameAttribute : TypedValidationAttribute<string>
         {
             return ValidationResult.Success;
         }
-        int indexOfAny = value.IndexOfAny(invalidPathCharacters);
+        int indexOfAny = value.IndexOfAny(InvalidPathCharacters);
         if (indexOfAny > -1)
         {
-            return new ValidationResult($"{context.DisplayName} must not contain '{value[indexOfAny]}'. All invalid characters: {string.Join(' ', invalidPathCharacters.Where(c => c > 31))}");
+            return new ValidationResult($"{context.DisplayName} must not contain '{value[indexOfAny]}'. All invalid characters: {string.Join(' ', InvalidPathCharacters.Where(c => c > 31))}");
         }
 
         return ValidationResult.Success;

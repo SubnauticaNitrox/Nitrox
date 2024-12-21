@@ -17,10 +17,7 @@ public sealed class AppViewLocator : ViewLocatorBase, ReactiveUI.IViewLocator
 
     public AppViewLocator(IServiceProvider serviceProvider)
     {
-        if (serviceProvider is IServiceScope)
-        {
-            AppViewLocator.serviceProvider = serviceProvider;
-        }
+        AppViewLocator.serviceProvider = serviceProvider;
     }
 
     private static MainWindow mainWindow;

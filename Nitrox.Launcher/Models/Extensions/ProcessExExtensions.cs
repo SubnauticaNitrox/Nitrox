@@ -9,6 +9,10 @@ public static class ProcessExExtensions
 {
     public static void SetForegroundWindowAndRestore(this ProcessEx process)
     {
+        if (Avalonia.Controls.Design.IsDesignMode)
+        {
+            return;
+        }
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             WindowsApi.BringProcessToFront(process.MainWindowHandle);

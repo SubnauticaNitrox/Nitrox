@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Threading;
@@ -86,6 +85,6 @@ public partial class UpdatesViewModel : RoutableViewModelBase
     [RelayCommand]
     private void DownloadUpdate()
     {
-        Process.Start(new ProcessStartInfo("https://nitrox.rux.gg/download") { UseShellExecute = true, Verb = "open" })?.Dispose();
+        ProcessUtils.OpenUrl("nitrox.rux.gg/download");
     }
 }

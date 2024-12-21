@@ -19,7 +19,8 @@ namespace NitroxModel.Helper
         private static string appDataPath;
         private static string launcherPath;
         private static string gamePath;
-        private static string currentExecutablePath;
+        private static string executableRootPath;
+        private static string executablePath;
         private static string assetsPath;
 
         private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
@@ -163,21 +164,45 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static string CurrentExecutablePath
+        public static string ExecutableRootPath
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(currentExecutablePath))
+                if (!string.IsNullOrWhiteSpace(executableRootPath))
                 {
-                    return currentExecutablePath;
+                    return executableRootPath;
+                }
+                string exePath = ExecutableFilePath;
+                if (exePath == null)
+                {
+                    return null;
                 }
 
-                // File URI works different on Linux/OSX so just return path directly.
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return executableRootPath = Path.GetDirectoryName(exePath);
+            }
+        }
+
+        public static string ExecutableFilePath
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(executablePath))
                 {
-                    return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory();
+                    return executablePath;
                 }
-                return currentExecutablePath = new Uri(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
+
+                Assembly entryAssembly = Assembly.GetEntryAssembly();
+                if (entryAssembly == null)
+                {
+                    return null;
+                }
+                string path = entryAssembly.Location;
+                // File URI works different on Linux/OSX, so only do uri parsing on Windows.
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    path = new Uri(path).LocalPath;
+                }
+                return executablePath = path;
             }
         }
 
@@ -205,7 +230,7 @@ namespace NitroxModel.Helper
                 }
                 else
                 {
-                    nitroxAssets = LauncherPath ?? CurrentExecutablePath;
+                    nitroxAssets = LauncherPath ?? ExecutableRootPath;
                 }
                 return assetsPath = nitroxAssets;
             }

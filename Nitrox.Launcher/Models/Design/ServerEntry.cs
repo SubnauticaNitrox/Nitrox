@@ -92,6 +92,24 @@ public partial class ServerEntry : ObservableObject
         return result.RefreshFromDirectory(saveDir) ? result : null;
     }
 
+    public static ServerEntry CreateNew(string saveDir, NitroxGameMode saveGameMode)
+    {
+        Directory.CreateDirectory(saveDir);
+        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
+        string fileEnding = "json";
+        if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
+        {
+            fileEnding = "nitrox";
+        }
+
+        File.WriteAllText(Path.Combine(saveDir, $"Version.{fileEnding}"), null);
+        using (config.Update(saveDir))
+        {
+            config.GameMode = saveGameMode;
+        }
+        return FromDirectory(saveDir);
+    }
+
     public bool RefreshFromDirectory(string saveDir)
     {
         if (!File.Exists(Path.Combine(saveDir, "server.cfg")) || !File.Exists(Path.Combine(saveDir, "Version.json")))
@@ -205,10 +223,10 @@ public partial class ServerEntry : ObservableObject
             {
                 serverExeName = "NitroxServer-Subnautica";
             }
-            string serverFile = Path.Combine(NitroxUser.CurrentExecutablePath, serverExeName);
+            string serverFile = Path.Combine(NitroxUser.ExecutableRootPath, serverExeName);
             ProcessStartInfo startInfo = new(serverFile)
             {
-                WorkingDirectory = NitroxUser.CurrentExecutablePath,
+                WorkingDirectory = NitroxUser.ExecutableRootPath,
                 ArgumentList = { "--save", Path.GetFileName(saveDir) },
                 RedirectStandardOutput = captureOutput,
                 WindowStyle = captureOutput ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,

@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -13,7 +11,6 @@ using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Logger;
-using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -51,18 +48,6 @@ public partial class BlogViewModel : RoutableViewModelBase
     [RelayCommand]
     private void BlogEntryClick(string blogUrl)
     {
-        UriBuilder blogUriBuilder = new(blogUrl)
-        {
-            Scheme = Uri.UriSchemeHttps,
-            Port = -1
-        };
-
-        Process.Start(
-            new ProcessStartInfo(blogUriBuilder.Uri.ToString())
-            {
-                UseShellExecute = true,
-                Verb = "open"
-            }
-        )?.Dispose();
+        ProcessUtils.OpenUrl(blogUrl);
     }
 }

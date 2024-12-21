@@ -15,6 +15,9 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel Background="Transparent">
+                    <Border HorizontalAlignment="Left" Padding="5 2">
+                        <TextBlock Text="{Binding $parent[Window].Title}" VerticalAlignment="Stretch" TextAlignment="Center" />
+                    </Border>
                     <StackPanel>
                         <Button Classes.leftOff1="{x:True}" Classes.leftOff2="{x:True}" x:Name="PART_MinimizeButton" IsVisible="{TemplateBinding CanMinimize}" Command="{Binding MinimizeCommand, RelativeSource={RelativeSource TemplatedParent}}">
                             <Svg Classes="theme" Path="/Assets/Icons/minimize.svg" />

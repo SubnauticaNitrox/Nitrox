@@ -85,7 +85,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         return Task.CompletedTask;
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task CreateServerAsync()
     {
         CreateServerViewModel result = await dialogService.ShowAsync<CreateServerViewModel>();
@@ -124,7 +124,7 @@ public partial class ServersViewModel : RoutableViewModelBase
     {
         if (server.IsOnline && server.IsEmbedded)
         {
-            HostScreen.ShowAsync(new EmbeddedServerViewModel(server));
+            await HostScreen.ShowAsync(new EmbeddedServerViewModel(server));
             return;
         }
         if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
@@ -133,7 +133,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         }
 
         manageServerViewModel.LoadFrom(server);
-        HostScreen.ShowAsync(manageServerViewModel);
+        await HostScreen.ShowAsync(manageServerViewModel);
     }
 
     private async Task GetSavesOnDiskAsync()

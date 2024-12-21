@@ -3,10 +3,10 @@ using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels.Abstract;
 using NitroxModel.Helper;
-using NitroxModel.Serialization;
 using NitroxModel.Server;
 
 namespace Nitrox.Launcher.ViewModels;
@@ -41,20 +41,7 @@ public partial class CreateServerViewModel : ModalViewModelBase
     public void CreateEmptySave(string saveName, NitroxGameMode saveGameMode)
     {
         string saveDir = Path.Combine(SavesFolderDir, saveName);
-        Directory.CreateDirectory(saveDir);
-        SubnauticaServerConfig config = SubnauticaServerConfig.Load(saveDir);
-        string fileEnding = "json";
-        if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
-        {
-            fileEnding = "nitrox";
-        }
-
-        File.WriteAllText(Path.Combine(saveDir, $"Version.{fileEnding}"), null);
-
-        using (config.Update(saveDir))
-        {
-            config.GameMode = saveGameMode;
-        }
+        ServerEntry.CreateNew(saveDir, saveGameMode);
     }
 
     [RelayCommand(CanExecute = nameof(CanCreate))]

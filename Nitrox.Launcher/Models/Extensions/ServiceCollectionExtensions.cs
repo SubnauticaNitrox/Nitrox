@@ -38,7 +38,6 @@ public static class ServiceCollectionExtensions
         collection.AddTransient<DialogBoxModal>();
 
         // Views
-        collection.AddSingleton(provider => new MainWindow(provider.GetRequiredService<IDialogService>()) { DataContext = provider.GetRequiredService<MainWindowViewModel>() });
         collection.AddSingleton<LaunchGameView>();
         collection.AddSingleton<OptionsView>();
         collection.AddSingleton<ServersView>();

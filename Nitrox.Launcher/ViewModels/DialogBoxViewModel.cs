@@ -29,7 +29,6 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     [ObservableProperty] private FontWeight descriptionFontWeight = FontWeight.Normal;
 
     [ObservableProperty] private ButtonOptions buttonOptions = ButtonOptions.Ok;
-    private Task copyToClipboardTask;
 
     public KeyGesture OkHotkey { get; } = new(Key.Return);
     public KeyGesture NoHotkey { get; } = new(Key.Escape);
@@ -50,15 +49,9 @@ public partial class DialogBoxViewModel : ModalViewModelBase
         });
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task CopyToClipboard(ContentControl commandControl)
     {
-        if (!copyToClipboardTask?.IsCompleted ?? false)
-        {
-            return;
-        }
-
-
         string text = $"{Title}{Environment.NewLine}{(Description.StartsWith(Title) ? Description[Title.Length..].TrimStart() : Description)}";
         IClipboard clipboard = AppViewLocator.MainWindow.Clipboard;
         if (clipboard != null)
@@ -69,7 +62,7 @@ public partial class DialogBoxViewModel : ModalViewModelBase
             {
                 object previousContent = commandControl.Content;
                 commandControl.Content = "Copied!";
-                copyToClipboardTask = Dispatcher.UIThread.InvokeAsync(async () =>
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     await Task.Delay(3000);
                     commandControl.Content = previousContent;

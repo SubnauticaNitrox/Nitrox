@@ -20,6 +20,7 @@ using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
+using NitroxModel.Server;
 
 namespace Nitrox.Launcher.ViewModels;
 
@@ -141,7 +142,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                     const string PATCHER_DLL_NAME = "NitroxPatcher.dll";
 
                     File.Copy(
-                        Path.Combine(NitroxUser.CurrentExecutablePath ?? "", "lib", "net472", PATCHER_DLL_NAME),
+                        Path.Combine(NitroxUser.ExecutableRootPath ?? "", "lib", "net472", PATCHER_DLL_NAME),
                         Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
                         true
                     );
@@ -183,7 +184,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     }
 
     /// <summary>
-    /// Launch the server and Subnautica (for each given player name) if the --instantlaunch argument is present.
+    /// Launch the server and Subnautica (for each given player name) if the --instant-launch argument is present.
     /// </summary>
     [Conditional("DEBUG")]
     private void HandleInstantLaunchForDevelopment()
@@ -193,40 +194,25 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             return;
         }
         hasInstantLaunched = true;
+        if (Program.InstantLaunch == null)
+        {
+            return;
+        }
         Task.Run(async () =>
         {
-            string[] launchArgs = Environment.GetCommandLineArgs().GetCommandArgs("--instantlaunch").ToArray();
-            if (launchArgs is [])
-            {
-                return;
-            }
-            string[] playerNames = launchArgs.Skip(1).ToArray();
-            if (playerNames is [])
-            {
-                string error = "--instantlaunch requires at least one player name";
-                Log.Error(error);
-                LauncherNotifier.Error(error);
-                return;
-            }
-
             // Start the server
-            string serverName = launchArgs.First();
-            string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), serverName);
-            ServerEntry server = ServerEntry.FromDirectory(serverPath);
-            if (server == null)
-            {
-                throw new Exception($"Failed to load save file from '{serverPath}'");
-            }
-            server.Name = serverName;
+            string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), Program.InstantLaunch.SaveName);
+            ServerEntry server = ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
+            server.Name = Program.InstantLaunch.SaveName;
             Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serversViewModel.StartServerAsync(server)).ContinueWithHandleError();
             // Start a game in multiplayer for each player
-            foreach (string playerName in playerNames)
+            foreach (string playerName in Program.InstantLaunch.PlayerNames)
             {
                 await StartMultiplayerAsync(["--instantlaunch", playerName]).ContinueWithHandleError();
             }
 
             await serverStartTask;
-        });
+        }).ContinueWithHandleError();
     }
 
     private async Task StartSubnauticaAsync(string[] args = null)
