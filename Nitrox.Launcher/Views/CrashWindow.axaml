@@ -42,7 +42,8 @@
         <StackPanel Grid.Row="0">
             <controls:CustomTitlebar IsVisible="{Binding $parent[Window].(design:NitroxAttached.UseCustomTitleBar)}" />
             <!-- TODO: Nice color highlighting (with option to click on line to open the source file?) -->
-            <SelectableTextBlock Padding="10" Foreground="#FF4444" Text="{Binding Message}" />
+            <!-- Background should be transparent so text and be selected anywhere inside of control. -->
+            <SelectableTextBlock Text="{Binding Message}" FontSize="14" Background="Transparent" Padding="10" Foreground="#FF4444" />
         </StackPanel>
         <Border Grid.Row="1" VerticalAlignment="Bottom" Background="{DynamicResource BrandPanelBackground}" Padding="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
