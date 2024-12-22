@@ -1,8 +1,8 @@
 ﻿using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.Packets;
 using UnityEngine;
 using UWE;
 using Terrain = NitroxClient.GameLogic.Terrain;
@@ -30,14 +30,21 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
 
             Player.main.SetCurrentSub(subRoot);
         }
-        
+
+        Vehicle currentVehicle = Player.main.currentMountedVehicle;
+        if (currentVehicle)
+        {
+            currentVehicle.TeleportVehicle(packet.DestinationTo.ToUnity(), currentVehicle.transform.rotation);
+            return;
+        }
+
         Player.main.SetPosition(packet.DestinationTo.ToUnity());
-        // Freeze the player while he's loading its new position
         Player.main.cinematicModeActive = true;
         try
         {
             CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Player.main.cinematicModeActive = false;
             Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
