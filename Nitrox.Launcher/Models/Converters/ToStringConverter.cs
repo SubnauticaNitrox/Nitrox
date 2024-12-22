@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using Avalonia.Data;
+using NitroxModel.Helper;
 
 namespace Nitrox.Launcher.Models.Converters;
 
@@ -10,8 +11,6 @@ namespace Nitrox.Launcher.Models.Converters;
 /// </summary>
 public class ToStringConverter : Converter<ToStringConverter>
 {
-    private static readonly CultureInfo enUsCulture = new("en-US", false);
-
     public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is null)
@@ -38,7 +37,7 @@ public class ToStringConverter : Converter<ToStringConverter>
         {
             "upper" => sourceText.ToUpperInvariant(),
             "lower" => sourceText.ToLowerInvariant(),
-            _ => enUsCulture.TextInfo.ToTitleCase(sourceText.ToLower().Replace("_", " ")),
+            _ => CultureManager.CultureInfo.TextInfo.ToTitleCase(sourceText.ToLower().Replace("_", " ")),
         };
     }
 

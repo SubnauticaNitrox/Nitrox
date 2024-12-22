@@ -22,7 +22,7 @@ public class DateToRelativeDateConverter : Converter<DateToRelativeDateConverter
             _ => throw new ArgumentException($"Value must be a {nameof(DateTime)} or {nameof(DateTimeOffset)}", nameof(value))
         };
 
-        TimeSpan delta = DateTimeOffset.UtcNow - date;
+        TimeSpan delta = DateTimeOffset.UtcNow - date.UtcDateTime;
 
         return delta switch
         {

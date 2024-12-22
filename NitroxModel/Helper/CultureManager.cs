@@ -5,6 +5,8 @@ namespace NitroxModel.Helper;
 
 public static class CultureManager
 {
+    public static readonly CultureInfo CultureInfo = new("en-US");
+
     /// <summary>
     ///     Internal Subnautica files are setup using US english number formats and dates.  To ensure
     ///     that we parse all of these appropriately, we will set the default cultureInfo to en-US.
@@ -15,16 +17,14 @@ public static class CultureManager
     /// </summary>
     public static void ConfigureCultureInfo()
     {
-        CultureInfo cultureInfo = new("en-US");
-
         // Although we loaded the en-US cultureInfo, let's make sure to set these in case the
         // default was overriden by the user.
-        cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
-        cultureInfo.NumberFormat.NumberGroupSeparator = ",";
+        CultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+        CultureInfo.NumberFormat.NumberGroupSeparator = ",";
 
-        Thread.CurrentThread.CurrentCulture = cultureInfo;
-        Thread.CurrentThread.CurrentUICulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+        Thread.CurrentThread.CurrentCulture = CultureInfo;
+        Thread.CurrentThread.CurrentUICulture = CultureInfo;
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo;
+        CultureInfo.DefaultThreadCurrentUICulture = CultureInfo;
     }
 }

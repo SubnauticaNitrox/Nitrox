@@ -15,7 +15,7 @@
         <vm:DialogBoxViewModel Title="Title Text" Description="Description Text" />
     </Design.DataContext>
     <Grid RowDefinitions="Auto,*,Auto">
-        <controls:CustomTitlebar CanMinimize="False" Grid.RowSpan="2" />
+        <controls:CustomTitlebar ShowTitle="False" CanMinimize="False" Grid.RowSpan="2" />
         <TextBlock Grid.Row="0" Text="{Binding Title}" Margin="24 20 24 -10"
                    FontWeight="{Binding TitleFontWeight}" FontSize="{Binding TitleFontSize}"
                    IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />

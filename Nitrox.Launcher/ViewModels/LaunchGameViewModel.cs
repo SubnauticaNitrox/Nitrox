@@ -184,7 +184,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     }
 
     /// <summary>
-    /// Launch the server and Subnautica (for each given player name) if the --instant-launch argument is present.
+    ///     Launches the server and Subnautica immediately if instant launch is active.
     /// </summary>
     [Conditional("DEBUG")]
     private void HandleInstantLaunchForDevelopment()

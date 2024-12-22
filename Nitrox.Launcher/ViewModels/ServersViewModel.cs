@@ -51,19 +51,26 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     internal override async Task ViewContentLoadAsync()
     {
-        WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
+        try
         {
-            lock (serversLock)
+            WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
             {
-                for (int i = Servers.Count - 1; i >= 0; i--)
+                lock (serversLock)
                 {
-                    if (Servers[i].Name == message.SaveName)
+                    for (int i = Servers.Count - 1; i >= 0; i--)
                     {
-                        Servers.RemoveAt(i);
+                        if (Servers[i].Name == message.SaveName)
+                        {
+                            Servers.RemoveAt(i);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        catch (InvalidOperationException)
+        {
+            // ignored - already subscribed exception.
+        }
         // Load server list
         serverRefreshCts = new();
         await GetSavesOnDiskAsync();
@@ -136,7 +143,7 @@ public partial class ServersViewModel : RoutableViewModelBase
         await HostScreen.ShowAsync(manageServerViewModel);
     }
 
-    private async Task GetSavesOnDiskAsync()
+    private async Task GetSavesOnDiskAsync(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -149,6 +156,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             }
             foreach (string saveDir in Directory.EnumerateDirectories(keyValueStore.GetSavesFolderDir()))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
                     if (serversOnDisk.TryGetValue(Path.GetFileName(saveDir), out (ServerEntry Data, bool _) server))
@@ -157,7 +165,7 @@ public partial class ServersViewModel : RoutableViewModelBase
                         serversOnDisk[Path.GetFileName(saveDir)] = (server.Data, true);
                         continue;
                     }
-                    ServerEntry entryFromDir = await Task.Run(() => ServerEntry.FromDirectory(saveDir));
+                    ServerEntry entryFromDir = await Task.Run(() => ServerEntry.FromDirectory(saveDir), cancellationToken);
                     if (entryFromDir != null)
                     {
                         serversOnDisk.Add(entryFromDir.Name, (entryFromDir, true));
@@ -178,7 +186,7 @@ public partial class ServersViewModel : RoutableViewModelBase
                 Servers = [..serversOnDisk.Values.Where(server => server.HasFiles).Select(server => server.Data).OrderByDescending(entry => entry.LastAccessedTime)];
             }
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
         {
             Log.Error(ex, "Error while getting saves");
             await dialogService.ShowErrorAsync(ex, "Error while getting saves");
@@ -199,28 +207,35 @@ public partial class ServersViewModel : RoutableViewModelBase
         watcher.Deleted += OnDirectoryChanged;
         watcher.Renamed += OnDirectoryChanged;
 
-        await Task.Run(async () =>
+        try
         {
-            watcher.EnableRaisingEvents = true; // Slowish (~2ms) - Moved into Task.Run.
-
-            while (true)
+            await Task.Run(async () =>
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                while (shouldRefreshServersList)
+                watcher.EnableRaisingEvents = true; // Slowish (~2ms) - Moved into Task.Run.
+
+                while (true)
                 {
-                    try
+                    cancellationToken.ThrowIfCancellationRequested();
+                    while (shouldRefreshServersList)
                     {
-                        await GetSavesOnDiskAsync();
-                        shouldRefreshServersList = false;
+                        try
+                        {
+                            await GetSavesOnDiskAsync(cancellationToken);
+                            shouldRefreshServersList = false;
+                        }
+                        catch (IOException)
+                        {
+                            await Task.Delay(100, cancellationToken);
+                        }
                     }
-                    catch (IOException)
-                    {
-                        await Task.Delay(100, cancellationToken);
-                    }
+                    await Task.Delay(1000, cancellationToken);
                 }
-                await Task.Delay(1000, cancellationToken);
-            }
-        }, cancellationToken);
+            }, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            // ignored
+        }
     }
 
     private void OnDirectoryChanged(object sender, FileSystemEventArgs e)

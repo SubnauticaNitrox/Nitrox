@@ -53,7 +53,7 @@ public partial class DialogBoxViewModel : ModalViewModelBase
     private async Task CopyToClipboard(ContentControl commandControl)
     {
         string text = $"{Title}{Environment.NewLine}{(Description.StartsWith(Title) ? Description[Title.Length..].TrimStart() : Description)}";
-        IClipboard clipboard = AppViewLocator.MainWindow.Clipboard;
+        IClipboard clipboard = commandControl.GetWindow().Clipboard;
         if (clipboard != null)
         {
             await clipboard.SetTextAsync(text);

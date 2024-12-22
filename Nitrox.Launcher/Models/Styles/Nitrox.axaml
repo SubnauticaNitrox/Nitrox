@@ -54,6 +54,11 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBackground}" />
     </Style>
 
+    <Style Selector="SelectableTextBlock">
+        <!-- Background should be transparent so text and be selected anywhere inside of control. -->
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
     <Style Selector="controls|CustomTitlebar">
         <Setter Property="Background" Value="{DynamicResource BrandWhite}" />
     </Style>

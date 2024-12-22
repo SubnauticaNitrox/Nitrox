@@ -15,7 +15,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel Background="Transparent">
-                    <Border HorizontalAlignment="Left" Padding="5 2">
+                    <Border HorizontalAlignment="Left" Padding="5 2" IsVisible="{TemplateBinding ShowTitle}">
                         <TextBlock Text="{Binding $parent[Window].Title}" VerticalAlignment="Stretch" TextAlignment="Center" />
                     </Border>
                     <StackPanel>

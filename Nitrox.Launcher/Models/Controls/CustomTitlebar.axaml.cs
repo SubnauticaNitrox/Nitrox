@@ -9,6 +9,12 @@ namespace Nitrox.Launcher.Models.Controls;
 
 public partial class CustomTitlebar : TemplatedControl
 {
+    public static readonly DirectProperty<CustomTitlebar, bool> ShowTitleProperty =
+        AvaloniaProperty.RegisterDirect<CustomTitlebar, bool>(
+            nameof(showTitle),
+            o => o.showTitle,
+            (o, v) => o.showTitle = v, true);
+
     public static readonly DirectProperty<CustomTitlebar, bool> CanMaximizeProperty =
         AvaloniaProperty.RegisterDirect<CustomTitlebar, bool>(
             nameof(CanMaximize),
@@ -21,8 +27,15 @@ public partial class CustomTitlebar : TemplatedControl
             o => o.CanMinimize,
             (o, v) => o.CanMinimize = v, true);
 
+    private bool showTitle = true;
     private bool canMaximize = true;
     private bool canMinimize = true;
+
+    public bool ShowTitle
+    {
+        get => showTitle;
+        set => SetAndRaise(ShowTitleProperty, ref showTitle, value);
+    }
 
     public bool CanMaximize
     {
