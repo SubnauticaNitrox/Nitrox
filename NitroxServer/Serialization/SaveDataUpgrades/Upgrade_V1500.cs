@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using Newtonsoft.Json.Linq;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.SaveDataUpgrades
@@ -15,7 +13,7 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
             data["GameData"]["StoryTiming"] = data["StoryTimingData"];
             data.Property("StoryTimingData")?.Remove();
             data["Seed"] = "TCCBIBZXAB"; //Default seed so life pod should stay the same
-            data["InventoryData"]["Modules"] = new JArray(new List<EquippedItemData>());
+            data["InventoryData"]["Modules"] = new JArray();
 
             Log.Warn("Plants will still be counted as normal items with no growth progression. Re adding them to a container should fix this.");
             Log.Warn("The precursor incubator may be unpowered and hatching progress will be reset");
