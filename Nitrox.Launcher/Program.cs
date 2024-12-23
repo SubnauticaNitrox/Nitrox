@@ -25,6 +25,28 @@ internal static class Program
         LoadAvalonia(args);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void LoadAvalonia(string[] args)
+    {
+        try
+        {
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception ex)
+        {
+            HandleUnhandledException(ex);
+        }
+    }
+
+    private static AppBuilder BuildAvaloniaApp()
+    {
+        // https://github.com/wieslawsoltes/Svg.Skia?tab=readme-ov-file#avalonia-previewer
+        GC.KeepAlive(typeof(SvgImageExtension).Assembly);
+        GC.KeepAlive(typeof(Avalonia.Svg.Skia.Svg).Assembly);
+
+        return App.Create();
+    }
+
     internal static void HandleUnhandledException(Exception ex)
     {
         if (App.IsCrashReport)
@@ -62,28 +84,6 @@ internal static class Program
             Console.WriteLine(exception);
         }
         Environment.Exit(1);
-    }
-
-    private static AppBuilder BuildAvaloniaApp()
-    {
-        // https://github.com/wieslawsoltes/Svg.Skia?tab=readme-ov-file#avalonia-previewer
-        GC.KeepAlive(typeof(SvgImageExtension).Assembly);
-        GC.KeepAlive(typeof(Avalonia.Svg.Skia.Svg).Assembly);
-
-        return App.Create();
-    }
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void LoadAvalonia(string[] args)
-    {
-        try
-        {
-            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
-        }
-        catch (Exception ex)
-        {
-            HandleUnhandledException(ex);
-        }
     }
 
     private static class AssemblyResolver
