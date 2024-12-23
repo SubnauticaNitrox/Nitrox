@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
@@ -71,8 +72,10 @@ public class BaseLeakManager : MonoBehaviour
                     }
                     if (baseHullStrength.crushSounds[num] != null)
                     {
-                        // TODO: When #1780 is merged, change this accordingly
-                        Utils.PlayFMODAsset(baseHullStrength.crushSounds[num], cellObject, 20f);
+                        using (PacketSuppressor<FMODAssetPacket>.Suppress())
+                        {
+                            Utils.PlayFMODAsset(baseHullStrength.crushSounds[num], cellObject, 20f);
+                        }
                     }
                     ErrorMessage.AddMessage(Language.main.GetFormat("BaseHullStrDamageDetected", baseHullStrength.totalStrength));
                 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
@@ -14,21 +13,10 @@ namespace NitroxPatcher.Patches.Dynamic;
 public sealed partial class Flare_Update_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Flare t) => t.Update());
-    private static readonly MethodInfo INSERTED_METHOD = Reflect.Method(() => GetDeltaTime());
-    private static readonly MethodInfo MATCHING_FIELD = Reflect.Property(() => Time.deltaTime).GetGetMethod();
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        return new CodeMatcher(instructions).MatchStartForward(new CodeMatch(OpCodes.Call, MATCHING_FIELD))
-                                            .SetOperandAndAdvance(INSERTED_METHOD)
+        return new CodeMatcher(instructions).ReplaceDeltaTime()
                                             .InstructionEnumeration();
-    }
-
-    /// <summary>
-    /// Wrapper for dependency resolving and variable querying
-    /// </summary>
-    public static float GetDeltaTime()
-    {
-        return Resolve<TimeManager>().DeltaTime;
     }
 }
