@@ -36,11 +36,17 @@ public static class ProcessUtils
     {
         string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
         // On Linux, entry assembly is .dll file but real executable is without extension.
-        string noExtension = Path.ChangeExtension(executableFilePath, null);
-        if (File.Exists(noExtension))
+        string temp = Path.ChangeExtension(executableFilePath, null);
+        if (File.Exists(temp))
         {
-            executableFilePath = noExtension;
+            executableFilePath = temp;
         }
+        temp = Path.ChangeExtension(executableFilePath, ".exe");
+        if (File.Exists(temp))
+        {
+            executableFilePath = temp;
+        }
+        
         if (arguments.IndexOf("--allow-instances") < 0)
         {
             arguments = [..arguments, "--allow-instances"];
