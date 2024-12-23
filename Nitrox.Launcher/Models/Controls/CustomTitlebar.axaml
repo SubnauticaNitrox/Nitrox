@@ -46,6 +46,7 @@
         <Setter Property="Height" Value="28" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ShowTitle" Value="False" />
 
         <Style Selector="^ /template/ StackPanel">
             <Setter Property="Orientation" Value="Horizontal" />
