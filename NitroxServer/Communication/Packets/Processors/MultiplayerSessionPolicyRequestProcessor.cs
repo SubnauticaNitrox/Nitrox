@@ -1,14 +1,14 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class MultiplayerSessionPolicyRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionPolicyRequest>
     {
-        private readonly ServerConfig config;
+        private readonly SubnauticaServerConfig config;
 
-        public MultiplayerSessionPolicyRequestProcessor(ServerConfig config)
+        public MultiplayerSessionPolicyRequestProcessor(SubnauticaServerConfig config)
         {
             this.config = config;
         }
@@ -17,7 +17,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(MultiplayerSessionPolicyRequest packet, INitroxConnection connection)
         {
             Log.Info("Providing session policies...");
-            connection.SendPacket(new MultiplayerSessionPolicy(packet.CorrelationId, config.DisableConsole, config.MaxConnections, config.IsPasswordRequired));
+            connection.SendPacket(new MultiplayerSessionPolicy(packet.CorrelationId, config.DisableConsole, config.MaxConnections, config.IsPasswordRequired()));
         }
     }
 }

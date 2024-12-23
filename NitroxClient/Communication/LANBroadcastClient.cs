@@ -61,7 +61,7 @@ public static class LANBroadcastClient
             {
                 return;
             }
-            
+
             Log.Info($"Found LAN server at {serverEndPoint}.");
             discoveredServers.Add(serverEndPoint);
             OnServerFound(serverEndPoint);
@@ -69,8 +69,8 @@ public static class LANBroadcastClient
 
         cancellationToken = cancellationToken == default ? new CancellationTokenSource(TimeSpan.FromMinutes(1)).Token : cancellationToken;
         EventBasedNetListener listener = new();
-        NetManager client = new(listener) { 
-            AutoRecycle = true, 
+        NetManager client = new(listener) {
+            AutoRecycle = true,
             BroadcastReceiveEnabled = true,
             UnconnectedMessagesEnabled = true
         };

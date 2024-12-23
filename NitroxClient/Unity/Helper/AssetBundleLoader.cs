@@ -7,7 +7,7 @@ namespace NitroxClient.Unity.Helper;
 
 public static class AssetBundleLoader
 {
-    private static readonly string assetRootFolder = NitroxUser.AssetsPath;
+    private static readonly string assetRootFolder = NitroxUser.AssetBundlePath;
 
     private static bool loadedSharedAssets;
 

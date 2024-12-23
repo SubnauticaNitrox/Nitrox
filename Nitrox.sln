@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
@@ -10,9 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		Nitrox.Shared.props = Nitrox.Shared.props
+		Nitrox.Shared.targets = Nitrox.Shared.targets
+		.gitignore = .gitignore
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxLauncher", "NitroxLauncher\NitroxLauncher.csproj", "{59EB8953-864F-4147-A210-7FC97E1A5294}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{39E377AD-2163-4428-952D-EBECD402C8F3}"
 EndProject
@@ -24,14 +24,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxServer-Subnautica", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Test", "Nitrox.Test\Nitrox.Test.csproj", "{E4D8C360-34E4-4BE6-909F-3791DD9169B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Launcher", "Nitrox.Launcher\Nitrox.Launcher.csproj", "{30493A43-7EB3-4898-A82F-98A387284EB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Test", "Nitrox.Test\Nitrox.Test.csproj", "{B4C9C786-10A1-4091-A88F-C22AA14C05D4}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Assets.Subnautica", "Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.shproj", "{79E92B6D-5D25-4254-AC9F-FA9A1CD3CBC6}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.projitems*{79e92b6d-5d25-4254-ac9f-fa9a1cd3cbc6}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -41,10 +40,6 @@ Global
 		{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59EB8953-864F-4147-A210-7FC97E1A5294}.Release|Any CPU.Build.0 = Release|Any CPU
 		{39E377AD-2163-4428-952D-EBECD402C8F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39E377AD-2163-4428-952D-EBECD402C8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39E377AD-2163-4428-952D-EBECD402C8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,15 +60,22 @@ Global
 		{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30493A43-7EB3-4898-A82F-98A387284EB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4C9C786-10A1-4091-A88F-C22AA14C05D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4C9C786-10A1-4091-A88F-C22AA14C05D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4C9C786-10A1-4091-A88F-C22AA14C05D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4C9C786-10A1-4091-A88F-C22AA14C05D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC56EA37-FBBC-4D19-8796-29A42A2331A2}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.projitems*{79e92b6d-5d25-4254-ac9f-fa9a1cd3cbc6}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

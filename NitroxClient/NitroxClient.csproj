@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
-        <Nullable>disable</Nullable>
+        <TargetFrameworks>net472;net9.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -14,13 +14,10 @@
             <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
             <Private>false</Private>
         </Reference>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1" />
+        <PackageReference Include="DiscordGameSDKWrapper" Version="3.2.1.1" />
     </ItemGroup>
 
 </Project>
