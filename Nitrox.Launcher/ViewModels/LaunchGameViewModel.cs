@@ -194,19 +194,19 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             return;
         }
         hasInstantLaunched = true;
-        if (Program.InstantLaunch == null)
+        if (App.InstantLaunch == null)
         {
             return;
         }
         Task.Run(async () =>
         {
             // Start the server
-            string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), Program.InstantLaunch.SaveName);
+            string serverPath = Path.Combine(keyValueStore.GetSavesFolderDir(), App.InstantLaunch.SaveName);
             ServerEntry server = ServerEntry.FromDirectory(serverPath) ?? ServerEntry.CreateNew(serverPath, NitroxGameMode.SURVIVAL);
-            server.Name = Program.InstantLaunch.SaveName;
+            server.Name = App.InstantLaunch.SaveName;
             Task serverStartTask = Dispatcher.UIThread.InvokeAsync(async () => await serversViewModel.StartServerAsync(server)).ContinueWithHandleError();
             // Start a game in multiplayer for each player
-            foreach (string playerName in Program.InstantLaunch.PlayerNames)
+            foreach (string playerName in App.InstantLaunch.PlayerNames)
             {
                 await StartMultiplayerAsync(["--instantlaunch", playerName]).ContinueWithHandleError();
             }
