@@ -101,6 +101,14 @@ namespace NitroxServer
             return Id.GetHashCode();
         }
 
+        /// <summary>
+        /// Returns a <b>new</b> list from the original set. To use the original set, use <see cref="AddCells"/>, <see cref="RemoveCells"/> and <see cref="HasCellLoaded"/>.
+        /// </summary>
+        internal List<AbsoluteEntityCell> GetVisibleCells()
+        {
+            return [.. visibleCells];
+        }
+
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {
             foreach (AbsoluteEntityCell cell in cells)
