@@ -29,16 +29,23 @@ public static class ProcessUtils
         return Process.Start(startInfo);
     }
 
-    public static void RestartApp()
+    /// <summary>
+    ///     Starts the current app as a new instance.
+    /// </summary>
+    public static void StartSelf(params string[] arguments)
     {
         string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
+        // On Linux, entry assembly is .dll file but real executable is without extension.
         string noExtension = Path.ChangeExtension(executableFilePath, null);
         if (File.Exists(noExtension))
         {
             executableFilePath = noExtension;
         }
-        using Process proc = StartProcessDetached(new ProcessStartInfo(executableFilePath!, ["--allow-instances"]));
-        Environment.Exit(0);
+        if (arguments.IndexOf("--allow-instances") < 0)
+        {
+            arguments = [..arguments, "--allow-instances"];
+        }
+        using Process proc = StartProcessDetached(new ProcessStartInfo(executableFilePath!, arguments));
     }
 
     /// <summary>

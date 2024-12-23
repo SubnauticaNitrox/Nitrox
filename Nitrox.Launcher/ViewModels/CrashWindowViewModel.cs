@@ -23,7 +23,8 @@ public partial class CrashWindowViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanRestart))]
     private void Restart()
     {
-        ProcessUtils.RestartApp();
+        ProcessUtils.StartSelf();
+        Environment.Exit(0);
     }
 
     [RelayCommand]

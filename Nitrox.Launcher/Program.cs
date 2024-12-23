@@ -66,12 +66,7 @@ internal static class Program
             {
                 string crashReportFile = Path.Combine(executableRoot, App.CRASH_REPORT_FILE_NAME);
                 File.WriteAllText(crashReportFile, ex.ToString());
-                string noExtension = Path.ChangeExtension(executableFilePath, null);
-                if (File.Exists(noExtension))
-                {
-                    executableFilePath = noExtension;
-                }
-                using Process proc = ProcessUtils.StartProcessDetached(new ProcessStartInfo(executableFilePath, ["--crash-report"]));
+                ProcessUtils.StartSelf("--crash-report");
             }
             else
             {
