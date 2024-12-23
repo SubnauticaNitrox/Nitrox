@@ -13,6 +13,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using ConsoleAppFramework;
 using Microsoft.Extensions.DependencyInjection;
+using Nitrox.Launcher.Models.Utils;
 using Nitrox.Launcher.Models.Validators;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views;
@@ -130,9 +131,42 @@ public class App : Application
         FixAvaloniaPlugins();
         ApplyAppDefaults();
 
-        Dispatcher.UIThread.UnhandledException += (_, eventArgs) => Program.HandleUnhandledException(eventArgs.Exception);
+        Dispatcher.UIThread.UnhandledException += (_, eventArgs) => HandleUnhandledException(eventArgs.Exception);
         AppWindow = StartupWindowFactory();
         base.OnFrameworkInitializationCompleted();
+    }
+
+    internal static void HandleUnhandledException(Exception ex)
+    {
+        if (IsCrashReport)
+        {
+            Log.Error(ex, "Error while trying to show crash report");
+            return;
+        }
+
+        Log.Error(ex, "!!!Nitrox Launcher Crash!!!");
+
+        // Write crash report if we're not reporting one right now.
+        try
+        {
+            string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
+            string executableRoot = Path.GetDirectoryName(executableFilePath);
+            if (executableFilePath != null && executableRoot != null)
+            {
+                string crashReportFile = Path.Combine(executableRoot, CRASH_REPORT_FILE_NAME);
+                File.WriteAllText(crashReportFile, ex.ToString());
+                ProcessUtils.StartSelf("--crash-report");
+            }
+            else
+            {
+                Log.Error(ex, "Unable to get executable file path for writing crash report.");
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
+        Environment.Exit(1);
     }
 
     private static void CheckForRunningInstance()

@@ -5,9 +5,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Svg.Skia;
-using Nitrox.Launcher.Models.Utils;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace Nitrox.Launcher;
 
@@ -34,7 +31,7 @@ internal static class Program
         }
         catch (Exception ex)
         {
-            HandleUnhandledException(ex);
+            App.HandleUnhandledException(ex);
         }
     }
 
@@ -45,40 +42,6 @@ internal static class Program
         GC.KeepAlive(typeof(Avalonia.Svg.Skia.Svg).Assembly);
 
         return App.Create();
-    }
-
-    internal static void HandleUnhandledException(Exception ex)
-    {
-        if (App.IsCrashReport)
-        {
-            Log.Error(ex, "Error while trying to show crash report");
-            return;
-        }
-
-        Log.Error(ex, "!!!Nitrox Launcher Crash!!!");
-
-        // Write crash report if we're not reporting one right now.
-        try
-        {
-            string executableFilePath = NitroxUser.ExecutableFilePath ?? Environment.ProcessPath;
-            string executableRoot = Path.GetDirectoryName(executableFilePath);
-            if (executableFilePath != null && executableRoot != null)
-            {
-                string crashReportFile = Path.Combine(executableRoot, App.CRASH_REPORT_FILE_NAME);
-                File.WriteAllText(crashReportFile, ex.ToString());
-                ProcessUtils.StartSelf("--crash-report");
-            }
-            else
-            {
-                Log.Error(ex, "Unable to get executable file path for writing crash report.");
-            }
-        }
-        catch (Exception exception)
-        {
-            Debug.WriteLine(exception);
-            Console.WriteLine(exception);
-        }
-        Environment.Exit(1);
     }
 
     private static class AssemblyResolver
