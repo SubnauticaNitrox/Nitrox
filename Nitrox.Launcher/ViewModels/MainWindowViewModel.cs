@@ -72,22 +72,19 @@ public partial class MainWindowViewModel : ViewModelBase
                 .Subscribe(viewModel => ActiveViewModel = viewModel)
                 .DisposeWith(disposables);
 
-            WeakReferenceMessenger.Default.Register<NotificationAddMessage>(this, (_, message) =>
+            RegisterMessageListener<NotificationAddMessage, MainWindowViewModel>(static async (message, vm) =>
             {
-                Notifications.Add(message.Item);
-                Task.Run(async () =>
-                {
-                    await Task.Delay(7000);
-                    WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
-                });
+                vm.Notifications.Add(message.Item);
+                await Task.Delay(7000);
+                WeakReferenceMessenger.Default.Send(new NotificationCloseMessage(message.Item));
             });
-            WeakReferenceMessenger.Default.Register<NotificationCloseMessage>(this, async (_, message) =>
+            RegisterMessageListener<NotificationCloseMessage, MainWindowViewModel>(static async (message, vm) =>
             {
                 message.Item.Dismissed = true;
                 await Task.Delay(1000); // Wait for animations
                 if (!Design.IsDesignMode) // Prevent design preview crashes
                 {
-                    Notifications.Remove(message.Item);
+                    vm.Notifications.Remove(message.Item);
                 }
             });
 
@@ -115,37 +112,37 @@ public partial class MainWindowViewModel : ViewModelBase
         _ = RoutingScreen.ShowAsync(launchGameViewModel).ContinueWithHandleError(ex => LauncherNotifier.Error(ex.Message));
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenLaunchGameViewAsync()
     {
         await RoutingScreen.ShowAsync(launchGameViewModel);
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenServersViewAsync()
     {
         await RoutingScreen.ShowAsync(serversViewModel);
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenCommunityViewAsync()
     {
         await RoutingScreen.ShowAsync(communityViewModel);
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenBlogViewAsync()
     {
         await RoutingScreen.ShowAsync(blogViewModel);
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenUpdatesViewAsync()
     {
         await RoutingScreen.ShowAsync(updatesViewModel);
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = false)]
     public async Task OpenOptionsViewAsync()
     {
         await RoutingScreen.ShowAsync(optionsViewModel);

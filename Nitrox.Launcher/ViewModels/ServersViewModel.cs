@@ -51,26 +51,19 @@ public partial class ServersViewModel : RoutableViewModelBase
 
     internal override async Task ViewContentLoadAsync()
     {
-        try
+        RegisterMessageListener<SaveDeletedMessage, ServersViewModel>(static (message, vm) =>
         {
-            WeakReferenceMessenger.Default.Register<SaveDeletedMessage>(this, (sender, message) =>
+            lock (vm.serversLock)
             {
-                lock (serversLock)
+                for (int i = vm.Servers.Count - 1; i >= 0; i--)
                 {
-                    for (int i = Servers.Count - 1; i >= 0; i--)
+                    if (vm.Servers[i].Name == message.SaveName)
                     {
-                        if (Servers[i].Name == message.SaveName)
-                        {
-                            Servers.RemoveAt(i);
-                        }
+                        vm.Servers.RemoveAt(i);
                     }
                 }
-            });
-        }
-        catch (InvalidOperationException)
-        {
-            // ignored - already subscribed exception.
-        }
+            }
+        });
         // Load server list
         serverRefreshCts = new();
         await GetSavesOnDiskAsync();
