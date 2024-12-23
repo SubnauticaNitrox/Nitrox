@@ -46,7 +46,7 @@
         </StackPanel>
         <Border Grid.Row="1" VerticalAlignment="Bottom" Background="{DynamicResource BrandPanelBackground}" Padding="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-                <Button Content="Copy to clipboard" HotKey="Ctrl+C" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding $self}" Background="Transparent" />
+                <Button Content="Copy to clipboard" HotKey="Ctrl+Shift+C" Command="{Binding CopyToClipboardCommand}" CommandParameter="{Binding $self}" Background="Transparent" />
                 <Button Content="Report on GitHub" Command="{Binding ReportCommand}" />
                 <Button Content="Restart Nitrox" Command="{Binding RestartCommand}" />
             </StackPanel>
