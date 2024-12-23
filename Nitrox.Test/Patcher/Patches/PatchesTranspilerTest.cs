@@ -3,6 +3,7 @@ using HarmonyLib;
 using NitroxPatcher.Patches;
 using NitroxPatcher.Patches.Dynamic;
 using NitroxPatcher.Patches.Persistent;
+using NitroxPatcher.PatternMatching;
 using NitroxTest.Patcher;
 
 namespace Nitrox.Test.Patcher.Patches;
@@ -10,6 +11,7 @@ namespace Nitrox.Test.Patcher.Patches;
 [TestClass]
 public class PatchesTranspilerTest
 {
+    // Add "true" to any of those elements to have its transformed IL printed.
     public static IEnumerable<object[]> TranspilerPatchClasses =>
     [
         [typeof(BaseDeconstructable_Deconstruct_Patch), BaseDeconstructable_Deconstruct_Patch.InstructionsToAdd(true).Count() * 2],
@@ -64,6 +66,21 @@ public class PatchesTranspilerTest
         [typeof(uGUI_SceneIntro_IntroSequence_Patch), 8],
         [typeof(uSkyManager_SetVaryingMaterialProperties_Patch), 0],
         [typeof(Welder_Weld_Patch), 1],
+        [typeof(AggressiveWhenSeeTarget_ScanForAggressionTarget_Patch), 3],
+        [typeof(AttackCyclops_OnCollisionEnter_Patch), -17],
+        [typeof(AttackCyclops_UpdateAggression_Patch), -23],
+        [typeof(Bullet_Update_Patch), 3],
+        [typeof(Poop_Perform_Patch), 1],
+        [typeof(SeaDragonMeleeAttack_OnTouchFront_Patch), 9],
+        [typeof(SeaDragonMeleeAttack_SwatAttack_Patch), 4],
+        [typeof(SeaTreaderSounds_SpawnChunks_Patch), 3],
+        [typeof(Vehicle_TorpedoShot_Patch), 3],
+        [typeof(SeamothTorpedo_Update_Patch), 0],
+        [typeof(SeaTreader_UpdatePath_Patch), 0],
+        [typeof(SeaTreader_UpdateTurning_Patch), 0],
+        [typeof(SeaTreader_Update_Patch), 0],
+        [typeof(EntityCell_AwakeAsync_Patch), 2],
+        [typeof(StasisSphere_LateUpdate_Patch), 0],
     ];
 
     [TestMethod]
@@ -82,7 +99,7 @@ public class PatchesTranspilerTest
 
     [TestMethod]
     [DynamicData(nameof(TranspilerPatchClasses))]
-    public void AllPatchesTranspilerSanity(Type patchClassType, int ilDifference)
+    public void AllPatchesTranspilerSanity(Type patchClassType, int ilDifference, bool logInstructions = false)
     {
         FieldInfo targetMethodInfo = patchClassType.GetRuntimeFields().FirstOrDefault(x => string.Equals(x.Name.Replace("_", ""), "targetMethod", StringComparison.OrdinalIgnoreCase));
         if (targetMethodInfo == null)
@@ -122,6 +139,12 @@ public class PatchesTranspilerTest
         }
 
         List<CodeInstruction> transformedIl = (transpilerMethod.Invoke(null, injectionParameters.ToArray()) as IEnumerable<CodeInstruction>)?.ToList();
+        
+        if (logInstructions)
+        {
+            Console.WriteLine(transformedIl.ToPrettyString());
+        }
+
         if (transformedIl == null || transformedIl.Count == 0)
         {
             Assert.Fail($"Calling {patchClassType.Name}.Transpiler() through reflection returned null or an empty list.");

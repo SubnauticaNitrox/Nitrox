@@ -91,7 +91,7 @@ public class AI
 
         if (aggressiveWhenSeeTarget.sightedSound && !aggressiveWhenSeeTarget.sightedSound.GetIsPlaying())
         {
-            // TODO: Adapt this code when #1780 is merged
+            // This call doesn't broadcast a sound packet
             aggressiveWhenSeeTarget.sightedSound.StartEvent();
         }
 
@@ -155,8 +155,6 @@ public class AI
 
     public bool TryGetActionForCreature(Creature creature, out CreatureAction action)
     {
-        // TODO: Fix ondeath cinematic being played for all players when getting bitten by a reaper
-        // TODO: When #2043 is merged, blacklist the cinematic
         return actions.TryGetValue(creature, out action);
     }
 

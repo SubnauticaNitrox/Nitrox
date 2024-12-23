@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -66,8 +66,11 @@ public class EntityPositionBroadcaster : MonoBehaviour
             }
         }
 
-        updates.AddRange(splineUpdatesById.Values);
-
+        // Only send data for entities still simulated by the local player
+        updates.AddRange(splineUpdatesById.Values.Where(
+            splineUpdate => this.Resolve<SimulationOwnership>().HasAnyLockType(splineUpdate.Id)
+        ));
+        
         splineUpdatesById.Clear();
 
         return updates;
@@ -80,11 +83,9 @@ public class EntityPositionBroadcaster : MonoBehaviour
         // The game object may not exist at this very moment (due to being spawned in async). This is OK as we will
         // automatically start sending updates when we finally get it in the world. This behavior will also allow us
         // to resync or respawn entities while still have broadcasting enabled without doing anything extra.
-        Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(id);
-
-        if (gameObject.HasValue)
+        
+        if (NitroxEntity.TryGetComponentFrom(id, out RemotelyControlled remotelyControlled))
         {
-            RemotelyControlled remotelyControlled = gameObject.Value.GetComponent<RemotelyControlled>();
             Object.Destroy(remotelyControlled);
         }
     }

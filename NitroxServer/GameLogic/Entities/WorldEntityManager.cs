@@ -100,7 +100,7 @@ public class WorldEntityManager
     {
         if (!entityRegistry.TryGetEntityById(id, out WorldEntity entity))
         {
-            Log.WarnOnce($"[{nameof(WorldEntityManager)}] Can't update entity position of {entity.Id} because it isn't registered");
+            Log.WarnOnce($"[{nameof(WorldEntityManager)}] Can't update entity position of {id} because it isn't registered");
             return Optional.Empty;
         }
 
@@ -277,7 +277,7 @@ public class WorldEntityManager
             return; // We don't care what cell a global root entity resides in.  Only phasing entities.
         }
 
-        if (oldCell.BatchId != newCell.BatchId)
+        if (oldCell != newCell)
         {
             lock (worldEntitiesLock)
             {
