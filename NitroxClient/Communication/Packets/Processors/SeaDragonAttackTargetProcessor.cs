@@ -45,8 +45,10 @@ public class SeaDragonAttackTargetProcessor : ClientPacketProcessor<SeaDragonAtt
         seaDragonMeleeAttack.timeLastBite = Time.time;
         if (seaDragonMeleeAttack.attackSound)
         {
-            // TODO: Adapt this code when #1780 is merged
-            Utils.PlayEnvSound(seaDragonMeleeAttack.attackSound, collider.transform.position, 20f);
+            using (PacketSuppressor<FMODAssetPacket>.Suppress())
+            {
+                Utils.PlayEnvSound(seaDragonMeleeAttack.attackSound, collider.transform.position, 20f);
+            }
         }
         seaDragonMeleeAttack.OnTouch(collider);
     }
