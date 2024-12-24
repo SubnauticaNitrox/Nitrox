@@ -72,5 +72,13 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
             gameObject.transform.SetParent(parent.transform, false);
         }
+
+        if (entity is PrefabPlaceholderEntity pEntity && pEntity.IsEntitySlotEntity && gameObject.TryGetComponent(out LargeWorldEntity lwe))
+        {
+            lwe.cellLevel = (LargeWorldEntity.CellLevel)pEntity.Level;
+            bool enabled = LargeWorld.main.streamer.cellManager.RegisterEntity(lwe);
+
+            gameObject.SetActive(enabled);
+        }
     }
 }
