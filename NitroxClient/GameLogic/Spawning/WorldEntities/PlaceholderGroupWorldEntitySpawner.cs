@@ -121,6 +121,11 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             }
         }
 
+        if (prefabPlaceholderGroup.OnPrefabGroupSpawned != null) // Handles setting isKinematic on Floating Stones
+        {
+            prefabPlaceholderGroup.OnPrefabGroupSpawned();
+        }
+
         result.Set(prefabPlaceholderGroupGameObject);
     }
 

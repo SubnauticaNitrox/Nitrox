@@ -58,14 +58,14 @@ public class PrefabPlaceholderEntitySpawner : IWorldEntitySpawner, IWorldEntityS
             return true;
         }
 
-        Log.Error($"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent for {entity.Id}");
+        Log.Error($"[{nameof(PrefabPlaceholderEntitySpawner)}] Can't find a {nameof(PrefabPlaceholdersGroup)} on parent: {parent}\n for: {entity}");
         placeholder = null;
         return false;
     }
 
     private void SetupObject(WorldEntity entity, GameObject gameObject, GameObject parent)
     {
-        if (entity is PrefabPlaceholderEntity prefabEntity && !prefabEntity.IsEntitySlotEntity && parent)
+        if (parent)
         {
             gameObject.transform.localPosition = entity.Transform.LocalPosition.ToUnity();
             gameObject.transform.localRotation = entity.Transform.LocalRotation.ToUnity();
