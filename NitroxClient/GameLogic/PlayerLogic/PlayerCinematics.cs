@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
@@ -10,6 +11,8 @@ public class PlayerCinematics
 {
     private readonly IPacketSender packetSender;
     private readonly LocalPlayer localPlayer;
+
+    private IntroCinematicMode lastModeToSend = IntroCinematicMode.NONE;
 
     public ushort? IntroCinematicPartnerId = null;
 
@@ -48,10 +51,25 @@ public class PlayerCinematics
             return;
         }
 
-        if (localPlayer.IntroCinematicMode != introCinematicMode)
+        if (localPlayer.IntroCinematicMode == introCinematicMode)
         {
-            localPlayer.IntroCinematicMode = introCinematicMode;
-            packetSender.Send(new SetIntroCinematicMode(localPlayer.PlayerId.Value, introCinematicMode));
+            return;
         }
+
+        localPlayer.IntroCinematicMode = introCinematicMode;
+
+        // This method can be called before client is joined. To prevent sending as an unauthenticated packet we delay it.
+        if (Multiplayer.Joined)
+        {
+            packetSender.Send(new SetIntroCinematicMode(localPlayer.PlayerId.Value, introCinematicMode));
+            return;
+        }
+
+        if (lastModeToSend == IntroCinematicMode.NONE)
+        {
+            Multiplayer.OnLoadingComplete += () => SetLocalIntroCinematicMode(lastModeToSend);
+        }
+
+        lastModeToSend = introCinematicMode;
     }
 }

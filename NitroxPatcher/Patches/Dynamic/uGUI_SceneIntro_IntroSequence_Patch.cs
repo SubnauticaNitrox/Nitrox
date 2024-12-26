@@ -84,16 +84,19 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     private static bool callbackRun;
     private static bool packetSend;
 
+    // ReSharper disable once UnusedMethodReturnValue.Local
     private static bool IsWorldSettledAndInitialSyncCompleted()
     {
         return LargeWorldStreamer.main.IsWorldSettled() && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted;
     }
 
+    // ReSharper disable once UnusedMethodReturnValue.Local
     private static bool AnyKeyDownOrModeCompleted()
     {
         return GameInput.AnyKeyDown() || Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED;
     }
 
+    // ReSharper disable once UnusedMethodReturnValue.Local
     private static float GetSkipTime()
     {
         // Return Time.time when starting solo and disable skip button when staring duo
@@ -103,14 +106,20 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
     // ReSharper disable once UnusedMethodReturnValue.Local
     private static bool IsRemoteCinematicReady(uGUI_SceneIntro uGuiSceneIntro)
     {
-        if (callbackRun) return true;
+        if (callbackRun)
+        {
+            return true;
+        }
 
-        if (GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative)) uGuiSceneIntro.Stop(true); // Stopping intro if Creative like in normal SN
+        if (GameModeUtils.currentGameMode.HasFlag(GameModeOption.Creative))
+        {
+            SkipLocalCinematic(uGuiSceneIntro); // Skipping intro if Creative like in normal SN
+            return false;
+        }
 
         if (Resolve<LocalPlayer>().IntroCinematicMode == IntroCinematicMode.COMPLETED)
         {
-            uGuiSceneIntro.Stop(true);
-            EndRemoteCinematic();
+            SkipLocalCinematic(uGuiSceneIntro);
             return false;
         }
 
@@ -185,8 +194,18 @@ public sealed partial class uGUI_SceneIntro_IntroSequence_Patch : NitroxPatch, I
         Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
     }
 
-    private static bool IsPartnerValid()
+    private static bool IsPartnerValid() => partner != null && Resolve<PlayerManager>().Find(partner.PlayerId).HasValue;
+
+    public static void SkipLocalCinematic(uGUI_SceneIntro uGuiSceneIntro)
     {
-        return partner != null && Resolve<PlayerManager>().Find(partner.PlayerId).HasValue;
+        uGuiSceneIntro.Stop(true);
+
+        Transform introFireHolder = EscapePod.main.transform.Find("Intro");
+        if (introFireHolder) // Can be null if called very early
+        {
+            introFireHolder.GetComponentInChildren<FMOD_CustomEmitter>(true).ReleaseEvent(); // Not releasing it before destroying results in infinite unstoppable pain
+            Object.DestroyImmediate(introFireHolder.gameObject); // Like in Fire.Extinguished() but without delay
+        }
+        Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
     }
 }

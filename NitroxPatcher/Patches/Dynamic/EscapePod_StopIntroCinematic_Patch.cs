@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 
@@ -14,14 +13,6 @@ public sealed partial class EscapePod_StopIntroCinematic_Patch : NitroxPatch, ID
     {
         if (!isInterrupted) return;
 
-        // This patch should fire before Multiplayer is loaded. To prevent sending as an unauthenticated packet we delay it.
-        if (Multiplayer.Active)
-        {
-            Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
-        }
-        else
-        {
-            Multiplayer.OnLoadingComplete += () => Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
-        }
+        Resolve<PlayerCinematics>().SetLocalIntroCinematicMode(IntroCinematicMode.COMPLETED);
     }
 }
