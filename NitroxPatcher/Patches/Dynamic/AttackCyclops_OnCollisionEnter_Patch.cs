@@ -29,7 +29,7 @@ public sealed partial class AttackCyclops_OnCollisionEnter_Patch : NitroxPatch, 
      * {
      *     if (this.isActive)
      * BY:
-     * if (AttackCyclops_OnCollisionEnter_Patch.ShouldCollisionAnnoyCreature(this, collision))
+     * if (AttackCyclops_OnCollisionEnter_Patch.ShouldCollisionAnnoyCreature(collision))
      * {
      *     if (this.isActive)
      */

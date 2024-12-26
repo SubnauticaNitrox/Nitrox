@@ -21,7 +21,7 @@ public sealed partial class AttackLastTarget_CanAttackTarget_Patch : NitroxPatch
         }
         // We only want to cancel if the target is a remote player which can't be attacked
         if (target.TryGetComponent(out RemotePlayerIdentifier remotePlayerIdentifier) &&
-            !remotePlayerIdentifier.RemotePlayer.CanBeAttacked())
+            (!remotePlayerIdentifier.RemotePlayer.LiveMixin.IsAlive() || !remotePlayerIdentifier.RemotePlayer.CanBeAttacked()))
         {
             __result = false;
             return false;
