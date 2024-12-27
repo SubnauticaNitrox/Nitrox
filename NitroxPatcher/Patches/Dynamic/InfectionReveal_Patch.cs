@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -7,6 +8,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -37,28 +39,27 @@ To:
        )
        .InstructionEnumeration();
     }
-    public static void Postfix()
-    {
-        SendInfectAnimationEndPacket();
-    }
     public static void SendInfectAnimationStartPacket()
     {
-        Log.Debug("Infection animation start packet sending");
         if (!Resolve<LocalPlayer>().PlayerId.HasValue)
         {
             return;
         }
+        Log.Debug("Infection animation start packet sending");
         AnimationChangeEvent animEventPacket = new(Resolve<LocalPlayer>().PlayerId.Value, (int)AnimChangeType.INFECTION_REVEAL, (int)AnimChangeState.ON);
         Resolve<IPacketSender>().Send(animEventPacket);
+        UWE.CoroutineHost.StartCoroutine(SendInfectAnimationEndPacket());
     }
-    public static void SendInfectAnimationEndPacket()
+    public static IEnumerator SendInfectAnimationEndPacket()
     {
-        Log.Debug("Infection animation end packet sending");
         if (!Resolve<LocalPlayer>().PlayerId.HasValue)
         {
-            return;
+            yield break;
         }
+        yield return new WaitForSeconds(12f);
+        Log.Debug("Infection animation end packet sending");
         AnimationChangeEvent animEventPacket = new(Resolve<LocalPlayer>().PlayerId.Value, (int)AnimChangeType.INFECTION_REVEAL, (int)AnimChangeState.OFF);
         Resolve<IPacketSender>().Send(animEventPacket);
+        yield break;
     }
 }
