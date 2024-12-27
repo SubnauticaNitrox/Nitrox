@@ -41,25 +41,15 @@ To:
     }
     public static void SendInfectAnimationStartPacket()
     {
-        if (!Resolve<LocalPlayer>().PlayerId.HasValue)
-        {
-            return;
-        }
-        Log.Debug("Infection animation start packet sending");
-        AnimationChangeEvent animEventPacket = new(Resolve<LocalPlayer>().PlayerId.Value, (int)AnimChangeType.INFECTION_REVEAL, (int)AnimChangeState.ON);
-        Resolve<IPacketSender>().Send(animEventPacket);
+        Log.Debug("Infection animation started");
+        Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.ON);
         UWE.CoroutineHost.StartCoroutine(SendInfectAnimationEndPacket());
     }
     public static IEnumerator SendInfectAnimationEndPacket()
     {
-        if (!Resolve<LocalPlayer>().PlayerId.HasValue)
-        {
-            yield break;
-        }
         yield return new WaitForSeconds(12f);
-        Log.Debug("Infection animation end packet sending");
-        AnimationChangeEvent animEventPacket = new(Resolve<LocalPlayer>().PlayerId.Value, (int)AnimChangeType.INFECTION_REVEAL, (int)AnimChangeState.OFF);
-        Resolve<IPacketSender>().Send(animEventPacket);
+        Log.Debug("Infection animation ended");
+        Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.OFF);
         yield break;
     }
 }
