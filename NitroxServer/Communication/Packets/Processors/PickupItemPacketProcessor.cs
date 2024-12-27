@@ -38,7 +38,7 @@ public class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem
         entityRegistry.AddOrUpdate(packet.Item);
 
         // Have other players respawn the item inside the inventory.
-        playerManager.SendPacketToOtherPlayers(new SpawnEntities(packet.Item, true), player);
+        playerManager.SendPacketToOtherPlayers(new SpawnEntities(packet.Item, forceRespawn: true), player);
     }
 
     private void StopTrackingExistingWorldEntity(NitroxId id)

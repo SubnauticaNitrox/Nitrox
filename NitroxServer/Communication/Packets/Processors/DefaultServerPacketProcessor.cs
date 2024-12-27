@@ -14,7 +14,6 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
     {
         typeof(AnimationChangeEvent),
         typeof(PlayerMovement),
-        typeof(VehicleMovement),
         typeof(ItemPosition),
         typeof(PlayerStats),
         typeof(StoryGoalExecuted),
@@ -22,7 +21,7 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(FMODCustomEmitterPacket),
         typeof(FMODCustomLoopingEmitterPacket),
         typeof(FMODStudioEmitterPacket),
-        typeof(PlayerCinematicControllerCall)
+        typeof(PlayerCinematicControllerCall),
     };
 
     /// <summary>

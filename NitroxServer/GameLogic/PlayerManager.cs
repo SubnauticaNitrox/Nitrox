@@ -122,9 +122,10 @@ namespace NitroxServer.GameLogic
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
             NitroxGameMode gameMode = hasSeenPlayerBefore ? player.GameMode : serverConfig.GameMode;
+            IntroCinematicMode introCinematicMode = hasSeenPlayerBefore ? IntroCinematicMode.COMPLETED : IntroCinematicMode.LOADING;
 
             // TODO: At some point, store the muted state of a player
-            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode);
+            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings, false, gameMode, null, introCinematicMode);
             string reservationKey = Guid.NewGuid().ToString();
 
             reservations.Add(reservationKey, playerContext);
@@ -206,8 +207,7 @@ namespace NitroxServer.GameLogic
                     serverConfig.GameMode,
                     new List<NitroxTechType>(),
                     Array.Empty<Optional<NitroxId>>(),
-                    new List<EquippedItemData>(),
-                    new List<EquippedItemData>(),
+                    new Dictionary<string, NitroxId>(),
                     new Dictionary<string, float>(),
                     new Dictionary<string, PingInstancePreference>(),
                     new List<int>()
@@ -335,13 +335,13 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        private IEnumerable<Player> ConnectedPlayers()
+        public IEnumerable<Player> ConnectedPlayers()
         {
             return assetsByConnection.Values
                 .Where(assetPackage => assetPackage.Player != null)
                 .Select(assetPackage => assetPackage.Player);
         }
-        
+
         public void BroadcastPlayerJoined(Player player)
         {
             PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);

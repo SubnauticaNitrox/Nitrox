@@ -1,30 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// Skips the GameModeUtils.IsPermadeath() branch so it doesn't call SaveGameAsync().
+/// Inserts IMultiplayerSession.Disconnect() after LargeWorldStreamer streamer = LargeWorldStreamer.main
+/// </summary>
 public sealed partial class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
-
-    internal static readonly object triggerOperand = Reflect.Property(() => SaveLoadManager.main).GetMethod;
-    internal static readonly object injectionOperand = Reflect.Method(() => Application.Quit());
+    private static readonly MethodInfo enumeratorMethod = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
+    private static readonly MethodInfo targetMethod = AccessTools.EnumeratorMoveNext(enumeratorMethod);
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        foreach (CodeInstruction instruction in instructions)
-        {
-            if (instruction.operand != null && instruction.operand.Equals(triggerOperand))
-            {
-                instruction.operand = injectionOperand;
-                yield return instruction;
-                break;
-            }
-
-            yield return instruction;
-        }
+        return new CodeMatcher(instructions)
+               .MatchEndForward(
+                   new CodeMatch(OpCodes.Call, Reflect.Method(() => GameModeUtils.IsPermadeath()))
+               )
+               .Set(OpCodes.Ldc_I4_0, null)
+               .MatchEndForward(
+                   new CodeMatch(OpCodes.Ldsfld, Reflect.Field(() => LargeWorldStreamer.main))
+               )
+               .Advance(2)
+               .Insert(
+                   TranspilerHelper.LocateService<IMultiplayerSession>(),
+                   new CodeInstruction(OpCodes.Callvirt, Reflect.Method((IMultiplayerSession x) => x.Disconnect()))
+               )
+               .InstructionEnumeration();
     }
 }

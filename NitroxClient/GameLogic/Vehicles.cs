@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic;
@@ -21,94 +21,19 @@ public class Vehicles
 {
     private readonly IPacketSender packetSender;
     private readonly IMultiplayerSession multiplayerSession;
+    private readonly PlayerManager playerManager;
+    private readonly EntityMetadataManager entityMetadataManager;
+    private readonly Entities entities;
+
     private readonly Dictionary<TechType, string> pilotingChairByTechType = [];
 
-    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
+    public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession, PlayerManager playerManager, EntityMetadataManager entityMetadataManager, Entities entities)
     {
         this.packetSender = packetSender;
         this.multiplayerSession = multiplayerSession;
-    }
-
-    public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
-    {
-        Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(vehicleModel.Id);
-        Vehicle vehicle = null;
-        SubRoot subRoot = null;
-
-        if (opGameObject.HasValue)
-        {
-            Rocket rocket = opGameObject.Value.GetComponent<Rocket>();
-            vehicle = opGameObject.Value.GetComponent<Vehicle>();
-            subRoot = opGameObject.Value.GetComponent<SubRoot>();
-
-            MultiplayerVehicleControl mvc = null;
-
-            if (subRoot)
-            {
-                mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
-            }
-            else if (vehicle)
-            {
-                if (vehicle.docked)
-                {
-                    Log.Debug($"For vehicle {vehicleModel.Id} position update while docked, will not execute");
-                    return;
-                }
-
-                switch (vehicle)
-                {
-                    case SeaMoth seamoth:
-                    {
-                        mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
-                        break;
-                    }
-                    case Exosuit exosuit:
-                    {
-                        mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
-
-                        if (vehicleModel is ExosuitMovementData exoSuitMovement)
-                        {
-                            mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
-                        }
-                        else
-                        {
-                            Log.Error($"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
-                        }
-
-                        break;
-                    }
-                }
-            }
-            else if (rocket)
-            {
-                rocket.transform.position = vehicleModel.Position.ToUnity();
-                rocket.transform.rotation = vehicleModel.Rotation.ToUnity();
-            }
-
-            if (mvc)
-            {
-                mvc.SetPositionVelocityRotation(
-                    vehicleModel.Position.ToUnity(),
-                    vehicleModel.Velocity.ToUnity(),
-                    vehicleModel.Rotation.ToUnity(),
-                    vehicleModel.AngularVelocity.ToUnity()
-                );
-                mvc.SetThrottle(vehicleModel.AppliedThrottle);
-                mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
-            }
-        }
-
-        if (player.HasValue)
-        {
-            RemotePlayer playerInstance = player.Value;
-            playerInstance.SetVehicle(vehicle);
-            if (subRoot)
-            {
-                playerInstance.SetSubRoot(subRoot);
-            }
-            playerInstance.SetPilotingChair(FindPilotingChairWithCache(opGameObject.Value, vehicleModel.TechType.ToUnity()));
-            playerInstance.AnimationController.UpdatePlayerAnimations = false;
-        }
+        this.playerManager = playerManager;
+        this.entityMetadataManager = entityMetadataManager;
+        this.entities = entities;
     }
 
     private PilotingChair FindPilotingChairWithCache(GameObject parent, TechType techType)
@@ -128,14 +53,7 @@ public class Vehicles
         else
         {
             PilotingChair chair = parent.GetComponentInChildren<PilotingChair>(true);
-            if (chair)
-            {
-                pilotingChairByTechType.Add(techType, chair.gameObject.GetHierarchyPath(parent));
-            }
-            else
-            {
-                pilotingChairByTechType.Add(techType, string.Empty);
-            }
+            pilotingChairByTechType.Add(techType, chair ? chair.gameObject.GetHierarchyPath(parent) : string.Empty);
             return chair;
         }
     }
@@ -144,110 +62,87 @@ public class Vehicles
     {
         using (PacketSuppressor<VehicleOnPilotModeChanged>.Suppress())
         {
-            VehicleDestroyed vehicleDestroyed = new(id);
-            packetSender.Send(vehicleDestroyed);
+            EntityDestroyed entityDestroyed = new(id);
+            packetSender.Send(entityDestroyed);
         }
     }
 
-    public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
+    public void BroadcastDestroyedCyclops(GameObject cyclops, NitroxId id)
     {
-        if (!dockingBay.gameObject.TryGetIdOrWarn(out NitroxId dockId))
-        {
-            return;
-        }
-        if (!vehicle.gameObject.TryGetIdOrWarn(out NitroxId vehicleId))
-        {
-            return;
-        }
+        CyclopsMetadataExtractor.CyclopsGameObject cyclopsGameObject = new() { GameObject = cyclops };
+        Optional<EntityMetadata> metadata = entityMetadataManager.Extract(cyclopsGameObject);
 
-        VehicleDocking packet = new VehicleDocking(vehicleId, dockId, multiplayerSession.Reservation.PlayerId);
-        packetSender.Send(packet);
+        if (metadata.HasValue && metadata.Value is CyclopsMetadata cyclopsMetadata)
+        {
+            cyclopsMetadata.IsDestroyed = true;
+            entities.BroadcastMetadataUpdate(id, cyclopsMetadata);
+        }
+    }
 
+    public static void EngagePlayerMovementSuppressor(Vehicle vehicle)
+    {
+        // TODO: Properly prevent the vehicle from sending position update as long as it's not free from the animation
         PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
-        PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
-        vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor, vehicleMovementSuppressor));
+        vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation());
+        return;
+
+        /*
+         A poorly timed movement packet will cause major problems when docking because the remote
+         player will think that the player is no longer in a vehicle.  Unfortunately, the game calls
+         the vehicle exit code before the animation completes so we need to suppress any side effects.
+         Two thing we want to protect against:
+
+             1) If a movement packet is received when docking, the player might exit the vehicle early,
+                and it will show them sitting outside the vehicle during the docking animation.
+
+             2) If a movement packet is received when undocking, the player game object will be stuck in
+                place until after the player exits the vehicle.  This causes the player body to stretch to
+                the current cyclops position.
+        */
+        IEnumerator AllowMovementPacketsAfterDockingAnimation()
+        {
+            yield return Yielders.WaitFor3Seconds;
+            playerMovementSuppressor.Dispose();
+        }
     }
 
-    public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
+    public void BroadcastOnPilotModeChanged(GameObject gameObject, bool isPiloting)
     {
-        if (!dockingBay.TryGetIdOrWarn(out NitroxId dockId))
+        if (gameObject.TryGetIdOrWarn(out NitroxId vehicleId))
         {
-            return;
+            VehicleOnPilotModeChanged packet = new(vehicleId, multiplayerSession.Reservation.PlayerId, isPiloting);
+            packetSender.Send(packet);
         }
-        if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
-        {
-            return;
-        }
-
-        PacketSuppressor<PlayerMovement> movementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
-        PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
-        if (!undockingStart)
-        {
-            movementSuppressor.Dispose();
-            vehicleMovementSuppressor.Dispose();
-        }
-
-        VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, multiplayerSession.Reservation.PlayerId, undockingStart);
-        packetSender.Send(packet);
     }
 
-    /*
-     A poorly timed movement packet will cause major problems when docking because the remote
-     player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
-     the vehicle exit code before the animation completes so we need to suppress any side affects.
-     Two thing we want to protect against:
-
-         1) If a movement packet is received when docking, the player might exit the vehicle early
-            and it will show them sitting outside the vehicle during the docking animation.
-
-         2) If a movement packet is received when undocking, the player game object will be stuck in
-            place until after the player exits the vehicle.  This causes the player body to strech to
-            the current cyclops position.
-    */
-    public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<PlayerMovement> playerMovementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
+    public void SetOnPilotMode(GameObject gameObject, ushort playerId, bool isPiloting)
     {
-        yield return Yielders.WaitFor3Seconds;
-        playerMovementSuppressor.Dispose();
-        vehicleMovementSuppressor.Dispose();
-    }
-
-    public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, TechType techType, GameObject gameObject, float cooldown)
-    {
-        yield return new WaitForSeconds(cooldown);
-
-        VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(techType.ToDto(), id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
-        ushort playerId = ushort.MaxValue;
-
-        packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
-    }
-
-    public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
-    {
-        if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
+        if (playerManager.TryFind(playerId, out RemotePlayer remotePlayer))
         {
-            return;
+            if (gameObject.TryGetComponent(out Vehicle vehicle))
+            {
+                remotePlayer.SetVehicle(isPiloting ? vehicle : null);
+            }
+            else if (gameObject.GetComponent<SubRoot>())
+            {
+                if (!isPiloting)
+                {
+                    remotePlayer.SetPilotingChair(null);
+                    return;
+                }
+                PilotingChair pilotingChair = FindPilotingChairWithCache(gameObject, TechType.Cyclops);
+                remotePlayer.SetPilotingChair(pilotingChair);
+            }
+            // TODO: [FUTURE] For any mods adding new vehicle with a piloting chair, there should be something done right here
         }
-
-        VehicleOnPilotModeChanged packet = new(vehicleId, multiplayerSession.Reservation.PlayerId, isPiloting);
-        packetSender.Send(packet);
     }
 
     public void SetOnPilotMode(NitroxId vehicleId, ushort playerId, bool isPiloting)
     {
-        Optional<GameObject> opVehicle = NitroxEntity.GetObjectFrom(vehicleId);
-        if (!opVehicle.HasValue)
+        if (NitroxEntity.TryGetObjectFrom(vehicleId, out GameObject vehicleObject))
         {
-            return;
+            SetOnPilotMode(vehicleObject, playerId, isPiloting);
         }
-
-        GameObject gameObject = opVehicle.Value;
-        Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-        if (!vehicle)
-        {
-            return;
-        }
-
-        vehicle.pilotId = isPiloting ? playerId.ToString() : string.Empty;
     }
 
     /// <summary>
@@ -266,7 +161,7 @@ public class Vehicles
         foreach (NitroxEntity nitroxEntity in nitroxEntities)
         {
             nitroxEntity.Remove();
-            UnityEngine.Object.DestroyImmediate(nitroxEntity);
+            Object.DestroyImmediate(nitroxEntity);
         }
     }
 

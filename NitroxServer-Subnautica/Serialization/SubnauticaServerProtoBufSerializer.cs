@@ -1,9 +1,6 @@
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures.Surrogates;
 using NitroxServer.Serialization;
-using ProtoBufNet.Meta;
 using UnityEngine;
 
 namespace NitroxServer_Subnautica.Serialization
@@ -28,10 +25,6 @@ namespace NitroxServer_Subnautica.Serialization
             Model.Add(typeof(NitroxQuaternion), false).SetSurrogate(typeof(QuaternionSurrogate));
             Model.Add(typeof(Transform), false).SetSurrogate(typeof(NitroxTransform));
             Model.Add(typeof(GameObject), false).SetSurrogate(typeof(NitroxServer.UnityStubs.GameObject));
-
-            MetaType movementData = Model.Add(typeof(VehicleMovementData), false);
-            movementData.AddSubType(100, typeof(BasicVehicleMovementData));
-            movementData.AddSubType(200, typeof(ExosuitMovementData));
         }
     }
 }
