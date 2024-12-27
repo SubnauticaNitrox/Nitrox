@@ -53,7 +53,7 @@ To:
     }
     public static void SendInfectAnimationEndPacket()
     {
-        Log.Debug("Infection animation start packet sending");
+        Log.Debug("Infection animation end packet sending");
         if (!Resolve<LocalPlayer>().PlayerId.HasValue)
         {
             return;
