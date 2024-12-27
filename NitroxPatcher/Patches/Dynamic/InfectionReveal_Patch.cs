@@ -15,6 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 public sealed partial class InfectionReveal_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Player t) => t.TriggerInfectionRevealAsync()));
+    
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         /*
@@ -39,12 +40,14 @@ To:
        )
        .InstructionEnumeration();
     }
+
     public static void SendInfectAnimationStartPacket()
     {
         Log.Debug("Infection animation started");
         Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.ON);
         UWE.CoroutineHost.StartCoroutine(SendInfectAnimationEndPacket());
     }
+
     public static IEnumerator SendInfectAnimationEndPacket()
     {
         yield return new WaitForSeconds(12f);
