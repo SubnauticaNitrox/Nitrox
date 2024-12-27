@@ -2,7 +2,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -33,8 +37,28 @@ To:
        )
        .InstructionEnumeration();
     }
+    public static void Postfix()
+    {
+        SendInfectAnimationEndPacket();
+    }
     public static void SendInfectAnimationStartPacket()
     {
-        Log.Debug("Infection animation transpiler hit");
+        Log.Debug("Infection animation start packet sending");
+        if (!Resolve<LocalPlayer>().PlayerId.HasValue)
+        {
+            return;
+        }
+        AnimationChangeEvent animEventPacket = new(Resolve<LocalPlayer>().PlayerId.Value, (int)AnimChangeType.INFECTION_REVEAL, (int)AnimChangeState.ON);
+        Resolve<IPacketSender>().Send(animEventPacket);
+    }
+    public static void SendInfectAnimationEndPacket()
+    {
+        Log.Debug("Infection animation start packet sending");
+        if (!Resolve<LocalPlayer>().PlayerId.HasValue)
+        {
+            return;
+        }
+        AnimationChangeEvent animEventPacket = new(Resolve<LocalPlayer>().PlayerId.Value, (int)AnimChangeType.INFECTION_REVEAL, (int)AnimChangeState.OFF);
+        Resolve<IPacketSender>().Send(animEventPacket);
     }
 }
