@@ -50,72 +50,24 @@
         <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
 
+    <!-- Project references not to be code-linked with app, but are used by app as content files. See https://github.com/dotnet/msbuild/issues/4795#issuecomment-1443879474  -->
     <ItemGroup>
-      <UpToDateCheckInput Remove="UI\Styles\Nitrox.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Palette\Nitrox.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\ButtonStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\CheckBoxStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\ComboBoxStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\ExpanderStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\RadioButtonGroupStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\RadioButtonStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\ScrollViewerStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\TextBlockStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\TextBoxStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\ToolTipStyle.axaml" />
-      <UpToDateCheckInput Remove="UI\Styles\Theme\ValidationErrorsStyle.axaml" />
+        <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj">
+            <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+            <ExcludeAssets>compile</ExcludeAssets>
+        </ProjectReference>
+        <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
+            <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+            <ExcludeAssets>compile</ExcludeAssets>
+            <Properties>TargetFramework=net472;OutDir=$(MSBuildProjectDirectory)\$(OutputPath)\lib\net472\</Properties>
+        </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\Nitrox.Assets.Subnautica\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="..\Nitrox.Assets.Subnautica\LanguageFiles\**" LinkBase="Resources\LanguageFiles" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="..\Nitrox.Assets.Subnautica\AssetBundles\**" LinkBase="Resources\AssetBundles" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <Import Project="..\Nitrox.Shared.targets" />
-
-    <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)">
-        <Message Importance="High" Text="Running MoveNitroxAssetsToLauncherOutput" /> 
-
-        <ItemGroup>
-            <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
-            <NitroxSubnauticaStaticDlls Include="..\Nitrox.Assets.Subnautica\**\*.dll" />
-            <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Assets.Subnautica\LanguageFiles\*.json" />
-            <NitroxSubnauticaResources Include="..\Nitrox.Assets.Subnautica\Resources\*.*" />
-        </ItemGroup>
-
-        <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
-        <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
-        <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\Resources\LanguageFiles\%(RecursiveDir)" />
-        <Copy SourceFiles="@(NitroxSubnauticaResources)" DestinationFolder="$(TargetDir)\Resources\%(RecursiveDir)" />
-    </Target>
-
-    <Target Name="BuildServer" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
-        <Message Importance="High" Text="Running BuildServer" />
-
-        <PropertyGroup>
-            <OutputDirectory>$(TargetDir)</OutputDirectory>
-            <SpecificBuildProperty></SpecificBuildProperty>
-            <SpecificBuildProperty Condition="'$(RuntimeIdentifier)' != ''">-r $(RuntimeIdentifier)</SpecificBuildProperty>
-        </PropertyGroup>
-
-        <!-- Create directory if it doesn't exist -->
-        <MakeDir Directories="$(OutputDirectory)"
-                 Condition="!Exists('$(OutputDirectory)')"
-                 ContinueOnError="WarnAndContinue" />
-
-        <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Command="dotnet build ../NitroxServer-Subnautica/NitroxServer-Subnautica.csproj -c $(Configuration) $(SpecificBuildProperty) -p:Configuration=$(Configuration) -p:OutputPath=$(OutputDirectory)" />
-    </Target>
-    
-    <!-- Build dependencies that will be loaded by the game, which must be net472 compatible -->
-    <Target Name="BuildNet472BinariesForGame" BeforeTargets="$(_NitroxMoveDependenciesToLibTaskName)">
-        <Message Importance="High" Text="Running BuildNet472BinariesForGame" />
-
-        <PropertyGroup>
-            <OutputDirectory>$(TargetDir)lib\net472</OutputDirectory>
-        </PropertyGroup>
-
-        <!-- Create directory if it doesn't exist -->
-        <MakeDir Directories="$(OutputDirectory)"
-                 Condition="!Exists('$(OutputDirectory)')"
-                 ContinueOnError="WarnAndContinue" />
-        
-         <!-- MSBuild project build target with OutputPath somehow doesn't work -->
-        <Exec Command="dotnet build ../NitroxPatcher/NitroxPatcher.csproj -c $(Configuration) -f net472 -p:OutputPath=$(OutputDirectory)" />
-    </Target>
 </Project>

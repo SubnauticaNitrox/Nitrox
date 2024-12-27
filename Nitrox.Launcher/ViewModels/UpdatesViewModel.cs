@@ -66,8 +66,8 @@ public partial class UpdatesViewModel : RoutableViewModelBase
                 LauncherNotifier.Warning(versionMessage);
             }
 
-            version = currentVersion.ToString();
-            officialVersion = latestVersion.ToString();
+            Version = currentVersion.ToString();
+            OfficialVersion = latestVersion.ToString();
         }
         catch // If update check fails, just show "No Update Available" text unless on debug mode
         {

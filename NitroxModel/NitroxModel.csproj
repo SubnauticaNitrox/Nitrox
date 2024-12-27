@@ -34,7 +34,7 @@
     </ItemGroup>
 
     <Choose>
-        <When Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <When Condition="'$(TargetFramework)' == 'net472'">
             <ItemGroup>
                 <!-- .NET Framework 4.7.2 specific references -->
                 <Reference Include="System.Net.Http" />
