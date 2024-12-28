@@ -162,7 +162,12 @@ namespace NitroxServer.Serialization
 
                 Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
 
-                object component = FormatterServices.GetUninitializedObject(type);
+#if NET5_0_OR_GREATER
+                object component = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(type);
+#else
+                object component = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
+#endif
+
                 long startPosition = stream.Position;
                 serializer.Deserialize(stream, component, type);
 
