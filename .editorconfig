@@ -52,11 +52,6 @@ dotnet_style_qualification_for_method = false:silent
 dotnet_style_qualification_for_event = false:silent
 dotnet_style_predefined_type_for_locals_parameters_members = true:silent
 dotnet_style_predefined_type_for_member_access = true:silent
-dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_null_propagation = false:warning
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
-dotnet_style_prefer_auto_properties = true:silent
-dotnet_style_operator_placement_when_wrapping = beginning_of_line
 
 [App.config]
 indent_size = 4
@@ -66,9 +61,8 @@ insert_final_newline = true
 indent_size = 4
 insert_final_newline = true
 charset = utf-8
+csharp_prefer_system_threading_lock = true:suggestion
 csharp_space_around_binary_operators = before_and_after
-csharp_indent_labels = one_less_than_current
-csharp_style_expression_bodied_methods = false:silent
 csharp_style_expression_bodied_constructors = false:silent
 csharp_style_expression_bodied_operators = false:silent
 csharp_style_expression_bodied_properties = true:silent
@@ -83,7 +77,6 @@ csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
 csharp_style_prefer_not_pattern = true:suggestion
 csharp_style_prefer_extended_property_pattern = true:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
-csharp_prefer_braces = true:silent
 csharp_style_namespace_declarations = file_scoped:suggestion
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
@@ -222,7 +215,6 @@ dotnet_naming_rule.public_fields.severity = warning
 dotnet_naming_rule.general_types.symbols = types
 dotnet_naming_rule.general_types.style = pascal_case_style
 dotnet_naming_rule.general_types.severity = warning
-csharp_prefer_system_threading_lock = true:suggestion
 
 [*.g.cs]
 generated_code = true
