@@ -12,11 +12,6 @@ using NitroxModel.Platforms.OS.Windows;
 
 namespace NitroxModel.Platforms.OS.Shared;
 
-#if NET5_0_OR_GREATER
-[System.Runtime.Versioning.SupportedOSPlatform("windows")]
-[System.Runtime.Versioning.SupportedOSPlatform("linux")]
-[System.Runtime.Versioning.SupportedOSPlatform("osx")]
-#endif
 public abstract class FileSystem
 {
     private static readonly Lazy<FileSystem> instance = new(() =>

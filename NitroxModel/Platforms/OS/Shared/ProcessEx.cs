@@ -201,6 +201,9 @@ public class ProcessModuleEx
     public int ModuleMemorySize { get; set; }
 }
 
+#if NET5_0_OR_GREATER
+[System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
 public class WindowsProcessEx : ProcessExBase
 {
     private bool disposed;
@@ -259,8 +262,8 @@ public class WindowsProcessEx : ProcessExBase
             }
 
             // Otherwise check if user is in admin group (https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers)
-            string admininistratorSID = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null).Value;
-            return principal.Claims.Any(claim => claim.Value == admininistratorSID);
+            string admininistratorSid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null).Value;
+            return principal.Claims.Any(claim => claim.Value == admininistratorSid);
         }
         catch (Exception)
         {
