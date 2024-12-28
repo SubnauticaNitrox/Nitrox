@@ -11,7 +11,7 @@
         <ApplicationIcon>Assets\Images\nitrox-icon.ico</ApplicationIcon>
         <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <AppBundleName>Nitrox.app</AppBundleName>
     </PropertyGroup>
@@ -35,8 +35,8 @@
         <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.1.0.7" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
         <PackageReference Include="ConsoleAppFramework" Version="5.3.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="dnlib" Version="4.4.0" />
         <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
