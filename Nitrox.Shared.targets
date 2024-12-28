@@ -27,7 +27,7 @@
     </PropertyGroup>
 
     <!-- Common targets -->
-    <Target Name="_NitroxBeforeBuild" AfterTargets="Build" />
+    <Target Name="_NitroxBeforeBuild" AfterTargets="Build;Rebuild" />
 
     <Target Name="_NitroxBuild" AfterTargets="$(_NitroxBeforeBuildTaskName)" />
 
@@ -109,7 +109,7 @@
         <Message Importance="High"
                  Text="Running NitroxClean on $(MSBuildProjectName)" />
 
-         <RemoveDir Directories="$(TargetDir)\$(_NitroxOutputFolder);$(TargetDir)\$(_NitroxResourcesFolder)"
+         <RemoveDir Directories="$(TargetDir)\$(_NitroxOutputFolder);$(TargetDir)\$(_NitroxResourcesFolder);$(TargetDir)\runtimes"
                     ContinueOnError="WarnAndContinue" />
     </Target>
 

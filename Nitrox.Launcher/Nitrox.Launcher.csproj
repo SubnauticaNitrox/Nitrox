@@ -56,12 +56,39 @@
             <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
             <ExcludeAssets>compile</ExcludeAssets>
         </ProjectReference>
+
         <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
-            <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+            <Name>NitroxPatcher472</Name>
+            <SetTargetFramework>TargetFramework=net472</SetTargetFramework>
+            <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <ExcludeAssets>compile</ExcludeAssets>
-            <Properties>TargetFramework=net472;OutDir=$(MSBuildProjectDirectory)\$(OutputPath)\lib\net472\</Properties>
+            <AdditionalProperties Condition="'$(BuildingInsideVisualStudio)' != 'true'">TargetFramework=net472;OutDir=$(MSBuildProjectDirectory)\$(OutputPath)\lib\net472\</AdditionalProperties>
         </ProjectReference>
     </ItemGroup>
+
+    <!-- ProjectReference with Properties/AdditionalProperties aren't given to referenced project inside Visual Studio, so we need to copy it by hand.. -->
+    <!-- See: https://github.com/dotnet/msbuild/issues/5599 -->
+    <Target Name="_NitroxFixBuildInsideVisualStudio" AfterTargets="$(_NitroxMoveDependenciesToLibTaskName)" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+
+        <Message Importance="High"
+                 Text="Running _FixBuildInsideVisualStudio on $(MSBuildProjectName)" />
+
+        <ItemGroup>
+            <_FilesToCopy Include="$(MSBuildProjectDirectory)\..\NitroxPatcher\bin\$(Configuration)\net472\*" />
+        </ItemGroup>
+
+        <Error Text="Unable to find NitroxPatcher files from _NitroxFixBuildInsideVisualStudio"
+               Condition="@(_FilesToCopy->Count()) == 0" />
+
+        <Copy SourceFiles="@(_FilesToCopy)"
+              DestinationFolder="$(MSBuildProjectDirectory)\$(OutputPath)\lib\net472\"
+              OverwriteReadOnlyFiles="True"
+              Retries="3"
+              RetryDelayMilliseconds="100"
+              SkipUnchangedFiles="True" />
+
+    </Target>
 
     <ItemGroup>
         <Content Include="..\Nitrox.Assets.Subnautica\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
