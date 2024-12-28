@@ -1,9 +1,11 @@
 using System;
 using NitroxModel.Helper;
-using NitroxModel.Platforms.OS.Windows.Internal;
 
 namespace NitroxModel.Platforms.OS.Windows;
 
+#if NET5_0_OR_GREATER
+[System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
 public class RegistryKeyValueStore : IKeyValueStore
 {
     public static string KeyToRegistryPath(string key) => @$"SOFTWARE\Nitrox\{key}";

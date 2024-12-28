@@ -7,6 +7,9 @@ using Microsoft.Win32;
 
 namespace NitroxModel.Platforms.OS.Windows;
 
+#if NET5_0_OR_GREATER
+[System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
 public static class RegistryEx
 {
     /// <summary>
