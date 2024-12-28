@@ -1,12 +1,14 @@
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using Nitrox.Test.Model.Platforms;
 
 namespace NitroxModel.Platforms.OS.Windows;
 
 [TestClass]
+[SupportedOSPlatform("windows")]
 public class RegistryTest
 {
-    [OSTestMethod("WINDOWS")]
+    [OSTestMethod("windows")]
     public async Task WaitsForRegistryKeyToExist()
     {
         const string PATH_TO_KEY = @"SOFTWARE\Nitrox\test";
