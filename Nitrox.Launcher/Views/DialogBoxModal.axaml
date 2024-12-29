@@ -18,6 +18,7 @@
         <controls:CustomTitlebar ShowTitle="False" CanMinimize="False" Grid.RowSpan="2" />
         <TextBlock Grid.Row="0" Text="{Binding Title}" Margin="24 20 24 -10"
                    FontWeight="{Binding TitleFontWeight}" FontSize="{Binding TitleFontSize}"
+                   TextWrapping="Wrap"
                    IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="24 20 10 20">

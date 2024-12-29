@@ -58,9 +58,7 @@ public class ServerService
     public async Task<bool> ConfirmServerVersionAsync(ServerEntry server) =>
         await dialogService.ShowAsync<DialogBoxViewModel>(model =>
         {
-            model.Description = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
-            model.DescriptionFontSize = 24;
-            model.DescriptionFontWeight = FontWeight.Bold;
+            model.Title = $"The version of '{server.Name}' is v{(server.Version != null ? server.Version.ToString() : "X.X.X.X")}. It is highly recommended to NOT use this save file with Nitrox v{NitroxEnvironment.Version}. Would you still like to continue?";
             model.ButtonOptions = ButtonOptions.YesNo;
         });
 }

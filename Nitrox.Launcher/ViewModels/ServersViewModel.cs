@@ -127,7 +127,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             await HostScreen.ShowAsync(new EmbeddedServerViewModel(server));
             return;
         }
-        if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server)) // TODO: Exclude upgradeable versions + add separate prompt to upgrade first?
+        if (server.Version != NitroxEnvironment.Version && !await serverService.ConfirmServerVersionAsync(server))
         {
             return;
         }
