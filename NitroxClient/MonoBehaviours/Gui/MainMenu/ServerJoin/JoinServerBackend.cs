@@ -69,14 +69,7 @@ public static class JoinServerBackend
                 Log.InGame(Language.main.Get("Nitrox_LaunchGame"));
                 multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                 preferencesManager.Save();
-
-#pragma warning disable CS0618 // God Damn it UWE...
-                Multiplayer.SubnauticaLoadingStarted();
-                IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
-#pragma warning restore CS0618 // God damn it UWE...
-                UWE.CoroutineHost.StartCoroutine(startNewGame);
-                LoadingScreenVersionText.Initialize();
-
+                StartGame();
                 break;
 
             case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
@@ -145,6 +138,28 @@ public static class JoinServerBackend
             StopMultiplayerClient();
             MainMenuNotificationPanel.ShowMessage(msg, MainMenuServerListPanel.NAME);
         }
+    }
+
+    /// <summary>
+    /// This method starts a connection with the provided server but leaves handling the session negotiation for the caller.
+    /// </summary>
+    public static async Task StartDetachedMultiplayerClientAsync(IPAddress ip, int port, MultiplayerSessionConnectionStateChangedEventHandler sessionHandler)
+    {
+        multiplayerClient = new GameObject("Nitrox Multiplayer Client");
+        Task task = StartMultiplayerClientAsync(ip, port);
+        multiplayerClient.AddComponent<Multiplayer>();
+        multiplayerSession.ConnectionStateChanged += sessionHandler;
+        await task;
+    }
+
+    public static void StartGame()
+    {
+#pragma warning disable CS0618 // God Damn it UWE...
+        Multiplayer.SubnauticaLoadingStarted();
+        IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
+#pragma warning restore CS0618 // God damn it UWE...
+        UWE.CoroutineHost.StartCoroutine(startNewGame);
+        LoadingScreenVersionText.Initialize();
     }
 
     public static void StopMultiplayerClient()
