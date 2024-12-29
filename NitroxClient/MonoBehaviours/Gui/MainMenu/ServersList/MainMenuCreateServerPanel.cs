@@ -14,6 +14,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu.ServersList;
 public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, uGUI_IButtonReceiver
 {
     public const string NAME = "MultiplayerCreateServer";
+    private const string DEFAULT_PORT = "11000";
 
     private TMP_InputField serverNameInput, serverAddressInput, serverPortInput;
     private mGUI_Change_Legend_On_Select legendChange;
@@ -56,6 +57,7 @@ public class MainMenuCreateServerPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         serverPortInput = serverPort.GetComponent<TMP_InputField>();
         serverPortInput.characterValidation = TMP_InputField.CharacterValidation.Integer;
         serverPortInput.placeholder.GetComponent<TranslationLiveUpdate>().translationKey = Language.main.Get("Nitrox_AddServer_PortPlaceholder");
+        serverPortInput.text = DEFAULT_PORT;
         GameObject serverPortDesc = Instantiate(generalTextRef, serverPort.transform, false);
         serverPortDesc.transform.localPosition = new Vector3(-200, 0, 0);
         serverPortDesc.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_AddServer_PortDescription");
