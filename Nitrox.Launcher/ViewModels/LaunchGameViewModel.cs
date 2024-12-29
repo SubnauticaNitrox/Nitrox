@@ -141,8 +141,15 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                 {
                     const string PATCHER_DLL_NAME = "NitroxPatcher.dll";
 
+                    string patcherDllPath = Path.Combine(NitroxUser.ExecutableRootPath ?? "", "lib", "net472", PATCHER_DLL_NAME);
+                    if (!File.Exists(patcherDllPath))
+                    {
+                        LauncherNotifier.Error("Launcher files seems corrupted, please contact us");
+                        return false;
+                    }
+
                     File.Copy(
-                        Path.Combine(NitroxUser.ExecutableRootPath ?? "", "lib", "net472", PATCHER_DLL_NAME),
+                        patcherDllPath,
                         Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
                         true
                     );

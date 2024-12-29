@@ -14,6 +14,9 @@
         <_ReleaseMacOSTaskName>_NitroxMacOSRelease</_ReleaseMacOSTaskName>
         <_VerifyMacOSFilesTaskName>_VerifyMacOSFiles</_VerifyMacOSFilesTaskName>
         <_CreateMacOSAppBundleTaskName>_CreateMacOSAppBundle</_CreateMacOSAppBundleTaskName>
+
+        <_NitroxOutputFolder>lib\</_NitroxOutputFolder>
+        <_NitroxResourcesFolder>Resources\</_NitroxResourcesFolder>
     </PropertyGroup>
     
     <!-- Overridable properties -->
@@ -24,7 +27,7 @@
     </PropertyGroup>
 
     <!-- Common targets -->
-    <Target Name="_NitroxBeforeBuild" AfterTargets="Build" />
+    <Target Name="_NitroxBeforeBuild" AfterTargets="Build;Rebuild" />
 
     <Target Name="_NitroxBuild" AfterTargets="$(_NitroxBeforeBuildTaskName)" />
 
@@ -59,7 +62,6 @@
                  Text="Running $(_NitroxMoveDependenciesToLibTaskName) on $(MSBuildProjectName)" />
         
         <PropertyGroup>
-            <_NitroxOutputFolder>lib\</_NitroxOutputFolder>
             <OutputDirectory>$(TargetDir)$(_NitroxOutputFolder)</OutputDirectory>
         </PropertyGroup>
 
@@ -106,6 +108,9 @@
     <Target Name="_NitroxClean" AfterTargets="Clean">
         <Message Importance="High"
                  Text="Running NitroxClean on $(MSBuildProjectName)" />
+
+         <RemoveDir Directories="$(TargetDir)\$(_NitroxOutputFolder);$(TargetDir)\$(_NitroxResourcesFolder);$(TargetDir)\runtimes"
+                    ContinueOnError="WarnAndContinue" />
     </Target>
 
     <!-- *************** RELEASE *************** -->
