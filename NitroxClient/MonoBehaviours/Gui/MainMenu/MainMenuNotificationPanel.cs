@@ -37,6 +37,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         instance.confirmObject.SetActive(false);
         instance.loadingCircle.gameObject.SetActive(true);
         instance.text.text = Language.main.Get("Nitrox_Loading");
+        uGUI_MainMenu.main.ShowPrimaryOptions(true);
         MainMenuRightSide.main.OpenGroup(NAME);
         instance.confirmButtonLegend.legendButtonConfiguration = [];
     }
@@ -54,6 +55,7 @@ public class MainMenuNotificationPanel : MonoBehaviour, uGUI_INavigableIconGrid,
         instance.continuationAction = continuationAction;
         instance.confirmObject.SetActive(true);
         instance.loadingCircle.gameObject.SetActive(false);
+        uGUI_MainMenu.main.ShowPrimaryOptions(true);
         MainMenuRightSide.main.OpenGroup(NAME);
         instance.confirmButtonLegend.legendButtonConfiguration = instance.savedLegendData;
     }
