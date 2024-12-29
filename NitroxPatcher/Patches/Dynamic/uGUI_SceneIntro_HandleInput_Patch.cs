@@ -16,8 +16,16 @@ public sealed partial class uGUI_SceneIntro_HandleInput_Patch : NitroxPatch, IDy
 
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
+        /* Removes uGUI_SceneIntro.Stop() and uses our HandleButtonHeld feedback as return value
+         *
+         * Replaces:
+         *      this.Stop(true);
+         *      return false;
+         *
+         * With:
+         *      return uGUI_SceneIntro_HandleInput_Patch.HandleButtonHeld(this);
+         */
         return new CodeMatcher(instructions)
-               // Remove uGUI_SceneIntro.Stop() and use our HandleButtonHeld feedback as return value
                .MatchStartForward(
                    new CodeMatch(OpCodes.Ldc_I4_1),
                    new CodeMatch(OpCodes.Call, Reflect.Method((uGUI_SceneIntro si) => si.Stop(default))),
