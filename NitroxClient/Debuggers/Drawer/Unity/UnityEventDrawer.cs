@@ -53,10 +53,8 @@ public class UnityEventDrawer : IDrawer<UnityEvent, UnityEventDrawer.DrawOptions
             {
                 NitroxGUILayout.Separator();
                 Object target = unityEventBase.GetPersistentTarget(index);
-                if(target)
-                    GUILayout.Label($"{target.GetType().Name}.{unityEventBase.GetPersistentMethodName(index)}()", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
-                else
-                    GUILayout.Label($"{unityEventBase.GetPersistentMethodName(index)}()", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
+                string labelText = target ? $"{target.GetType().Name}.{unityEventBase.GetPersistentMethodName(index)}()" : $"{unityEventBase.GetPersistentMethodName(index)}()";
+                GUILayout.Label(labelText, NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
             }
         }
     }
