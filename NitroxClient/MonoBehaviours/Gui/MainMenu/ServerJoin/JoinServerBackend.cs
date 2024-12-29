@@ -48,7 +48,7 @@ public static class JoinServerBackend
 
             case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
                 Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out float saturation, out float brightness); // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
-                MainMenuJoinServerPanel.Instance.UpdatePanelValues(serverIp, activePlayerPreference.PlayerName, new Vector3(hue, saturation, brightness));
+                MainMenuJoinServerPanel.Instance.UpdatePlayerPanelValues(activePlayerPreference.PlayerName, new Vector3(hue, saturation, brightness));
 
                 if (multiplayerSession.SessionPolicy.RequiresServerPassword)
                 {

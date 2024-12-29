@@ -287,19 +287,8 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         GameObject multiplayerLoadButtonInst = Instantiate(multiplayerNewServerButtonRef, multiplayerButtonInst.transform, false);
         multiplayerLoadButtonInst.name = "Load";
 
-        StringBuilder buttonText = new();
-        buttonText.Append(Language.main.Get("Nitrox_ConnectTo")).Append(" <b>").Append(serverName).AppendLine("</b>");
-        if (NitroxPrefs.HideIp.Value)
-        {
-            buttonText.AppendLine("***.***.***.***:*****");
-        }
-        else
-        {
-            buttonText.Append(address[^System.Math.Min(address.Length, 25)..]).Append(':').Append(port);
-        }
-
         MainMenuServerButton serverButton = multiplayerButtonInst.AddComponent<MainMenuServerButton>();
-        serverButton.Init(buttonText.ToString(), address, port, isReadOnly);
+        serverButton.Init(serverName, address, port, isReadOnly);
 
         scrollBar.SetActive(serverAreaContent.childCount >= 4);
         foreach (EventTrigger eventTrigger in multiplayerButtonInst.GetComponentsInChildren<EventTrigger>(true))

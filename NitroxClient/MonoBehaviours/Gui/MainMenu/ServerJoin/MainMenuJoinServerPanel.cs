@@ -125,9 +125,10 @@ public class MainMenuJoinServerPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         MainMenuRightSide.main.OpenGroup(MainMenuServerListPanel.NAME);
     }
 
-    public void UpdatePanelValues(string ip, string playerName, Vector3 hsb)
+    public void UpdatePanelValues(string serverName) => header.text = $"    {Language.main.Get("Nitrox_JoinServer")} {serverName}";
+
+    public void UpdatePlayerPanelValues(string playerName, Vector3 hsb)
     {
-        header.text = $"    {Language.main.Get("Nitrox_JoinServer")} {ip}";
         playerNameInputField.text = playerName;
         colorPicker.SetHSB(hsb);
     }

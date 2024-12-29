@@ -1,6 +1,9 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.MainMenu.ServerJoin;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
@@ -22,6 +25,7 @@ public class MainMenuServerButton : MonoBehaviour
 
     private string joinIp;
     private int joinPort;
+    private string joinServerName;
 
     public static void Setup(MainMenuLoadButton _loadButtonRef)
     {
@@ -30,22 +34,33 @@ public class MainMenuServerButton : MonoBehaviour
         deleteButtonRef = _loadButtonRef.deleteButton;
     }
 
-    public void Init(string text, string ip, int port, bool isReadOnly)
+    public void Init(string serverName, string ip, int port, bool isReadOnly)
     {
         joinIp = ip;
         joinPort = port;
+        joinServerName = serverName;
 
         Transform loadTransform = this.RequireTransform("Load");
         loadCg = loadTransform.gameObject.AddComponent<CanvasGroup>();
         Transform newGameButtonTransform = loadTransform.RequireTransform("NewGameButton");
 
         TextMeshProUGUI tmp = newGameButtonTransform.RequireTransform("Text").GetComponent<TextMeshProUGUI>();
-        tmp.text = text;
         Destroy(tmp.GetComponent<TranslationLiveUpdate>());
+        StringBuilder buttonText = new(Language.main.Get("Nitrox_ConnectTo"));
+        buttonText.Append(" <b>").Append(serverName).AppendLine("</b>");
+        if (NitroxPrefs.HideIp.Value)
+        {
+            buttonText.AppendLine("***.***.***.***:*****");
+        }
+        else
+        {
+            buttonText.Append(ip[^Math.Min(ip.Length, 25)..]).Append(':').Append(port);
+        }
+        tmp.text = buttonText.ToString();
 
         Button multiplayerJoinButton = newGameButtonTransform.GetComponent<Button>();
         multiplayerJoinButton.onClick = new Button.ButtonClickedEvent();
-        multiplayerJoinButton.onClick.AddListener(OnJoinButtonClicked);
+        multiplayerJoinButton.onClick.AddListener(() => _ = OnJoinButtonClicked());
 
         gameObject.GetComponent<mGUI_Change_Legend_On_Select>().legendButtonConfiguration = confirmButtonLegendData;
 
@@ -137,7 +152,7 @@ public class MainMenuServerButton : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public async void OnJoinButtonClicked()
+    public async Task OnJoinButtonClicked()
     {
         if (MainMenuServerListPanel.Main.IsJoining)
         {
@@ -147,9 +162,10 @@ public class MainMenuServerButton : MonoBehaviour
         MainMenuServerListPanel.Main.IsJoining = true;
         MainMenuServerListPanel.Main.DeselectAllItems();
         await OpenJoinServerMenuAsync(joinIp, joinPort).ContinueWith(_ => { MainMenuServerListPanel.Main.IsJoining = false; });
+        MainMenuJoinServerPanel.Instance.UpdatePanelValues(joinServerName);
     }
 
-    public static async System.Threading.Tasks.Task OpenJoinServerMenuAsync(string serverIp, int serverPort)
+    public static async Task OpenJoinServerMenuAsync(string serverIp, int serverPort)
     {
         if (!MainMenuServerListPanel.Main)
         {
