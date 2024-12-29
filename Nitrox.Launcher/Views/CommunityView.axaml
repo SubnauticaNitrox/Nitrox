@@ -47,7 +47,7 @@
         <StackPanel Classes="viewPadding" Spacing="23" Background="{DynamicResource BrandWhite}">
             <TextBlock Classes="header" Text="Community" />
             <Image Source="/Assets/Images/banners/community.png" MaxWidth="1580" />
-            <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="280">
+            <controls:FittingWrapPanel MinItemWidth="280" MaxWidth="2500" Margin="-8 0">
                 <Border>
                     <StackPanel>
                         <Panel>
