@@ -44,15 +44,6 @@ To:
     public static void SendInfectAnimationStartPacket()
     {
         Log.Debug("Infection animation started");
-        Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.ON);
-        UWE.CoroutineHost.StartCoroutine(SendInfectAnimationEndPacket());
-    }
-
-    public static IEnumerator SendInfectAnimationEndPacket()
-    {
-        yield return new WaitForSeconds(12f);
-        Log.Debug("Infection animation ended");
-        Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.OFF);
-        yield break;
+        Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.ON);    
     }
 }
