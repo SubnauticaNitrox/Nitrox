@@ -171,7 +171,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
-        if (args is { Cancel: false, IsProgrammatic: false })
+        if (args.Cancel == false && args.IsClosingByUser(MainWindow))
         {
             MainWindow.Close();
         }
