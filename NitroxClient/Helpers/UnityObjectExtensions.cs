@@ -46,4 +46,10 @@ public static class UnityObjectExtensions
         }
         return copy;
     }
+
+    public static bool TryFind(string name, out GameObject gameObject)
+    {
+        gameObject = GameObject.Find(name);
+        return gameObject;
+    }
 }

@@ -38,7 +38,12 @@ namespace NitroxClient.MonoBehaviours
         /// <summary>
         ///     True if multiplayer is loaded and client is connected to a server.
         /// </summary>
-        public static bool Active => Main != null && Main.multiplayerSession.Client.IsConnected;
+        public static bool Active => Main && Main.multiplayerSession.Client.IsConnected;
+
+        /// <summary>
+        ///     True if multiplayer is loaded and player has successfully joined a server.
+        /// </summary>
+        public static bool Joined => Main && Main.multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED;
 
         public void Awake()
         {

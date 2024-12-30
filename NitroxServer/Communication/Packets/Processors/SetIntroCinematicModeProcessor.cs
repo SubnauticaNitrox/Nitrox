@@ -26,6 +26,7 @@ public class SetIntroCinematicModeProcessor : AuthenticatedPacketProcessor<SetIn
         packet.PartnerId = null; // Resetting incoming packets just to be safe we don't relay any PartnerId. Server has only authority.
         player.PlayerContext.IntroCinematicMode = packet.Mode;
         playerManager.SendPacketToOtherPlayers(packet, player);
+        Log.Debug($"Set IntroCinematicMode to {packet.Mode} for {player.PlayerContext.PlayerName}");
 
         Player[] allWaitingPlayers = playerManager.ConnectedPlayers().Where(p => p.PlayerContext.IntroCinematicMode == IntroCinematicMode.WAITING).ToArray();
         if (allWaitingPlayers.Length >= 2)
