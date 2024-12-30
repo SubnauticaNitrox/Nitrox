@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public sealed partial class InfectionReveal_Patch : NitroxPatch, IDynamicPatch
+internal sealed partial class InfectionReveal_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Player t) => t.TriggerInfectionRevealAsync()));
     
