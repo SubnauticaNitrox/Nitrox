@@ -9,7 +9,7 @@ namespace Nitrox.Launcher.Models.Extensions;
 /// </summary>
 public static class CloseByUserExtensions
 {
-    private static readonly Dictionary<Window, bool> isClosingProgrammatically = [];
+    private static readonly Dictionary<Window, bool> isClosingByUser = [];
 
     /// <summary>
     ///     Closes the window non-programmatically (by user).
@@ -21,10 +21,8 @@ public static class CloseByUserExtensions
             return;
         }
         window.Closed += WindowOnClosed;
-
-        isClosingProgrammatically[window] = true;
+        isClosingByUser[window] = true;
         window.Close();
-        return;
 
         static void WindowOnClosed(object sender, EventArgs e)
         {
@@ -33,17 +31,26 @@ public static class CloseByUserExtensions
                 return;
             }
             window.Closed -= WindowOnClosed;
-            isClosingProgrammatically.Remove(window);
+            isClosingByUser.Remove(window);
         }
     }
 
-    public static bool IsClosingByUser(this WindowClosingEventArgs args, Window closingWindow)
+    /// <summary>
+    ///     Closes the window programmatically.
+    /// </summary>
+    public static void CloseByCode(this Window window)
     {
-        if (!args.IsProgrammatic)
+        if (window == null)
         {
-            return true;
+            return;
         }
-        if (closingWindow is not null && isClosingProgrammatically.TryGetValue(closingWindow, out bool isByUser))
+        isClosingByUser[window] = false;
+        window.Close();
+    }
+
+    public static bool IsClosingByUser(this Window closingWindow)
+    {
+        if (closingWindow is not null && isClosingByUser.TryGetValue(closingWindow, out bool isByUser))
         {
             return isByUser;
         }

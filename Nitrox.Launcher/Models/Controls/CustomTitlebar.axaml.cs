@@ -108,6 +108,6 @@ public partial class CustomTitlebar : TemplatedControl
         {
             return;
         }
-        window.Close();
+        window.CloseByUser();
     }
 }

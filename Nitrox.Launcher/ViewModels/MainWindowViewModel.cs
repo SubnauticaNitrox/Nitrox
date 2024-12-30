@@ -171,9 +171,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         // As closing handler isn't async, cancellation might have happened anyway. So check manually if we should close the window after all the tasks are done.
-        if (args.Cancel == false && args.IsClosingByUser(MainWindow))
+        if (args.Cancel == false && MainWindow.IsClosingByUser())
         {
-            MainWindow.Close();
+            MainWindow.CloseByCode();
         }
 
         static async Task<DialogBoxViewModel> ShowDialogAsync(IDialogService dialogService, WindowClosingEventArgs args, string title)
