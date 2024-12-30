@@ -13,6 +13,25 @@ namespace Nitrox.Launcher.Models.Behaviors;
 public abstract class SmoothScrollBehavior
 {
     private static CancellationTokenSource animationTokenSource;
+    private static readonly Easing smoothScrollEasing = new ExponentialEaseOut();
+    private static readonly Animation animation = new()
+    {
+        Duration = TimeSpan.FromMilliseconds(250),
+        Easing = smoothScrollEasing,
+        Children =
+        {
+            new KeyFrame
+            {
+                Cue = new Cue(0),
+                Setters = { new Setter(ScrollViewer.OffsetProperty, 0) }
+            },
+            new KeyFrame
+            {
+                Cue = new Cue(1),
+                Setters = { new Setter(ScrollViewer.OffsetProperty, 0) }
+            }
+        }
+    };
 
     public static readonly AttachedProperty<bool> SmoothScrollProperty =
         AvaloniaProperty.RegisterAttached<SmoothScrollBehavior, ScrollViewer, bool>("SmoothScroll");
@@ -27,11 +46,24 @@ public abstract class SmoothScrollBehavior
     private static readonly AttachedProperty<Vector> lastOffsetProperty =
         AvaloniaProperty.RegisterAttached<SmoothScrollBehavior, ScrollViewer, Vector>("LastOffset", new Vector(0, 0));
 
-    private static readonly Easing smoothScrollEasing = new ExponentialEaseOut();
-
     static SmoothScrollBehavior()
     {
         SmoothScrollProperty.Changed.Subscribe(OnEnableSmoothScrollingChanged);
+        ScrollViewer.OffsetProperty.Changed.Subscribe(OnScrollOffsetChanged);
+    }
+
+    private static void OnScrollOffsetChanged(AvaloniaPropertyChangedEventArgs<Vector> args)
+    {
+        if (args.Sender is not ScrollViewer scrollViewer)
+        {
+            return;
+        }
+
+        // This keeps LastOffset in sync with programmatic changes to offset so there won't be any huge and ugly scroll jumps.
+        if (animationTokenSource is null or { IsCancellationRequested: true })
+        {
+            SetLastOffset(scrollViewer, args.OldValue.Value);
+        }
     }
 
     public static bool GetSmoothScroll(ScrollViewer element) => element.GetValue(SmoothScrollProperty);
@@ -88,24 +120,8 @@ public abstract class SmoothScrollBehavior
     {
         try
         {
-            Animation animation = new()
-            {
-                Duration = TimeSpan.FromMilliseconds(250),
-                Easing = smoothScrollEasing,
-                Children =
-                {
-                    new KeyFrame
-                    {
-                        Cue = new Cue(0),
-                        Setters = { new Setter(ScrollViewer.OffsetProperty, previousOffset) }
-                    },
-                    new KeyFrame
-                    {
-                        Cue = new Cue(1),
-                        Setters = { new Setter(ScrollViewer.OffsetProperty, targetOffset) }
-                    }
-                }
-            };
+            ((Setter)animation.Children[0].Setters[0]).Value = previousOffset;
+            ((Setter)animation.Children[1].Setters[0]).Value = targetOffset;
             await animation.RunAsync(scrollViewer, cancellationToken);
         }
         catch (OperationCanceledException)
