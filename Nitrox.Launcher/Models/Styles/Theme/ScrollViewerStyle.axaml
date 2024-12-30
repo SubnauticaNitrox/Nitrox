@@ -1,7 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-        xmlns:behaviors="clr-namespace:Nitrox.Launcher.UI.Behaviors">
+        xmlns:behaviors="clr-namespace:Nitrox.Launcher.Models.Behaviors">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="20">
@@ -86,7 +86,7 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="AllowAutoHide" Value="False"/>
-        <Setter Property="behaviors:SmoothScrollBehavior.EnableSmoothScrolling" Value="True"/> 
+        <Setter Property="behaviors:SmoothScrollBehavior.SmoothScroll" Value="True"/>
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
@@ -104,10 +104,10 @@
                                                       IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"/>
                         </ScrollContentPresenter.GestureRecognizers>
                     </ScrollContentPresenter>
-                    <ScrollBar Name="PART_HorizontalScrollBar"
+                    <ScrollBar Grid.Column="0" Name="PART_HorizontalScrollBar"
                                Orientation="Horizontal" Margin="0 5 0 0"
                                Grid.Row="1" />
-                    <ScrollBar Name="PART_VerticalScrollBar"
+                    <ScrollBar Grid.Row="0" Name="PART_VerticalScrollBar"
                                Orientation="Vertical" Margin="5 0 0 0"
                                Grid.Column="1" />
                 </Grid>
@@ -166,12 +166,10 @@
                                    IsDirectionReversed="True">
                                 <Track.DecreaseButton>
                                     <RepeatButton Name="PART_PageUpButton"
-                                                  Classes="largeIncrease"
                                                   Focusable="False" />
                                 </Track.DecreaseButton>
                                 <Track.IncreaseButton>
                                     <RepeatButton Name="PART_PageDownButton"
-                                                  Classes="largeIncrease"
                                                   Focusable="False" />
                                 </Track.IncreaseButton>
                                 <Thumb Width="8"
@@ -199,12 +197,10 @@
                                    Orientation="{TemplateBinding Orientation}">
                                 <Track.DecreaseButton>
                                     <RepeatButton Name="PART_PageUpButton"
-                                                  Classes="largeIncrease"
                                                   Focusable="False" />
                                 </Track.DecreaseButton>
                                 <Track.IncreaseButton>
                                     <RepeatButton Name="PART_PageDownButton"
-                                                  Classes="largeIncrease"
                                                   Focusable="False" />
                                 </Track.IncreaseButton>
                                 <Thumb Height="8"

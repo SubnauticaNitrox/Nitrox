@@ -11,6 +11,7 @@ resharper_blank_lines_after_block_statements = 0
 resharper_braces_for_ifelse = required_for_multiline
 resharper_braces_redundant = false
 resharper_keep_existing_attribute_arrangement = true
+resharper_max_initializer_elements_on_line = 1
 resharper_wrap_object_and_collection_initializer_style = chop_if_long
 resharper_space_before_self_closing = true
 resharper_xmldoc_space_before_self_closing = true
