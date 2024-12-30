@@ -1,6 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:behaviors="clr-namespace:Nitrox.Launcher.UI.Behaviors">
     <Design.PreviewWith>
         <Panel Background="CornflowerBlue">
             <StackPanel Margin="10" Spacing="20">
@@ -85,6 +86,7 @@
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="AllowAutoHide" Value="False"/>
+        <Setter Property="behaviors:SmoothScrollBehavior.EnableSmoothScrolling" Value="True"/> 
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
