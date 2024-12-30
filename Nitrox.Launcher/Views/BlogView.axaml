@@ -29,19 +29,16 @@
             </StackPanel>
 
             <ItemsControl ItemsSource="{Binding NitroxBlogs, Mode=OneWay}">
-
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <controls:FittingWrapPanel HorizontalAlignment="Center" MinItemWidth="340" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="design:NitroxBlog">
                         <Button Classes="anycontent" Margin="0,0,15,15" VerticalAlignment="Top" Command="{Binding $parent[ItemsControl].((vm:BlogViewModel)DataContext).BlogEntryClickCommand}" CommandParameter="{Binding Url, Mode=OneTime}">
                             <StackPanel Orientation="Vertical"
                                         Spacing="5">
-
                                 <Border CornerRadius="12"
                                         ClipToBounds="True">
                                     <Viewbox>
@@ -54,7 +51,6 @@
                                         </Panel>
                                     </Viewbox>
                                 </Border>
-
                                 <TextBlock Text="{Binding Title, TargetNullValue='No title'}"
                                            HorizontalAlignment="Left"
                                            FontSize="16"
@@ -66,13 +62,12 @@
                                            FontWeight="Bold"
                                            Foreground="{DynamicResource BrandSubText}"
                                            ToolTip.Tip="{Binding Date, Converter={converters:DateToRelativeDateConverter}}"/>
-
                             </StackPanel>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+
         </StackPanel>
     </ScrollViewer>
-
 </UserControl>

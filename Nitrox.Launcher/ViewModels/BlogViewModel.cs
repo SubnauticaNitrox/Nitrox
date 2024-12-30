@@ -31,18 +31,21 @@ public partial class BlogViewModel : RoutableViewModelBase
         {
             return;
         }
-        await Dispatcher.UIThread.InvokeAsync(async () =>
+        if (NitroxBlogs.Count <= 0)
         {
-            try
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                NitroxBlogs.Clear();
-                NitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while trying to display nitrox blogs");
-            }
-        });
+                try
+                {
+                    NitroxBlogs.Clear();
+                    NitroxBlogs.AddRange(await Downloader.GetBlogsAsync());
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error while trying to display nitrox blogs");
+                }
+            });
+        }
     }
 
     [RelayCommand]
