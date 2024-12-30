@@ -64,34 +64,20 @@
                 </StackPanel>
             </Grid>
 
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                <!-- TODO: Fix height of the Viewbox not changing correctly -->
-                <Viewbox Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <ItemsControl ItemsSource="{Binding GalleryImageSources, Mode=OneTime}">
-            
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" Spacing="12" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-            
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border CornerRadius="12"
-                                        ClipToBounds="True">
-                                    <Panel HorizontalAlignment="Stretch"
-                                           VerticalAlignment="Stretch"
-                                           Width="282"
-                                           Height="175">
-                                        <Image Stretch="UniformToFill" Source="{Binding .}" />
-                                    </Panel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-            
-                    </ItemsControl>
-                </Viewbox>
-            </ScrollViewer>
+            <ItemsControl ItemsSource="{Binding GalleryImageSources, Mode=OneTime}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="{Binding GalleryImageSources, Converter={converters:ToIntConverter}}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border CornerRadius="12" ClipToBounds="True" Margin="6 0">
+                            <Image Stretch="UniformToFill" Source="{Binding}" />
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
             <StackPanel Orientation="Vertical">
                 <TextBlock FontWeight="Bold" Margin="0,11,0,12" Text="Contributors" />
