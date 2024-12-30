@@ -1,14 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
