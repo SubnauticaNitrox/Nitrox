@@ -46,8 +46,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 playerManager.SendPacketToOtherPlayers(spawnNewEscapePod, player);
             }
 
-            List<EquippedItemData> equippedItems = player.GetEquipment();
-
             // Make players on localhost admin by default.
             if (connection.Endpoint.Address.IsLocalhost())
             {
@@ -65,7 +63,7 @@ namespace NitroxServer.Communication.Packets.Processors
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
                 assignedEscapePodId,
-                equippedItems,
+                player.EquippedItems,
                 player.UsedItems,
                 player.QuickSlotsBindingIds,
                 world.GameData.PDAState.GetInitialPDAData(),

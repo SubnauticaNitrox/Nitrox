@@ -19,7 +19,7 @@ public sealed class Steam : IGamePlatform
 {
     public string Name => nameof(Steam);
     public Platform Platform => Platform.STEAM;
-    
+
     private string SteamProcessName => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "steam_osx" : "steam";
 
     public bool OwnsGame(string gameRootPath) =>
@@ -39,7 +39,7 @@ public sealed class Steam : IGamePlatform
         {
             return steam;
         }
-        
+
         // Steam is not running, start it.
         string exe = GetExeFile();
         if (exe is null)
@@ -68,7 +68,7 @@ public sealed class Steam : IGamePlatform
         {
             return null;
         }
-        
+
         steam = new ProcessEx(process);
         // Wait for steam to write to its log file, which indicates it's ready to start games.
         using CancellationTokenSource steamReadyCts = new(TimeSpan.FromSeconds(30));
@@ -150,12 +150,20 @@ public sealed class Steam : IGamePlatform
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
+#if DEBUG // Needed to start multiple SN instances, but Steam Overlay doesn't work this way so only active for devs
             return ProcessEx.Start(
                 pathToGameExe,
                 [("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath)],
                 Path.GetDirectoryName(pathToGameExe),
                 launchArguments
             );
+#endif
+
+            return new ProcessEx(Process.Start(new ProcessStartInfo
+            {
+                FileName = GetExeFile(),
+                Arguments = $"""-applaunch {steamAppId} -nitrox "{NitroxUser.LauncherPath}" {launchArguments}"""
+            }));
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

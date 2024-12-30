@@ -10,6 +10,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace NitroxClient.Debuggers.Drawer;
@@ -34,6 +35,7 @@ public class DrawerManager
         RectDrawer rectDrawer = new();
         LayoutGroupDrawer layoutGroupDrawer = new(rectDrawer);
         MaterialDrawer materialDrawer = new();
+        ImageDrawer imageDrawer = new(colorDrawer, materialDrawer, rectDrawer);
         NitroxEntityDrawer nitroxEntityDrawer = new();
 
         AddDrawer<NitroxEntityDrawer, NitroxEntity>(nitroxEntityDrawer);
@@ -47,9 +49,12 @@ public class DrawerManager
         AddDrawer<CanvasScalerDrawer, CanvasScaler>(new(vectorDrawer));
         AddDrawer<ContentSizeFitterDrawer, ContentSizeFitter>();
         AddDrawer<DropdownDrawer, Dropdown>(new(sceneDebugger, selectableDrawer));
+        AddDrawer<EventTriggerDrawer, EventTrigger>(new(sceneDebugger));
         AddDrawer<GraphicRaycasterDrawer, GraphicRaycaster>();
         AddDrawer<GridLayoutGroupDrawer, GridLayoutGroup>(new(vectorDrawer, rectDrawer));
         AddDrawer<LayoutGroupDrawer, HorizontalLayoutGroup>(layoutGroupDrawer);
+        AddDrawer<ImageDrawer, Image>(imageDrawer);
+        AddDrawer<ImageDrawer, RawImage>(imageDrawer);
         AddDrawer<LayoutGroupDrawer, VerticalLayoutGroup>(layoutGroupDrawer);
         AddDrawer<MaskDrawer, Mask>();
         AddDrawer<RectTransformDrawer, RectTransform>(new(vectorDrawer));

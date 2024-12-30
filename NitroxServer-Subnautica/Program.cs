@@ -486,8 +486,7 @@ public class Program
         {
             Log.Error(ex);
         }
-
-        if (!Environment.UserInteractive || Console.In == StreamReader.Null)
+        if (!Environment.UserInteractive || Console.IsInputRedirected || Console.In == StreamReader.Null)
         {
             return;
         }

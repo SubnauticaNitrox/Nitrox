@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
     public class InitialPlayerSync : Packet
     {
         public NitroxId AssignedEscapePodId { get; }
-        public List<EquippedItemData> EquippedItems { get; }
+        public Dictionary<string, NitroxId> EquippedItems { get; }
         public List<NitroxTechType> UsedItems { get; }
         public Optional<NitroxId>[] QuickSlotsBindingIds { get; }
         public NitroxId PlayerGameObjectId { get; }
@@ -39,7 +39,7 @@ namespace NitroxModel.Packets
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
             NitroxId assignedEscapePodId,
-            IEnumerable<EquippedItemData> equipment,
+            IDictionary<string, NitroxId> equipment,
             IEnumerable<NitroxTechType> usedItems,
             Optional<NitroxId>[] quickSlotsBindingIds,
             InitialPDAData pdaData,
@@ -62,7 +62,7 @@ namespace NitroxModel.Packets
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
-            EquippedItems = equipment.ToList();
+            EquippedItems = new(equipment);
             UsedItems = usedItems.ToList();
             QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
@@ -86,7 +86,7 @@ namespace NitroxModel.Packets
         /// <remarks>Used for deserialization</remarks>
         public InitialPlayerSync(
             NitroxId assignedEscapePodId,
-            List<EquippedItemData> equippedItems,
+            Dictionary<string, NitroxId> equippedItems,
             List<NitroxTechType> usedItems,
             Optional<NitroxId>[] quickSlotsBindingIds,
             NitroxId playerGameObjectId,
