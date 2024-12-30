@@ -75,13 +75,10 @@
     </Style>
 
     <Style Selector=":is(Control)">
+        <Setter Property="Opacity" Value="1" />
+
         <Style Selector="^ /template/ ContentPresenter">
-            <Setter Property="Opacity" Value="1" />
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
-                </Transitions>
-            </Setter>
+            <Setter Property="Opacity" Value="{TemplateBinding Opacity}" />
         </Style>
 
         <!-- TODO: a good-looking focus overlay, compatible with all controls -->

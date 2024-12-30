@@ -8,7 +8,6 @@
         xmlns:views="clr-namespace:Nitrox.Launcher.Views"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Controls"
-        xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"

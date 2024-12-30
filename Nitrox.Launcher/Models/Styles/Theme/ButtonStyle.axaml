@@ -150,7 +150,6 @@
             <Setter Property="TextBlock.Foreground" Value="{Binding $parent[Button].Foreground}" />
             <Setter Property="Background" Value="{Binding $parent[Button].Background}" />
             <Setter Property="CornerRadius" Value="{Binding $parent[Button].CornerRadius}" />
-            <Setter Property="Transitions" Value="{Binding $parent[Button].Transitions}" />
         </Style>
         <Style Selector="^:pointerover">
             <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
