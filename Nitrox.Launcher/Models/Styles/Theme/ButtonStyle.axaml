@@ -55,6 +55,7 @@
         <Setter Property="Transitions">
             <Transitions>
                 <DoubleTransition Property="Opacity" Duration="0:0:0.075" />
+                <BrushTransition Property="Background" Duration="0:0:0.075" /> 
             </Transitions>
         </Setter>
 

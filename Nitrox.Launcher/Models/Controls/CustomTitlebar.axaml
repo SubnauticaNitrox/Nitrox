@@ -74,10 +74,8 @@
                     <Setter Property="Opacity" Value="1" />
                 </Style>
                 
-                <Style Selector="^:pointerover">
-                    <Style Selector="^.close">
-                        <Setter Property="Background" Value="Red" />
-                    </Style>
+                <Style Selector="^.close:pointerover">
+                    <Setter Property="Background" Value="Red" />
                 </Style>
             </Style>
 
