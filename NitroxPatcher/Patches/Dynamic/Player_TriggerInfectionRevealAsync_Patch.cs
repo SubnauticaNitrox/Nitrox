@@ -28,17 +28,16 @@ To:
     float num = this.armsController.StartHolsterTime(12f);
     SendInfectAnimationStartPacket();
  */
-        return new CodeMatcher(instructions)
-       .MatchStartForward(
-           new CodeMatch(OpCodes.Ldloc_1),
-           new CodeMatch(OpCodes.Ldfld),
-           new CodeMatch(OpCodes.Ldc_R4),
-           new CodeMatch(OpCodes.Callvirt, Reflect.Method((ArmsController arms) => arms.StartHolsterTime(default)))
-       )
-       .Insert(
-           new CodeInstruction(OpCodes.Call, Reflect.Method(() => SendInfectAnimationStartPacket()))
-       )
-       .InstructionEnumeration();
+        return new CodeMatcher(instructions).MatchStartForward(
+                                                new CodeMatch(OpCodes.Ldloc_1),
+                                                new CodeMatch(OpCodes.Ldfld),
+                                                new CodeMatch(OpCodes.Ldc_R4),
+                                                new CodeMatch(OpCodes.Callvirt, Reflect.Method((ArmsController arms) => arms.StartHolsterTime(default)))
+                                            )
+                                            .Insert(
+                                                new CodeInstruction(OpCodes.Call, Reflect.Method(() => SendInfectAnimationStartPacket()))
+                                            )
+                                            .InstructionEnumeration();
     }
 
     public static void SendInfectAnimationStartPacket()
