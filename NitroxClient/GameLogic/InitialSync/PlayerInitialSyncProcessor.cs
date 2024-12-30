@@ -27,6 +27,7 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         this.itemContainers = itemContainers;
         this.localPlayer = localPlayer;
 
+        AddStep(sync => SetupEscapePod(sync.FirstTimeConnecting));
         AddStep(sync => SetPlayerPermissions(sync.Permissions));
         AddStep(sync => SetPlayerIntroCinematicMode(sync.IntroCinematicMode));
         AddStep(sync => SetPlayerGameObjectId(sync.PlayerGameObjectId));
@@ -53,6 +54,25 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
     {
         NitroxEntity.SetNewId(Player.mainObject, id);
         Log.Info($"Received initial sync player GameObject Id: {id}");
+    }
+
+    private void SetupEscapePod(bool firstTimeConnecting)
+    {
+        EscapePod escapePod = EscapePod.main;
+        if (escapePod)
+        {
+            Log.Info($"Setting up escape pod, FirstTimeConnecting: {firstTimeConnecting}");
+
+            escapePod.bottomHatchUsed = !firstTimeConnecting;
+            escapePod.topHatchUsed = !firstTimeConnecting;
+
+            // Call code we suppressed inside EscapePodFirstUseCinematicsController_Initialize_Patch
+            EscapePodFirstUseCinematicsController cinematicController = escapePod.GetComponentInChildren<EscapePodFirstUseCinematicsController>(true);
+            if (cinematicController)
+            {
+                cinematicController.Initialize();
+            }
+        }
     }
 
     private IEnumerator AddStartingItemsToPlayer(bool firstTimeConnecting)
