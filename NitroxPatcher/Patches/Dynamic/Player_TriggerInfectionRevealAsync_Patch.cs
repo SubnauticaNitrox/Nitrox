@@ -40,7 +40,7 @@ To:
                                             .InstructionEnumeration();
     }
 
-    public static void SendInfectAnimationStartPacket()
+    private static void SendInfectAnimationStartPacket()
     {
         Log.Debug("Infection animation started");
         Resolve<LocalPlayer>().AnimationChange(AnimChangeType.INFECTION_REVEAL, AnimChangeState.ON);    
