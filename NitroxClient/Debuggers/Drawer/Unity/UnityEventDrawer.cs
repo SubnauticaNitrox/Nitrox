@@ -52,7 +52,9 @@ public class UnityEventDrawer : IDrawer<UnityEvent, UnityEventDrawer.DrawOptions
             using (new GUILayout.HorizontalScope())
             {
                 NitroxGUILayout.Separator();
-                GUILayout.Label(unityEventBase.GetPersistentMethodName(index), NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
+                Object target = unityEventBase.GetPersistentTarget(index);
+                string labelText = target ? $"{target.GetType().Name}.{unityEventBase.GetPersistentMethodName(index)}()" : $"{unityEventBase.GetPersistentMethodName(index)}()";
+                GUILayout.Label(labelText, NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
             }
         }
     }
