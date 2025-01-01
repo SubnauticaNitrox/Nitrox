@@ -82,6 +82,7 @@ public class PatchesTranspilerTest
         [typeof(EntityCell_AwakeAsync_Patch), 2],
         [typeof(StasisSphere_LateUpdate_Patch), 0],
         [typeof(MeleeAttack_CanDealDamageTo_Patch), 4],
+        [typeof(LargeWorldEntity_UpdateCell_Patch), 1],
     ];
 
     [TestMethod]

@@ -48,16 +48,18 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
 
     private void DestroySubroot(SubRoot subRoot)
     {
+        DamageInfo damageInfo = new() { type = DAMAGE_TYPE_RUN_ORIGINAL };
         if (subRoot.live.health > 0f)
         {
             // oldHPPercent must be in the interval [0; 0.25[ because else, SubRoot.OnTakeDamage will end up in the wrong else condition
             subRoot.oldHPPercent = 0f;
             subRoot.live.health = 0f;
+            subRoot.live.NotifyAllAttachedDamageReceivers(damageInfo);
             subRoot.live.Kill();
         }
 
         // We use a specific DamageType so that the Prefix on this method will accept this call
-        subRoot.OnTakeDamage(new() { type = DAMAGE_TYPE_RUN_ORIGINAL });
+        subRoot.OnTakeDamage(damageInfo);
     }
 
     private void DestroyVehicle(Vehicle vehicle)

@@ -68,15 +68,44 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
         }
     }
 
+    /// <summary>
+    /// This is executed every 0.5s for each spawned leviathan so we can focus on optimization
+    /// </summary>
     public static CyclopsNoiseManager FindClosestCyclopsNoiseManagerIfAny(AttackCyclops attackCyclops)
     {
-        // Cyclops are marked with EcoTargetType.Whale
-        IEcoTarget ecoTarget = EcoRegionManager.main.FindNearestTarget(EcoTargetType.Whale, attackCyclops.transform.position, IsTargetAValidInhabitedCyclops, 2);
-        if (ecoTarget == null)
+        // Limit for optimization
+        if (NitroxCyclops.ScaledNoiseByCyclops.Count > 100)
         {
-            return null;
+            // Cyclops are marked with EcoTargetType.Whale
+            IEcoTarget ecoTarget = EcoRegionManager.main.FindNearestTarget(EcoTargetType.Whale, attackCyclops.transform.position, IsTargetAValidInhabitedCyclops, 3);
+            if (ecoTarget == null)
+            {
+                return null;
+            }
+            
+            return ecoTarget.GetGameObject().GetComponent<CyclopsNoiseManager>();
         }
-        return ecoTarget.GetGameObject().GetComponent<CyclopsNoiseManager>();
+        
+        float minDistance = float.MaxValue;
+        CyclopsNoiseManager closest = null;
+        foreach (KeyValuePair<NitroxCyclops, float> cyclopsEntry in NitroxCyclops.ScaledNoiseByCyclops)
+        {
+            if (cyclopsEntry.Key.Pawns.Count == 0)
+            {
+                continue;
+            }
+
+            // Calculations from the "if (closestDecoy != null || cyclopsNoiseManager != null)" part
+            float distance = Vector3.Distance(cyclopsEntry.Key.transform.position, attackCyclops.transform.position);
+            
+            if (distance < cyclopsEntry.Value && distance < minDistance)
+            {
+                minDistance = distance;
+                closest = cyclopsEntry.Key.GetComponent<CyclopsNoiseManager>();
+            }
+        }
+
+        return closest;
     }
 
     public static bool IsTargetAValidInhabitedCyclops(IEcoTarget target)
