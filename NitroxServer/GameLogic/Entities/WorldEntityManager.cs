@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.GameLogic.Entities;
@@ -31,11 +32,12 @@ public class WorldEntityManager
     private readonly Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById;
 
     private readonly BatchEntitySpawner batchEntitySpawner;
+    private readonly PlayerManager playerManager;
 
     private readonly object worldEntitiesLock;
     private readonly object globalRootEntitiesLock;
 
-    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner)
+    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager)
     {
         List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
 
@@ -46,6 +48,7 @@ public class WorldEntityManager
                                                .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
+        this.playerManager = playerManager;
 
         worldEntitiesLock = new();
         globalRootEntitiesLock = new();
@@ -286,6 +289,15 @@ public class WorldEntityManager
 
                 // Automatically add entity to its new cell
                 RegisterWorldEntityInCell(entity, newCell);
+                
+                // It can happen for some players that the entity moves to a loaded cell of theirs, but that they hadn't spawned it in the first place
+                foreach (Player player in playerManager.ConnectedPlayers())
+                {
+                    if (player.HasCellLoaded(newCell) && !player.HasCellLoaded(oldCell))
+                    {
+                        player.SendPacket(new SpawnEntities(entity));
+                    }
+                }
             }
         }
     }
