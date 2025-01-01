@@ -60,6 +60,7 @@ public class PatchesTranspilerTest
         [typeof(uGUI_PDA_Initialize_Patch), 2],
         [typeof(uGUI_PDA_SetTabs_Patch), 3],
         [typeof(uGUI_Pings_IsVisibleNow_Patch), 0],
+        [typeof(uGUI_SceneIntro_HandleInput_Patch), -2],
         [typeof(uGUI_SceneIntro_IntroSequence_Patch), 8],
         [typeof(uSkyManager_SetVaryingMaterialProperties_Patch), 0],
         [typeof(Welder_Weld_Patch), 1],
