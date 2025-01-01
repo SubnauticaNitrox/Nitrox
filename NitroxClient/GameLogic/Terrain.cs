@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Map;
+using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 using WorldStreaming;
 
 namespace NitroxClient.GameLogic;
@@ -77,11 +80,23 @@ public class Terrain
 
     }
 
+    public static void WaitForEntities()
+    {
+        // In case the player is spawned in the air, we need to hold them up while all the entities load around them
+        if (Player.main && !Player.main.IsUnderwater() && !Player.main.groundMotor.grounded)
+        {
+            Player.main.cinematicModeActive = true;
+            CoroutineHost.StartCoroutine(WaitForWorldLoad(Yielders.WaitFor2Seconds));
+        }
+    }
+
     /// <summary>
     /// Forces world streamer's to load the terrain around the MainCamera and waits until it's done to unfreeze the player.
     /// </summary>
-    public static IEnumerator WaitForWorldLoad()
+    public static IEnumerator WaitForWorldLoad(WaitForSeconds initialWait = null)
     {
+        Entities entities = NitroxServiceLocator.LocateService<Entities>();
+
         // In WorldStreamer.CreateStreamers() three coroutines are created to constantly call UpdateCenter() on the streamers
         // We force these updates so that the world streamer gets busy instantly
         WorldStreamer streamerV2 = LargeWorldStreamer.main.streamerV2;
@@ -90,7 +105,9 @@ public class Terrain
         streamerV2.lowDetailOctreesStreamer.UpdateCenter(streamerV2.streamingCenter);
         streamerV2.clipmapStreamer.UpdateCenter(streamerV2.streamingCenter);
 
-        yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
+        yield return initialWait;
+
+        yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled() && entities.EntitiesToSpawn.Count == 0);
         Player.main.cinematicModeActive = false;
     }
 }
