@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- General build properties -->
+    <PropertyGroup>
+        <!-- Current machine operating system -->
+        <_OSArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)</_OSArchitecture>
+        <_IsWindows>$([System.OperatingSystem]::IsWindows())</_IsWindows>
+        <_IsLinux>$([System.OperatingSystem]::IsLinux())</_IsLinux>
+        <_IsMacOS>$([System.OperatingSystem]::IsMacOS())</_IsMacOS>
+        
+        <!-- Current project build configuration -->
+        <_IsRelease>$([System.String]::Equals($(Configuration), 'Release'))</_IsRelease>
+        <_IsDebug>$([System.String]::Equals($(Configuration), 'Debug'))</_IsDebug>
+         
+        <!-- Current RID build configuration -->
+        <_IsWindowsTarget>false</_IsWindowsTarget>
+        <_IsWindowsTarget Condition="'$(RuntimeIdentifier)' == 'win-x64'">true</_IsWindowsTarget>
+
+        <_IsLinuxTarget>false</_IsLinuxTarget>
+        <_IsLinuxTarget Condition="'$(RuntimeIdentifier)' == 'linux-x64' Or '$(RuntimeIdentifier)' == 'linux-arm64'">true</_IsLinuxTarget>
+
+        <_IsMacOSTarget>false</_IsMacOSTarget>
+        <_IsMacOSTarget Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">true</_IsMacOSTarget>
+    </PropertyGroup>
+
+</Project>

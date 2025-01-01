@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -40,7 +40,7 @@ public class ServerProtoBufSerializer : IServerSerializer
 
     public T Deserialize<T>(Stream stream)
     {
-        T t = (T)Activator.CreateInstance(typeof(T));
+        T t = Activator.CreateInstance<T>();
         Model.DeserializeWithLengthPrefix(stream, t, typeof(T), PrefixStyle.Base128, 0);
         return t;
     }

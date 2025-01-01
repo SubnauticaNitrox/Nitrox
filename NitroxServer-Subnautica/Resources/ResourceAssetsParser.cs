@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using NitroxModel;
 using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers;
 
@@ -26,7 +27,7 @@ public static class ResourceAssetsParser
             };
         }
         AssetParser.Dispose();
-        
+
         ResourceAssets.ValidateMembers(resourceAssets);
         return resourceAssets;
     }
@@ -39,17 +40,17 @@ public static class ResourceAssetsParser
             throw new DirectoryNotFoundException("Could not locate Subnautica installation directory for resource parsing.");
         }
 
-        if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
+        if (File.Exists(Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder, "resources.assets")))
         {
-            return Path.Combine(subnauticaPath, "Subnautica_Data");
+            return Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder);
         }
         if (File.Exists(Path.Combine("..", "resources.assets"))) //  SubServer => Subnautica/Subnautica_Data/SubServer
         {
             return Path.GetFullPath(Path.Combine(".."));
         }
-        if (File.Exists(Path.Combine("..", "Subnautica_Data", "resources.assets"))) //  SubServer => Subnautica/SubServer
+        if (File.Exists(Path.Combine("..", GameInfo.Subnautica.DataFolder, "resources.assets"))) //  SubServer => Subnautica/SubServer
         {
-            return Path.GetFullPath(Path.Combine("..", "Subnautica_Data"));
+            return Path.GetFullPath(Path.Combine("..", GameInfo.Subnautica.DataFolder));
         }
         if (File.Exists("resources.assets")) //  SubServer/* => Subnautica/Subnautica_Data/
         {

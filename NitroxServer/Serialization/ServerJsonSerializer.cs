@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NitroxModel.Platforms.OS.Shared;
@@ -51,7 +51,7 @@ public class ServerJsonSerializer : IServerSerializer
     {
         stream.Position = 0;
         using JsonTextReader reader = new(new StreamReader(stream));
-        return (T)serializer.Deserialize(reader, typeof(T));
+        return serializer.Deserialize<T>(reader);
     }
 
     public T Deserialize<T>(string filePath)

@@ -25,7 +25,7 @@ public class ServerList
         }
     }
 
-    public static string DefaultFile => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", SERVERS_FILE_NAME);
+    public static string DefaultFile => Path.Combine(NitroxUser.AppDataPath, SERVERS_FILE_NAME);
 
     public IEnumerable<Entry> Entries => entries;
 

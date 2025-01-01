@@ -10,9 +10,6 @@ namespace NitroxModel.Platforms.Store;
 
 public sealed class MSStore : IGamePlatform
 {
-    private static MSStore instance;
-    public static MSStore Instance => instance ??= new MSStore();
-
     public string Name => "Microsoft Store";
     public Platform Platform => Platform.MICROSOFT;
 
@@ -39,7 +36,7 @@ public sealed class MSStore : IGamePlatform
                 @"C:\Windows\System32\cmd.exe",
                 null,
                 Path.GetDirectoryName(pathToGameExe),
-                @$"/C start /b {pathToGameExe} -nitrox ""{NitroxUser.LauncherPath}""",
+                @$"/C start /b {pathToGameExe} --nitrox ""{NitroxUser.LauncherPath}""",
                 createWindow: false)
         );
     }

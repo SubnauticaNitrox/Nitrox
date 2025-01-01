@@ -1,11 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
-        <Nullable>disable</Nullable>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,18 +13,22 @@
 
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="[2.1.9]" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="protobuf-net">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+        </Reference>
+        <!-- TODO: This dependency is seen as Assembly-Csharp sub-dependency, which causes this DLL to not be copied to output. Find cause and fix. -->
+        <Reference Include="Serilog.Sinks.Map">
+            <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
         </Reference>
     </ItemGroup>
 
-  <Target Name="MoveNitroxAssetsToServerOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <ItemGroup>
-      <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
+        <Content Include="..\Nitrox.Assets.Subnautica\**\*.tpk" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
-    <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
-  </Target>
+
+    <Import Project="..\Nitrox.Shared.targets" />
 </Project>
