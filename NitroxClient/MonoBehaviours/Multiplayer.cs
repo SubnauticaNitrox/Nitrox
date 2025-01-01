@@ -199,6 +199,8 @@ namespace NitroxClient.MonoBehaviours
             LoadingScreenVersionText.DisableWarningText();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
             CoroutineHost.StartCoroutine(NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint());
+
+            GameLogic.Terrain.WaitForEntities();
         }
 
         private IEnumerator InitializeLocalPlayerState()

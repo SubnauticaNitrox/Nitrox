@@ -8,23 +8,32 @@ public class KeypadMetadataProcessor : EntityMetadataProcessor<KeypadMetadata>
 {
     public override void ProcessMetadata(GameObject gameObject, KeypadMetadata metadata)
     {
-        Log.Debug($"Received keypad metadata change for {gameObject.name} with data of {metadata}");
+        GameObject keypadObject = gameObject;
 
-        KeypadDoorConsole keypad = gameObject.GetComponent<KeypadDoorConsole>();
-        keypad.unlocked = metadata.Unlocked;
+        if (metadata.PathFromRoot.Length > 0)
+        {
+            Transform child = gameObject.transform.Find(metadata.PathFromRoot);
+            if (!child)
+            {
+                Log.Error($"Could not find child at path \"{child}\" from {gameObject}");
+                return;
+            }
+            keypadObject = child.gameObject;
+        }
+
+        if (!keypadObject.TryGetComponent(out KeypadDoorConsole keypadDoorConsole))
+        {
+            Log.Error($"Could not find {nameof(KeypadDoorConsole)} on {gameObject}");
+            return;
+        }
+
+        keypadDoorConsole.unlocked = metadata.Unlocked;
 
         if (metadata.Unlocked)
         {
-            if (keypad.root)
-            {
-                keypad.root.BroadcastMessage("UnlockDoor");
-            }
-            else
-            {
-                keypad.BroadcastMessage("UnlockDoor");
-            }
-
-            keypad.UnlockDoor();
+            keypadDoorConsole.keypadUI.SetActive(false);
+            keypadDoorConsole.unlockIcon.SetActive(true);
+            keypadDoorConsole.AcceptNumberField();
         }
     }
 }

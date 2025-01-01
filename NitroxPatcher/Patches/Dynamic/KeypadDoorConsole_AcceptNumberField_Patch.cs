@@ -1,5 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -12,10 +13,21 @@ public sealed partial class KeypadDoorConsole_AcceptNumberField_Patch : NitroxPa
 
     public static void Postfix(KeypadDoorConsole __instance)
     {
-        if (__instance.TryGetIdOrWarn(out NitroxId id))
+        KeypadMetadata keypadMetadata = Resolve<KeypadMetadataExtractor>().Extract(__instance);
+
+        NitroxId entityId;
+        if (keypadMetadata.PathFromRoot.Length > 0)
         {
-            KeypadMetadata keypadMetadata = new(__instance.unlocked);
-            Resolve<Entities>().BroadcastMetadataUpdate(id, keypadMetadata);
+            if (!__instance.root.TryGetIdOrWarn(out entityId))
+            {
+                return;
+            }
         }
+        else if (!__instance.TryGetIdOrWarn(out entityId))
+        {
+            return;
+        }
+
+        Resolve<Entities>().BroadcastMetadataUpdate(entityId, keypadMetadata);
     }
 }
