@@ -1,5 +1,5 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.HUD;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.Packets;
 
@@ -7,21 +7,23 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 public class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
 {
-    private readonly PlayerVitalsManager vitalsManager;
+    private readonly PlayerManager playerManager;
 
-    public PlayerStatsProcessor(PlayerVitalsManager vitalsManager)
+    public PlayerStatsProcessor(PlayerManager playerManager)
     {
-        this.vitalsManager = vitalsManager;
+        this.playerManager = playerManager;
     }
 
     public override void Process(PlayerStats playerStats)
     {
-        if (vitalsManager.TryFindForPlayer(playerStats.PlayerId, out RemotePlayerVitals vitals))
+        if (playerManager.TryFind(playerStats.PlayerId, out RemotePlayer remotePlayer))
         {
+            RemotePlayerVitals vitals = remotePlayer.vitals;
             vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
             vitals.SetHealth(playerStats.Health);
             vitals.SetFood(playerStats.Food);
             vitals.SetWater(playerStats.Water);
+            remotePlayer.UpdateHealthAndInfection(playerStats.Health, playerStats.InfectionAmount);
         }
     }
 }

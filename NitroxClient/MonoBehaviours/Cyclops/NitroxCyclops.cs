@@ -19,8 +19,11 @@ public class NitroxCyclops : MonoBehaviour
     private WorldForces worldForces;
     private Stabilizer stabilizer;
     private CharacterController controller;
+    private CyclopsNoiseManager cyclopsNoiseManager;
 
     public readonly Dictionary<INitroxPlayer, CyclopsPawn> Pawns = [];
+
+    public static readonly Dictionary<NitroxCyclops, float> ScaledNoiseByCyclops = [];
 
     public void Start()
     {
@@ -31,15 +34,26 @@ public class NitroxCyclops : MonoBehaviour
         worldForces = GetComponent<WorldForces>();
         stabilizer = GetComponent<Stabilizer>();
         controller = cyclopsMotor.controller;
+        cyclopsNoiseManager = GetComponent<CyclopsNoiseManager>();
 
         UWE.Utils.SetIsKinematicAndUpdateInterpolation(rigidbody, false, true);
 
         WorkaroundColliders();
+
+        ScaledNoiseByCyclops.Add(this, 0f);
     }
 
     public void Update()
     {
         MaintainPawns();
+
+        // Calculation from AttackCyclops.UpdateAggression
+        ScaledNoiseByCyclops[this] = Mathf.Lerp(0f, 150f, cyclopsNoiseManager.GetNoisePercent());
+    }
+
+    public void OnDestroy()
+    {
+        ScaledNoiseByCyclops.Remove(this);
     }
 
     /// <summary>

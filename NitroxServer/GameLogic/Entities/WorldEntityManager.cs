@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.GameLogic.Entities;
@@ -31,11 +32,12 @@ public class WorldEntityManager
     private readonly Dictionary<NitroxId, GlobalRootEntity> globalRootEntitiesById;
 
     private readonly BatchEntitySpawner batchEntitySpawner;
+    private readonly PlayerManager playerManager;
 
     private readonly object worldEntitiesLock;
     private readonly object globalRootEntitiesLock;
 
-    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner)
+    public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner, PlayerManager playerManager)
     {
         List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
 
@@ -46,6 +48,7 @@ public class WorldEntityManager
                                                .ToDictionary(group => group.Key, group => group.ToDictionary(entity => entity.Id, entity => entity));
         this.entityRegistry = entityRegistry;
         this.batchEntitySpawner = batchEntitySpawner;
+        this.playerManager = playerManager;
 
         worldEntitiesLock = new();
         globalRootEntitiesLock = new();
@@ -98,15 +101,12 @@ public class WorldEntityManager
 
     public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
     {
-        Optional<WorldEntity> opEntity = entityRegistry.GetEntityById<WorldEntity>(id);
-
-        if (!opEntity.HasValue)
+        if (!entityRegistry.TryGetEntityById(id, out WorldEntity entity))
         {
-            Log.Debug("Could not update entity position because it was not found (maybe it was recently picked up)");
+            Log.WarnOnce($"[{nameof(WorldEntityManager)}] Can't update entity position of {id} because it isn't registered");
             return Optional.Empty;
         }
 
-        WorldEntity entity = opEntity.Value;
         AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
 
         entity.Transform.Position = position;
@@ -280,7 +280,7 @@ public class WorldEntityManager
             return; // We don't care what cell a global root entity resides in.  Only phasing entities.
         }
 
-        if (oldCell.BatchId != newCell.BatchId)
+        if (oldCell != newCell)
         {
             lock (worldEntitiesLock)
             {
@@ -289,6 +289,15 @@ public class WorldEntityManager
 
                 // Automatically add entity to its new cell
                 RegisterWorldEntityInCell(entity, newCell);
+                
+                // It can happen for some players that the entity moves to a loaded cell of theirs, but that they hadn't spawned it in the first place
+                foreach (Player player in playerManager.ConnectedPlayers())
+                {
+                    if (player.HasCellLoaded(newCell) && !player.HasCellLoaded(oldCell))
+                    {
+                        player.SendPacket(new SpawnEntities(entity));
+                    }
+                }
             }
         }
     }

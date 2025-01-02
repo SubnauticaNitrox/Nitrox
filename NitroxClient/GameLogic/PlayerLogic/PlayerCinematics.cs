@@ -19,7 +19,7 @@ public class PlayerCinematics
     /// <summary>
     /// Some cinematics should not be played. Example the intro as it's completely handled by a dedicated system.
     /// </summary>
-    private readonly HashSet<string> blacklistedKeys = ["escapepod_intro"];
+    private readonly HashSet<string> blacklistedKeys = ["escapepod_intro", "reaper_attack"];
 
     public PlayerCinematics(IPacketSender packetSender, LocalPlayer localPlayer)
     {

@@ -1,5 +1,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.HUD;
@@ -33,6 +34,11 @@ public sealed partial class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDy
             return true;
         }
 
+        if (IsInvalidGrabTarget(target))
+        {
+            return false;
+        }
+
         PropulsionGrab context = new(__instance, target);
         LockRequest<PropulsionGrab> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
@@ -59,5 +65,13 @@ public sealed partial class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDy
         {
             context.GrabbedObject.AddComponent<DenyOwnershipHand>();
         }
+    }
+
+    /// <summary>
+    /// Prevents certain entities like players from being grabbed
+    /// </summary>
+    private static bool IsInvalidGrabTarget(GameObject target)
+    {
+        return target.GetComponent<RemotePlayerIdentifier>();
     }
 }

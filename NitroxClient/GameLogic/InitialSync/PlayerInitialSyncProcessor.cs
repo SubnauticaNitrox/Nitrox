@@ -51,6 +51,9 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
 
     private void SetPlayerGameObjectId(NitroxId id)
     {
+        EcoTarget playerEcoTarget = Player.mainObject.AddComponent<EcoTarget>();
+        playerEcoTarget.SetTargetType(RemotePlayer.PLAYER_ECO_TARGET_TYPE);
+
         NitroxEntity.SetNewId(Player.mainObject, id);
         Log.Info($"Received initial sync player GameObject Id: {id}");
     }
@@ -83,7 +86,8 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         if (statsData != null)
         {
             Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
-            Player.main.liveMixin.health = statsData.Health;
+            // Spawning a player with 0 health makes them invincible so we'd rather set it to 1 HP
+            Player.main.liveMixin.health = Mathf.Max(1f, statsData.Health);
             Survival survivalComponent = Player.main.GetComponent<Survival>();
             survivalComponent.food = statsData.Food;
             survivalComponent.water = statsData.Water;
