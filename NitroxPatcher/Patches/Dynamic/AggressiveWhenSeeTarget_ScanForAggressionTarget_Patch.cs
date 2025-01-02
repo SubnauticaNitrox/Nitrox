@@ -62,7 +62,6 @@ public sealed partial class AggressiveWhenSeeTarget_ScanForAggressionTarget_Patc
             float aggressionAmount = aggressiveWhenSeeTarget.creature.Aggression.Value;
             
             Resolve<IPacketSender>().Send(new AggressiveWhenSeeTargetChanged(creatureId, targetId, lastTarget.targetLocked, aggressionAmount));
-            ErrorMessage.AddMessage($"[SEND] {aggressiveWhenSeeTarget.gameObject.name} chases {realTarget.name}");
         }
     }
 }

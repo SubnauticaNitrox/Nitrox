@@ -14,6 +14,10 @@ public class PatchesTranspilerTest
     // Add "true" to any of those elements to have its transformed IL printed.
     public static IEnumerable<object[]> TranspilerPatchClasses =>
     [
+        [typeof(AggressiveWhenSeeTarget_ScanForAggressionTarget_Patch), 3],
+        [typeof(AttackCyclops_OnCollisionEnter_Patch), -17],
+        [typeof(AttackCyclops_UpdateAggression_Patch), -23],
+        [typeof(Bullet_Update_Patch), 3],
         [typeof(BaseDeconstructable_Deconstruct_Patch), BaseDeconstructable_Deconstruct_Patch.InstructionsToAdd(true).Count() * 2],
         [typeof(BaseHullStrength_CrushDamageUpdate_Patch), 3],
         [typeof(BreakableResource_SpawnResourceFromPrefab_Patch), 2],
@@ -28,6 +32,7 @@ public class PatchesTranspilerTest
         [typeof(CrashHome_Update_Patch), -5],
         [typeof(CreatureDeath_OnKillAsync_Patch), 9],
         [typeof(CreatureDeath_SpawnRespawner_Patch), 2],
+        [typeof(CyclopsDestructionEvent_DestroyCyclops_Patch), 3],
         [typeof(CyclopsDestructionEvent_SpawnLootAsync_Patch), 7],
         [typeof(CyclopsShieldButton_OnClick_Patch), -6],
         [typeof(CyclopsSonarButton_Update_Patch), 3],
@@ -35,6 +40,7 @@ public class PatchesTranspilerTest
         [typeof(DevConsole_Update_Patch), 0],
         [typeof(Eatable_IterateDespawn_Patch), 2],
         [typeof(EnergyMixin_SpawnDefaultAsync_Patch), -64],
+        [typeof(EntityCell_AwakeAsync_Patch), 2],
         [typeof(EntityCell_SleepAsync_Patch), 2],
         [typeof(Equipment_RemoveItem_Patch), 7],
         [typeof(EscapePod_Start_Patch), 43],
@@ -48,9 +54,11 @@ public class PatchesTranspilerTest
         [typeof(IngameMenu_QuitSubscreen_Patch), -24],
         [typeof(Inventory_LoseItems_Patch), -2],
         [typeof(ItemsContainer_DestroyItem_Patch), 2],
+        [typeof(LargeWorldEntity_UpdateCell_Patch), 1],
         [typeof(LaunchRocket_OnHandClick_Patch), -9],
         [typeof(LeakingRadiation_Update_Patch), 0],
         [typeof(MainGameController_StartGame_Patch), 1],
+        [typeof(MeleeAttack_CanDealDamageTo_Patch), 4],
         [typeof(PDAScanner_Scan_Patch), 3],
         [typeof(Player_OnKill_Patch), 0],
         [typeof(Respawn_Start_Patch), 3],
@@ -66,10 +74,6 @@ public class PatchesTranspilerTest
         [typeof(uGUI_SceneIntro_IntroSequence_Patch), 8],
         [typeof(uSkyManager_SetVaryingMaterialProperties_Patch), 0],
         [typeof(Welder_Weld_Patch), 1],
-        [typeof(AggressiveWhenSeeTarget_ScanForAggressionTarget_Patch), 3],
-        [typeof(AttackCyclops_OnCollisionEnter_Patch), -17],
-        [typeof(AttackCyclops_UpdateAggression_Patch), -23],
-        [typeof(Bullet_Update_Patch), 3],
         [typeof(Poop_Perform_Patch), 1],
         [typeof(SeaDragonMeleeAttack_OnTouchFront_Patch), 9],
         [typeof(SeaDragonMeleeAttack_SwatAttack_Patch), 4],
@@ -79,10 +83,7 @@ public class PatchesTranspilerTest
         [typeof(SeaTreader_UpdatePath_Patch), 0],
         [typeof(SeaTreader_UpdateTurning_Patch), 0],
         [typeof(SeaTreader_Update_Patch), 0],
-        [typeof(EntityCell_AwakeAsync_Patch), 2],
         [typeof(StasisSphere_LateUpdate_Patch), 0],
-        [typeof(MeleeAttack_CanDealDamageTo_Patch), 4],
-        [typeof(LargeWorldEntity_UpdateCell_Patch), 1],
     ];
 
     [TestMethod]

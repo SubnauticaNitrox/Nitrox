@@ -17,10 +17,7 @@ public sealed partial class RangedAttackLastTarget_StartCharging_Patch : NitroxP
 
     public static void Prefix(RangedAttackLastTarget __instance)
     {
-        if (BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CHARGING))
-        {
-            ErrorMessage.AddMessage($"[SEND] {__instance.name} charges against {__instance.currentTarget.name}");
-        }
+        BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CHARGING);
     }
 
     /// <summary>

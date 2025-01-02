@@ -1,5 +1,4 @@
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours;
@@ -10,7 +9,7 @@ public class PlayerDeathBroadcaster : MonoBehaviour
 
     public void Awake()
     {
-        localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        localPlayer = this.Resolve<LocalPlayer>();
 
         Player.main.playerDeathEvent.AddHandler(this, PlayerDeath);
     }
