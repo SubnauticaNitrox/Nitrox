@@ -4,38 +4,40 @@ using System.Linq;
 
 namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 
-public class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDisposable
+public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDisposable
 {
     private readonly LiteNetLibClient liteNetLibClient = liteNetLibClient;
     private readonly int previousPingInterval = liteNetLibClient.PingInterval;
     private readonly List<long> deltas = [];
 
-    public static ClockSyncProcedure Start(LiteNetLibClient liteNetLibClient)
+    public static ClockSyncProcedure Start(LiteNetLibClient liteNetLibClient, int procedureDuration)
     {
         ClockSyncProcedure clockSyncProcedure = new(liteNetLibClient);
-        liteNetLibClient.PingInterval = 100;
+        liteNetLibClient.PingInterval = procedureDuration * 1000;
         liteNetLibClient.LatencyUpdateCallback += clockSyncProcedure.LatencyUpdate;
         return clockSyncProcedure;
     }
 
     public void LatencyUpdate(long remoteTimeDelta)
     {
-        Log.Debug($"l: {remoteTimeDelta}");
+        Log.Debug($"rtd: {remoteTimeDelta}");
         deltas.Add(remoteTimeDelta);
+        liteNetLibClient.ForceUpdate();
     }
 
     /// <summary>
     /// Get an average of remote delta times gathered until now without the ones which are not in the standard deviation range.
     /// </summary>
-    public long GetSafeAverageRTD()
+    public bool TryGetSafeAverageRTD(out long average)
     {
         if (deltas.Count == 0)
         {
             Log.Debug("0 deltas");
-            return 0; // abnormal situation
+            average = 0;
+            return false; // abnormal situation
         }
 
-        long average = (long)deltas.Average();
+        average = (long)deltas.Average();
         Log.Debug($"average 1: {average}");
 
         // manual calculation of standard deviation
@@ -65,10 +67,11 @@ public class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDisposable
         if (validValues.Count == 0)
         {
             Log.Debug($"0 valid values");
-            return average; // value is not really meaningful ...
+            return true; // value is not really meaningful ...
         }
 
-        return (long)validValues.Average();
+        average = (long)validValues.Average();
+        return true;
     }
 
     public void Dispose()

@@ -19,7 +19,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
     {
         this.packetSender = packetSender;
 
-        AddDependency<ClockSyncProcessor>();
+        AddDependency<ClockSyncInitialSyncProcessor>();
     }
 
     // The steps are ordered like their call order in Player.OnProtoDeserialize

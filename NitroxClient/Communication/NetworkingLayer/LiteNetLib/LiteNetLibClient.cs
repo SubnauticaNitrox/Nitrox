@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
@@ -126,5 +127,20 @@ public class LiteNetLibClient : IClient
 
         IsConnected = false;
         Log.Info("Disconnected from server");
+    }
+
+    private readonly FieldInfo fieldInfo = typeof(NetManager).GetField("_manualMode", BindingFlags.Instance | BindingFlags.NonPublic);
+    
+    internal void ForceUpdate()
+    {
+        int pingInterval = PingInterval;
+        // Set PingInterval to 0 so another ping is sent immediately
+        PingInterval = 0;
+        // ManualUpdate requires the client to have _manualMode set to true so we temporarily do so
+        fieldInfo.SetValue(client, true);
+        client.ManualUpdate(0);
+        fieldInfo.SetValue(client, false);
+        // We set it back to its high value so another ping isn't sent while we're waiting for the previous one
+        PingInterval = pingInterval;
     }
 }

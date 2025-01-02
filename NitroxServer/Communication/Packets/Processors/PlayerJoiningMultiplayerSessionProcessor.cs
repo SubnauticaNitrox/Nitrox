@@ -83,8 +83,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
                 storyManager.GetTimeData(),
                 isFirstPlayer,
-                BuildingManager.GetEntitiesOperations(globalRootEntities),
-                ntpSyncer.OnlineMode
+                BuildingManager.GetEntitiesOperations(globalRootEntities)
             );
 
             player.SendPacket(initialPlayerSync);
