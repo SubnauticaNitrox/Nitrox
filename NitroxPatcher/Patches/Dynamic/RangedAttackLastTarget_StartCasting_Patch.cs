@@ -14,10 +14,7 @@ public sealed partial class RangedAttackLastTarget_StartCasting_Patch : NitroxPa
 
     public static void Prefix(RangedAttackLastTarget __instance)
     {
-        if (RangedAttackLastTarget_StartCharging_Patch.BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CASTING))
-        {
-            ErrorMessage.AddMessage($"[SEND] {__instance.name} casts against {__instance.currentTarget.name}");
-        }
+        RangedAttackLastTarget_StartCharging_Patch.BroadcastRangedAttack(__instance, RangedAttackLastTargetUpdate.ActionState.CASTING);
     }
 }
 

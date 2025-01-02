@@ -64,7 +64,6 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
             float aggressiveToNoise = __instance.aggressiveToNoise.Value;
 
             Resolve<IPacketSender>().Send(new AttackCyclopsTargetChanged(creatureId, targetId, aggressiveToNoise));
-            ErrorMessage.AddMessage($"[SEND] {__instance.gameObject.name} attacks {__instance.currentTarget.name}");
         }
     }
 

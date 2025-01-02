@@ -51,7 +51,6 @@ public class AI
             return;
         }
 
-        ErrorMessage.AddMessage($"[SEND] synced action: {newAction.GetType().FullName}");
         packetSender.Send(new CreatureActionChanged(creatureId, newAction.GetType().FullName));
     }
 
@@ -63,7 +62,6 @@ public class AI
         }
         if (cachedCreatureActionTypeByFullName.TryGetValue(creatureActionTypeName, out Type creatureActionType))
         {
-            ErrorMessage.AddMessage($"[GET] {creatureActionType}");
             if (creature.TryGetComponent(creatureActionType, out Component component) && component is CreatureAction creatureAction)
             {
                 actions[creature] = creatureAction;
@@ -78,8 +76,6 @@ public class AI
         {
             return;
         }
-
-        ErrorMessage.AddMessage($"[GET] {aggressiveWhenSeeTarget.gameObject.name} chases {targetObject.name}");
 
         Creature creature = aggressiveWhenSeeTarget.creature;
 
@@ -109,8 +105,6 @@ public class AI
             return;
         }
 
-        ErrorMessage.AddMessage($"[GET] {attackCyclops.gameObject.name} attacks {targetObject.name}");
-
         // Kinda stuff from AttackCyclops.UpdateAggression
         attackCyclops.aggressiveToNoise.Value = aggressiveToNoiseAmount;
         // Force currentTarget to null to ensure SetCurrentTarget detects a change
@@ -134,11 +128,9 @@ public class AI
         {
             case ActionState.CHARGING:
                 rangedAttackLastTarget.StartCharging(attackType);
-                ErrorMessage.AddMessage($"[GET] {rangedAttackLastTarget.name} charges against {targetObject.name}");
                 break;
             case ActionState.CASTING:
                 rangedAttackLastTarget.StartCasting(attackType);
-                ErrorMessage.AddMessage($"[GET] {rangedAttackLastTarget.name} casts against {targetObject.name}");
                 break;
         }
     }
