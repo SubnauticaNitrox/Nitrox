@@ -85,13 +85,9 @@ public class TimeKeeper
         this.ntpSyncer = ntpSyncer;
 
         // We only need the correction offset to be calculated once
-        ntpSyncer.Setup(true, (onlineMode, correctionOffset) => // TODO: set to false after tests
+        ntpSyncer.Setup(true, (onlineMode, _) => // TODO: set to false after tests
         {
-            if (onlineMode)
-            {
-                SetCorrectionOffset(correctionOffset);
-            }
-            else
+            if (!onlineMode)
             {
                 // until we get online even once, we'll retry the ntp sync sequence every NTP_RETRY_INTERVAL
                 StartNtpTimer();
@@ -132,23 +128,17 @@ public class TimeKeeper
         {
             // Reset the syncer before starting another round of it
             ntpSyncer.Dispose();
-            ntpSyncer.Setup(true, (onlineMode, correctionOffset) =>  // TODO: set to false after tests
+            ntpSyncer.Setup(true, (onlineMode, _) =>  // TODO: set to false after tests
             {
                 if (onlineMode)
                 {
                     retryTimer.Close();
-                    SetCorrectionOffset(correctionOffset);
                 }
             });
             ntpSyncer.RequestNtpService();
         };
 
         retryTimer.Start();
-    }
-
-    private void SetCorrectionOffset(TimeSpan correctionOffset)
-    {
-        // TODO: Send connected players a delta correction offset so they can update their local correctionOffset
     }
 
     public void StartCounting()
@@ -200,7 +190,7 @@ public class TimeKeeper
 
     public TimeChange MakeTimePacket()
     {
-        return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), RealTimeElapsed);
+        return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), RealTimeElapsed, ntpSyncer.OnlineMode, ntpSyncer.CorrectionOffset.Ticks);
     }
 
     public delegate void TimeSkippedEventHandler(double skipAmount);

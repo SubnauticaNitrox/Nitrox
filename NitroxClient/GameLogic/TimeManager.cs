@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public class TimeManager
+public partial class TimeManager
 {
     /// <summary>
     ///     When first player connects to the server, time will resume when time will be resumed on server-side.
@@ -36,8 +36,8 @@ public class TimeManager
     private const double DEFAULT_REAL_TIME = 0;
 
     /// <summary>
-    ///     Calculates the exact real time elapsed from an offset (<see cref="realTimeElapsedRegistrationTime"/>) and the delta time between
-    ///     <see cref="DateTimeOffset.UtcNow"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
+    ///     Calculates the server's real time elapsed from an offset (<see cref="realTimeElapsedRegistrationTime"/>) and the delta time between
+    ///     <see cref="ServerUtcNow"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
     /// </summary>
     public double RealTimeElapsed
     {
@@ -53,15 +53,15 @@ public class TimeManager
                 return realTimeElapsed;
             }
 
-            return (DateTimeOffset.UtcNow - realTimeElapsedRegistrationTime).TotalMilliseconds * 0.001 + realTimeElapsed;
+            return (ServerUtcNow() - realTimeElapsedRegistrationTime).TotalMilliseconds * 0.001 + realTimeElapsed;
         }
     }
 
     private const double DEFAULT_SUBNAUTICA_TIME = 480;
 
     /// <summary>
-    ///     Calculates the current exact time from an offset (<see cref="latestRegisteredTime"/>) and the delta time between
-    ///     <see cref="DateTimeOffset.UtcNow"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
+    ///     Calculates the server's exact time from an offset (<see cref="latestRegisteredTime"/>) and the delta time between
+    ///     <see cref="ServerUtcNow"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
     /// </summary>
     /// <remarks>
     ///     This should only be used for DayNigthCycle internal calculations so that we don't use different times during the same frame.
@@ -80,7 +80,7 @@ public class TimeManager
             {
                 return latestRegisteredTime;
             }
-            return (DateTimeOffset.UtcNow - latestRegistrationTime).TotalMilliseconds * 0.001 + latestRegisteredTime;
+            return (ServerUtcNow() - latestRegistrationTime).TotalMilliseconds * 0.001 + latestRegisteredTime;
         }
     }
 
@@ -112,6 +112,12 @@ public class TimeManager
         latestRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(packet.UpdateTime);
         latestRegisteredTime = packet.CurrentTime;
 
+        // No need to re-initialize the fields with the same data
+        if (!serverOnlineMode)
+        {
+            SetServerCorrectionData(packet.OnlineMode, packet.UtcCorrectionTicks);
+        }
+
         // We don't want to have a big DeltaTime when processing a time skip so we calculate it beforehands
         float deltaTimeBefore = DeltaTime;
         DayNightCycle.main.timePassedAsDouble = CalculateCurrentTime();
@@ -141,15 +147,5 @@ public class TimeManager
         this.realTimeElapsed = realTimeElapsed;
         realTimeElapsedRegistrationTime = DateTimeOffset.FromUnixTimeMilliseconds(registrationTime);
         freezeTime = isFirstPlayer;
-    }
-
-    public void SetClockCorrection(long remoteTimeDelta)
-    {
-        
-    }
-
-    public void SetClockCorrection(TimeSpan correctionOffset)
-    {
-
     }
 }

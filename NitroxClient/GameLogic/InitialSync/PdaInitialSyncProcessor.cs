@@ -15,7 +15,7 @@ public sealed class PdaInitialSyncProcessor : InitialSyncProcessor
 {
     public PdaInitialSyncProcessor()
     {
-        AddDependency<ClockSyncProcessor>();
+        AddDependency<ClockSyncInitialSyncProcessor>();
     }
 
     // The steps are ordered like their call order in Player.OnProtoDeserialize

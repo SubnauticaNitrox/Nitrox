@@ -36,7 +36,6 @@ namespace NitroxModel.Packets
         public bool IsFirstPlayer { get; }
         public Dictionary<NitroxId, int> BuildOperationIds { get; }
         public bool KeepInventoryOnDeath { get; }
-        public bool OnlineMode { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -60,8 +59,7 @@ namespace NitroxModel.Packets
             TimeData timeData,
             bool isFirstPlayer,
             Dictionary<NitroxId, int> buildOperationIds,
-            bool keepInventoryOnDeath,
-            bool onlineMode)
+            bool keepInventoryOnDeath)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -86,7 +84,6 @@ namespace NitroxModel.Packets
             IsFirstPlayer = isFirstPlayer;
             BuildOperationIds = buildOperationIds;
             KeepInventoryOnDeath = keepInventoryOnDeath;
-            OnlineMode = onlineMode;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -113,8 +110,7 @@ namespace NitroxModel.Packets
             TimeData timeData,
             bool isFirstPlayer,
             Dictionary<NitroxId, int> buildOperationIds,
-            bool keepInventoryOnDeath,
-            bool onlineMode)
+            bool keepInventoryOnDeath)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -139,7 +135,6 @@ namespace NitroxModel.Packets
             IsFirstPlayer = isFirstPlayer;
             BuildOperationIds = buildOperationIds;
             KeepInventoryOnDeath = keepInventoryOnDeath;
-            OnlineMode = onlineMode;
         }
     }
 }
