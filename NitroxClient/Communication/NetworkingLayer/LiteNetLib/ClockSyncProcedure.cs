@@ -15,6 +15,7 @@ public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDis
         ClockSyncProcedure clockSyncProcedure = new(liteNetLibClient);
         liteNetLibClient.PingInterval = procedureDuration * 1000;
         liteNetLibClient.LatencyUpdateCallback += clockSyncProcedure.LatencyUpdate;
+        liteNetLibClient.ForceUpdate();
         return clockSyncProcedure;
     }
 

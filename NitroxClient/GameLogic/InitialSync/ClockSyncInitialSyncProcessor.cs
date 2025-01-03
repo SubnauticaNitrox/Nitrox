@@ -2,6 +2,7 @@ using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.GameLogic.Settings;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -60,7 +61,7 @@ public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
     private IEnumerator GetAveragePing()
     {
         Log.Debug("GetAveragePing()");
-        int procedureDuration = 5; // seconds, TODO: Make this a settings
+        int procedureDuration = (int)NitroxPrefs.OfflineClockSyncDuration.Value; // seconds
         using ClockSyncProcedure clockSyncProcedure = ClockSyncProcedure.Start(liteNetLibClient, procedureDuration);
         yield return new WaitForSecondsRealtime(procedureDuration);
         bool success = clockSyncProcedure.TryGetSafeAverageRTD(out long remoteTimeDelta);
