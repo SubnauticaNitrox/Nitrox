@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -23,16 +24,16 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
-        private readonly BuildingManager buildingManager;
+        private readonly NtpSyncer ntpSyncer;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, BuildingManager buildingManager)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, NtpSyncer ntpSyncer)
         {
             this.scheduleKeeper = scheduleKeeper;
             this.storyManager = storyManager;
             this.playerManager = playerManager;
             this.world = world;
             this.entityRegistry = entityRegistry;
-            this.buildingManager = buildingManager;
+            this.ntpSyncer = ntpSyncer;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)

@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Networking;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Server;
 using NitroxServer.GameLogic;
@@ -33,8 +34,9 @@ namespace NitroxServer.Serialization.World
         private readonly RandomStartGenerator randomStart;
         private readonly IWorldModifier worldModifier;
         private readonly SaveDataUpgrade[] upgrades;
+        private readonly NtpSyncer ntpSyncer;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, IWorldModifier worldModifier, SaveDataUpgrade[] upgrades, NtpSyncer ntpSyncer)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
@@ -42,6 +44,7 @@ namespace NitroxServer.Serialization.World
             this.randomStart = randomStart;
             this.worldModifier = worldModifier;
             this.upgrades = upgrades;
+            this.ntpSyncer = ntpSyncer;
 
             UpdateSerializer(config.SerializerMode);
         }
@@ -218,7 +221,7 @@ namespace NitroxServer.Serialization.World
                 Seed = seed
             };
 
-            world.TimeKeeper = new(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
+            world.TimeKeeper = new(world.PlayerManager, ntpSyncer, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.RealTimeElapsed);
             world.StoryManager = new(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime, pWorldData.WorldData.GameData.StoryTiming.AuroraRealExplosionTime);
             world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, world.PlayerManager);
 

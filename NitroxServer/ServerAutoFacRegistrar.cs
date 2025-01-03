@@ -2,6 +2,7 @@ global using NitroxModel.Logger;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
+using NitroxModel.Networking;
 using NitroxServer.Communication.LiteNetLib;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
@@ -35,6 +36,8 @@ namespace NitroxServer
             containerBuilder.RegisterType<LiteNetLibServer>()
                             .As<Communication.NitroxServer>()
                             .SingleInstance();
+
+            containerBuilder.RegisterType<NtpSyncer>().SingleInstance();
         }
 
         private void RegisterWorld(ContainerBuilder containerBuilder)
