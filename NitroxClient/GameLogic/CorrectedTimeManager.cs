@@ -1,10 +1,13 @@
 using System;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
+using NitroxModel.Networking;
 
 namespace NitroxClient.GameLogic;
 
 public partial class TimeManager
 {
+    private readonly NtpSyncer ntpSyncer;
+
     /// <summary>
     /// Whether or not the local player could obtain a correction from the global NTP server
     /// </summary>
@@ -61,5 +64,17 @@ public partial class TimeManager
         this.serverOnlineMode = serverOnlineMode;
         serverCorrection = new(serverUtcCorrectionTicks);
         Log.Info($"Server ONLINE: correction = {serverCorrection}");
+    }
+
+    public void AttemptNtpSync()
+    {
+        ntpSyncer.Setup(false, (onlineMode, correction) =>
+        {
+            if (onlineMode)
+            {
+                SetClientCorrectionData(onlineMode, correction);
+            }
+        });
+        ntpSyncer.RequestNtpService();
     }
 }

@@ -77,7 +77,7 @@ public class NtpSyncer
 
         timer.Elapsed += delegate
         {
-            // It can happen that thes requests were corrupted in which cases we want to clear them
+            // It can happen that the requests were corrupted in which cases we want to clear them
             IDictionary ntpRequests = (IDictionary)NTP_REQUESTS_FIELD.GetValue(netManager);
             ntpRequests.Clear();
 

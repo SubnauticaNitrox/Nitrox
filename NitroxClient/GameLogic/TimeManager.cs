@@ -1,5 +1,6 @@
 using System;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -100,6 +101,11 @@ public partial class TimeManager
     /// </remarks>
     public float DeltaTime = 0;
 
+    public TimeManager(NtpSyncer ntpSyncer)
+    {
+        this.ntpSyncer = ntpSyncer;
+    }
+
     public void ProcessUpdate(TimeChange packet)
     {
         if (freezeTime && Multiplayer.Main && Multiplayer.Main.InitialSyncCompleted)
@@ -116,6 +122,12 @@ public partial class TimeManager
         if (!serverOnlineMode)
         {
             SetServerCorrectionData(packet.OnlineMode, packet.UtcCorrectionTicks);
+        }
+
+        // If the server is in online mode, the server should try to get to online mode too
+        if (!clientOnlineMode && serverOnlineMode)
+        {
+            AttemptNtpSync();
         }
 
         // We don't want to have a big DeltaTime when processing a time skip so we calculate it beforehands

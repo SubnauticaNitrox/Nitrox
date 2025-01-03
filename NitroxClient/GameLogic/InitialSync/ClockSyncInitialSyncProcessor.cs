@@ -3,6 +3,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.GameLogic.Settings;
+using NitroxClient.MonoBehaviours.Gui.Modals;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -42,21 +43,14 @@ public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
                 // TODO: when the thing is ready, write instead: yield break;
             }
         }
-        else
-        {
-            // TODO: Start a retry (every minute for example) interval IF the server is in online mode, else when the server switches to online mode, start the said interval
-        }
-
-        // TODO: Fix modal not appearing
-        //yield return Modal.Get<InfoModal>().ShowAsync("Currently OFFLINE. Relying on a fallback clock sync method which might be");
 
         Log.Warn($"Both client ({(ntpSyncer.OnlineMode ? "ONLINE" : "OFFLINE")}) and server ({(timeData.OnlineMode ? "ONLINE" : "OFFLINE")}) aren't in ONLINE mode. Falling back to {nameof(ClockSyncProcedure)}");
-        // TODO: maybe only show the modal when the below procedure failed and instead
+        
         yield return GetAveragePing();
     }
 
     /// <summary>
-    /// 5 seconds procedure to calculate an average time delta with the server
+    /// Procedure to calculate an average time delta with the server
     /// </summary>
     private IEnumerator GetAveragePing()
     {
@@ -68,5 +62,10 @@ public class ClockSyncInitialSyncProcessor : InitialSyncProcessor
 
         Log.Info($"[success: {success}] calculated RTD: {remoteTimeDelta}");
         timeManager.SetCorrectionDelta(remoteTimeDelta);
+
+        if (!success)
+        {
+            yield return Modal.Get<InfoModal>().ShowAsync("Clock desync fixer failed. Ensure both you and the server are connected to the internet. Or try increasing the \"Offline Clock Sync Duration\" value in the settings, and restart your game.");
+        }
     }
 }
