@@ -64,7 +64,6 @@ namespace NitroxServer.Communication.Packets.Processors
             List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
             bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
 
-            Log.Debug($"onlinemode: {ntpSyncer.OnlineMode}, {ntpSyncer.CorrectionOffset}");
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
                 assignedEscapePodId,

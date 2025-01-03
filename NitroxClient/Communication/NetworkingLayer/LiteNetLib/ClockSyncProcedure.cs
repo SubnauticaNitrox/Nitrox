@@ -33,7 +33,7 @@ public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDis
     {
         if (deltas.Count == 0)
         {
-            Log.Debug("0 deltas");
+            Log.Error($"[{nameof(ClockSyncProcedure)}] No delta received !");
             average = 0;
             return false; // abnormal situation
         }
@@ -67,7 +67,7 @@ public sealed class ClockSyncProcedure(LiteNetLibClient liteNetLibClient) : IDis
 
         if (validValues.Count == 0)
         {
-            Log.Debug($"0 valid values");
+            Log.Warn($"[{nameof(ClockSyncProcedure)}] No valid value out of {deltas.Count} deltas. Using regular average without filtering.");
             return true; // value is not really meaningful ...
         }
 
