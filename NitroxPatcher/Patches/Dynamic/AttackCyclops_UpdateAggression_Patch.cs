@@ -21,6 +21,12 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
 
     // TODO: Sync attacksub command
 
+    public static bool Prefix(AttackCyclops __instance)
+    {
+        return !__instance.TryGetNitroxId(out NitroxId creatureId) ||
+               Resolve<SimulationOwnership>().HasAnyLockType(creatureId);
+    }
+
     /*
      * REPLACE:
      * if (Player.main != null && Player.main.currentSub != null && Player.main.currentSub.isCyclops)
@@ -48,12 +54,6 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
                                                 new CodeInstruction(OpCodes.Ldarg_0),
                                                 new CodeInstruction(OpCodes.Call, Reflect.Method(() => FindClosestCyclopsNoiseManagerIfAny(default)))
                                             ]).InstructionEnumeration();
-    }
-
-    public static bool Prefix(AttackCyclops __instance)
-    {
-        return !__instance.TryGetNitroxId(out NitroxId creatureId) ||
-               Resolve<SimulationOwnership>().HasAnyLockType(creatureId);
     }
 
     public static void Postfix(AttackCyclops __instance)
@@ -86,7 +86,7 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
         }
         
         float minDistance = float.MaxValue;
-        CyclopsNoiseManager closest = null;
+        NitroxCyclops closest = null;
         foreach (KeyValuePair<NitroxCyclops, float> cyclopsEntry in NitroxCyclops.ScaledNoiseByCyclops)
         {
             if (cyclopsEntry.Key.Pawns.Count == 0)
@@ -100,11 +100,11 @@ public sealed partial class AttackCyclops_UpdateAggression_Patch : NitroxPatch, 
             if (distance < cyclopsEntry.Value && distance < minDistance)
             {
                 minDistance = distance;
-                closest = cyclopsEntry.Key.GetComponent<CyclopsNoiseManager>();
+                closest = cyclopsEntry.Key;
             }
         }
 
-        return closest;
+        return closest.AliveOrNull()?.GetComponent<CyclopsNoiseManager>();
     }
 
     public static bool IsTargetAValidInhabitedCyclops(IEcoTarget target)

@@ -35,7 +35,7 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
     /// </summary>
     private readonly HashSet<Type> defaultPacketProcessorBlacklist = new()
     {
-        typeof(GameModeChanged)
+        typeof(GameModeChanged), typeof(DropSimulationOwnership),
     };
 
     public DefaultServerPacketProcessor(PlayerManager playerManager)

@@ -60,12 +60,10 @@ public class AI
         {
             return;
         }
-        if (cachedCreatureActionTypeByFullName.TryGetValue(creatureActionTypeName, out Type creatureActionType))
+        if (cachedCreatureActionTypeByFullName.TryGetValue(creatureActionTypeName, out Type creatureActionType) &&
+            creature.TryGetComponent(creatureActionType, out Component component) && component is CreatureAction creatureAction)
         {
-            if (creature.TryGetComponent(creatureActionType, out Component component) && component is CreatureAction creatureAction)
-            {
-                actions[creature] = creatureAction;
-            }
+            actions[creature] = creatureAction;
         }
     }
 

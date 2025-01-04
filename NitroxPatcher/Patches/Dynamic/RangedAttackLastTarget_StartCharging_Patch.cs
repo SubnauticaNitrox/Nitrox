@@ -26,30 +26,29 @@ public sealed partial class RangedAttackLastTarget_StartCharging_Patch : NitroxP
     /// <returns>
     /// true if the broadcast was done (all conditions met)
     /// </returns>
-    internal static bool BroadcastRangedAttack(RangedAttackLastTarget attackBehaviour, RangedAttackLastTargetUpdate.ActionState actionState)
+    public static void BroadcastRangedAttack(RangedAttackLastTarget attackBehaviour, RangedAttackLastTargetUpdate.ActionState actionState)
     {
         // should action be broadcasted
         if (!Resolve<AI>().IsCreatureWhitelisted(attackBehaviour.creature))
         {
-            return false;
+            return;
         }
 
         // Attacker object validity
         if (!attackBehaviour.TryGetNitroxId(out NitroxId creatureId) || !Resolve<SimulationOwnership>().HasAnyLockType(creatureId))
         {
-            return false;
+            return;
         }
 
         // Target validity
         if (!attackBehaviour.currentTarget || !attackBehaviour.currentTarget.TryGetNitroxId(out NitroxId targetId))
         {
-            return false;
+            return;
         }
 
         int attackTypeIndex = attackBehaviour.attackTypes.GetIndex(attackBehaviour.currentAttack);
 
         Resolve<IPacketSender>().Send(new RangedAttackLastTargetUpdate(creatureId, targetId, attackTypeIndex, actionState));
-        return true;
     }
 }
 

@@ -1,7 +1,9 @@
 using System.Reflection;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours.Cyclops;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -17,7 +19,16 @@ public sealed partial class Floater_FixedUpdate_Patch : NitroxPatch, IDynamicPat
             return true;
         }
 
-        // If target has an id, we only apply the FixedUpdate when we have a lock type on it (true)
+        Rigidbody connectedBody = __instance.fixedJoint.connectedBody;
+
+        // For now we only check for vehicles which are our main concern but in the future when we properly sync floaters,
+        // we'll extend the check to all entities
+        if (!connectedBody.GetComponent<Vehicle>() || !connectedBody.GetComponent<NitroxCyclops>())
+        {
+            return true;
+        }
+
+        // We only apply the FixedUpdate when we have a lock type on it (true)
         return Resolve<SimulationOwnership>().HasAnyLockType(jointId);
     }
 }
