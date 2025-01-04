@@ -99,26 +99,31 @@ public class WorldEntityManager
         return [];
     }
 
-    public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
+    public bool UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, out AbsoluteEntityCell newCell, out WorldEntity worldEntity)
     {
-        if (!entityRegistry.TryGetEntityById(id, out WorldEntity entity))
+        lock (worldEntitiesLock)
         {
-            Log.WarnOnce($"[{nameof(WorldEntityManager)}] Can't update entity position of {id} because it isn't registered");
-            return Optional.Empty;
+            if (!entityRegistry.TryGetEntityById(id, out worldEntity))
+            {
+                Log.WarnOnce($"[{nameof(WorldEntityManager)}] Can't update entity position of {id} because it isn't registered");
+                newCell = null;
+                return false;
+            }
+
+            AbsoluteEntityCell oldCell = worldEntity.AbsoluteEntityCell;
+
+            worldEntity.Transform.Position = position;
+            worldEntity.Transform.Rotation = rotation;
+
+            newCell = worldEntity.AbsoluteEntityCell;
+            
+            if (oldCell != newCell)
+            {
+                EntitySwitchedCells(worldEntity, oldCell, newCell);
+            }
+
+            return true;
         }
-
-        AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
-
-        entity.Transform.Position = position;
-        entity.Transform.Rotation = rotation;
-
-        AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
-        if (oldCell != newCell)
-        {
-            EntitySwitchedCells(entity, oldCell, newCell);
-        }
-
-        return Optional.Of(newCell);
     }
 
     public Optional<Entity> RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)

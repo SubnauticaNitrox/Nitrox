@@ -136,13 +136,6 @@ namespace NitroxClient.GameLogic
             {
                 Object.Destroy(remotelyControlled);
             }
-
-            // Very specific edge case (we are still seeing the entity but it's not in a cell that we have marked as visible)
-            // so the server couldn't automatically hand the simulation ownership to us
-            if (gameObject.TryGetComponent(out OutOfCellEntity outOfCellEntity))
-            {
-                outOfCellEntity.TryClaim();
-            }
         }
 
         public bool TryGetLockType(NitroxId nitroxId, out SimulationLockType simulationLockType)
