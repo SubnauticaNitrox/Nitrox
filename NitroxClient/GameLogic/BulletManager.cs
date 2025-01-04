@@ -23,13 +23,13 @@ public class BulletManager
     /// <summary>
     /// TechTypes of objects which should have a Vehicle MB
     /// </summary>
-    public static readonly HashSet<TechType> PreloadedVehicleTypes = [
+    private static readonly HashSet<TechType> preloadedVehicleTypes = [
         TechType.Seamoth, TechType.Exosuit
     ];
 
     private readonly Dictionary<TechType, GameObject> torpedoPrefabByTechType = [];
 
-    private GameObject stasisSpherePrefab { get; set; }
+    private GameObject stasisSpherePrefab;
 
     public BulletManager(PlayerManager playerManager)
     {
@@ -136,7 +136,7 @@ public class BulletManager
         TaskResult<GameObject> result = new();
         
         // Load torpedo types prefab and store them by tech type
-        foreach (TechType techType in PreloadedVehicleTypes)
+        foreach (TechType techType in preloadedVehicleTypes)
         {
             yield return DefaultWorldEntitySpawner.RequestPrefab(techType, result);
             if (result.value && result.value.TryGetComponent(out Vehicle vehicle) && vehicle.torpedoTypes != null)
@@ -166,5 +166,5 @@ public class BulletManager
         playerManager.OnRemove += (playerId, _) => { DestroyPlayerSphere(playerId); };
     }
 
-    public class RemotePlayerBullet : MonoBehaviour { }
+    public class RemotePlayerBullet : MonoBehaviour;
 }

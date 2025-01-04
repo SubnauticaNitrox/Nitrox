@@ -142,20 +142,18 @@ internal static class TranspilerHelper
 
     /// <summary>
     /// Replaces first use of <see cref="Time.deltaTime"/> by <see cref="TimeManager.DeltaTime"/>.
-    /// Doesn't change <see cref="CodeMatcher.Pos"/>.
+    /// Moves to the said instruction.
     /// </summary>
     public static CodeMatcher ReplaceDeltaTime(this CodeMatcher codeMatcher)
     {
-        int pos = codeMatcher.Pos;
         return codeMatcher.MatchStartForward(new CodeMatch(OpCodes.Call, DELTA_TIME_MATCHING_FIELD))
-                   .SetOperandAndAdvance(DELTA_TIME_INSERTED_METHOD)
-                   .Advance(pos - codeMatcher.Pos);
+                   .SetOperandAndAdvance(DELTA_TIME_INSERTED_METHOD);
     }
 
     /// <summary>
     /// Wrapper for dependency resolving and variable querying
     /// </summary>
-    public static float GetDeltaTime()
+    private static float GetDeltaTime()
     {
         return NitroxServiceLocator.Cache<TimeManager>.Value.DeltaTime;
     }

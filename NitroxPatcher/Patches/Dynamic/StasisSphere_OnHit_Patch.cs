@@ -24,7 +24,7 @@ public sealed partial class StasisSphere_OnHit_Patch : NitroxPatch, IDynamicPatc
         }
 
         ushort? localPlayerId = Resolve<LocalPlayer>().PlayerId;
-        // If the lcoal player id isn't set then there's already a bigger problem/no problem and we can ignore that
+        // If the local player id isn't set then there's already a bigger problem/no problem and we can ignore that
         if (!localPlayerId.HasValue)
         {
             return true;
