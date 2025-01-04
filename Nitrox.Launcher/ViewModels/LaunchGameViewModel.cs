@@ -2,9 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Web;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -39,6 +39,9 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 
     [ObservableProperty]
     private string platformToolTip;
+
+    [ObservableProperty]
+    private string contributionsOfYearUrl = $"github.com/SubnauticaNitrox/Nitrox/graphs/contributors?from={HttpUtility.UrlEncode($"{DateTime.UtcNow.AddYears(-1):yyyy/M/d}")}";
 
     public Bitmap[] GalleryImageSources { get; } = [
         BitmapAssetValueConverter.GetBitmapFromPath("/Assets/Images/gallery/image-1.png"),

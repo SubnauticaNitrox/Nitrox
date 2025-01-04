@@ -81,9 +81,7 @@
 
             <StackPanel Orientation="Vertical">
                 <TextBlock FontWeight="Bold" Margin="0,11,0,12" Text="Contributors" />
-
                 <StackPanel Margin="0,11,0,0" Spacing="6">
-
                     <StackPanel.Styles>
                         <Style Selector="StackPanel > TextBlock:nth-child(2n+1)">
                             <Setter Property="FontSize" Value="10" />
@@ -95,13 +93,21 @@
                         </Style>
                     </StackPanel.Styles>
 
-                    <TextBlock Text="DEVELOPERS" />
-                    <TextBlock
-                        Text="Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, dartasen, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem, Tornac, TwinBuilderOne" />
+                    <TextBlock Text="AUTHOR" />
+                    <controls:RichTextBlock>[Sunrunner](github.com/Sunrunner37)</controls:RichTextBlock>
+                    <!-- Active contributors which have higher role than junior. -->
+                    <TextBlock Text="CONTRIBUTORS" />
+                    <controls:RichTextBlock>
+                        Tornac, iCleeem, Jannify, _HeN_, TwinBuilderOne, Meas, NinjaPedroX, <TextBlock Tag="{Binding ContributionsOfYearUrl}" Classes="link" Text="see contributions made in the last year" />
+                    </controls:RichTextBlock>
                     <TextBlock Text="STAFF" />
-                    <TextBlock Text="Werewolfs, Shalix, CriticalCookie, SavageJay, and a big thanks to the discord support team (Arctic-Peepers, Peepers)" />
+                    <controls:RichTextBlock>
+                        Werewolfs, Shalix, CriticalCookie, SavageJay, and a big thanks to the discord support team (Arctic-Peepers, Peepers)
+                    </controls:RichTextBlock>
                     <TextBlock Text="DESIGN" />
-                    <TextBlock Text="Rux" />
+                    <controls:RichTextBlock>
+                        [Rux](rux.gg)
+                    </controls:RichTextBlock>
                 </StackPanel>
             </StackPanel>
 
