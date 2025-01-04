@@ -14,13 +14,15 @@ internal sealed partial class Player_TriggerInfectionRevealAsync_Patch : NitroxP
     
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        /*
+/*
 From:
-    float num = this.armsController.StartHolsterTime(12f);
+    if (!this.infectionRevealed){
+	    float num = this.armsController.StartHolsterTime(12f);
 
 To:
-    float num = this.armsController.StartHolsterTime(12f);
-    SendInfectAnimationStartPacket();
+    if (!this.infectionRevealed){
+        SendInfectAnimationStartPacket();
+        float num = this.armsController.StartHolsterTime(12f);
  */
         return new CodeMatcher(instructions).MatchStartForward(
                                                 new CodeMatch(OpCodes.Ldloc_1),
