@@ -97,13 +97,13 @@
                     <controls:RichTextBlock>[Sunrunner](github.com/Sunrunner37)</controls:RichTextBlock>
                     <!-- Active contributors which have higher role than junior. -->
                     <TextBlock Text="CONTRIBUTORS" />
-                    <controls:RichTextBlock>
+                    <TextBlock>
                         Tornac, iCleeem, Jannify, _HeN_, TwinBuilderOne, Meas, NinjaPedroX, <TextBlock Tag="{Binding ContributionsOfYearUrl}" Classes="link" Text="see contributions made in the last year" />
-                    </controls:RichTextBlock>
+                    </TextBlock>
                     <TextBlock Text="STAFF" />
-                    <controls:RichTextBlock>
+                    <TextBlock>
                         Werewolfs, Shalix, CriticalCookie, SavageJay, and a big thanks to the discord support team (Arctic-Peepers, Peepers)
-                    </controls:RichTextBlock>
+                    </TextBlock>
                     <TextBlock Text="DESIGN" />
                     <controls:RichTextBlock>
                         [Rux](rux.gg)
