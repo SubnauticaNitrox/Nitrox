@@ -38,6 +38,7 @@ namespace NitroxServer
         public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
         public ThreadSafeList<int> PinnedRecipePreferences { get; set; }
         public ThreadSafeDictionary<string, NitroxId> EquippedItems { get; set ;}
+        public ThreadSafeSet<NitroxId> OutOfCellVisibleEntities { get; set; } = [];
 
         public PlayerWorldEntity Entity { get; set; }
 
@@ -139,7 +140,8 @@ namespace NitroxServer
         {
             if (entity is WorldEntity worldEntity)
             {
-                return worldEntity is GlobalRootEntity || HasCellLoaded(worldEntity.AbsoluteEntityCell);
+                return worldEntity is GlobalRootEntity || HasCellLoaded(worldEntity.AbsoluteEntityCell) ||
+                       OutOfCellVisibleEntities.Contains(entity.Id);
             }
 
             return true;

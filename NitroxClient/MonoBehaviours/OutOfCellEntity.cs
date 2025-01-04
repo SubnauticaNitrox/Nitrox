@@ -1,5 +1,4 @@
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -13,47 +12,19 @@ namespace NitroxClient.MonoBehaviours;
 /// </summary>
 public class OutOfCellEntity : MonoBehaviour
 {
-    private bool manuallyDestroyed;
-    private NitroxId nitroxId;
-
-    private SimulationOwnership SimulationOwnership => this.Resolve<SimulationOwnership>();
+    private NitroxId entityId;
 
     public void Init(NitroxId nitroxId)
     {
-        this.nitroxId = nitroxId;
-    }
-
-    /// <remarks>
-    /// Once an entity out of cell is "free" from simulation ownership, we need to ask the server to lock it since we don't have
-    /// it's actual cell loaded (from position)
-    /// </remarks>
-    public void TryClaim()
-    {
-        SimulationOwnership.RequestSimulationLock(nitroxId, SimulationLockType.TRANSIENT);
-    }
-
-    /// <summary>
-    /// Remove the component without triggering the entity unload broadcast
-    /// </summary>
-    public void ManuallyDestroy()
-    {
-        manuallyDestroyed = true;
-        Destroy(this);
+        if (entityId == null)
+        {
+            this.Resolve<IPacketSender>().Send(new PlayerSeeOutOfCellEntity(nitroxId));
+        }
+        entityId = nitroxId;
     }
 
     public void OnDestroy()
     {
-        if (manuallyDestroyed)
-        {
-            return;
-        }
-
-        // We check for IsAlive because we don't want to broadcast this when the entity was killed (it's managed in another way)
-        if (TryGetComponent(out LiveMixin liveMixin) && liveMixin.IsAlive() && SimulationOwnership.HasAnyLockType(nitroxId))
-        {
-            SimulationOwnership.StopSimulatingEntity(nitroxId);
-            EntityPositionBroadcaster.StopWatchingEntity(nitroxId);
-            this.Resolve<IPacketSender>().Send(new DropSimulationOwnership(nitroxId));
-        }
+        this.Resolve<IPacketSender>().Send(new PlayerUnseeOutOfCellEntity(entityId));
     }
 }

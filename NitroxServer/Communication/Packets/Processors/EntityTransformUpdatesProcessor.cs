@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -54,9 +54,7 @@ namespace NitroxServer.Communication.Packets.Processors
                     continue;
                 }
 
-                Optional<AbsoluteEntityCell> currentCell = worldEntityManager.UpdateEntityPosition(update.Id, update.Position, update.Rotation);
-
-                if (!currentCell.HasValue)
+                if (!worldEntityManager.UpdateEntityPosition(update.Id, update.Position, update.Rotation, out AbsoluteEntityCell currentCell, out WorldEntity worldEntity))
                 {
                     // Normal behaviour if the entity was removed at the same time as someone trying to simulate a postion update.
                     // we log an info inside entityManager.UpdateEntityPosition just in case.
@@ -65,12 +63,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
                 foreach (KeyValuePair<Player, List<EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
                 {
-                    Player player = playerUpdates.Key;
-                    List<EntityTransformUpdate> visibleUpdates = playerUpdates.Value;
-
-                    if (player.HasCellLoaded(currentCell.Value))
+                    if (playerUpdates.Key.CanSee(worldEntity))
                     {
-                        visibleUpdates.Add(update);
+                        playerUpdates.Value.Add(update);
                     }
                 }
             }

@@ -18,7 +18,7 @@ internal class PlayerCommand : Command
     private readonly Lazy<WorldEntityManager> worldEntityManager = new(NitroxServiceLocator.LocateService<WorldEntityManager>);
     private readonly Lazy<SimulationOwnershipData> simulationOwnershipData = new(NitroxServiceLocator.LocateService<SimulationOwnershipData>);
 
-    public PlayerCommand() : base("player", Perms.CONSOLE, "Lists all visible cells of a player and their simulated entities per cell")
+    public PlayerCommand() : base("player", Perms.CONSOLE, "Lists all visible cells of a player, their simulated entities per cell and the player's visible out of cell entities")
     {
         AddParameter(new TypeString("player name", true, "name of the target player"));
     }
@@ -51,6 +51,7 @@ internal class PlayerCommand : Command
                     Log.Info(simulatedEntities[..^2]);
                 }
             }
+            Log.Info($"\nOut of cell entities:\n{string.Join(", ", player.OutOfCellVisibleEntities)}");
         }
         else
         {

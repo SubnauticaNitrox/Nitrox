@@ -5,6 +5,7 @@ using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -38,17 +39,28 @@ public sealed partial class LargeWorldEntity_UpdateCell_Patch : NitroxPatch, IDy
                                             ]).InstructionEnumeration();
     }
 
-    public static void EntityUpdated(bool success, LargeWorldEntity largeWorldEntity)
+    private static void EntityUpdated(bool success, LargeWorldEntity largeWorldEntity)
     {
-        // The entity left the zone
-        if (!success && largeWorldEntity.TryGetNitroxId(out NitroxId nitroxId))
+        // Successfully moving from one cell to another isn't interesting to us
+        if (success)
         {
-            largeWorldEntity.gameObject.EnsureComponent<OutOfCellEntity>().Init(nitroxId);
+            return;
         }
-        // The component is no longer required because the entity is now in the loading zone
+        
+        // The entity has left the regular loaded zone
+        // NB: Very important to check for selfActive because it's false when the entity is unloaded by EntityCell.AddEntity
+
+        if (largeWorldEntity.gameObject.activeSelf)
+        {
+            if (largeWorldEntity.TryGetNitroxId(out NitroxId nitroxId))
+            {
+                largeWorldEntity.gameObject.EnsureComponent<OutOfCellEntity>().Init(nitroxId);
+            }
+        }
+        // Entity was added to a sleeping cell so it'll be just like it's 
         else if (largeWorldEntity.TryGetComponent(out OutOfCellEntity outOfCellEntity))
         {
-            outOfCellEntity.ManuallyDestroy();
+            Object.Destroy(outOfCellEntity);
         }
     }
 }
