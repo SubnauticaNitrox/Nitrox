@@ -16,11 +16,9 @@ internal sealed partial class Player_TriggerInfectionRevealAsync_Patch : NitroxP
     {
         /*
 From:
-            if (!this.infectionRevealed){
     float num = this.armsController.StartHolsterTime(12f);
 
 To:
-            if (!this.infectionRevealed){
     float num = this.armsController.StartHolsterTime(12f);
     SendInfectAnimationStartPacket();
  */
