@@ -13,6 +13,9 @@
     <Design.DataContext>
         <vm:ManageServerViewModel ServerName="My fun server" />
     </Design.DataContext>
+    <UserControl.KeyBindings>
+        <KeyBinding Gesture="Shift+Delete" Command="{Binding ForceDeleteServerCommand}" />
+    </UserControl.KeyBindings>
     <Grid Classes="viewPadding" RowDefinitions="Auto,*,Auto" Background="{DynamicResource BrandWhite}">
         <StackPanel>
             <Button Margin="0 0 0 26" Background="Transparent" Command="{Binding BackCommand}" HotKey="Escape" Cursor="Hand">

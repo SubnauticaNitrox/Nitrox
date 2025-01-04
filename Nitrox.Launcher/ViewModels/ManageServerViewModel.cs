@@ -385,16 +385,30 @@ public partial class ManageServerViewModel : RoutableViewModelBase
     }
 
     [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
-    private async Task DeleteServer()
+    private async Task DeleteServerAsync()
     {
-        DialogBoxViewModel modalViewModel = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+        await CoreDeleteServerAsync();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRestoreBackupAndDeleteServer))]
+    private async Task ForceDeleteServerAsync()
+    {
+        await CoreDeleteServerAsync(true);
+    }
+
+    private async Task CoreDeleteServerAsync(bool force = false)
+    {
+        if (!force)
         {
-            model.Title = $"Are you sure you want to delete the server '{ServerName}'?";
-            model.ButtonOptions = ButtonOptions.YesNo;
-        });
-        if (!modalViewModel)
-        {
-            return;
+            DialogBoxViewModel modal = await dialogService.ShowAsync<DialogBoxViewModel>(model =>
+            {
+                model.Title = $"Are you sure you want to delete the server '{ServerName}'?";
+                model.ButtonOptions = ButtonOptions.YesNo;
+            });
+            if (!modal)
+            {
+                return;
+            }
         }
 
         try
