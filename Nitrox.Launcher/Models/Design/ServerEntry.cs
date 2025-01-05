@@ -229,6 +229,8 @@ public partial class ServerEntry : ObservableObject
                 WorkingDirectory = NitroxUser.ExecutableRootPath,
                 ArgumentList = { "--save", Path.GetFileName(saveDir) },
                 RedirectStandardOutput = captureOutput,
+                RedirectStandardError = captureOutput,
+                RedirectStandardInput = captureOutput,
                 WindowStyle = captureOutput ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                 CreateNoWindow = captureOutput
             };
