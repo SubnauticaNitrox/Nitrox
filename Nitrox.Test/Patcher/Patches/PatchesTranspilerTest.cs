@@ -55,6 +55,7 @@ public class PatchesTranspilerTest
         [typeof(IngameMenu_QuitSubscreen_Patch), -24],
         [typeof(Inventory_LoseItems_Patch), -2],
         [typeof(ItemsContainer_DestroyItem_Patch), 2],
+        [typeof(Knife_OnToolUseAnim_Patch), 0],
         [typeof(LargeWorldEntity_UpdateCell_Patch), 1],
         [typeof(LaunchRocket_OnHandClick_Patch), -9],
         [typeof(LeakingRadiation_Update_Patch), 0],
