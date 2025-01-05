@@ -216,7 +216,7 @@ public partial class ServerEntry : ObservableObject
         public bool IsRunning => !serverProcess?.HasExited ?? false;
         public AvaloniaList<string> Output { get; } = new();
 
-        private ServerProcess(string saveDir, Action onExited, bool captureOutput = false)
+        private ServerProcess(string saveDir, Action onExited, bool isEmbeddedMode = false)
         {
             string serverExeName = "NitroxServer-Subnautica.exe";
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -228,11 +228,11 @@ public partial class ServerEntry : ObservableObject
             {
                 WorkingDirectory = NitroxUser.ExecutableRootPath,
                 ArgumentList = { "--save", Path.GetFileName(saveDir) },
-                RedirectStandardOutput = captureOutput,
-                RedirectStandardError = captureOutput,
-                RedirectStandardInput = captureOutput,
-                WindowStyle = captureOutput ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
-                CreateNoWindow = captureOutput
+                RedirectStandardOutput = isEmbeddedMode,
+                RedirectStandardError = isEmbeddedMode,
+                RedirectStandardInput = isEmbeddedMode,
+                WindowStyle = isEmbeddedMode ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
+                CreateNoWindow = isEmbeddedMode
             };
             Log.Info($"Starting server:{Environment.NewLine}File: {startInfo.FileName}{Environment.NewLine}Working directory: {startInfo.WorkingDirectory}{Environment.NewLine}Arguments: {string.Join(", ", startInfo.ArgumentList)}");
 
@@ -240,7 +240,7 @@ public partial class ServerEntry : ObservableObject
             if (serverProcess != null)
             {
                 serverProcess.EnableRaisingEvents = true; // Required for 'Exited' event from process.
-                if (captureOutput)
+                if (isEmbeddedMode)
                 {
                     serverProcess.OutputDataReceived += (sender, args) => Output.Add(args.Data ?? "");
                     serverProcess.BeginOutputReadLine();
