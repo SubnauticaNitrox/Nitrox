@@ -36,6 +36,8 @@ namespace NitroxModel.Packets
         public bool IsFirstPlayer { get; }
         public Dictionary<NitroxId, int> BuildOperationIds { get; }
 
+        public bool KeepInventory { get; }
+
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
             NitroxId assignedEscapePodId,
@@ -57,7 +59,8 @@ namespace NitroxModel.Packets
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,
             bool isFirstPlayer,
-            Dictionary<NitroxId, int> buildOperationIds)
+            Dictionary<NitroxId, int> buildOperationIds,
+            bool keepInventory)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -81,6 +84,7 @@ namespace NitroxModel.Packets
             TimeData = timeData;
             IsFirstPlayer = isFirstPlayer;
             BuildOperationIds = buildOperationIds;
+            KeepInventory = keepInventory;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -106,7 +110,8 @@ namespace NitroxModel.Packets
             SubnauticaPlayerPreferences preferences,
             TimeData timeData,
             bool isFirstPlayer,
-            Dictionary<NitroxId, int> buildOperationIds)
+            Dictionary<NitroxId, int> buildOperationIds,
+            bool keepInventory)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -130,6 +135,7 @@ namespace NitroxModel.Packets
             TimeData = timeData;
             IsFirstPlayer = isFirstPlayer;
             BuildOperationIds = buildOperationIds;
+            KeepInventory = keepInventory;
         }
     }
 }

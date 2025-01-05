@@ -40,6 +40,7 @@ public class LocalPlayer : ILocalNitroxPlayer
 
     public Perms Permissions;
     public IntroCinematicMode IntroCinematicMode;
+    public bool KeepInventory;
 
     public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
     {
@@ -51,6 +52,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
         Permissions = Perms.PLAYER;
         IntroCinematicMode = IntroCinematicMode.NONE;
+        KeepInventory = false;
     }
 
     public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)

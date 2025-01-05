@@ -27,6 +27,9 @@ namespace NitroxServer.Serialization
 
         public int ServerPort { get; set; } = ServerList.DEFAULT_PORT;
 
+        [PropertyDescription("Prevents you from losing items on death")]
+        public bool KeepInventory { get; set; } = true;
+
         [PropertyDescription("Measured in milliseconds")]
         public int SaveInterval
         {
