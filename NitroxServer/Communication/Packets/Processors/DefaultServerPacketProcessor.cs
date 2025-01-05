@@ -22,6 +22,12 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
         typeof(FMODCustomLoopingEmitterPacket),
         typeof(FMODStudioEmitterPacket),
         typeof(PlayerCinematicControllerCall),
+        typeof(TorpedoShot),
+        typeof(TorpedoHit),
+        typeof(TorpedoTargetAcquired),
+        typeof(StasisSphereShot),
+        typeof(StasisSphereHit),
+        typeof(SeaTreaderChunkPickedUp)
     };
 
     /// <summary>
@@ -29,7 +35,7 @@ public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
     /// </summary>
     private readonly HashSet<Type> defaultPacketProcessorBlacklist = new()
     {
-        typeof(GameModeChanged)
+        typeof(GameModeChanged), typeof(DropSimulationOwnership),
     };
 
     public DefaultServerPacketProcessor(PlayerManager playerManager)

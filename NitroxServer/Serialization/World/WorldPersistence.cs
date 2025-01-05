@@ -164,7 +164,7 @@ public class WorldPersistence
             world.Seed
         );
 
-        world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
+        world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner, world.PlayerManager);
 
         world.BuildingManager = new BuildingManager(world.EntityRegistry, world.WorldEntityManager, config);
 

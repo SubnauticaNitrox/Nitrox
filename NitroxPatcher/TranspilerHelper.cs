@@ -5,10 +5,12 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using HarmonyLib;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxPatcher.PatternMatching;
+using UnityEngine;
 
 namespace NitroxPatcher;
 
@@ -16,6 +18,9 @@ internal static class TranspilerHelper
 {
     private static readonly MethodInfo serviceLocator = typeof(NitroxServiceLocator)
         .GetMethod(nameof(NitroxServiceLocator.LocateService), BindingFlags.Static | BindingFlags.Public, null, Array.Empty<Type>(), null);
+
+    private static readonly MethodInfo DELTA_TIME_INSERTED_METHOD = Reflect.Method(() => GetDeltaTime());
+    private static readonly MethodInfo DELTA_TIME_MATCHING_FIELD = Reflect.Property(() => Time.deltaTime).GetGetMethod();
 
     public static CodeInstruction LocateService<T>()
     {
@@ -133,5 +138,23 @@ internal static class TranspilerHelper
         Log.Info(sb.ToString());
 
         return matcher;
+    }
+
+    /// <summary>
+    /// Replaces first use of <see cref="Time.deltaTime"/> by <see cref="TimeManager.DeltaTime"/>.
+    /// Moves to the said instruction.
+    /// </summary>
+    public static CodeMatcher ReplaceDeltaTime(this CodeMatcher codeMatcher)
+    {
+        return codeMatcher.MatchStartForward(new CodeMatch(OpCodes.Call, DELTA_TIME_MATCHING_FIELD))
+                   .SetOperandAndAdvance(DELTA_TIME_INSERTED_METHOD);
+    }
+
+    /// <summary>
+    /// Wrapper for dependency resolving and variable querying
+    /// </summary>
+    private static float GetDeltaTime()
+    {
+        return NitroxServiceLocator.Cache<TimeManager>.Value.DeltaTime;
     }
 }

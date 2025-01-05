@@ -62,10 +62,10 @@ public class PlayerManager
         Validate.NotNull(playerContext);
         Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
 
-        RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
-
-        playersById.Add(remotePlayer.PlayerId, remotePlayer);
-        OnCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
+            RemotePlayer remotePlayer = new(playerContext, playerModelManager, playerVitalsManager, fmodWhitelist);
+            
+            playersById.Add(remotePlayer.PlayerId, remotePlayer);
+            OnCreate(remotePlayer.PlayerId, remotePlayer);
 
         DiscordClient.UpdatePartySize(GetTotalPlayerCount());
 
@@ -78,7 +78,7 @@ public class PlayerManager
         {
             player.Destroy();
             playersById.Remove(playerId);
-            OnRemove(playerId.ToString(), player);
+            OnRemove(playerId, player);
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
         }
     }
@@ -86,6 +86,6 @@ public class PlayerManager
     /// <returns>Remote players + You => X + 1</returns>
     public int GetTotalPlayerCount() => playersById.Count + 1;
 
-    public delegate void OnCreateDelegate(string playerId, RemotePlayer remotePlayer);
-    public delegate void OnRemoveDelegate(string playerId, RemotePlayer remotePlayer);
+    public delegate void OnCreateDelegate(ushort playerId, RemotePlayer remotePlayer);
+    public delegate void OnRemoveDelegate(ushort playerId, RemotePlayer remotePlayer);
 }

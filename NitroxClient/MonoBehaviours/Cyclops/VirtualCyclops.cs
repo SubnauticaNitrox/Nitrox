@@ -56,7 +56,6 @@ public class VirtualCyclops : MonoBehaviour
             SubConsoleCommand.main.OnSubPrefabLoaded(cyclopsPrefab);
             GameObject model = SubConsoleCommand.main.GetLastCreatedSub();
             model.name = NAME;
-            LargeWorldEntity.Register(model);
             Vector3 position = Vector3.up * 500;
             Quaternion rotation = Quaternion.identity;
             model.transform.position = position;
@@ -69,6 +68,7 @@ public class VirtualCyclops : MonoBehaviour
             GameObject.Destroy(model.GetComponent<EcoTarget>());
             GameObject.Destroy(model.GetComponent<PingInstance>());
             GameObject.Destroy(model.GetComponent<CyclopsDestructionEvent>());
+            GameObject.Destroy(model.GetComponent<VFXConstructing>());
                         
             Instance.InitialPosition = position;
             Instance.InitialRotation = rotation;
@@ -83,6 +83,8 @@ public class VirtualCyclops : MonoBehaviour
 
             Instance.RegisterVirtualOpenables();
             Instance.ToggleRenderers(false);
+            Instance.DisableBadComponents();
+
             model.SetActive(true);
         });
     }
@@ -165,11 +167,32 @@ public class VirtualCyclops : MonoBehaviour
         }
     }
 
-    public void RegisterVirtualOpenables()
+    private void RegisterVirtualOpenables()
     {
         foreach (Openable openable in transform.GetComponentsInChildren<Openable>(true))
         {
             virtualOpenableByName.Add(openable.name, openable);
+        }
+    }
+
+    private void DisableBadComponents()
+    {
+        CyclopsLightingPanel cyclopsLightingPanel = GetComponentInChildren<CyclopsLightingPanel>(true);
+        cyclopsLightingPanel.floodlightsOn = false;
+        cyclopsLightingPanel.lightingOn = false;
+        cyclopsLightingPanel.SetExternalLighting(false);
+        cyclopsLightingPanel.cyclopsRoot.ForceLightingState(false);
+        cyclopsLightingPanel.enabled = false;
+        Destroy(cyclopsLightingPanel);
+
+        // Disable a source of useless logs
+        foreach (FMOD_CustomEmitter customEmitter in GetComponentsInChildren<FMOD_CustomEmitter>(true))
+        {
+            customEmitter.enabled = false;
+        }
+        foreach (PlayerCinematicController cinematicController in GetComponentsInChildren<PlayerCinematicController>(true))
+        {
+            cinematicController.enabled = false;
         }
     }
 

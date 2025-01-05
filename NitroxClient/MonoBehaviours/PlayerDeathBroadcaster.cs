@@ -1,23 +1,26 @@
-﻿using NitroxClient.GameLogic;
-using NitroxModel.Core;
+using NitroxClient.GameLogic;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours
+namespace NitroxClient.MonoBehaviours;
+
+public class PlayerDeathBroadcaster : MonoBehaviour
 {
-    public class PlayerDeathBroadcaster : MonoBehaviour
+    private LocalPlayer localPlayer;
+
+    public void Awake()
     {
-        private LocalPlayer localPlayer;
+        localPlayer = this.Resolve<LocalPlayer>();
 
-        public void Awake()
-        {
-            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        Player.main.playerDeathEvent.AddHandler(this, PlayerDeath);
+    }
 
-            Player.main.playerDeathEvent.AddHandler(this, PlayerDeath);
-        }
+    private void PlayerDeath(Player player)
+    {
+        localPlayer.BroadcastDeath(player.transform.position);
+    }
 
-        private void PlayerDeath(Player player)
-        {
-            localPlayer.BroadcastDeath(player.transform.position);
-        }
+    public void OnDestroy()
+    {
+        Player.main.playerDeathEvent.RemoveHandler(this, PlayerDeath);
     }
 }
