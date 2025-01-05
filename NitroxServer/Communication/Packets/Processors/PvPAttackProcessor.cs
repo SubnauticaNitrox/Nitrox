@@ -26,12 +26,20 @@ public class PvPAttackProcessor : AuthenticatedPacketProcessor<PvPAttack>
 
     public override void Process(PvPAttack packet, Player player)
     {
-        if (serverConfig.PvPEnabled &&
-            playerManager.TryGetPlayerById(packet.TargetPlayerId, out Player targetPlayer) &&
-            damageMultiplierByType.TryGetValue(packet.Type, out float multiplier))
+        if (!serverConfig.PvPEnabled)
         {
-            packet.Damage *= multiplier;
-            targetPlayer.SendPacket(packet);
+            return;
         }
+        if (!playerManager.TryGetPlayerById(packet.TargetPlayerId, out Player targetPlayer))
+        {
+            return;
+        }
+        if (!damageMultiplierByType.TryGetValue(packet.Type, out float multiplier))
+        {
+            return;
+        }
+
+        packet.Damage *= multiplier;
+        targetPlayer.SendPacket(packet);
     }
 }

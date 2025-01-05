@@ -18,9 +18,11 @@ public sealed partial class Knife_OnToolUseAnim_Patch : NitroxPatch, IDynamicPat
      * bool flag = liveMixin.IsAlive();
      * REPLACE below line
      * liveMixin.TakeDamage(this.damage, vector, this.damageType, null);
-     * BY:
+     * 
+     * WITH:
      * liveMixin.TakeDamage(this.damage, vector, this.damageType, Player.mainObject);
      * this.GiveResourceOnDamage(gameObject, liveMixin.IsAlive(), flag);
+     * 
      */
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
