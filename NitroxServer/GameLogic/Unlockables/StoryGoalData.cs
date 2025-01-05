@@ -26,8 +26,12 @@ namespace NitroxServer.GameLogic.Unlockables
             {
                 return false;
             }
-
+            string message = RadioQueue[0];
             RadioQueue.RemoveAt(0);
+
+            // Just like StoryGoalManager.ExecutePendingRadioMessage
+            CompletedGoals.Add("OnPlay" + message);
+
             return true;
         }
 
@@ -39,7 +43,7 @@ namespace NitroxServer.GameLogic.Unlockables
 
         public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper, Player player)
         {
-            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks), scheduleKeeper.GetScheduledGoals(), new(player.PersonalCompletedGoalsWithTimestamp));
+            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), scheduleKeeper.GetScheduledGoals(), new(player.PersonalCompletedGoalsWithTimestamp));
         }
     }
 }
