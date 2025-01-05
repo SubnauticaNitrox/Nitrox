@@ -8,9 +8,9 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-internal sealed partial class Player_TriggerInfectionRevealAsync_Patch : NitroxPatch, IDynamicPatch
+public sealed partial class Player_TriggerInfectionRevealAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Player t) => t.TriggerInfectionRevealAsync()));
+    private static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Player t) => t.TriggerInfectionRevealAsync()));
     
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
