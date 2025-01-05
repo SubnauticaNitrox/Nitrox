@@ -101,10 +101,7 @@ public partial class ServersViewModel : RoutableViewModelBase
             {
                 throw new Exception("Failed to create save file");
             }
-            lock (serversLock)
-            {
-                Servers.Insert(0, serverEntry);
-            }
+            // Don't add to servers list manually here, it will be added by file system watcher. Otherwise: possible duplicate entries by race-condition.
         }
         catch (Exception ex)
         {
