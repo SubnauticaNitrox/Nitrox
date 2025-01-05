@@ -373,6 +373,9 @@ public class RemotePlayer : INitroxPlayer
                 AnimationController["bench_sit"] = state == AnimChangeState.ON;
                 AnimationController["bench_stand_up"] = state == AnimChangeState.OFF;
                 break;
+            case AnimChangeType.INFECTION_REVEAL:
+                AnimationController["player_infected"] = state != AnimChangeState.UNSET;
+                break;
         }
 
         // Rough estimation for different collider boxes in different animation stages
