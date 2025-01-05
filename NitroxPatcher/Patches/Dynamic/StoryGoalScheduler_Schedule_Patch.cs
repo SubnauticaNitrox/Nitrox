@@ -16,7 +16,8 @@ public sealed partial class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDy
     public static bool Prefix(StoryGoal goal, out bool __state)
     {
         __state = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key) ||
-                  (goal.goalType == Story.GoalType.Radio && StoryGoalManager.main.pendingRadioMessages.Contains(goal.key));
+                  (goal.goalType == Story.GoalType.Radio && StoryGoalManager.main.pendingRadioMessages.Contains(goal.key)) ||
+                  StoryGoalManager.main.completedGoals.Contains(goal.key);
 
         if (__state)
         {

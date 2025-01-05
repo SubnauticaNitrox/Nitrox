@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using Story;
@@ -67,13 +67,16 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
         StoryGoalManager storyGoalManager = StoryGoalManager.main;
         OnGoalUnlockTracker onGoalUnlockTracker = storyGoalManager.onGoalUnlockTracker;
+        CompoundGoalTracker compoundGoalTracker = storyGoalManager.compoundGoalTracker;
 
-        // Initialize CompoundGoalTracker and OnGoalUnlockTracker and clear their already completed goals
-        // StoryGoalManager.OnSceneObjectsLoaded() is already applied so we can directly modify the trackers' content
-
-        storyGoalManager.compoundGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
-        completedGoals.ForEach(goal => storyGoalManager.onGoalUnlockTracker.goalUnlocks.Remove(goal));
-
+        // Initializing CompoundGoalTracker and OnGoalUnlockTracker again (with OnSceneObjectsLoaded) requires us to
+        // we first clear what was done in the first iteration of OnSceneObjectsLoaded
+        onGoalUnlockTracker.goalUnlocks.Clear();
+        compoundGoalTracker.goals.Clear();
+        // we force initialized to false so OnSceneObjectsLoaded actually does something
+        storyGoalManager.initialized = false;
+        storyGoalManager.OnSceneObjectsLoaded();
+        
         // Clean LocationGoalTracker, BiomeGoalTracker and ItemGoalTracker already completed goals
         storyGoalManager.locationGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
         storyGoalManager.biomeGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
@@ -96,8 +99,9 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 
         // To avoid having the SignalPing play its sound we just make its notification null while triggering it
         // (the sound is something like "coordinates added to the gps" or something)
-        PDANotification pdaNotification = onGoalUnlockTracker.signalPrefab.GetComponent<SignalPing>().vo;
-        onGoalUnlockTracker.signalPrefab.GetComponent<SignalPing>().vo = null;
+        SignalPing prefabSignalPing = onGoalUnlockTracker.signalPrefab.GetComponent<SignalPing>();
+        PDANotification pdaNotification = prefabSignalPing.vo;
+        prefabSignalPing.vo = null;
 
         foreach (OnGoalUnlock onGoalUnlock in onGoalUnlockTracker.unlockData.onGoalUnlocks)
         {
@@ -112,7 +116,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         }
         
         // recover the notification sound
-        onGoalUnlockTracker.signalPrefab.GetComponent<SignalPing>().vo = pdaNotification;
+        prefabSignalPing.vo = pdaNotification;
     }
 
     // Must happen after CompletedGoals
@@ -120,7 +124,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
         TimeData timeData = packet.TimeData;
 
-        AuroraWarnings auroraWarnings = UnityEngine.Object.FindObjectOfType<AuroraWarnings>();
+        AuroraWarnings auroraWarnings = Player.mainObject.GetComponentInChildren<AuroraWarnings>(true);
         auroraWarnings.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         auroraWarnings.OnProtoDeserialize(null);
 
@@ -144,6 +148,10 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
         List<NitroxScheduledGoal> scheduledGoals = packet.StoryGoalData.ScheduledGoals;
 
+        // We don't want any scheduled goal we add now to be executed before initial sync has finished, else they might not get broadcasted
+        StoryGoalScheduler.main.paused = true;
+        Multiplayer.OnLoadingComplete += () => StoryGoalScheduler.main.paused = false;
+
         foreach (NitroxScheduledGoal scheduledGoal in scheduledGoals)
         {
             // Clear duplicated goals that might have appeared during loading and before sync
@@ -155,7 +163,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
                 goalType = (Story.GoalType)scheduledGoal.GoalType,
                 timeExecute = scheduledGoal.TimeExecute,
             };
-            if (goal.timeExecute >= DayNightCycle.main.timePassedAsDouble && !StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
+            if (!StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
             {
                 StoryGoalScheduler.main.schedule.Add(goal);
             }
