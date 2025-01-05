@@ -25,7 +25,8 @@
             <CheckBox Content="Auto scroll" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding ShouldAutoScroll}" />
         </Grid>
         <ScrollViewer x:Name="ScrollViewer" Grid.Row="1" Margin="0 20 0 20">
-            <ItemsControl ItemsSource="{Binding ServerOutput}">
+            <!-- Transparent background for improved QoL selecting text (otherwise: if cursor between lines won't allow selecting something) -->
+            <ItemsControl ItemsSource="{Binding ServerOutput}" Background="Transparent">
                 <Interaction.Behaviors>
                     <BehaviorCollection>
                         <EventTriggerBehavior EventName="SizeChanged">
