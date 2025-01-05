@@ -120,5 +120,8 @@ namespace NitroxModel.Serialization
 
         [PropertyDescription("When true and started in launcher, will use launcher UI as opposed to external window")]
         public bool IsEmbedded { get; set; } = true;
+
+        [PropertyDescription("Activates/Deactivates Player versus Player damage/interactions")]
+        public bool PvPEnabled { get; set; } = true;
     }
 }

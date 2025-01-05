@@ -19,6 +19,7 @@ namespace NitroxServer.GameLogic
     public class PlayerManager
     {
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
+        private readonly ThreadSafeDictionary<ushort, Player> connectedPlayersById = [];
         private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = new();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
@@ -214,6 +215,8 @@ namespace NitroxServer.GameLogic
                 allPlayersByName[playerContext.PlayerName] = player;
             }
 
+            connectedPlayersById.Add(playerContext.PlayerId, player);
+
             // TODO: make a ConnectedPlayer wrapper so this is not stateful
             player.PlayerContext = playerContext;
             player.Connection = connection;
@@ -247,6 +250,7 @@ namespace NitroxServer.GameLogic
             {
                 Player player = assetPackage.Player;
                 reservedPlayerNames.Remove(player.Name);
+                connectedPlayersById.Remove(player.Id);
             }
 
             assetsByConnection.Remove(connection);
@@ -298,6 +302,11 @@ namespace NitroxServer.GameLogic
             }
 
             return false;
+        }
+
+        public bool TryGetPlayerById(ushort playerId, out Player player)
+        {
+            return connectedPlayersById.TryGetValue(playerId, out player);
         }
 
         public Player GetPlayer(INitroxConnection connection)
