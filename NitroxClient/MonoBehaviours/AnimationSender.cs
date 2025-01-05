@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using UnityEngine;
 
@@ -36,6 +36,7 @@ namespace NitroxClient.MonoBehaviours
     public enum AnimChangeType
     {
         UNDERWATER,
-        BENCH
+        BENCH,
+        INFECTION_REVEAL
     }
 }
