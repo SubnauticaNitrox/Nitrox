@@ -89,7 +89,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
             return;
         }
 
-        LauncherNotifier.Info("Starting game");
         Log.Info("Launching Subnautica in singleplayer mode");
 
         try
@@ -113,7 +112,6 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
     [RelayCommand]
     private async Task StartMultiplayerAsync(string[] args = null)
     {
-        LauncherNotifier.Info("Starting game");
         Log.Info("Launching Subnautica in multiplayer mode");
         try
         {
@@ -227,6 +225,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
 
     private async Task StartSubnauticaAsync(string[] args = null)
     {
+        LauncherNotifier.Info("Starting game");
         string subnauticaPath = NitroxUser.GamePath;
         string subnauticaLaunchArguments = $"{SubnauticaLaunchArguments} {string.Join(" ", args ?? Environment.GetCommandLineArgs())}";
         string subnauticaExe;
