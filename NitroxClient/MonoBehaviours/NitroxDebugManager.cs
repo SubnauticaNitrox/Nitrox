@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+#if DEBUG
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Debuggers;
@@ -13,8 +14,8 @@ public class NitroxDebugManager : MonoBehaviour
 {
     private const KeyCode ENABLE_DEBUGGER_HOTKEY = KeyCode.F7;
 
+    private readonly HashSet<BaseDebugger> prevActiveDebuggers = [];
     private List<BaseDebugger> debuggers;
-    private readonly HashSet<BaseDebugger> prevActiveDebuggers = new();
 
     private bool showDebuggerList;
     private bool isDebugging;
@@ -32,7 +33,6 @@ public class NitroxDebugManager : MonoBehaviour
 
     public void OnGUI()
     {
-#if DEBUG
         if (!isDebugging)
         {
             return;
@@ -46,12 +46,10 @@ public class NitroxDebugManager : MonoBehaviour
         {
             debugger.OnGUI();
         }
-#endif
     }
 
     public void Update()
     {
-#if DEBUG
         if (Input.GetKeyDown(ENABLE_DEBUGGER_HOTKEY))
         {
             ToggleDebugging();
@@ -71,7 +69,6 @@ public class NitroxDebugManager : MonoBehaviour
                 debugger.Update();
             }
         }
-#endif
     }
 
     public void ToggleDebugging()
@@ -183,3 +180,4 @@ public class NitroxDebugManager : MonoBehaviour
         Log.Debug($"Active scene changed from {fromScene.name} to {toScene.name}");
     }
 }
+#endif
