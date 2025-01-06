@@ -12,16 +12,16 @@ internal class SetKeepInventoryCommand : Command
     private readonly PlayerManager playerManager;
     private readonly ServerConfig serverConfig;
 
-    public SetKeepInventoryCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("setkeepinventory", NitroxModel.DataStructures.GameLogic.Perms.ADMIN, "Sets the keep inventory setting to either true or false")
+    public SetKeepInventoryCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("setkeepinventoryondeath", NitroxModel.DataStructures.GameLogic.Perms.ADMIN, "Sets the keep inventory setting to either true or false so the player will either keep or lose their items when they die")
     {
-        AddParameter(new TypeBoolean("state", true, "The true/false state to set keep inventory to"));
+        AddParameter(new TypeBoolean("state", true, "The true/false state to set keep inventory on death to"));
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
     }
 
     protected override void Execute(CallArgs args)
     {
-        SendMessageToAllPlayers($"KeepInventory has been updated to {args.Get<bool>(0)}");
+        SendMessageToAllPlayers($"KeepInventoryOnDeath has been updated to {args.Get<bool>(0)}");
         if (args.Get<bool>(0) == serverConfig.KeepInventoryOnDeath)
         {
             return;
