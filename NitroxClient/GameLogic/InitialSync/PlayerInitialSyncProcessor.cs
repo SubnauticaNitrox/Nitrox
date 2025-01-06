@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic.InitialSync;
 ///     This allows the player to:<br/>
 ///      - use equipment
 /// </remarks>
-public class PlayerInitialSyncProcessor : InitialSyncProcessor
+public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly Items item;
     private readonly ItemContainers itemContainers;
@@ -49,7 +49,7 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         }
     }
 
-    private void SetPlayerGameObjectId(NitroxId id)
+    private static void SetPlayerGameObjectId(NitroxId id)
     {
         EcoTarget playerEcoTarget = Player.mainObject.AddComponent<EcoTarget>();
         playerEcoTarget.SetTargetType(RemotePlayer.PLAYER_ECO_TARGET_TYPE);
@@ -81,7 +81,7 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         }
     }
 
-    private void SetPlayerStats(PlayerStatsData statsData)
+    private static void SetPlayerStats(PlayerStatsData statsData)
     {
         if (statsData != null)
         {
@@ -110,7 +110,7 @@ public class PlayerInitialSyncProcessor : InitialSyncProcessor
         Player.main.GetPDA().Close();
     }
 
-    private void SetPlayerGameMode(NitroxGameMode gameMode)
+    private static void SetPlayerGameMode(NitroxGameMode gameMode)
     {
         Log.Info($"Received initial sync packet with gamemode {gameMode}");
         GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);

@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.InitialSync;
 ///      - vehicles to use equipment
 ///      - other players to be set as drivers of some vehicle
 /// </remarks>
-public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
+public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly Entities entities;
     private readonly Vehicles vehicles;
