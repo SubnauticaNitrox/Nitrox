@@ -38,20 +38,12 @@ To:
 
     private static void LoseItemsIfKeepInventoryDisabled()
     {
-        if (Resolve<LocalPlayer>().KeepInventory == false)
+        if (!Resolve<LocalPlayer>().KeepInventory && Inventory.main.LoseItems())
         {
-            if (Inventory.main.LoseItems())
-            {
-                ErrorMessage.AddWarning(Language.main.Get("YouDiedLostStuff"));
-            }
-            else
-            {
-                ErrorMessage.AddWarning(Language.main.Get("YouDied"));
-            }
+            ErrorMessage.AddWarning(Language.main.Get("YouDiedLostStuff"));
+            return;
         }
-        else
-        {
-            ErrorMessage.AddWarning(Language.main.Get("YouDied"));
-        }
+
+        ErrorMessage.AddWarning(Language.main.Get("YouDied"));
     }
 }
