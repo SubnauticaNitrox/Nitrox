@@ -21,6 +21,11 @@ internal class SetKeepInventoryCommand : Command
 
     protected override void Execute(CallArgs args)
     {
+        SendMessageToAllPlayers($"KeepInventory has been updated to {args.Get<bool>(0)}");
+        if (args.Get<bool>(0) == serverConfig.KeepInventory)
+        {
+            return;
+        }
         serverConfig.KeepInventory = args.Get<bool>(0);
         serverConfig.Serialize(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)); // Saves the server config edit to disk
         KeepInventoryChanged packet = new KeepInventoryChanged(args.Get<bool>(0));
@@ -28,6 +33,5 @@ internal class SetKeepInventoryCommand : Command
         {
             player.SendPacket(packet);
         }
-        SendMessageToAllPlayers($"KeepInventory has been updated to {args.Get<bool>(0)}");
     }
 }
