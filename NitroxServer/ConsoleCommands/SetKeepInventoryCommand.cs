@@ -1,6 +1,5 @@
 using System.IO;
 using NitroxModel.Packets;
-using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
