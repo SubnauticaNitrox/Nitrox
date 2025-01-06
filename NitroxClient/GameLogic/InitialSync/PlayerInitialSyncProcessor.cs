@@ -38,7 +38,6 @@ public sealed class PlayerInitialSyncProcessor : InitialSyncProcessor
     private void SetPlayerKeepInventory(bool keepInventory)
     {
         localPlayer.KeepInventory = keepInventory;
-        Log.Info($"Set player keep inventory to: {localPlayer.KeepInventory}");
     }
 
     private void SetPlayerPermissions(Perms permissions)

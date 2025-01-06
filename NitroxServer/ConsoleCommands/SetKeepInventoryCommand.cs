@@ -1,7 +1,7 @@
+using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
-using NitroxModel.Packets;
 using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands;
