@@ -8,6 +8,7 @@ using FMODUnity;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
+using NitroxModel;
 using NitroxModel.Serialization;
 using TMPro;
 using UnityEngine;
@@ -104,7 +105,7 @@ public class MainMenuServerListPanel : MonoBehaviour, uGUI_INavigableIconGrid, u
         }
         else if (selectedServerItem.TryGetComponent(out MainMenuServerButton serverButton))
         {
-            serverButton.OnJoinButtonClicked();
+            _ = serverButton.OnJoinButtonClicked().ContinueWithHandleError(Log.Error);
         }
     }
 
