@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
+using NitroxPatcher.PatternMatching;
 
 namespace NitroxPatcher.Patches.Dynamic;
 public sealed partial class Player_ResetPlayerOnDeath_Patch : NitroxPatch, IDynamicPatch
@@ -18,21 +19,26 @@ To:
     //bool lostStuff = Inventory.main.LoseItems();
     LoseItemsIfKeepInventoryEnabled(Inventory.main)
  */
+        Log.Debug(new CodeMatcher(instructions).MatchStartForward(
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(OpCodes.Ldsfld),
+            new CodeMatch(OpCodes.Callvirt, Reflect.Method((Inventory t) => t.LoseItems())))
+            // Skip the call command for the LoseItems function and call our function instead
+            .RemoveInstructions(4).
+            Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => LoseItemsIfKeepInventoryDisabled()))).Instructions().ToPrettyString());
         return new CodeMatcher(instructions).MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
             new CodeMatch(OpCodes.Ldsfld),
             new CodeMatch(OpCodes.Callvirt, Reflect.Method((Inventory t) => t.LoseItems())))
-            // Skip the 
-            .Advance(1).
-            InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_0)).
-            Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => LoseItemsIfKeepInventoryEnabled(default))))
-            .InstructionEnumeration();
+            // Skip the call command for the LoseItems function and call our function instead
+            .RemoveInstructions(4).
+            Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => LoseItemsIfKeepInventoryDisabled()))).InstructionEnumeration();
     }
-    public static void LoseItemsIfKeepInventoryEnabled(Inventory inventory)
+    public static void LoseItemsIfKeepInventoryDisabled()
     {
-        if (Resolve<LocalPlayer>().KeepInventory) {
+        if (Resolve<LocalPlayer>().KeepInventory == true) {
             return;
         }
-        inventory.LoseItems();
+        Inventory.main.LoseItems();
     }
 }
