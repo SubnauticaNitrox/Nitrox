@@ -27,6 +27,8 @@ public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
     public GlobalRootInitialSyncProcessor(Entities entities, Vehicles vehicles, PlayerManager playerManager, BulletManager bulletManager)
     {
         this.entities = entities;
+        this.vehicles = vehicles;
+        this.playerManager = playerManager;
         this.bulletManager = bulletManager;
 
         // As we migrate systems over to entities, we want to ensure the required components are in place to spawn these entities.
