@@ -23,7 +23,7 @@ public sealed class GameAnalytics_Patch : NitroxPatch, IPersistentPatch
     private static readonly MethodInfo TARGET_METHOD_MANAGER_ONENABLE = Reflect.Method((SentrySdkManager t) => t.OnEnable());
 
     /// <summary>
-    ///     Skip controller create as well to remove NRE in Player.log on exit (OnDestroy will try access null SentrySdk instance)
+    ///     Skip controller create as well to remove NRE in Player.log
     /// </summary>
     private static readonly MethodInfo TARGET_METHOD_CONTROLLER = Reflect.Method((AnalyticsController t) => t.Awake());
     private static readonly MethodInfo TARGET_METHOD_CONTROLLER_ONENABLE = Reflect.Method((AnalyticsController t) => t.OnEnable());
