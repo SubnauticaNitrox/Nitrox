@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using Story;
@@ -22,10 +22,9 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         AddStep(SetupTrackers);
         AddStep(SetupAuroraAndSunbeam);
         AddStep(SetScheduledGoals);
-        AddStep(RefreshStoryWithLatestData);
     }
 
-    private static IEnumerator SetupStoryGoalManager(InitialPlayerSync packet)
+    private static void SetupStoryGoalManager(InitialPlayerSync packet)
     {
         List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
         List<string> radioQueue = packet.StoryGoalData.RadioQueue;
@@ -61,20 +60,23 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         - Personal goals        : {personalGoals.Count}
         - Radio queue           : {radioQueue.Count}
         """);
-        yield break;
     }
 
-    private static IEnumerator SetupTrackers(InitialPlayerSync packet)
+    private static void SetupTrackers(InitialPlayerSync packet)
     {
         List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
         StoryGoalManager storyGoalManager = StoryGoalManager.main;
+        OnGoalUnlockTracker onGoalUnlockTracker = storyGoalManager.onGoalUnlockTracker;
+        CompoundGoalTracker compoundGoalTracker = storyGoalManager.compoundGoalTracker;
 
-        // Initialize CompoundGoalTracker and OnGoalUnlockTracker and clear their already completed goals
+        // Initializing CompoundGoalTracker and OnGoalUnlockTracker again (with OnSceneObjectsLoaded) requires us to
+        // we first clear what was done in the first iteration of OnSceneObjectsLoaded
+        onGoalUnlockTracker.goalUnlocks.Clear();
+        compoundGoalTracker.goals.Clear();
+        // we force initialized to false so OnSceneObjectsLoaded actually does something
+        storyGoalManager.initialized = false;
         storyGoalManager.OnSceneObjectsLoaded();
-
-        storyGoalManager.compoundGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
-        completedGoals.ForEach(goal => storyGoalManager.onGoalUnlockTracker.goalUnlocks.Remove(goal));
-
+        
         // Clean LocationGoalTracker, BiomeGoalTracker and ItemGoalTracker already completed goals
         storyGoalManager.locationGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
         storyGoalManager.biomeGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
@@ -90,15 +92,39 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             }
         }
         techTypesToRemove.ForEach(techType => storyGoalManager.itemGoalTracker.goals.Remove(techType));
-        yield break;
+
+        // OnGoalUnlock might trigger the creation of a signal which is later on set to invisible when getting close to it
+        // the invisibility is managed by PingInstance_Set_Patches and is restored during PlayerPreferencesInitialSyncProcessor
+        // So we still need to recreate the signals at every game launch
+
+        // To avoid having the SignalPing play its sound we just make its notification null while triggering it
+        // (the sound is something like "coordinates added to the gps" or something)
+        SignalPing prefabSignalPing = onGoalUnlockTracker.signalPrefab.GetComponent<SignalPing>();
+        PDANotification pdaNotification = prefabSignalPing.vo;
+        prefabSignalPing.vo = null;
+
+        foreach (OnGoalUnlock onGoalUnlock in onGoalUnlockTracker.unlockData.onGoalUnlocks)
+        {
+            if (completedGoals.Contains(onGoalUnlock.goal))
+            {
+                // Code adapted from OnGoalUnlock.Trigger
+                foreach (UnlockSignalData unlockSignalData in onGoalUnlock.signals)
+                {
+                    unlockSignalData.Trigger(onGoalUnlockTracker);
+                }
+            }
+        }
+        
+        // recover the notification sound
+        prefabSignalPing.vo = pdaNotification;
     }
 
     // Must happen after CompletedGoals
-    private static IEnumerator SetupAuroraAndSunbeam(InitialPlayerSync packet)
+    private static void SetupAuroraAndSunbeam(InitialPlayerSync packet)
     {
         TimeData timeData = packet.TimeData;
 
-        AuroraWarnings auroraWarnings = UnityEngine.Object.FindObjectOfType<AuroraWarnings>();
+        AuroraWarnings auroraWarnings = Player.mainObject.GetComponentInChildren<AuroraWarnings>(true);
         auroraWarnings.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         auroraWarnings.OnProtoDeserialize(null);
 
@@ -115,14 +141,16 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             StoryGoalCustomEventHandler.main.countdownStartingTime = sunbeamCountdownGoal.TimeExecute - 2370;
             // See StoryGoalCustomEventHandler.endTime for calculation (endTime - 30 seconds)
         }
-
-        yield break;
     }
 
     // Must happen after CompletedGoals
-    private static IEnumerator SetScheduledGoals(InitialPlayerSync packet)
+    private static void SetScheduledGoals(InitialPlayerSync packet)
     {
         List<NitroxScheduledGoal> scheduledGoals = packet.StoryGoalData.ScheduledGoals;
+
+        // We don't want any scheduled goal we add now to be executed before initial sync has finished, else they might not get broadcasted
+        StoryGoalScheduler.main.paused = true;
+        Multiplayer.OnLoadingComplete += () => StoryGoalScheduler.main.paused = false;
 
         foreach (NitroxScheduledGoal scheduledGoal in scheduledGoals)
         {
@@ -135,17 +163,17 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
                 goalType = (Story.GoalType)scheduledGoal.GoalType,
                 timeExecute = scheduledGoal.TimeExecute,
             };
-            if (goal.timeExecute >= DayNightCycle.main.timePassedAsDouble && !StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
+            if (!StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
             {
                 StoryGoalScheduler.main.schedule.Add(goal);
             }
         }
 
-        yield break;
+        RefreshStoryWithLatestData();
     }
 
     // Must happen after CompletedGoals
-    private static IEnumerator RefreshStoryWithLatestData()
+    private static void RefreshStoryWithLatestData()
     {
         // If those aren't set up yet, they'll initialize correctly in time
         // Else, we need to force them to acquire the right data
@@ -157,7 +185,6 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         {
             PrecursorGunStoryEvents.main.Start();
         }
-        yield break;
     }
 
     private void SetTimeData(InitialPlayerSync packet)

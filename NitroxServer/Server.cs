@@ -72,7 +72,6 @@ namespace NitroxServer
              - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}
              - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
              - World gamemode: {serverConfig.GameMode}
-             - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}
              - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
              - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
             """);
