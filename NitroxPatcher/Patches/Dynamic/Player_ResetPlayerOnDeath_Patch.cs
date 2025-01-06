@@ -16,8 +16,8 @@ public sealed partial class Player_ResetPlayerOnDeath_Patch : NitroxPatch, IDyna
 From:
     bool lostStuff = Inventory.main.LoseItems();
 To:
-    //bool lostStuff = Inventory.main.LoseItems();
-    LoseItemsIfKeepInventoryEnabled(Inventory.main)
+    //bool lostStuff = Inventory.main.LoseItems(); [REPLACED]
+    LoseItemsIfKeepInventoryEnabled(Inventory.main) [NEW]
  */
         Log.Debug(new CodeMatcher(instructions).MatchStartForward(
             new CodeMatch(OpCodes.Ldarg_0),
@@ -36,9 +36,8 @@ To:
     }
     public static void LoseItemsIfKeepInventoryDisabled()
     {
-        if (Resolve<LocalPlayer>().KeepInventory == true) {
-            return;
+        if (Resolve<LocalPlayer>().KeepInventory == false) {
+            Inventory.main.LoseItems();
         }
-        Inventory.main.LoseItems();
     }
 }
