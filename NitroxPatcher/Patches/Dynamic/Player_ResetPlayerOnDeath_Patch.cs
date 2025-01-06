@@ -9,6 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 public sealed partial class Player_ResetPlayerOnDeath_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(Reflect.Method((Player t) => t.ResetPlayerOnDeath(default)));
+
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
         /*
@@ -27,7 +28,8 @@ To:
             Insert(new CodeInstruction(OpCodes.Call, Reflect.Method(() => LoseItemsIfKeepInventoryDisabled())))
             .InstructionEnumeration();
     }
-    public static void LoseItemsIfKeepInventoryDisabled()
+
+    private static void LoseItemsIfKeepInventoryDisabled()
     {
         if (Resolve<LocalPlayer>().KeepInventory == false)
         {
