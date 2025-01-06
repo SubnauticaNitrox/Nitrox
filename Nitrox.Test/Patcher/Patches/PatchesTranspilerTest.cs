@@ -18,14 +18,14 @@ public class PatchesTranspilerTest
         [typeof(AttackCyclops_OnCollisionEnter_Patch), -17],
         [typeof(AttackCyclops_UpdateAggression_Patch), -23],
         [typeof(Bullet_Update_Patch), 3],
-        [typeof(BaseDeconstructable_Deconstruct_Patch), BaseDeconstructable_Deconstruct_Patch.InstructionsToAdd(true).Count() * 2],
+        [typeof(BaseDeconstructable_Deconstruct_Patch), 10],
         [typeof(BaseHullStrength_CrushDamageUpdate_Patch), 3],
         [typeof(BreakableResource_SpawnResourceFromPrefab_Patch), 2],
-        [typeof(Builder_TryPlace_Patch), Builder_TryPlace_Patch.InstructionsToAdd1.Count + Builder_TryPlace_Patch.InstructionsToAdd2.Count],
+        [typeof(Builder_TryPlace_Patch), 4],
         [typeof(CellManager_TryLoadCacheBatchCells_Patch), 4],
-        [typeof(Constructable_Construct_Patch), Constructable_Construct_Patch.InstructionsToAdd.Count],
-        [typeof(Constructable_DeconstructAsync_Patch), Constructable_DeconstructAsync_Patch.InstructionsToAdd.Count],
-        [typeof(ConstructableBase_SetState_Patch), ConstructableBase_SetState_Patch.InstructionsToAdd.Count],
+        [typeof(Constructable_Construct_Patch), 3],
+        [typeof(Constructable_DeconstructAsync_Patch), 3],
+        [typeof(ConstructableBase_SetState_Patch), 2],
         [typeof(ConstructorInput_OnCraftingBegin_Patch), 7],
         [typeof(CrafterLogic_TryPickupSingleAsync_Patch), 4],
         [typeof(CrashHome_Spawn_Patch), 2],
@@ -97,7 +97,7 @@ public class PatchesTranspilerTest
     [TestMethod]
     public void AllTranspilerPatchesHaveSanityTest()
     {
-        Type[] allPatchesWithTranspiler = typeof(NitroxPatcher.Main).Assembly.GetTypes().Where(p => typeof(NitroxPatch).IsAssignableFrom(p) && p.IsClass).Where(x => x.GetMethod("Transpiler") != null).ToArray();
+        Type[] allPatchesWithTranspiler = typeof(NitroxPatcher.Main).Assembly.GetTypes().Where(p => typeof(INitroxPatch).IsAssignableFrom(p) && p.IsClass).Where(x => x.GetMethod("Transpiler") != null).ToArray();
 
         foreach (Type patch in allPatchesWithTranspiler)
         {
@@ -153,7 +153,14 @@ public class PatchesTranspilerTest
         
         if (logInstructions)
         {
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("~~~ TRANSFORMED IL ~~~");
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~");
             Console.WriteLine(transformedIl.ToPrettyString());
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("~~~  ORIGINAL IL   ~~~");
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine(originalIlCopy.ToPrettyString());
         }
 
         if (transformedIl == null || transformedIl.Count == 0)
@@ -162,7 +169,14 @@ public class PatchesTranspilerTest
         }
 
         originalIlCopy.Count.Should().Be(transformedIl.Count - ilDifference);
-        Assert.IsFalse(originalIlCopy.SequenceEqual(transformedIl, new CodeInstructionComparer()), $"The transpiler patch of {patchClassType.Name} did not change the IL");
+        if (originalIlCopy.Count == transformedIl.Count)
+        {
+            string originalIlPrettyString = originalIlCopy.ToPrettyString();
+            if (originalIlPrettyString == transformedIl.ToPrettyString())
+            {
+                Assert.Fail($"The transpiler patch of {patchClassType.Name} did not change the IL:{Environment.NewLine}{originalIlPrettyString}");
+            }
+        }
     }
 
     private static readonly ModuleBuilder patchTestModule;
@@ -182,37 +196,5 @@ public class PatchesTranspilerTest
         TypeBuilder myTypeBld = patchTestModule.DefineType($"{generatingType}_PatchTestType", TypeAttributes.Public);
 
         return myTypeBld.DefineMethod(method.Name, MethodAttributes.Public,  method.ReturnType, method.GetParameters().Types()).GetILGenerator();
-    }
-}
-
-public class CodeInstructionComparer : IEqualityComparer<CodeInstruction>
-{
-    public bool Equals(CodeInstruction x, CodeInstruction y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-        if (x is null)
-        {
-            return false;
-        }
-        if (y is null)
-        {
-            return false;
-        }
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-        return x.opcode.Equals(y.opcode) && Equals(x.operand, y.operand);
-    }
-
-    public int GetHashCode(CodeInstruction obj)
-    {
-        unchecked
-        {
-            return (obj.opcode.GetHashCode() * 397) ^ (obj.operand != null ? obj.operand.GetHashCode() : 0);
-        }
     }
 }
