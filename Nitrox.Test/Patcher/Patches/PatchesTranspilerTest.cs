@@ -49,7 +49,7 @@ public class PatchesTranspilerTest
         [typeof(Flare_Update_Patch), 0],
         [typeof(FootstepSounds_OnStep_Patch), 6],
         [typeof(GameInput_Initialize_Patch), 5],
-        [typeof(Player_ResetPlayerOnDeath_Patch), -3],
+        [typeof(Player_ResetPlayerOnDeath_Patch), -14],
         [typeof(Player_TriggerInfectionRevealAsync_Patch), 1],
         [typeof(IngameMenu_OnSelect_Patch), -2],
         [typeof(IngameMenu_QuitGameAsync_Patch), 2],
