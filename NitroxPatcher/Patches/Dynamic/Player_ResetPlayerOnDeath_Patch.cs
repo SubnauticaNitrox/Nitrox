@@ -36,6 +36,7 @@ To:
     }
     public static void LoseItemsIfKeepInventoryDisabled()
     {
+        Log.Debug($"Player died with the keepInventory setting {Resolve<LocalPlayer>().KeepInventory}");
         if (Resolve<LocalPlayer>().KeepInventory == false) {
             Inventory.main.LoseItems();
         }
