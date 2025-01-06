@@ -13,16 +13,10 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public class EquippedItemInitialSyncProcessor : InitialSyncProcessor
+public sealed class EquippedItemInitialSyncProcessor : InitialSyncProcessor
 {
-    private readonly IPacketSender packetSender;
-    private readonly Entities entities;
-
-    public EquippedItemInitialSyncProcessor(IPacketSender packetSender, Entities entities)
+    public EquippedItemInitialSyncProcessor()
     {
-        this.packetSender = packetSender;
-        this.entities = entities;
-
         AddDependency<PlayerInitialSyncProcessor>();
         AddDependency<RemotePlayerInitialSyncProcessor>();
         AddDependency<GlobalRootInitialSyncProcessor>();

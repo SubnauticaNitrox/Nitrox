@@ -11,23 +11,16 @@ using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
-public class PdaInitialSyncProcessor : InitialSyncProcessor
+public sealed class PdaInitialSyncProcessor : InitialSyncProcessor
 {
-    private readonly IPacketSender packetSender;
-
-    public PdaInitialSyncProcessor(IPacketSender packetSender)
-    {
-        this.packetSender = packetSender;
-    }
-
     // The steps are ordered like their call order in Player.OnProtoDeserialize
-    public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } = new()
-    {
+    public override List<Func<InitialPlayerSync, IEnumerator>> Steps { get; } =
+    [
         RestoreKnownTech,
         RestorePDALog,
         RestoreEncyclopediaEntries,
         RestorePDAScanner
-    };
+    ];
 
     private static IEnumerator RestoreKnownTech(InitialPlayerSync packet)
     {

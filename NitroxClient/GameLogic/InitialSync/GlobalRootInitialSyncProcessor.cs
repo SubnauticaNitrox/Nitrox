@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.InitialSync;
 ///      - vehicles to use equipment
 ///      - other players to be set as drivers of some vehicle
 /// </remarks>
-public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
+public sealed class GlobalRootInitialSyncProcessor : InitialSyncProcessor
 {
     private readonly Entities entities;
     private readonly Vehicles vehicles;
@@ -27,6 +27,8 @@ public class GlobalRootInitialSyncProcessor : InitialSyncProcessor
     public GlobalRootInitialSyncProcessor(Entities entities, Vehicles vehicles, PlayerManager playerManager, BulletManager bulletManager)
     {
         this.entities = entities;
+        this.vehicles = vehicles;
+        this.playerManager = playerManager;
         this.bulletManager = bulletManager;
 
         // As we migrate systems over to entities, we want to ensure the required components are in place to spawn these entities.

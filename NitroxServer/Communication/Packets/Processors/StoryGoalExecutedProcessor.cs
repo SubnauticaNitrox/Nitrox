@@ -30,7 +30,7 @@ public class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<StoryGoal
             case StoryGoalExecuted.EventType.RADIO:
                 if (added)
                 {
-                    storyGoalData.RadioQueue.Add(packet.Key);
+                    storyGoalData.RadioQueue.Enqueue(packet.Key);
                 }
                 break;
             case StoryGoalExecuted.EventType.PDA:
