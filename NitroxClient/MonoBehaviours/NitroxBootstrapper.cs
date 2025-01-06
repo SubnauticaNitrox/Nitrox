@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine;
@@ -7,6 +8,7 @@ namespace NitroxClient.MonoBehaviours;
 public class NitroxBootstrapper : MonoBehaviour
 {
     internal static NitroxBootstrapper Instance;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -17,26 +19,28 @@ public class NitroxBootstrapper : MonoBehaviour
 
 #if DEBUG
         EnableDeveloperFeatures();
-#endif
-
         CreateDebugger();
+#endif
 
         // This is very important, see Application_runInBackground_Patch.cs
         Application.runInBackground = true;
         Log.Info($"Unity run in background set to \"{Application.runInBackground}\"");
     }
 
-    private void EnableDeveloperFeatures()
+#if DEBUG
+    private static void EnableDeveloperFeatures()
     {
-        Log.Info("Enabling developer console.");
+        Log.Info("Enabling Subnautica developer console");
         PlatformUtils.SetDevToolsEnabled(true);
     }
 
     private void CreateDebugger()
     {
-        GameObject debugger = new GameObject();
+        Log.Info("Enabling Nitrox debugger");
+        GameObject debugger = new();
         debugger.name = "Debug manager";
         debugger.AddComponent<NitroxDebugManager>();
         debugger.transform.SetParent(transform);
     }
+#endif
 }
