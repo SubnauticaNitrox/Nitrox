@@ -5,10 +5,10 @@ namespace NitroxModel.Packets;
 [Serializable]
 public class KeepInventoryChanged : Packet
 {
-    public bool KeepInventory { get; }
+    public bool KeepInventoryOnDeath { get; }
 
-    public KeepInventoryChanged(bool KeepInventory)
+    public KeepInventoryChanged(bool keepInventoryOnDeath)
     {
-        this.KeepInventory = KeepInventory;
+        KeepInventoryOnDeath = keepInventoryOnDeath;
     }
 }

@@ -38,7 +38,7 @@ To:
 
     private static void LoseItemsIfKeepInventoryDisabled()
     {
-        if (!Resolve<LocalPlayer>().KeepInventory && Inventory.main.LoseItems())
+        if (!Resolve<LocalPlayer>().KeepInventoryOnDeath && Inventory.main.LoseItems())
         {
             ErrorMessage.AddWarning(Language.main.Get("YouDiedLostStuff"));
             return;

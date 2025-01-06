@@ -13,6 +13,6 @@ public class KeepInventoryChangedProcessor : ClientPacketProcessor<KeepInventory
 
     public override void Process(KeepInventoryChanged packet)
     {
-        localPlayer.KeepInventory = packet.KeepInventory;
+        localPlayer.KeepInventoryOnDeath = packet.KeepInventoryOnDeath;
     }
 }
