@@ -26,10 +26,6 @@ public class PlayerManager
     private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
     private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-    private ThreadSafeQueue<(INitroxConnection, string)> JoinQueue { get; set; } = new();
-    private bool queueIdle = false;
-    public Action SyncFinishedCallback { get; private set; }
-
     private ushort currentPlayerId;
 
     public PlayerManager(List<Player> players, ServerConfig serverConfig)

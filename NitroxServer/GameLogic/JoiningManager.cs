@@ -14,7 +14,6 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication;
 using NitroxServer.GameLogic.Bases;
-using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
@@ -25,22 +24,16 @@ public sealed class JoiningManager
     private readonly PlayerManager playerManager;
     private readonly ServerConfig serverConfig;
     private readonly World world;
-    private readonly EntityRegistry entityRegistry;
-    private readonly StoryManager storyManager;
-    private readonly ScheduleKeeper scheduleKeeper;
 
     private ThreadSafeQueue<(INitroxConnection, string)> JoinQueue { get; set; } = new();
     private bool queueIdle;
     public Action SyncFinishedCallback { get; private set; }
 
-    public JoiningManager(PlayerManager playerManager, ServerConfig serverConfig, World world, EntityRegistry entityRegistry, StoryManager storyManager, ScheduleKeeper scheduleKeeper)
+    public JoiningManager(PlayerManager playerManager, ServerConfig serverConfig, World world)
     {
         this.playerManager = playerManager;
         this.serverConfig = serverConfig;
         this.world = world;
-        this.entityRegistry = entityRegistry;
-        this.storyManager = storyManager;
-        this.scheduleKeeper = scheduleKeeper;
 
         Task.Run(JoinQueueLoop).ContinueWithHandleError();
     }
@@ -172,14 +165,14 @@ public sealed class JoiningManager
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
             PlayerWorldEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
-            entityRegistry.AddOrUpdate(playerEntity);
+            world.EntityRegistry.AddOrUpdate(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;
         }
 
         PlayerWorldEntity RespawnExistingEntity(Player player)
         {
-            if (entityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerWorldEntity playerWorldEntity))
+            if (world.EntityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerWorldEntity playerWorldEntity))
             {
                 return playerWorldEntity;
             }
@@ -217,7 +210,7 @@ public sealed class JoiningManager
             player.UsedItems,
             player.QuickSlotsBindingIds,
             world.GameData.PDAState.GetInitialPDAData(),
-            world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper, player),
+            world.GameData.StoryGoals.GetInitialStoryGoalData(world.ScheduleKeeper, player),
             player.Position,
             player.Rotation,
             player.SubRootId,
@@ -229,7 +222,7 @@ public sealed class JoiningManager
             player.Permissions,
             wasBrandNewPlayer ? IntroCinematicMode.LOADING : IntroCinematicMode.COMPLETED,
             new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
-            storyManager.GetTimeData(),
+            world.StoryManager.GetTimeData(),
             isFirstPlayer,
             BuildingManager.GetEntitiesOperations(globalRootEntities),
             serverConfig.KeepInventoryOnDeath
