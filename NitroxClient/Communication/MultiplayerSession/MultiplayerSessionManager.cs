@@ -108,7 +108,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public bool Send<T>(T packet) where T : Packet
         {
-            if (!PacketSuppressor<T>.IsSuppressed)
+            if (Client.IsConnected && !PacketSuppressor<T>.IsSuppressed)
             {
                 Client.Send(packet);
                 return true;

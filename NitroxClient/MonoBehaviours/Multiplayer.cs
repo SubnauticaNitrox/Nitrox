@@ -34,7 +34,6 @@ namespace NitroxClient.MonoBehaviours
         private GameLogic.Terrain terrain;
 
         public bool InitialSyncCompleted { get; set; }
-        public bool TimedOut { get; set; }
 
         /// <summary>
         ///     True if multiplayer is loaded and client is connected to a server.
@@ -94,7 +93,6 @@ namespace NitroxClient.MonoBehaviours
             if (Active)
             {
                 Main.InitialSyncCompleted = false;
-                Main.TimedOut = false;
                 Main.StartCoroutine(LoadAsync());
             }
             else
@@ -124,7 +122,16 @@ namespace NitroxClient.MonoBehaviours
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
             WaitScreen.Remove(waitingItem);
 
-            if (Main.TimedOut)
+            SetLoadingComplete();
+            OnLoadingComplete?.Invoke();
+        }
+
+        public void TimeOut()
+        {
+            multiplayerSession.Disconnect();
+            StartCoroutine(TimeOutRoutine());
+
+            IEnumerator TimeOutRoutine()
             {
                 int timer = 5;
 
@@ -136,11 +143,7 @@ namespace NitroxClient.MonoBehaviours
                 }
 
                 IngameMenu.main.QuitGame(false);
-                yield break;
             }
-
-            SetLoadingComplete();
-            OnLoadingComplete?.Invoke();
         }
 
         public void ProcessPackets()
