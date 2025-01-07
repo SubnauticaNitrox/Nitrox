@@ -35,7 +35,6 @@ namespace NitroxModel.Packets
         public TimeData TimeData { get; }
         public bool IsFirstPlayer { get; }
         public Dictionary<NitroxId, int> BuildOperationIds { get; }
-
         public bool KeepInventoryOnDeath { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
