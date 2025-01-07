@@ -2,6 +2,7 @@ using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors.Abstract;
+
 public class KeepInventoryChangedProcessor : ClientPacketProcessor<KeepInventoryChanged>
 {
     private readonly LocalPlayer localPlayer;
